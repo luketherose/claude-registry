@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+
+  "_comment_purpose": [
+    "This file is a REFERENCE EXAMPLE, not a deployed settings file.",
+    "Copy relevant sections to your project's .claude/settings.json.",
+    "Never copy this file as-is — review each section for your project's needs.",
+    "Do not commit secrets. Use environment variables for sensitive values."
+  ],
+
+  "permissions": {
+    "_comment": "Adjust these rules to match your project's actual commands.",
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(git checkout*)",
+      "Bash(git branch*)",
+      "Bash(mvn verify)",
+      "Bash(mvn test)",
+      "Bash(mvn clean package)",
+      "Bash(./mvnw *)",
+      "Bash(gradle *)",
+      "Bash(./gradlew *)",
+      "Bash(uv run *)",
+      "Bash(uv sync)",
+      "Bash(pytest *)",
+      "Bash(python -m pytest *)",
+      "Bash(docker compose up*)",
+      "Bash(docker compose down*)",
+      "Bash(docker compose logs*)",
+      "Read(**)",
+      "Grep(**)",
+      "Glob(**)",
+      "Agent(software-architect)",
+      "Agent(functional-analyst)",
+      "Agent(developer-java-spring)",
+      "Agent(technical-analyst)",
+      "Agent(developer-python)",
+      "Agent(code-reviewer)",
+      "Agent(test-writer)",
+      "Agent(debugger)",
+      "Agent(api-designer)",
+      "Agent(documentation-writer)"
+    ],
+    "ask": [
+      "Bash(docker *)",
+      "Bash(kubectl *)",
+      "Write(**)",
+      "Edit(**)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(DROP *)",
+      "Bash(DELETE FROM *)",
+      "Bash(curl * | bash)",
+      "Bash(wget * | sh)"
+    ]
+  },
+
+  "hooks": {
+    "_comment": "See hooks/README.md for documentation. Adjust paths to match your project.",
+
+    "PreToolUse": [
+      {
+        "_comment": "Warn before destructive bash commands. Blocks execution if script exits 2.",
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "claude-catalog/hooks/scripts/pre-tool-safety.sh",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+
+    "Stop": [
+      {
+        "_comment": "Log session end for audit trail. Non-blocking (exit 0 always).",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "claude-catalog/hooks/scripts/post-session-log.sh",
+            "timeout": 3000
+          }
+        ]
+      }
+    ]
+  },
+
+  "env": {
+    "_comment": "Environment variables for the Claude Code session. No secrets here.",
+    "JAVA_OPTS": "-Xmx512m",
+    "MAVEN_OPTS": "-Xmx512m"
+  }
+}

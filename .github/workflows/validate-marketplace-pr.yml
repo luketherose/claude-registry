@@ -1,0 +1,81 @@
+name: Validate Marketplace PR
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "claude-marketplace/**"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Validate marketplace changes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Run validation
+        id: validate
+        run: |
+          python3 .github/scripts/validate_marketplace.py \
+            --output-file /tmp/validation-comment.md
+        continue-on-error: true
+
+      - name: Post or update PR comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- claude-marketplace-validation -->';
+
+            let body;
+            try {
+              body = fs.readFileSync('/tmp/validation-comment.md', 'utf8');
+            } catch {
+              body = `${marker}\n## Marketplace Validation Report\n\n⚠️ Could not read validation output.`;
+            }
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existing = comments.find(c =>
+              c.user.type === 'Bot' && c.body.includes(marker)
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Fail if validation errors found
+        if: steps.validate.outcome == 'failure'
+        run: |
+          echo "Marketplace validation failed. See the PR comment for details."
+          exit 1

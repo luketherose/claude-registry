@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Claude Code local files (personal, not shared)
+.claude/settings.local.json
+.claude/session-log.txt
+.claude/safety-warnings.log
+CLAUDE.local.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+.env
+
+# Editor
+.idea/
+.vscode/settings.json
+*.swp
+*.swo

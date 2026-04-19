@@ -1,0 +1,64 @@
+{
+  "_comment": [
+    "This is a REFERENCE EXAMPLE of a .mcp.json file.",
+    "",
+    "OFFICIAL FORMAT: .mcp.json is the official Claude Code project-scoped MCP config file.",
+    "Place it at the root of your project (same level as .claude/).",
+    "It is safe to commit to git AS LONG AS it contains no secrets.",
+    "",
+    "SECRETS: Never put API keys, passwords, or tokens directly in this file.",
+    "Use environment variable references: ${VAR_NAME} or ${VAR_NAME:-default}.",
+    "Set actual secret values in your shell environment or a .env file that is gitignored.",
+    "",
+    "WHEN TO USE MCP:",
+    "  - You need to give Claude access to a tool or data source that Claude Code",
+    "    does not natively support (e.g. a JIRA instance, a custom knowledge base,",
+    "    a specific database, a vector search service).",
+    "  - The integration is reusable across sessions and worth the setup cost.",
+    "",
+    "WHEN NOT TO USE MCP:",
+    "  - For simple read access to files already in the project — use Read/Grep/Glob.",
+    "  - For running build commands — use Bash.",
+    "  - For one-off lookups — it is faster to ask Claude to use WebFetch.",
+    "  - When the overhead of maintaining an MCP server exceeds the benefit.",
+    "",
+    "Remove the _comment key and unused server entries before using this file."
+  ],
+
+  "mcpServers": {
+
+    "_comment_filesystem": "Remove this entry — it is documentation only.",
+
+    "project-docs": {
+      "_when_to_use": "Useful when you have documentation outside the project root that Claude should be able to read — e.g. a shared specs folder, a wiki export, or generated docs in a separate directory.",
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/path/to/your/external/docs"
+      ]
+    },
+
+    "postgres": {
+      "_when_to_use": "Gives Claude read access to a database for schema inspection and query analysis. Useful for the technical-analyst and functional-analyst subagents. Never grant write access unless you have a very specific and controlled use case.",
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "POSTGRES_CONNECTION_STRING": "${POSTGRES_CONNECTION_STRING}"
+      }
+    },
+
+    "github": {
+      "_when_to_use": "Gives Claude access to GitHub issues, PRs, and code review data. Useful for context during code review sessions or for the functional-analyst to read issue descriptions.",
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    }
+
+  }
+}

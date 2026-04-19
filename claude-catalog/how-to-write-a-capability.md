@@ -1,0 +1,227 @@
+# How to Write a Capability
+
+A **capability** in this catalog is a Claude Code **subagent**: a Markdown file with
+YAML frontmatter that defines a specialized role Claude can adopt or delegate to.
+
+This document is the authoritative guide for authors.
+
+---
+
+## 1. The subagent file format (official Claude Code standard)
+
+A subagent is a `.md` file in `.claude/agents/` (or in this catalog under `agents/`).
+It has two parts:
+
+```markdown
+---
+name: your-capability-name
+description: When and why Claude should use this subagent. Be precise.
+tools: Read, Grep, Glob, Bash, Write, Edit
+model: sonnet
+---
+
+The system prompt goes here. This is the full instruction set for the subagent.
+It replaces the default Claude Code system prompt when the subagent is active.
+```
+
+### Required frontmatter fields
+
+| Field | Type | Description |
+|---|---|---|
+| `name` | string | Unique identifier. Lowercase, hyphens only. Must match filename. |
+| `description` | string | Controls when Claude delegates to this subagent. This is the most critical field. |
+
+### Optional frontmatter fields
+
+| Field | Type | Example | Notes |
+|---|---|---|---|
+| `tools` | string | `Read, Grep, Glob, Bash` | Comma-separated. Omitting inherits all tools. Prefer explicit allowlists. |
+| `disallowedTools` | string | `Write, Edit` | Tools to explicitly deny. |
+| `model` | string | `sonnet`, `opus`, `haiku` | Default: inherits from parent session. Use `opus` only when reasoning depth justifies it. |
+| `maxTurns` | integer | `10` | Limits agentic turns. Useful for bounded tasks. |
+| `color` | string | `blue`, `green`, `red` | Visual indicator in the Claude UI. |
+
+Do not add fields that are not in this list. Unrecognized fields are silently ignored
+but create confusion.
+
+---
+
+## 2. The `description` field — most important
+
+The `description` tells Claude **when to use** this subagent. It is used both for
+automatic delegation (Claude decides to spawn this subagent) and for user-directed
+invocation (user types `/agents` and selects it).
+
+### Rules for a good description
+
+- Start with "Use when" or "Use for"
+- Be specific about the **trigger condition**, not just the domain
+- List the key tasks it handles
+- Mention what it does NOT handle (if there's a likely confusion)
+
+```yaml
+# Bad — too vague
+description: Helps with software architecture.
+
+# Bad — technology first, not role first
+description: Works with Spring Boot applications.
+
+# Good — specific trigger + task list
+description: >
+  Use when analyzing or designing system architecture, evaluating technology
+  choices, writing Architecture Decision Records (ADRs), or reasoning about
+  trade-offs across security, performance, scalability, cost, and maintainability.
+  Does not write implementation code — delegates to developer subagents for that.
+```
+
+---
+
+## 3. The system prompt — writing guidelines
+
+The body of the `.md` file is the system prompt. It replaces the default Claude Code
+system prompt when the subagent runs.
+
+### Structure (recommended)
+
+```markdown
+## Role
+
+One paragraph defining who this subagent is and what it is authoritative for.
+
+## What you always do
+
+Bullet list of mandatory behaviors. Things that happen in every interaction.
+
+## What you never do
+
+Explicit prohibitions. Include the reason when non-obvious.
+
+## Output format
+
+Define the exact format the subagent should produce. Consistency matters for
+consumers who parse or post-process outputs.
+
+## Quality criteria
+
+How the subagent evaluates its own output before responding.
+```
+
+### Writing rules
+
+1. **Be opinionated.** A generic prompt produces generic outputs. A capability should
+   have strong opinions: specific output formats, named frameworks, explicit standards.
+   A vague subagent is not useful.
+
+2. **Define output formats explicitly.** If the subagent should produce an ADR, define
+   the exact ADR structure. If it should produce a risk table, define the columns.
+   Don't leave format to interpretation.
+
+3. **Include completeness checks.** Tell the subagent what to verify before it responds.
+   Example: "Before responding, check that you have addressed security, performance, and
+   operational considerations. If the source code is needed and not provided, ask for it."
+
+4. **Name the frameworks it follows.** "Use the C4 model for system diagrams" is better
+   than "describe the system structure". Named frameworks produce consistent, recognizable
+   output.
+
+5. **Specify what it delegates.** If this subagent analyzes but does not implement,
+   say so explicitly. "Do not write implementation code. If code changes are needed,
+   describe them precisely and note which developer subagent should implement them."
+
+6. **Define escalation.** Tell the subagent when to ask for more context before
+   proceeding rather than guessing.
+
+---
+
+## 4. Tool permissions
+
+Use the minimum set of tools needed. This reduces the blast radius of errors and makes
+the capability's scope clear.
+
+### Standard profiles
+
+| Profile | Tools | Use for |
+|---|---|---|
+| Read-only analyst | `Read, Grep, Glob` | Analysis-only roles |
+| Read + report | `Read, Grep, Glob, Write` | Analysis with written output |
+| Full developer | `Read, Edit, Write, Bash, Grep, Glob` | Code writing and execution |
+| Research | `Read, Grep, Glob, WebFetch` | Architecture / design with web lookup |
+
+### Tool reference
+
+| Tool | Purpose | Grant when |
+|---|---|---|
+| `Read` | Read files | Always grant to analysis roles |
+| `Grep` | Search code and content | Always grant to analysis roles |
+| `Glob` | Find files by pattern | Always grant to analysis roles |
+| `Write` | Create new files | When producing deliverables (reports, specs) |
+| `Edit` | Modify existing files | Developer roles only |
+| `Bash` | Run shell commands | Developer and debugger roles; scope carefully |
+| `WebFetch` | Fetch external URLs | Architecture research; risks for sensitive projects |
+| `Agent` | Spawn other subagents | Orchestrator roles only |
+
+---
+
+## 5. Model selection
+
+| Model | Use when |
+|---|---|
+| `sonnet` (default) | Standard analysis, code writing, documentation — use for most capabilities |
+| `opus` | Deep reasoning tasks where answer quality justifies higher cost (rare) |
+| `haiku` | Fast, high-volume, low-complexity tasks |
+
+Default to `sonnet`. Only use `opus` if you can articulate why the task needs deeper
+reasoning and cannot be handled by `sonnet`. Document the reason in a comment in the PR.
+
+---
+
+## 6. Quality criteria before submitting
+
+Before opening a PR, verify:
+
+- [ ] The `name` matches the filename exactly (without `.md`)
+- [ ] The `description` starts with "Use when" or "Use for" and is specific
+- [ ] The system prompt defines a clear role, not a vague helper
+- [ ] Output formats are explicitly defined
+- [ ] The tools list is minimal (not `*` unless genuinely necessary)
+- [ ] No credentials, tokens, or secrets anywhere in the file
+- [ ] At least one example exists in `examples/`
+- [ ] At least two eval scenarios exist in `evals/`
+- [ ] You have tested the subagent locally in at least one real scenario
+
+---
+
+## 7. When to create a new capability vs. modify existing
+
+**Modify existing** when:
+- The capability covers the right domain but is missing a behavior or output format
+- A prompt bug causes consistently wrong output
+- The model should change (e.g. upgrading to a newer Claude version)
+
+**Create new** when:
+- The role is genuinely different (different actor, different output, different tools)
+- The specialization is deep enough that it would fragment an existing capability
+- A project-specific override has proven broadly useful and deserves promotion
+
+**Do not** create a new capability just to add technology-specific details that could
+be provided as context at invocation time. For example, do not create
+`developer-java-spring-microservices.md` if `developer-java-spring.md` can handle
+microservices with the right context in the user message.
+
+---
+
+## 8. Global capability vs. project override
+
+**Global capability** (this catalog):
+- Applies across projects and domains
+- Technology-aware but not domain-aware
+- Contains no project-specific business rules, data models, or team conventions
+
+**Project override** (project's `.claude/agents/`):
+- A copy of a global capability with project-specific additions
+- Adds domain context (e.g. "this service uses CQRS with Axon Framework")
+- Adds team conventions (e.g. "always use our internal logging library X")
+- Should be as thin as possible — add, don't rewrite
+
+When a project override grows large, it's a signal that the global capability needs
+to be more flexible, or that a new specialized capability should be created in this catalog.
