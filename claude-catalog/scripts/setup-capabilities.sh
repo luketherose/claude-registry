@@ -45,16 +45,19 @@ echo -e "  Registry:  ${DIM}$REGISTRY_ROOT${RESET}"
 echo -e "  Progetto:  ${CYAN}$PROJECT_DIR${RESET}"
 echo ""
 
-# ── Leggi catalog.json ────────────────────────────────────────────────────────
-CAPABILITIES_JSON=$(python3 -c "
+# ── Leggi catalog.json (scrivi su file temporaneo per evitare quoting issues) ──
+CATALOG_TMP=$(mktemp /tmp/claude-catalog-XXXXXX.json)
+python3 -c "
 import json
 with open('$CATALOG') as f:
     data = json.load(f)
 caps = [c for c in data.get('capabilities', []) if not any(k.startswith('_') for k in c)]
-print(json.dumps(caps))
-")
+with open('$CATALOG_TMP', 'w') as out:
+    json.dump(caps, out)
+"
+trap "rm -f $CATALOG_TMP" EXIT
 
-N=$(echo "$CAPABILITIES_JSON" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
+N=$(python3 -c "import json; print(len(json.load(open('$CATALOG_TMP'))))")
 
 if [[ "$N" -eq 0 ]]; then
   echo -e "${YELLOW}Nessuna capability trovata nel catalog.${RESET}"
@@ -68,13 +71,12 @@ echo -e "  ${DIM}Num  Tier    Nome                           Descrizione${RESET}
 echo -e "  ${DIM}───  ──────  ─────────────────────────────  ────────────────────────────────────────${RESET}"
 
 python3 -c "
-import json, sys
-caps = json.loads('''$CAPABILITIES_JSON''')
+import json
+caps = json.load(open('$CATALOG_TMP'))
 for i, c in enumerate(caps, 1):
     tier = c.get('tier','?')
     name = c.get('name','?')
     desc = c.get('description','')
-    # Flatten multi-line description
     desc = ' '.join(desc.split())[:55]
     tier_color = '\033[0;32m' if tier == 'stable' else '\033[1;33m'
     reset = '\033[0m'
@@ -132,28 +134,35 @@ if [[ "$SELECTION" == "all" ]]; then
   while IFS='|' read -r name tier; do
     [[ "$tier" == "stable" ]] && install_capability "$name" "$tier"
   done < <(python3 -c "
-import json, sys
-caps = json.loads('''$CAPABILITIES_JSON''')
+import json
+caps = json.load(open('$CATALOG_TMP'))
 for c in caps:
     print(c['name'] + '|' + c['tier'])
 ")
 else
-  declare -A CAP_MAP
-  eval "$(python3 -c "
-import json, sys
-caps = json.loads('''$CAPABILITIES_JSON''')
+  # Scrivi la mappa num→name|tier su un file temporaneo
+  CAPMAP_TMP=$(mktemp /tmp/claude-capmap-XXXXXX.sh)
+  python3 -c "
+import json
+caps = json.load(open('$CATALOG_TMP'))
 for i, c in enumerate(caps, 1):
-    print(f'CAP_MAP[{i}]=\"{c[\"name\"]}|{c[\"tier\"]}\"')
-")"
+    name = c['name'].replace(\"'\", '')
+    tier = c['tier'].replace(\"'\", '')
+    print(f\"CAP_{i}_NAME='{name}'\")
+    print(f\"CAP_{i}_TIER='{tier}'\")
+print(f'CAP_TOTAL={len(caps)}')
+" > "$CAPMAP_TMP"
+  # shellcheck source=/dev/null
+  source "$CAPMAP_TMP"
+  rm -f "$CAPMAP_TMP"
 
   for num in $SELECTION; do
-    if [[ -v "CAP_MAP[$num]" ]]; then
-      entry="${CAP_MAP[$num]}"
-      name="${entry%|*}"
-      tier="${entry#*|}"
-      install_capability "$name" "$tier"
+    name_var="CAP_${num}_NAME"
+    tier_var="CAP_${num}_TIER"
+    if [[ -n "${!name_var:-}" ]]; then
+      install_capability "${!name_var}" "${!tier_var}"
     else
-      echo -e "  ${RED}✗${RESET} Numero non valido: $num"
+      echo -e "  ${RED}✗${RESET} Numero non valido: $num (max: $CAP_TOTAL)"
     fi
   done
 fi
