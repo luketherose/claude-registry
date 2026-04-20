@@ -28,53 +28,16 @@ Your job is to read, synthesize, and write.
 
 ---
 
-## Brand Standard
+## Skills
 
-Always apply the Accenture brand from `claude-catalog/policies/accenture-branding.md`.
+Before generating any output, invoke:
 
-**For PDF (HTML → Chrome headless) — use this CSS structure:**
+- **`accenture-branding`** — color palette, CSS template for HTML→PDF, python-docx
+  style map for Word documents, typography rules, footer format.
+  Invoke with: `"Provide all brand constants and CSS/docx styles for a [PDF|DOCX] document"`
 
-```css
-:root {
-  --acc-purple:      #A100FF;
-  --acc-purple-dark: #7500C0;
-  --acc-purple-dk2:  #460073;
-  --acc-black:       #000000;
-  --acc-white:       #FFFFFF;
-  --acc-gray:        #96968C;
-  --acc-gray-light:  #E6E6DC;
-  --acc-purple-lt:   #BE82FF;
-  --acc-purple-lt2:  #DCAFFF;
-}
-body { font-family: Arial, sans-serif; color: #000000; margin: 0; padding: 0; }
-.cover { background: #000000; color: #fff; padding: 80px; border-left: 8px solid #A100FF; min-height: 100vh; box-sizing: border-box; }
-.cover h1 { font-family: 'Palatino Linotype', Georgia, serif; font-size: 48pt; margin: 0 0 16px; }
-.cover .subtitle { font-size: 20pt; color: #DCAFFF; }
-.cover .meta { font-size: 12pt; color: #96968C; margin-top: 40px; }
-.section { padding: 48px 80px; page-break-before: always; }
-h2 { font-size: 22pt; font-weight: bold; border-bottom: 3px solid #A100FF; padding-bottom: 8px; margin-bottom: 24px; }
-h3 { font-size: 15pt; color: #7500C0; margin-top: 24px; }
-h4 { font-size: 12pt; color: #460073; margin-top: 16px; }
-p, li { font-size: 11pt; line-height: 1.6; }
-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 10pt; }
-th { background: #A100FF; color: #fff; font-weight: bold; padding: 8px 12px; text-align: left; }
-td { padding: 8px 12px; border-bottom: 1px solid #E6E6DC; vertical-align: top; }
-tr:nth-child(even) td { background: #F9F9F6; }
-code, pre { font-family: 'Courier New', monospace; background: #F4F0FF; border-left: 3px solid #A100FF; padding: 2px 6px; font-size: 10pt; }
-pre { display: block; padding: 12px 16px; white-space: pre-wrap; }
-.callout { border-left: 4px solid #A100FF; background: #F4F0FF; padding: 12px 16px; margin: 16px 0; }
-.footer-line { font-size: 9pt; color: #96968C; border-top: 1px solid #E6E6DC; padding: 16px 80px; text-align: center; }
-```
-
-**For Word (.docx) — python-docx style map:**
-- Heading 1: Arial Bold 18pt, color `#000000`, bottom border `#A100FF` 1pt
-- Heading 2: Arial Bold 14pt, color `#7500C0`
-- Heading 3: Arial Bold 11pt, color `#460073`
-- Normal: Arial Regular 11pt, color `#000000`, 1.15 line spacing
-- Table header: fill `#A100FF`, text White Bold
-- Table body: alternating `#FFFFFF` / `#E6E6DC`
-- Code: Courier New 10pt, background `#F4F0FF`
-- Footer: Arial 9pt, Gray, "© [Year] Accenture. All rights reserved."
+Use the returned CSS verbatim in the HTML file and the returned style map for python-docx.
+Do not hardcode brand values inline.
 
 ---
 

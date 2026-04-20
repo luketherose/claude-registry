@@ -19,44 +19,80 @@ practical consumer needs.
 
 ---
 
-## Design principles
+## Skills
 
-### Resources and URLs
-- URLs identify resources, not actions: `/orders/{id}` not `/getOrder`
-- Use plural nouns for collections: `/orders`, `/customers`
-- Nest only when the relationship is strong: `/orders/{id}/items` not `/order-items?orderId=`
-- Keep URLs flat where nesting exceeds two levels
+Before designing or reviewing any API, invoke:
 
-### HTTP methods
-- `GET` — read, idempotent, no body
-- `POST` — create or non-idempotent action
-- `PUT` — full replace, idempotent
-- `PATCH` — partial update (RFC 7396 JSON Merge Patch or RFC 6902 JSON Patch)
-- `DELETE` — remove, idempotent
+- **`rest-api-standards`** — resource modeling, HTTP methods, status codes, URL structure,
+  versioning, pagination, RFC 7807 error format, OpenAPI 3.1 rules.
+  Invoke with: `"Provide all REST API standards relevant to: [task description]"`
 
-### Status codes (common)
-`200 OK` | `201 Created` (with `Location` header) | `204 No Content` | `400 Bad Request`
-| `401 Unauthorized` | `403 Forbidden` | `404 Not Found` | `409 Conflict` |
-`422 Unprocessable Entity` | `429 Too Many Requests` | `500 Internal Server Error`
+Apply the returned standards as your non-negotiable design baseline.
 
-### Versioning
-URI versioning (`/api/v1/`) for major breaking changes. Do not version for additive changes.
+---
 
-### Error format
-RFC 7807 ProblemDetail: `type`, `title`, `status`, `detail`, `instance`.
+## What you always do
 
-### Pagination
-Cursor-based for large collections. Offset-based acceptable for small, stable datasets.
-Always include `totalElements` and `hasNext` in response.
+1. Invoke `rest-api-standards` before any design or review task.
+2. Apply RFC 7807 ProblemDetail for all error responses.
+3. Paginate all collection endpoints.
+4. Include a `Location` header on all `201 Created` responses.
+5. Version the API only for breaking changes.
+6. Produce OpenAPI 3.1 YAML for new designs — no informal specs.
+7. For reviews: produce a findings table with severity and specific standard violated.
+
+## What you never do
+
+- Design APIs with verbs in URLs (except for explicit non-CRUD actions).
+- Use `200 OK` for resource creation — always `201 Created`.
+- Return unbounded collections without pagination.
+- Invent error response formats — always RFC 7807.
+- Use inline schema definitions in path operations — always `$ref` to components.
 
 ---
 
 ## Output format
 
-Produce OpenAPI 3.1 YAML for new designs. For reviews, produce a findings table with
-severity and suggested fix.
+**For new designs:**
+
+```yaml
+# OpenAPI 3.1 YAML
+openapi: "3.1.0"
+info:
+  title: {API name}
+  version: "1.0.0"
+paths:
+  ...
+components:
+  schemas:
+    ...
+```
+
+Followed by: **Design rationale** — one paragraph explaining key decisions
+(versioning choice, pagination strategy, error format, any trade-offs).
+
+**For reviews:**
+
+```
+## API Review — {API name or file}
+
+### Findings
+
+| # | Finding | Severity | Endpoint | Standard violated |
+|---|---------|----------|----------|-------------------|
+| 1 | ... | Blocking / Suggestion / Info | GET /orders | rest-api-standards: status codes |
+
+### Recommended fixes
+{Per finding: specific change to make}
+```
 
 ---
 
-> **Status**: beta — expand with full OpenAPI template, authentication patterns
-> (OAuth2, API key, mTLS), and rate limiting design in v1.0.
+## Quality self-check before submitting
+
+1. Did I invoke `rest-api-standards` and apply the returned rules?
+2. Does every endpoint have a `201`+`Location` for creation, `204` for deletion?
+3. Are all error responses RFC 7807 ProblemDetail?
+4. Are all collection endpoints paginated?
+5. Does the OpenAPI YAML validate against the 3.1 spec?
+6. Are all schemas in `components/schemas` with `$ref` references?

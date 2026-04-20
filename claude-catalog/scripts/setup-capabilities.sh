@@ -51,7 +51,10 @@ python3 -c "
 import json
 with open('$CATALOG') as f:
     data = json.load(f)
-caps = [c for c in data.get('capabilities', []) if not any(k.startswith('_') for k in c)]
+# Escludi campi interni e le skill (installate come dipendenze, non come scelte primarie)
+caps = [c for c in data.get('capabilities', [])
+        if not any(k.startswith('_') for k in c)
+        and c.get('type', 'agent') == 'agent']
 with open('$CATALOG_TMP', 'w') as out:
     json.dump(caps, out)
 "
@@ -78,9 +81,11 @@ for i, c in enumerate(caps, 1):
     name = c.get('name','?')
     desc = c.get('description','')
     desc = ' '.join(desc.split())[:55]
+    deps = c.get('dependencies', [])
     tier_color = '\033[0;32m' if tier == 'stable' else '\033[1;33m'
     reset = '\033[0m'
-    print(f'  {i:3}  {tier_color}{tier:<6}{reset}  {name:<29}  {desc}...')
+    dep_str = f' \033[2m[uses: {chr(44).join(deps)}]\033[0m' if deps else ''
+    print(f'  {i:3}  {tier_color}{tier:<6}{reset}  {name:<29}  {desc}...{dep_str}')
 "
 
 echo ""
@@ -111,8 +116,16 @@ echo -e "${BOLD}Installazione:${RESET}"
 echo ""
 
 install_capability() {
-  local name="$1" tier="$2"
-  local src="$MARKETPLACE_ROOT/$tier/$name.md"
+  local name="$1" tier="$2" is_dep="${3:-}"
+  local src
+
+  # Skill: cercano in marketplace/skills/, agenti in marketplace/{tier}/
+  if [[ "$tier" == "skill" ]]; then
+    src="$MARKETPLACE_ROOT/skills/$name.md"
+  else
+    src="$MARKETPLACE_ROOT/$tier/$name.md"
+  fi
+
   local dst="$AGENTS_DIR/$name.md"
 
   if [[ ! -f "$src" ]]; then
@@ -121,13 +134,51 @@ install_capability() {
   fi
 
   if [[ -f "$dst" ]]; then
-    echo -e "  ${YELLOW}↺${RESET} $name — già presente, sovrascritto"
+    [[ -z "$is_dep" ]] && echo -e "  ${YELLOW}↺${RESET} $name — già presente, sovrascritto" || true
   else
-    echo -e "  ${GREEN}✓${RESET} $name ${DIM}[$tier]${RESET}"
+    if [[ -n "$is_dep" ]]; then
+      echo -e "  ${CYAN}↳${RESET} $name ${DIM}[skill — dipendenza]${RESET}"
+    else
+      echo -e "  ${GREEN}✓${RESET} $name ${DIM}[$tier]${RESET}"
+    fi
   fi
 
   cp "$src" "$dst"
   INSTALLED+=("$name")
+
+  # ── Risolvi dipendenze ───────────────────────────────────────────────────────
+  python3 - "$name" "$CATALOG" <<'DEPEOF'
+import json, sys
+name = sys.argv[1]
+catalog_path = sys.argv[2]
+all_caps = json.load(open(catalog_path)).get('capabilities', [])
+cap = next((c for c in all_caps if c.get('name') == name), None)
+if cap:
+    for dep in cap.get('dependencies', []):
+        dep_cap = next((c for c in all_caps if c.get('name') == dep), None)
+        if dep_cap:
+            tier = dep_cap.get('tier', 'skill') if dep_cap.get('type') == 'skill' else dep_cap.get('tier', 'beta')
+            print(f"{dep}|{tier}")
+DEPEOF
+  while IFS='|' read -r dep_name dep_tier; do
+    [[ -z "$dep_name" ]] && continue
+    if [[ ! -f "$AGENTS_DIR/$dep_name.md" ]]; then
+      install_capability "$dep_name" "$dep_tier" "dep"
+    fi
+  done < <(python3 - "$name" "$CATALOG" <<'DEPEOF2'
+import json, sys
+name = sys.argv[1]
+catalog_path = sys.argv[2]
+all_caps = json.load(open(catalog_path)).get('capabilities', [])
+cap = next((c for c in all_caps if c.get('name') == name), None)
+if cap:
+    for dep in cap.get('dependencies', []):
+        dep_cap = next((c for c in all_caps if c.get('name') == dep), None)
+        if dep_cap:
+            t = 'skill' if dep_cap.get('type') == 'skill' else dep_cap.get('tier', 'beta')
+            print(f"{dep}|{t}")
+DEPEOF2
+)
 }
 
 if [[ "$SELECTION" == "all" ]]; then

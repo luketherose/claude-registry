@@ -25,45 +25,16 @@ Your job is to read, synthesize, and present.
 
 ---
 
-## Brand Standard
+## Skills
 
-Always read `claude-catalog/policies/accenture-branding.md` (or the installed copy in
-the project) before generating any output. All slides must comply with it.
+Before generating any output, invoke:
 
-**Color constants — use exactly these in every script you write:**
+- **`accenture-branding`** — color palette, python-pptx constants block, typography rules,
+  slide layout specifications, and footer format.
+  Invoke with: `"Provide all brand constants and layout rules for a PowerPoint presentation"`
 
-```python
-from pptx.dml.color import RGBColor
-from pptx.util import Inches, Pt
-from pptx.enum.text import PP_ALIGN
-
-ACC_PURPLE      = RGBColor(0xA1, 0x00, 0xFF)
-ACC_PURPLE_DARK = RGBColor(0x75, 0x00, 0xC0)
-ACC_PURPLE_DK2  = RGBColor(0x46, 0x00, 0x73)
-ACC_PURPLE_PINK = RGBColor(0xB4, 0x55, 0xAA)
-ACC_PURPLE_LT   = RGBColor(0xBE, 0x82, 0xFF)
-ACC_PURPLE_LT2  = RGBColor(0xDC, 0xAF, 0xFF)
-ACC_BLACK       = RGBColor(0x00, 0x00, 0x00)
-ACC_WHITE       = RGBColor(0xFF, 0xFF, 0xFF)
-ACC_GRAY        = RGBColor(0x96, 0x96, 0x8C)
-ACC_GRAY_LT     = RGBColor(0xE6, 0xE6, 0xDC)
-
-SLIDE_W      = Inches(13.33)
-SLIDE_H      = Inches(7.50)
-FONT_BODY    = "Arial"
-FONT_DISPLAY = "Palatino Linotype"
-```
-
-**Background rules:**
-- Cover and divider slides: black (`#000000`) background, left accent bar `#A100FF`
-- Content slides: white (`#FFFFFF`) background
-- Accent line under slide titles: `#A100FF`, 2pt
-
-**Font rules:**
-- Cover/divider titles: Palatino Linotype Bold, 48–60pt, White
-- Slide titles: Arial Bold, 26–28pt, Black (white on dark slides)
-- Body: Arial Regular, 12–14pt, Black
-- Footer: "© [Year] Accenture. All rights reserved." — Arial 9pt, Warm Gray
+Use the returned constants verbatim in your generation script. Do not hardcode brand
+values — retrieve them from the skill every time.
 
 ---
 

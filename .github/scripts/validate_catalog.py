@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Validates Claude Code subagent files in claude-catalog/agents/.
+Validates Claude Code subagent files in claude-catalog/agents/ and claude-catalog/skills/.
 
 Exit codes:
   0 — no errors (warnings may be present)
@@ -32,6 +32,9 @@ KNOWN_FRONTMATTER_KEYS = {
     "skills", "mcpServers", "hooks", "memory",
 }
 
+# Tools that skill agents should not have (they are knowledge providers, not actors)
+SKILL_DISALLOWED_TOOLS = {"Edit", "Write", "Bash", "Agent"}
+
 
 @dataclass
 class Finding:
@@ -51,7 +54,8 @@ def parse_frontmatter(content: str):
         return {"_parse_error": str(exc)}, content
 
 
-def validate_agent_file(filepath: Path) -> list[Finding]:
+def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Finding]:
+    """Validate a single subagent or skill file."""
     findings = []
     content = filepath.read_text(encoding="utf-8")
     fm, body = parse_frontmatter(content)
@@ -99,13 +103,28 @@ def validate_agent_file(filepath: Path) -> list[Finding]:
                 "A precise description is critical for automatic delegation."))
 
     # --- tools ---
+    tools_used = set()
     if "tools" in fm:
         raw = str(fm["tools"])
         for tool in [t.strip() for t in raw.split(",") if t.strip()]:
+            tools_used.add(tool)
             if tool not in KNOWN_TOOLS:
                 findings.append(Finding("warning", str(filepath),
                     f"Unknown tool `{tool}` in `tools` field. "
                     f"Known tools: {', '.join(sorted(KNOWN_TOOLS))}"))
+
+    # --- skill-specific tool checks ---
+    if file_type == "skill":
+        bad_tools = tools_used & SKILL_DISALLOWED_TOOLS
+        if bad_tools:
+            findings.append(Finding("warning", str(filepath),
+                f"Skill has tools that knowledge providers should not need: "
+                f"{', '.join(sorted(bad_tools))}. "
+                "Skills should only use `Read`. Add a comment in the PR explaining why."))
+        if "Agent" in tools_used:
+            findings.append(Finding("error", str(filepath),
+                "Skill uses the `Agent` tool. Skills must not spawn subagents — "
+                "they are leaf knowledge providers."))
 
     # --- model ---
     if "model" in fm:
@@ -114,6 +133,10 @@ def validate_agent_file(filepath: Path) -> list[Finding]:
             findings.append(Finding("warning", str(filepath),
                 f"`model: {model}` is not a recognized shorthand. "
                 f"Expected one of: {', '.join(sorted(VALID_MODELS))}, or a full claude-* model ID."))
+        if file_type == "skill" and model in ("sonnet", "opus"):
+            findings.append(Finding("warning", str(filepath),
+                f"Skill uses `model: {model}`. Skills are knowledge retrieval — "
+                "`model: haiku` is recommended unless reasoning depth requires more."))
 
     # --- color ---
     if "color" in fm:
@@ -150,21 +173,36 @@ def validate_agent_file(filepath: Path) -> list[Finding]:
     return findings
 
 
-def check_supporting_files(agents_dir: Path, catalog_root: Path) -> list[Finding]:
+def check_supporting_files(catalog_root: Path) -> list[Finding]:
     findings = []
     examples_dir = catalog_root / "examples"
     evals_dir = catalog_root / "evals"
+    agents_dir = catalog_root / "agents"
+    skills_dir = catalog_root / "skills"
 
     for agent_file in sorted(agents_dir.glob("*.md")):
         name = agent_file.stem
         if not (examples_dir / f"{name}-example.md").exists():
             findings.append(Finding("warning", f"examples/{name}-example.md",
-                f"No example file for capability `{name}`. "
+                f"No example file for agent `{name}`. "
                 "Add `examples/{name}-example.md` before promoting to stable."))
         if not (evals_dir / f"{name}-eval.md").exists():
             findings.append(Finding("warning", f"evals/{name}-eval.md",
-                f"No eval file for capability `{name}`. "
+                f"No eval file for agent `{name}`. "
                 "Add `evals/{name}-eval.md` before promoting to stable."))
+
+    if skills_dir.exists():
+        for skill_file in sorted(skills_dir.glob("*.md")):
+            name = skill_file.stem
+            if not (examples_dir / f"{name}-example.md").exists():
+                findings.append(Finding("warning", f"examples/{name}-example.md",
+                    f"No example file for skill `{name}`. "
+                    "Consider adding `examples/{name}-example.md`."))
+            if not (evals_dir / f"{name}-eval.md").exists():
+                findings.append(Finding("warning", f"evals/{name}-eval.md",
+                    f"No eval file for skill `{name}`. "
+                    "Consider adding `evals/{name}-eval.md`."))
+
     return findings
 
 
@@ -233,6 +271,7 @@ def main():
     repo_root = Path(__file__).resolve().parent.parent.parent
     catalog_root = repo_root / "claude-catalog"
     agents_dir = catalog_root / "agents"
+    skills_dir = catalog_root / "skills"
 
     all_findings: list[Finding] = []
     validated_files: list[str] = []
@@ -240,18 +279,24 @@ def main():
     if args.changed_files:
         for path_str in args.changed_files:
             filepath = repo_root / path_str
-            if (filepath.exists()
-                    and filepath.suffix == ".md"
-                    and "agents" in filepath.parts):
-                all_findings.extend(validate_agent_file(filepath))
-                validated_files.append(path_str)
+            if filepath.exists() and filepath.suffix == ".md":
+                if "agents" in filepath.parts:
+                    all_findings.extend(validate_agent_file(filepath, file_type="agent"))
+                    validated_files.append(path_str)
+                elif "skills" in filepath.parts:
+                    all_findings.extend(validate_agent_file(filepath, file_type="skill"))
+                    validated_files.append(path_str)
     else:
         for filepath in sorted(agents_dir.glob("*.md")):
-            all_findings.extend(validate_agent_file(filepath))
+            all_findings.extend(validate_agent_file(filepath, file_type="agent"))
             validated_files.append(str(filepath.relative_to(repo_root)))
+        if skills_dir.exists():
+            for filepath in sorted(skills_dir.glob("*.md")):
+                all_findings.extend(validate_agent_file(filepath, file_type="skill"))
+                validated_files.append(str(filepath.relative_to(repo_root)))
 
     all_findings.extend(check_changelog(catalog_root))
-    all_findings.extend(check_supporting_files(agents_dir, catalog_root))
+    all_findings.extend(check_supporting_files(catalog_root))
 
     comment = format_comment(all_findings, validated_files)
 

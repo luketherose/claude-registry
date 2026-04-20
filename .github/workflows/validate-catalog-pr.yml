@@ -29,14 +29,14 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml
 
-      - name: Get changed agent files
+      - name: Get changed agent and skill files
         id: changed
         run: |
           FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD \
-            | grep '^claude-catalog/agents/.*\.md$' \
+            | grep -E '^claude-catalog/(agents|skills)/.*\.md$' \
             | tr '\n' ' ')
           echo "files=$FILES" >> "$GITHUB_OUTPUT"
-          echo "Changed agent files: $FILES"
+          echo "Changed files: $FILES"
 
       - name: Run validation
         id: validate
