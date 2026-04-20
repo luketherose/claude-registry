@@ -3,8 +3,9 @@
 # Scaffolda una nuova capability nel claude-catalog e crea il branch git.
 #
 # Utilizzo:
-#   ./new-capability.sh                         # chiede il nome interattivamente
-#   ./new-capability.sh api-security-reviewer   # usa il nome fornito
+#   ./new-capability.sh                           # chiede il nome interattivamente
+#   ./new-capability.sh api-security-reviewer     # agente con il nome fornito
+#   ./new-capability.sh --type skill skill-name   # skill con il nome fornito
 
 set -euo pipefail
 
@@ -20,19 +21,48 @@ CATALOG_ROOT="$REGISTRY_ROOT/claude-catalog"
 cd "$REGISTRY_ROOT"
 
 # ── Input ────────────────────────────────────────────────────────────────────
-NAME="${1:-}"
+TYPE="agent"
+NAME=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --type)
+      TYPE="${2:-}"
+      shift 2
+      ;;
+    *)
+      NAME="$1"
+      shift
+      ;;
+  esac
+done
+
+if [[ "$TYPE" != "agent" && "$TYPE" != "skill" ]]; then
+  echo -e "${RED}Errore:${RESET} --type deve essere 'agent' o 'skill'. Ricevuto: '$TYPE'"
+  exit 1
+fi
 
 echo ""
-echo -e "${BOLD}╔══════════════════════════════════════════════╗${RESET}"
-echo -e "${BOLD}║    Claude Registry — Nuova Capability        ║${RESET}"
-echo -e "${BOLD}╚══════════════════════════════════════════════╝${RESET}"
+if [[ "$TYPE" == "skill" ]]; then
+  echo -e "${BOLD}╔══════════════════════════════════════════════╗${RESET}"
+  echo -e "${BOLD}║    Claude Registry — Nuova Skill             ║${RESET}"
+  echo -e "${BOLD}╚══════════════════════════════════════════════╝${RESET}"
+else
+  echo -e "${BOLD}╔══════════════════════════════════════════════╗${RESET}"
+  echo -e "${BOLD}║    Claude Registry — Nuova Capability        ║${RESET}"
+  echo -e "${BOLD}╚══════════════════════════════════════════════╝${RESET}"
+fi
 echo ""
 
 if [[ -z "$NAME" ]]; then
   echo -e "  Il nome deve essere: ${CYAN}lowercase${RESET}, solo lettere e trattini."
-  echo -e "  Esempi: ${DIM}api-security-reviewer, data-migration-specialist, event-designer${RESET}"
+  if [[ "$TYPE" == "skill" ]]; then
+    echo -e "  Esempi: ${DIM}java-spring-standards, rest-api-standards, brand-guidelines${RESET}"
+  else
+    echo -e "  Esempi: ${DIM}api-security-reviewer, data-migration-specialist, event-designer${RESET}"
+  fi
   echo ""
-  read -rp "  Nome della nuova capability: " NAME
+  read -rp "  Nome: " NAME
 fi
 
 # ── Validazione nome ──────────────────────────────────────────────────────────
@@ -42,21 +72,23 @@ if ! echo "$NAME" | grep -qE '^[a-z][a-z0-9-]+$'; then
   exit 1
 fi
 
-if [[ -f "$CATALOG_ROOT/agents/$NAME.md" ]]; then
-  echo -e "${YELLOW}La capability '$NAME' esiste già.${RESET}"
+TARGET_DIR="$CATALOG_ROOT/agents"
+[[ "$TYPE" == "skill" ]] && TARGET_DIR="$CATALOG_ROOT/skills"
+
+if [[ -f "$TARGET_DIR/$NAME.md" ]]; then
+  echo -e "${YELLOW}La capability '$NAME' esiste già in ${TARGET_DIR}.${RESET}"
   echo ""
-  echo -e "  Per migliorarla, usa invece:"
-  echo -e "    ${CYAN}./improve-capability.sh $NAME${RESET}"
-  echo -e "  oppure edita direttamente:"
-  echo -e "    ${CYAN}\$EDITOR $CATALOG_ROOT/agents/$NAME.md${RESET}"
+  echo -e "  Edita direttamente:"
+  echo -e "    ${CYAN}\$EDITOR $TARGET_DIR/$NAME.md${RESET}"
   exit 1
 fi
 
 BRANCH_NAME="add/$NAME"
 
-echo -e "  Capability: ${CYAN}$NAME${RESET}"
+echo -e "  Tipo:       ${CYAN}$TYPE${RESET}"
+echo -e "  Nome:       ${CYAN}$NAME${RESET}"
 echo -e "  Branch:     ${CYAN}$BRANCH_NAME${RESET}"
-echo -e "  Registry:   ${DIM}$REGISTRY_ROOT${RESET}"
+echo -e "  Directory:  ${DIM}$TARGET_DIR${RESET}"
 echo ""
 
 # ── Verifica stato git ────────────────────────────────────────────────────────
@@ -78,9 +110,45 @@ echo ""
 echo -e "${BOLD}Creazione file:${RESET}"
 echo ""
 
-# ── Crea agent file ───────────────────────────────────────────────────────────
-AGENT_FILE="$CATALOG_ROOT/agents/$NAME.md"
-cat > "$AGENT_FILE" <<AGENTEOF
+# ── Crea capability file ──────────────────────────────────────────────────────
+CAPABILITY_FILE="$TARGET_DIR/$NAME.md"
+
+if [[ "$TYPE" == "skill" ]]; then
+  mkdir -p "$TARGET_DIR"
+  cat > "$CAPABILITY_FILE" <<SKILLEOF
+---
+name: $NAME
+description: >
+  Use to retrieve TODO — descrivi i contenuti della skill in modo preciso.
+  Inizia con "Use to retrieve" e elenca i topic coperti.
+tools: Read
+model: haiku
+color: cyan
+---
+
+## Role
+
+You are a knowledge provider for [domain] standards. When invoked, return the
+complete and authoritative standards relevant to the caller's task.
+
+Do not take any actions. Do not write or modify files. Return knowledge only.
+
+---
+
+## [Topic 1]
+
+TODO — contenuto della prima sezione di standard.
+
+---
+
+## [Topic 2]
+
+TODO — contenuto della seconda sezione.
+SKILLEOF
+
+  echo -e "  ${GREEN}✓${RESET} $CAPABILITY_FILE"
+else
+  cat > "$CAPABILITY_FILE" <<AGENTEOF
 ---
 name: $NAME
 description: >
@@ -140,7 +208,8 @@ Prima di rispondere, verifica:
 3. Ogni finding è ancorato a evidence specifica?
 AGENTEOF
 
-echo -e "  ${GREEN}✓${RESET} $AGENT_FILE"
+  echo -e "  ${GREEN}✓${RESET} $CAPABILITY_FILE"
+fi
 
 # ── Crea example file ─────────────────────────────────────────────────────────
 EXAMPLE_FILE="$CATALOG_ROOT/examples/$NAME-example.md"
@@ -271,13 +340,13 @@ fi
 # ── Riepilogo e istruzioni ────────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}${GREEN}══════════════════════════════════════════════${RESET}"
-echo -e "${BOLD}${GREEN}  Scaffolding completato per: $NAME${RESET}"
+echo -e "${BOLD}${GREEN}  Scaffolding completato per: $NAME ($TYPE)${RESET}"
 echo -e "${BOLD}${GREEN}══════════════════════════════════════════════${RESET}"
 echo ""
 echo -e "${BOLD}Prossimi passi:${RESET}"
 echo ""
-echo -e "  ${BOLD}1. Scrivi il system prompt${RESET}"
-echo -e "     ${CYAN}\$EDITOR $AGENT_FILE${RESET}"
+echo -e "  ${BOLD}1. Scrivi il contenuto${RESET}"
+echo -e "     ${CYAN}\$EDITOR $CAPABILITY_FILE${RESET}"
 echo -e "     ${DIM}Sostituisci tutti i TODO con contenuto reale.${RESET}"
 echo -e "     ${DIM}Leggi claude-catalog/how-to-write-a-capability.md per la guida completa.${RESET}"
 echo ""
@@ -286,14 +355,21 @@ echo -e "     ${CYAN}\$EDITOR $EVAL_FILE${RESET}"
 echo -e "     ${DIM}Almeno 2 scenari reali prima di aprire la PR.${RESET}"
 echo ""
 echo -e "  ${BOLD}3. Testa localmente${RESET}"
-echo -e "     ${DIM}cp $AGENT_FILE /path/to/project/.claude/agents/${RESET}"
+echo -e "     ${DIM}cp $CAPABILITY_FILE /path/to/project/.claude/agents/${RESET}"
 echo -e "     ${DIM}Apri Claude Code e prova il subagent con scenari reali.${RESET}"
 echo ""
+if [[ "$TYPE" == "skill" ]]; then
+  echo -e "  ${BOLD}3b. Aggiorna catalog.json${RESET}"
+  echo -e "     ${DIM}Aggiungi la voce skill in claude-marketplace/catalog.json.${RESET}"
+  echo -e "     ${DIM}Aggiungi '$NAME' nelle 'dependencies' degli agenti che la useranno.${RESET}"
+  echo -e "     ${DIM}Aggiungi una sezione '## Skills' agli agenti che la usano.${RESET}"
+  echo ""
+fi
 echo -e "  ${BOLD}4. Apri la Pull Request${RESET}"
 echo -e "     ${DIM}git add -A${RESET}"
-echo -e "     ${DIM}git commit -m 'add: $NAME capability (draft)'${RESET}"
+echo -e "     ${DIM}git commit -m 'add: $NAME $TYPE (draft)'${RESET}"
 echo -e "     ${DIM}git push origin $BRANCH_NAME${RESET}"
-echo -e "     ${DIM}gh pr create --title 'add: $NAME' --body 'Aggiunge la capability $NAME'${RESET}"
+echo -e "     ${DIM}gh pr create --title 'add: $NAME' --body 'Aggiunge la $TYPE $NAME'${RESET}"
 echo ""
 echo -e "  ${BOLD}5. Rispondi alla review automatica${RESET}"
 echo -e "     ${DIM}GitHub Actions posterà un commento con eventuali errori da correggere.${RESET}"

@@ -6,7 +6,7 @@ This guide is for developers who want to start using shared capabilities in thei
 
 ## Step 1: Find the capability you need
 
-Browse `../claude-marketplace/catalog.json` or the `claude-marketplace/stable/` directory.
+Browse `../claude-marketplace/catalog.json` or the `claude-marketplace/` directory.
 
 Common capabilities and when to use them:
 
@@ -22,26 +22,54 @@ Common capabilities and when to use them:
 | `debugger` | Diagnosing a bug from error message + code |
 | `api-designer` | Designing or reviewing REST API contracts |
 | `documentation-writer` | Writing READMEs, runbooks, API guides |
+| `presentation-creator` | Creating Accenture-branded PowerPoint presentations |
+| `document-creator` | Creating Accenture-branded PDF or Word documents |
 
 ---
 
-## Step 2: Copy the subagent file to your project
+## Step 2: Install with the setup script (recommended)
+
+The easiest way to install capabilities is the interactive setup script:
+
+```bash
+./claude-catalog/scripts/setup-capabilities.sh /path/to/your-project
+```
+
+The script:
+- Shows the full capability list with tiers
+- Lets you select by number, or type `all` to install all stable capabilities
+- **Automatically installs skill dependencies** — if you select `developer-java-spring`,
+  the script also copies `java-spring-standards`, `testing-standards`, and
+  `rest-api-standards` into your project's `.claude/agents/`
+- Updates your project's `.claude/settings.json` with the `Agent(name)` permission rules
+
+### What are skills?
+
+Skills are shared knowledge providers used by multiple agents. You do not invoke them
+directly — agents call them internally to load standards and conventions (e.g. Accenture
+branding, Java/Spring patterns, REST design rules). You do not need to think about skills
+when installing: the script handles them automatically.
+
+---
+
+## Step 3: Manual copy (alternative)
+
+If you prefer to copy files manually:
 
 ```bash
 mkdir -p .claude/agents
 cp path/to/claude-marketplace/stable/software-architect.md .claude/agents/
 ```
 
-The `.claude/agents/` directory is the official Claude Code location for project-scoped
-subagents. Any `.md` file there with valid frontmatter is automatically available to
-Claude Code when you work in that project.
+Check `catalog.json` for any `"dependencies"` listed for the capability you install,
+and copy those skill files from `claude-marketplace/skills/` as well.
 
 ---
 
-## Step 3: Verify it works
+## Step 4: Verify it works
 
 Open Claude Code in your project. Type `/agents` to see the list of available subagents.
-Your newly added capability should appear there.
+Your newly added capabilities should appear there.
 
 Alternatively, start a task that naturally triggers the capability. For example, ask
 "Can you review the architecture of this service?" — Claude Code should delegate to
@@ -49,9 +77,9 @@ Alternatively, start a task that naturally triggers the capability. For example,
 
 ---
 
-## Step 4: Configure settings (optional)
+## Step 5: Configure settings (optional)
 
-To allow Claude Code to use these subagents without prompting for permission each time,
+To allow Claude Code to use subagents without prompting for permission each time,
 add explicit `Agent(name)` rules to your `.claude/settings.json`:
 
 ```json
@@ -66,11 +94,12 @@ add explicit `Agent(name)` rules to your `.claude/settings.json`:
 }
 ```
 
-See `../settings/shared-settings-example.json` for a more complete example.
+The setup script does this automatically. If you copied files manually, add the rules
+yourself.
 
 ---
 
-## Step 5: Project-specific customization (optional)
+## Step 6: Project-specific customization (optional)
 
 If a capability needs project-specific context (your company's naming conventions,
 your specific frameworks, domain vocabulary), create a project-local override:
@@ -91,8 +120,8 @@ Keep overrides thin. The purpose is to add project context, not rewrite the capa
 
 ## Pinning to a specific version
 
-By default, you get whatever is in the stable tier of the marketplace at the time you
-copy the file. If your project needs to stay on a specific version:
+By default, you get whatever is in the marketplace at the time you install. If your
+project needs to stay on a specific version:
 
 1. Check `claude-marketplace/catalog.json` for the version you want
 2. Check out the git tag: `git checkout software-architect@1.0.0 -- claude-marketplace/stable/software-architect.md`

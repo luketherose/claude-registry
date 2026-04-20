@@ -4,13 +4,24 @@
 
 | Role | Responsibilities |
 |---|---|
-| **Capability Author** | Writes new subagents or updates existing ones; provides examples and evals |
+| **Capability Author** | Writes new agents or skills; provides examples and evals |
 | **Capability Reviewer** | Reviews PRs using `review-checklist.md`; approves or requests changes |
 | **Catalog Maintainer** | Merges approved PRs, manages git tags, runs the publish process |
 | **Consumer** | Uses published capabilities from `claude-marketplace/`; files issues for bugs or gaps |
 
 A team member can hold multiple roles. There is no dedicated team required — the process
 scales from one maintainer to many.
+
+## Capability types
+
+| Type | Description | Location | Invoked by |
+|---|---|---|---|
+| **Agent** | Performs a role (architect, developer, reviewer…). Has behavioral logic and tool access appropriate to the role. | `agents/` | Claude automatic delegation or user via `/agents` |
+| **Skill** | Provides domain knowledge (standards, conventions, brand rules). Read-only, `haiku` model, no autonomous actions. | `skills/` | Other agents via the `Agent` tool |
+
+Skills are not visible to end users directly — they are implementation details of the
+agents that depend on them. When a consumer installs an agent, the setup script
+automatically installs its skill dependencies.
 
 ## Lifecycle states
 
@@ -20,12 +31,12 @@ draft → review → approved → released → published → deprecated
 
 | State | Meaning | Where it lives |
 |---|---|---|
-| `draft` | Work in progress on a feature branch | `claude-catalog/agents/` (branch) |
-| `review` | PR open, review in progress | `claude-catalog/agents/` (PR) |
-| `approved` | PR merged to main | `claude-catalog/agents/` (main) |
+| `draft` | Work in progress on a feature branch | `claude-catalog/agents/` or `skills/` (branch) |
+| `review` | PR open, review in progress | (PR) |
+| `approved` | PR merged to main | `claude-catalog/` (main) |
 | `released` | Git tag applied (`name@x.y.z`) | Git tag |
-| `published` | Copied to marketplace tier | `claude-marketplace/stable/` or `beta/` |
-| `deprecated` | No longer recommended; kept for compatibility | `claude-marketplace/stable/` with deprecation notice |
+| `published` | Copied to marketplace tier | `claude-marketplace/stable/`, `beta/`, or `skills/` |
+| `deprecated` | No longer recommended; kept for compatibility | Marketplace with deprecation notice |
 
 ## Decision process
 

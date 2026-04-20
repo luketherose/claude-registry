@@ -23,6 +23,16 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 - `policies/accenture-branding.md` — migrated to skill
 - `policies/java-spring-conventions.md` — merged into java-spring-standards skill
 
+### Documentation
+- `README.md` — updated: skills layer, repo structure, full capability+skill tables, corrected PPTX link
+- `docs/quick-start.md` — updated: skills explanation, setup script instructions, full capability list
+- `CONTRIBUTING.md` — updated: skill workflow, skill PR requirements
+- `how-to-write-a-capability.md` — updated: section 0 on skills (format, constraints, composition)
+- `GOVERNANCE.md` — updated: capability types table (agent vs. skill), lifecycle states
+- `review-checklist.md` — updated: section 9 for skill-specific checks
+- `scripts/new-capability.sh` — updated: `--type skill` flag for skill scaffolding
+- `CLAUDE.md` (root) — created: project-level instructions for documentation maintenance rule
+
 
 ### Added
 - Initial catalog structure

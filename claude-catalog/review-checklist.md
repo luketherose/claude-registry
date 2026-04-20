@@ -76,6 +76,17 @@ Use this checklist when reviewing a PR that adds or modifies a capability.
   (e.g. no testing guidance, no error handling)?
 - **Tool excess**: Does the capability request tools it doesn't actually need?
 
+## 9. Skill-specific checks (only when the PR adds or modifies a skill)
+
+- [ ] Skill file is in `claude-catalog/skills/`, not `agents/`
+- [ ] `model: haiku` (knowledge retrieval; justify if higher model needed)
+- [ ] `tools: Read` only — no Edit, Write, Bash, or Agent
+- [ ] No `## Skills` section (skills are leaf nodes; they cannot delegate further)
+- [ ] Content is purely declarative: standards, rules, templates — not workflow logic
+- [ ] `catalog.json`: skill entry has `"type": "skill"` and `"tier": "skill"`
+- [ ] Each dependent agent has this skill listed in its `"dependencies"` in `catalog.json`
+- [ ] Each dependent agent's system prompt has a `## Skills` section invoking this skill
+
 ## Approval criteria
 
 A PR can be approved when:

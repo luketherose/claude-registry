@@ -34,17 +34,18 @@ Se vuoi solo installare le capability nel tuo progetto senza leggere tutto:
 claude-registry/
   claude-catalog/          ← sorgente (sviluppo e review)
     agents/                  subagent .md con YAML frontmatter
+    skills/                  knowledge provider riutilizzabili (condivisi tra agenti)
     examples/                invocazioni di esempio per capability
     evals/                   scenari di validazione
     hooks/                   script e configurazioni per hook Claude Code
     settings/                reference settings.json per i progetti
     mcp/                     esempi di configurazione MCP server
-    policies/                convenzioni e policy che i subagent applicano
+    policies/                convenzioni residue (non ancora migrate a skill)
     templates/               template di output (ADR, report, API contract)
     docs/                    documentazione interna per i contributori
     scripts/
-      setup-capabilities.sh  installa capability in un progetto
-      new-capability.sh      scaffolda una nuova capability
+      setup-capabilities.sh  installa capability in un progetto (risolve dipendenze)
+      new-capability.sh      scaffolda una nuova capability o skill
     how-to-write-a-capability.md
     CONTRIBUTING.md
     GOVERNANCE.md
@@ -53,16 +54,18 @@ claude-registry/
   claude-marketplace/      ← distribuzione (solo capability approvate)
     stable/                  capability production-ready
     beta/                    capability nuove o sperimentali
-    catalog.json             manifest con versioni e metadati
-    scripts/
-      publish.sh             promuove una capability dal catalog al marketplace
+    skills/                  skill condivise (installate automaticamente come dipendenze)
+    catalog.json             manifest con versioni, metadati e dipendenze
 
   guida-operativa.pdf      ← leggi qui
+  pitch-claude-registry.pptx
 ```
 
 ---
 
 ## Capability disponibili
+
+### Agenti (12)
 
 | Nome | Tier | Descrizione |
 |------|------|-------------|
@@ -76,6 +79,21 @@ claude-registry/
 | `debugger` | beta | Diagnosi bug da stack trace, log e codice |
 | `api-designer` | beta | Design e review API REST, spec OpenAPI |
 | `documentation-writer` | beta | README, runbook, guide architetturali |
+| `presentation-creator` | beta | Slide Accenture-branded (.pptx) da documenti di progetto |
+| `document-creator` | beta | Documenti Accenture-branded (PDF/DOCX) da documenti di progetto |
+
+### Skill (4)
+
+Le skill sono knowledge provider atomici condivisi tra più agenti. Non sono agenti
+autonomi: vengono invocati dagli agenti per recuperare standard e convenzioni.
+Lo script `setup-capabilities.sh` le installa automaticamente come dipendenze.
+
+| Nome | Usata da | Contenuto |
+|------|----------|-----------|
+| `java-spring-standards` | developer-java-spring, code-reviewer, test-writer | Struttura pacchetti, layering, testing, error handling, logging, security, Micrometer |
+| `testing-standards` | developer-java-spring, test-writer, code-reviewer, developer-python | Principi, tassonomia scenari, naming, JUnit 5 / pytest / Jest template |
+| `rest-api-standards` | developer-java-spring, api-designer, code-reviewer | Modellazione risorse, HTTP methods, status code, RFC 7807, OpenAPI 3.1 |
+| `accenture-branding` | presentation-creator, document-creator | Palette colori, costanti python-pptx, CSS template PDF, tipografia |
 
 ---
 
@@ -99,4 +117,4 @@ Dettagli in [`claude-catalog/GOVERNANCE.md`](claude-catalog/GOVERNANCE.md).
 | Checklist review PR | [`claude-catalog/review-checklist.md`](claude-catalog/review-checklist.md) |
 | Processo di release | [`claude-catalog/release-process.md`](claude-catalog/release-process.md) |
 | Changelog | [`claude-catalog/CHANGELOG.md`](claude-catalog/CHANGELOG.md) |
-| Pitch per il team (PPTX) | [`claude-catalog/docs/pitch-claude-registry.pptx`](claude-catalog/docs/pitch-claude-registry.pptx) |
+| Pitch per il team (PPTX) | [`pitch-claude-registry.pptx`](pitch-claude-registry.pptx) |

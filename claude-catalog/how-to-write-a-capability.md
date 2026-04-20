@@ -1,9 +1,88 @@
 # How to Write a Capability
 
-A **capability** in this catalog is a Claude Code **subagent**: a Markdown file with
-YAML frontmatter that defines a specialized role Claude can adopt or delegate to.
+A **capability** in this catalog is either an **agent** or a **skill** — both are
+Claude Code subagents (`.md` files with YAML frontmatter), but they serve different
+purposes and have different constraints.
+
+| Type | Purpose | Model | Tools | Location |
+|------|---------|-------|-------|---------|
+| **Agent** | Performs a role: analyzes, writes code, designs, reviews | `sonnet` | Role-appropriate set | `agents/` |
+| **Skill** | Provides knowledge: standards, conventions, brand rules | `haiku` | `Read` only | `skills/` |
+
+Skills are not invoked directly by users. They are called by agents via the `Agent`
+tool to load shared knowledge. A skill should contain knowledge that would otherwise
+be copy-pasted into two or more agent system prompts.
 
 This document is the authoritative guide for authors.
+
+---
+
+## 0. Skills — when and how to use them
+
+### When to create a skill
+
+Create a skill when:
+- The same domain knowledge (coding standards, design rules, brand constants) appears
+  in two or more agent system prompts
+- The knowledge is declarative: it describes how things should be done, not what to do next
+- The knowledge changes independently of any single agent's behavior
+
+Do not create a skill for:
+- Logic that is specific to one agent's workflow
+- Behavior that needs tool access beyond reading files
+- Content that is already short enough to inline without duplication
+
+### Skill file format
+
+```markdown
+---
+name: my-standards
+description: >
+  Use to retrieve [domain] standards: [list of topics].
+tools: Read
+model: haiku
+color: cyan
+---
+
+## Role
+
+You are a knowledge provider for [domain] standards. When invoked, return the
+complete standards relevant to the task at hand.
+
+## Standards
+
+[The actual content — organized by topic, with specific rules and examples]
+```
+
+**Constraints for skills:**
+- `model: haiku` — skills are knowledge retrieval, not reasoning
+- `tools: Read` only — skills do not modify files, run commands, or spawn subagents
+- No `## Skills` section — skills are leaf nodes
+- No `Agent` tool — skills cannot delegate further
+
+### How agents invoke skills
+
+Add a `## Skills` section to the agent's system prompt:
+
+```markdown
+## Skills
+
+Before starting any task, invoke the following skills to load shared standards:
+
+- `java-spring-standards` — authoritative Java/Spring Boot conventions
+- `testing-standards` — testing principles, scenario taxonomy, JUnit 5 templates
+
+Apply the loaded standards to all code and recommendations in this session.
+```
+
+The agent calls the skill via the `Agent` tool at the start of each session. Skills
+return their knowledge content; the agent applies it throughout the task.
+
+### Adding a skill to the marketplace
+
+When adding a skill to `catalog.json`, use `"type": "skill"` and `"tier": "skill"`.
+For each agent that depends on the skill, add it to the agent's `"dependencies"` list —
+the setup script uses this to auto-install skills alongside their dependent agents.
 
 ---
 
