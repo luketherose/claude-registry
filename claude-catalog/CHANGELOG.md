@@ -18,6 +18,9 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 - `debugger@0.1.0` — initial draft (beta)
 - `api-designer@0.1.0` — initial draft (beta)
 - `documentation-writer@0.1.0` — initial draft (beta)
+- `presentation-creator@0.1.0` — Accenture-branded PPTX creator for project/estimation presentations (beta)
+- `document-creator@0.1.0` — Accenture-branded PDF/DOCX creator for project/estimation documents (beta)
+- `policies/accenture-branding.md` — brand specification: color palette, typography, CSS/python-pptx constants
 
 ---
 

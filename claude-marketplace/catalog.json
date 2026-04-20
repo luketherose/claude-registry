@@ -133,6 +133,32 @@
       "tags": ["documentation", "readme", "runbook"],
       "published": "2026-04-19",
       "changelog": "Initial beta release"
+    },
+    {
+      "name": "presentation-creator",
+      "version": "0.1.0",
+      "tier": "beta",
+      "status": "active",
+      "description": "Creates Accenture-branded PowerPoint presentations (.pptx) from project docs, estimation files, or any source materials. Handles business and technical audiences. Covers problem, solution, architecture, dependencies, and timeline. Uses python-pptx with full Accenture brand compliance.",
+      "file": "beta/presentation-creator.md",
+      "tools": ["Read", "Grep", "Glob", "Bash", "Write"],
+      "model": "sonnet",
+      "tags": ["presentation", "pptx", "accenture", "branding", "estimation"],
+      "published": "2026-04-20",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "document-creator",
+      "version": "0.1.0",
+      "tier": "beta",
+      "status": "active",
+      "description": "Creates Accenture-branded technical documents (PDF via HTML/Chrome or Word .docx) from project docs and estimation files. Covers executive summary, problem, solution, architecture, component inventory, effort estimate, risks. Handles business and technical audiences.",
+      "file": "beta/document-creator.md",
+      "tools": ["Read", "Grep", "Glob", "Bash", "Write"],
+      "model": "sonnet",
+      "tags": ["document", "pdf", "docx", "accenture", "branding", "estimation"],
+      "published": "2026-04-20",
+      "changelog": "Initial beta release"
     }
   ]
 }
