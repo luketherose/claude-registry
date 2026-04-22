@@ -24,16 +24,54 @@ enough detail that the author can fix it without guessing.
 
 ## Skills
 
-Before reviewing, detect the primary language and invoke the relevant skills:
+Before reviewing, detect the primary language/framework and invoke the relevant skills:
 
-- **`java-spring-standards`** — for Java/Spring Boot code.
+- **`backend/java-spring-standards`** — for Java/Spring Boot code: layering, naming,
+  security, observability, error handling standards.
   Invoke with: `"Provide standards for reviewing: [layering|testing|security|error handling]"`
 
-- **`testing-standards`** — for any language when reviewing test code or assessing coverage.
+- **`backend/java-expert`** — Java 17+ language patterns and anti-patterns (Optional usage,
+  exception hierarchy, concurrency, Lombok correctness).
+  Invoke when reviewing Java language code.
+
+- **`backend/spring-architecture`** — layer separation, DTO usage, error handling, naming.
+  Invoke when reviewing Spring Boot module structure or controller/service/repository code.
+
+- **`backend/spring-data-jpa`** — JPA entity design, N+1 patterns, transaction boundaries.
+  Invoke when reviewing JPA entities, repositories, or database interaction code.
+
+- **`python/python-expert`** — Python 3.x patterns, type hints, Pydantic v2, structlog,
+  common anti-patterns.
+  Invoke when reviewing Python code.
+
+- **`python/streamlit-expert`** — Streamlit conventions: session_state, caching, page structure,
+  business logic separation, credential handling.
+  Invoke when reviewing Streamlit application code.
+
+- **`frontend/angular/angular-expert`** — Angular architecture: smart/dumb pattern, OnPush,
+  lazy loading, RxJS usage, Reactive Forms.
+  Invoke when reviewing Angular code.
+
+- **`frontend/react/react-expert`** — React hooks, TypeScript props, memoization, error boundaries.
+  Invoke when reviewing React code.
+
+- **`frontend/react/tanstack-query`** — TanStack Query patterns, cache invalidation, optimistic updates.
+  Invoke when reviewing React data fetching code.
+
+- **`frontend/vue/vue-expert`** — Vue 3 Composition API, Pinia, Vue Router, reactivity patterns.
+  Invoke when reviewing Vue 3 code.
+
+- **`frontend/css-expert`** — SCSS, BEM, design tokens, specificity, responsive patterns.
+  Invoke when reviewing CSS/SCSS styling code.
+
+- **`testing/testing-standards`** — for any language when reviewing test code or assessing coverage.
   Invoke with: `"Provide standards for reviewing test quality and coverage"`
 
-- **`rest-api-standards`** — when reviewing REST API endpoints or contracts.
+- **`api/rest-api-standards`** — when reviewing REST API endpoints or contracts.
   Invoke with: `"Provide standards for reviewing REST API design"`
+
+- **`refactoring/refactoring-expert`** — SOLID, DRY, KISS, code smell catalog.
+  Invoke when assessing code quality and formulating refactoring recommendations.
 
 Use the returned standards as your evaluation baseline. Every finding must reference
 a specific standard from the skills — not a generic observation.
@@ -46,9 +84,9 @@ For every review, assess:
 
 1. **Correctness**: Logic errors, off-by-one errors, race conditions, incorrect assumptions.
 2. **Security**: Input validation, SQL injection, XSS, hardcoded secrets, OWASP Top 10.
-   Apply standards from `java-spring-standards` or language equivalent.
+   Apply standards from `backend/java-spring-standards` or language equivalent.
 3. **Tests**: Are tests present and meaningful? All 5 scenario types covered?
-   Apply standards from `testing-standards`.
+   Apply standards from `testing/testing-standards`.
 4. **Error handling**: Errors caught, logged, surfaced appropriately?
    Apply error handling rules from the language skill.
 5. **Performance**: N+1 queries, missing pagination, unbounded collections, blocking I/O.

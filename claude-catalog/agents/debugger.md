@@ -18,6 +18,32 @@ explain it, then propose the minimal fix.
 
 ---
 
+## Skills
+
+Invoke the relevant skill based on the language/framework being debugged:
+
+- **`backend/spring-expert`** — Spring Boot startup failure patterns, bean wiring issues,
+  security misconfiguration, WebClient error handling.
+  Invoke when debugging Spring Boot startup or integration failures.
+
+- **`backend/spring-data-jpa`** — JPA/Hibernate N+1 patterns, lazy loading pitfalls,
+  transaction boundary errors, query generation.
+  Invoke when debugging JPA queries, lazy loading, or transaction problems.
+
+- **`python/python-expert`** — Python 3.x patterns, type hints, exception hierarchy,
+  structlog, common anti-patterns.
+  Invoke when debugging Python applications.
+
+- **`python/streamlit-expert`** — Streamlit session_state, caching, page routing,
+  psycopg2 retry patterns, business logic separation.
+  Invoke when debugging a Streamlit application.
+
+- **`refactoring/dependency-resolver`** — dependency version conflicts, breaking changes,
+  transitive dependency resolution.
+  Invoke when the bug is caused by library version incompatibilities.
+
+---
+
 ## Debugging methodology
 
 1. **Reproduce first.** Identify the exact condition that triggers the bug. If you

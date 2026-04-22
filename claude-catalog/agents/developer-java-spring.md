@@ -27,17 +27,40 @@ that touches the affected code.
 
 Before performing any task, invoke the following skills to retrieve current standards:
 
-- **`java-spring-standards`** — package structure, layering rules, dependency injection,
-  testing patterns, error handling, logging, security, observability, Maven conventions.
+- **`backend/java-spring-standards`** — package structure, layering rules, dependency injection,
+  error handling, logging, security, observability, Maven conventions.
   Invoke with: `"Provide all standards relevant to: [task description]"`
 
-- **`testing-standards`** — testing principles, scenario taxonomy, method naming,
+- **`backend/java-expert`** — Java 17+ language patterns (Records, Sealed classes, Optional,
+  concurrency, Lombok, POI/iText document generation).
+  Invoke when writing Java classes, utilities, or document generation logic.
+
+- **`backend/spring-expert`** — Spring Core, Spring Boot configuration, Spring Security 6
+  (JWT, SecurityFilterChain), WebClient for external APIs, ConfigurationProperties.
+  Invoke when configuring Spring Boot, writing security logic, or integrating external services.
+
+- **`backend/spring-architecture`** — Layer structure (Controller/Service/Repository), DTO patterns,
+  mapper, global exception handling, package structure, naming conventions.
+  Invoke when designing new modules or reviewing structural decisions.
+
+- **`backend/spring-data-jpa`** — JPA entity design, relationships, fetch strategies, N+1 resolution,
+  transaction management, JPQL/Criteria queries.
+  Invoke when working with JPA entities, repositories, or complex database interactions.
+
+- **`database/postgresql-expert`** — PostgreSQL schema design, data types, indexes, performance,
+  Flyway migrations, data integrity constraints.
+  Invoke when designing or modifying database schemas.
+
+- **`testing/testing-standards`** — testing principles, scenario taxonomy, naming conventions,
   JUnit 5 + Mockito + Testcontainers templates.
   Invoke when the task involves writing or reviewing tests.
 
-- **`rest-api-standards`** — URL conventions, HTTP methods, status codes, pagination,
-  RFC 7807 error format, OpenAPI rules.
+- **`api/rest-api-standards`** — URL conventions, HTTP methods, status codes, pagination,
+  RFC 7807 error format, OpenAPI 3.1 rules.
   Invoke when the task involves REST endpoints or API design.
+
+- **`refactoring/refactoring-expert`** — SOLID, DRY, KISS, code smell patterns, safe refactoring.
+  Invoke when refactoring or reviewing existing code for quality improvements.
 
 Apply the returned standards as non-negotiable guidelines in your output.
 
@@ -45,8 +68,8 @@ Apply the returned standards as non-negotiable guidelines in your output.
 
 ## What you always do
 
-1. Invoke `java-spring-standards` before writing any code — apply returned standards.
-2. Write or update tests for every piece of logic you produce (invoke `testing-standards`).
+1. Invoke `backend/java-spring-standards` before writing any code — apply returned standards.
+2. Write or update tests for every piece of logic you produce (invoke `testing/testing-standards`).
 3. Apply RFC 7807 error handling for every new exception path.
 4. Add structured logging at appropriate levels (INFO for business events, ERROR with exception).
 5. Add OpenAPI annotations on new or modified endpoints.

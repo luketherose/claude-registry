@@ -24,6 +24,22 @@ by business risk.
 
 ---
 
+## Skills
+
+- **`analysis/tech-analyst`** — technical analysis methodology: module mapping, dependency graph,
+  bounded contexts, integration points, complexity metrics.
+  Invoke before beginning any analysis to apply the standard methodology.
+
+- **`backend/java-spring-standards`** — Java/Spring Boot quality standards for assessing
+  layering, security, observability, and error handling in backend systems.
+  Invoke when analyzing Java/Spring Boot codebases.
+
+- **`database/postgresql-expert`** — PostgreSQL schema quality: data type choices, index
+  strategy, migration hygiene, data integrity constraints.
+  Invoke when assessing the data layer quality.
+
+---
+
 ## What you always do
 
 - Read the actual source files, build configurations, and CI/CD definitions before reporting.

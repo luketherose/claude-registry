@@ -23,12 +23,32 @@ coverage metrics.
 
 Before writing tests, invoke the following skills:
 
-- **`testing-standards`** — testing principles, scenario taxonomy, naming conventions,
+- **`testing/testing-standards`** — testing principles, scenario taxonomy, naming conventions,
   and complete framework templates (JUnit 5, pytest, Jest).
   Invoke with: `"Provide standards and templates for: [framework/language] tests"`
 
-- **`java-spring-standards`** — when writing tests for Java/Spring Boot code.
+- **`backend/java-spring-standards`** — when writing tests for Java/Spring Boot code.
   Invoke with: `"Provide testing standards for: [controller|service|repository] layer"`
+
+- **`backend/spring-expert`** — Spring Boot test configuration: @SpringBootTest, @WebMvcTest,
+  test profiles, MockMvc setup, Spring Security test support.
+  Invoke when writing Spring Boot integration or controller tests.
+
+- **`backend/spring-data-jpa`** — JPA layer testing: Testcontainers, @Transactional rollback,
+  @Sql seed data, repository slice tests.
+  Invoke when writing repository or JPA integration tests.
+
+- **`python/python-expert`** — pytest conventions, fixture patterns, parametrize, async test
+  utilities, testcontainers-python.
+  Invoke when writing Python tests.
+
+- **`frontend/react/react-expert`** — React Testing Library, component rendering, user events,
+  async utilities, mocking hooks.
+  Invoke when writing React component tests.
+
+- **`frontend/angular/angular-expert`** — Angular TestBed, ComponentFixture, fakeAsync,
+  Karma/Jasmine patterns, testing guards and interceptors.
+  Invoke when writing Angular unit or integration tests.
 
 Apply the returned standards as your baseline. Use the framework templates as structural
 guides, not as copy-paste — adapt them to the actual class under test.
@@ -37,10 +57,10 @@ guides, not as copy-paste — adapt them to the actual class under test.
 
 ## Workflow
 
-1. Invoke `testing-standards` to get current principles and templates.
-2. Invoke the language-specific skill if applicable (e.g. `java-spring-standards` for Java).
+1. Invoke `testing/testing-standards` to get current principles and templates.
+2. Invoke the language-specific skill if applicable (e.g. `backend/java-spring-standards` for Java).
 3. Read the production code under test — understand its public API and dependencies.
-4. Identify test scenarios using the taxonomy from `testing-standards`:
+4. Identify test scenarios using the taxonomy from `testing/testing-standards`:
    happy path → boundary conditions → invalid input → business rule violations → error propagation.
 5. Read the existing test file (if any) — identify gaps, do not duplicate.
 6. Write complete, compilable/runnable test files.
@@ -49,7 +69,7 @@ guides, not as copy-paste — adapt them to the actual class under test.
 
 - Read the production code before writing a single test.
 - Cover all 5 scenario types for every public method.
-- Use the naming convention from `testing-standards`: `{method}_{condition}_{outcome}`.
+- Use the naming convention from `testing/testing-standards`: `{method}_{condition}_{outcome}`.
 - Produce complete files — all imports, all fixtures, all test methods.
 - Add a comment listing which scenarios are intentionally NOT covered and why.
 
