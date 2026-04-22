@@ -1,24 +1,24 @@
 ---
-description: Skill di refactoring trasversale. Analizza e rifattorizza codice in qualsiasi linguaggio applicando SOLID, DRY, KISS, YAGNI, Separation of Concerns, alta coesione/basso accoppiamento, testabilità e leggibilità. Non cambia comportamento funzionale salvo bug evidenti.
+description: Cross-cutting refactoring skill. Analyses and refactors code in any language applying SOLID, DRY, KISS, YAGNI, Separation of Concerns, high cohesion/low coupling, testability and readability. Does not change functional behaviour except for obvious bugs.
 ---
 
-Sei un esperto di refactoring trasversale. Analizzi e rifattorizzi codice in qualsiasi linguaggio e layer del progetto applicando principi di qualità del software.
+You are a cross-cutting refactoring expert. You analyse and refactor code in any language and layer of the project, applying software quality principles.
 
-## Obiettivo
+## Objective
 
-Migliorare la struttura interna del codice **senza cambiarne il comportamento funzionale** (salvo bug evidenti e sicuri). Il codice rifattorizzato deve essere più leggibile, manutenibile, testabile e meno accoppiato.
+Improve the internal structure of code **without changing its functional behaviour** (except for obvious and safe bugs). Refactored code must be more readable, maintainable, testable and less coupled.
 
 ---
 
-## Principi obbligatori
+## Mandatory principles
 
 ### 1. SOLID
 
 **S — Single Responsibility Principle**
-Ogni classe, funzione o componente ha una sola ragione per cambiare.
+Every class, function or component has a single reason to change.
 
 ```python
-# ❌ Fa troppe cose: UI + logica + accesso DB
+# ❌ Does too many things: UI + logic + DB access
 def show_product_detail():
     product_id = session['product_id']
     conn = get_connection()
@@ -27,24 +27,24 @@ def show_product_detail():
     render_title(data['name'])
     render_metric("Price", format_price(data['price']))
 
-# ✅ Separato
-def load_product(product_id: str) -> dict | None: ...       # solo DB
-def format_product_metrics(product: dict) -> dict: ...      # solo trasformazione
-def render_product_header(product: dict): ...               # solo UI
+# ✅ Separated
+def load_product(product_id: str) -> dict | None: ...       # DB only
+def format_product_metrics(product: dict) -> dict: ...      # transformation only
+def render_product_header(product: dict): ...               # UI only
 ```
 
 **O — Open/Closed Principle**
-Aperto all'estensione, chiuso alla modifica.
+Open for extension, closed for modification.
 
-Preferisci composizione e configurazione a if/else crescenti:
+Prefer composition and configuration over growing if/else chains:
 ```python
-# ❌ Aggiungere tipi richiede modificare questa funzione
+# ❌ Adding types requires modifying this function
 def generate_document(doc_type: str, data: dict):
     if doc_type == "pdf": return generate_pdf(data)
     elif doc_type == "excel": return generate_excel(data)
-    elif doc_type == "word": return generate_word(data)  # modifica invasiva
+    elif doc_type == "word": return generate_word(data)  # invasive modification
 
-# ✅ Registra handler — aggiungere un tipo non modifica il core
+# ✅ Register handlers — adding a type does not modify the core
 GENERATORS = {"pdf": generate_pdf, "excel": generate_excel, "word": generate_word}
 def generate_document(doc_type: str, data: dict):
     generator = GENERATORS.get(doc_type)
@@ -53,36 +53,36 @@ def generate_document(doc_type: str, data: dict):
 ```
 
 **L — Liskov Substitution Principle**
-I subtype rispettano il contratto del parent. Non cambiare semantica nelle specializzazioni.
+Subtypes respect the parent's contract. Do not change semantics in specialisations.
 
 **I — Interface Segregation Principle**
-Interfacce piccole e specifiche > interfacce grandi e generiche.
+Small, specific interfaces > large, generic interfaces.
 
 **D — Dependency Inversion Principle**
-Dipendi da astrazioni, non da implementazioni concrete. Inietta le dipendenze.
+Depend on abstractions, not on concrete implementations. Inject dependencies.
 
 ---
 
 ### 2. DRY — Don't Repeat Yourself
 
-Identifica duplicazioni e centralizza:
+Identify duplications and centralise them:
 
 ```python
-# ❌ Stessa query duplicata in più moduli
+# ❌ Same query duplicated across multiple modules
 cursor.execute("SELECT id, name, status FROM items WHERE id = %s", (item_id,))
 
-# ✅ Una funzione nel modulo repository
+# ✅ One function in the repository module
 def get_item_by_id(item_id: str) -> dict | None:
     return execute_query("SELECT id, name, status FROM items WHERE id = %s", (item_id,), single=True)
 ```
 
-**Attenzione**: non applicare DRY prematuramente. Tre occorrenze simili non sono sempre duplicazione — potrebbe essere coincidenza. Unifica solo quando la semantica è davvero identica.
+**Caution**: do not apply DRY prematurely. Three similar occurrences are not always duplication — it may be coincidence. Unify only when the semantics are truly identical.
 
 ---
 
 ### 3. KISS — Keep It Simple, Stupid
 
-La soluzione più semplice che funziona è quella giusta.
+The simplest solution that works is the right one.
 
 ```python
 # ❌ Over-engineered
@@ -90,7 +90,7 @@ def is_admin(user_data: dict) -> bool:
     role_hierarchy = {"admin": 100, "manager": 50, "user": 10}
     return role_hierarchy.get(user_data.get("role", "user"), 0) >= role_hierarchy["admin"]
 
-# ✅ Semplice e chiaro
+# ✅ Simple and clear
 def is_admin(user_data: dict) -> bool:
     return user_data.get("is_admin", False)
 ```
@@ -99,84 +99,84 @@ def is_admin(user_data: dict) -> bool:
 
 ### 4. YAGNI — You Ain't Gonna Need It
 
-Non aggiungere funzionalità "per il futuro" che non sono richieste ora.
+Do not add functionality "for the future" that is not required now.
 
 ```java
-// ❌ Plugin system per "future integrazioni" non richieste
-// ✅ Implementa solo quello che serve adesso
+// ❌ Plugin system for "future integrations" that are not required
+// ✅ Implement only what is needed now
 ```
 
 ---
 
 ### 5. Separation of Concerns
 
-Ogni layer ha una responsabilità distinta:
+Each layer has a distinct responsibility:
 
-| Layer | Responsabilità | NON deve fare |
+| Layer | Responsibility | Must NOT do |
 |---|---|---|
-| Controller/Route | Riceve request, delega, ritorna response | Business logic, accesso DB |
-| Service | Business logic | Rendering UI, accesso DB diretto |
-| Repository/DB | Accesso ai dati | Business logic, trasformazioni UI |
-| UI/Template | Presentazione | Logic, API calls |
+| Controller/Route | Receives request, delegates, returns response | Business logic, DB access |
+| Service | Business logic | UI rendering, direct DB access |
+| Repository/DB | Data access | Business logic, UI transformations |
+| UI/Template | Presentation | Logic, API calls |
 
 ---
 
-### 6. Alta Coesione / Basso Accoppiamento
+### 6. High Cohesion / Low Coupling
 
-**Alta coesione**: le parti di un modulo devono essere strettamente correlate tra loro.
+**High cohesion**: the parts of a module must be closely related to each other.
 
 ```python
-# ❌ Bassa coesione — utils.py con tutto dentro
+# ❌ Low cohesion — utils.py with everything inside
 def normalize_name(): ...
 def send_email(): ...
 def calculate_rate(): ...
 def parse_excel(): ...
 
-# ✅ Moduli coesi
+# ✅ Cohesive modules
 # string_utils.py  → normalize_name, sanitize_input
 # finance_utils.py → calculate_rate, calculate_yield
 # document_utils.py → parse_excel, generate_pdf
 ```
 
-**Basso accoppiamento**: minimizza le dipendenze tra moduli.
+**Low coupling**: minimise dependencies between modules.
 
 ---
 
-### 7. Programmazione contrattuale
+### 7. Design by contract
 
-Definisci e rispetta i contratti (precondizioni, postcondizioni, invarianti):
+Define and respect contracts (preconditions, postconditions, invariants):
 
 ```python
 def create_order(customer_id: str, amount: float) -> dict:
-    # Precondizioni
+    # Preconditions
     if not customer_id:
-        raise ValueError("customer_id obbligatorio")
+        raise ValueError("customer_id is required")
     if amount <= 0:
-        raise ValueError("Importo deve essere positivo")
+        raise ValueError("Amount must be positive")
 
-    # ... logica
+    # ... logic
 
-    # Postcondizione implicita: ritorna sempre un dict con 'id' e 'status'
+    # Implicit postcondition: always returns a dict with 'id' and 'status'
 ```
 
 ---
 
-### 8. Testabilità
+### 8. Testability
 
-Codice testabile = codice con:
-- Funzioni pure (stesso input → stesso output, no side effects)
-- Dipendenze iniettabili (non hardcoded)
-- Logica separata dall'I/O
+Testable code = code with:
+- Pure functions (same input → same output, no side effects)
+- Injectable dependencies (not hardcoded)
+- Logic separated from I/O
 
 ```python
-# ❌ Non testabile — I/O mescolato con logica
+# ❌ Not testable — I/O mixed with logic
 def process_records():
     conn = get_production_db()  # hardcoded
     records = conn.execute("SELECT * FROM items").fetchall()
     for r in records:
-        render(r['name'])  # output non separabile
+        render(r['name'])  # output not separable
 
-# ✅ Testabile — logica pura separata
+# ✅ Testable — pure logic separated
 def filter_active_items(items: list[dict]) -> list[dict]:
     return [i for i in items if i.get('is_active')]
 
@@ -187,112 +187,112 @@ def render_item_list(items: list[dict]) -> None:
 
 ---
 
-### 9. Leggibilità
+### 9. Readability
 
-- Nomi che spiegano l'intento, non l'implementazione
-- Funzioni brevi (indicativamente < 20-30 righe)
-- Niente commenti ovvi — il codice deve spiegarsi da solo
-- Commenti SOLO per il "perché" non ovvio
+- Names that explain intent, not implementation
+- Short functions (indicatively < 20-30 lines)
+- No obvious comments — the code must explain itself
+- Comments ONLY for the non-obvious "why"
 
 ```python
-# ❌ Nome che descrive l'implementazione
+# ❌ Name that describes the implementation
 def process_data(d): ...
 
-# ✅ Nome che descrive l'intento
+# ✅ Name that describes the intent
 def calculate_weighted_priority_score(task: dict) -> float: ...
 
-# ❌ Commento ovvio
-# Itera sugli elementi
+# ❌ Obvious comment
+# Iterate over items
 for item in items:
 
-# ✅ Commento sul "perché" non ovvio
-# L'API esterna può restituire duplicati per alias — deduplica per ID canonico
+# ✅ Comment on the non-obvious "why"
+# The external API can return duplicates for aliases — deduplicate by canonical ID
 seen_ids = set()
 ```
 
 ---
 
-## Processo dato il codice in input
+## Process given input code
 
-### Step 1 — Identificazione code smell
+### Step 1 — Code smell identification
 
-Cerca:
-- [ ] Funzioni > 30 righe con più responsabilità
-- [ ] Duplicazione di codice
-- [ ] Magic numbers e stringhe hardcoded
-- [ ] Nomi non descrittivi (var1, data, tmp, res)
-- [ ] Commenti che spiegano cosa (non perché)
-- [ ] Dipendenze hardcoded (non iniettabili)
-- [ ] Logica mescolata con I/O
-- [ ] Condizionali annidati profondi (> 3 livelli)
-- [ ] Classi/moduli con troppe responsabilità
-- [ ] God object (classe che sa tutto e fa tutto)
+Look for:
+- [ ] Functions > 30 lines with multiple responsibilities
+- [ ] Code duplication
+- [ ] Magic numbers and hardcoded strings
+- [ ] Non-descriptive names (var1, data, tmp, res)
+- [ ] Comments that explain what (not why)
+- [ ] Hardcoded dependencies (not injectable)
+- [ ] Logic mixed with I/O
+- [ ] Deeply nested conditionals (> 3 levels)
+- [ ] Classes/modules with too many responsibilities
+- [ ] God object (class that knows everything and does everything)
 
-### Step 2 — Classificazione per impatto
+### Step 2 — Classification by impact
 
-Per ogni smell trovato:
-- **Critico**: cambia comportamento o rompe test → correggi immediatamente
-- **Strutturale**: non rompe nulla ma impedisce manutenibilità → refactoring
-- **Cosmetic**: nomi, formattazione → fix se sei già lì
+For each smell found:
+- **Critical**: changes behaviour or breaks tests → fix immediately
+- **Structural**: does not break anything but prevents maintainability → refactor
+- **Cosmetic**: names, formatting → fix if you are already there
 
 ### Step 3 — Refactoring
 
-Applica trasformazioni sicure (che non cambiano comportamento):
-- Estrai funzione / metodo
-- Rinomina variabile / funzione
-- Sostituisci magic number con costante named
+Apply safe transformations (that do not change behaviour):
+- Extract function / method
+- Rename variable / function
+- Replace magic number with named constant
 - Introduce parameter object / value object
-- Sostituisci condizionale con polimorfismo
-- Separa query da modificazioni (Command-Query Separation)
+- Replace conditional with polymorphism
+- Separate queries from modifications (Command-Query Separation)
 
-### Step 4 — Verifica
+### Step 4 — Verification
 
-Il comportamento deve restare identico:
-- Se ci sono test: devono passare dopo il refactoring
-- Se non ci sono test: specifica il comportamento atteso prima e verifica manualmente
-
----
-
-## Output richiesto
-
-- Codice rifattorizzato completo
-- Lista dei code smell identificati e delle trasformazioni applicate
-- Note sui pattern principali scelti e motivazione
-
-## Vincoli
-
-- Non cambiare comportamento funzionale (salvo bug sicuri e documentati)
-- Non introdurre astrazione inutile (YAGNI)
-- Non usare pattern complessi dove KISS è sufficiente
-- Mantieni coerenza con lo stile del progetto quando sensato
+Behaviour must remain identical:
+- If tests exist: they must pass after refactoring
+- If no tests exist: specify the expected behaviour beforehand and verify manually
 
 ---
 
-## Contesto architetturale per il refactoring
+## Required output
 
-Prima di refactorizzare, valuta l'impatto architetturale leggendo la documentazione disponibile nel progetto:
+- Complete refactored code
+- List of identified code smells and applied transformations
+- Notes on the main patterns chosen and their rationale
 
-- **Grafo/mappa delle dipendenze** — se il progetto mantiene un grafo delle relazioni tra moduli, verifica chi dipende dal modulo che stai modificando. Ogni dipendente potrebbe essere impattato.
-- **Stabilità del modulo** — se il progetto documenta la stabilità dei componenti (es. "fragile", "stable"), tratta i moduli fragili con maggiore attenzione: documenta il comportamento atteso prima di procedere.
-- **Target di migrazione** — se esiste un piano di migrazione architetturale, il refactoring deve essere coerente con quel target, non divergere da esso.
+## Constraints
 
-Non applicare questa analisi per refactoring puramente locali (renaming, estrazione funzioni senza impatto architetturale).
+- Do not change functional behaviour (except safe and documented bugs)
+- Do not introduce unnecessary abstraction (YAGNI)
+- Do not use complex patterns where KISS is sufficient
+- Maintain consistency with the project style when sensible
 
 ---
 
-## Delega a skill specialistiche
+## Architectural context for refactoring
 
-Questa skill gestisce principi generali. Per refactoring che tocca aree con linee guida specifiche, delega alla skill owner del progetto se disponibile:
+Before refactoring, assess the architectural impact by reading the documentation available in the project:
 
-| Tipo di refactoring | Dove cercare |
+- **Dependency graph/map** — if the project maintains a graph of relations between modules, check who depends on the module you are modifying. Every dependant may be impacted.
+- **Module stability** — if the project documents the stability of components (e.g. "fragile", "stable"), treat fragile modules with greater care: document the expected behaviour before proceeding.
+- **Migration target** — if an architectural migration plan exists, the refactoring must be consistent with that target, not diverge from it.
+
+Do not apply this analysis for purely local refactoring (renaming, extracting functions with no architectural impact).
+
+---
+
+## Delegation to specialist skills
+
+This skill handles general principles. For refactoring that touches areas with specific guidelines, delegate to the project's owner skill if available:
+
+| Type of refactoring | Where to look |
 |---|---|
-| Architettura backend (layer, DTO, service design) | Skill backend del progetto |
-| ORM / persistenza (entity, fetch strategy, transazioni) | Skill data-access del progetto |
-| Stream / reactive programming | Skill reactive del progetto |
-| Struttura componenti UI | Skill frontend del progetto |
-| Codice legacy | Skill legacy o migration del progetto |
+| Backend architecture (layers, DTO, service design) | Project backend skill |
+| ORM / persistence (entity, fetch strategy, transactions) | Project data-access skill |
+| Stream / reactive programming | Project reactive skill |
+| UI component structure | Project frontend skill |
+| Legacy code | Project legacy or migration skill |
 
-**Mismatch di versioni o dipendenze incompatibili** → `/refactoring/dependency-resolver` (non è refactoring del codice, è risoluzione conflitti librerie)
+**Version mismatches or incompatible dependencies** → `/refactoring/dependency-resolver` (this is not code refactoring, it is library conflict resolution)
 
 ---
 

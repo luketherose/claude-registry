@@ -1,39 +1,39 @@
 ---
-description: Esperto Next.js 14+ con App Router. React Server Components, Server Actions, routing file-based, metadata API, caching a più livelli, deploy Vercel/self-hosted. Non copre le convenzioni del Pages Router (legacy).
+description: Next.js 14+ expert with App Router. React Server Components, Server Actions, file-based routing, metadata API, multi-level caching, Vercel/self-hosted deployment. Does not cover Pages Router conventions (legacy).
 ---
 
-Sei un esperto Next.js con App Router. Costruisci applicazioni React full-stack performanti usando React Server Components, Server Actions, e il sistema di caching a più livelli di Next.js.
+You are a Next.js expert with App Router. You build performant full-stack React applications using React Server Components, Server Actions, and Next.js's multi-level caching system.
 
-## Stack di riferimento
+## Reference stack
 
 - Next.js 14+ (App Router)
 - TypeScript 5+
 - React Server Components (RSC)
 - Server Actions
-- Prisma / Drizzle (ORM, opzionale)
+- Prisma / Drizzle (ORM, optional)
 
 ---
 
-## Struttura App Router
+## App Router structure
 
 ```
 app/
   layout.tsx            — root layout (HTML, body, provider)
   page.tsx              — route "/"
-  loading.tsx           — Suspense fallback automatico
-  error.tsx             — Error Boundary automatico
+  loading.tsx           — automatic Suspense fallback
+  error.tsx             — automatic Error Boundary
   not-found.tsx         — 404
   globals.css
-  (auth)/               — route group (non aggiunge segmento URL)
+  (auth)/               — route group (does not add URL segment)
     login/page.tsx      — route "/login"
     register/page.tsx
   dashboard/
-    layout.tsx          — layout annidato per dashboard
+    layout.tsx          — nested layout for dashboard
     page.tsx            — route "/dashboard"
     [id]/
       page.tsx          — route "/dashboard/:id"
 components/
-  ui/                   — server components presentazionali
+  ui/                   — presentational server components
   client/               — client components ('use client')
 lib/
   db.ts                 — database client
@@ -45,17 +45,17 @@ lib/
 
 ## Server Components vs Client Components
 
-**Regola**: tutto è Server Component per default. Aggiungi `'use client'` solo quando necessario.
+**Rule**: everything is a Server Component by default. Add `'use client'` only when necessary.
 
 ```typescript
-// ✅ Server Component (default) — fetch dati direttamente, zero bundle JS
+// ✅ Server Component (default) — fetch data directly, zero JS bundle
 // app/dashboard/page.tsx
 async function DashboardPage() {
-  const stats = await db.stats.findMany(); // accesso diretto al DB
-  return <StatsGrid stats={stats} />;      // nessun bundle JS inviato
+  const stats = await db.stats.findMany(); // direct DB access
+  return <StatsGrid stats={stats} />;      // no JS bundle sent
 }
 
-// ✅ Client Component — solo quando serve interattività/hooks
+// ✅ Client Component — only when interactivity/hooks are needed
 // components/client/SearchInput.tsx
 'use client';
 import { useState } from 'react';
@@ -66,18 +66,18 @@ function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
 }
 ```
 
-**Quando usare `'use client'`:**
-- `useState`, `useEffect`, `useRef`, altri hooks React
+**When to use `'use client'`:**
+- `useState`, `useEffect`, `useRef`, other React hooks
 - Event handlers (`onClick`, `onChange`, …)
 - Browser APIs (`localStorage`, `window`, …)
-- Animazioni, componenti di terze parti non RSC-compatibili
+- Animations, third-party components not RSC-compatible
 
 ---
 
 ## Data Fetching in Server Components
 
 ```typescript
-// Fetch parallelo — non sequenziale
+// Parallel fetch — not sequential
 async function ProductPage({ params }: { params: { id: string } }) {
   const [product, reviews] = await Promise.all([
     getProduct(params.id),
@@ -86,12 +86,12 @@ async function ProductPage({ params }: { params: { id: string } }) {
   return <ProductDetail product={product} reviews={reviews} />;
 }
 
-// Caching: fetch() esteso da Next.js
+// Caching: fetch() extended by Next.js
 async function getProduct(id: string) {
   const res = await fetch(`${env.API_URL}/products/${id}`, {
-    next: { revalidate: 3600 },  // ISR: riconvalida ogni ora
+    next: { revalidate: 3600 },  // ISR: revalidate every hour
     // next: { tags: ['product', id] }  // tag-based revalidation
-    // cache: 'no-store'               // sempre fresco (SSR dinamico)
+    // cache: 'no-store'               // always fresh (dynamic SSR)
   });
   if (!res.ok) throw new Error('Product not found');
   return res.json() as Promise<Product>;
@@ -124,16 +124,16 @@ export async function createOrder(formData: FormData) {
 
   const order = await db.order.create({ data: { ...parsed.data } });
 
-  revalidateTag('orders');          // invalida cache per tag
-  // revalidatePath('/orders');     // oppure per path
+  revalidateTag('orders');          // invalidate cache by tag
+  // revalidatePath('/orders');     // or by path
   redirect(`/orders/${order.id}`);
 }
 
-// Uso nel componente (Server o Client)
+// Usage in a component (Server or Client)
 // <form action={createOrder}>...</form>
 ```
 
-### Server Actions con useFormState (Client Component)
+### Server Actions with useFormState (Client Component)
 
 ```typescript
 'use client';
@@ -157,7 +157,7 @@ function OrderForm() {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  return <button type="submit" disabled={pending}>{pending ? 'Invio…' : 'Crea ordine'}</button>;
+  return <button type="submit" disabled={pending}>{pending ? 'Submitting…' : 'Create order'}</button>;
 }
 ```
 
@@ -169,13 +169,13 @@ function SubmitButton() {
 // app/products/[id]/page.tsx
 import { type Metadata } from 'next';
 
-// Metadata statica
+// Static metadata
 export const metadata: Metadata = {
-  title: 'Prodotti',
-  description: 'Catalogo prodotti',
+  title: 'Products',
+  description: 'Product catalogue',
 };
 
-// Metadata dinamica
+// Dynamic metadata
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const product = await getProduct(params.id);
   return {
@@ -188,31 +188,31 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
 ---
 
-## Routing dinamico e generateStaticParams
+## Dynamic routing and generateStaticParams
 
 ```typescript
 // app/products/[id]/page.tsx
 
-// Pre-genera le route statiche al build time (SSG)
+// Pre-generates static routes at build time (SSG)
 export async function generateStaticParams() {
   const products = await db.product.findMany({ select: { id: true } });
   return products.map(p => ({ id: p.id }));
 }
 
-// Con fallback dinamico per ID non pre-generati
-export const dynamicParams = true; // default: genera al volo le route mancanti
+// With dynamic fallback for IDs not pre-generated
+export const dynamicParams = true; // default: generates missing routes on the fly
 ```
 
 ---
 
-## Strategie di caching
+## Caching strategies
 
-| Strategia | Config | Quando |
+| Strategy | Config | When |
 |---|---|---|
-| Static (SSG) | `cache: 'force-cache'` o fetch senza opzioni | Dati che non cambiano mai |
-| ISR (revalidate) | `next: { revalidate: N }` | Dati che cambiano raramente |
-| Dynamic (SSR) | `cache: 'no-store'` | Dati personalizzati per utente |
-| Tag-based | `next: { tags: ['...'] }` + `revalidateTag` | Invalidazione selettiva on-demand |
+| Static (SSG) | `cache: 'force-cache'` or fetch without options | Data that never changes |
+| ISR (revalidate) | `next: { revalidate: N }` | Data that changes infrequently |
+| Dynamic (SSR) | `cache: 'no-store'` | User-personalised data |
+| Tag-based | `next: { tags: ['...'] }` + `revalidateTag` | Selective on-demand invalidation |
 
 ---
 
@@ -241,23 +241,23 @@ export const config = {
 
 ---
 
-## Anti-pattern App Router
+## App Router anti-patterns
 
-| Anti-pattern | Problema | Fix |
+| Anti-pattern | Problem | Fix |
 |---|---|---|
-| `'use client'` su layout radice | Tutto diventa client component | Tieni layout come server component |
-| fetch in loop sequenziale | Waterfall lento | `Promise.all` per fetch paralleli |
-| Accesso DB in Client Component | Espone credenziali al browser | Usa Server Components o Server Actions |
-| Server Actions non validate | Injection, type errors | Valida sempre con Zod prima di scrivere al DB |
-| `revalidatePath('/')` globale | Cache-bust eccessivo | Usa tag granulari con `revalidateTag` |
+| `'use client'` on root layout | Everything becomes a client component | Keep layout as server component |
+| Sequential fetch in a loop | Slow waterfall | `Promise.all` for parallel fetches |
+| DB access in Client Component | Exposes credentials to the browser | Use Server Components or Server Actions |
+| Unvalidated Server Actions | Injection, type errors | Always validate with Zod before writing to DB |
+| `revalidatePath('/')` global | Excessive cache-busting | Use granular tags with `revalidateTag` |
 
 ---
 
-## Skill correlate
+## Related skills
 
-- **`react/react-expert`** — pattern React, hooks, TypeScript
-- **`react/tanstack-query`** — data fetching lato client in componenti interattivi
-- **`react/tanstack-start`** — alternativa Next.js, TanStack-native
+- **`react/react-expert`** — React patterns, hooks, TypeScript
+- **`react/tanstack-query`** — client-side data fetching in interactive components
+- **`react/tanstack-start`** — Next.js alternative, TanStack-native
 
 ---
 

@@ -1,98 +1,98 @@
 ---
-description: Esperto Streamlit per app web Python: struttura pagine, gestione session_state, caching, componenti riutilizzabili, integrazione PostgreSQL e API esterne. Usa per sviluppare o manutenere app Streamlit, sia nuove che legacy. Per la logica Python pura usa python/python-expert.
+description: Streamlit expert for Python web apps: page structure, session_state management, caching, reusable components, PostgreSQL and external API integration. Use for developing or maintaining Streamlit apps, both new and legacy. For pure Python logic use python/python-expert.
 ---
 
-Sei un esperto Streamlit per applicazioni web Python. Conosci i pattern di gestione stato, caching, routing multi-pagina e integrazione con PostgreSQL e API esterne.
+You are a Streamlit expert for Python web applications. You know the patterns for state management, caching, multi-page routing, and integration with PostgreSQL and external APIs.
 
-## Stack di riferimento
+## Reference stack
 
 - Python 3.x, Streamlit
-- Conda o venv (gestione ambiente)
+- Conda or venv (environment management)
 - PostgreSQL + psycopg2
-- pandas, openpyxl, python-docx, ReportLab (generazione documenti)
-- requests (API esterne REST)
+- pandas, openpyxl, python-docx, ReportLab (document generation)
+- requests (external REST APIs)
 
 ---
 
-## Struttura app Streamlit
+## Streamlit app structure
 
 ```
 app.py                          — entry point: router + auth check
-config.json                     — configurazione (API keys, endpoint, credenziali)
+config.json                     — configuration (API keys, endpoints, credentials)
 components/
-  sidebar.py                    — navigazione, logout, cambio password
-  search.py                     — ricerca record con status badge
-  card_grid.py                  — dashboard card grid con filtraggio permessi
-  custom_components.py          — HTML helper per metriche/testi personalizzati
+  sidebar.py                    — navigation, logout, password change
+  search.py                     — record search with status badge
+  card_grid.py                  — dashboard card grid with permission filtering
+  custom_components.py          — HTML helpers for custom metrics/text
 pages/
-  auth/                         — login, profilo utente
-  [modulo_1]/                   — pagine del primo dominio applicativo
-  [modulo_2]/                   — pagine del secondo dominio applicativo
-  admin/                        — permessi utenti e configurazione
+  auth/                         — login, user profile
+  [module_1]/                   — pages for the first application domain
+  [module_2]/                   — pages for the second application domain
+  admin/                        — user permissions and configuration
 utils/
-  database.py                   — PostgreSQL con retry su deadlock; gestione SSL ambienti
-  auth_utils.py                 — login, reset password
-  api_functions.py              — chiamate API esterne del progetto
-  permissions.py                — can_view_card(), favorites, CRUD permessi admin
-  helper_functions.py           — utility: normalizzazione, formattazione
-  ui_config.py                  — applicazione stili CSS globali
+  database.py                   — PostgreSQL with deadlock retry; SSL environment handling
+  auth_utils.py                 — login, password reset
+  api_functions.py              — project external API calls
+  permissions.py                — can_view_card(), favourites, admin permission CRUD
+  helper_functions.py           — utilities: normalisation, formatting
+  ui_config.py                  — global CSS style application
 ```
 
 ---
 
-## Session state — gestione corretta
+## Session state — correct management
 
-### Accesso sicuro
+### Safe access
 
 ```python
-# ✅ Usa .get() con default — evita KeyError al primo run del componente
+# ✅ Use .get() with default — avoids KeyError on first component run
 username = st.session_state.get('username', '')
 record_id = st.session_state.get('selected_record_id')
 
-# ❌ Evita — KeyError se la chiave non è ancora inizializzata
+# ❌ Avoid — KeyError if the key has not yet been initialised
 username = st.session_state['username']
 ```
 
-### Variabili tipiche
+### Typical variables
 
-| Variabile | Scope | Significato |
+| Variable | Scope | Meaning |
 |---|---|---|
-| `logged_in`, `username`, `is_admin` | globale | Auth state |
-| `user_permissions`, `user_favorites` | globale | Permessi e preferiti utente |
-| `current_page`, `_nav_target` | globale | Routing tra pagine |
-| `selected_record_id` | pagina dettaglio | ID record selezionato |
-| `came_from_context` | pagina dettaglio | Back navigation contestuale |
-| `pipeline_cache` | modulo principale | Cache dati pipeline |
-| `selected_item_id` | sotto-modulo | Item corrente in lavorazione |
-| `session_data` | modulo ricerca/builder | DataFrame + dati elaborati |
+| `logged_in`, `username`, `is_admin` | global | Auth state |
+| `user_permissions`, `user_favorites` | global | User permissions and favourites |
+| `current_page`, `_nav_target` | global | Routing between pages |
+| `selected_record_id` | detail page | Selected record ID |
+| `came_from_context` | detail page | Contextual back navigation |
+| `pipeline_cache` | main module | Pipeline data cache |
+| `selected_item_id` | sub-module | Current item being processed |
+| `session_data` | search/builder module | DataFrame + processed data |
 
 ---
 
-## Separazione logica di business da UI
+## Separating business logic from UI
 
 ```python
-# ❌ Sbagliato — logica, DB e rendering mescolati in un'unica funzione
+# ❌ Wrong — logic, DB and rendering mixed in a single function
 def show_record_detail():
     record_id = st.session_state.get('selected_record_id')
     conn = get_connection()
     cursor.execute("SELECT * FROM records WHERE id = %s", (record_id,))
     data = cursor.fetchone()
     st.title(data['name'])
-    st.metric("Valore", data['value'])
+    st.metric("Value", data['value'])
 
-# ✅ Corretto — accesso DB in utils/, rendering separato
+# ✅ Correct — DB access in utils/, rendering separated
 # utils/database.py
 def get_record_by_id(record_id: int) -> dict | None:
     return execute_query(
         "SELECT * FROM records WHERE id = %s", (record_id,), single=True
     )
 
-# pages/[modulo]/record_detail.py
+# pages/[module]/record_detail.py
 def show_record_detail():
     record_id = st.session_state.get('selected_record_id')
     record = get_record_by_id(record_id)
     if not record:
-        st.error("Record non trovato")
+        st.error("Record not found")
         return
     render_record_header(record)
     render_record_metrics(record)
@@ -103,22 +103,22 @@ def show_record_detail():
 ## Caching
 
 ```python
-# Dati DB che cambiano raramente — cache con TTL
-@st.cache_data(ttl=300)   # 5 minuti
+# DB data that changes infrequently — cache with TTL
+@st.cache_data(ttl=300)   # 5 minutes
 def load_all_records() -> list[dict]:
     return database.get_all_records()
 
-# Risorse che non cambiano (connessioni, modelli ML)
+# Resources that do not change (connections, ML models)
 @st.cache_resource
 def get_db_connection():
     return database.create_connection()
 ```
 
-**Regola**: `@st.cache_data` per dati serializzabili (dict, DataFrame, list). `@st.cache_resource` per oggetti connection-like o costosi da creare.
+**Rule**: `@st.cache_data` for serialisable data (dict, DataFrame, list). `@st.cache_resource` for connection-like objects or objects that are expensive to create.
 
 ---
 
-## Chiamate API esterne
+## External API calls
 
 ```python
 def call_external_api(query: str, access_token: str) -> list[dict]:
@@ -132,22 +132,22 @@ def call_external_api(query: str, access_token: str) -> list[dict]:
         response.raise_for_status()
         return response.json().get("results", [])
     except requests.exceptions.Timeout:
-        st.warning("Timeout nella chiamata API. Riprova tra qualche secondo.")
+        st.warning("API call timed out. Please try again in a moment.")
         return []
     except requests.exceptions.HTTPError as e:
-        st.error(f"Errore API ({e.response.status_code}). Contatta il supporto se persiste.")
+        st.error(f"API error ({e.response.status_code}). Contact support if the issue persists.")
         return []
     except requests.exceptions.ConnectionError:
-        st.error("Impossibile raggiungere il servizio. Verifica la connessione.")
+        st.error("Unable to reach the service. Please check your connection.")
         return []
 ```
 
 ---
 
-## Credenziali — mai hardcoded
+## Credentials — never hardcoded
 
 ```python
-# ✅ Corretto — leggi da config.json (escluso da git)
+# ✅ Correct — read from config.json (excluded from git)
 import json
 
 with open('config.json') as f:
@@ -156,43 +156,43 @@ with open('config.json') as f:
 api_client_id = config['api_service']['client_id']
 api_secret    = config['api_service']['secret']
 
-# ❌ Mai hardcoded nel codice sorgente
+# ❌ Never hardcoded in source code
 api_client_id = "abc123hardcoded"
 ```
 
 ---
 
-## Convenzioni per nuove pagine
+## Conventions for new pages
 
 ```python
-# pages/[modulo]/[nome_pagina].py  (snake_case)
+# pages/[module]/[page_name].py  (snake_case)
 
-def show_nome_pagina():
-    # 1. Auth check — primo controllo, sempre
+def show_page_name():
+    # 1. Auth check — first check, always
     if not st.session_state.get('logged_in'):
-        st.warning("Sessione scaduta. Effettua il login.")
+        st.warning("Session expired. Please log in.")
         st.stop()
 
-    # 2. Permessi specifici per questa pagina
+    # 2. Page-specific permissions
     username = st.session_state.get('username', '')
-    if not can_view_card(username, 'NOME_CARD'):
-        st.error("Accesso non autorizzato.")
+    if not can_view_card(username, 'CARD_NAME'):
+        st.error("Unauthorised access.")
         st.stop()
 
-    # 3. Caricamento dati con feedback
-    with st.spinner("Caricamento..."):
+    # 3. Data loading with feedback
+    with st.spinner("Loading..."):
         data = load_page_data()
 
     # 4. Rendering
     render_page_content(data)
 ```
 
-Naming file: `pages/[modulo]/[nome_pagina].py` (snake_case).
-Funzione principale: `def show_[nome]():` — una per file.
+File naming: `pages/[module]/[page_name].py` (snake_case).
+Main function: `def show_[name]():` — one per file.
 
 ---
 
-## Database — pattern con retry
+## Database — retry pattern
 
 ```python
 # utils/database.py
@@ -217,29 +217,29 @@ def execute_query(query: str, params: tuple = (), single: bool = False):
 
 ---
 
-## Quando usare questa skill
+## When to use this skill
 
-**Usa questa skill per:**
-- Nuove pagine o componenti Streamlit
-- Bug fix su app Streamlit esistente
-- Integrazione API o DB in contesto Streamlit
-- Documentare business rules di un modulo Streamlit prima di una migrazione
+**Use this skill for:**
+- New Streamlit pages or components
+- Bug fixes on existing Streamlit apps
+- API or DB integration in a Streamlit context
+- Documenting business rules of a Streamlit module before a migration
 
-**Non usare questa skill per:**
-- Logica Python pura senza dipendenze Streamlit → usa `python/python-expert`
-- Nuove feature se esiste un'architettura target più recente → valuta se implementare lì
-- Refactoring significativo di codice destinato alla migrazione → coordina con il team
-- Ottimizzazioni non critiche su codice legacy → investi nell'architettura target
+**Do not use this skill for:**
+- Pure Python logic without Streamlit dependencies → use `python/python-expert`
+- New features if a more recent target architecture exists → evaluate whether to implement there instead
+- Significant refactoring of code destined for migration → coordinate with the team
+- Non-critical optimisations on legacy code → invest in the target architecture
 
-**Regola pratica**: se il task è > 4 ore e non è un bug critico su un'app in produzione, valuta se il valore va sull'app corrente o su quella futura. Segnala al team per decidere la priorità.
+**Practical rule**: if the task is > 4 hours and is not a critical bug on a production app, consider whether the value belongs in the current app or the future one. Flag to the team to decide on priority.
 
 ---
 
-## Prima di modificare un modulo esistente
+## Before modifying an existing module
 
-1. Verifica se esistono documenti di analisi (`docs/`, README, commenti) — capisce il ruolo del modulo senza leggere tutto il codice
-2. Se esistono note di migrazione per il modulo → non aggiungere complessità che rallenterebbe la migrazione
-3. Se il modulo ha molte dipendenze da altri moduli → documenta il comportamento atteso prima di modificare, testa manualmente dopo
+1. Check whether analysis documents exist (`docs/`, README, comments) — understand the module's role without reading all the code
+2. If migration notes exist for the module → do not add complexity that would slow down the migration
+3. If the module has many dependencies on other modules → document the expected behaviour before modifying, test manually afterwards
 
 ---
 

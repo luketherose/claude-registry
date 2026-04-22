@@ -1,33 +1,33 @@
 ---
-description: Sei un esperto di architettura applicativa Spring per applicazioni enterprise. Definisce la struttura a layer (Controller/Service/Repository/Entity), separazione responsabilità, DTO vs Entity, validazione, global exception handling, logging strutturato, struttura package, naming conventions, scalabilità. Non duplica Spring Core (→ spring-expert) né JPA (→ spring-data-jpa).
+description: You are a Spring application architecture expert for enterprise applications. Defines the layered structure (Controller/Service/Repository/Entity), separation of responsibilities, DTO vs Entity, validation, global exception handling, structured logging, package structure, naming conventions, scalability. Does not duplicate Spring Core (→ spring-expert) or JPA (→ spring-data-jpa).
 ---
 
-Sei un esperto di architettura applicativa Spring per applicazioni enterprise.
+You are a Spring application architecture expert for enterprise applications.
 
-**Scope**: struttura a layer, DTO pattern, validazione, error handling, logging, package structure, naming, ordine di implementazione. Per Spring Boot config → `/backend/spring-expert`. Per JPA/Hibernate → `/backend/spring-data-jpa`. Per core Java → `/backend/java-expert`.
+**Scope**: layered structure, DTO pattern, validation, error handling, logging, package structure, naming, implementation order. For Spring Boot config → `/backend/spring-expert`. For JPA/Hibernate → `/backend/spring-data-jpa`. For core Java → `/backend/java-expert`.
 
 ---
 
-## Struttura package
+## Package structure
 
 ```
 com.example.myapp/
-  controller/              — REST endpoint, validazione input, mapping request→response
+  controller/              — REST endpoints, input validation, request→response mapping
   service/
-    api/                   — interfacce pubbliche del service layer
-    impl/                  — implementazioni (annotate @Service)
+    api/                   — public service layer interfaces
+    impl/                  — implementations (annotated with @Service)
   repository/              — Spring Data JPA repositories
   entity/
-    domain-a/              — entity del primo dominio (es. Company, Contact, ...)
-    domain-b/              — entity del secondo dominio (es. Order, Product, ...)
+    domain-a/              — entities for the first domain (e.g. Company, Contact, ...)
+    domain-b/              — entities for the second domain (e.g. Order, Product, ...)
   dto/
-    request/               — DTO in ingresso (validati con @Valid)
-    response/              — DTO in uscita (proiettati dall'entity)
-  mapper/                  — conversione entity ↔ DTO
+    request/               — inbound DTOs (validated with @Valid)
+    response/              — outbound DTOs (projected from entity)
+  mapper/                  — entity ↔ DTO conversion
   config/                  — @Configuration: Security, WebClient, JPA, ...
   security/                — JWT filter, UserDetailsService, ...
-  exception/               — gerarchia eccezioni custom
-  util/                    — utility stateless condivise
+  exception/               — custom exception hierarchy
+  util/                    — shared stateless utilities
   resources/
     application.yml
     application-dev.yml
@@ -37,9 +37,9 @@ com.example.myapp/
 
 ---
 
-## Layer Controller
+## Controller layer
 
-**Responsabilità**: routing HTTP, validazione input (`@Valid`), mappatura request→response, gestione HTTP status code. **Nessuna business logic.**
+**Responsibilities**: HTTP routing, input validation (`@Valid`), request→response mapping, HTTP status code management. **No business logic.**
 
 ```java
 @RestController
@@ -87,20 +87,20 @@ public class CompanyController {
 }
 ```
 
-**Anti-pattern nel controller**:
-- Logica di business (calcoli, decisioni, orchestrazione di più service)
-- Accesso diretto al repository
-- Gestione eccezioni con try/catch — delega a `@ControllerAdvice`
-- `@Transactional` — appartiene al service
+**Controller anti-patterns**:
+- Business logic (calculations, decisions, orchestrating multiple services)
+- Direct repository access
+- Exception handling with try/catch — delegate to `@ControllerAdvice`
+- `@Transactional` — belongs in the service layer
 
 ---
 
-## Layer Service
+## Service layer
 
-**Responsabilità**: business logic, orchestrazione, validazioni di dominio, transazioni.
+**Responsibilities**: business logic, orchestration, domain validations, transactions.
 
 ```java
-// Interfaccia pubblica — contratto del layer
+// Public interface — layer contract
 public interface CompanyService {
     CompanyResponse getById(Long id);
     Page<CompanyResponse> search(String query, CompanyStatus status, Pageable pageable);
@@ -109,7 +109,7 @@ public interface CompanyService {
     void delete(Long id);
 }
 
-// Implementazione
+// Implementation
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -145,19 +145,19 @@ public class CompanyServiceImpl implements CompanyService {
 }
 ```
 
-**Interfaccia service — quando è utile**: quando hai più implementazioni (mock per test, real per prod) o quando il service è esposto tramite più entry point. Per service semplici senza alternative previste, la classe diretta è accettabile. L'interfaccia + impl garantisce coerenza e testabilità.
+**Service interface — when it is useful**: when you have multiple implementations (mock for tests, real for production) or when the service is exposed through multiple entry points. For simple services without foreseen alternatives, a direct class is acceptable. The interface + impl pattern guarantees consistency and testability.
 
 ---
 
-## DTO vs Entity — separazione obbligatoria
+## DTO vs Entity — mandatory separation
 
 ```
-Entity:  rappresenta la struttura del database — accoppiata a Hibernate
-DTO:     rappresenta il contratto API — stabile, indipendente dallo schema
+Entity:  represents the database structure — coupled to Hibernate
+DTO:     represents the API contract — stable, independent of the schema
 ```
 
 ```java
-// ✅ DTO request — validato, immutabile
+// ✅ Request DTO — validated, immutable
 public record CompanyCreateRequest(
     @NotBlank @Size(max = 200) String name,
     @NotBlank @Pattern(regexp = "^[0-9]{11}$") String vatNumber,
@@ -165,7 +165,7 @@ public record CompanyCreateRequest(
     @NotNull CompanyStatus status
 ) {}
 
-// ✅ DTO response — proiezione dell'entity, mai riferimenti a lazy collection
+// ✅ Response DTO — projection of the entity, never references lazy collections
 public record CompanyResponse(
     Long id,
     String name,
@@ -175,16 +175,16 @@ public record CompanyResponse(
     LocalDateTime createdAt
 ) {}
 
-// ❌ Mai restituire entity direttamente — espone struttura JPA, serializzazione lazy problematica
+// ❌ Never return entity directly — exposes JPA structure, lazy serialisation is problematic
 @GetMapping("/{id}")
-public Company getById(@PathVariable Long id) { ... } // SBAGLIATO
+public Company getById(@PathVariable Long id) { ... } // WRONG
 ```
 
-**Regola**: un campo aggiunto all'entity non deve automaticamente comparire nella response. Il DTO è un contratto esplicito.
+**Rule**: a field added to the entity should not automatically appear in the response. The DTO is an explicit contract.
 
 ---
 
-## Mapper — conversione entity ↔ DTO
+## Mapper — entity ↔ DTO conversion
 
 ```java
 @Component
@@ -213,18 +213,18 @@ public class CompanyMapper {
     public void updateEntity(Company company, CompanyUpdateRequest request) {
         company.setName(request.name());
         company.setEmail(request.email());
-        // id, vatNumber, createdAt non modificabili
+        // id, vatNumber, createdAt are not modifiable
     }
 }
 ```
 
-**MapStruct**: valutalo se i mapper diventano voluminosi. Per applicazioni con pochi campi per entity, il mapper manuale è più leggibile e debuggabile.
+**MapStruct**: consider it if mappers become bulky. For applications with few fields per entity, a manual mapper is more readable and debuggable.
 
 ---
 
-## Validazione
+## Validation
 
-### Bean Validation sui DTO
+### Bean Validation on DTOs
 
 ```java
 public record OrderCreateRequest(
@@ -235,11 +235,11 @@ public record OrderCreateRequest(
 ) {}
 ```
 
-### Validazione di business nel service
+### Business validation in the service
 
 ```java
-// Non mettere logica di business come annotation custom su DTO — diventa nascosta e difficile da testare
-// ✅ Validazione esplicita nel service
+// Do not put business logic as custom annotations on DTOs — it becomes hidden and hard to test
+// ✅ Explicit validation in the service
 @Transactional
 public OrderResponse create(OrderCreateRequest request) {
     Company company = companyRepository.findById(request.companyId())
@@ -260,9 +260,9 @@ public OrderResponse create(OrderCreateRequest request) {
 
 ---
 
-## Gerarchia eccezioni custom
+## Custom exception hierarchy
 
-Questo è il punto di definizione della gerarchia. La classe base e le specializzazioni appartengono al package `exception/`.
+This is the definition point for the hierarchy. The base class and its specialisations belong in the `exception/` package.
 
 ```java
 public class AppException extends RuntimeException {
@@ -281,21 +281,21 @@ public class AppException extends RuntimeException {
     public String getErrorCode() { return errorCode; }
 }
 
-// 404 — entità non trovata per ID o chiave business
+// 404 — entity not found by ID or business key
 public class EntityNotFoundException extends AppException {
     public EntityNotFoundException(String entity, Object id) {
         super("NOT_FOUND", entity + " not found: " + id);
     }
 }
 
-// 422 — regola di business violata (invariante dominio)
+// 422 — business rule violated (domain invariant)
 public class BusinessRuleViolationException extends AppException {
     public BusinessRuleViolationException(String message) {
         super("BUSINESS_RULE_VIOLATION", message);
     }
 }
 
-// 502 — servizio esterno non disponibile o in errore
+// 502 — external service unavailable or in error
 public class ExternalApiException extends AppException {
     public ExternalApiException(String message, String errorCode) {
         super(errorCode, message);
@@ -303,7 +303,7 @@ public class ExternalApiException extends AppException {
 }
 ```
 
-**Quando aggiungere una nuova eccezione**: estendi `AppException` con `errorCode` strutturato (es. `"ORDER_CODE_DUPLICATE"`). Aggiungi il corrispondente `@ExceptionHandler` nel `GlobalExceptionHandler`. Mai usare eccezioni generiche (`RuntimeException` nuda) per errori di dominio.
+**When to add a new exception**: extend `AppException` with a structured `errorCode` (e.g. `"ORDER_CODE_DUPLICATE"`). Add the corresponding `@ExceptionHandler` in the `GlobalExceptionHandler`. Never use generic exceptions (bare `RuntimeException`) for domain errors.
 
 ---
 
@@ -314,7 +314,7 @@ public class ExternalApiException extends AppException {
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    // Eccezioni di dominio custom
+    // Custom domain exceptions
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(EntityNotFoundException ex) {
         log.warn("Entity not found: {}", ex.getMessage());
@@ -333,7 +333,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildError(HttpStatus.BAD_GATEWAY, ex.getErrorCode(), "External service unavailable");
     }
 
-    // Bean Validation — @Valid fallito
+    // Bean Validation — @Valid failed
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -353,7 +353,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
-    // Fallback per eccezioni non gestite
+    // Fallback for unhandled exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, WebRequest request) {
         log.error("Unexpected error on {}: {}", request.getDescription(false), ex.getMessage(), ex);
@@ -385,20 +385,20 @@ public record FieldViolation(String field, String message) {}
 
 ---
 
-## Logging strutturato — convenzioni
+## Structured logging — conventions
 
 ```java
-// Pattern: [livello] [azione] [identificatori] [stato/risultato]
+// Pattern: [level] [action] [identifiers] [state/result]
 
-// Controller — non loggare input sensibili (dati personali, credenziali)
+// Controller — do not log sensitive input (personal data, credentials)
 log.debug("GET /companies/{} request received", id);
 
-// Service — log operazioni con identificatori
+// Service — log operations with identifiers
 log.info("Company created id={} vatNumber={}", saved.getId(), saved.getVatNumber());
 log.warn("Company not found id={}", id);
 log.error("Failed to generate PDF for company id={}: {}", id, ex.getMessage(), ex);
 
-// Service — non loggare dentro loop su grandi collection
+// Service — do not log inside loops over large collections
 // ❌
 companies.forEach(c -> { log.info("Processing company {}", c.getId()); process(c); });
 // ✅
@@ -407,10 +407,10 @@ companies.forEach(this::process);
 log.info("Completed processing {} companies", companies.size());
 ```
 
-**MDC per correlazione request**: in ambienti con più thread/richieste parallele, aggiungi correlation ID.
+**MDC for request correlation**: in environments with multiple threads/parallel requests, add a correlation ID.
 
 ```java
-// Filter che aggiunge requestId all'MDC
+// Filter that adds requestId to the MDC
 @Component
 public class MdcLoggingFilter extends OncePerRequestFilter {
     @Override
@@ -433,82 +433,82 @@ public class MdcLoggingFilter extends OncePerRequestFilter {
 
 ## Naming conventions
 
-| Elemento | Convenzione | Esempio |
+| Element | Convention | Example |
 |---|---|---|
-| Entity | Singolare, PascalCase | `Company`, `Order` |
+| Entity | Singular, PascalCase | `Company`, `Order` |
 | Repository | `{Entity}Repository` | `CompanyRepository` |
 | Service interface | `{Entity}Service` | `CompanyService` |
 | Service impl | `{Entity}ServiceImpl` | `CompanyServiceImpl` |
 | Controller | `{Entity}Controller` | `CompanyController` |
-| DTO request | `{Entity}{Action}Request` | `CompanyCreateRequest`, `CompanyUpdateRequest` |
-| DTO response | `{Entity}Response` | `CompanyResponse` |
+| Request DTO | `{Entity}{Action}Request` | `CompanyCreateRequest`, `CompanyUpdateRequest` |
+| Response DTO | `{Entity}Response` | `CompanyResponse` |
 | Mapper | `{Entity}Mapper` | `CompanyMapper` |
-| Exception | Descrittiva, suffisso `Exception` | `EntityNotFoundException`, `BusinessRuleViolationException` |
-| REST endpoint | Plurale, kebab-case | `/api/companies`, `/api/orders` |
-| Variabili | camelCase, nomi espliciti | `companyRepository`, `vatNumber` |
+| Exception | Descriptive, `Exception` suffix | `EntityNotFoundException`, `BusinessRuleViolationException` |
+| REST endpoint | Plural, kebab-case | `/api/companies`, `/api/orders` |
+| Variables | camelCase, explicit names | `companyRepository`, `vatNumber` |
 
 ---
 
-## Ordine di implementazione per un nuovo modulo
+## Implementation order for a new module
 
 ```
-1. Entity        — struttura dati, relazioni, indici
-2. Repository    — query derivate + JPQL custom + projections
-3. DTO           — request (validato) + response (proiezione)
+1. Entity        — data structure, relations, indices
+2. Repository    — derived queries + custom JPQL + projections
+3. DTO           — request (validated) + response (projection)
 4. Mapper        — entity ↔ DTO
-5. Service       — interfaccia + implementazione con business logic
-6. Controller    — endpoint REST, @Valid, mapping response code
-7. Exception     — eccezioni custom se non già presenti
-8. SecurityConfig — autorizzazioni per i nuovi endpoint
-9. Test          — unit del service (Mockito) + integration del controller (@WebMvcTest)
+5. Service       — interface + implementation with business logic
+6. Controller    — REST endpoints, @Valid, response code mapping
+7. Exception     — custom exceptions if not already present
+8. SecurityConfig — authorisation for the new endpoints
+9. Test          — service unit tests (Mockito) + controller integration tests (@WebMvcTest)
 ```
 
 ---
 
-## Scalabilità e manutenibilità
+## Scalability and maintainability
 
 ### Stateless by design
 
-Ogni service bean è stateless (singleton). Lo stato di sessione vive nel JWT, non nel server. Questo rende l'applicazione scalabile orizzontalmente senza session affinity.
+Every service bean is stateless (singleton). Session state lives in the JWT, not on the server. This makes the application horizontally scalable without session affinity.
 
-### Separazione dei domini
+### Domain separation
 
-Quando l'applicazione gestisce domini distinti (es. CRM e Ordini), mantienili con schemi DB separati o almeno con package separati. Evita dipendenze dirette tra service di dominio diverso — usa un `orchestration service` se serve coordinazione.
+When the application manages distinct domains (e.g. CRM and Orders), keep them with separate DB schemas or at minimum with separate packages. Avoid direct dependencies between services from different domains — use an `orchestration service` if coordination is needed.
 
 ```java
-// ❌ Service di un dominio che dipende direttamente dal service di un altro
+// ❌ Service of one domain that directly depends on the service of another
 @Service
 public class CompanyServiceImpl {
-    private final OrderService orderService; // accoppiamento inter-dominio
+    private final OrderService orderService; // inter-domain coupling
 }
 
-// ✅ Orchestrazione in un service dedicato
+// ✅ Orchestration in a dedicated service
 @Service
 public class CompanyDossierService {
     private final CompanyService companyService;  // domain A
     private final OrderService orderService;      // domain B
-    // assembla il dossier combinando i due domini
+    // assembles the dossier by combining the two domains
 }
 ```
 
-### Feature scaling — aggiungere un modulo senza toccare l'esistente
+### Feature scaling — adding a module without touching existing code
 
-Ogni nuovo dominio segue la stessa struttura. Non modificare classi esistenti per aggiungere feature non correlate — apri nuovi file, rispetta OCP.
+Each new domain follows the same structure. Do not modify existing classes to add unrelated features — open new files, respect OCP.
 
 ---
 
 ## Checklist — layer architecture
 
-- [ ] Controller: solo routing, validazione, mapping HTTP status — zero business logic
-- [ ] Service: interfaccia + impl, `@Transactional(readOnly=true)` default, override per write
-- [ ] Repository: query derivate per casi semplici, JPQL per logica complessa, native solo per feature DB-specifiche
-- [ ] DTO: record immutabili, request validati con `@Valid`, response mai entity JPA
-- [ ] Mapper: classe dedicata, niente mappatura nel service o nel controller
-- [ ] Exception handler: `@ControllerAdvice` centralizzato, niente try/catch nei controller
-- [ ] Logging: DEBUG per parametri, INFO per operazioni completate, WARN per anomalie gestite, ERROR per failure
-- [ ] Naming: convenzioni rispettate su entity/service/controller/DTO/endpoint
-- [ ] Package: struttura per layer, non per feature
-- [ ] Security: ogni nuovo endpoint esplicitamente autorizzato in `SecurityConfig`
+- [ ] Controller: routing, validation, HTTP status mapping only — zero business logic
+- [ ] Service: interface + impl, `@Transactional(readOnly=true)` default, override for writes
+- [ ] Repository: derived queries for simple cases, JPQL for complex logic, native only for DB-specific features
+- [ ] DTO: immutable records, requests validated with `@Valid`, responses never JPA entities
+- [ ] Mapper: dedicated class, no mapping in the service or controller
+- [ ] Exception handler: centralised `@ControllerAdvice`, no try/catch in controllers
+- [ ] Logging: DEBUG for parameters, INFO for completed operations, WARN for handled anomalies, ERROR for failures
+- [ ] Naming: conventions respected for entity/service/controller/DTO/endpoint
+- [ ] Package: structure by layer, not by feature
+- [ ] Security: every new endpoint explicitly authorised in `SecurityConfig`
 
 ---
 

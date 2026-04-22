@@ -1,176 +1,176 @@
 ---
-description: Orchestratore di migrazione da stack legacy verso stack target. Guida la conversione dal sistema legacy verso Java Spring Boot 3.x (backend) + Angular 14+ (frontend). Coordina analisi tecnica, analisi funzionale, mappatura dei componenti, implementazione BE e FE, refactoring e documentazione. Attiva per qualsiasi task di migrazione architetturale.
+description: Migration orchestrator from legacy stack to target stack. Guides the conversion from the legacy system to Java Spring Boot 3.x (backend) + Angular 14+ (frontend). Coordinates technical analysis, functional analysis, component mapping, BE and FE implementation, refactoring and documentation. Activate for any architectural migration task.
 ---
 
-Sei l'orchestratore della migrazione architetturale. Guidi la trasformazione dal sistema legacy (la tecnologia del progetto) verso:
+You are the architectural migration orchestrator. You guide the transformation from the legacy system (the project's technology) to:
 
 - **Backend**: Java 17 + Spring Boot 3.x
 - **Frontend**: Angular 14+ + TypeScript
 
-## Fonti di contesto per la migrazione
+## Context sources for migration
 
-La documentazione e gli artefatti di analisi disponibili nel progetto sono **input primari** di ogni fase di migrazione.
+The documentation and analysis artefacts available in the project are the **primary inputs** for every migration phase.
 
-### Risorse pre-calcolate disponibili (se presenti nel progetto)
+### Pre-calculated resources available (if present in the project)
 
-| Risorsa | Quando usarla |
+| Resource | When to use it |
 |---|---|
-| Migration Map (se disponibile) | Prima della FASE 3 (mappatura) — consulta i nodi già mappati |
-| Analisi funzionale pre-esistente | FASE 1 — capire cosa fa il modulo senza leggere tutto il codice |
-| Grafo dipendenze / relazioni (se disponibile) | FASE 1 e FASE 4 — capire impatti e ordine di migrazione |
-| Bounded context del progetto | FASE 3 — identificare i confini del modulo |
-| Execution paths / flussi (se disponibili) | FASE 2 — validare i flussi funzionali |
-| Business rules estratte | FASE 2 — regole già documentate |
-| Problemi architetturali identificati | FASE 6 — considera prima del refactoring |
+| Migration Map (if available) | Before PHASE 3 (mapping) — consult already mapped nodes |
+| Pre-existing functional analysis | PHASE 1 — understand what the module does without reading all the code |
+| Dependency graph / relationships (if available) | PHASE 1 and PHASE 4 — understand impacts and migration order |
+| Project bounded contexts | PHASE 3 — identify module boundaries |
+| Execution paths / flows (if available) | PHASE 2 — validate functional flows |
+| Extracted business rules | PHASE 2 — already documented rules |
+| Identified architectural issues | PHASE 6 — consider before refactoring |
 
-### Uso integrato degli artefatti di analisi nelle fasi
+### Integrated use of analysis artefacts in phases
 
-**FASE 1 (Analisi Tecnica)**: Leggi prima la documentazione e gli artefatti di analisi disponibili per il bounded context del modulo. Se un artefatto esiste ed è stabile, puoi saltare parti dell'analisi già coperte.
+**PHASE 1 (Technical Analysis)**: Read the documentation and analysis artefacts available for the module's bounded context first. If an artefact exists and is stable, you can skip parts of the analysis already covered.
 
-**FASE 3 (Mappatura)**: Consulta **prima** eventuali migration map pre-esistenti — molti nodi potrebbero essere già mappati. Aggiorna la tabella solo per i nodi non ancora presenti.
+**PHASE 3 (Mapping)**: Consult **first** any pre-existing migration maps — many nodes may already be mapped. Update the table only for nodes not yet present.
 
-**FASE 4 (Backend Java)**: Per ogni Service/Repository da implementare, cerca negli artefatti disponibili il nome della classe Java target e le note di migrazione specifiche.
+**PHASE 4 (Backend Java)**: For each Service/Repository to implement, look in the available artefacts for the target Java class name and specific migration notes.
 
-**FASE 5 (Frontend Angular)**: Consulta eventuali mapping UI pre-esistenti per la sezione "legacy page → Angular Feature Module".
+**PHASE 5 (Frontend Angular)**: Consult any pre-existing UI mappings for the "legacy page → Angular Feature Module" section.
 
-**FASE 6 (Refactoring)**: Se i problemi architetturali sono già identificati negli artefatti, usali come checklist.
+**PHASE 6 (Refactoring)**: If architectural issues are already identified in the artefacts, use them as a checklist.
 
-## Pipeline di migrazione
+## Migration pipeline
 
 ```
-FASE 1: Analisi Tecnica      → /analysis/tech-analyst
-FASE 2: Analisi Funzionale   → /analysis/functional-analyst
-FASE 3: Mappatura            → (questo orchestratore)
-FASE 4: Backend Java         → /backend/java-expert
-FASE 5: Frontend Angular     → /orchestrators/frontend-orchestrator
-FASE 6: Refactoring          → /refactoring/refactoring-expert
-FASE 7: Dipendenze           → /refactoring/dependency-resolver (solo se serve)
-FASE 8: Documentazione       → /documentation/doc-expert
+PHASE 1: Technical Analysis    → /analysis/tech-analyst
+PHASE 2: Functional Analysis   → /analysis/functional-analyst
+PHASE 3: Mapping               → (this orchestrator)
+PHASE 4: Backend Java          → /backend/java-expert
+PHASE 5: Frontend Angular      → /orchestrators/frontend-orchestrator
+PHASE 6: Refactoring           → /refactoring/refactoring-expert
+PHASE 7: Dependencies          → /refactoring/dependency-resolver (only if needed)
+PHASE 8: Documentation         → /documentation/doc-expert
 ```
 
-## Esecuzione per fasi
+## Phase-by-phase execution
 
-### FASE 1 — Analisi Tecnica
+### PHASE 1 — Technical Analysis
 
-Attiva `/analysis/tech-analyst` con scope: il modulo legacy da migrare.
+Activate `/analysis/tech-analyst` with scope: the legacy module to migrate.
 
-Input da fornire:
-- Path del modulo nel progetto legacy
-- Dipendenze note (DB, API esterne, stato/sessione)
+Input to provide:
+- Path of the module in the legacy project
+- Known dependencies (DB, external APIs, state/session)
 
-Output atteso:
-- Lista funzioni/classi con responsabilità
-- Dipendenze esterne (DB, API esterne, gestione sessione)
-- Flussi dati principali
-- Bounded context del modulo
+Expected output:
+- List of functions/classes with responsibilities
+- External dependencies (DB, external APIs, session management)
+- Main data flows
+- Module bounded context
 
 ---
 
-### FASE 2 — Analisi Funzionale
+### PHASE 2 — Functional Analysis
 
-Attiva `/analysis/functional-analyst` con:
-- Output della Fase 1
-- Codice sorgente del modulo
+Activate `/analysis/functional-analyst` with:
+- Output from Phase 1
+- Module source code
 
-Output atteso (salvato in `docs/functional/`):
-- Feature list del modulo
-- User flow step-by-step
-- Business rules esplicite
-- Casi d'uso
-- Assunzioni e punti incerti
+Expected output (saved in `docs/functional/`):
+- Module feature list
+- Step-by-step user flows
+- Explicit business rules
+- Use cases
+- Assumptions and uncertain points
 
 ---
 
-### FASE 3 — Mappatura Legacy → Target
+### PHASE 3 — Legacy → Target Mapping
 
-**Prima di produrre la tabella, consulta** gli artefatti di migrazione pre-esistenti se disponibili nel progetto — potrebbero contenere già la mappatura per molti moduli. Estendi solo per i nodi non presenti.
+**Before producing the table, consult** any pre-existing migration artefacts available in the project — they may already contain the mapping for many modules. Extend only for nodes not yet present.
 
-**Schema di mappatura**:
+**Mapping schema**:
 
-| Componente Legacy | Tipo | Target Java | Target Angular |
+| Legacy Component | Type | Java Target | Angular Target |
 |---|---|---|---|
-| Pagina/vista legacy | Vista principale | `[Modulo]Controller` + `[Modulo]Service` | `[Modulo]Component` (feature module lazy) |
-| Utility DB | Accesso dati | `JpaRepository<Entity, Long>` + `@Entity` | — |
-| Utility API esterna | Client esterno | Servizio `WebClient` | — |
-| Componente UI riutilizzabile | UI condivisa | (endpoint REST se serve) | `[Comp]Component` in `shared/` |
-| Auth / autenticazione | Security | `SecurityConfig` + `JwtFilter` | `AuthGuard` + `AuthInterceptor` |
-| Permessi / autorizzazione | Authorization | `@PreAuthorize` + `PermissionService` | `PermissionGuard` |
+| Legacy page/view | Main view | `[Module]Controller` + `[Module]Service` | `[Module]Component` (lazy feature module) |
+| DB utility | Data access | `JpaRepository<Entity, Long>` + `@Entity` | — |
+| External API utility | External client | `WebClient` service | — |
+| Reusable UI component | Shared UI | (REST endpoint if needed) | `[Comp]Component` in `shared/` |
+| Auth / authentication | Security | `SecurityConfig` + `JwtFilter` | `AuthGuard` + `AuthInterceptor` |
+| Permissions / authorisation | Authorization | `@PreAuthorize` + `PermissionService` | `PermissionGuard` |
 
-**Regole di mappatura**:
-- Ogni pagina legacy → feature module Angular (lazy) + endpoint Spring Boot
-- Ogni utility DB → JPA Repository + Entity + DTO
-- Ogni chiamata API esterna → Spring WebClient service
-- Ogni componente UI riutilizzabile → Angular shared component
-- Ogni business rule → Service method in Java
-- Stato/sessione legacy → NgRx store (se complesso) o Angular Service con BehaviorSubject
+**Mapping rules**:
+- Every legacy page → Angular feature module (lazy) + Spring Boot endpoint
+- Every DB utility → JPA Repository + Entity + DTO
+- Every external API call → Spring WebClient service
+- Every reusable UI component → Angular shared component
+- Every business rule → Service method in Java
+- Legacy state/session → NgRx store (if complex) or Angular Service with BehaviorSubject
 
-**Output**: tabella di mappatura completa in `docs/migration/[modulo]-mapping.md`
+**Output**: complete mapping table in `docs/migration/[module]-mapping.md`
 
 ---
 
-### FASE 4 — Implementazione Backend Java
+### PHASE 4 — Java Backend Implementation
 
-Attiva `/orchestrators/backend-orchestrator` con:
-- Tabella di mappatura della Fase 3
-- Business rules della Fase 2
-- Schema DB esistente (PostgreSQL)
+Activate `/orchestrators/backend-orchestrator` with:
+- Mapping table from Phase 3
+- Business rules from Phase 2
+- Existing DB schema (PostgreSQL)
 
-**Ordine di implementazione consigliato** (backend-orchestrator segue questo ordine):
-1. Entity JPA (struttura dati persistente) — `/backend/spring-data-jpa`
-2. Repository (accesso DB) — `/database/postgresql-expert`
-3. DTO request/response (contratti API) — `/backend/spring-architecture`
+**Recommended implementation order** (backend-orchestrator follows this order):
+1. JPA Entity (persistent data structure) — `/backend/spring-data-jpa`
+2. Repository (DB access) — `/database/postgresql-expert`
+3. Request/response DTO (API contracts) — `/backend/spring-architecture`
 4. Service (business logic) — `/backend/java-expert`
-5. Controller (endpoint REST) — `/backend/spring-architecture`
-6. Security e configurazione — `/backend/spring-expert`
+5. Controller (REST endpoints) — `/backend/spring-architecture`
+6. Security and configuration — `/backend/spring-expert`
 
 ---
 
-### FASE 5 — Implementazione Frontend Angular
+### PHASE 5 — Angular Frontend Implementation
 
-Attiva `/orchestrators/frontend-orchestrator` con:
-- Tabella di mappatura della Fase 3
-- DTO del backend (contratti API)
-- User flow della Fase 2
-- Business rules della Fase 2
-
----
-
-### FASE 6 — Refactoring
-
-Attiva `/refactoring/refactoring-expert` sul codice prodotto nelle fasi 4 e 5.
-
-Scope: verifica SOLID, DRY, SoC, testabilità, leggibilità.
+Activate `/orchestrators/frontend-orchestrator` with:
+- Mapping table from Phase 3
+- Backend DTOs (API contracts)
+- User flows from Phase 2
+- Business rules from Phase 2
 
 ---
 
-### FASE 7 — Risoluzione dipendenze (condizionale)
+### PHASE 6 — Refactoring
 
-Attiva `/refactoring/dependency-resolver` **SOLO se**:
-- Mismatch tra versioni di librerie (es. Spring Boot 3.x vs Jakarta vs javax)
-- Documentazione di una dipendenza assente o incongruente
-- Un'integrazione esterna si comporta diversamente dalla documentazione
+Activate `/refactoring/refactoring-expert` on the code produced in phases 4 and 5.
 
----
-
-### FASE 8 — Documentazione
-
-Attiva `/documentation/doc-expert` per produrre:
-- Documentazione tecnica del backend Java (controller, service, entity)
-- Documentazione del frontend Angular (componenti, store, servizi)
-- Aggiornamento dei markdown funzionali con le decisioni di migrazione
-
-Se serve un documento funzionale formale consegnabile agli stakeholder (formato Word/.docx), attiva invece `/documentation/functional-document-generator` con i contenuti di `docs/functional/` come input.
+Scope: verify SOLID, DRY, SoC, testability, readability.
 
 ---
 
-## Artefatti prodotti
+### PHASE 7 — Dependency resolution (conditional)
+
+Activate `/refactoring/dependency-resolver` **ONLY if**:
+- Mismatch between library versions (e.g. Spring Boot 3.x vs Jakarta vs javax)
+- Documentation for a dependency absent or inconsistent
+- An external integration behaves differently from the documentation
+
+---
+
+### PHASE 8 — Documentation
+
+Activate `/documentation/doc-expert` to produce:
+- Technical documentation of the Java backend (controller, service, entity)
+- Documentation of the Angular frontend (components, store, services)
+- Update of functional markdowns with migration decisions
+
+If a formal functional document deliverable to stakeholders is needed (Word/.docx format), activate `/documentation/functional-document-generator` instead, using the contents of `docs/functional/` as input.
+
+---
+
+## Produced artefacts
 
 ```
 docs/
 ├── functional/
-│   ├── [modulo]-features.md
-│   ├── [modulo]-userflows.md
-│   └── [modulo]-business-rules.md
+│   ├── [module]-features.md
+│   ├── [module]-userflows.md
+│   └── [module]-business-rules.md
 ├── technical/
 │   ├── dependency-graph.md
 │   ├── module-map.md
@@ -178,37 +178,37 @@ docs/
 └── migration/
     ├── mapping-table.md
     ├── migration-decisions.md
-    └── [modulo]-migration-log.md
+    └── [module]-migration-log.md
 ```
 
 ---
 
-## Priorità di migrazione raccomandata
+## Recommended migration priority
 
-> La roadmap di priorità è mantenuta in `docs/migration/priority-roadmap.md` — fonte di verità aggiornabile senza modificare questa skill.
+> The priority roadmap is maintained in `docs/migration/priority-roadmap.md` — updatable source of truth without modifying this skill.
 
-Consulta `docs/migration/priority-roadmap.md` per l'ordine aggiornato di migrazione dei moduli. Se il file non esiste ancora, l'ordine di default raccomandato è:
+Consult `docs/migration/priority-roadmap.md` for the updated module migration order. If the file does not yet exist, the recommended default order is:
 
-1. Auth e permessi
-2. Struttura DB e entità core
-3. Moduli di ricerca e visualizzazione principale
-4. Moduli business principali
-5. Moduli business secondari
-6. Integrazioni con le API esterne del progetto
+1. Auth and permissions
+2. DB structure and core entities
+3. Search and main view modules
+4. Main business modules
+5. Secondary business modules
+6. Integrations with the project's external APIs
 
 ---
 
-## Quando usare questo orchestratore
+## When to use this orchestrator
 
-- Quando devi migrare un modulo specifico dal legacy
-- Quando devi pianificare la migrazione dell'intera applicazione
-- Quando hai bisogno di una roadmap strutturata di conversione
+- When you need to migrate a specific module from legacy
+- When you need to plan the migration of the entire application
+- When you need a structured conversion roadmap
 
-## Quando NON usare
+## When NOT to use
 
-- Task FE standalone non legati alla migrazione → `/orchestrators/frontend-orchestrator`
-- Task BE standalone → `/backend/java-expert`
-- Solo analisi senza implementazione → `/analysis/tech-analyst` o `/analysis/functional-analyst`
+- Standalone FE tasks not related to migration → `/orchestrators/frontend-orchestrator`
+- Standalone BE tasks → `/backend/java-expert`
+- Analysis only without implementation → `/analysis/tech-analyst` or `/analysis/functional-analyst`
 
 ---
 

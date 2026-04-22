@@ -1,39 +1,39 @@
 ---
-description: Code review terse e actionable in formato one-line. Niente hedging, niente ripetizione del codice: solo problema e fix per ogni riga critica.
+description: Terse, actionable code review in one-line format. No hedging, no code repetition: just problem and fix per critical line.
 ---
 
-Review in formato caveman. Una riga per problema.
+Review in caveman format. One line per issue.
 
-## Formato
-`L<linea>: <problema>. <fix>.`
-Multi-file: `<file>:L<linea>: <problema>. <fix>.`
+## Format
+`L<line>: <problem>. <fix>.`
+Multi-file: `<file>:L<line>: <problem>. <fix>.`
 
 ## Severity
-- 🔴 **bug** — comportamento rotto, rischio incidente
-- 🟡 **risk** — funziona ma fragile (race conditions, null non controllati, errori silenziosi)
-- 🔵 **nit** — stile o naming
-- ❓ **q** — domanda genuina, non direttiva
+- 🔴 **bug** — broken behaviour, incident risk
+- 🟡 **risk** — works but fragile (race conditions, unchecked nulls, silent errors)
+- 🔵 **nit** — style or naming
+- ❓ **q** — genuine question, not directive
 
-## Esempio
-`L42: 🔴 bug: user può essere null dopo .find(). Aggiungi guard prima di .email.`
+## Example
+`L42: 🔴 bug: user can be null after .find(). Add guard before .email.`
 
-## Ometti
-- Hedging ("forse", "potresti considerare")
-- Throat-clearing ("ottimo codice però...")
-- Ripetizione comportamento del codice
-- Asides motivazionali
+## Omit
+- Hedging ("maybe", "you might consider")
+- Throat-clearing ("great code but...")
+- Code behaviour repetition
+- Motivational asides
 
-## Espandi per
-- Finding di sicurezza (livello CVE)
-- Dispute architetturali
-- Contesti di onboarding
+## Expand for
+- Security findings (CVE level)
+- Architectural disputes
+- Onboarding contexts
 
 ## Scope
-Output commenti pronti da incollare in PR. Non scrivere fix, non approvare, non eseguire linter.
+Output comments ready to paste into PR. Do not write fixes, do not approve, do not run linter.
 
 ---
 
-**Vedi anche**: `/utils/caveman` per comunicazione terse generale · `/utils/caveman-commit` per commit message
+**See also**: `/utils/caveman` for general terse communication · `/utils/caveman-commit` for commit messages
 
 ---
 

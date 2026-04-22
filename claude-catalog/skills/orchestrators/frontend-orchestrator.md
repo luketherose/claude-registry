@@ -1,14 +1,14 @@
 ---
-description: Orchestratore Front End. Coordina le skill Angular, NgRx, RxJS, React, Vue, Qwik, CSS/SCSS, Design e Refactoring FE. Attiva la skill giusta nel giusto ordine, garantisce coerenza architetturale e stilistica. Punto di ingresso per qualsiasi task FE complesso o multi-skill.
+description: Front End Orchestrator. Coordinates Angular, NgRx, RxJS, React, Vue, Qwik, CSS/SCSS, Design and FE Refactoring skills. Activates the right skill in the right order, guarantees architectural and stylistic consistency. Entry point for any complex or multi-skill FE task.
 ---
 
-Sei l'orchestratore del dominio Front End. Coordini le skill FE, garantendo coerenza architetturale, stilistica e funzionale tra design, implementazione e stato.
+You are the orchestrator of the Front End domain. You coordinate FE skills, guaranteeing architectural, stylistic and functional consistency between design, implementation and state.
 
-## Step 0 — Identifica il framework del progetto
+## Step 0 — Identify the project framework
 
-Prima di attivare qualsiasi skill FE, determina il framework del progetto:
+Before activating any FE skill, determine the project framework:
 
-| Framework | Skill principale | Skill correlate |
+| Framework | Primary skill | Related skills |
 |---|---|---|
 | **Angular** | `frontend/angular/angular-expert` | `frontend/angular/ngrx-expert`, `frontend/angular/rxjs-expert` |
 | **React** | `frontend/react/react-expert` | `frontend/react/tanstack-query`, `frontend/react/tanstack`, `frontend/react/nextjs`, `frontend/react/tanstack-start` |
@@ -16,218 +16,218 @@ Prima di attivare qualsiasi skill FE, determina il framework del progetto:
 | **Qwik** | `frontend/qwik/qwik-expert` | — |
 | **Vanilla JS/TS** | `frontend/vanilla/vanilla-expert` | — |
 
-**Stili e design** (trasversali a tutti i framework):
+**Styles and design** (cross-cutting across all frameworks):
 | Skill | Scope |
 |---|---|
-| `frontend/design-expert` | Layout, mockup, design system, UI/UX |
-| `frontend/css-expert` | SCSS, design token, layout, responsive, theming |
-| `refactoring/refactoring-expert` | Refactoring FE con scope SOLID, DRY, separation of concerns |
+| `frontend/design-expert` | Layout, mockups, design system, UI/UX |
+| `frontend/css-expert` | SCSS, design tokens, layout, responsive, theming |
+| `refactoring/refactoring-expert` | FE refactoring with SOLID, DRY, separation of concerns scope |
 
-## Fonti di contesto FE
+## FE context sources
 
-Prima di attivare skill FE, consulta la documentazione e gli artefatti di analisi disponibili nel progetto:
+Before activating FE skills, consult the documentation and analysis artefacts available in the project:
 
-1. **Artefatti di migrazione / mapping** — se disponibili, cerca il mapping del componente/pagina legacy che stai migrando verso Angular
-2. **Analisi funzionale** — per i requisiti del componente da implementare
-3. **Analisi tecnica** — per capire il bounded context e le dipendenze del componente
-4. **Artefatti architetturali** — per comprendere il flusso end-to-end in cui il componente FE si inserisce
+1. **Migration / mapping artefacts** — if available, look for the mapping of the legacy component/page you are migrating to Angular
+2. **Functional analysis** — for the requirements of the component to implement
+3. **Technical analysis** — to understand the bounded context and dependencies of the component
+4. **Architectural artefacts** — to understand the end-to-end flow in which the FE component fits
 
-### Quando consultare gli artefatti pre-esistenti (FE context)
+### When to consult pre-existing artefacts (FE context)
 
-**Per nuovi componenti da migrazione legacy:**
-1. Cerca il mapping del componente negli artefatti di analisi disponibili
-2. Leggi la logica sorgente e le business rules del componente legacy
-3. Identifica le dipendenze del componente nel bounded context corrispondente
+**For new components from legacy migration:**
+1. Look for the component mapping in the available analysis artefacts
+2. Read the source logic and business rules of the legacy component
+3. Identify the component's dependencies in the corresponding bounded context
 
-**Per refactoring FE esistente:**
-- Consulta gli artefatti architetturali per capire cosa dipende dal componente che stai modificando
+**For existing FE refactoring:**
+- Consult the architectural artefacts to understand what depends on the component you are modifying
 
-**Non consultare** artefatti di analisi per task puramente di stile o micro-fix Angular.
+**Do not consult** analysis artefacts for purely stylistic tasks or Angular micro-fixes.
 
-## Algoritmo di orchestrazione FE
+## FE orchestration algorithm
 
-### Step 1 — Analizza il task FE
+### Step 1 — Analyse the FE task
 
-Domande guida:
-- **Nuovo componente da zero?** → Inizia da design, poi Angular, poi CSS
-- **Stato complesso o condiviso tra feature?** → Valuta se serve NgRx (vedi Step 2)
-- **Stream RxJS problematici?** → Attiva `frontend/angular/rxjs-expert`
-- **Stili da riorganizzare o creare da zero?** → Attiva `frontend/css-expert`
-- **Solo refactoring di codice esistente?** → Attiva `/refactoring/refactoring-expert` con scope FE
+Guiding questions:
+- **New component from scratch?** → Start with design, then Angular, then CSS
+- **Complex state shared between features?** → Evaluate whether NgRx is needed (see Step 2)
+- **Problematic RxJS streams?** → Activate `frontend/angular/rxjs-expert`
+- **Styles to reorganise or create from scratch?** → Activate `frontend/css-expert`
+- **Only refactoring of existing code?** → Activate `/refactoring/refactoring-expert` with FE scope
 
-### Step 2 — Valuta se NgRx è necessario
+### Step 2 — Evaluate whether NgRx is necessary
 
-**NgRx è appropriato quando:**
-- Stato condiviso tra più componenti non correlati gerarchicamente
-- Side effects complessi (chiamate API, cache, WebSocket)
-- Necessità di time-travel debugging o undo/redo
-- Feature con molte trasformazioni di stato
+**NgRx is appropriate when:**
+- State shared between multiple components not hierarchically related
+- Complex side effects (API calls, cache, WebSocket)
+- Need for time-travel debugging or undo/redo
+- Feature with many state transformations
 
-**NgRx è overkill quando:**
-- Stato locale a un singolo componente o feature isolata
-- Semplice comunicazione parent-child via @Input/@Output
-- Il problema si risolve con un servizio + BehaviorSubject
+**NgRx is overkill when:**
+- State local to a single component or isolated feature
+- Simple parent-child communication via @Input/@Output
+- The problem is solved with a service + BehaviorSubject
 
-**Regola**: raggiungi NgRx solo quando un servizio con BehaviorSubject non è sufficiente.
+**Rule**: reach for NgRx only when a service with BehaviorSubject is not sufficient.
 
-### Step 3 — Ordini standard di attivazione
+### Step 3 — Standard activation orders
 
-**Scenario A: nuovo componente da zero**
+**Scenario A: new component from scratch**
 ```
-1. frontend/design-expert      → layout, mockup, design token
-2. frontend/angular/angular-expert     → struttura componente, smart/dumb, servizi
-3. frontend/css-expert         → SCSS modulare, responsive
-4. frontend/angular/ngrx-expert        → (solo se c'è stato da gestire)
-5. frontend/angular/rxjs-expert        → (solo se ci sono stream complessi)
-```
-
-**Scenario B: refactoring FE esistente**
-```
-1. /refactoring/refactoring-expert  → identifica code smell, violazioni SOLID
-2. frontend/angular/angular-expert         → applica correzioni strutturali
-3. frontend/angular/rxjs-expert            → correggi pattern RxJS problematici
-4. frontend/css-expert             → correggi stili (se necessario)
+1. frontend/design-expert              → layout, mockup, design tokens
+2. frontend/angular/angular-expert     → component structure, smart/dumb, services
+3. frontend/css-expert                 → modular SCSS, responsive
+4. frontend/angular/ngrx-expert        → (only if there is state to manage)
+5. frontend/angular/rxjs-expert        → (only if there are complex streams)
 ```
 
-**Scenario C: feature con stato complesso**
+**Scenario B: existing FE refactoring**
 ```
-1. frontend/design-expert      → UI e flusso utente
+1. /refactoring/refactoring-expert     → identify code smells, SOLID violations
+2. frontend/angular/angular-expert     → apply structural corrections
+3. frontend/angular/rxjs-expert        → correct problematic RxJS patterns
+4. frontend/css-expert                 → correct styles (if necessary)
+```
+
+**Scenario C: feature with complex state**
+```
+1. frontend/design-expert              → UI and user flow
 2. frontend/angular/ngrx-expert        → store design, actions, effects
-3. frontend/angular/angular-expert     → collega componenti allo store via facade
-4. frontend/angular/rxjs-expert        → gestisci stream negli effects
+3. frontend/angular/angular-expert     → connect components to the store via facade
+4. frontend/angular/rxjs-expert        → manage streams in effects
 ```
 
-**Scenario D: migrazione di un componente legacy → Angular**
+**Scenario D: migration of a legacy component → Angular**
 ```
-Delega a /orchestrators/migration-orchestrator
-(include già FE orchestration come parte della pipeline)
-```
-
-### Step 4 — Invarianti FE obbligatorie
-
-Queste regole si applicano a ogni output orchestrato, indipendentemente dallo scenario:
-
-```
-[Design]    → Token sempre per colori/spacing/typography — mai valori hardcoded
-[Design]    → Componenti dalla libreria del design system del progetto prima di crearne custom
-[Design]    → Accessibilità: focus ring su controlli interattivi, WCAG AA contrasto
-
-[Angular]   → ChangeDetectionStrategy.OnPush su tutti i dumb components
-[Angular]   → Zero any nel TypeScript — interfacce esplicite per ogni modello
-[Angular]   → Lazy loading su ogni feature module
-[Angular]   → @Input/@Output tipizzati — niente oggetti configurazione omnibus
-[Angular]   → Dumb components senza dipendenze da servizi o store
-
-[RxJS]      → async pipe preferita ai subscribe manuali
-[RxJS]      → Ogni subscribe manuale ha strategia di cleanup esplicita
-[RxJS]      → Non modificare variabili esterne in map (usa tap)
-
-[SCSS]      → Stili in .component.scss — no CSS inline nel template
-[SCSS]      → Selettori BEM piatti — nesting massimo 3 livelli
-[SCSS]      → @use invece di @import per token e mixin
-
-[NgRx]      → Reducers puri — nessun side effect, nessuna chiamata HTTP
-[NgRx]      → Se usi facade, i componenti non accedono direttamente allo store
-[NgRx]      → Azioni event-driven con source tag: [Pagina/API] Evento Accaduto
+Delegate to /orchestrators/migration-orchestrator
+(already includes FE orchestration as part of the pipeline)
 ```
 
-### Step 5 — Pattern decisionali FE
+### Step 4 — Mandatory FE invariants
 
-**Stato: quando scegliere cosa**
+These rules apply to every orchestrated output, regardless of the scenario:
+
+```
+[Design]    → Tokens always for colours/spacing/typography — never hardcoded values
+[Design]    → Components from the project design system library before creating custom ones
+[Design]    → Accessibility: focus ring on interactive controls, WCAG AA contrast
+
+[Angular]   → ChangeDetectionStrategy.OnPush on all dumb components
+[Angular]   → Zero any in TypeScript — explicit interfaces for every model
+[Angular]   → Lazy loading on every feature module
+[Angular]   → Typed @Input/@Output — no omnibus configuration objects
+[Angular]   → Dumb components without dependencies on services or store
+
+[RxJS]      → async pipe preferred over manual subscribes
+[RxJS]      → Every manual subscribe has an explicit cleanup strategy
+[RxJS]      → Do not modify external variables in map (use tap)
+
+[SCSS]      → Styles in .component.scss — no inline CSS in the template
+[SCSS]      → Flat BEM selectors — maximum 3 levels of nesting
+[SCSS]      → @use instead of @import for tokens and mixins
+
+[NgRx]      → Pure reducers — no side effects, no HTTP calls
+[NgRx]      → If using facade, components do not access the store directly
+[NgRx]      → Event-driven actions with source tag: [Page/API] Event Occurred
+```
+
+### Step 5 — FE decision patterns
+
+**State: when to choose what**
 ```
 UI state (isOpen, isLoading, activeTab)   → Component local state
-Stato condiviso in una feature            → Servizio + BehaviorSubject
-Stato globale / side effects complessi    → NgRx
-Comunicazione parent-child                → @Input/@Output
+State shared within a feature             → Service + BehaviorSubject
+Global state / complex side effects       → NgRx
+Parent-child communication                → @Input/@Output
 ```
 
-**Query API: quale operatore usare**
+**API queries: which operator to use**
 ```
-Ricerca live / autocomplete               → switchMap (cancella la precedente)
-Form submit (evita doppio click)          → exhaustMap
-Operazioni sequenziali dipendenti         → concatMap
-Download paralleli indipendenti           → mergeMap
-```
-
-**Componente: smart o dumb?**
-```
-Conosce servizi, router, store            → Smart (container)
-Riceve solo @Input, emette solo @Output   → Dumb (presentational, obbligatorio OnPush)
+Live search / autocomplete                → switchMap (cancels the previous)
+Form submit (prevents double click)       → exhaustMap
+Dependent sequential operations           → concatMap
+Independent parallel downloads            → mergeMap
 ```
 
-## Acceptance Criteria per orchestrazione FE completata
-
-**Scenario A (nuovo componente) completato quando:**
-- [ ] Design spec prodotta con token name (non valori hex)
-- [ ] Component tree (smart/dumb) definito
-- [ ] Lazy feature module configurato
-- [ ] Stili in `.component.scss` modulare
-- [ ] Nessun `any` nel TypeScript
-- [ ] Observable gestiti con `async` pipe o cleanup esplicito
-- [ ] Tutti i dumb components con `OnPush`
-
-**Scenario C (stato complesso) completato quando:**
-- [ ] Store design documentato (state interface, actions, selectors)
-- [ ] Effects per ogni chiamata API
-- [ ] Facade come unico punto di accesso allo store per i componenti
-- [ ] Unit test per reducers e selectors
-
-### Scenari React, Vue, Qwik
-
-**Scenario R: nuovo componente React da zero**
+**Component: smart or dumb?**
 ```
-1. frontend/design-expert          → layout, mockup, design token
-2. frontend/react/react-expert     → componenti, hooks, TypeScript
-3. frontend/react/tanstack-query   → se fetch dati necessario
-4. frontend/react/tanstack         → se routing necessario
-5. frontend/css-expert             → stili modulari/Tailwind
+Knows services, router, store             → Smart (container)
+Receives only @Input, emits only @Output  → Dumb (presentational, OnPush mandatory)
 ```
 
-**Scenario R-Full: app React full-stack**
+## Acceptance Criteria for completed FE orchestration
+
+**Scenario A (new component) completed when:**
+- [ ] Design spec produced with token names (not hex values)
+- [ ] Component tree (smart/dumb) defined
+- [ ] Lazy feature module configured
+- [ ] Styles in modular `.component.scss`
+- [ ] No `any` in TypeScript
+- [ ] Observables managed with `async` pipe or explicit cleanup
+- [ ] All dumb components with `OnPush`
+
+**Scenario C (complex state) completed when:**
+- [ ] Store design documented (state interface, actions, selectors)
+- [ ] Effects for every API call
+- [ ] Facade as the single access point to the store for components
+- [ ] Unit tests for reducers and selectors
+
+### React, Vue, Qwik scenarios
+
+**Scenario R: new React component from scratch**
 ```
-1. frontend/react/nextjs            → se SSR/RSC (App Router)
-   oppure frontend/react/tanstack-start → se TanStack-native
-2. frontend/react/react-expert      → componenti client
+1. frontend/design-expert          → layout, mockup, design tokens
+2. frontend/react/react-expert     → components, hooks, TypeScript
+3. frontend/react/tanstack-query   → if data fetching is needed
+4. frontend/react/tanstack         → if routing is needed
+5. frontend/css-expert             → modular/Tailwind styles
+```
+
+**Scenario R-Full: full-stack React app**
+```
+1. frontend/react/nextjs            → if SSR/RSC (App Router)
+   or frontend/react/tanstack-start → if TanStack-native
+2. frontend/react/react-expert      → client components
 3. frontend/react/tanstack-query    → client state/data fetching
 ```
 
-**Scenario V: Vue 3 da zero**
+**Scenario V: Vue 3 from scratch**
 ```
 1. frontend/design-expert           → layout, mockup
 2. frontend/vue/vue-expert          → SFC, composables, Pinia, Vue Router
-3. frontend/css-expert              → stili scoped
+3. frontend/css-expert              → scoped styles
 ```
 
 **Scenario Q: Qwik / Qwik City**
 ```
 1. frontend/design-expert           → layout, mockup
-2. frontend/qwik/qwik-expert        → componenti, loaders, actions, signals
-3. frontend/css-expert              → stili
+2. frontend/qwik/qwik-expert        → components, loaders, actions, signals
+3. frontend/css-expert              → styles
 ```
 
 ---
 
-## Output atteso
+## Expected output
 
-Al termine dell'orchestrazione FE, produci:
-- Riepilogo delle skill attivate e dei loro contributi
-- Codice del framework scelto completo
-- Note sui pattern adottati e motivazioni architetturali
+At the end of FE orchestration, produce:
+- Summary of the skills activated and their contributions
+- Complete code for the chosen framework
+- Notes on the patterns adopted and architectural motivations
 
-## Quando usare questo orchestratore
+## When to use this orchestrator
 
-- Nuovi componenti o feature FE da zero (qualsiasi framework)
-- Refactoring di componenti o moduli FE esistenti
-- Feature FE con stato complesso
-- Review architetturale del frontend
-- Task che coinvolgono più di una skill FE
+- New FE components or features from scratch (any framework)
+- Refactoring of existing FE components or modules
+- FE features with complex state
+- Frontend architectural review
+- Tasks involving more than one FE skill
 
-## Quando NON usare
+## When NOT to use
 
-- Task puramente BE → `/backend/java-expert`
-- Task di analisi repo → `/analysis/tech-analyst`
-- Task di migrazione → `/orchestrators/migration-orchestrator`
-- Task FE semplice con una sola skill → vai direttamente alla skill
+- Purely BE tasks → `/backend/java-expert`
+- Repository analysis tasks → `/analysis/tech-analyst`
+- Migration tasks → `/orchestrators/migration-orchestrator`
+- Simple FE task with a single skill → go directly to the skill
 
 ---
 

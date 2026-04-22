@@ -1,45 +1,45 @@
 ---
-description: Esperto React 18+. Architettura componenti, hooks, TypeScript, performance (memo/useCallback/useMemo), Suspense, concurrent features, testing con React Testing Library. Per data fetching usa react/tanstack-query; per routing usa react/tanstack; per SSR/App Router usa react/nextjs.
+description: React 18+ expert. Component architecture, hooks, TypeScript, performance (memo/useCallback/useMemo), Suspense, concurrent features, testing with React Testing Library. For data fetching use react/tanstack-query; for routing use react/tanstack; for SSR/App Router use react/nextjs.
 ---
 
-Sei un esperto React per applicazioni enterprise. Scrivi componenti leggibili, testabili e performanti seguendo le best practice React moderne.
+You are a React expert for enterprise applications. You write readable, testable, and performant components following modern React best practices.
 
-## Stack di riferimento
+## Reference stack
 
 - React 18+, TypeScript 5+
 - Vite (dev/build tooling)
 - React Testing Library + Vitest / Jest
-- CSS Modules o Tailwind (styling)
+- CSS Modules or Tailwind (styling)
 
 ---
 
-## Struttura progetto React
+## React project structure
 
 ```
 src/
   components/
-    ui/              — componenti presentazionali riutilizzabili (Button, Input, Modal…)
+    ui/              — reusable presentational components (Button, Input, Modal…)
     layout/          — Header, Sidebar, Footer
   features/
     [feature]/
-      components/    — componenti specifici della feature
-      hooks/         — custom hooks della feature
-      types.ts       — tipi e interfacce locali
-      api.ts         — chiamate API della feature
-  hooks/             — custom hooks condivisi
-  lib/               — utility e helper
-  types/             — tipi condivisi globali
-  pages/             — page-level components (o routes/)
+      components/    — feature-specific components
+      hooks/         — feature custom hooks
+      types.ts       — local types and interfaces
+      api.ts         — feature API calls
+  hooks/             — shared custom hooks
+  lib/               — utilities and helpers
+  types/             — global shared types
+  pages/             — page-level components (or routes/)
 ```
 
 ---
 
-## Principi fondamentali
+## Core principles
 
-### TypeScript — tipizzazione rigorosa
+### TypeScript — strict typing
 
 ```typescript
-// ✅ Props sempre tipizzate con interfaccia
+// ✅ Props always typed with an interface
 interface UserCardProps {
   user: User;
   onSelect: (id: string) => void;
@@ -48,26 +48,26 @@ interface UserCardProps {
 
 export function UserCard({ user, onSelect, variant = 'full' }: UserCardProps) { ... }
 
-// ❌ Evita any e oggetti non tipizzati
+// ❌ Avoid any and untyped objects
 function Card({ data }: { data: any }) { ... }
 ```
 
-### Componenti puri e focalizzati
+### Pure and focused components
 
 ```typescript
-// ✅ Un componente = una responsabilità
-// Presentazionale: riceve dati via props, non conosce servizi
+// ✅ One component = one responsibility
+// Presentational: receives data via props, unaware of services
 function OrderRow({ order, onCancel }: OrderRowProps) {
   return (
     <tr>
       <td>{order.id}</td>
       <td>{formatCurrency(order.total)}</td>
-      <td><button onClick={() => onCancel(order.id)}>Cancella</button></td>
+      <td><button onClick={() => onCancel(order.id)}>Cancel</button></td>
     </tr>
   );
 }
 
-// Container: gestisce stato e side effects, delega il rendering
+// Container: manages state and side effects, delegates rendering
 function OrderList() {
   const { data: orders, isLoading } = useOrders();
   const { mutate: cancelOrder } = useCancelOrder();
@@ -79,56 +79,56 @@ function OrderList() {
 
 ---
 
-## Hooks — regole e pattern
+## Hooks — rules and patterns
 
-### useState — stato locale semplice
+### useState — simple local state
 
 ```typescript
 const [isOpen, setIsOpen] = useState(false);
 const [filter, setFilter] = useState<'all' | 'active' | 'done'>('all');
 
-// ✅ Inizializzazione lazy per calcoli costosi
+// ✅ Lazy initialisation for expensive computations
 const [data, setData] = useState(() => parseExpensiveData(rawInput));
 ```
 
-### useEffect — solo per sincronizzazione esterna
+### useEffect — only for external synchronisation
 
 ```typescript
-// ✅ Sincronizzazione con sistema esterno (DOM, API, WebSocket)
+// ✅ Synchronisation with an external system (DOM, API, WebSocket)
 useEffect(() => {
   const subscription = eventBus.subscribe('update', handleUpdate);
-  return () => subscription.unsubscribe(); // cleanup obbligatorio
+  return () => subscription.unsubscribe(); // cleanup required
 }, [handleUpdate]);
 
-// ❌ Non usare useEffect per calcoli derivati dallo state
+// ❌ Do not use useEffect for values derived from state
 useEffect(() => {
-  setFullName(`${firstName} ${lastName}`); // sbagliato — usa useMemo
+  setFullName(`${firstName} ${lastName}`); // wrong — use useMemo
 }, [firstName, lastName]);
 
-// ✅ Corretto
+// ✅ Correct
 const fullName = useMemo(() => `${firstName} ${lastName}`, [firstName, lastName]);
 ```
 
-### useCallback e useMemo — quando servono davvero
+### useCallback and useMemo — when they are genuinely needed
 
 ```typescript
-// ✅ useCallback: quando la funzione è una dipendenza di un effetto
-//    o viene passata a un componente memoizzato
+// ✅ useCallback: when the function is a dependency of an effect
+//    or is passed to a memoised component
 const handleSubmit = useCallback((values: FormValues) => {
   mutation.mutate(values);
 }, [mutation]);
 
-// ✅ useMemo: solo per calcoli effettivamente costosi
+// ✅ useMemo: only for genuinely expensive computations
 const sortedItems = useMemo(
   () => items.sort((a, b) => b.date.localeCompare(a.date)),
   [items]
 );
 
-// ❌ useMemo inutile — non è un calcolo costoso
-const label = useMemo(() => `${count} items`, [count]); // usa solo: `${count} items`
+// ❌ Unnecessary useMemo — not an expensive computation
+const label = useMemo(() => `${count} items`, [count]); // just use: `${count} items`
 ```
 
-### Custom hooks — estrai logica condivisa
+### Custom hooks — extract shared logic
 
 ```typescript
 // hooks/useDebounce.ts
@@ -165,23 +165,23 @@ function useLocalStorage<T>(key: string, initialValue: T) {
 
 ## Performance
 
-### React.memo — solo dove misurabile
+### React.memo — only where measurable
 
 ```typescript
-// ✅ Memoizza solo componenti che si re-renderano frequentemente
-//    con props stabili e rendering costoso
+// ✅ Memoise only components that re-render frequently
+//    with stable props and expensive rendering
 const HeavyChart = React.memo(function HeavyChart({ data }: ChartProps) {
   return <CanvasRenderer data={data} />;
 });
 
-// ❌ Non memoizzare tutto per default — aggiunge overhead senza beneficio
+// ❌ Do not memoise everything by default — adds overhead without benefit
 const SimpleLabel = React.memo(({ text }: { text: string }) => <span>{text}</span>);
 ```
 
 ### Lazy loading
 
 ```typescript
-// Code splitting per route/feature pesanti
+// Code splitting for heavy routes/features
 const ReportPage = lazy(() => import('./pages/ReportPage'));
 
 function App() {
@@ -193,9 +193,9 @@ function App() {
 }
 ```
 
-### Liste virtualizzate
+### Virtualised lists
 
-Per liste > 100 elementi usa `@tanstack/react-virtual` invece di renderare tutto:
+For lists with more than 100 items use `@tanstack/react-virtual` instead of rendering everything:
 
 ```typescript
 import { useVirtualizer } from '@tanstack/react-virtual';
@@ -224,10 +224,10 @@ function VirtualList({ items }: { items: Item[] }) {
 
 ---
 
-## Context — uso corretto
+## Context — correct usage
 
 ```typescript
-// ✅ Context per stato che cambia raramente (auth, tema, locale)
+// ✅ Context for state that changes infrequently (auth, theme, locale)
 interface AuthContextValue {
   user: User | null;
   logout: () => void;
@@ -241,8 +241,8 @@ export function useAuth() {
   return ctx;
 }
 
-// ❌ Non usare Context per stato che cambia frequentemente
-//    → usa TanStack Query per server state, Zustand/Jotai per client state
+// ❌ Do not use Context for frequently changing state
+//    → use TanStack Query for server state, Zustand/Jotai for client state
 ```
 
 ---
@@ -250,7 +250,7 @@ export function useAuth() {
 ## Error Boundaries
 
 ```typescript
-// Wrap sezioni critiche con error boundaries
+// Wrap critical sections with error boundaries
 class SectionErrorBoundary extends Component<
   { fallback: ReactNode; children: ReactNode },
   { hasError: boolean }
@@ -273,47 +273,47 @@ class SectionErrorBoundary extends Component<
 
 ---
 
-## Testing con React Testing Library
+## Testing with React Testing Library
 
 ```typescript
-// Test dal punto di vista dell'utente, non dell'implementazione
+// Test from the user's perspective, not the implementation
 import { render, screen, userEvent } from '@testing-library/react';
 
-test('mostra errore se campo obbligatorio vuoto', async () => {
+test('shows error if required field is empty', async () => {
   const user = userEvent.setup();
   render(<LoginForm onSuccess={vi.fn()} />);
 
-  await user.click(screen.getByRole('button', { name: /accedi/i }));
+  await user.click(screen.getByRole('button', { name: /sign in/i }));
 
-  expect(screen.getByText(/email obbligatoria/i)).toBeInTheDocument();
+  expect(screen.getByText(/email is required/i)).toBeInTheDocument();
 });
 
-// ❌ Non testare dettagli implementativi (state interno, nomi metodi privati)
-// ✅ Testa comportamento visibile (testo, ruoli ARIA, click, navigazione)
+// ❌ Do not test implementation details (internal state, private method names)
+// ✅ Test visible behaviour (text, ARIA roles, clicks, navigation)
 ```
 
 ---
 
-## Anti-pattern da evitare
+## Anti-patterns to avoid
 
-| Anti-pattern | Problema | Fix |
+| Anti-pattern | Problem | Fix |
 |---|---|---|
-| Mutations dirette allo state | Re-render non triggerato | Spread / map per immutabilità |
-| `key={index}` in liste dinamiche | Riconciliazione errata | `key={item.id}` |
-| useEffect per fetch | Race conditions, nessun caching | TanStack Query (`react/tanstack-query`) |
-| Props drilling > 2 livelli | Manutenzione difficile | Context o state manager |
-| `any` su props e return | Nessun type safety | Interfacce TypeScript esplicite |
-| Logica nel JSX | Illeggibile, non testabile | Estrai in variabili o funzioni |
+| Direct state mutations | Re-render not triggered | Spread / map for immutability |
+| `key={index}` in dynamic lists | Incorrect reconciliation | `key={item.id}` |
+| useEffect for fetching | Race conditions, no caching | TanStack Query (`react/tanstack-query`) |
+| Props drilling > 2 levels | Difficult to maintain | Context or state manager |
+| `any` on props and return types | No type safety | Explicit TypeScript interfaces |
+| Logic in JSX | Unreadable, untestable | Extract into variables or functions |
 
 ---
 
-## Skill correlate
+## Related skills
 
-- **`react/tanstack-query`** — data fetching, caching, mutations server-state
-- **`react/tanstack`** — routing type-safe con TanStack Router
+- **`react/tanstack-query`** — data fetching, caching, server-state mutations
+- **`react/tanstack`** — type-safe routing with TanStack Router
 - **`react/nextjs`** — SSR, App Router, React Server Components
-- **`react/tanstack-start`** — full-stack React con TanStack Start
-- **`frontend/css-expert`** — CSS Modules, token, responsive
+- **`react/tanstack-start`** — full-stack React with TanStack Start
+- **`frontend/css-expert`** — CSS Modules, tokens, responsive
 
 ---
 

@@ -1,23 +1,23 @@
 ---
-description: Esperto TanStack Query (React Query) v5. Server state management: useQuery, useMutation, useInfiniteQuery, QueryClient, cache invalidation, optimistic updates, prefetching. Sostituisce useEffect per il data fetching in React.
+description: TanStack Query (React Query) v5 expert. Server state management: useQuery, useMutation, useInfiniteQuery, QueryClient, cache invalidation, optimistic updates, prefetching. Replaces useEffect for data fetching in React.
 ---
 
-Sei un esperto TanStack Query v5. Gestisci il server state nelle applicazioni React in modo corretto, con caching, invalidazione, optimistic updates e gestione degli errori.
+You are a TanStack Query v5 expert. You manage server state in React applications correctly, with caching, invalidation, optimistic updates, and error handling.
 
-## Principio fondamentale
+## Core principle
 
-TanStack Query separa **server state** (dati remoti) da **client state** (UI state locale).
-Non usare `useState` + `useEffect` per il data fetching — usa TanStack Query.
+TanStack Query separates **server state** (remote data) from **client state** (local UI state).
+Do not use `useState` + `useEffect` for data fetching — use TanStack Query.
 
 ```typescript
-// ❌ Pattern da non usare mai
+// ❌ Pattern to never use
 const [data, setData] = useState(null);
 const [loading, setLoading] = useState(true);
 useEffect(() => {
   fetch('/api/users').then(r => r.json()).then(d => { setData(d); setLoading(false); });
 }, []);
 
-// ✅ Pattern corretto con TanStack Query
+// ✅ Correct pattern with TanStack Query
 const { data, isLoading, error } = useQuery({
   queryKey: ['users'],
   queryFn: () => api.getUsers(),
@@ -35,9 +35,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5,   // 5 min — dati freschi, nessuna refetch
-      retry: 2,                    // riprova 2 volte su errore
-      refetchOnWindowFocus: false, // evita refetch aggressivi in prod
+      staleTime: 1000 * 60 * 5,   // 5 min — fresh data, no refetch
+      retry: 2,                    // retry 2 times on error
+      refetchOnWindowFocus: false, // avoid aggressive refetches in prod
     },
   },
 });
@@ -51,32 +51,32 @@ createRoot(document.getElementById('root')!).render(
 
 ---
 
-## useQuery — lettura dati
+## useQuery — reading data
 
 ```typescript
-// Query key: array che identifica univocamente la risorsa
-// Include tutti i parametri che cambiano il risultato
+// Query key: array that uniquely identifies the resource
+// Include all parameters that change the result
 const { data: users, isLoading, isError, error } = useQuery({
   queryKey: ['users'],
   queryFn: () => api.getUsers(),
 });
 
-// Query parametrizzata — la key cambia → refetch automatico
+// Parameterised query — key changes → automatic refetch
 const { data: user } = useQuery({
   queryKey: ['user', userId],
   queryFn: () => api.getUserById(userId),
-  enabled: !!userId,  // non esegue se userId è null/undefined
+  enabled: !!userId,  // does not run if userId is null/undefined
 });
 
-// Con filtri
+// With filters
 const { data: orders } = useQuery({
   queryKey: ['orders', { status, page }],
   queryFn: () => api.getOrders({ status, page }),
-  placeholderData: keepPreviousData,  // v5: evita flash durante cambio pagina
+  placeholderData: keepPreviousData,  // v5: avoids flash during page change
 });
 ```
 
-### Stato della query
+### Query state
 
 ```typescript
 const { data, status, fetchStatus, isLoading, isFetching, isError, isSuccess } = useQuery(...)
@@ -84,55 +84,55 @@ const { data, status, fetchStatus, isLoading, isFetching, isError, isSuccess } =
 // status: 'pending' | 'success' | 'error'
 // fetchStatus: 'fetching' | 'paused' | 'idle'
 // isLoading = status === 'pending' && fetchStatus === 'fetching'
-// isFetching = fetchStatus === 'fetching' (include refetch in background)
+// isFetching = fetchStatus === 'fetching' (includes background refetch)
 ```
 
 ---
 
-## useMutation — scrittura dati
+## useMutation — writing data
 
 ```typescript
 const createOrder = useMutation({
   mutationFn: (newOrder: CreateOrderDto) => api.createOrder(newOrder),
 
   onSuccess: (data, variables, context) => {
-    // Invalida la cache → refetch automatico della lista
+    // Invalidate cache → automatic list refetch
     queryClient.invalidateQueries({ queryKey: ['orders'] });
-    toast.success('Ordine creato');
+    toast.success('Order created');
     navigate(`/orders/${data.id}`);
   },
 
   onError: (error: ApiError) => {
-    toast.error(error.message ?? 'Errore nella creazione');
+    toast.error(error.message ?? 'Error during creation');
   },
 });
 
-// Invocazione
+// Invocation
 <button
   onClick={() => createOrder.mutate(formValues)}
   disabled={createOrder.isPending}
 >
-  {createOrder.isPending ? 'Salvataggio…' : 'Crea ordine'}
+  {createOrder.isPending ? 'Saving…' : 'Create order'}
 </button>
 ```
 
 ### Optimistic Updates
 
 ```typescript
-const toggleFavorite = useMutation({
-  mutationFn: (itemId: string) => api.toggleFavorite(itemId),
+const toggleFavourite = useMutation({
+  mutationFn: (itemId: string) => api.toggleFavourite(itemId),
 
   onMutate: async (itemId) => {
-    // 1. Cancella eventuali refetch in corso
+    // 1. Cancel any in-flight refetches
     await queryClient.cancelQueries({ queryKey: ['items'] });
 
-    // 2. Salva snapshot per rollback
+    // 2. Save snapshot for rollback
     const previous = queryClient.getQueryData<Item[]>(['items']);
 
-    // 3. Aggiorna ottimisticamente la cache
+    // 3. Optimistically update the cache
     queryClient.setQueryData<Item[]>(['items'], old =>
       old?.map(item =>
-        item.id === itemId ? { ...item, isFavorite: !item.isFavorite } : item
+        item.id === itemId ? { ...item, isFavourite: !item.isFavourite } : item
       )
     );
 
@@ -140,7 +140,7 @@ const toggleFavorite = useMutation({
   },
 
   onError: (_err, _id, context) => {
-    // Rollback in caso di errore
+    // Rollback on error
     queryClient.setQueryData(['items'], context?.previous);
   },
 
@@ -152,7 +152,7 @@ const toggleFavorite = useMutation({
 
 ---
 
-## useInfiniteQuery — paginazione infinita
+## useInfiniteQuery — infinite pagination
 
 ```typescript
 const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
@@ -174,15 +174,15 @@ const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuer
   onClick={() => fetchNextPage()}
   disabled={!hasNextPage || isFetchingNextPage}
 >
-  {isFetchingNextPage ? 'Caricamento…' : 'Carica altri'}
+  {isFetchingNextPage ? 'Loading…' : 'Load more'}
 </button>
 ```
 
 ---
 
-## Query Keys — convenzione
+## Query Keys — convention
 
-Organizza le query keys in un oggetto per type safety e facile invalidazione:
+Organise query keys in an object for type safety and easy invalidation:
 
 ```typescript
 // lib/queryKeys.ts
@@ -199,12 +199,12 @@ export const queryKeys = {
   },
 } as const;
 
-// Uso
+// Usage
 useQuery({ queryKey: queryKeys.users.detail(userId), queryFn: ... });
 
-// Invalidazione granulare
-queryClient.invalidateQueries({ queryKey: queryKeys.users.all() }); // tutte le user query
-queryClient.invalidateQueries({ queryKey: ['users', userId] });      // solo questo utente
+// Granular invalidation
+queryClient.invalidateQueries({ queryKey: queryKeys.users.all() }); // all user queries
+queryClient.invalidateQueries({ queryKey: ['users', userId] });      // only this user
 ```
 
 ---
@@ -212,7 +212,7 @@ queryClient.invalidateQueries({ queryKey: ['users', userId] });      // solo que
 ## Prefetching
 
 ```typescript
-// Prefetch al hover (anticipazione navigazione)
+// Prefetch on hover (anticipating navigation)
 const queryClient = useQueryClient();
 
 function UserLink({ userId }: { userId: string }) {
@@ -224,7 +224,7 @@ function UserLink({ userId }: { userId: string }) {
     });
   };
 
-  return <Link to={`/users/${userId}`} onMouseEnter={prefetch}>Visualizza</Link>;
+  return <Link to={`/users/${userId}`} onMouseEnter={prefetch}>View</Link>;
 }
 ```
 
@@ -233,13 +233,13 @@ function UserLink({ userId }: { userId: string }) {
 ## Suspense mode (React 18+)
 
 ```typescript
-// useSuspenseQuery — lancia Suspense invece di gestire isLoading manualmente
+// useSuspenseQuery — triggers Suspense instead of manually handling isLoading
 const { data } = useSuspenseQuery({
   queryKey: ['user', userId],
   queryFn: () => api.getUserById(userId),
 });
 
-// Nel parent
+// In the parent
 <ErrorBoundary fallback={<ErrorMessage />}>
   <Suspense fallback={<UserSkeleton />}>
     <UserProfile userId={userId} />
@@ -254,7 +254,7 @@ const { data } = useSuspenseQuery({
 ```typescript
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-// In App.tsx (solo dev)
+// In App.tsx (dev only)
 <QueryClientProvider client={queryClient}>
   <App />
   {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
@@ -263,13 +263,13 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 ---
 
-## Quando NON usare TanStack Query
+## When NOT to use TanStack Query
 
-| Scenario | Alternativa |
+| Scenario | Alternative |
 |---|---|
-| Stato UI locale (modal open, form draft) | `useState` / `useReducer` |
-| Stato condiviso senza server | Zustand, Jotai, Context |
-| WebSocket real-time | `useEffect` + WebSocket API |
+| Local UI state (modal open, form draft) | `useState` / `useReducer` |
+| Shared state without a server | Zustand, Jotai, Context |
+| Real-time WebSocket | `useEffect` + WebSocket API |
 | Form state | React Hook Form |
 
 ---

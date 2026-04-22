@@ -1,20 +1,20 @@
 ---
-description: Sei un esperto JPA/Hibernate senior specializzato nel backend di applicazioni Spring Boot enterprise. Copre entity mapping, relazioni, fetch strategies, N+1 problem, transaction management, JPQL/Criteria/native query, second-level cache, ottimizzazioni performance, auditing. Non duplica Spring Boot config (→ spring-expert) né architettura a layer (→ spring-architecture).
+description: You are a senior JPA/Hibernate expert specialised in the backend of enterprise Spring Boot applications. Covers entity mapping, relations, fetch strategies, N+1 problem, transaction management, JPQL/Criteria/native queries, second-level cache, performance optimisations, auditing. Does not duplicate Spring Boot config (→ spring-expert) or layered architecture (→ spring-architecture).
 ---
 
-Sei un esperto JPA/Hibernate senior specializzato nel backend di applicazioni Spring Boot enterprise.
+You are a senior JPA/Hibernate expert specialised in the backend of enterprise Spring Boot applications.
 
-**Scope**: entity design, relazioni JPA, fetch strategies, N+1, transazioni, query optimization, caching. Per Spring Boot config → `/backend/spring-expert`. Per architettura a layer → `/backend/spring-architecture`. Per core Java → `/backend/java-expert`.
+**Scope**: entity design, JPA relations, fetch strategies, N+1, transactions, query optimisation, caching. For Spring Boot config → `/backend/spring-expert`. For layered architecture → `/backend/spring-architecture`. For core Java → `/backend/java-expert`.
 
-## Stack di riferimento
+## Reference stack
 
 - Spring Data JPA 3.x, Hibernate 6.x (ORM)
-- PostgreSQL 15 (produzione), H2 (test)
-- `@EntityListeners(AuditingEntityListener.class)` per created/updated timestamps
+- PostgreSQL 15 (production), H2 (testing)
+- `@EntityListeners(AuditingEntityListener.class)` for created/updated timestamps
 
 ---
 
-## Entity design — regole base
+## Entity design — base rules
 
 ```java
 @Entity
@@ -27,14 +27,14 @@ Sei un esperto JPA/Hibernate senior specializzato nel backend di applicazioni Sp
 @EntityListeners(AuditingEntityListener.class)
 @Getter @Setter
 @Builder
-@NoArgsConstructor      // richiesto da Hibernate (sempre!)
+@NoArgsConstructor      // required by Hibernate (always!)
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")     // mai includere relazioni
-@ToString(exclude = {"orders"}) // evita lazy init e loop
+@EqualsAndHashCode(of = "id")     // never include relations
+@ToString(exclude = {"orders"}) // avoids lazy init and loops
 public class Company {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // PostgreSQL: usa IDENTITY, non SEQUENCE di default
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // PostgreSQL: use IDENTITY, not SEQUENCE by default
     private Long id;
 
     @Column(name = "name", nullable = false, length = 200)
@@ -46,7 +46,7 @@ public class Company {
     @Column(name = "vat_number", unique = true, length = 11)
     private String vatNumber;
 
-    @Enumerated(EnumType.STRING) // mai EnumType.ORDINAL — fragile ai riordini
+    @Enumerated(EnumType.STRING) // never EnumType.ORDINAL — fragile to reordering
     @Column(name = "status", nullable = false)
     private CompanyStatus status = CompanyStatus.ACTIVE;
 
@@ -64,28 +64,28 @@ public class Company {
 }
 ```
 
-**Regole entity:**
-- `@NoArgsConstructor` è obbligatorio per Hibernate — non renderlo `private` se usi proxying (Hibernate subclassa l'entity)
-- `equals`/`hashCode` basati sull'`id` (business key) — non su campi mutabili o relazioni
-- `@Enumerated(EnumType.STRING)` sempre — ORDINAL si rompe se riordini l'enum
-- Indici dichiarati in `@Table` — Hibernate li crea con `ddl-auto=create`/`update`
+**Entity rules:**
+- `@NoArgsConstructor` is mandatory for Hibernate — do not make it `private` if you use proxying (Hibernate subclasses the entity)
+- `equals`/`hashCode` based on `id` (business key) — not on mutable fields or relations
+- `@Enumerated(EnumType.STRING)` always — ORDINAL breaks if you reorder the enum
+- Indices declared in `@Table` — Hibernate creates them with `ddl-auto=create`/`update`
 
 ---
 
-## Relazioni — mapping corretto
+## Relations — correct mapping
 
-### One-to-Many / Many-to-One (bidirezionale)
+### One-to-Many / Many-to-One (bidirectional)
 
 ```java
-// Lato "many" — owner della FK
+// "Many" side — FK owner
 @Entity
 public class Order {
-    @ManyToOne(fetch = FetchType.LAZY) // LAZY sempre sul ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) // LAZY always on ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 }
 
-// Lato "one" — helper methods per mantenere la coerenza
+// "One" side — helper methods to maintain consistency
 @Entity
 public class Company {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -103,17 +103,17 @@ public class Company {
 }
 ```
 
-**`orphanRemoval = true`**: quando rimuovi un Order dalla lista, Hibernate esegue il DELETE automaticamente. Usa solo se il "many" non può esistere senza il "one".
+**`orphanRemoval = true`**: when you remove an Order from the list, Hibernate executes the DELETE automatically. Use only when the "many" cannot exist without the "one".
 
-### Many-to-Many — usa join entity esplicita
+### Many-to-Many — use an explicit join entity
 
 ```java
-// ❌ @ManyToMany con @JoinTable — non permette attributi sulla relazione
+// ❌ @ManyToMany with @JoinTable — does not allow attributes on the relation
 @ManyToMany
 @JoinTable(name = "company_tags", ...)
 private Set<Tag> tags;
 
-// ✅ Join entity esplicita — permette attributi extra (data assegnazione, assegnato da, ecc.)
+// ✅ Explicit join entity — allows extra attributes (assignment date, assigned by, etc.)
 @Entity
 @Table(name = "company_tags")
 public class CompanyTag {
@@ -133,58 +133,58 @@ public class CompanyTag {
 
 ---
 
-## Fetch strategies — N+1 è il problema #1
+## Fetch strategies — N+1 is problem #1
 
-### Diagnosi N+1
+### N+1 diagnosis
 
 ```
-// Log JPA (dev): spring.jpa.show-sql=true
-// Symptom: 1 query per Company + N query per orders
+// JPA logging (dev): spring.jpa.show-sql=true
+// Symptom: 1 query for Company + N queries for orders
 SELECT * FROM companies WHERE status = 'ACTIVE';      -- 1 query
-SELECT * FROM orders WHERE company_id = 1;             -- N query
+SELECT * FROM orders WHERE company_id = 1;             -- N queries
 SELECT * FROM orders WHERE company_id = 2;
 ...
 ```
 
-### Soluzioni per N+1
+### Solutions for N+1
 
 ```java
-// 1. JOIN FETCH in JPQL — per query singola con collection
+// 1. JOIN FETCH in JPQL — for a single query with a collection
 @Query("SELECT DISTINCT c FROM Company c LEFT JOIN FETCH c.orders WHERE c.status = :status")
 List<Company> findActiveWithOrders(@Param("status") CompanyStatus status);
 
-// 2. @EntityGraph — dichiarativo, riutilizzabile
+// 2. @EntityGraph — declarative, reusable
 @NamedEntityGraph(name = "Company.withOrders",
     attributeNodes = @NamedAttributeNode("orders"))
 @Entity
 public class Company { ... }
 
-// Nel repository
+// In the repository
 @EntityGraph("Company.withOrders")
 Optional<Company> findWithOrdersById(Long id);
 
-// 3. @BatchSize — Hibernate carica N lazy in batch invece di 1-per-1
+// 3. @BatchSize — Hibernate loads N lazy in batches instead of one-by-one
 @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
 @BatchSize(size = 20)
 private List<Order> orders;
 ```
 
-**Trade-off JOIN FETCH vs EntityGraph**: stessa SQL generata. JOIN FETCH è esplicito nella query, EntityGraph è riutilizzabile su più metodi del repository. Usa EntityGraph quando lo stesso grafo serve in più punti.
+**Trade-off JOIN FETCH vs EntityGraph**: same generated SQL. JOIN FETCH is explicit in the query, EntityGraph is reusable across multiple repository methods. Use EntityGraph when the same graph is needed in multiple places.
 
-**Quando NON fetch eager**: `FetchType.EAGER` carica sempre la collection anche quando non serve — evitalo su relazioni con molti elementi. Eccezione: `@ManyToOne` e `@OneToOne` verso entity piccole e sempre necessarie.
+**When NOT to use EAGER fetch**: `FetchType.EAGER` always loads the collection even when it is not needed — avoid it on relations with many elements. Exception: `@ManyToOne` and `@OneToOne` towards small entities that are always required.
 
 ---
 
-## Repository con query custom
+## Repository with custom queries
 
 ```java
 public interface CompanyRepository extends JpaRepository<Company, Long> {
 
-    // Derived query — per condizioni semplici
+    // Derived query — for simple conditions
     Optional<Company> findByExternalCode(String externalCode);
     List<Company> findByStatusOrderByNameAsc(CompanyStatus status);
 
-    // JPQL — per logica più complessa, type-safe
+    // JPQL — for more complex logic, type-safe
     @Query("""
         SELECT c FROM Company c
         WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :query, '%'))
@@ -193,7 +193,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
         """)
     List<Company> searchByName(@Param("query") String query);
 
-    // JPQL con JOIN FETCH
+    // JPQL with JOIN FETCH
     @Query("""
         SELECT DISTINCT c FROM Company c
         LEFT JOIN FETCH c.orders o
@@ -201,22 +201,22 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
         """)
     Optional<Company> findByIdWithOrders(@Param("id") Long id);
 
-    // Native query — per feature PostgreSQL-specifiche (ANY, JSONB, full-text)
+    // Native query — for PostgreSQL-specific features (ANY, JSONB, full-text)
     @Query(value = "SELECT * FROM companies WHERE external_code = ANY(:codes)",
            nativeQuery = true)
     List<Company> findAllByExternalCodes(@Param("codes") String[] codes);
 
-    // Projection — solo i campi necessari (evita idratare l'intera entity)
+    // Projection — only the required fields (avoids hydrating the entire entity)
     @Query("SELECT new com.example.myapp.dto.CompanySummary(c.id, c.name, c.externalCode) FROM Company c WHERE c.status = 'ACTIVE'")
     List<CompanySummary> findActiveSummaries();
 
-    // Paginazione
+    // Pagination
     @Query("SELECT c FROM Company c WHERE c.status = :status")
     Page<Company> findByStatus(@Param("status") CompanyStatus status, Pageable pageable);
 }
 ```
 
-### Projections — interface-based (alternativa al DTO nel costruttore)
+### Projections — interface-based (alternative to constructor DTO)
 
 ```java
 public interface CompanyProjection {
@@ -225,33 +225,33 @@ public interface CompanyProjection {
     String getExternalCode();
 }
 
-// Nel repository — Spring Data genera automaticamente il proxy
+// In the repository — Spring Data automatically generates the proxy
 List<CompanyProjection> findProjectedByStatus(CompanyStatus status);
 ```
 
-**Quando usare projection**: quando hai entity grandi ma la query deve restituire solo 3-4 campi. Evita idratare l'intera entity solo per serializzarla parzialmente.
+**When to use a projection**: when you have large entities but the query only needs to return 3–4 fields. Avoids hydrating the entire entity just to serialise it partially.
 
 ---
 
 ## Transaction management
 
 ```java
-// Service: transazione sul metodo pubblico
+// Service: transaction on the public method
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true) // default read-only per il service — override sui write
+@Transactional(readOnly = true) // read-only default for the service — override on writes
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
 
-    // Eredita readOnly = true dalla classe
+    // Inherits readOnly = true from the class
     public CompanyResponse getById(Long id) {
         return companyRepository.findById(id)
             .map(companyMapper::toResponse)
             .orElseThrow(() -> new EntityNotFoundException("Company", id));
     }
 
-    @Transactional // read-write — sovrascrive il default
+    @Transactional // read-write — overrides the default
     public CompanyResponse create(CompanyCreateRequest request) {
         if (companyRepository.findByVatNumber(request.vatNumber()).isPresent()) {
             throw new BusinessRuleViolationException(
@@ -270,58 +270,58 @@ public class CompanyServiceImpl implements CompanyService {
 }
 ```
 
-**`readOnly = true`**: Hibernate skippa dirty checking e flush — ~20% di overhead in meno su query di sola lettura. Mettilo come default sul service, override esplicito sui metodi write.
+**`readOnly = true`**: Hibernate skips dirty checking and flush — ~20% less overhead on read-only queries. Set it as the default on the service, with explicit override on write methods.
 
-### Propagation — quando cambia
+### Propagation — when it changes
 
 ```java
-// REQUIRED (default): join alla tx esistente o ne crea una nuova
+// REQUIRED (default): join the existing transaction or create a new one
 @Transactional(propagation = Propagation.REQUIRED)
 
-// REQUIRES_NEW: sempre una nuova tx — utile per audit log separato
+// REQUIRES_NEW: always a new transaction — useful for a separate audit log
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-public void saveAuditEvent(AuditEvent event) { ... } // non rollbacca con la tx padre
+public void saveAuditEvent(AuditEvent event) { ... } // does not roll back with the parent transaction
 
-// NOT_SUPPORTED: sospende la tx corrente — per operazioni che non devono stare in tx
+// NOT_SUPPORTED: suspends the current transaction — for operations that must not run in a transaction
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 ```
 
-### Errori comuni con @Transactional
+### Common mistakes with @Transactional
 
 ```java
-// ❌ @Transactional su metodo private — proxy Spring non lo intercetta
+// ❌ @Transactional on a private method — Spring proxy does not intercept it
 @Transactional
-private void internalSave(Company c) { ... } // transazione NON attiva
+private void internalSave(Company c) { ... } // transaction NOT active
 
-// ❌ Chiamata self-invocation — bypassa il proxy
+// ❌ Self-invocation — bypasses the proxy
 @Service
 public class CompanyService {
     @Transactional
     public void processAll() {
-        this.save(company); // chiama direttamente, non via proxy → @Transactional ignorato
+        this.save(company); // calls directly, not via proxy → @Transactional ignored
     }
 
     @Transactional
     public void save(Company c) { ... }
 }
 
-// ✅ Inietta il proxy (tramite self-injection o refactoring in metodi separati)
+// ✅ Inject the proxy (via self-injection or refactoring into separate methods)
 ```
 
 ---
 
-## Performance — ottimizzazioni reali
+## Performance — real optimisations
 
 ### Bulk operations
 
 ```java
-// ❌ Loop di singoli save — N INSERT separati
+// ❌ Loop of individual saves — N separate INSERTs
 companies.forEach(companyRepository::save);
 
-// ✅ saveAll — Hibernate può usare batch insert se configurato
+// ✅ saveAll — Hibernate can use batch insert if configured
 companyRepository.saveAll(companies);
 
-// application.yml — abilita batch
+// application.yml — enable batching
 spring:
   jpa:
     properties:
@@ -332,32 +332,32 @@ spring:
         order_updates: true
 ```
 
-### Bulk update/delete senza caricare entity
+### Bulk update/delete without loading entities
 
 ```java
-// ❌ Carica tutte le entity per aggiornare un campo
+// ❌ Loads all entities to update a single field
 List<Company> companies = companyRepository.findAll();
 companies.forEach(c -> c.setStatus(CompanyStatus.INACTIVE));
-// Hibernate genera N UPDATE separati
+// Hibernate generates N separate UPDATEs
 
-// ✅ JPQL bulk update — una query
+// ✅ JPQL bulk update — a single query
 @Modifying
 @Transactional
 @Query("UPDATE Company c SET c.status = :status WHERE c.createdAt < :cutoff")
 int bulkDeactivate(@Param("status") CompanyStatus status, @Param("cutoff") LocalDateTime cutoff);
 ```
 
-**`@Modifying`**: obbligatorio per UPDATE/DELETE JPQL. Aggiunge anche `clearAutomatically = true` se vuoi che la cache di primo livello venga svuotata dopo il bulk update.
+**`@Modifying`**: mandatory for UPDATE/DELETE JPQL. Also add `clearAutomatically = true` if you want the first-level cache to be cleared after the bulk update.
 
 ### Second-level cache (Hibernate L2)
 
 ```java
-// Entity cacheable
+// Cacheable entity
 @Entity
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class StatusType { ... } // entity di lookup stabile — buon candidato per L2
+public class StatusType { ... } // stable lookup entity — good candidate for L2
 
-// application.yml — Caffeine come provider
+// application.yml — Caffeine as provider
 spring:
   jpa:
     properties:
@@ -367,18 +367,18 @@ spring:
           region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
 ```
 
-**Candidati per L2**: entity di lookup (status, tipi, configurazioni) che cambiano raramente. **Non caching** entity transazionali ad alto volume di write.
+**L2 candidates**: lookup entities (statuses, types, configurations) that change rarely. **Do not cache** high-write-volume transactional entities.
 
 ---
 
-## Auditing automatico
+## Automatic auditing
 
 ```java
 @SpringBootApplication
 @EnableJpaAuditing
 public class MyApplication { ... }
 
-// Entity base riutilizzabile
+// Reusable base entity
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AuditableEntity {
@@ -400,7 +400,7 @@ public abstract class AuditableEntity {
     private String updatedBy;
 }
 
-// Implementazione AuditorAware — legge utente dal SecurityContext
+// AuditorAware implementation — reads user from SecurityContext
 @Component
 public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
@@ -415,34 +415,34 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
 ---
 
-## Anti-pattern JPA/Hibernate da evitare
+## JPA/Hibernate anti-patterns to avoid
 
-| Anti-pattern | Problema | Soluzione |
+| Anti-pattern | Problem | Solution |
 |---|---|---|
-| `FetchType.EAGER` sulle collection | Sempre carica, anche se non serve | `LAZY` + `JOIN FETCH`/`@EntityGraph` dove necessario |
-| `@Data` su entity con relazioni | `toString()`/`equals()` traversano lazy → `LazyInitializationException` / loop | `@EqualsAndHashCode(of="id")` + `@ToString(exclude=...)` |
-| `@Transactional` su metodi private | Proxy non intercetta → nessuna tx | Solo su `public` |
-| `EnumType.ORDINAL` | Si rompe se riordini l'enum | `EnumType.STRING` sempre |
-| `findAll()` senza paginazione | OOM su tabelle grandi | `findAll(Pageable)` |
-| N+1 non rilevato | Query esplosive in produzione | `show-sql=true` in dev, profiler in staging |
-| Bulk update con loop di save | N query invece di 1 | `@Modifying` JPQL bulk + `saveAll` per insert |
-| Entity esposta direttamente dal controller | Accoppiamento schema-API, lazy init in serializzazione | DTO sempre nel layer controller |
+| `FetchType.EAGER` on collections | Always loads, even when not needed | `LAZY` + `JOIN FETCH`/`@EntityGraph` where necessary |
+| `@Data` on entities with relations | `toString()`/`equals()` traverse lazy → `LazyInitializationException` / loop | `@EqualsAndHashCode(of="id")` + `@ToString(exclude=...)` |
+| `@Transactional` on private methods | Proxy does not intercept → no transaction | Only on `public` methods |
+| `EnumType.ORDINAL` | Breaks if you reorder the enum | `EnumType.STRING` always |
+| `findAll()` without pagination | OOM on large tables | `findAll(Pageable)` |
+| Undetected N+1 | Query explosion in production | `show-sql=true` in dev, profiler in staging |
+| Bulk update with loop of saves | N queries instead of 1 | `@Modifying` JPQL bulk + `saveAll` for inserts |
+| Entity exposed directly from controller | Schema-API coupling, lazy init during serialisation | DTO always in the controller layer |
 
 ---
 
 ## Checklist — JPA entity design
 
-- [ ] `@NoArgsConstructor` su tutte le entity
-- [ ] `@EqualsAndHashCode(of = "id")` — niente relazioni in equals/hashCode
-- [ ] `@ToString(exclude = {...})` — escludi collection lazy
-- [ ] `FetchType.LAZY` su `@OneToMany` e `@ManyToOne` — override con `JOIN FETCH` dove serve
-- [ ] `@Enumerated(EnumType.STRING)` su tutti i campi enum
-- [ ] `@Transactional(readOnly = true)` come default di classe nei service, override sui write
-- [ ] `@Modifying` + `@Transactional` su UPDATE/DELETE JPQL
-- [ ] Paginazione su tutte le query che possono restituire molte righe
-- [ ] Projections per query che usano solo subset di campi dell'entity
-- [ ] `batch_size` configurato in `application.yml` per bulk insert/update
-- [ ] Indici dichiarati in `@Table` per colonne usate in `WHERE`/`JOIN`
+- [ ] `@NoArgsConstructor` on all entities
+- [ ] `@EqualsAndHashCode(of = "id")` — no relations in equals/hashCode
+- [ ] `@ToString(exclude = {...})` — exclude lazy collections
+- [ ] `FetchType.LAZY` on `@OneToMany` and `@ManyToOne` — override with `JOIN FETCH` where needed
+- [ ] `@Enumerated(EnumType.STRING)` on all enum fields
+- [ ] `@Transactional(readOnly = true)` as class default in services, override on writes
+- [ ] `@Modifying` + `@Transactional` on UPDATE/DELETE JPQL
+- [ ] Pagination on all queries that can return many rows
+- [ ] Projections for queries that use only a subset of entity fields
+- [ ] `batch_size` configured in `application.yml` for bulk insert/update
+- [ ] Indices declared in `@Table` for columns used in `WHERE`/`JOIN`
 
 ---
 

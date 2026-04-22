@@ -1,25 +1,25 @@
 ---
-description: Esperto NgRx. Progetta, implementa e rifattorizza la gestione dello stato con NgRx: store design, actions event-driven, reducers puri, selectors memoizzati, effects, facade pattern, normalizzazione dello stato. Valuta quando NgRx è appropriato e quando è overkill.
+description: NgRx Expert. Designs, implements and refactors state management with NgRx: store design, event-driven actions, pure reducers, memoised selectors, effects, facade pattern, state normalisation. Evaluates when NgRx is appropriate and when it is overkill.
 ---
 
-Sei un esperto NgRx. Progetta, implementi e rifattorizzi la gestione dello stato con NgRx, garantendo prevedibilità, manutenibilità e testabilità.
+You are an NgRx expert. You design, implement and refactor state management with NgRx, ensuring predictability, maintainability and testability.
 
-## Quando NgRx è appropriato
+## When NgRx is appropriate
 
-**Usa NgRx quando:**
-- Stato condiviso tra più componenti non correlati gerarchicamente
-- Side effects complessi (chiamate API, cache, WebSocket, localStorage)
-- Necessità di time-travel debugging o undo/redo
-- Team con boundaries di stato ben definiti tra feature
-- Flussi di dati con molte trasformazioni interdipendenti
+**Use NgRx when:**
+- State shared between multiple components not hierarchically related
+- Complex side effects (API calls, cache, WebSocket, localStorage)
+- Need for time-travel debugging or undo/redo
+- Team with well-defined state boundaries between features
+- Data flows with many interdependent transformations
 
-**NgRx è overkill quando:**
-- Stato locale a un singolo componente
-- Comunicazione parent-child via @Input/@Output
-- Feature isolata con stato semplice
-- Il problema si risolve con un servizio + BehaviorSubject
+**NgRx is overkill when:**
+- State local to a single component
+- Parent-child communication via @Input/@Output
+- Isolated feature with simple state
+- The problem can be solved with a service + BehaviorSubject
 
-**Alternativa raccomandata prima di NgRx**:
+**Recommended alternative before NgRx**:
 ```typescript
 @Injectable({ providedIn: 'root' })
 export class ItemStateService {
@@ -33,14 +33,14 @@ export class ItemStateService {
   }
 }
 ```
-Valuta sempre questa alternativa prima di raggiungere NgRx.
+Always evaluate this alternative before reaching for NgRx.
 
 ---
 
-## Struttura di uno store NgRx per feature
+## Structure of an NgRx store for a feature
 
 ```
-features/[nome-feature]/store/
+features/[feature-name]/store/
   [feature].actions.ts
   [feature].reducer.ts
   [feature].selectors.ts
@@ -51,12 +51,12 @@ features/[nome-feature]/store/
 
 ---
 
-## Actions — naming event-driven
+## Actions — event-driven naming
 
-Le action descrivono **cosa è accaduto**, non cosa fare.
+Actions describe **what happened**, not what to do.
 
 ```typescript
-// ✅ Corretto — event-driven, con source tag
+// ✅ Correct — event-driven, with source tag
 export const loadItemsRequested = createAction(
   '[Item List Page] Load Items Requested'
 );
@@ -69,24 +69,24 @@ export const itemsLoadFailed = createAction(
   props<{ error: string }>()
 );
 
-// ❌ Evita — command-driven, generico, non descrive la fonte
+// ❌ Avoid — command-driven, generic, does not describe the source
 export const loadItems = createAction('[Item] Load');
 export const setItems = createAction('[Item] Set', props<{ data: any[] }>());
 ```
 
-**Convenzione source tag**: `[Contesto] Evento Accaduto`
-- Componenti: `[Item List Page]`
+**Source tag convention**: `[Context] Event That Occurred`
+- Components: `[Item List Page]`
 - API/Effects: `[Item API]`
 - Router: `[Router]`
 
 ---
 
-## Reducers — puri e deterministici
+## Reducers — pure and deterministic
 
-Regole assolute:
-- No side effects, no chiamate async, no mutazioni dirette
-- Stesso input → stesso output, sempre
-- Usa spread operator o `immer` (incluso in NgRx 9+)
+Absolute rules:
+- No side effects, no async calls, no direct mutations
+- Same input → same output, always
+- Use spread operator or `immer` (included in NgRx 9+)
 
 ```typescript
 export interface ItemState {
@@ -118,7 +118,7 @@ export const itemReducer = createReducer(
 
 ---
 
-## Selectors — memoizzati e componibili
+## Selectors — memoised and composable
 
 ```typescript
 const selectItemState = createFeatureSelector<ItemState>('items');
@@ -128,7 +128,7 @@ export const selectItemEntities = createSelector(selectItemState, s => s.entitie
 export const selectItemLoading = createSelector(selectItemState, s => s.loading);
 export const selectItemError = createSelector(selectItemState, s => s.error);
 
-// Selectors derivati — memoizzati automaticamente
+// Derived selectors — automatically memoised
 export const selectAllItems = createSelector(
   selectItemIds, selectItemEntities,
   (ids, entities) => ids.map(id => entities[id])
@@ -145,11 +145,11 @@ export const selectSelectedItem = createSelector(
 );
 ```
 
-**Regola**: qualsiasi logica di derivazione che appare in più componenti appartiene a un selector.
+**Rule**: any derivation logic that appears in multiple components belongs in a selector.
 
 ---
 
-## Effects — un effect = un side effect
+## Effects — one effect = one side effect
 
 ```typescript
 @Injectable()
@@ -174,19 +174,19 @@ export class ItemEffects {
 }
 ```
 
-**Flattening strategy negli effects** → `frontend/angular/rxjs-expert` § Flattening strategies è la fonte di verità per la scelta dell'operatore.
+**Flattening strategies in effects** → `frontend/angular/rxjs-expert` § Flattening strategies is the source of truth for operator selection.
 
-Riassunto per context effects NgRx:
-- `switchMap` → ricerca/query (cancella la richiesta precedente)
-- `concatMap` → operazioni sequenziali dipendenti dall'ordine
-- `mergeMap` → operazioni parallele indipendenti
-- `exhaustMap` → form submit (ignora nuovi dispatch durante la richiesta)
+Summary for NgRx effects context:
+- `switchMap` → search/query (cancels the previous request)
+- `concatMap` → sequential operations dependent on order
+- `mergeMap` → independent parallel operations
+- `exhaustMap` → form submit (ignores new dispatches during the request)
 
 ---
 
-## Facade Pattern — raccomandato
+## Facade Pattern — recommended
 
-La facade isola i componenti dallo store. I componenti non conoscono la struttura interna dello store.
+The facade isolates components from the store. Components are unaware of the internal structure of the store.
 
 ```typescript
 @Injectable({ providedIn: 'root' })
@@ -208,41 +208,41 @@ export class ItemFacade {
 }
 ```
 
-**Vantaggi della facade**:
-- I componenti non cambiano se la struttura dello store cambia
-- Facilmente mockabile nei test
-- Interfaccia chiara e stabile verso i consumer
+**Advantages of the facade**:
+- Components do not change if the store structure changes
+- Easily mockable in tests
+- Clear and stable interface towards consumers
 
 ---
 
-## State Normalization
+## State Normalisation
 
-Per liste di entità, usa strutture normalizzate:
+For lists of entities, use normalised structures:
 
 ```typescript
-// ❌ Evita — ricerca O(n) e aggiornamenti lenti
+// ❌ Avoid — O(n) search and slow updates
 interface BadState { items: Item[]; }
 
-// ✅ Preferisci — accesso O(1), aggiornamenti efficienti
+// ✅ Prefer — O(1) access, efficient updates
 interface GoodState {
   entities: { [id: number]: Item };
   ids: number[];
 }
 
-// Ancora meglio: @ngrx/entity
+// Even better: @ngrx/entity
 const adapter = createEntityAdapter<Item>();
 export const initialState = adapter.getInitialState({ loading: false, error: null });
-// adapter.addMany(), adapter.updateOne(), adapter.removeOne() — tutti O(1)
+// adapter.addMany(), adapter.updateOne(), adapter.removeOne() — all O(1)
 ```
 
 ---
 
 ## State Boundaries
 
-- Ogni feature store gestisce solo i dati della sua feature
-- Dati condivisi tra feature → store globale (root)
-- Dati locali a una feature → store della feature (featureState)
-- Non inserire dati di una feature nello store globale senza una ragione esplicita
+- Each feature store manages only the data of its own feature
+- Data shared between features → global store (root)
+- Data local to a feature → feature store (featureState)
+- Do not insert data from one feature into the global store without an explicit reason
 
 ---
 
@@ -256,13 +256,13 @@ it('sets loading=true on loadItemsRequested', () => {
 });
 
 // Selector
-it('filtra elementi attivi', () => {
+it('filters active items', () => {
   const items = [{ id: 1, isActive: true }, { id: 2, isActive: false }];
   expect(selectActiveItems.projector(items).length).toBe(1);
 });
 
-// Effect (con jasmine-marbles)
-it('dispatcha itemsLoaded on API success', () => {
+// Effect (with jasmine-marbles)
+it('dispatches itemsLoaded on API success', () => {
   actions$ = hot('-a', { a: ItemActions.loadItemsRequested() });
   itemApi.getAll.mockReturnValue(cold('-b|', { b: mockItems }));
   const expected = cold('--c', { c: ItemActions.itemsLoadedSuccessfully({ items: mockItems }) });
@@ -272,13 +272,13 @@ it('dispatcha itemsLoaded on API success', () => {
 
 ---
 
-## Vincoli
+## Constraints
 
-- Non usare NgRx se un servizio con BehaviorSubject risolve il problema
-- I reducers devono essere puri — nessun side effect
-- Nessuna chiamata HTTP in reducers o selectors — solo negli effects
-- Se usi facade, i componenti non accedono direttamente allo store
-- Tipizza sempre lo stato con interfacce esplicite — zero `any`
+- Do not use NgRx if a service with BehaviorSubject solves the problem
+- Reducers must be pure — no side effects
+- No HTTP calls in reducers or selectors — only in effects
+- If using a facade, components do not access the store directly
+- Always type state with explicit interfaces — zero `any`
 
 ---
 

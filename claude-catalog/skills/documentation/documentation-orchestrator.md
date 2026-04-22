@@ -1,148 +1,148 @@
 ---
-description: Orchestratore per la generazione di documentazione tecnica enterprise. Interpreta un template Word, suddivide i contenuti tra backend (Java/Spring Boot) e frontend (Angular), attiva backend-technical-documentation e frontend-technical-documentation, garantisce coerenza cross-layer (nomi DTO, contratti API), produce backend-doc.tex e frontend-doc.tex pronti per pandoc.
+description: Orchestrator for enterprise technical documentation generation. Interprets a Word template, divides content between backend (Java/Spring Boot) and frontend (Angular), activates backend-technical-documentation and frontend-technical-documentation, ensures cross-layer consistency (DTO names, API contracts), produces backend-doc.tex and frontend-doc.tex ready for pandoc.
 ---
 
-Sei l'orchestratore per la produzione di documentazione tecnica enterprise di un progetto software. Coordini la generazione di due documenti separati — backend e frontend — a partire da un template Word comune, garantendo coerenza incrociata tra i layer.
+You are the orchestrator for producing enterprise technical documentation for a software project. You coordinate the generation of two separate documents — backend and frontend — from a common Word template, ensuring cross-layer consistency between the layers.
 
-**Output**: `docs/technical-output/backend-doc.tex` e `docs/technical-output/frontend-doc.tex`, entrambi pronti per la conversione in `.docx` via pandoc.
+**Output**: `docs/technical-output/backend-doc.tex` and `docs/technical-output/frontend-doc.tex`, both ready for conversion to `.docx` via pandoc.
 
 ---
 
-## Skill che questo orchestratore attiva
+## Skills activated by this orchestrator
 
 | Skill | Output | Scope |
 |---|---|---|
-| `/documentation/backend-documentation` | `backend-doc.tex` | Architettura, API, DB, security, logging, integrazioni |
-| `/documentation/frontend-documentation` | `frontend-doc.tex` | Architettura Angular, componenti, NgRx, routing, design |
+| `/documentation/backend-documentation` | `backend-doc.tex` | Architecture, API, DB, security, logging, integrations |
+| `/documentation/frontend-documentation` | `frontend-doc.tex` | Angular architecture, components, NgRx, routing, design |
 
 ---
 
-## Processo obbligatorio (in ordine)
+## Mandatory process (in order)
 
-### STEP 0 — Raccolta input
+### STEP 0 — Input collection
 
-Prima di qualsiasi attività:
+Before any activity:
 
-1. **Template Word** (opzionale): se fornito, analizza il file `.docx` per struttura e stile
-   - Se presente: usa come struttura target per entrambi i documenti
-   - Se assente: ogni skill usa la propria struttura standard
+1. **Word template** (optional): if provided, analyse the `.docx` file for structure and style
+   - If present: use as target structure for both documents
+   - If absent: each skill uses its own standard structure
 
-2. **Scope**: identifica cosa documentare — dai `$ARGUMENTS` o chiedi:
-   - `all` → documenta BE + FE completo
-   - `backend` → solo `backend-doc.tex`
-   - `frontend` → solo `frontend-doc.tex`
-   - `module:[nome]` → documenta solo il bounded context specificato (es. `module:Auth`, `module:Orders`)
+2. **Scope**: identify what to document — from `$ARGUMENTS` or ask:
+   - `all` → document BE + FE in full
+   - `backend` → only `backend-doc.tex`
+   - `frontend` → only `frontend-doc.tex`
+   - `module:[name]` → document only the specified bounded context (e.g. `module:Auth`, `module:Orders`)
 
-3. **Verifica fonti disponibili**:
-   - Leggi la documentazione tecnica del progetto — conta nodi BE e FE se disponibili
-   - Verifica quali moduli sono già migrati o documentati
-   - Identifica lo stato corrente (documentato/in progress/da fare)
+3. **Verify available sources**:
+   - Read the project technical documentation — count BE and FE nodes if available
+   - Verify which modules are already migrated or documented
+   - Identify the current status (documented / in progress / to do)
 
 ---
 
-### STEP 1 — Analisi del template Word
+### STEP 1 — Word template analysis
 
-Se un template Word è fornito:
+If a Word template is provided:
 
-1. **Identifica tutte le sezioni del template**
-2. **Classifica ogni sezione come BE, FE o shared**:
+1. **Identify all sections of the template**
+2. **Classify each section as BE, FE or shared**:
 
-| Tipo di sezione | Classifica come | Skill target |
+| Section type | Classify as | Target skill |
 |---|---|---|
-| Architettura layer Java/Spring Boot | BE | `backend-technical-documentation` |
-| API REST — endpoint, DTO request/response | BE | `backend-technical-documentation` |
-| Modello dati — entità JPA, schema DB | BE | `backend-technical-documentation` |
-| Security — JWT, ruoli, BCrypt | BE | `backend-technical-documentation` |
+| Java/Spring Boot layer architecture | BE | `backend-technical-documentation` |
+| REST API — endpoints, request/response DTOs | BE | `backend-technical-documentation` |
+| Data model — JPA entities, DB schema | BE | `backend-technical-documentation` |
+| Security — JWT, roles, BCrypt | BE | `backend-technical-documentation` |
 | Logging, monitoring, error handling | BE | `backend-technical-documentation` |
-| Integrazioni esterne del progetto | BE | `backend-technical-documentation` |
-| Configurazione Spring — profili, DataSource | BE | `backend-technical-documentation` |
-| Architettura Angular — feature modules, lazy | FE | `frontend-technical-documentation` |
-| Componenti — smart/dumb, @Input/@Output | FE | `frontend-technical-documentation` |
+| Project external integrations | BE | `backend-technical-documentation` |
+| Spring configuration — profiles, DataSource | BE | `backend-technical-documentation` |
+| Angular architecture — feature modules, lazy | FE | `frontend-technical-documentation` |
+| Components — smart/dumb, @Input/@Output | FE | `frontend-technical-documentation` |
 | NgRx store — actions, reducers, effects | FE | `frontend-technical-documentation` |
 | Routing, guards, resolvers | FE | `frontend-technical-documentation` |
-| API services Angular, HTTP interceptors | FE | `frontend-technical-documentation` |
-| Design system — token SCSS, libreria UI del progetto | FE | `frontend-technical-documentation` |
+| Angular API services, HTTP interceptors | FE | `frontend-technical-documentation` |
+| Design system — SCSS tokens, project UI library | FE | `frontend-technical-documentation` |
 | Performance — OnPush, trackBy, bundle | FE | `frontend-technical-documentation` |
-| Introduzione, glossario, stack tecnologico | BE + FE | incluso in entrambi |
-| Pagina di titolo, registro revisioni, indice | BE + FE | incluso in entrambi |
+| Introduction, glossary, technology stack | BE + FE | included in both |
+| Title page, revision history, index | BE + FE | included in both |
 
-3. **Passa la classificazione come istruzione** alle skill attivate in STEP 2 e STEP 3.
-
----
-
-### STEP 2 — Generazione documentazione backend
-
-Attiva `/documentation/backend-documentation` con:
-- Template Word (se presente) + classificazione sezioni BE da STEP 1
-- Scope: `all` o `module:[nome]` dalla richiesta utente
-- Istruzione: "Produci `docs/technical-output/backend-doc.tex`"
-
-**Invarianti da verificare nell'output BE:**
-- [ ] Tutti i Controller documentati con tabella endpoint
-- [ ] Tutti i DTO request documentati con tabella campi
-- [ ] Gerarchia eccezioni con tabella HTTP status mapping
-- [ ] Sezione security con JWT flow e ruoli
-- [ ] Nessun placeholder o TODO
+3. **Pass the classification as an instruction** to the skills activated in STEP 2 and STEP 3.
 
 ---
 
-### STEP 3 — Generazione documentazione frontend
+### STEP 2 — Backend documentation generation
 
-Attiva `/documentation/frontend-documentation` con:
-- Template Word (se presente) + classificazione sezioni FE da STEP 1
-- Lista endpoint REST e DTO TypeScript estratti da `backend-doc.tex` al STEP 2 (per cross-consistency)
-- Scope: `all` o `module:[nome]` dalla richiesta utente
-- Istruzione: "Produci `docs/technical-output/frontend-doc.tex`"
+Activate `/documentation/backend-documentation` with:
+- Word template (if present) + BE section classification from STEP 1
+- Scope: `all` or `module:[name]` from the user request
+- Instruction: "Produce `docs/technical-output/backend-doc.tex`"
 
-**Invarianti da verificare nell'output FE:**
-- [ ] Albero componenti per ogni feature module documentata
-- [ ] NgRx store documentato (se presente nel bounded context)
-- [ ] API services con DTO TypeScript coerenti con i DTO BE
-- [ ] Tabella route completa
-- [ ] Nessun `any` negli esempi TypeScript
+**Invariants to verify in BE output:**
+- [ ] All Controllers documented with endpoint table
+- [ ] All request DTOs documented with field table
+- [ ] Exception hierarchy with HTTP status mapping table
+- [ ] Security section with JWT flow and roles
+- [ ] No placeholders or TODOs
 
 ---
 
-### STEP 4 — Verifica coerenza cross-layer
+### STEP 3 — Frontend documentation generation
 
-Dopo che entrambi i documenti sono generati, verifica:
+Activate `/documentation/frontend-documentation` with:
+- Word template (if present) + FE section classification from STEP 1
+- List of REST endpoints and TypeScript DTOs extracted from `backend-doc.tex` in STEP 2 (for cross-consistency)
+- Scope: `all` or `module:[name]` from the user request
+- Instruction: "Produce `docs/technical-output/frontend-doc.tex`"
 
-#### Contratti API
+**Invariants to verify in FE output:**
+- [ ] Component tree for each documented feature module
+- [ ] NgRx store documented (if present in the bounded context)
+- [ ] API services with TypeScript DTOs consistent with BE DTOs
+- [ ] Complete route table
+- [ ] No `any` in TypeScript examples
 
-| Cosa verificare | Come |
+---
+
+### STEP 4 — Cross-layer consistency check
+
+After both documents have been generated, verify:
+
+#### API contracts
+
+| What to verify | How |
 |---|---|
-| Nome endpoint BE | Deve corrispondere al service Angular che lo chiama |
-| DTO request BE (Java) | Deve corrispondere all'interfaccia TypeScript FE |
-| DTO response BE (Java) | Deve corrispondere al tipo ritornato dall'API service Angular |
-| Codici errore BE | Devono comparire nell'error handling degli interceptor FE |
-| Ruoli/permessi JWT | Devono corrispondere ai guard Angular (`AuthGuard`, `PermissionGuard`) |
+| BE endpoint name | Must match the Angular service that calls it |
+| BE request DTO (Java) | Must match the FE TypeScript interface |
+| BE response DTO (Java) | Must match the type returned by the Angular API service |
+| BE error codes | Must appear in the FE interceptor error handling |
+| JWT roles/permissions | Must match the Angular guards (`AuthGuard`, `PermissionGuard`) |
 
-Se trovi mismatch, segnala esplicitamente:
+If you find mismatches, report explicitly:
 
 ```
-MISMATCH RILEVATO
-   Sezione BE: [sezione e riga]
-   Sezione FE: [sezione e riga]
-   BE dichiara: [...]
-   FE dichiara: [...]
-   Azione: allineare prima della consegna
+MISMATCH DETECTED
+   BE section: [section and line]
+   FE section: [section and line]
+   BE declares: [...]
+   FE declares: [...]
+   Action: align before delivery
 ```
 
-#### Terminologia
+#### Terminology
 
-- Il nome dell'entità (es. `Entity`, `Order`, `Product`) deve essere identico in BE e FE
-- Gli ID business rules (BR-N) citati in entrambi i doc devono riferirsi alla stessa regola
+- The entity name (e.g. `Entity`, `Order`, `Product`) must be identical in BE and FE
+- Business rule IDs (BR-N) cited in both documents must refer to the same rule
 
 ---
 
-### STEP 5 — Istruzioni pandoc per conversione finale
+### STEP 5 — Pandoc instructions for final conversion
 
 ```bash
-# Verifica compilazione LaTeX (raccomandato prima di convertire)
+# Verify LaTeX compilation (recommended before converting)
 pdflatex docs/technical-output/backend-doc.tex
 pdflatex docs/technical-output/frontend-doc.tex
 
-# Conversione Backend
+# Backend conversion
 pandoc docs/technical-output/backend-doc.tex \
   --reference-doc=template.docx \
   --listings \
@@ -150,7 +150,7 @@ pandoc docs/technical-output/backend-doc.tex \
   --toc-depth=3 \
   -o docs/technical-output/backend-doc.docx
 
-# Conversione Frontend
+# Frontend conversion
 pandoc docs/technical-output/frontend-doc.tex \
   --reference-doc=template.docx \
   --listings \
@@ -159,7 +159,7 @@ pandoc docs/technical-output/frontend-doc.tex \
   -o docs/technical-output/frontend-doc.docx
 ```
 
-**Se è richiesto un unico documento Word (BE + FE insieme):**
+**If a single Word document (BE + FE together) is required:**
 
 ```bash
 pandoc docs/technical-output/backend-doc.tex \
@@ -173,61 +173,61 @@ pandoc docs/technical-output/backend-doc.tex \
 
 ---
 
-### STEP 6 — Riepilogo orchestrazione
+### STEP 6 — Orchestration summary
 
-Al termine, riporta:
+At the end, report:
 
 ```markdown
-## Riepilogo orchestrazione documentazione tecnica
+## Technical documentation orchestration summary
 
-### Fonti utilizzate
-- [documentazione tecnica del progetto] — [N nodi BE, M nodi FE, se disponibili]
-- [analisi pre-esistenti] — [N moduli documentati]
-- [documentazione funzionale] — [N chunk/file letti]
+### Sources used
+- [project technical documentation] — [N BE nodes, M FE nodes, if available]
+- [pre-existing analyses] — [N documented modules]
+- [functional documentation] — [N chunks/files read]
 
-### Documenti prodotti
+### Documents produced
 - [ ] docs/technical-output/backend-doc.tex
 - [ ] docs/technical-output/frontend-doc.tex
 
-### Mismatch cross-layer rilevati
-- [Nessuno / lista mismatch con azione richiesta]
+### Cross-layer mismatches detected
+- [None / list of mismatches with required action]
 
-### Comandi pandoc
-[inclusi nel STEP 5]
+### Pandoc commands
+[included in STEP 5]
 
-### Assunzioni e parti dedotte
-- [Lista]
+### Assumptions and inferred parts
+- [List]
 ```
 
 ---
 
-## Struttura cartella output
+## Output folder structure
 
 ```
 docs/
 └── technical-output/
     ├── backend-doc.tex
     ├── frontend-doc.tex
-    ├── backend-doc.docx         (dopo pandoc)
-    ├── frontend-doc.docx        (dopo pandoc)
-    └── technical-doc.docx       (opzionale — merge BE+FE)
+    ├── backend-doc.docx         (after pandoc)
+    ├── frontend-doc.docx        (after pandoc)
+    └── technical-doc.docx       (optional — BE+FE merge)
 ```
 
 ---
 
-## Quando usare questo orchestratore
+## When to use this orchestrator
 
-- Generare documentazione tecnica completa per una milestone o release
-- Produrre doc BE + FE con template Word comune e stile coerente
-- Verifica di coerenza cross-layer sui contratti API
-- Consegna documentazione tecnica a stakeholder o team esterno
+- Generating complete technical documentation for a milestone or release
+- Producing BE + FE documentation with a common Word template and consistent style
+- Cross-layer consistency check on API contracts
+- Delivering technical documentation to stakeholders or an external team
 
-## Quando NON usare
+## When NOT to use
 
-- Solo doc BE → `/documentation/backend-documentation` direttamente
-- Solo doc FE → `/documentation/frontend-documentation` direttamente
-- Documentazione funzionale per stakeholder non tecnici → `/documentation/functional-document-generator`
-- Documentazione inline del codice → skill dedicate
+- Only BE documentation → `/documentation/backend-documentation` directly
+- Only FE documentation → `/documentation/frontend-documentation` directly
+- Functional documentation for non-technical stakeholders → `/documentation/functional-document-generator`
+- Inline code documentation → dedicated skills
 
 ---
 

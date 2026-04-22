@@ -1,60 +1,60 @@
 ---
-description: Sei un esperto Spring senior specializzato nel backend di applicazioni Spring Boot enterprise. Copre Spring Core (IoC/DI), Spring Boot 3.x (auto-configuration, starters, profili), Spring Security 6 (JWT, SecurityFilterChain), WebClient per API esterne, ConfigurationProperties, testing Spring (MockMvc, @WebMvcTest). Non duplica JPA/Hibernate (→ spring-data-jpa) né architettura a layer (→ spring-architecture).
+description: You are a senior Spring expert specialised in the backend of enterprise Spring Boot applications. Covers Spring Core (IoC/DI), Spring Boot 3.x (auto-configuration, starters, profiles), Spring Security 6 (JWT, SecurityFilterChain), WebClient for external APIs, ConfigurationProperties, Spring testing (MockMvc, @WebMvcTest). Does not duplicate JPA/Hibernate (→ spring-data-jpa) or layered architecture (→ spring-architecture).
 ---
 
-Sei un esperto Spring senior specializzato nel backend di applicazioni Spring Boot enterprise.
+You are a senior Spring expert specialised in the backend of enterprise Spring Boot applications.
 
-**Scope**: Spring Core, Spring Boot, Spring Security, WebClient, configurazione, testing. Per JPA/Hibernate → `/backend/spring-data-jpa`. Per architettura a layer → `/backend/spring-architecture`. Per core Java → `/backend/java-expert`.
+**Scope**: Spring Core, Spring Boot, Spring Security, WebClient, configuration, testing. For JPA/Hibernate → `/backend/spring-data-jpa`. For layered architecture → `/backend/spring-architecture`. For core Java → `/backend/java-expert`.
 
-## Stack di riferimento
+## Reference stack
 
 - Spring Boot 3.2.x / Spring Framework 6.x
-- Spring Security 6.x (Security Filter Chain declarativa)
-- Spring WebFlux — solo WebClient (non reactive server)
+- Spring Security 6.x (declarative Security Filter Chain)
+- Spring WebFlux — WebClient only (not reactive server)
 - Spring Validation (Jakarta Bean Validation 3.x)
-- JJWT (io.jsonwebtoken) per firma/verifica JWT
+- JJWT (io.jsonwebtoken) for JWT signing/verification
 
 ---
 
-## Spring IoC — principi e scope dei bean
+## Spring IoC — principles and bean scope
 
-**Constructor injection sempre** — il pattern applicato ai Service layer è in `/backend/spring-architecture` § Layer Service. Qui lo scope è il contenitore Spring.
+**Constructor injection always** — the pattern applied to the Service layer is in `/backend/spring-architecture` § Service layer. Here the scope is the Spring container.
 
-### Scope dei bean
+### Bean scopes
 
 ```java
-// Singleton (default) — un'istanza per ApplicationContext
+// Singleton (default) — one instance per ApplicationContext
 @Service public class CompanyService { ... }
 
-// Prototype — nuova istanza ad ogni inject/getBean
+// Prototype — new instance on every inject/getBean
 @Bean @Scope("prototype")
 public ReportBuilder reportBuilder() { return new ReportBuilder(); }
 
-// Request scope — stato per-request HTTP
+// Request scope — per-request HTTP state
 @Bean @RequestScope
 public AuditContext auditContext() { return new AuditContext(); }
 ```
 
-**Regola pratica**: quasi tutti i bean sono singleton. Se un bean accumula stato per-request, usa `@RequestScope` o passa lo stato come parametro invece di tenerlo nel bean.
+**Practical rule**: almost all beans are singletons. If a bean accumulates per-request state, use `@RequestScope` or pass the state as a parameter instead of keeping it in the bean.
 
 ---
 
 ## Spring Boot Auto-Configuration
 
-### Come funziona
+### How it works
 
-Spring Boot legge `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`. Ogni classe è condizionale:
+Spring Boot reads `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`. Each class is conditional:
 
 ```java
-@ConditionalOnClass(DataSource.class)          // driver nel classpath
-@ConditionalOnMissingBean(DataSource.class)    // nessun DataSource già definito
+@ConditionalOnClass(DataSource.class)          // driver on the classpath
+@ConditionalOnMissingBean(DataSource.class)    // no DataSource already defined
 public class DataSourceAutoConfiguration { ... }
 ```
 
-**Override**: definisci un bean dello stesso tipo — Spring lo preferisce all'auto-configured. Niente `@Primary` se il tuo è l'unico.
+**Override**: define a bean of the same type — Spring prefers it over the auto-configured one. No need for `@Primary` if yours is the only one.
 
 ```java
-// Override del DataSource con pool sizing esplicito
+// Override DataSource with explicit pool sizing
 @Bean
 public DataSource dataSource(DataSourceProperties props) {
     HikariDataSource ds = new HikariDataSource();
@@ -71,12 +71,12 @@ public DataSource dataSource(DataSourceProperties props) {
 
 ---
 
-## Configurazione — YAML e ConfigurationProperties
+## Configuration — YAML and ConfigurationProperties
 
-### Struttura profili raccomandata
+### Recommended profile structure
 
 ```yaml
-# application.yml — valori di base e struttura
+# application.yml — base values and structure
 spring:
   application:
     name: my-app-backend
@@ -125,7 +125,7 @@ spring:
       ddl-auto: validate
 ```
 
-### ConfigurationProperties — preferibile a @Value sparsi
+### ConfigurationProperties — preferable to scattered @Value
 
 ```java
 @ConfigurationProperties(prefix = "app.service-a")
@@ -143,19 +143,19 @@ public record SecurityProperties(
     @Positive long jwtExpirationMs
 ) {}
 
-// Abilitazione nel main
+// Enable in main class
 @SpringBootApplication
 @ConfigurationPropertiesScan
 public class MyApplication { ... }
 ```
 
-**Vantaggi vs `@Value`**: validazione all'avvio (fail-fast), type-safe, testabile in isolamento, IDE autocomplete, documentazione auto-generabile con `spring-boot-configuration-processor`.
+**Advantages vs `@Value`**: validation on startup (fail-fast), type-safe, testable in isolation, IDE autocomplete, auto-generatable documentation with `spring-boot-configuration-processor`.
 
 ---
 
-## WebClient — chiamate HTTP esterne
+## WebClient — external HTTP calls
 
-### Configurazione bean
+### Bean configuration
 
 ```java
 @Configuration
@@ -187,7 +187,7 @@ public class WebClientConfig {
 }
 ```
 
-### Pattern chiamata con error handling completo
+### Call pattern with full error handling
 
 ```java
 @Service
@@ -213,23 +213,23 @@ public class ExternalSearchService {
             .bodyToMono(new ParameterizedTypeReference<List<SearchMatch>>() {})
             .retryWhen(Retry.backoff(3, Duration.ofSeconds(1))
                 .filter(ex -> ex instanceof ExternalApiException e
-                    && e.getErrorCode().endsWith("SERVER_ERROR"))) // retry solo 5xx, non 4xx
+                    && e.getErrorCode().endsWith("SERVER_ERROR"))) // retry on 5xx only, not 4xx
             .onErrorResume(ex -> {
                 log.error("Service A search failed query='{}': {}", query, ex.getMessage());
-                return Mono.just(List.of()); // fallback: lista vuota invece di propagare
+                return Mono.just(List.of()); // fallback: empty list instead of propagating
             })
-            .block(); // accettabile in Spring MVC (servlet-based) — evita in WebFlux server
+            .block(); // acceptable in Spring MVC (servlet-based) — avoid in WebFlux server
     }
 }
 ```
 
-**`.block()` in Spring MVC**: applicazioni servlet-stack usano `.block()` correttamente per consumare Mono/Flux da WebClient nel thread di richiesta. Se si migra a Spring WebFlux server, torna reattivo end-to-end.
+**`.block()` in Spring MVC**: servlet-stack applications correctly use `.block()` to consume Mono/Flux from WebClient in the request thread. If migrating to Spring WebFlux server, go reactive end-to-end.
 
 ---
 
-## Spring Security — JWT con Security 6
+## Spring Security — JWT with Security 6
 
-### SecurityFilterChain (lambda DSL — non extends WebSecurityConfigurerAdapter)
+### SecurityFilterChain (lambda DSL — not extends WebSecurityConfigurerAdapter)
 
 ```java
 @Configuration
@@ -243,7 +243,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-            .csrf(AbstractHttpConfigurer::disable)        // API REST stateless
+            .csrf(AbstractHttpConfigurer::disable)        // stateless REST API
             .sessionManagement(s ->
                 s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
@@ -266,7 +266,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12); // mai SHA-256 plain
+        return new BCryptPasswordEncoder(12); // never plain SHA-256
     }
 
     @Bean
@@ -316,7 +316,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (JwtException ex) {
             log.warn("JWT validation failed: {}", ex.getMessage());
-            // Non bloccare il filter chain — il request rimane non-authenticated
+            // Do not block the filter chain — the request remains unauthenticated
         }
 
         chain.doFilter(request, response);
@@ -369,9 +369,9 @@ public class JwtService {
 
 ---
 
-## Testing con Spring
+## Testing with Spring
 
-### Unit test — senza contesto Spring (preferito per velocità)
+### Unit test — without Spring context (preferred for speed)
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -402,7 +402,7 @@ class CompanyServiceImplTest {
 }
 ```
 
-### Integration test controller con @WebMvcTest
+### Controller integration test with @WebMvcTest
 
 ```java
 @WebMvcTest(CompanyController.class)
@@ -410,7 +410,7 @@ class CompanyControllerTest {
 
     @Autowired MockMvc mockMvc;
     @MockBean CompanyService companyService;
-    @MockBean JwtService jwtService; // se Security è incluso
+    @MockBean JwtService jwtService; // if Security is included
 
     @Test
     @WithMockUser(roles = "USER")
@@ -446,12 +446,12 @@ class CompanyControllerTest {
 }
 ```
 
-### Integration test con DB reale H2
+### Integration test with a real H2 database
 
 ```java
 @SpringBootTest
 @ActiveProfiles("dev")
-@Transactional // rollback dopo ogni test
+@Transactional // rollback after each test
 class CompanyRepositoryIntegrationTest {
 
     @Autowired CompanyRepository companyRepository;
@@ -470,20 +470,20 @@ class CompanyRepositoryIntegrationTest {
 
 ---
 
-## Anti-pattern Spring da evitare
+## Spring anti-patterns to avoid
 
-| Anti-pattern | Problema | Soluzione |
+| Anti-pattern | Problem | Solution |
 |---|---|---|
-| `@Autowired` su field | Non testabile senza ApplicationContext | Constructor injection + `@RequiredArgsConstructor` |
-| `ApplicationContext.getBean()` nel codice applicativo | Service Locator — accoppiamento al container | Injection dichiarativa |
-| `@Transactional` sul controller | Transazione aperta per tutta la request HTTP | Solo nei service — vedi anche `/backend/spring-data-jpa` per tutti gli errori `@Transactional` |
-| `new` su bean Spring dentro altri bean | Bypassa il container, niente DI/AOP | Injection o `@Bean` factory |
-| SHA-256 plain per password | Hash reversibile con rainbow table; migra a BCrypt | `BCryptPasswordEncoder(12)` |
-| `@Value` sparsi in decine di classi | Refactoring difficile, no validazione all'avvio | `@ConfigurationProperties` per gruppo di config |
+| `@Autowired` on field | Not testable without ApplicationContext | Constructor injection + `@RequiredArgsConstructor` |
+| `ApplicationContext.getBean()` in application code | Service Locator — coupling to the container | Declarative injection |
+| `@Transactional` on the controller | Transaction open for the entire HTTP request | In services only — see also `/backend/spring-data-jpa` for all `@Transactional` mistakes |
+| `new` on Spring beans inside other beans | Bypasses the container, no DI/AOP | Injection or `@Bean` factory |
+| Plain SHA-256 for passwords | Reversible hash with rainbow table; migrate to BCrypt | `BCryptPasswordEncoder(12)` |
+| `@Value` scattered across dozens of classes | Difficult refactoring, no startup validation | `@ConfigurationProperties` for config groups |
 
 ---
 
-## Actuator — configurazione minima
+## Actuator — minimal configuration
 
 ```yaml
 management:
@@ -503,15 +503,15 @@ management:
 
 ## Checklist — Spring Boot configuration
 
-- [ ] Constructor injection ovunque, zero `@Autowired` su field
-- [ ] `@ConfigurationProperties` per gruppi di config, validati con `@Validated`
-- [ ] Profili: `dev` → H2 + `show-sql=true`, `prod` → PostgreSQL + `ddl-auto=validate`
-- [ ] Security: STATELESS, CSRF disabilitato, JWT filter registrato prima di `UsernamePasswordAuthenticationFilter`
-- [ ] Password: `BCryptPasswordEncoder(12)`, mai SHA-256
-- [ ] WebClient: timeout configurato, retry solo su 5xx, fallback esplicito su errore
-- [ ] `@Transactional` solo su `public` methods di service, mai sul controller
-- [ ] Test: unit Mockito (veloce) + `@WebMvcTest` per controller + `@SpringBootTest` + H2 per integration
-- [ ] Actuator: espone solo `health`, `info`, `metrics` — non `/env` in produzione
+- [ ] Constructor injection everywhere, zero `@Autowired` on fields
+- [ ] `@ConfigurationProperties` for config groups, validated with `@Validated`
+- [ ] Profiles: `dev` → H2 + `show-sql=true`, `prod` → PostgreSQL + `ddl-auto=validate`
+- [ ] Security: STATELESS, CSRF disabled, JWT filter registered before `UsernamePasswordAuthenticationFilter`
+- [ ] Password: `BCryptPasswordEncoder(12)`, never SHA-256
+- [ ] WebClient: timeout configured, retry on 5xx only, explicit fallback on error
+- [ ] `@Transactional` only on `public` service methods, never on the controller
+- [ ] Tests: Mockito unit (fast) + `@WebMvcTest` for controllers + `@SpringBootTest` + H2 for integration
+- [ ] Actuator: exposes only `health`, `info`, `metrics` — not `/env` in production
 
 ---
 

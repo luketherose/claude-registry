@@ -1,35 +1,35 @@
 ---
-description: Genera commit message terse e focalizzati sull'intento in formato Conventional Commits. Nessun emoji, nessuna auto-referenzialità, solo sostanza.
+description: Generates terse, intent-focused commit messages in Conventional Commits format. No emojis, no self-referential text, substance only.
 ---
 
-Genera commit message in formato Conventional Commits.
+Generate commit messages in Conventional Commits format.
 
-## Formato
-`<type>(<scope>): <imperativo>` — max 50 char, hard cap 72
+## Format
+`<type>(<scope>): <imperative>` — max 50 chars, hard cap 72
 
-## Tipi ammessi
+## Allowed types
 feat, fix, refactor, perf, docs, test, chore, build, ci, style, revert
 
-## Regole
-- Solo imperativi nel subject
-- Body solo se "il perché non è ovvio"
-- Priorità al ragionamento, non alla descrizione
-- Niente emoji, niente attribuzioni, niente nomi file ripetuti
-- Niente frasi auto-referenziali ("This commit does..."), prima persona, crediti AI
+## Rules
+- Imperatives only in subject
+- Body only if "the why is not obvious"
+- Priority to reasoning, not description
+- No emojis, no attributions, no repeated file names
+- No self-referential phrases ("This commit does..."), first person, AI credits
 
-## Body obbligatorio per
+## Body required for
 - Breaking changes
-- Fix di sicurezza
+- Security fixes
 - Data migrations
-- Reversioni
-- Ragionamento non ovvio
+- Reverts
+- Non-obvious reasoning
 
 ## Output
-Solo il testo del messaggio in un blocco codice. Non eseguire git, non fare staging.
+Only the message text in a code block. Do not run git, do not stage.
 
 ---
 
-**Vedi anche**: `/utils/caveman` per comunicazione terse generale · `/utils/caveman-review` per code review one-line
+**See also**: `/utils/caveman` for general terse communication · `/utils/caveman-review` for one-line code review
 
 ---
 
