@@ -21,7 +21,7 @@ from dataclasses import dataclass
 
 
 SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
-VALID_TIERS = {"stable", "beta"}
+VALID_TIERS = {"stable", "beta", "skill"}
 VALID_STATUSES = {"active", "deprecated"}
 REQUIRED_CAP_FIELDS = {"name", "version", "tier", "status", "description", "file"}
 
@@ -123,18 +123,18 @@ def validate_catalog_json(catalog_path: Path) -> tuple[list[Finding], dict]:
                 # Check that the .md file has valid frontmatter with matching name
                 fm = parse_frontmatter(full_path.read_text(encoding="utf-8"))
                 if fm is None:
-                    findings.append(Finding("warning", loc,
+                    findings.append(Finding("error", loc,
                         f"`{file_field}` has no parseable YAML frontmatter."))
                 elif fm.get("name") != name:
                     findings.append(Finding("error", loc,
                         f"`{file_field}` has `name: {fm.get('name')}` "
                         f"but catalog entry is `{name}`. They must match."))
 
-            # Check file path convention: {tier}/{name}.md
+            # Check file path convention: {tier}/{name}.md or skills/{name}.md
             if tier and name:
-                expected = f"{tier}/{name}.md"
+                expected = f"skills/{name}.md" if tier == "skill" else f"{tier}/{name}.md"
                 if file_field != expected:
-                    findings.append(Finding("warning", loc,
+                    findings.append(Finding("error", loc,
                         f"`file: {file_field}` — expected `{expected}` "
                         f"based on tier and name."))
 
@@ -142,21 +142,21 @@ def validate_catalog_json(catalog_path: Path) -> tuple[list[Finding], dict]:
 
 
 def check_orphan_files(marketplace_root: Path, catalog: dict) -> list[Finding]:
-    """Warn about .md files in stable/ or beta/ with no catalog.json entry."""
+    """Error on .md files in stable/, beta/, or skills/ with no catalog.json entry."""
     findings = []
     catalog_files = {
         cap.get("file")
         for cap in catalog.get("capabilities", [])
         if isinstance(cap, dict) and not any(k.startswith("_") for k in cap)
     }
-    for tier in ("stable", "beta"):
-        tier_dir = marketplace_root / tier
+    for subdir in ("stable", "beta", "skills"):
+        tier_dir = marketplace_root / subdir
         if not tier_dir.exists():
             continue
         for md_file in sorted(tier_dir.glob("*.md")):
-            rel = f"{tier}/{md_file.name}"
+            rel = f"{subdir}/{md_file.name}"
             if rel not in catalog_files:
-                findings.append(Finding("warning", rel,
+                findings.append(Finding("error", rel,
                     f"`{rel}` has no entry in catalog.json. "
                     "Run the publish script to register it, or delete the file."))
     return findings
