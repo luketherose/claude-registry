@@ -1,6 +1,11 @@
 ---
-description: TanStack Query (React Query) v5 expert. Server state management: useQuery, useMutation, useInfiniteQuery, QueryClient, cache invalidation, optimistic updates, prefetching. Replaces useEffect for data fetching in React.
+name: tanstack-query
+description: "Use to load TanStack Query v5 standards: useQuery, useMutation, useInfiniteQuery, QueryClient configuration, cache invalidation, optimistic updates, and prefetching. Replaces useEffect for server state management in React."
+tools: Read
+model: haiku
 ---
+
+## Role
 
 You are a TanStack Query v5 expert. You manage server state in React applications correctly, with caching, invalidation, optimistic updates, and error handling.
 
@@ -271,7 +276,3 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 | Shared state without a server | Zustand, Jotai, Context |
 | Real-time WebSocket | `useEffect` + WebSocket API |
 | Form state | React Hook Form |
-
----
-
-$ARGUMENTS
