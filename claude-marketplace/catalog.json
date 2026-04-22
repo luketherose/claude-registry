@@ -1,7 +1,7 @@
 {
   "_comment": "Team convention — not an official Claude Code format. This manifest tracks published capabilities.",
   "version": "1.0",
-  "generated": "2026-04-20",
+  "generated": "2026-04-22",
   "repository": "claude-registry",
   "capabilities": [
     {
@@ -13,9 +13,21 @@
       "description": "Analyzes and designs system architecture; writes ADRs; reasons about trade-offs across security, performance, scalability, cost, and maintainability.",
       "file": "stable/software-architect.md",
       "dependencies": [],
-      "tools": ["Read", "Grep", "Glob", "Bash", "Write", "WebFetch"],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "Write",
+        "WebFetch"
+      ],
       "model": "sonnet",
-      "tags": ["architecture", "adr", "trade-off", "design"],
+      "tags": [
+        "architecture",
+        "adr",
+        "trade-off",
+        "design"
+      ],
       "published": "2026-04-19",
       "changelog": "Initial release"
     },
@@ -28,11 +40,43 @@
       "description": "Extracts and documents functional requirements, use cases, business processes, and acceptance criteria.",
       "file": "stable/functional-analyst.md",
       "dependencies": [],
-      "tools": ["Read", "Grep", "Glob", "Write"],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write"
+      ],
       "model": "sonnet",
-      "tags": ["requirements", "use-cases", "business-process", "bdd"],
+      "tags": [
+        "requirements",
+        "use-cases",
+        "business-process",
+        "bdd"
+      ],
       "published": "2026-04-19",
       "changelog": "Initial release"
+    },
+    {
+      "name": "functional-analyst",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when reconstructing the functional behaviour of an existing codebase. Produces feature lists, user flows, business rules, use cases, and functional dependencies in docs/functional/. Use before a migration, refactoring, or to document existing functionality for a new team.",
+      "file": "skills/functional-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "analysis",
+        "functional",
+        "requirements",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release — skill variant extracted from catalog"
     },
     {
       "name": "developer-java-spring",
@@ -42,10 +86,26 @@
       "status": "active",
       "description": "Writes production-ready Java/Spring Boot code with clean architecture, JUnit 5 testing, Spring Security, structured logging, and RFC 7807 error handling.",
       "file": "stable/developer-java-spring.md",
-      "dependencies": ["java-spring-standards", "testing-standards", "rest-api-standards"],
-      "tools": ["Read", "Edit", "Write", "Bash", "Grep", "Glob"],
+      "dependencies": [
+        "java-spring-standards",
+        "testing-standards",
+        "rest-api-standards"
+      ],
+      "tools": [
+        "Read",
+        "Edit",
+        "Write",
+        "Bash",
+        "Grep",
+        "Glob"
+      ],
       "model": "sonnet",
-      "tags": ["java", "spring-boot", "backend", "developer"],
+      "tags": [
+        "java",
+        "spring-boot",
+        "backend",
+        "developer"
+      ],
       "published": "2026-04-20",
       "changelog": "v1.1.0: Extracted standards to java-spring-standards, testing-standards, rest-api-standards skills"
     },
@@ -58,9 +118,20 @@
       "description": "Produces structured technical analysis: tech debt inventory, security posture, dependency vulnerabilities, observability gaps, and CI/CD assessment.",
       "file": "beta/technical-analyst.md",
       "dependencies": [],
-      "tools": ["Read", "Grep", "Glob", "Bash", "Write"],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
       "model": "sonnet",
-      "tags": ["technical-debt", "security", "analysis", "quality"],
+      "tags": [
+        "technical-debt",
+        "security",
+        "analysis",
+        "quality"
+      ],
       "published": "2026-04-19",
       "changelog": "Initial beta release"
     },
@@ -72,10 +143,24 @@
       "status": "active",
       "description": "Writes production-ready Python following PEP 8, type hints, pytest, pydantic v2, structlog, and uv dependency management. FastAPI and general backend.",
       "file": "beta/developer-python.md",
-      "dependencies": ["testing-standards"],
-      "tools": ["Read", "Edit", "Write", "Bash", "Grep", "Glob"],
+      "dependencies": [
+        "testing-standards"
+      ],
+      "tools": [
+        "Read",
+        "Edit",
+        "Write",
+        "Bash",
+        "Grep",
+        "Glob"
+      ],
       "model": "sonnet",
-      "tags": ["python", "fastapi", "backend", "developer"],
+      "tags": [
+        "python",
+        "fastapi",
+        "backend",
+        "developer"
+      ],
       "published": "2026-04-19",
       "changelog": "Initial beta release"
     },
@@ -87,10 +172,23 @@
       "status": "active",
       "description": "Reviews code for correctness, security, test coverage, performance, and maintainability. Produces structured review with blocking issues, suggestions, and overall recommendation.",
       "file": "beta/code-reviewer.md",
-      "dependencies": ["java-spring-standards", "testing-standards", "rest-api-standards"],
-      "tools": ["Read", "Grep", "Glob", "Bash"],
+      "dependencies": [
+        "java-spring-standards",
+        "testing-standards",
+        "rest-api-standards"
+      ],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash"
+      ],
       "model": "sonnet",
-      "tags": ["review", "quality", "security"],
+      "tags": [
+        "review",
+        "quality",
+        "security"
+      ],
       "published": "2026-04-20",
       "changelog": "v0.2.0: Added skill-based language-specific review (fulfills v1.0 TODO)"
     },
@@ -102,10 +200,24 @@
       "status": "active",
       "description": "Writes unit, integration, and controller tests for existing code. Supports JUnit 5 + Mockito, pytest, and Jest. Identifies and fills test coverage gaps.",
       "file": "beta/test-writer.md",
-      "dependencies": ["testing-standards", "java-spring-standards"],
-      "tools": ["Read", "Grep", "Glob", "Write", "Edit"],
+      "dependencies": [
+        "testing-standards",
+        "java-spring-standards"
+      ],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write",
+        "Edit"
+      ],
       "model": "sonnet",
-      "tags": ["testing", "junit", "pytest", "quality"],
+      "tags": [
+        "testing",
+        "junit",
+        "pytest",
+        "quality"
+      ],
       "published": "2026-04-20",
       "changelog": "v0.2.0: Delegates to testing-standards and java-spring-standards skills"
     },
@@ -118,9 +230,18 @@
       "description": "Diagnoses bugs by tracing from symptom to root cause. Produces a debug report with root cause analysis and minimal targeted fix.",
       "file": "beta/debugger.md",
       "dependencies": [],
-      "tools": ["Read", "Edit", "Grep", "Glob", "Bash"],
+      "tools": [
+        "Read",
+        "Edit",
+        "Grep",
+        "Glob",
+        "Bash"
+      ],
       "model": "sonnet",
-      "tags": ["debugging", "diagnostics"],
+      "tags": [
+        "debugging",
+        "diagnostics"
+      ],
       "published": "2026-04-19",
       "changelog": "Initial beta release"
     },
@@ -132,10 +253,22 @@
       "status": "active",
       "description": "Designs and reviews REST API contracts. Produces OpenAPI 3.1 YAML and design rationale. Enforces REST maturity, consistent status codes, and RFC 7807 errors.",
       "file": "beta/api-designer.md",
-      "dependencies": ["rest-api-standards"],
-      "tools": ["Read", "Grep", "Glob", "Write"],
+      "dependencies": [
+        "rest-api-standards"
+      ],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write"
+      ],
       "model": "sonnet",
-      "tags": ["api", "rest", "openapi", "design"],
+      "tags": [
+        "api",
+        "rest",
+        "openapi",
+        "design"
+      ],
       "published": "2026-04-20",
       "changelog": "v0.2.0: Delegates to rest-api-standards skill"
     },
@@ -148,9 +281,18 @@
       "description": "Writes technical documentation: READMEs, runbooks, API guides, architecture overviews, and onboarding guides. Reads code before writing — never documents what should be, only what is.",
       "file": "beta/documentation-writer.md",
       "dependencies": [],
-      "tools": ["Read", "Grep", "Glob", "Write"],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write"
+      ],
       "model": "sonnet",
-      "tags": ["documentation", "readme", "runbook"],
+      "tags": [
+        "documentation",
+        "readme",
+        "runbook"
+      ],
       "published": "2026-04-19",
       "changelog": "Initial beta release"
     },
@@ -162,10 +304,24 @@
       "status": "active",
       "description": "Creates Accenture-branded PowerPoint presentations (.pptx) from project docs, estimation files, or any source materials. Handles business and technical audiences. Covers problem, solution, architecture, dependencies, and timeline. Uses python-pptx with full Accenture brand compliance.",
       "file": "beta/presentation-creator.md",
-      "dependencies": ["accenture-branding"],
-      "tools": ["Read", "Grep", "Glob", "Bash", "Write"],
+      "dependencies": [
+        "accenture-branding"
+      ],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
       "model": "sonnet",
-      "tags": ["presentation", "pptx", "accenture", "branding", "estimation"],
+      "tags": [
+        "presentation",
+        "pptx",
+        "accenture",
+        "branding",
+        "estimation"
+      ],
       "published": "2026-04-20",
       "changelog": "v0.2.0: Delegates brand constants to accenture-branding skill"
     },
@@ -177,10 +333,25 @@
       "status": "active",
       "description": "Creates Accenture-branded technical documents (PDF via HTML/Chrome or Word .docx) from project docs and estimation files. Covers executive summary, problem, solution, architecture, component inventory, effort estimate, risks. Handles business and technical audiences.",
       "file": "beta/document-creator.md",
-      "dependencies": ["accenture-branding"],
-      "tools": ["Read", "Grep", "Glob", "Bash", "Write"],
+      "dependencies": [
+        "accenture-branding"
+      ],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
       "model": "sonnet",
-      "tags": ["document", "pdf", "docx", "accenture", "branding", "estimation"],
+      "tags": [
+        "document",
+        "pdf",
+        "docx",
+        "accenture",
+        "branding",
+        "estimation"
+      ],
       "published": "2026-04-20",
       "changelog": "v0.2.0: Delegates brand constants to accenture-branding skill"
     },
@@ -193,9 +364,16 @@
       "description": "Use to retrieve authoritative Java/Spring Boot standards: package structure, layering rules, testing patterns (JUnit 5 + Testcontainers), error handling (RFC 7807), logging, security, observability, and Maven conventions.",
       "file": "skills/java-spring-standards.md",
       "dependencies": [],
-      "tools": ["Read"],
+      "tools": [
+        "Read"
+      ],
       "model": "haiku",
-      "tags": ["java", "spring-boot", "standards", "skill"],
+      "tags": [
+        "java",
+        "spring-boot",
+        "standards",
+        "skill"
+      ],
       "published": "2026-04-20",
       "changelog": "Initial release — extracted from developer-java-spring and java-spring-conventions policy"
     },
@@ -208,9 +386,18 @@
       "description": "Use to retrieve authoritative testing standards: principles, scenario taxonomy, method naming, Arrange-Act-Assert structure, and JUnit 5, pytest, Jest framework templates.",
       "file": "skills/testing-standards.md",
       "dependencies": [],
-      "tools": ["Read"],
+      "tools": [
+        "Read"
+      ],
       "model": "haiku",
-      "tags": ["testing", "junit", "pytest", "jest", "standards", "skill"],
+      "tags": [
+        "testing",
+        "junit",
+        "pytest",
+        "jest",
+        "standards",
+        "skill"
+      ],
       "published": "2026-04-20",
       "changelog": "Initial release — extracted from test-writer and developer-java-spring"
     },
@@ -223,9 +410,18 @@
       "description": "Use to retrieve Accenture brand standards: color palette, python-pptx constants, CSS template for PDF generation, typography rules, slide layout specifications.",
       "file": "skills/accenture-branding.md",
       "dependencies": [],
-      "tools": ["Read"],
+      "tools": [
+        "Read"
+      ],
       "model": "haiku",
-      "tags": ["accenture", "branding", "pptx", "pdf", "standards", "skill"],
+      "tags": [
+        "accenture",
+        "branding",
+        "pptx",
+        "pdf",
+        "standards",
+        "skill"
+      ],
       "published": "2026-04-20",
       "changelog": "Initial release — migrated from policies/accenture-branding.md"
     },
@@ -238,11 +434,840 @@
       "description": "Use to retrieve REST API design standards: resource modeling, HTTP methods, status codes, versioning, pagination, RFC 7807 error format, and OpenAPI 3.1 rules.",
       "file": "skills/rest-api-standards.md",
       "dependencies": [],
-      "tools": ["Read"],
+      "tools": [
+        "Read"
+      ],
       "model": "haiku",
-      "tags": ["rest", "api", "openapi", "standards", "skill"],
+      "tags": [
+        "rest",
+        "api",
+        "openapi",
+        "standards",
+        "skill"
+      ],
       "published": "2026-04-20",
       "changelog": "Initial release — extracted from api-designer"
+    },
+    {
+      "name": "developer-frontend",
+      "version": "0.1.0",
+      "type": "agent",
+      "tier": "beta",
+      "status": "active",
+      "description": "Use when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack — does not load Angular skills for a React project or vice versa. Produces production-ready, typed, accessible, tested frontend code following the conventions of the detected framework.",
+      "file": "beta/developer-frontend.md",
+      "dependencies": [
+        "angular-expert",
+        "ngrx-expert",
+        "rxjs-expert",
+        "react-expert",
+        "tanstack-query",
+        "tanstack",
+        "nextjs",
+        "tanstack-start",
+        "vue-expert",
+        "qwik-expert",
+        "vanilla-expert",
+        "css-expert",
+        "design-expert",
+        "testing-standards",
+        "rest-api-standards",
+        "refactoring-expert"
+      ],
+      "tools": [
+        "Read",
+        "Edit",
+        "Write",
+        "Bash",
+        "Grep",
+        "Glob"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "frontend",
+        "angular",
+        "react",
+        "vue",
+        "qwik",
+        "typescript",
+        "developer"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "tech-analyst",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when analysing a repository's technical structure. Produces module maps, dependency graphs, bounded contexts, data flows, integration points, and semantic indices. Use as the first step in an analysis, migration, or architectural-understanding pipeline.",
+      "file": "skills/tech-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "analysis",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "java-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load Java 17+ core standards: records, sealed classes, Optional, Stream API, Lombok patterns, concurrency, custom exceptions, logging conventions, and document generation (Apache POI, iText). Does not cover Spring Boot, JPA, or layered architecture.",
+      "file": "skills/java-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "java",
+        "spring",
+        "backend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "spring-architecture",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load Spring layered-architecture standards: Controller/Service/Repository/Entity structure, DTO separation, Bean Validation, global exception handling, mapper pattern, structured logging, naming conventions, and module implementation order.",
+      "file": "skills/spring-architecture.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "java",
+        "spring",
+        "backend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "spring-data-jpa",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load JPA/Hibernate standards: entity design, relations, fetch strategies, N+1 solutions, transaction management, JPQL queries, second-level cache, bulk operations, automatic auditing, and performance optimisations.",
+      "file": "skills/spring-data-jpa.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "java",
+        "spring",
+        "backend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "spring-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load Spring Boot 3.x standards: IoC/DI, auto-configuration, profiles, ConfigurationProperties, WebClient for external APIs, Spring Security 6 with JWT, and testing patterns (MockMvc, @WebMvcTest, @SpringBootTest).",
+      "file": "skills/spring-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "java",
+        "spring",
+        "backend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "postgresql-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load PostgreSQL standards: relational design, data modelling, data types, indices, performance tuning, Flyway migrations, transaction management, data integrity, security, and monitoring. Works alongside spring-data-jpa; does not duplicate the ORM layer.",
+      "file": "skills/postgresql-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "database",
+        "postgresql",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "backend-documentation",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when generating enterprise technical documentation for a Java/Spring Boot backend. Reads pre-existing analyses and source code to produce a backend-doc.tex covering architecture, API reference, data model, business logic, security, and error handling. Ready for pandoc conversion.",
+      "file": "skills/backend-documentation.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "documentation",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "doc-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when producing technical or functional documentation for Python/Streamlit, Java/Spring Boot, or Angular projects. Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented. Saves output to docs/.",
+      "file": "skills/doc-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "documentation",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "documentation-orchestrator",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when generating enterprise technical documentation for a full-stack project. Interprets a Word template, coordinates backend-documentation and frontend-documentation skills, ensures cross-layer consistency (DTO names, API contracts), and produces backend-doc.tex and frontend-doc.tex ready for pandoc.",
+      "file": "skills/documentation-orchestrator.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "documentation",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "frontend-documentation",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when generating enterprise technical documentation for an Angular frontend. Reads pre-existing analyses and Angular code to produce a frontend-doc.tex covering module architecture, smart/dumb components, NgRx store, routing, API services, design system, and performance. Ready for pandoc conversion.",
+      "file": "skills/frontend-documentation.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "documentation",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "functional-document-generator",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to convert existing functional documentation into an enterprise LaTeX document deliverable to stakeholders. Reads from docs/functional/, interprets a provided Word template, and generates a complete .tex file ready for pandoc conversion to .docx. Does not invent functionality not supported by the source content.",
+      "file": "skills/functional-document-generator.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "documentation",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "angular-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load Angular standards: component architecture, smart/dumb pattern, OnPush change detection, RxJS integration, Reactive Forms, lazy loading, and SOLID principles applied to Angular. Use for new components, FE refactoring, or Angular architectural review.",
+      "file": "skills/angular-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "angular",
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "ngrx-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load NgRx standards: store design, event-driven actions, pure reducers, memoised selectors, effects, facade pattern, state normalisation, and guidance on when NgRx is appropriate versus simpler alternatives.",
+      "file": "skills/ngrx-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "angular",
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "rxjs-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load RxJS standards for Angular: naming conventions, flattening strategies (switchMap/mergeMap/concatMap), subscription management, memory safety, stream combination, error handling, and pipeline clarity. Covers anti-patterns to eliminate.",
+      "file": "skills/rxjs-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "angular",
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "css-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load CSS/SCSS standards: design tokens, BEM naming, specificity rules, modularity, mobile-first responsive design, theming, and layout patterns. Use for SCSS refactoring, design system integration, or eliminating fragile inline styles.",
+      "file": "skills/css-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "design-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when designing layouts, mockups, or style specifications for new frontend components. Applies the company design system and coordinates with the project's framework skill and css-expert. Invoke before implementing any new UI component.",
+      "file": "skills/design-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "qwik-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load Qwik and Qwik City standards: resumability, lazy components, signals, server-side loaders/actions, and file-based routing. Use for web apps with extreme performance requirements and minimum Time To Interactive.",
+      "file": "skills/qwik-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "qwik",
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "nextjs",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load Next.js 14+ App Router standards: React Server Components, Server Actions, file-based routing, metadata API, multi-level caching, and deployment patterns. Does not cover the Pages Router.",
+      "file": "skills/nextjs.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "react",
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "react-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load React 18+ standards: component architecture, hooks, TypeScript integration, performance optimisation (memo/useCallback/useMemo), Suspense, concurrent features, and testing with React Testing Library. For data fetching use tanstack-query; for routing use tanstack; for SSR use nextjs.",
+      "file": "skills/react-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "react",
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "tanstack-query",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load TanStack Query v5 standards: useQuery, useMutation, useInfiniteQuery, QueryClient configuration, cache invalidation, optimistic updates, and prefetching. Replaces useEffect for server state management in React.",
+      "file": "skills/tanstack-query.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "react",
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "tanstack-start",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load TanStack Start standards for full-stack React: SSR, Server Functions, streaming, file-based routing, and end-to-end type safety. Use for new full-stack React apps that do not require the Next.js ecosystem.",
+      "file": "skills/tanstack-start.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "react",
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "tanstack",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load TanStack Router standards: type-safe file-based routing, route definitions, loaders, search params, lazy routes, and per-route error boundaries. Type-safe alternative to React Router.",
+      "file": "skills/tanstack.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "react",
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "vanilla-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load Vanilla JS/TS standards: Web Components, ES Modules, modern DOM APIs, Custom Events, Intersection/MutationObserver, strict TypeScript, and Vite bundling. Use for independent widgets, reusable libraries, or projects where a framework is overkill.",
+      "file": "skills/vanilla-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "vanilla",
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "vue-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load Vue 3 Composition API standards: components, composables, Pinia state management, Vue Router 4, TypeScript patterns, performance optimisation, and testing with Vitest and Vue Test Utils. Does not cover Vue 2 or the Options API.",
+      "file": "skills/vue-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "vue",
+        "frontend",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "backend-orchestrator",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use for complex or multi-skill backend tasks. Coordinates java-expert, spring-expert, spring-data-jpa, spring-architecture, and postgresql-expert; interprets the request context and guarantees cross-layer consistency from Controller to DB.",
+      "file": "skills/backend-orchestrator.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "orchestrator",
+        "pipeline",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "frontend-orchestrator",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use for complex or multi-skill frontend tasks. Coordinates Angular, NgRx, RxJS, React, Vue, Qwik, CSS/SCSS, Design, and FE Refactoring skills; guarantees architectural and stylistic consistency across design, implementation, and state management.",
+      "file": "skills/frontend-orchestrator.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "orchestrator",
+        "pipeline",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "migration-orchestrator",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when migrating a legacy application to Java Spring Boot 3.x (backend) and Angular 14+ (frontend). Coordinates technical analysis, functional analysis, component mapping, BE/FE implementation, refactoring, and documentation across the full migration pipeline.",
+      "file": "skills/migration-orchestrator.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "orchestrator",
+        "pipeline",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "orchestrator",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use for ambiguous, multi-domain, or unclassifiable tasks. Analyses the request, determines which skills to activate and in what order, avoids redundant activations, and composes results from multiple skills into a coherent output.",
+      "file": "skills/orchestrator.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "orchestrator",
+        "pipeline",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "porting-orchestrator",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when porting features from a legacy project to an Angular + Java Spring Boot target. Coordinates analysis artefacts and specialist skills; mandatorily updates functional analysis after every code change. Entry point for 'convert feature X into folder Y' commands.",
+      "file": "skills/porting-orchestrator.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "orchestrator",
+        "pipeline",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "python-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load Python production standards: mandatory type hints, project structure, Pydantic v2, pytest, structlog, and dependency management (uv/pip-tools). Covers FastAPI services, CLIs, data pipelines, and scripts. Does not cover Streamlit — use streamlit-expert for that.",
+      "file": "skills/python-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "python",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "streamlit-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to load Streamlit standards: page structure, session_state management, caching, reusable components, and PostgreSQL/API integration. Use for developing or maintaining Streamlit web apps. For pure Python logic use python-expert.",
+      "file": "skills/streamlit-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "python",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "dependency-resolver",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when a dependency conflict blocks another skill: incompatible library versions, breaking changes after an update, absent documentation, inconsistent behaviour, transitive conflicts, or deprecated APIs. Support skill only — do not activate for simple version updates without conflicts.",
+      "file": "skills/dependency-resolver.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "refactoring",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "refactoring-expert",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when refactoring code in any language to improve internal structure without changing functional behaviour. Applies SOLID, DRY, KISS, YAGNI, Separation of Concerns, high cohesion/low coupling, testability, and readability.",
+      "file": "skills/refactoring-expert.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "refactoring",
+        "standards",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "caveman-commit",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when generating commit messages. Produces a terse, intent-focused Conventional Commits subject line (max 72 chars) with a body only when the reasoning is non-obvious. No emojis, no AI credits. Outputs message text in a code block only — does not run git.",
+      "file": "skills/caveman-commit.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "utils",
+        "git",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "caveman-review",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when reviewing code and producing PR comments. Each comment follows the format L<line>: <severity> <problem>. <fix>. No hedging, no code repetition, no motivational asides. Produces comments ready to paste into a PR.",
+      "file": "skills/caveman-review.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "utils",
+        "git",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "caveman",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to activate token-efficient communication mode (approx. 75% token reduction). Switches responses to terse, direct prose: no filler words, no hedging, no pleasantries. Preserves exact technical terminology and code unchanged.",
+      "file": "skills/caveman.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "utils",
+        "git",
+        "skill"
+      ],
+      "published": "2026-04-22",
+      "changelog": "Initial release"
     }
   ]
 }

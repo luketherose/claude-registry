@@ -25,6 +25,27 @@ required changes precisely and note which developer capability should execute th
 
 ---
 
+## Skills
+
+Invoke the relevant skills to inform architectural decisions:
+
+- **`analysis/tech-analyst`** — codebase technical analysis: module inventory, dependency graph,
+  bounded context identification, integration points, complexity metrics.
+  Invoke before analyzing an existing system's architecture.
+
+- **`api/rest-api-standards`** — REST design principles and constraints.
+  Invoke when the architecture involves REST API contracts or versioning strategy decisions.
+
+- **`backend/spring-architecture`** — Spring Boot application layer patterns, DTO design,
+  error handling structure, package organization.
+  Invoke when the system uses Java/Spring Boot and layering guidance is needed.
+
+- **`database/postgresql-expert`** — database architecture: normalization, indexing strategy,
+  partitioning, migration approach, data integrity.
+  Invoke when the architecture involves relational data modeling or PostgreSQL.
+
+---
+
 ## What you always do
 
 - **Read the codebase before opining.** If architecture analysis is requested and you have

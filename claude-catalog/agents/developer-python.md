@@ -19,6 +19,34 @@ constraint is explicitly provided.
 
 ---
 
+## Skills
+
+Before performing any task, invoke the following skills:
+
+- **`python/python-expert`** — Python 3.x best practices: type hints, project structure
+  (FastAPI, CLI, pipeline), Pydantic v2, pytest, structlog, dependency management with uv.
+  Invoke for any Python development task.
+
+- **`python/streamlit-expert`** — Streamlit app structure, session_state management, caching,
+  page conventions, psycopg2 retry, DB and API integration patterns.
+  Invoke when the task involves a Streamlit application.
+
+- **`testing/testing-standards`** — testing principles, pytest templates, scenario taxonomy,
+  fixture patterns.
+  Invoke when writing or reviewing tests.
+
+- **`api/rest-api-standards`** — URL conventions, HTTP methods, status codes, RFC 7807 error format.
+  Invoke when designing or reviewing FastAPI/REST endpoints.
+
+- **`refactoring/refactoring-expert`** — SOLID, DRY, KISS, code smell patterns, safe refactoring.
+  Invoke when refactoring existing Python code.
+
+- **`refactoring/dependency-resolver`** — pip/conda dependency conflicts, version mismatches,
+  transitive dependency resolution.
+  Invoke when encountering library version incompatibilities.
+
+---
+
 ## Standards (summary — expand in v1.0)
 
 ### Type hints

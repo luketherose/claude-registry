@@ -1,120 +1,122 @@
 # Claude Registry
 
-Infrastruttura di governance per le capability condivise di Claude Code del team.
+Governance infrastructure for shared Claude Code capabilities across the team.
 
-Il registry permette di definire, revisionare, versionare e distribuire subagent
-specializzati — esattamente come una libreria di codice condivisa, ma per il
-comportamento di Claude.
+The registry lets you define, review, version, and distribute specialised subagents —
+exactly like a shared code library, but for Claude's behaviour.
 
 ---
 
-## Leggi prima la guida operativa
+## Read the operational guide first
 
-Tutto quello che ti serve per usare o contribuire al registry è nella guida:
+Everything you need to use or contribute to the registry is in the guide:
 
 ```
-guida-operativa.pdf   (nella root di questo repository)
+guida-operativa.pdf   (in the root of this repository)
 ```
 
-La guida copre:
-- **Parte 1 — Usare le capability**: prerequisiti, installazione con script, verifica, aggiornamento
-- **Parte 2 — Contribuire**: creare una nuova capability, scrivere il system prompt, testare, aprire una PR, gestire la review, pubblicare
+The guide covers:
+- **Part 1 — Using capabilities**: prerequisites, installation via script, verification, updates
+- **Part 2 — Contributing**: creating a new capability, writing the system prompt, testing, opening a PR, handling review, publishing
 
-Se vuoi solo installare le capability nel tuo progetto senza leggere tutto:
+If you just want to install capabilities in your project without reading everything:
 
 ```bash
-./claude-catalog/scripts/setup-capabilities.sh /path/to/tuo-progetto
+./claude-catalog/scripts/setup-capabilities.sh /path/to/your-project
 ```
 
 ---
 
-## Struttura del repository
+## Repository structure
 
 ```
 claude-registry/
-  claude-catalog/          ← sorgente (sviluppo e review)
-    agents/                  subagent .md con YAML frontmatter
-    skills/                  knowledge provider riutilizzabili (condivisi tra agenti)
-    examples/                invocazioni di esempio per capability
-    evals/                   scenari di validazione
-    hooks/                   script e configurazioni per hook Claude Code
-    settings/                reference settings.json per i progetti
-    mcp/                     esempi di configurazione MCP server
-    policies/                convenzioni residue (non ancora migrate a skill)
-    templates/               template di output (ADR, report, API contract)
-    docs/                    documentazione interna per i contributori
+  claude-catalog/          ← source (development and review)
+    agents/                  subagent .md files with YAML frontmatter
+    skills/                  reusable knowledge providers (shared across agents)
+    examples/                example invocations for capabilities
+    evals/                   validation scenarios
+    hooks/                   scripts and configurations for Claude Code hooks
+    settings/                reference settings.json for projects
+    mcp/                     MCP server configuration examples
+    policies/                remaining conventions (not yet migrated to skills)
+    templates/               output templates (ADR, report, API contract)
+    docs/                    internal documentation for contributors
     scripts/
-      setup-capabilities.sh  installa capability in un progetto (risolve dipendenze)
-      new-capability.sh      scaffolda una nuova capability o skill
+      setup-capabilities.sh  installs capabilities into a project (resolves dependencies)
+      new-capability.sh      scaffolds a new capability or skill
     how-to-write-a-capability.md
     CONTRIBUTING.md
     GOVERNANCE.md
     CHANGELOG.md
 
-  claude-marketplace/      ← distribuzione (solo capability approvate)
-    stable/                  capability production-ready
-    beta/                    capability nuove o sperimentali
-    skills/                  skill condivise (installate automaticamente come dipendenze)
-    catalog.json             manifest con versioni, metadati e dipendenze
+  claude-marketplace/      ← distribution (approved capabilities only)
+    stable/                  production-ready capabilities
+    beta/                    new or experimental capabilities
+    skills/                  shared skills (installed automatically as dependencies)
+    catalog.json             manifest with versions, metadata, and dependencies
 
-  guida-operativa.pdf      ← leggi qui
+  guida-operativa.pdf      ← read this first
   pitch-claude-registry.pptx
 ```
 
 ---
 
-## Capability disponibili
+## Available capabilities
 
-### Agenti (12)
+### Agents (13)
 
-| Nome | Tier | Descrizione |
+| Name | Tier | Description |
 |------|------|-------------|
-| `software-architect` | stable | Analisi architetturale, ADR, trade-off |
-| `functional-analyst` | stable | Requisiti, use case, processi di business |
-| `developer-java-spring` | stable | Sviluppo Java/Spring Boot enterprise |
-| `technical-analyst` | beta | Debito tecnico, sicurezza, dipendenze vulnerabili |
-| `developer-python` | beta | Sviluppo Python/FastAPI |
-| `code-reviewer` | beta | Code review strutturata su PR o file modificati |
-| `test-writer` | beta | Test JUnit 5, Mockito, Testcontainers, pytest |
-| `debugger` | beta | Diagnosi bug da stack trace, log e codice |
-| `api-designer` | beta | Design e review API REST, spec OpenAPI |
-| `documentation-writer` | beta | README, runbook, guide architetturali |
-| `presentation-creator` | beta | Slide Accenture-branded (.pptx) da documenti di progetto |
-| `document-creator` | beta | Documenti Accenture-branded (PDF/DOCX) da documenti di progetto |
+| `software-architect` | stable | Architectural analysis, ADRs, trade-off evaluation |
+| `functional-analyst` | stable | Requirements, use cases, business processes |
+| `developer-java-spring` | stable | Java/Spring Boot enterprise development |
+| `technical-analyst` | beta | Technical debt, security, vulnerable dependencies |
+| `developer-python` | beta | Python/FastAPI development |
+| `developer-frontend` | beta | Multi-framework frontend development (Angular, React, Vue, Qwik, Vanilla) |
+| `code-reviewer` | beta | Structured code review on PRs or changed files |
+| `test-writer` | beta | JUnit 5, Mockito, Testcontainers, pytest tests |
+| `debugger` | beta | Bug diagnosis from stack traces, logs, and code |
+| `api-designer` | beta | REST API design and review, OpenAPI specs |
+| `documentation-writer` | beta | READMEs, runbooks, architectural guides |
+| `presentation-creator` | beta | Accenture-branded slides (.pptx) from project documents |
+| `document-creator` | beta | Accenture-branded documents (PDF/DOCX) from project documents |
 
-### Skill (4)
+### Skills
 
-Le skill sono knowledge provider atomici condivisi tra più agenti. Non sono agenti
-autonomi: vengono invocati dagli agenti per recuperare standard e convenzioni.
-Lo script `setup-capabilities.sh` le installa automaticamente come dipendenze.
+Skills are atomic knowledge providers shared across multiple agents. They are not
+autonomous agents: they are invoked by agents to retrieve standards and conventions.
+The `setup-capabilities.sh` script installs them automatically as dependencies.
 
-| Nome | Usata da | Contenuto |
-|------|----------|-----------|
-| `java-spring-standards` | developer-java-spring, code-reviewer, test-writer | Struttura pacchetti, layering, testing, error handling, logging, security, Micrometer |
-| `testing-standards` | developer-java-spring, test-writer, code-reviewer, developer-python | Principi, tassonomia scenari, naming, JUnit 5 / pytest / Jest template |
-| `rest-api-standards` | developer-java-spring, api-designer, code-reviewer | Modellazione risorse, HTTP methods, status code, RFC 7807, OpenAPI 3.1 |
-| `accenture-branding` | presentation-creator, document-creator | Palette colori, costanti python-pptx, CSS template PDF, tipografia |
+| Name | Used by | Contents |
+|------|---------|----------|
+| `java-spring-standards` | developer-java-spring, code-reviewer, test-writer | Package structure, layering, testing, error handling, logging, security, Micrometer |
+| `testing-standards` | developer-java-spring, test-writer, code-reviewer, developer-python | Principles, scenario taxonomy, naming, JUnit 5 / pytest / Jest templates |
+| `rest-api-standards` | developer-java-spring, api-designer, code-reviewer | Resource modelling, HTTP methods, status codes, RFC 7807, OpenAPI 3.1 |
+| `accenture-branding` | presentation-creator, document-creator | Colour palette, python-pptx constants, CSS PDF template, typography |
+| `functional-analyst` | developer-frontend, functional-analyst | Functional behaviour reconstruction, feature lists, user flows, business rules |
+| + 36 frontend and backend skills | developer-frontend | Angular, React, Vue, Qwik, Vanilla, Python, Java, database, refactoring, orchestrators |
 
 ---
 
 ## Governance
 
-- Il branch `main` è protetto: ogni modifica passa da Pull Request con review
-- GitHub Actions valida struttura e completezza di ogni capability
-- Versioning SemVer: PATCH = fix, MINOR = nuovi comportamenti, MAJOR = breaking change
-- La promozione da `beta` a `stable` richiede utilizzo in almeno due progetti e 30 giorni senza issue critiche
+- The `main` branch is protected: every change goes through a Pull Request with review
+- GitHub Actions validates structure and completeness of every capability (catalog check first, then marketplace)
+- SemVer versioning: PATCH = fix, MINOR = new behaviours, MAJOR = breaking change
+- Promotion from `beta` to `stable` requires use in at least two projects and 30 days without critical issues
 
-Dettagli in [`claude-catalog/GOVERNANCE.md`](claude-catalog/GOVERNANCE.md).
+Details in [`claude-catalog/GOVERNANCE.md`](claude-catalog/GOVERNANCE.md).
 
 ---
 
-## Link utili
+## Useful links
 
-| Risorsa | Percorso |
-|---------|----------|
-| Guida operativa (PDF) | [`guida-operativa.pdf`](guida-operativa.pdf) |
-| Come scrivere una capability | [`claude-catalog/how-to-write-a-capability.md`](claude-catalog/how-to-write-a-capability.md) |
-| Checklist review PR | [`claude-catalog/review-checklist.md`](claude-catalog/review-checklist.md) |
-| Processo di release | [`claude-catalog/release-process.md`](claude-catalog/release-process.md) |
+| Resource | Path |
+|----------|------|
+| Operational guide (PDF) | [`guida-operativa.pdf`](guida-operativa.pdf) |
+| How to write a capability | [`claude-catalog/how-to-write-a-capability.md`](claude-catalog/how-to-write-a-capability.md) |
+| PR review checklist | [`claude-catalog/review-checklist.md`](claude-catalog/review-checklist.md) |
+| Release process | [`claude-catalog/release-process.md`](claude-catalog/release-process.md) |
 | Changelog | [`claude-catalog/CHANGELOG.md`](claude-catalog/CHANGELOG.md) |
-| Pitch per il team (PPTX) | [`pitch-claude-registry.pptx`](pitch-claude-registry.pptx) |
+| Team pitch (PPTX) | [`pitch-claude-registry.pptx`](pitch-claude-registry.pptx) |

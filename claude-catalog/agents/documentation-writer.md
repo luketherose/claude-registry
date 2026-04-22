@@ -22,6 +22,15 @@ you document what it actually does.
 
 ---
 
+## Skills
+
+- **`documentation/doc-expert`** — documentation templates and conventions: module docs,
+  API guides, flow descriptions, Spring Boot controller/service templates, Angular component
+  docs. Covers what to document, what to skip, and priority order.
+  Invoke with: `"Provide documentation templates for: [type of documentation]"`
+
+---
+
 ## Documentation types and standards
 
 ### README.md

@@ -192,7 +192,7 @@ def check_supporting_files(catalog_root: Path) -> list[Finding]:
                 "Add `evals/{name}-eval.md` before promoting to stable."))
 
     if skills_dir.exists():
-        for skill_file in sorted(skills_dir.glob("*.md")):
+        for skill_file in sorted(skills_dir.rglob("*.md")):
             name = skill_file.stem
             if not (examples_dir / f"{name}-example.md").exists():
                 findings.append(Finding("warning", f"examples/{name}-example.md",
@@ -202,6 +202,50 @@ def check_supporting_files(catalog_root: Path) -> list[Finding]:
                 findings.append(Finding("warning", f"evals/{name}-eval.md",
                     f"No eval file for skill `{name}`. "
                     "Consider adding `evals/{name}-eval.md`."))
+
+    return findings
+
+
+def check_marketplace_sync(repo_root: Path, catalog_root: Path) -> list[Finding]:
+    """Error if any agent or skill in the catalog has no entry in claude-marketplace/catalog.json."""
+    findings = []
+    catalog_json = repo_root / "claude-marketplace" / "catalog.json"
+    if not catalog_json.exists():
+        findings.append(Finding("error", "claude-marketplace/catalog.json",
+            "claude-marketplace/catalog.json not found — cannot verify marketplace sync."))
+        return findings
+
+    try:
+        import json
+        marketplace = json.loads(catalog_json.read_text(encoding="utf-8"))
+    except Exception as exc:
+        findings.append(Finding("error", "claude-marketplace/catalog.json",
+            f"Cannot parse catalog.json: {exc}"))
+        return findings
+
+    published = {
+        cap["name"]
+        for cap in marketplace.get("capabilities", [])
+        if isinstance(cap, dict) and "name" in cap and not any(k.startswith("_") for k in cap)
+    }
+
+    agents_dir = catalog_root / "agents"
+    skills_dir = catalog_root / "skills"
+
+    for agent_file in sorted(agents_dir.glob("*.md")):
+        name = agent_file.stem
+        if name not in published:
+            findings.append(Finding("error", str(agent_file.relative_to(repo_root)),
+                f"Agent `{name}` has no entry in `claude-marketplace/catalog.json`. "
+                "Run the publish script before merging."))
+
+    if skills_dir.exists():
+        for skill_file in sorted(skills_dir.rglob("*.md")):
+            name = skill_file.stem
+            if name not in published:
+                findings.append(Finding("error", str(skill_file.relative_to(repo_root)),
+                    f"Skill `{name}` has no entry in `claude-marketplace/catalog.json`. "
+                    "Run the publish script before merging."))
 
     return findings
 
@@ -291,12 +335,13 @@ def main():
             all_findings.extend(validate_agent_file(filepath, file_type="agent"))
             validated_files.append(str(filepath.relative_to(repo_root)))
         if skills_dir.exists():
-            for filepath in sorted(skills_dir.glob("*.md")):
+            for filepath in sorted(skills_dir.rglob("*.md")):
                 all_findings.extend(validate_agent_file(filepath, file_type="skill"))
                 validated_files.append(str(filepath.relative_to(repo_root)))
 
     all_findings.extend(check_changelog(catalog_root))
     all_findings.extend(check_supporting_files(catalog_root))
+    all_findings.extend(check_marketplace_sync(repo_root, catalog_root))
 
     comment = format_comment(all_findings, validated_files)
 
