@@ -28,6 +28,52 @@ aggiorna anche `catalog.json`.
 
 ---
 
+## Come lavorano insieme catalog e marketplace
+
+Questo repository ha due aree con responsabilità distinte:
+
+| Area | Scopo | Chi modifica |
+|------|-------|--------------|
+| `claude-catalog/` | Sorgente di sviluppo — qui si scrive, rivede, e versionano le capability | Sviluppatori, PR |
+| `claude-marketplace/` | Distribuzione — contiene solo capability approvate, copiate dal catalog | Script di publish, mai a mano |
+
+**Regola fondamentale**: una capability non è "disponibile" finché non è pubblicata nel marketplace. Modificare solo il catalog non è sufficiente.
+
+### Flusso di pubblicazione
+
+```
+claude-catalog/agents/foo.md   ─── publish script ──→   claude-marketplace/beta/foo.md
+claude-catalog/skills/bar.md   ─── publish script ──→   claude-marketplace/skills/bar.md
+                                                          claude-marketplace/catalog.json  ← manifest
+```
+
+Per pubblicare: `./claude-marketplace/scripts/publish.sh <name> <version> <tier>`
+
+### Flusso di validazione CI (sequenziale)
+
+Le PR passano per due gate in sequenza — il secondo parte solo se il primo è verde:
+
+```
+1. validate-catalog   — controlla i file in claude-catalog/
+   ├── frontmatter YAML valido (name, description, tools, model)
+   ├── system prompt presente e con ## Role
+   ├── skill senza tool proibiti (Edit, Write, Bash, Agent)
+   ├── CHANGELOG.md ha voce [Unreleased]
+   └── check_marketplace_sync: ogni agente/skill del catalog
+       deve avere una entry in claude-marketplace/catalog.json  ← BLOCCA se manca
+
+2. validate-marketplace   — (solo se validate-catalog è verde)
+   ├── catalog.json valido (semver, tier, status, campi obbligatori)
+   ├── ogni file referenziato esiste fisicamente
+   ├── frontmatter del file corrisponde al nome in catalog.json
+   ├── path convention: {tier}/{name}.md o skills/{name}.md
+   └── nessun file orfano in stable/, beta/, skills/
+```
+
+**Conseguenza pratica**: se apri una PR che aggiunge capability al catalog senza pubblicarle nel marketplace, `validate-catalog` blocca la PR prima ancora che parta `validate-marketplace`.
+
+---
+
 ## Struttura del repository
 
 - `claude-catalog/` — sorgente di sviluppo (agenti, skill, documenti di governance)

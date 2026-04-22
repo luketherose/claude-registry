@@ -64,6 +64,8 @@ def validate_catalog_json(catalog_path: Path) -> tuple[list[Finding], dict]:
             "`capabilities` must be a JSON array"))
         return findings, catalog
 
+    # tracks (name, type) to allow same name across different types (agent + skill)
+    keys_seen: set[tuple[str, str]] = set()
     names_seen: set[str] = set()
 
     for i, cap in enumerate(catalog["capabilities"]):
@@ -85,12 +87,19 @@ def validate_catalog_json(catalog_path: Path) -> tuple[list[Finding], dict]:
                     f"Missing required field: `{field}`"))
 
         name = cap.get("name", "")
+        cap_type = cap.get("type", "")
         if not name:
             continue
 
-        if name in names_seen:
+        key = (name, cap_type)
+        if key in keys_seen:
             findings.append(Finding("error", loc,
-                f"Duplicate capability name: `{name}`"))
+                f"Duplicate `{cap_type}` entry with name `{name}`."))
+        elif name in names_seen:
+            findings.append(Finding("warning", loc,
+                f"`{name}` is used for both an agent and a skill. "
+                "Consider distinct names to avoid ambiguity."))
+        keys_seen.add(key)
         names_seen.add(name)
 
         # version semver
