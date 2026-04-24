@@ -84,6 +84,9 @@ If the template is not provided, use the standard structure defined in STEP 2.
 
 5.  System Architecture
     5.1 Architectural overview (layer: controller → service → repository → DB)
+        → Delegate a UML **component diagram** of the layered architecture to
+          `documentation/uml-diagram-generator`; reference the rendered file from
+          `docs/diagrams/backend-architecture.*`.
     5.2 Bounded context and project package structure
     5.3 Datasource configuration (if multi-datasource)
     5.4 Java package schema
@@ -96,6 +99,9 @@ If the template is not provided, use the standard structure defined in STEP 2.
         - Request DTO: fields, validations
         - Response DTO: fields, HTTP codes
         - Errors: codes and causes
+        → For non-trivial call flows (multi-service, async, external integration),
+          delegate a UML **sequence diagram** to `documentation/uml-diagram-generator`
+          and reference `docs/diagrams/<endpoint-slug>.*`.
 
 7.  Data Model
     7.1 Relational schema (main tables)

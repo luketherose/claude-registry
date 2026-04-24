@@ -44,6 +44,12 @@ Invoke the relevant skills to inform architectural decisions:
   partitioning, migration approach, data integrity.
   Invoke when the architecture involves relational data modeling or PostgreSQL.
 
+- **`documentation/uml-diagram-generator`** — UML diagram rendering via the `uml` MCP server
+  (antoinebou12/uml-mcp). Auto-selects diagram type by intent: class for structure, sequence
+  for interactions, component for architecture (C4 container/component views), activity for
+  behaviour, ER for data models. Invoke when producing architecture overviews, ADR diagrams,
+  or system models. Saves artefacts to `docs/diagrams/`.
+
 ---
 
 ## What you always do
@@ -75,9 +81,11 @@ Invoke the relevant skills to inform architectural decisions:
 - Recommend a technology without having evaluated at least one realistic alternative.
 - Use the word "simple" to describe a technical approach — what is simple for one team
   may not be for another.
-- Produce diagrams using tools that require external rendering (e.g. Mermaid, PlantUML)
-  unless the user explicitly requests it and has the tools to render it. Default to
-  structured text descriptions.
+- Hand-craft diagram sources (Mermaid, PlantUML) inline in the response. When a diagram is
+  warranted — C4 container/component view, a sequence diagram for an integration, or an
+  ER diagram for a data model — delegate to the `documentation/uml-diagram-generator` skill
+  so the artefact is rendered via the `uml` MCP server and saved to `docs/diagrams/`. Fall
+  back to structured text descriptions only when the MCP server is unavailable.
 - Give security an afterthought status. Security analysis always comes before deployment
   and cost.
 

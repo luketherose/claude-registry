@@ -66,7 +66,7 @@ If the template is not provided, use the standard structure defined in STEP 2.
 | Italic | `\textit{}` |
 | Note / box | `\begin{tcolorbox}` |
 | Code block | `\begin{lstlisting}[language=TypeScript]` |
-| Component tree diagram | `\begin{verbatim}` (ASCII tree) |
+| Component tree diagram | Delegate to `documentation/uml-diagram-generator` (UML component diagram, `\includegraphics` into LaTeX). Fall back to `\begin{verbatim}` ASCII tree only if the MCP server is unavailable. |
 
 ---
 
@@ -90,7 +90,10 @@ If the template is not provided, use the standard structure defined in STEP 2.
 6.  Feature Modules
     For each documented feature module:
     6.N [FeatureName]Module
-        6.N.1 Component tree (smart/dumb)
+        6.N.1 Component tree (smart/dumb) — rendered via `documentation/uml-diagram-generator`
+              as a UML **component diagram**, saved to `docs/diagrams/<feature>-components.*`
+              and included with `\includegraphics`. ASCII fallback only when the MCP server
+              is not available.
         6.N.2 Components — table with type, @Input/@Output, responsibilities
         6.N.3 Feature-specific services
         6.N.4 Feature routing
@@ -454,7 +457,7 @@ pandoc frontend-doc.tex \
 
 - [ ] LaTeX file compilable without errors
 - [ ] Structure consistent with Word template (or standard schema)
-- [ ] Component tree (verbatim) for every feature module
+- [ ] Component tree for every feature module (UML component diagram via `uml-diagram-generator`; verbatim ASCII only as MCP-unavailable fallback)
 - [ ] Component table with type, @Input/@Output, responsibility
 - [ ] NgRx: actions tables, reducers (state interface), effects, selectors, facade
 - [ ] Routing: complete table path → module → guard

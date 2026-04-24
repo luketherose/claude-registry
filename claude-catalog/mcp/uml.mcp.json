@@ -1,0 +1,37 @@
+{
+  "_comment": [
+    "MCP server entry for UML diagram generation via antoinebou12/uml-mcp.",
+    "Merge the 'uml' key below into the mcpServers object of the project-root .mcp.json.",
+    "Requires 'uvx' (from Astral uv) on PATH. PLANTUML_SERVER overrides the rendering endpoint.",
+    "Remove the _comment key before using this file."
+  ],
+  "mcpServers": {
+    "uml": {
+      "_when_to_use": "Gives Claude the ability to generate UML diagrams (class, sequence, component, activity, state, use-case, ER) from natural-language or structural input. Used by documentation-writer, software-architect, technical-analyst, api-designer, doc-expert, backend-documentation and frontend-documentation capabilities to emit diagrams into docs/diagrams/ during documentation, architecture design, system modeling and code-structure explanation tasks.",
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/antoinebou12/uml-mcp",
+        "uml-mcp"
+      ],
+      "env": {
+        "PLANTUML_SERVER": "${PLANTUML_SERVER:-https://www.plantuml.com/plantuml}",
+        "UML_OUTPUT_DIR": "${UML_OUTPUT_DIR:-docs/diagrams}"
+      },
+      "diagramSelection": {
+        "structure": "class",
+        "interaction": "sequence",
+        "architecture": "component",
+        "behavior": "activity",
+        "data-model": "er"
+      },
+      "triggers": [
+        "documentation",
+        "architecture-design",
+        "system-modeling",
+        "code-structure-explanation"
+      ]
+    }
+  }
+}

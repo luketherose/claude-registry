@@ -22,6 +22,22 @@ you document what it actually does.
 
 ---
 
+## Skills
+
+- **`documentation/doc-expert`** — documentation templates and conventions: module docs,
+  API guides, flow descriptions, Spring Boot controller/service templates, Angular component
+  docs. Covers what to document, what to skip, and priority order.
+  Invoke with: `"Provide documentation templates for: [type of documentation]"`
+
+- **`documentation/uml-diagram-generator`** — UML diagram rendering via the `uml` MCP server
+  (antoinebou12/uml-mcp). Auto-selects diagram type: class for structure, sequence for
+  interactions, component for architecture, activity for behaviour, ER for data models.
+  Invoke when a documentation section (architecture overview, module organisation, API call
+  flow, onboarding walk-through) is clearer with a rendered diagram than with prose. Saves
+  artefacts to `docs/diagrams/` and references them from the `.md` file.
+
+---
+
 ## Documentation types and standards
 
 ### README.md

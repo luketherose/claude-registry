@@ -95,6 +95,7 @@ The `setup-capabilities.sh` script installs them automatically as dependencies.
 | `rest-api-standards` | developer-java-spring, api-designer, code-reviewer | Resource modelling, HTTP methods, status codes, RFC 7807, OpenAPI 3.1 |
 | `accenture-branding` | presentation-creator, document-creator | Colour palette, python-pptx constants, CSS PDF template, typography |
 | `functional-analyst` | developer-frontend, functional-analyst | Functional behaviour reconstruction, feature lists, user flows, business rules |
+| `uml-diagram-generator` | software-architect, functional-analyst, documentation-writer, doc-expert, backend-documentation, frontend-documentation, functional-document-generator | UML diagram rendering (class, sequence, component, activity, use-case, ER) via the `uml` MCP server (antoinebou12/uml-mcp) |
 | + 36 frontend and backend skills | developer-frontend | Angular, React, Vue, Qwik, Vanilla, Python, Java, database, refactoring, orchestrators |
 
 ---

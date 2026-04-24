@@ -6,6 +6,8 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 ### Added
+- `uml-diagram-generator@1.0.0` — new skill: delegates UML diagram generation (class, sequence, component, activity, state, use-case, ER) to the `uml` MCP server (antoinebou12/uml-mcp); auto-selects diagram type by intent; saves artefacts to `docs/diagrams/`
+- `mcp/uml.mcp.json` — reference MCP server entry for `antoinebou12/uml-mcp` (stdio via `uvx`); merge into project-root `.mcp.json`
 - `developer-frontend@0.1.0` — new agent: multi-framework frontend developer (Angular, React/Next.js/TanStack, Vue 3, Qwik, Vanilla JS/TS); auto-detects stack and loads only relevant skills
 - 36 new skills published to marketplace: `tech-analyst`, `java-expert`, `spring-architecture`, `spring-data-jpa`, `spring-expert`, `postgresql-expert`, `backend-documentation`, `doc-expert`, `documentation-orchestrator`, `frontend-documentation`, `functional-document-generator`, `angular-expert`, `ngrx-expert`, `rxjs-expert`, `css-expert`, `design-expert`, `qwik-expert`, `nextjs`, `react-expert`, `tanstack-query`, `tanstack-start`, `tanstack`, `vanilla-expert`, `vue-expert`, `backend-orchestrator`, `frontend-orchestrator`, `migration-orchestrator`, `orchestrator`, `porting-orchestrator`, `python-expert`, `streamlit-expert`, `dependency-resolver`, `refactoring-expert`, `caveman-commit`, `caveman-review`, `caveman`
 
@@ -15,6 +17,13 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 - `validate_marketplace.py` — added `skill` as valid tier; fixed path convention for skills (`skills/{name}.md`); orphan check now covers `skills/` directory; all warnings promoted to errors
 
 ### Changed
+- `software-architect@1.1.0` — adds `uml-diagram-generator` to Skills section and dependencies; rewrites the "do not hand-craft PlantUML/Mermaid" rule to delegate to the skill instead
+- `functional-analyst@1.1.0` — adds `uml-diagram-generator` to Skills section and dependencies for UC-NNN use-case and activity diagrams
+- `documentation-writer@0.2.0` — adds `doc-expert` and `uml-diagram-generator` to dependencies; references the skill for architecture overviews, module organisation, API flows
+- `doc-expert@1.1.0` — documentation principles delegate diagrams to `uml-diagram-generator`; raw PlantUML source must not be pasted inline
+- `backend-documentation@1.1.0` — sections 5 (System Architecture) and 6 (API Reference) delegate to `uml-diagram-generator` for component and sequence diagrams
+- `frontend-documentation@1.1.0` — feature-module component trees rendered via `uml-diagram-generator` (UML component diagram); ASCII verbatim kept only as MCP-unavailable fallback
+- `functional-document-generator@1.1.0` — sections 9 (Main Flows) and 10 (Use Cases) delegate to `uml-diagram-generator` for activity and use-case diagrams
 - All 37 skills in `claude-catalog/skills/` — add `name`, `tools: Read`, `model: haiku` frontmatter fields; rewrite `description` to start with "Use when/for/to"; add `## Role` section; remove `$ARGUMENTS` template artefact; translate `utils/caveman.md` body to English UK
 
 ### Added

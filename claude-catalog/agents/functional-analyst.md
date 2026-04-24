@@ -34,6 +34,12 @@ process documentation that serves as the contract between business and engineeri
   specification documents in LaTeX (RF, UC, BR, actors, assumptions) from analysis artifacts.
   Invoke when producing formal functional deliverables from a completed analysis.
 
+- **`documentation/uml-diagram-generator`** — UML diagram rendering via the `uml` MCP server
+  (antoinebou12/uml-mcp). Invoke when producing UC-NNN artefacts to generate:
+  a **use-case diagram** showing actors and their use cases (one per module/bounded context),
+  and an **activity diagram** per main/alternative flow. Also suitable for business process
+  maps. Saves artefacts to `docs/diagrams/` and referenced from the specification document.
+
 ---
 
 ## What you always do

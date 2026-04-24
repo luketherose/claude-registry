@@ -6,13 +6,15 @@
   "capabilities": [
     {
       "name": "software-architect",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "agent",
       "tier": "stable",
       "status": "active",
       "description": "Analyzes and designs system architecture; writes ADRs; reasons about trade-offs across security, performance, scalability, cost, and maintainability.",
       "file": "stable/software-architect.md",
-      "dependencies": [],
+      "dependencies": [
+        "uml-diagram-generator"
+      ],
       "tools": [
         "Read",
         "Grep",
@@ -28,18 +30,20 @@
         "trade-off",
         "design"
       ],
-      "published": "2026-04-19",
-      "changelog": "Initial release"
+      "published": "2026-04-24",
+      "changelog": "v1.1.0: delegates UML diagram generation (C4 / component / sequence) to uml-diagram-generator skill"
     },
     {
       "name": "functional-analyst",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "agent",
       "tier": "stable",
       "status": "active",
       "description": "Extracts and documents functional requirements, use cases, business processes, and acceptance criteria.",
       "file": "stable/functional-analyst.md",
-      "dependencies": [],
+      "dependencies": [
+        "uml-diagram-generator"
+      ],
       "tools": [
         "Read",
         "Grep",
@@ -53,8 +57,8 @@
         "business-process",
         "bdd"
       ],
-      "published": "2026-04-19",
-      "changelog": "Initial release"
+      "published": "2026-04-24",
+      "changelog": "v1.1.0: delegates UML use-case and activity diagram generation to uml-diagram-generator skill"
     },
     {
       "name": "functional-analyst",
@@ -274,13 +278,16 @@
     },
     {
       "name": "documentation-writer",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "type": "agent",
       "tier": "beta",
       "status": "active",
       "description": "Writes technical documentation: READMEs, runbooks, API guides, architecture overviews, and onboarding guides. Reads code before writing — never documents what should be, only what is.",
       "file": "beta/documentation-writer.md",
-      "dependencies": [],
+      "dependencies": [
+        "doc-expert",
+        "uml-diagram-generator"
+      ],
       "tools": [
         "Read",
         "Grep",
@@ -293,8 +300,8 @@
         "readme",
         "runbook"
       ],
-      "published": "2026-04-19",
-      "changelog": "Initial beta release"
+      "published": "2026-04-24",
+      "changelog": "v0.2.0: delegates UML diagram generation to uml-diagram-generator skill"
     },
     {
       "name": "presentation-creator",
@@ -630,13 +637,15 @@
     },
     {
       "name": "backend-documentation",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
       "description": "Use when generating enterprise technical documentation for a Java/Spring Boot backend. Reads pre-existing analyses and source code to produce a backend-doc.tex covering architecture, API reference, data model, business logic, security, and error handling. Ready for pandoc conversion.",
       "file": "skills/backend-documentation.md",
-      "dependencies": [],
+      "dependencies": [
+        "uml-diagram-generator"
+      ],
       "tools": [
         "Read"
       ],
@@ -646,18 +655,20 @@
         "standards",
         "skill"
       ],
-      "published": "2026-04-22",
-      "changelog": "Initial release"
+      "published": "2026-04-24",
+      "changelog": "v1.1.0: delegates architecture component and API sequence diagrams to uml-diagram-generator"
     },
     {
       "name": "doc-expert",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
       "description": "Use when producing technical or functional documentation for Python/Streamlit, Java/Spring Boot, or Angular projects. Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented. Saves output to docs/.",
       "file": "skills/doc-expert.md",
-      "dependencies": [],
+      "dependencies": [
+        "uml-diagram-generator"
+      ],
       "tools": [
         "Read"
       ],
@@ -667,8 +678,8 @@
         "standards",
         "skill"
       ],
-      "published": "2026-04-22",
-      "changelog": "Initial release"
+      "published": "2026-04-24",
+      "changelog": "v1.1.0: documentation principles delegate diagrams to uml-diagram-generator"
     },
     {
       "name": "documentation-orchestrator",
@@ -693,13 +704,15 @@
     },
     {
       "name": "frontend-documentation",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
       "description": "Use when generating enterprise technical documentation for an Angular frontend. Reads pre-existing analyses and Angular code to produce a frontend-doc.tex covering module architecture, smart/dumb components, NgRx store, routing, API services, design system, and performance. Ready for pandoc conversion.",
       "file": "skills/frontend-documentation.md",
-      "dependencies": [],
+      "dependencies": [
+        "uml-diagram-generator"
+      ],
       "tools": [
         "Read"
       ],
@@ -709,18 +722,20 @@
         "standards",
         "skill"
       ],
-      "published": "2026-04-22",
-      "changelog": "Initial release"
+      "published": "2026-04-24",
+      "changelog": "v1.1.0: component trees rendered via uml-diagram-generator; ASCII kept as fallback"
     },
     {
       "name": "functional-document-generator",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
       "description": "Use to convert existing functional documentation into an enterprise LaTeX document deliverable to stakeholders. Reads from docs/functional/, interprets a provided Word template, and generates a complete .tex file ready for pandoc conversion to .docx. Does not invent functionality not supported by the source content.",
       "file": "skills/functional-document-generator.md",
-      "dependencies": [],
+      "dependencies": [
+        "uml-diagram-generator"
+      ],
       "tools": [
         "Read"
       ],
@@ -730,8 +745,8 @@
         "standards",
         "skill"
       ],
-      "published": "2026-04-22",
-      "changelog": "Initial release"
+      "published": "2026-04-24",
+      "changelog": "v1.1.0: Main Flows and Use Cases sections delegate to uml-diagram-generator"
     },
     {
       "name": "angular-expert",
@@ -1268,6 +1283,29 @@
       ],
       "published": "2026-04-22",
       "changelog": "Initial release"
+    },
+    {
+      "name": "uml-diagram-generator",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when producing UML diagrams for documentation, architecture design, system modeling, or code-structure explanation. Routes to the 'uml' MCP server (antoinebou12/uml-mcp) and selects the correct diagram type automatically: class for structure, sequence for interactions, component for architecture, activity for behaviour, ER for data models. Saves rendered diagrams to docs/diagrams/.",
+      "file": "skills/uml-diagram-generator.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "documentation",
+        "architecture",
+        "uml",
+        "diagrams",
+        "skill"
+      ],
+      "published": "2026-04-24",
+      "changelog": "Initial release — integrates antoinebou12/uml-mcp for UML diagram generation"
     }
   ]
 }

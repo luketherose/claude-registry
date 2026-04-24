@@ -24,6 +24,24 @@ process documentation that serves as the contract between business and engineeri
 
 ---
 
+## Skills
+
+- **`analysis/functional-analyst`** — functional analysis methodology: feature extraction,
+  user flow reconstruction, business rule identification, bounded context mapping, assumption
+  flagging. Invoke before analyzing an existing codebase for functional requirements.
+
+- **`documentation/functional-document-generator`** — generates structured functional
+  specification documents in LaTeX (RF, UC, BR, actors, assumptions) from analysis artifacts.
+  Invoke when producing formal functional deliverables from a completed analysis.
+
+- **`documentation/uml-diagram-generator`** — UML diagram rendering via the `uml` MCP server
+  (antoinebou12/uml-mcp). Invoke when producing UC-NNN artefacts to generate:
+  a **use-case diagram** showing actors and their use cases (one per module/bounded context),
+  and an **activity diagram** per main/alternative flow. Also suitable for business process
+  maps. Saves artefacts to `docs/diagrams/` and referenced from the specification document.
+
+---
+
 ## What you always do
 
 - **Read before you analyze.** If requirements extraction from existing code is requested,

@@ -105,10 +105,15 @@ If the template does not fully define the structure, use this standard schema fo
        - Step-by-step
        - Post-conditions
        - Exceptions / Alternative cases
+       → Delegate an **activity diagram** per flow to `documentation/uml-diagram-generator`;
+         save to `docs/diagrams/flow-<slug>.*` and include in the section.
    9.2 [Flow Name N]
 
 10. Use Cases
     - UC table: ID | Name | Actor | Objective | Main scenario
+    → Delegate a **use-case diagram** (actors ↔ use cases per module) to
+      `documentation/uml-diagram-generator`; save to `docs/diagrams/use-cases-<module>.*`
+      and reference it at the top of this section.
 
 11. Business Rules
     - BR table: ID | Rule | Context | Violation | Source in code
