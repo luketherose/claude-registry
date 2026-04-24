@@ -6,7 +6,7 @@
   "capabilities": [
     {
       "name": "master-orchestrator",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "type": "agent",
       "tier": "stable",
       "status": "active",
@@ -1345,6 +1345,30 @@
       ],
       "published": "2026-04-24",
       "changelog": "Initial release \u2014 integrates antoinebou12/uml-mcp for UML diagram generation"
+    },
+    {
+      "name": "browser-automation",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Browser automation via the 'browser' MCP server (@playwright/mcp): navigate, screenshot, click, fill, tabs, keyboard events, JavaScript evaluation, E2E test execution.",
+      "file": "skills/browser-automation.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "browser",
+        "playwright",
+        "e2e",
+        "screenshot",
+        "automation",
+        "testing"
+      ],
+      "published": "2026-04-24",
+      "changelog": "v1.0.0: initial release \u2014 browser automation skill delegating to the 'browser' MCP server (@playwright/mcp)"
     }
   ]
 }

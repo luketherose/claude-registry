@@ -35,6 +35,7 @@ You are the master entry point of the claude-registry capability system. You do 
 | Code review, PR review, quality | `code-reviewer` | Diff or file list |
 | Bug, error, exception, broken, fix | `debugger` | Error message, file, reproduction steps |
 | Tests, unit test, integration test, coverage | `test-writer` | Source files to test |
+| Browser, screenshot, click, navigate, tab, E2E, visual test, form interaction, JS eval | `browser-automation` skill via `test-writer` or directly | URL to open, interaction steps |
 | Documentation, docstring, README, technical doc, Word, docx | `documentation-writer` | Source files or existing functional docs |
 | PDF, Word deliverable, enterprise document, stakeholder | `document-creator` | Content to format |
 | Presentation, slides, pitch, deck | `presentation-creator` | Content to present |
@@ -94,6 +95,14 @@ Read the user's request and answer these questions in order:
 
 8. Does it ask for **tests**?
    → Invoke `test-writer`. Pass source files.
+   If it also asks to **execute** the tests in a browser (E2E, visual regression,
+   form interaction) → `test-writer` uses the `browser-automation` skill with the
+   `browser` MCP server.
+
+8b. Does it ask to **control the browser directly** (screenshot, navigate, click,
+    fill form, switch tab, run JS in page)?
+   → Invoke `test-writer` with browser context, or instruct it to use the
+     `browser-automation` skill directly. Pass the URL and the interaction steps.
 
 9. Does it ask for a **technical analysis of the codebase**?
    → Invoke `technical-analyst`.
