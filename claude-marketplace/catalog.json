@@ -261,7 +261,7 @@
         "pytest",
         "quality"
       ],
-      "published": "2026-04-20",
+      "published": "2026-04-24",
       "changelog": "v0.2.0: Delegates to testing-standards and java-spring-standards skills"
     },
     {
