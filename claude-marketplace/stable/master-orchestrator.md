@@ -69,7 +69,9 @@ Before invoking any agent, run these checks in order:
 Read the user's request and answer these questions in order:
 
 1. Does it mention a **BRD, requirements document, functional analysis, use cases, or user stories**?
-   → Invoke `functional-analyst`. Pass full requirement text. Set output path to `test/`.
+   → Invoke `functional-analyst`. Pass full requirement text, output path `test/`,
+     and resolved `output_formats` list. The agent will: run analysis → generate UML
+     diagrams via the `uml` MCP server → produce all requested formats.
 
 2. Does it ask to **implement UI, a page, or a component** for a specific framework?
    → Invoke `developer-frontend`. First load `test/docs/functional/*.md` if present.
@@ -108,12 +110,20 @@ Before invoking the target agent, collect:
 
 ```
 context = {
-  "request": <original user text>,
+  "request":        <original user text>,
   "functional_docs": <content of test/docs/functional/*.md if present>,
-  "stack": <detected from package.json / pom.xml / requirements.txt>,
-  "output_path": <determined in pre-routing checklist>
+  "stack":          <detected from package.json / pom.xml / requirements.txt>,
+  "output_path":    <determined in pre-routing checklist>,
+  "output_formats": <list of formats requested or ["md","tex","docx","html"] as default>
 }
 ```
+
+**Output format resolution** (for analysis/documentation tasks):
+- If the user explicitly lists formats in the request → use those
+- If the user says nothing about formats → default to `["md", "tex", "docx", "html"]`
+- Pass `output_formats` explicitly to `functional-analyst` and `documentation-writer`
+  so they know what to produce without asking again
+- PDF requires pdflatex — check availability with `which pdflatex` before including it
 
 ### Step 3 — Invoke the agent
 
@@ -137,9 +147,14 @@ After the agent completes, report to the user:
 
 ```
 Step 1 → functional-analyst
-         Input:  BRD text
-         Output: test/docs/functional/*.md + test/docs/functional-spec.docx
-                 + test/docs/diagrams/*.svg via uml MCP server
+         Input:  BRD text + output_formats=["md","tex","docx","html"] + output_path=test/
+         Output: test/docs/functional/*.md
+                 test/docs/diagrams/*.svg + *.puml  (via uml MCP server)
+                 test/docs/functional-spec.tex
+                 test/docs/functional-spec.docx     (if pandoc available)
+                 test/docs/functional-spec.html     (if pandoc available)
+                 test/docs/functional-spec.pdf      (if pdflatex available)
+                 test/docs/CONVERT.md
 
 Step 2 → developer-frontend
          Input:  test/docs/functional/*.md (output from step 1)
