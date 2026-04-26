@@ -134,14 +134,9 @@ def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Findin
                 f"`model: {model}` is not a recognized shorthand. "
                 f"Expected one of: {', '.join(sorted(VALID_MODELS))}, or a full claude-* model ID."))
         if file_type == "skill" and model in ("sonnet", "opus"):
-            skill_name = fm.get("name", filepath.stem)
-            # The general orchestrator is intentionally sonnet — skip the generic warning;
-            # check_model_conventions enforces the correct model for each orchestrator type.
-            is_orchestrator = "orchestrator" in str(skill_name)
-            if not is_orchestrator:
-                findings.append(Finding("warning", str(filepath),
-                    f"Skill uses `model: {model}`. Skills are knowledge retrieval — "
-                    "`model: haiku` is recommended unless reasoning depth requires more."))
+            findings.append(Finding("warning", str(filepath),
+                f"Skill uses `model: {model}`. Skills are knowledge retrieval — "
+                "`model: haiku` is recommended unless reasoning depth requires more."))
 
     # --- color ---
     if "color" in fm:
@@ -258,8 +253,6 @@ def check_marketplace_sync(repo_root: Path, catalog_root: Path) -> list[Finding]
 SPECIALIZED_ORCHESTRATORS = {
     "backend-orchestrator",
     "frontend-orchestrator",
-    "migration-orchestrator",
-    "porting-orchestrator",
     "documentation-orchestrator",
 }
 
@@ -284,22 +277,24 @@ def check_model_conventions(
         name = filepath.stem
 
         if file_type == "agent":
-            if model == "haiku":
-                findings.append(Finding("error", str(filepath.relative_to(repo_root)),
-                    f"`{name}`: agent must use `model: sonnet` or `model: opus`, "
-                    "not `model: haiku`. Agents need reasoning capability."))
-            if model == "opus":
-                findings.append(Finding("warning", str(filepath.relative_to(repo_root)),
-                    f"`{name}`: model: opus — justify this in the PR description"))
+            if name == "orchestrator":
+                # the meta-orchestrator agent must use opus (deep reasoning for
+                # task decomposition, dependency analysis, and synthesis)
+                if model != "opus":
+                    findings.append(Finding("error", str(filepath.relative_to(repo_root)),
+                        f"`{name}`: the meta-orchestrator agent must use `model: opus`, "
+                        f"got `model: {model}`."))
+            else:
+                if model == "haiku":
+                    findings.append(Finding("error", str(filepath.relative_to(repo_root)),
+                        f"`{name}`: agent must use `model: sonnet` or `model: opus`, "
+                        "not `model: haiku`. Agents need reasoning capability."))
+                if model == "opus":
+                    findings.append(Finding("warning", str(filepath.relative_to(repo_root)),
+                        f"`{name}`: model: opus — justify this in the PR description"))
         else:
             # skill
-            if name == "orchestrator":
-                # the general orchestrator must use sonnet
-                if model != "sonnet":
-                    findings.append(Finding("error", str(filepath.relative_to(repo_root)),
-                        f"`{name}`: the general orchestrator skill must use `model: sonnet`, "
-                        f"got `model: {model}`."))
-            elif "orchestrator" in name and name in SPECIALIZED_ORCHESTRATORS:
+            if "orchestrator" in name and name in SPECIALIZED_ORCHESTRATORS:
                 # specialized orchestrators must use haiku
                 if model in ("sonnet", "opus"):
                     findings.append(Finding("error", str(filepath.relative_to(repo_root)),

@@ -6,7 +6,13 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 ### Added
+- `orchestrator@2.0.0` — promoted from skill to **agent** (`model: opus`, `tools: Read, Glob, Agent`). Stack-agnostic meta-orchestrator: dynamically discovers installed agents (no hardcoded list), decomposes requests into a phase-based dependency graph, dispatches specialists in parallel where independent, and synthesises their outputs into a unified result. Replaces the previous skill-based orchestrator (1.1.0).
 - `developer-frontend@0.1.0` — new agent: multi-framework frontend developer (Angular, React/Next.js/TanStack, Vue 3, Qwik, Vanilla JS/TS); auto-detects stack and loads only relevant skills
+
+### Removed
+- `orchestrator` skill (superseded by `orchestrator` agent at 2.0.0 — the skill could only describe plans, the agent actually dispatches them)
+- `migration-orchestrator` skill — language/stack-specific workflow template; subsumed by the general meta-orchestrator agent which handles any migration scenario through dynamic agent discovery
+- `porting-orchestrator` skill — same rationale as migration-orchestrator
 - 36 new skills published to marketplace: `tech-analyst`, `java-expert`, `spring-architecture`, `spring-data-jpa`, `spring-expert`, `postgresql-expert`, `backend-documentation`, `doc-expert`, `documentation-orchestrator`, `frontend-documentation`, `functional-document-generator`, `angular-expert`, `ngrx-expert`, `rxjs-expert`, `css-expert`, `design-expert`, `qwik-expert`, `nextjs`, `react-expert`, `tanstack-query`, `tanstack-start`, `tanstack`, `vanilla-expert`, `vue-expert`, `backend-orchestrator`, `frontend-orchestrator`, `migration-orchestrator`, `orchestrator`, `porting-orchestrator`, `python-expert`, `streamlit-expert`, `dependency-resolver`, `refactoring-expert`, `caveman-commit`, `caveman-review`, `caveman`
 
 ### Fixed

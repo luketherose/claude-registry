@@ -64,13 +64,14 @@ claude-registry/
 
 ## Available capabilities
 
-### Agents (13)
+### Agents (14)
 
 | Name | Tier | Description |
 |------|------|-------------|
 | `software-architect` | stable | Architectural analysis, ADRs, trade-off evaluation |
 | `functional-analyst` | stable | Requirements, use cases, business processes |
 | `developer-java-spring` | stable | Java/Spring Boot enterprise development |
+| `orchestrator` | beta | Meta-orchestrator (opus): discovers installed agents dynamically, decomposes multi-domain tasks, dispatches specialists in parallel, synthesises results |
 | `technical-analyst` | beta | Technical debt, security, vulnerable dependencies |
 | `developer-python` | beta | Python/FastAPI development |
 | `developer-frontend` | beta | Multi-framework frontend development (Angular, React, Vue, Qwik, Vanilla) |

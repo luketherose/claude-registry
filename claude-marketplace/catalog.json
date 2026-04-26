@@ -1,5 +1,5 @@
 {
-  "_comment": "Team convention — not an official Claude Code format. This manifest tracks published capabilities.",
+  "_comment": "Team convention \u2014 not an official Claude Code format. This manifest tracks published capabilities.",
   "version": "1.0",
   "generated": "2026-04-26",
   "repository": "claude-registry",
@@ -76,7 +76,7 @@
         "skill"
       ],
       "published": "2026-04-22",
-      "changelog": "Initial release — skill variant extracted from catalog"
+      "changelog": "Initial release \u2014 skill variant extracted from catalog"
     },
     {
       "name": "developer-java-spring",
@@ -278,7 +278,7 @@
       "type": "agent",
       "tier": "beta",
       "status": "active",
-      "description": "Writes technical documentation: READMEs, runbooks, API guides, architecture overviews, and onboarding guides. Reads code before writing — never documents what should be, only what is.",
+      "description": "Writes technical documentation: READMEs, runbooks, API guides, architecture overviews, and onboarding guides. Reads code before writing \u2014 never documents what should be, only what is.",
       "file": "beta/documentation-writer.md",
       "dependencies": [],
       "tools": [
@@ -375,7 +375,7 @@
         "skill"
       ],
       "published": "2026-04-20",
-      "changelog": "Initial release — extracted from developer-java-spring and java-spring-conventions policy"
+      "changelog": "Initial release \u2014 extracted from developer-java-spring and java-spring-conventions policy"
     },
     {
       "name": "testing-standards",
@@ -399,7 +399,7 @@
         "skill"
       ],
       "published": "2026-04-20",
-      "changelog": "Initial release — extracted from test-writer and developer-java-spring"
+      "changelog": "Initial release \u2014 extracted from test-writer and developer-java-spring"
     },
     {
       "name": "accenture-branding",
@@ -423,7 +423,7 @@
         "skill"
       ],
       "published": "2026-04-20",
-      "changelog": "Initial release — migrated from policies/accenture-branding.md"
+      "changelog": "Initial release \u2014 migrated from policies/accenture-branding.md"
     },
     {
       "name": "rest-api-standards",
@@ -446,7 +446,7 @@
         "skill"
       ],
       "published": "2026-04-20",
-      "changelog": "Initial release — extracted from api-designer"
+      "changelog": "Initial release \u2014 extracted from api-designer"
     },
     {
       "name": "developer-frontend",
@@ -454,7 +454,7 @@
       "type": "agent",
       "tier": "beta",
       "status": "active",
-      "description": "Use when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack — does not load Angular skills for a React project or vice versa. Produces production-ready, typed, accessible, tested frontend code following the conventions of the detected framework.",
+      "description": "Use when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack \u2014 does not load Angular skills for a React project or vice versa. Produces production-ready, typed, accessible, tested frontend code following the conventions of the detected framework.",
       "file": "beta/developer-frontend.md",
       "dependencies": [
         "angular-expert",
@@ -1060,75 +1060,12 @@
       "changelog": "Initial release"
     },
     {
-      "name": "migration-orchestrator",
-      "version": "1.1.0",
-      "type": "skill",
-      "tier": "skill",
-      "status": "active",
-      "description": "Use when migrating a legacy application to Java Spring Boot 3.x (backend) and Angular 14+ (frontend). Coordinates technical analysis, functional analysis, component mapping, BE/FE implementation, refactoring, and documentation across the full migration pipeline.",
-      "file": "skills/migration-orchestrator.md",
-      "dependencies": [],
-      "tools": [
-        "Read"
-      ],
-      "model": "haiku",
-      "tags": [
-        "orchestrator",
-        "pipeline",
-        "skill"
-      ],
-      "published": "2026-04-22",
-      "changelog": "Initial release"
-    },
-    {
-      "name": "orchestrator",
-      "version": "1.1.0",
-      "type": "skill",
-      "tier": "skill",
-      "status": "active",
-      "description": "Use for ambiguous, multi-domain, or unclassifiable tasks. Analyses the request, determines which skills to activate and in what order, avoids redundant activations, and composes results from multiple skills into a coherent output.",
-      "file": "skills/orchestrator.md",
-      "dependencies": [],
-      "tools": [
-        "Read"
-      ],
-      "model": "sonnet",
-      "tags": [
-        "orchestrator",
-        "pipeline",
-        "skill"
-      ],
-      "published": "2026-04-22",
-      "changelog": "Initial release"
-    },
-    {
-      "name": "porting-orchestrator",
-      "version": "1.1.0",
-      "type": "skill",
-      "tier": "skill",
-      "status": "active",
-      "description": "Use when porting features from a legacy project to an Angular + Java Spring Boot target. Coordinates analysis artefacts and specialist skills; mandatorily updates functional analysis after every code change. Entry point for 'convert feature X into folder Y' commands.",
-      "file": "skills/porting-orchestrator.md",
-      "dependencies": [],
-      "tools": [
-        "Read"
-      ],
-      "model": "haiku",
-      "tags": [
-        "orchestrator",
-        "pipeline",
-        "skill"
-      ],
-      "published": "2026-04-22",
-      "changelog": "Initial release"
-    },
-    {
       "name": "python-expert",
       "version": "1.0.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use to load Python production standards: mandatory type hints, project structure, Pydantic v2, pytest, structlog, and dependency management (uv/pip-tools). Covers FastAPI services, CLIs, data pipelines, and scripts. Does not cover Streamlit — use streamlit-expert for that.",
+      "description": "Use to load Python production standards: mandatory type hints, project structure, Pydantic v2, pytest, structlog, and dependency management (uv/pip-tools). Covers FastAPI services, CLIs, data pipelines, and scripts. Does not cover Streamlit \u2014 use streamlit-expert for that.",
       "file": "skills/python-expert.md",
       "dependencies": [],
       "tools": [
@@ -1170,7 +1107,7 @@
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use when a dependency conflict blocks another skill: incompatible library versions, breaking changes after an update, absent documentation, inconsistent behaviour, transitive conflicts, or deprecated APIs. Support skill only — do not activate for simple version updates without conflicts.",
+      "description": "Use when a dependency conflict blocks another skill: incompatible library versions, breaking changes after an update, absent documentation, inconsistent behaviour, transitive conflicts, or deprecated APIs. Support skill only \u2014 do not activate for simple version updates without conflicts.",
       "file": "skills/dependency-resolver.md",
       "dependencies": [],
       "tools": [
@@ -1212,7 +1149,7 @@
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use when generating commit messages. Produces a terse, intent-focused Conventional Commits subject line (max 72 chars) with a body only when the reasoning is non-obvious. No emojis, no AI credits. Outputs message text in a code block only — does not run git.",
+      "description": "Use when generating commit messages. Produces a terse, intent-focused Conventional Commits subject line (max 72 chars) with a body only when the reasoning is non-obvious. No emojis, no AI credits. Outputs message text in a code block only \u2014 does not run git.",
       "file": "skills/caveman-commit.md",
       "dependencies": [],
       "tools": [
@@ -1268,6 +1205,34 @@
       ],
       "published": "2026-04-22",
       "changelog": "Initial release"
+    },
+    {
+      "name": "orchestrator",
+      "version": "2.0.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Use when a task spans multiple domains, requires several specialists, or is ambiguous in scope. Dynamically discovers available agents, decomposes the request into independent subtasks, dispatches agents in parallel where possible, and synthesises their outputs into a single coherent result. Stack-agnostic.",
+      "dependencies": [
+        "backend-orchestrator",
+        "frontend-orchestrator",
+        "documentation-orchestrator"
+      ],
+      "file": "beta/orchestrator.md",
+      "tools": [
+        "Read",
+        "Glob",
+        "Agent"
+      ],
+      "model": "opus",
+      "tags": [
+        "orchestration",
+        "meta-agent",
+        "parallelization",
+        "multi-domain"
+      ],
+      "published": "2026-04-26",
+      "changelog": "Promoted from skill to agent: dynamic discovery, real Agent dispatch, synthesis"
     }
   ]
 }
