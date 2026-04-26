@@ -1,6 +1,28 @@
-# CLAUDE.md — Claude Registry
+# CLAUDE.md
 
-Instructions for Claude Code when working in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+---
+
+## Common commands
+
+```bash
+# Validate catalog locally (runs the same check as CI gate 1)
+python3 .github/scripts/validate_catalog.py
+
+# Validate marketplace locally (runs the same check as CI gate 2)
+python3 .github/scripts/validate_marketplace.py
+
+# Scaffold a new agent or skill
+./claude-catalog/scripts/new-capability.sh --type agent my-agent-name
+./claude-catalog/scripts/new-capability.sh --type skill my-skill-name
+
+# Publish a capability from catalog to marketplace
+./claude-marketplace/scripts/publish.sh <name> <version> <tier>   # tier: stable | beta
+
+# Install all capabilities globally (updates ~/.claude/agents/)
+./claude-catalog/scripts/setup-capabilities.sh --global
+```
 
 ---
 
