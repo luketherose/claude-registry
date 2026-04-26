@@ -2,7 +2,7 @@
 name: orchestrator
 description: "Use for ambiguous, multi-domain, or unclassifiable tasks. Analyses the request, determines which skills to activate and in what order, avoids redundant activations, and composes results from multiple skills into a coherent output."
 tools: Read
-model: haiku
+model: sonnet
 ---
 
 ## Role
@@ -120,6 +120,121 @@ Before executing, communicate to the user:
 - In which order and why
 - What you expect from each one
 - What the final output will be
+
+## Parallel execution
+
+### Independence criterion
+
+Two skills or agents are parallelizable when all of the following hold:
+- They do not write to the same files or shared mutable state
+- Neither depends on the other's output
+- They operate on distinct system layers (e.g. FE component vs BE endpoint vs DB schema)
+
+### Dependency graph pattern
+
+Before executing a multi-skill task, map it into phases. Each phase contains work that can run in parallel within that phase:
+
+```
+Phase 1 — Sequential anchor (defines shared contracts/interfaces)
+Phase 2 — Parallel fan-out (independent workers, no shared state)
+Phase 3 — Sequential convergence (integration, tests)
+```
+
+### Structured plan output format
+
+When the task involves multiple domains, output a plan before executing:
+
+```yaml
+parallel_plan:
+  - phase: 1
+    mode: sequential
+    reason: "defines shared contracts consumed by later phases"
+    tasks:
+      - skill: <skill-name>
+        produces: [<artifact>, ...]
+  - phase: 2
+    mode: parallel
+    reason: "<why these tasks are independent>"
+    tasks:
+      - skill: <skill-name>
+        needs: [<artifact-from-phase-1>]
+        produces: [<artifact>]
+      - skill: <skill-name>
+        needs: [<artifact-from-phase-1>]
+        produces: [<artifact>]
+  - phase: 3
+    mode: sequential
+    reason: "integrates output from phase 2"
+    tasks:
+      - skill: <skill-name>
+        needs: [<artifacts-from-phase-2>]
+```
+
+### Worktree guidance
+
+For cross-surface tasks (FE + BE on separate repos, or independent modules), recommend git worktree isolation per agent with an explicit convergence point (integration test, PR review). Each agent works in its own worktree; merge only at convergence.
+
+### When NOT to parallelize
+
+Do not parallelize when:
+- Tasks share mutable state (same files, same DB schema in active migration)
+- The output of task A is a required input to task B
+- The coordination overhead exceeds the parallelism gain (fewer than 2 truly independent tasks)
+
+### Parallelization examples
+
+#### New full-stack feature: FE component + BE API + DB schema
+
+```yaml
+parallel_plan:
+  - phase: 1
+    mode: sequential
+    reason: "defines the shared API contract and DB schema before any implementation"
+    tasks:
+      - skill: /backend/spring-architecture
+        produces: [api-contract.yaml, entity-definitions]
+  - phase: 2
+    mode: parallel
+    reason: "FE component, BE endpoint, and DB migration are independent once the contract is defined"
+    tasks:
+      - skill: /frontend/angular/angular-expert
+        needs: [api-contract.yaml]
+        produces: [fe-component, fe-service]
+      - skill: /backend/spring-expert
+        needs: [api-contract.yaml, entity-definitions]
+        produces: [rest-controller, service-layer]
+      - skill: /database/postgresql-expert
+        needs: [entity-definitions]
+        produces: [flyway-migration-script]
+  - phase: 3
+    mode: sequential
+    reason: "integration tests require all three artifacts to be ready"
+    tasks:
+      - skill: /backend/spring-data-jpa
+        needs: [flyway-migration-script, service-layer, fe-component]
+```
+
+#### Cross-cutting refactoring: FE + BE simultaneously, then integration tests
+
+```yaml
+parallel_plan:
+  - phase: 1
+    mode: parallel
+    reason: "FE and BE refactoring target separate codebases with no shared state"
+    tasks:
+      - skill: /refactoring/refactoring-expert
+        needs: [fe-codebase]
+        produces: [refactored-fe]
+      - skill: /refactoring/refactoring-expert
+        needs: [be-codebase]
+        produces: [refactored-be]
+  - phase: 2
+    mode: sequential
+    reason: "integration tests validate the refactored surfaces together"
+    tasks:
+      - skill: /backend/spring-expert
+        needs: [refactored-fe, refactored-be]
+```
 
 ## When to use this orchestrator
 

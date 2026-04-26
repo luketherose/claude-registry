@@ -134,9 +134,14 @@ def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Findin
                 f"`model: {model}` is not a recognized shorthand. "
                 f"Expected one of: {', '.join(sorted(VALID_MODELS))}, or a full claude-* model ID."))
         if file_type == "skill" and model in ("sonnet", "opus"):
-            findings.append(Finding("warning", str(filepath),
-                f"Skill uses `model: {model}`. Skills are knowledge retrieval — "
-                "`model: haiku` is recommended unless reasoning depth requires more."))
+            skill_name = fm.get("name", filepath.stem)
+            # The general orchestrator is intentionally sonnet — skip the generic warning;
+            # check_model_conventions enforces the correct model for each orchestrator type.
+            is_orchestrator = "orchestrator" in str(skill_name)
+            if not is_orchestrator:
+                findings.append(Finding("warning", str(filepath),
+                    f"Skill uses `model: {model}`. Skills are knowledge retrieval — "
+                    "`model: haiku` is recommended unless reasoning depth requires more."))
 
     # --- color ---
     if "color" in fm:
@@ -250,6 +255,116 @@ def check_marketplace_sync(repo_root: Path, catalog_root: Path) -> list[Finding]
     return findings
 
 
+SPECIALIZED_ORCHESTRATORS = {
+    "backend-orchestrator",
+    "frontend-orchestrator",
+    "migration-orchestrator",
+    "porting-orchestrator",
+    "documentation-orchestrator",
+}
+
+
+def check_model_conventions(
+    changed_files: list[str] | None,
+    repo_root: Path, catalog_root: Path
+) -> list[Finding]:
+    """Validate model field conventions for agents and skills."""
+    findings = []
+    agents_dir = catalog_root / "agents"
+    skills_dir = catalog_root / "skills"
+
+    def _check_file(filepath: Path, file_type: str) -> None:
+        content = filepath.read_text(encoding="utf-8")
+        fm, _ = parse_frontmatter(content)
+        if fm is None or "_parse_error" in fm:
+            return
+        if "model" not in fm:
+            return
+        model = str(fm["model"])
+        name = filepath.stem
+
+        if file_type == "agent":
+            if model == "haiku":
+                findings.append(Finding("error", str(filepath.relative_to(repo_root)),
+                    f"`{name}`: agent must use `model: sonnet` or `model: opus`, "
+                    "not `model: haiku`. Agents need reasoning capability."))
+            if model == "opus":
+                findings.append(Finding("warning", str(filepath.relative_to(repo_root)),
+                    f"`{name}`: model: opus — justify this in the PR description"))
+        else:
+            # skill
+            if name == "orchestrator":
+                # the general orchestrator must use sonnet
+                if model != "sonnet":
+                    findings.append(Finding("error", str(filepath.relative_to(repo_root)),
+                        f"`{name}`: the general orchestrator skill must use `model: sonnet`, "
+                        f"got `model: {model}`."))
+            elif "orchestrator" in name and name in SPECIALIZED_ORCHESTRATORS:
+                # specialized orchestrators must use haiku
+                if model in ("sonnet", "opus"):
+                    findings.append(Finding("error", str(filepath.relative_to(repo_root)),
+                        f"`{name}`: specialized orchestrator skill must use `model: haiku`, "
+                        f"got `model: {model}`."))
+            else:
+                # all other skills must use haiku
+                if model in ("sonnet", "opus"):
+                    findings.append(Finding("error", str(filepath.relative_to(repo_root)),
+                        f"`{name}`: skill must use `model: haiku`, "
+                        f"got `model: {model}`."))
+            if model == "opus":
+                findings.append(Finding("warning", str(filepath.relative_to(repo_root)),
+                    f"`{name}`: model: opus — justify this in the PR description"))
+
+    if changed_files is not None:
+        for path_str in changed_files:
+            filepath = repo_root / path_str
+            if filepath.exists() and filepath.suffix == ".md":
+                if "agents" in filepath.parts:
+                    _check_file(filepath, "agent")
+                elif "skills" in filepath.parts:
+                    _check_file(filepath, "skill")
+    else:
+        for filepath in sorted(agents_dir.glob("*.md")):
+            _check_file(filepath, "agent")
+        if skills_dir.exists():
+            for filepath in sorted(skills_dir.rglob("*.md")):
+                _check_file(filepath, "skill")
+
+    return findings
+
+
+def check_orchestrator_parallel_section(
+    changed_files: list[str] | None,
+    repo_root: Path, catalog_root: Path
+) -> list[Finding]:
+    """Warn if an orchestrator skill is missing a '## Parallel execution' section."""
+    findings = []
+    skills_dir = catalog_root / "skills"
+
+    def _check_file(filepath: Path) -> None:
+        name = filepath.stem
+        if "orchestrator" not in name:
+            return
+        content = filepath.read_text(encoding="utf-8")
+        _, body = parse_frontmatter(content)
+        if "## Parallel execution" not in body:
+            findings.append(Finding("warning", str(filepath.relative_to(repo_root)),
+                f"`{name}`: orchestrator skill missing '## Parallel execution' section "
+                "— consider adding parallelization guidance"))
+
+    if changed_files is not None:
+        for path_str in changed_files:
+            filepath = repo_root / path_str
+            if filepath.exists() and filepath.suffix == ".md" and "skills" in filepath.parts:
+                _check_file(filepath)
+    else:
+        if skills_dir.exists():
+            for filepath in sorted(skills_dir.rglob("*.md")):
+                _check_file(filepath)
+
+    return findings
+
+
 def check_changelog(catalog_root: Path) -> list[Finding]:
     changelog = catalog_root / "CHANGELOG.md"
     if not changelog.exists():
@@ -342,6 +457,8 @@ def main():
     all_findings.extend(check_changelog(catalog_root))
     all_findings.extend(check_supporting_files(catalog_root))
     all_findings.extend(check_marketplace_sync(repo_root, catalog_root))
+    all_findings.extend(check_model_conventions(args.changed_files, repo_root, catalog_root))
+    all_findings.extend(check_orchestrator_parallel_section(args.changed_files, repo_root, catalog_root))
 
     comment = format_comment(all_findings, validated_files)
 

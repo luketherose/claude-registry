@@ -13,9 +13,16 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 - `validate_catalog.py` — added `check_marketplace_sync`: every agent/skill in catalog must have a matching entry in `claude-marketplace/catalog.json` or the PR is blocked
 - `validate_catalog.py` — skills scan now uses `rglob` to handle subdirectory structure
 - `validate_marketplace.py` — added `skill` as valid tier; fixed path convention for skills (`skills/{name}.md`); orphan check now covers `skills/` directory; all warnings promoted to errors
+- `validate_catalog.py` — added `check_model_conventions`: enforces model: haiku for skills, model: sonnet for general orchestrator, model: haiku for specialized orchestrators, model: sonnet/opus for agents; warns on model: opus usage
+- `validate_catalog.py` — added `check_orchestrator_parallel_section`: warns if orchestrator skill is missing `## Parallel execution` section
 
 ### Changed
 - All 37 skills in `claude-catalog/skills/` — add `name`, `tools: Read`, `model: haiku` frontmatter fields; rewrite `description` to start with "Use when/for/to"; add `## Role` section; remove `$ARGUMENTS` template artefact; translate `utils/caveman.md` body to English UK
+- `orchestrator@1.1.0` — model upgraded haiku → sonnet; added `## Parallel execution` section with independence criterion, dependency graph pattern (anchor → fan-out → convergence), structured `parallel_plan` YAML output format, worktree isolation guidance, and concrete parallelization examples
+- `backend-orchestrator@1.1.0` — added `## Parallel execution` section with independence criterion, phase model, and backend-specific parallelizable pairs (postgresql-expert ∥ java-expert; spring-expert ∥ test-writer) and sequential constraints
+- `frontend-orchestrator@1.1.0` — added `## Parallel execution` section with frontend-specific parallelizable pairs (design-expert ∥ css-expert; component impl ∥ unit tests) and sequential constraints
+- `migration-orchestrator@1.1.0` — added `## Parallel execution` section with migration-specific parallel rules (independent bounded contexts, FE ∥ BE when API contract is stable)
+- `porting-orchestrator@1.1.0` — added `## Parallel execution` section with porting-specific parallel rules (independent features, FE ∥ BE when API contract defined)
 
 ### Added
 - `java-spring-standards@1.0.0` — skill: Java/Spring Boot standards (package structure, layering, testing, error handling, logging, security, observability)

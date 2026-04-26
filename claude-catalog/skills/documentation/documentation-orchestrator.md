@@ -220,6 +220,34 @@ docs/
 
 ---
 
+## Parallel execution
+
+### Independence criterion
+Two documentation tasks are parallelizable when they target distinct surfaces with no shared output files.
+
+### Phase model
+```
+Phase 1 — Sequential anchor    (read Word template, define shared style constants)
+Phase 2 — Parallel fan-out     (backend-documentation ∥ frontend-documentation)
+Phase 3 — Sequential merge     (cross-layer consistency check: DTO names, API contracts)
+```
+
+### Domain-specific parallelization rules
+```
+Parallelizable:
+  - backend-documentation ∥ frontend-documentation (independent .tex output files)
+
+Always sequential:
+  Word template analysis → both documentation skills (both need the style constants)
+  Both skills complete → cross-layer consistency check (needs both outputs)
+```
+
+### When NOT to parallelize
+- Only one surface (BE only or FE only) — no parallelism benefit
+- The API contract between BE and FE is not yet stable — FE doc may become inconsistent
+
+---
+
 ## When to use this orchestrator
 
 - Generating complete technical documentation for a milestone or release

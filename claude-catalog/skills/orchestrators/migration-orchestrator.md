@@ -168,6 +168,41 @@ If a formal functional document deliverable to stakeholders is needed (Word/.doc
 
 ---
 
+## Parallel execution
+
+### Independence criterion
+Two tasks are parallelizable when:
+- They do not write to the same files
+- Neither depends on the other's output
+- They operate on distinct system layers or surfaces
+
+### Phase model
+Map every multi-skill task into phases before executing:
+```
+Phase 1 — Sequential anchor    (shared contracts, interfaces, schemas)
+Phase 2 — Parallel fan-out     (independent implementation workers)
+Phase 3 — Sequential merge     (integration, consistency checks, tests)
+```
+
+### Domain-specific parallelization rules
+
+```
+Parallelizable pairs:
+  - Analysis of independent bounded contexts can run in parallel
+  - Migration of FE surface ∥ migration of BE surface (if APIs are contract-stable)
+
+Always sequential:
+  tech-analyst (inventory) → migration plan → execution
+  DB migration → entity/ORM migration → service migration
+```
+
+### When NOT to parallelize
+- Tasks share mutable output files (same component, same table, same service)
+- Task B's input is Task A's output
+- Only 1-2 tasks total (coordination overhead exceeds benefit)
+
+---
+
 ## Produced artefacts
 
 ```

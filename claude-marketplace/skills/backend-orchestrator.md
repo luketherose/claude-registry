@@ -158,6 +158,42 @@ Do not activate a skill if:
 
 ---
 
+## Parallel execution
+
+### Independence criterion
+Two tasks are parallelizable when:
+- They do not write to the same files
+- Neither depends on the other's output
+- They operate on distinct system layers or surfaces
+
+### Phase model
+Map every multi-skill task into phases before executing:
+```
+Phase 1 — Sequential anchor    (shared contracts, interfaces, schemas)
+Phase 2 — Parallel fan-out     (independent implementation workers)
+Phase 3 — Sequential merge     (integration, consistency checks, tests)
+```
+
+### Domain-specific parallelization rules
+
+```
+Parallelizable pairs (no shared state):
+  - postgresql-expert (DDL) ∥ java-expert (pure domain logic with no DB calls)
+  - spring-expert (config/security) ∥ test-writer (unit tests for already-defined interfaces)
+
+Always sequential (output dependency):
+  spring-architecture → spring-data-jpa (entity needs defined contracts)
+  postgresql-expert → spring-data-jpa (entity mapping needs final schema)
+  spring-data-jpa → spring-expert (service needs repository interface)
+```
+
+### When NOT to parallelize
+- Tasks share mutable output files (same component, same table, same service)
+- Task B's input is Task A's output
+- Only 1-2 tasks total (coordination overhead exceeds benefit)
+
+---
+
 ## 4. Priority rules (conflict resolution)
 
 When two skills suggest different approaches, the priority is:

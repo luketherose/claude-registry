@@ -108,6 +108,41 @@ Delegate to /orchestrators/migration-orchestrator
 (already includes FE orchestration as part of the pipeline)
 ```
 
+## Parallel execution
+
+### Independence criterion
+Two tasks are parallelizable when:
+- They do not write to the same files
+- Neither depends on the other's output
+- They operate on distinct system layers or surfaces
+
+### Phase model
+Map every multi-skill task into phases before executing:
+```
+Phase 1 — Sequential anchor    (shared contracts, interfaces, schemas)
+Phase 2 — Parallel fan-out     (independent implementation workers)
+Phase 3 — Sequential merge     (integration, consistency checks, tests)
+```
+
+### Domain-specific parallelization rules
+
+```
+Parallelizable pairs:
+  - design-expert (mockup/tokens) ∥ css-expert (global styles not tied to component)
+  - component implementation ∥ unit tests for already-specified component interface
+
+Always sequential:
+  design-expert → framework-expert (component needs finalized design tokens)
+  framework-expert → ngrx-expert/tanstack-query (state needs component contract defined)
+```
+
+### When NOT to parallelize
+- Tasks share mutable output files (same component, same table, same service)
+- Task B's input is Task A's output
+- Only 1-2 tasks total (coordination overhead exceeds benefit)
+
+---
+
 ### Step 4 — Mandatory FE invariants
 
 These rules apply to every orchestrated output, regardless of the scenario:
