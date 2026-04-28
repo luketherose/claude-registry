@@ -1637,16 +1637,17 @@
     },
     {
       "name": "refactoring-supervisor",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Currently coordinates Phase 0 (indexing-supervisor), Phase 1 (functional-analysis-supervisor), and Phase 2 (technical-analysis-supervisor); designed for extension. Strict human-in-the-loop: presents a schematic of the upcoming phase's parallelization before starting, recaps the completed phase, waits for explicit confirmation between phases. Strictly AS-IS through Phase 2.",
+      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Currently coordinates Phase 0 (indexing-supervisor), Phase 1 (functional-analysis-supervisor), Phase 2 (technical-analysis-supervisor), and Phase 3 (baseline-testing-supervisor); designed for extension. Strict human-in-the-loop with mandatory per-phase recap including execution timings. Strictly AS-IS through Phase 3.",
       "file": "beta/refactoring-supervisor.md",
       "dependencies": [
         "indexing-supervisor",
         "functional-analysis-supervisor",
-        "technical-analysis-supervisor"
+        "technical-analysis-supervisor",
+        "baseline-testing-supervisor"
       ],
       "tools": [
         "Read",
@@ -1664,7 +1665,7 @@
         "human-in-the-loop"
       ],
       "published": "2026-04-28",
-      "changelog": "0.2.0: registered Phase 2 (technical-analysis-supervisor) in the phase registry; added schematic and pre/post-phase brief support; updated bootstrap detection. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
+      "changelog": "0.3.0: registered Phase 3 (baseline-testing-supervisor) in the phase registry; added schematic; mandatory execution-timing block in post-phase recap (per-step durations from phase manifest, plus cumulative workflow time). 0.2.0: registered Phase 2 (technical-analysis-supervisor). 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
     },
     {
       "name": "technical-analysis-supervisor",
@@ -1974,6 +1975,240 @@
       "model": "sonnet",
       "tags": [
         "technical-analysis",
+        "sub-agent",
+        "review",
+        "challenger",
+        "adversarial",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "baseline-testing-supervisor",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Phase 3 supervisor (opus). Orchestrates 7 Sonnet workers in 4 waves to produce the AS-IS baseline regression suite at tests/baseline/ (pytest, fixtures, snapshots, benchmarks, optional Postman collection if services exposed) plus the report at docs/analysis/03-baseline/. Reads .indexing-kb/ + Phase 1 + Phase 2. Adaptive execution policy (auto-detects pytest readiness; falls back to write-only). Per-step recaps with execution timings. Failure policy: critical/high escalate; medium/low get xfail with AS-IS bug record. Never modifies AS-IS source code. Strict human-in-the-loop. Strictly AS-IS.",
+      "file": "beta/baseline-testing-supervisor.md",
+      "dependencies": [
+        "fixture-builder",
+        "usecase-test-writer",
+        "integration-test-writer",
+        "benchmark-writer",
+        "service-collection-builder",
+        "baseline-runner",
+        "baseline-challenger"
+      ],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Agent"
+      ],
+      "model": "opus",
+      "tags": [
+        "baseline-testing",
+        "supervisor",
+        "phase-3",
+        "as-is",
+        "pytest",
+        "regression",
+        "snapshot",
+        "benchmark",
+        "postman",
+        "streamlit"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release: Phase 3 supervisor with 4 waves (W0 fixtures + W1 authoring with per-UC fan-out + W2 execution & oracle capture + W3 challenger). Adaptive execution policy. Conditional Postman generation when services are exposed. Mandatory timing recap per step."
+    },
+    {
+      "name": "fixture-builder",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 0). Use to produce the test data layer of the AS-IS baseline regression suite: minimal/realistic/edge fixtures plus a conftest.py with global determinism setup (seed fix, time freeze, network mock). Strictly AS-IS.",
+      "file": "beta/fixture-builder.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "baseline-testing",
+        "sub-agent",
+        "fixtures",
+        "pytest",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "usecase-test-writer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 1, fan-out per UC). Use to write the baseline pytest module for ONE use case from Phase 1: happy + alternative + edge tests with streamlit.testing.v1.AppTest where applicable. Never modifies AS-IS source — bugs found are documented for the runner's failure policy. Strictly AS-IS.",
+      "file": "beta/usecase-test-writer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "baseline-testing",
+        "sub-agent",
+        "use-case",
+        "pytest",
+        "streamlit",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "integration-test-writer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 1). Use to write baseline integration tests covering DB, file system, outbound external APIs (mocked via responses/respx), and cache layers. Tests target boundaries the app CALLS (vs services it exposes). Strictly AS-IS.",
+      "file": "beta/integration-test-writer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "baseline-testing",
+        "sub-agent",
+        "integration",
+        "pytest",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "benchmark-writer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 1). Use to write baseline performance benchmarks: per-UC pytest-benchmark scripts, memory profiling probes via tracemalloc, optional throughput probes. Output is the AS-IS performance oracle for Phase 5 relative SLA gating. Deterministic. Strictly AS-IS.",
+      "file": "beta/benchmark-writer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "baseline-testing",
+        "sub-agent",
+        "benchmark",
+        "performance",
+        "pytest",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "service-collection-builder",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 1, conditional — only if services exposed). Use to produce a Postman 2.1 collection of the services the AS-IS app exposes: per-endpoint happy + edge requests, auth setup, response assertions, environment file. Captures the AS-IS service-level contract for Phase 5 equivalence verification. Strictly AS-IS.",
+      "file": "beta/service-collection-builder.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "baseline-testing",
+        "sub-agent",
+        "postman",
+        "service",
+        "rest",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "baseline-runner",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 2). Use to execute the baseline regression suite and capture the oracle artifacts (snapshots, benchmark JSON, coverage JSON). Applies the failure policy: critical/high escalate; medium/low get xfail with AS-IS bug record. Honors execution policy (write+execute or write-only). Only worker permitted to add xfail/skip markers to test files. Never modifies AS-IS source. Strictly AS-IS.",
+      "file": "beta/baseline-runner.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write",
+        "Edit"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "baseline-testing",
+        "sub-agent",
+        "execution",
+        "oracle",
+        "pytest",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "baseline-challenger",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 3, always ON). Use to perform an adversarial review of Phase 3 outputs: coverage gaps, AS-IS source modifications (forbidden), determinism risks, oracle integrity, severity-mismatch in bug dispositions, Streamlit-specific risks, Postman collection integrity. Does NOT rewrite — only flags findings. Strictly AS-IS.",
+      "file": "beta/baseline-challenger.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "baseline-testing",
         "sub-agent",
         "review",
         "challenger",
