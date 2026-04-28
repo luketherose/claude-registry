@@ -6,6 +6,15 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 ### Added
+- **Indexing pipeline (8 new agents, beta)** — supervisor pattern for indexing legacy Python codebases (with optional Streamlit) into a markdown knowledge base at `<repo>/.indexing-kb/`. Phase 1 only — indexing and understanding, not migration:
+  - `indexing-supervisor@0.1.0` — opus, single entrypoint, dispatches sub-agents in 4 phases (structural / module fan-out / cross-cutting / synthesis), escalates to user on ambiguity
+  - `codebase-mapper@0.1.0` — sonnet, structural inventory (tree, LOC, language stats, entrypoints)
+  - `dependency-analyzer@0.1.0` — sonnet, external deps + internal import graph + cycles
+  - `streamlit-analyzer@0.1.0` — sonnet, pages, session_state, widgets, caching, custom components, migration-relevant anti-patterns
+  - `module-documenter@0.1.0` — sonnet, per-package API documentation (parallelizable)
+  - `data-flow-analyst@0.1.0` — sonnet, DB / external APIs / file I/O / env vars / configuration
+  - `business-logic-analyst@0.1.0` — sonnet, domain concepts, validation rules, business rules, state machines
+  - `synthesizer@0.1.0` — sonnet, final consolidation (system overview, bounded context hypothesis, complexity hotspots, index page)
 - `orchestrator@2.0.0` — promoted from skill to **agent** (`model: opus`, `tools: Read, Glob, Agent`). Stack-agnostic meta-orchestrator: dynamically discovers installed agents (no hardcoded list), decomposes requests into a phase-based dependency graph, dispatches specialists in parallel where independent, and synthesises their outputs into a unified result. Replaces the previous skill-based orchestrator (1.1.0).
 - `developer-frontend@0.1.0` — new agent: multi-framework frontend developer (Angular, React/Next.js/TanStack, Vue 3, Qwik, Vanilla JS/TS); auto-detects stack and loads only relevant skills
 
@@ -15,7 +24,11 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 - `porting-orchestrator` skill — same rationale as migration-orchestrator
 - 36 new skills published to marketplace: `tech-analyst`, `java-expert`, `spring-architecture`, `spring-data-jpa`, `spring-expert`, `postgresql-expert`, `backend-documentation`, `doc-expert`, `documentation-orchestrator`, `frontend-documentation`, `functional-document-generator`, `angular-expert`, `ngrx-expert`, `rxjs-expert`, `css-expert`, `design-expert`, `qwik-expert`, `nextjs`, `react-expert`, `tanstack-query`, `tanstack-start`, `tanstack`, `vanilla-expert`, `vue-expert`, `backend-orchestrator`, `frontend-orchestrator`, `migration-orchestrator`, `orchestrator`, `porting-orchestrator`, `python-expert`, `streamlit-expert`, `dependency-resolver`, `refactoring-expert`, `caveman-commit`, `caveman-review`, `caveman`
 
+### Changed
+- `claude-catalog/agents/` — indexing pipeline agents grouped under `agents/indexing/` subdirectory for organization (8 files moved). Marketplace stays flat per existing convention.
+
 ### Fixed
+- `validate_catalog.py` — agents directory scan now uses `rglob` (recursive) to support thematic subdirectories like `agents/indexing/`. Skills already used `rglob`; this aligns the two.
 - `validate_catalog.py` — added `check_marketplace_sync`: every agent/skill in catalog must have a matching entry in `claude-marketplace/catalog.json` or the PR is blocked
 - `validate_catalog.py` — skills scan now uses `rglob` to handle subdirectory structure
 - `validate_marketplace.py` — added `skill` as valid tier; fixed path convention for skills (`skills/{name}.md`); orphan check now covers `skills/` directory; all warnings promoted to errors

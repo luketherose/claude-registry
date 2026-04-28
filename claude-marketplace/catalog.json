@@ -1233,6 +1233,213 @@
       ],
       "published": "2026-04-26",
       "changelog": "Promoted from skill to agent: dynamic discovery, real Agent dispatch, synthesis"
+    },
+    {
+      "name": "indexing-supervisor",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Single entrypoint for indexing a legacy Python codebase (with optional Streamlit) into a markdown knowledge base inside the repository. Decomposes indexing into phases, dispatches Sonnet sub-agents in parallel where independent, escalates to the user on ambiguity, and produces a final synthesis. Phase 1 only \u2014 indexing and understanding, not migration.",
+      "file": "beta/indexing-supervisor.md",
+      "dependencies": [
+        "codebase-mapper",
+        "dependency-analyzer",
+        "streamlit-analyzer",
+        "module-documenter",
+        "data-flow-analyst",
+        "business-logic-analyst",
+        "synthesizer"
+      ],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Agent"
+      ],
+      "model": "opus",
+      "tags": [
+        "indexing",
+        "python",
+        "streamlit",
+        "supervisor",
+        "knowledge-base",
+        "legacy"
+      ],
+      "published": "2026-04-26",
+      "changelog": "Initial beta release: opus supervisor + 7 sonnet sub-agents, KB at .indexing-kb/"
+    },
+    {
+      "name": "codebase-mapper",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of indexing-supervisor. Produces structural inventory: directory tree, file counts, language statistics, top-level package map, entrypoints. No semantic analysis.",
+      "file": "beta/codebase-mapper.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "indexing",
+        "sub-agent",
+        "structural"
+      ],
+      "published": "2026-04-26",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "dependency-analyzer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of indexing-supervisor. Extracts external dependencies (pyproject.toml, requirements.txt, setup.py) and builds the internal module dependency graph from imports. Detects circular dependencies and standalone packages.",
+      "file": "beta/dependency-analyzer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "indexing",
+        "sub-agent",
+        "dependencies"
+      ],
+      "published": "2026-04-26",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "streamlit-analyzer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of indexing-supervisor. Analyzes Streamlit-specific concerns: pages, session_state, widgets, caching, navigation, custom components, and migration-relevant anti-patterns.",
+      "file": "beta/streamlit-analyzer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "indexing",
+        "sub-agent",
+        "streamlit",
+        "frontend"
+      ],
+      "published": "2026-04-26",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "module-documenter",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of indexing-supervisor. Documents one Python package end-to-end at the API level: purpose, public interface, key data structures, internal organization. One invocation per package, parallelizable.",
+      "file": "beta/module-documenter.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "indexing",
+        "sub-agent",
+        "documentation",
+        "modules"
+      ],
+      "published": "2026-04-26",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "data-flow-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of indexing-supervisor. Identifies data crossings between application and outside world: database access, external API calls, file I/O, environment variables, configuration sources.",
+      "file": "beta/data-flow-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "indexing",
+        "sub-agent",
+        "data-flow",
+        "integrations"
+      ],
+      "published": "2026-04-26",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "business-logic-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of indexing-supervisor. Extracts business rules, validation logic, and domain concepts. Produces a domain-level view (glossary, rules, state machines) independent of file structure.",
+      "file": "beta/business-logic-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "indexing",
+        "sub-agent",
+        "business-logic",
+        "domain"
+      ],
+      "published": "2026-04-26",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "synthesizer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Final consolidation sub-agent of indexing-supervisor. Reads all prior phase outputs from the KB and produces system overview, bounded context hypothesis, complexity hotspot map, indexing report, and the index page.",
+      "file": "beta/synthesizer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "indexing",
+        "sub-agent",
+        "synthesis"
+      ],
+      "published": "2026-04-26",
+      "changelog": "Initial beta release"
     }
   ]
 }

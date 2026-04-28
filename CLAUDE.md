@@ -120,3 +120,5 @@ Use them when appropriate:
 - Capability file names: `kebab-case`, no version in the name (`developer-java-spring.md`, not `developer-java-spring-v1.md`)
 - Versioning: SemVer with git tag `name@MAJOR.MINOR.PATCH`
 - Skills: `model: haiku`, `tools: Read` — do not add other tools without justification in the PR
+- **Catalog directory layout**: agents and skills MAY be grouped into thematic subdirectories (e.g., `agents/indexing/`, `skills/orchestrators/`, `skills/documentation/`). Validation scans recursively (`rglob`).
+- **Marketplace directory layout**: stays FLAT regardless of catalog grouping. Files live at `stable/<name>.md`, `beta/<name>.md`, or `skills/<name>.md` directly. The `file` field in `catalog.json` reflects this flat path.
