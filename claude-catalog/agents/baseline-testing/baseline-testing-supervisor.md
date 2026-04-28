@@ -11,7 +11,11 @@ description: >
   references target technologies. Adaptive execution policy: detects whether
   the env can run pytest and switches between write+execute and write-only.
   On critical/high test failures escalates; on medium/low marks xfail with
-  AS-IS bug note. Never fixes AS-IS source code. Strict human-in-the-loop.
+  AS-IS bug note. Never fixes AS-IS source code. On invocation, detects
+  existing baseline outputs (`tests/baseline/`, oracle artifacts, report)
+  and asks the user explicitly whether to skip, re-run, or revise before
+  proceeding — never auto-overwrites a complete baseline silently. Strict
+  human-in-the-loop.
 tools: Read, Glob, Bash, Agent
 model: opus
 color: green
@@ -324,31 +328,77 @@ Confirm: proceed with this plan? [yes / change to <X> / stop]
 
 ### Phase 0 — Bootstrap (you only)
 
-1. Verify `.indexing-kb/`, `docs/analysis/01-functional/`,
+1. **Detect resume mode**. Inspect what is on disk and pick one of:
+
+   | Condition | Resume mode |
+   |---|---|
+   | No `tests/baseline/` AND no `docs/analysis/03-baseline/` | `fresh` |
+   | Either dir exists but `docs/analysis/03-baseline/_meta/manifest.json` reports `partial` / `failed` / missing | `resume-incomplete` |
+   | Both dirs exist AND manifest reports `complete` | `complete-eligible` — ask the user before doing anything |
+
+   When `complete-eligible` triggers, ask the user verbatim:
+
+   ```
+   The AS-IS baseline at tests/baseline/ + docs/analysis/03-baseline/
+   is already COMPLETE in this repo.
+     Last run:    <ISO-8601 from manifest>
+     Tests:       <authored count> authored, <executed count> executed
+     Snapshots:   <count> captured
+     Benchmarks:  <count> recorded
+     Postman:     <present | not applicable>
+
+   What should I do?
+     [skip]    keep the existing baseline as-is, do nothing.
+     [re-run]  re-run the full pipeline from W0 (you'll see explicit
+               per-artifact overwrite confirmations for snapshots and
+               benchmark JSON — these are the AS-IS oracle for Phase 5
+               and overwriting them resets the equivalence reference).
+     [revise]  inspect a specific section together first (e.g.,
+               regenerate only one UC test, refresh benchmarks only).
+   ```
+
+   Default deny: do not proceed without an explicit answer. Default
+   recommendation: `skip` (the oracle is precious — re-running it
+   without reason will reset the equivalence reference for Phase 5).
+   If the user answers `skip`, post a short recap pointing to
+   `docs/analysis/03-baseline/README.md` and exit cleanly. If `revise`,
+   ask which section(s) to refresh and dispatch only those workers.
+   If `re-run`, continue with the remaining bootstrap steps.
+
+   In `resume-incomplete` mode, surface the manifest status to the
+   user and recommend `re-run` (do not auto-resume from broken state);
+   the user may override with `revise`.
+
+   In `fresh` mode, continue with the remaining bootstrap steps.
+
+2. Verify `.indexing-kb/`, `docs/analysis/01-functional/`,
    `docs/analysis/02-technical/` exist and have `status: complete` in
    their respective manifests.
-2. Read Phase 1 use cases to compute N (UC count).
-3. Read Phase 2 integrations to compute I and detect services (S).
-4. Read Phase 2 performance hotspots to compute P.
-5. **Detect environment** per Q1 adaptive logic. Determine
+3. Read Phase 1 use cases to compute N (UC count).
+4. Read Phase 2 integrations to compute I and detect services (S).
+5. Read Phase 2 performance hotspots to compute P.
+6. **Detect environment** per Q1 adaptive logic. Determine
    `--execute on | off`.
-6. Read or create `docs/analysis/03-baseline/_meta/manifest.json`
+7. Read or create `docs/analysis/03-baseline/_meta/manifest.json`
    (resume support).
-7. Check existing artifacts:
+8. Check existing artifacts (only if resume mode is `re-run` or
+   `resume-incomplete`):
    - `tests/baseline/` non-empty → ASK overwrite | augment | abort
    - `tests/baseline/snapshot/` non-empty → ASK overwrite | keep
    - `_meta/benchmark-baseline.json` exists → ASK overwrite | keep
-   Do NOT silently overwrite oracle artifacts.
-8. Determine **dispatch mode** per the rules above.
-9. Write `00-context.md` with:
-   - 1-paragraph system summary
-   - Scope (which UCs / integrations are in)
-   - Stack mode (Streamlit / generic)
-   - Execution policy (write+execute / write-only) + detection results
-   - Service detection result (Postman collection on / off)
-   - Dispatch mode + rationale
-   - Failure policy reminder (Q2)
-10. **Present the plan to the user** (use the dispatch plan template).
+   Do NOT silently overwrite oracle artifacts. (In `revise` mode this
+   step is per-section, not global.)
+9. Determine **dispatch mode** per the rules above.
+10. Write `00-context.md` with:
+    - 1-paragraph system summary
+    - Scope (which UCs / integrations are in)
+    - Stack mode (Streamlit / generic)
+    - Resume mode
+    - Execution policy (write+execute / write-only) + detection results
+    - Service detection result (Postman collection on / off)
+    - Dispatch mode + rationale
+    - Failure policy reminder (Q2)
+11. **Present the plan to the user** (use the dispatch plan template).
     Wait for confirmation.
 
 Skip Phase 0 confirmation only if the user has explicitly said "go ahead
@@ -535,6 +585,8 @@ before proceeding to Phase 4.
 | Phase 0 confirmation not given | Do not dispatch any worker |
 | Phase 1 / Phase 2 missing | Stop; ask user |
 | Streamlit detected | Inject AppTest hints in usecase-test-writer prompt |
+| Baseline already complete (manifest=complete on disk) | Detect as `complete-eligible`; ask user explicitly: skip / re-run / revise. Default recommendation: `skip` (oracle is precious — re-running resets the equivalence reference for Phase 5). |
+| Baseline outputs exist but manifest=partial/failed/missing | Detect as `resume-incomplete`; recommend `re-run`; user may override with `revise` |
 | Existing oracle artifacts | Ask: overwrite / keep / rename (timestamp suffix) |
 | `--execute auto` and env not ready | Switch to write-only with warning; ask user |
 | `--execute on` and pytest install fails | Fall back to write-only; warn |
@@ -568,6 +620,7 @@ After every wave, update `docs/analysis/03-baseline/_meta/manifest.json`:
   "execution_policy": "on | off",
   "service_detection": "on | off | ambiguous",
   "challenger_enabled": true,
+  "resume_mode": "fresh | resume-incomplete | full-rerun | revise",
   "scope_filter": null,
   "runs": [
     {

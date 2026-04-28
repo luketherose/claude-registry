@@ -1236,11 +1236,11 @@
     },
     {
       "name": "indexing-supervisor",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Single entrypoint for indexing a legacy Python codebase (with optional Streamlit) into a markdown knowledge base inside the repository. Decomposes indexing into phases, dispatches Sonnet sub-agents in parallel where independent, escalates to the user on ambiguity, and produces a final synthesis. Phase 1 only \u2014 indexing and understanding, not migration.",
+      "description": "Single entrypoint for indexing a legacy Python codebase (with optional Streamlit) into a markdown knowledge base inside the repository. Decomposes indexing into phases, dispatches Sonnet sub-agents in parallel where independent, escalates to the user on ambiguity, and produces a final synthesis. Phase 1 only \u2014 indexing and understanding, not migration. On invocation, detects existing `.indexing-kb/` outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding \u2014 never auto-overwrites a complete index silently.",
       "file": "beta/indexing-supervisor.md",
       "dependencies": [
         "codebase-mapper",
@@ -1267,7 +1267,7 @@
         "legacy"
       ],
       "published": "2026-04-26",
-      "changelog": "Initial beta release: opus supervisor + 7 sonnet sub-agents, KB at .indexing-kb/"
+      "changelog": "0.2.0: bootstrap detects existing `.indexing-kb/` outputs and asks the user explicitly skip / re-run / revise before doing anything (no more silent auto-skip via escalation trigger); inconsistent state (manifest=partial/failed/missing) classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: opus supervisor + 7 sonnet sub-agents, KB at .indexing-kb/"
     },
     {
       "name": "codebase-mapper",
@@ -1989,11 +1989,11 @@
     },
     {
       "name": "baseline-testing-supervisor",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Phase 3 supervisor (opus). Orchestrates 7 Sonnet workers in 4 waves to produce the AS-IS baseline regression suite at tests/baseline/ (pytest, fixtures, snapshots, benchmarks, optional Postman collection if services exposed) plus the report at docs/analysis/03-baseline/. Reads .indexing-kb/ + Phase 1 + Phase 2. Adaptive execution policy (auto-detects pytest readiness; falls back to write-only). Per-step recaps with execution timings. Failure policy: critical/high escalate; medium/low get xfail with AS-IS bug record. Never modifies AS-IS source code. Strict human-in-the-loop. Strictly AS-IS.",
+      "description": "Phase 3 supervisor (opus). Orchestrates 7 Sonnet workers in 4 waves to produce the AS-IS baseline regression suite at tests/baseline/ (pytest, fixtures, snapshots, benchmarks, optional Postman collection if services exposed) plus the report at docs/analysis/03-baseline/. Reads .indexing-kb/ + Phase 1 + Phase 2. Adaptive execution policy (auto-detects pytest readiness; falls back to write-only). Per-step recaps with execution timings. Failure policy: critical/high escalate; medium/low get xfail with AS-IS bug record. Never modifies AS-IS source code. On invocation, detects existing baseline outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding — never auto-overwrites a complete baseline silently. Strict human-in-the-loop. Strictly AS-IS.",
       "file": "beta/baseline-testing-supervisor.md",
       "dependencies": [
         "fixture-builder",
@@ -2024,7 +2024,7 @@
         "streamlit"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release: Phase 3 supervisor with 4 waves (W0 fixtures + W1 authoring with per-UC fan-out + W2 execution & oracle capture + W3 challenger). Adaptive execution policy. Conditional Postman generation when services are exposed. Mandatory timing recap per step."
+      "changelog": "0.2.0: bootstrap detects existing baseline outputs (`tests/baseline/` + `docs/analysis/03-baseline/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` because the oracle (snapshots + benchmarks) is precious — re-running resets the equivalence reference for Phase 5; inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 3 supervisor with 4 waves (W0 fixtures + W1 authoring with per-UC fan-out + W2 execution & oracle capture + W3 challenger). Adaptive execution policy. Conditional Postman generation when services are exposed. Mandatory timing recap per step."
     },
     {
       "name": "fixture-builder",
@@ -2223,11 +2223,11 @@
     },
     {
       "name": "refactoring-tobe-supervisor",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Phase 4 supervisor (opus). FIRST phase with target tech (Spring Boot 3 + Angular). Reads .indexing-kb/ + Phase 1/2/3 outputs and orchestrates 9 Sonnet workers in 6 waves to produce: bounded-context decomposition + ADRs (W1), OpenAPI 3.1 contract (W2), Spring Boot scaffold + JPA + per-UC logic translation + Angular workspace (W3 parallel BE+FE), hardening + observability + security (W4), migration roadmap with strangler fig (W5), adversarial review with AS-IS↔TO-BE traceability (W6 always ON). Strict dependency chain (W1→W2→W3→W4→W5→W6) with three HITL checkpoints. Adaptive verification (mvn compile + ng build best-effort). Code generation scope configurable: scaffold-todo (default) | full | structural. Per-step execution timings. Inverse drift rule: target tech allowed; AS-IS-only leaks forbidden without ADR.",
+      "description": "Phase 4 supervisor (opus). FIRST phase with target tech (Spring Boot 3 + Angular). Reads .indexing-kb/ + Phase 1/2/3 outputs and orchestrates 9 Sonnet workers in 6 waves to produce: bounded-context decomposition + ADRs (W1), OpenAPI 3.1 contract (W2), Spring Boot scaffold + JPA + per-UC logic translation + Angular workspace (W3 parallel BE+FE), hardening + observability + security (W4), migration roadmap with strangler fig (W5), adversarial review with AS-IS↔TO-BE traceability (W6 always ON). Strict dependency chain (W1→W2→W3→W4→W5→W6) with three HITL checkpoints. Adaptive verification (mvn compile + ng build best-effort). Code generation scope configurable: scaffold-todo (default) | full | structural. Per-step execution timings. Inverse drift rule: target tech allowed; AS-IS-only leaks forbidden without ADR. On invocation, detects existing TO-BE outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding — never auto-overwrites generated code silently.",
       "file": "beta/refactoring-tobe-supervisor.md",
       "dependencies": [
         "decomposition-architect",
@@ -2265,7 +2265,7 @@
         "strangler-fig"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release: Phase 4 supervisor with 9 sub-agents in 6 waves; first phase with target tech; strict dependency chain with 3 HITL checkpoints; adaptive verification; configurable code-generation scope; AS-IS↔TO-BE traceability matrix produced by W6 challenger."
+      "changelog": "0.2.0: bootstrap detects existing TO-BE outputs (`.refactoring-kb/`, `docs/refactoring/`, `backend/`, `frontend/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` (re-running overwrites generated code that may have been hand-edited); inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 4 supervisor with 9 sub-agents in 6 waves; first phase with target tech; strict dependency chain with 3 HITL checkpoints; adaptive verification; configurable code-generation scope; AS-IS↔TO-BE traceability matrix produced by W6 challenger."
     },
     {
       "name": "decomposition-architect",

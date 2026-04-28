@@ -7,7 +7,9 @@ description: >
   sub-agents in parallel where independent, escalates to the user on
   ambiguity or scope changes, and produces a final synthesis. Phase 1 only —
   indexing and understanding, not migration planning. Stack-aware for Python
-  and Streamlit specifically.
+  and Streamlit specifically. On invocation, detects existing `.indexing-kb/`
+  outputs and asks the user explicitly whether to skip, re-run, or revise
+  before proceeding — never auto-overwrites a complete index silently.
 tools: Read, Glob, Bash, Agent
 model: opus
 color: purple
@@ -83,23 +85,63 @@ by listing modified files.
 
 ### Phase 0 — Bootstrap (you only, no sub-agents)
 
-1. Read `.indexing-kb/_meta/manifest.json` if it exists (resume support).
-2. Quick repo scan:
+1. **Detect resume mode**. Inspect what is on disk and pick one of:
+
+   | Condition | Resume mode |
+   |---|---|
+   | No `.indexing-kb/` directory | `fresh` |
+   | `.indexing-kb/` exists but `_meta/manifest.json` reports `partial` / `failed` / missing / unreadable | `resume-incomplete` |
+   | `.indexing-kb/` exists AND `_meta/manifest.json` last run reports `complete` | `complete-eligible` — ask the user before doing anything |
+
+   When `complete-eligible` triggers, ask the user verbatim:
+
+   ```
+   The codebase index at .indexing-kb/ is already COMPLETE in this repo.
+     Last run:    <ISO-8601 from manifest>
+     Modules:     <count from 02-structure/language-stats>
+     Stack:       <python | python+streamlit | …>
+
+   What should I do?
+     [skip]    keep the existing index as-is, do nothing.
+     [re-run]  re-run the full pipeline from Phase 1 (you'll see a
+               per-section overwrite confirmation; old artifacts are
+               replaced).
+     [revise]  inspect a specific section together first (e.g.,
+               regenerate only `04-modules/<package>/` for a package
+               that changed).
+   ```
+
+   Default deny: do not proceed without an explicit answer. Default
+   recommendation: `skip`. If the user answers `skip`, post a short
+   recap pointing to `.indexing-kb/00-index.md` and exit cleanly. If
+   `revise`, ask which section(s) to refresh and dispatch only those
+   sub-agents. If `re-run`, continue with the remaining bootstrap
+   steps.
+
+   In `resume-incomplete` mode, surface the manifest status to the
+   user and recommend `re-run` (do not auto-resume from broken state);
+   the user may override with `revise` to fix specific sections.
+
+   In `fresh` mode, continue with the remaining bootstrap steps as
+   normal.
+
+2. Read `.indexing-kb/_meta/manifest.json` if it exists (resume support).
+3. Quick repo scan:
    - `find . -type f -name '*.py' | wc -l`
    - sample top-level directories
    - check for `pyproject.toml`, `requirements.txt`, `setup.py`, `Pipfile`
-3. Detect Streamlit:
+4. Detect Streamlit:
    - grep `streamlit` in dependency files
    - check for `.streamlit/` directory
    - grep `import streamlit` in `.py` files (sample)
    - 2 of 3 positive signals → Streamlit confirmed
-4. Identify top-level packages: directories with `__init__.py` directly under
+5. Identify top-level packages: directories with `__init__.py` directly under
    the repo root or under `src/`.
-5. Build the proposed scope. Default skip list:
+6. Build the proposed scope. Default skip list:
    `tests/`, `test/`, `__pycache__/`, `.venv/`, `venv/`, `env/`,
    `node_modules/`, `dist/`, `build/`, `*.egg-info/`, `migrations/`,
    `alembic/versions/` (alembic versions only — keep alembic env.py).
-6. **Present scope, Streamlit detection, and phase plan to the user. Ask
+7. **Present scope, Streamlit detection, and phase plan to the user. Ask
    for confirmation before dispatching any sub-agent.**
 
 ### Phase 1 — Structural (parallel, single message with multiple Agent calls)
@@ -168,6 +210,8 @@ Stop and ask the user before proceeding when:
 
 | Situation | Decision |
 |---|---|
+| `.indexing-kb/` exists with manifest `complete` | Detect as `complete-eligible`; ask user explicitly: skip / re-run / revise. Never auto-skip silently. |
+| `.indexing-kb/` exists but manifest `partial` / `failed` / missing | Detect as `resume-incomplete`; recommend `re-run`; user may override with `revise` |
 | Phase already complete (manifest entry exists) | Skip; ask user if refresh wanted |
 | < 4 packages | Parallelize Phase 2 fully |
 | > 20 packages | Ask user for prioritization |
@@ -254,6 +298,7 @@ After every phase, update `.indexing-kb/_meta/manifest.json`. Schema:
     {
       "run_id": "<ISO-8601>",
       "supervisor_version": "1.0.0",
+      "resume_mode": "fresh | resume-incomplete | full-rerun | revise",
       "scope": {
         "packages_included": ["<list>"],
         "packages_skipped": ["<list>"]
