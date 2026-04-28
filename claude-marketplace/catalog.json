@@ -57,13 +57,13 @@
       "changelog": "Initial release"
     },
     {
-      "name": "functional-analyst",
+      "name": "functional-reconstruction",
       "version": "1.0.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
       "description": "Use when reconstructing the functional behaviour of an existing codebase. Produces feature lists, user flows, business rules, use cases, and functional dependencies in docs/functional/. Use before a migration, refactoring, or to document existing functionality for a new team.",
-      "file": "skills/functional-analyst.md",
+      "file": "skills/functional-reconstruction.md",
       "dependencies": [],
       "tools": [
         "Read"

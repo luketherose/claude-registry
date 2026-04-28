@@ -173,35 +173,50 @@ def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Findin
     return findings
 
 
-def check_supporting_files(catalog_root: Path) -> list[Finding]:
+def check_supporting_files(catalog_root: Path, repo_root: Path) -> list[Finding]:
+    """Warn about missing example/eval files only for capabilities where they are required.
+
+    Rules:
+    - Stable agents: warn if example or eval is missing (required before stable promotion)
+    - Beta agents: no warning (the message itself says "before promoting to stable",
+      so warning on beta is noise — the rule applies to promotion, not to the beta lifecycle)
+    - Skills: no warning (skills are atomic knowledge providers, examples not required)
+
+    Tier information is read from claude-marketplace/catalog.json.
+    """
     findings = []
     examples_dir = catalog_root / "examples"
     evals_dir = catalog_root / "evals"
     agents_dir = catalog_root / "agents"
-    skills_dir = catalog_root / "skills"
+
+    # Read tier info from marketplace catalog (the source of truth for tier)
+    catalog_json = repo_root / "claude-marketplace" / "catalog.json"
+    agent_tiers = {}
+    if catalog_json.exists():
+        import json
+        try:
+            data = json.loads(catalog_json.read_text(encoding="utf-8"))
+            for c in data.get("capabilities", []):
+                if c.get("type") == "agent":
+                    agent_tiers[c["name"]] = c.get("tier", "beta")
+        except (json.JSONDecodeError, KeyError):
+            # If we can't read tier info, don't warn — fail open
+            return findings
 
     for agent_file in sorted(agents_dir.rglob("*.md")):
         name = agent_file.stem
+        tier = agent_tiers.get(name)
+        # Only warn for stable agents — the warning text already states this rule
+        if tier != "stable":
+            continue
         if not (examples_dir / f"{name}-example.md").exists():
             findings.append(Finding("warning", f"examples/{name}-example.md",
-                f"No example file for agent `{name}`. "
-                "Add `examples/{name}-example.md` before promoting to stable."))
+                f"No example file for stable agent `{name}`. "
+                "Stable agents must have `examples/{name}-example.md`."))
         if not (evals_dir / f"{name}-eval.md").exists():
             findings.append(Finding("warning", f"evals/{name}-eval.md",
-                f"No eval file for agent `{name}`. "
-                "Add `evals/{name}-eval.md` before promoting to stable."))
-
-    if skills_dir.exists():
-        for skill_file in sorted(skills_dir.rglob("*.md")):
-            name = skill_file.stem
-            if not (examples_dir / f"{name}-example.md").exists():
-                findings.append(Finding("warning", f"examples/{name}-example.md",
-                    f"No example file for skill `{name}`. "
-                    "Consider adding `examples/{name}-example.md`."))
-            if not (evals_dir / f"{name}-eval.md").exists():
-                findings.append(Finding("warning", f"evals/{name}-eval.md",
-                    f"No eval file for skill `{name}`. "
-                    "Consider adding `evals/{name}-eval.md`."))
+                f"No eval file for stable agent `{name}`. "
+                "Stable agents must have `evals/{name}-eval.md`."))
 
     return findings
 
@@ -450,7 +465,7 @@ def main():
                 validated_files.append(str(filepath.relative_to(repo_root)))
 
     all_findings.extend(check_changelog(catalog_root))
-    all_findings.extend(check_supporting_files(catalog_root))
+    all_findings.extend(check_supporting_files(catalog_root, repo_root))
     all_findings.extend(check_marketplace_sync(repo_root, catalog_root))
     all_findings.extend(check_model_conventions(args.changed_files, repo_root, catalog_root))
     all_findings.extend(check_orchestrator_parallel_section(args.changed_files, repo_root, catalog_root))

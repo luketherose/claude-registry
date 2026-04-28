@@ -5,6 +5,10 @@ All notable changes to catalog capabilities are documented here.
 Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending changes.
 
 ## [Unreleased]
+### Changed
+- `functional-analyst` skill renamed to `functional-reconstruction` to eliminate the agent/skill name collision (the agent `functional-analyst` and the skill of the same name were ambiguous). The skill's purpose is unchanged: reconstructing functional behaviour from a codebase.
+- `validate_catalog.py` — example/eval warnings now fire only for **stable** agents (the warning text already said "before promoting to stable"; the rule now matches the message). Beta agents and skills no longer trigger these warnings. Reduces noise from 116 warnings to 6 (the 5 genuinely missing examples/evals on stable agents + 1 model: opus justification).
+
 ### Added
 - **Indexing pipeline (8 new agents, beta)** — supervisor pattern for indexing legacy Python codebases (with optional Streamlit) into a markdown knowledge base at `<repo>/.indexing-kb/`. Phase 1 only — indexing and understanding, not migration:
   - `indexing-supervisor@0.1.0` — opus, single entrypoint, dispatches sub-agents in 4 phases (structural / module fan-out / cross-cutting / synthesis), escalates to user on ambiguity

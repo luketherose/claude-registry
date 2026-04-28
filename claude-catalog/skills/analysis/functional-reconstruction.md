@@ -1,5 +1,5 @@
 ---
-name: functional-analyst
+name: functional-reconstruction
 description: "Use when reconstructing the functional behaviour of an existing codebase. Produces feature lists, user flows, business rules, use cases, and functional dependencies in docs/functional/. Use before a migration, refactoring, or to document existing functionality for a new team."
 tools: Read
 model: haiku
