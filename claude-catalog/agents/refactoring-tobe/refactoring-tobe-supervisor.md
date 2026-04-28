@@ -757,6 +757,23 @@ Inverse drift rule: AS-IS-only technology references (e.g., Streamlit
 primitives) must be either resolved through ADR or flagged as TODO with
 ADR reference. Bare AS-IS mentions in TO-BE design are forbidden.
 
+File-writing rule (non-negotiable): all file content output (Markdown,
+JSON, CSV, YAML, source code) MUST be written through the `Write` tool
+(or `Edit` for in-place changes). Never use `Bash` heredocs
+(`cat <<EOF > file`), echo redirects (`echo ... > file`), `printf > file`,
+`tee file`, or any other shell-based content generation. Mermaid syntax
+(`A[label]`, `B{cond?}`, `A --> B`) and code blocks contain shell
+metacharacters (`[`, `{`, `}`, `>`, `<`, `*`, `;`, `&`, `|`) that the
+shell interprets as redirection, glob expansion, or word splitting —
+even inside quotes (Git Bash / MSYS2 on Windows is especially fragile).
+A malformed heredoc produced 48 garbage files in a repo root in the
+Phase 2 incident of 2026-04-28. Allowed Bash: read-only inspection
+(`grep`, `find`, `ls`, `wc`, small `cat` of known files, `git log`,
+`git status`), running existing scripts (Maven/npm/test runners),
+`mkdir -p`. Forbidden Bash: any command that writes file content from a
+string, variable, template, heredoc, or piped input. Use `Write` to
+create, `Edit` to modify. No third path.
+
 Frontmatter requirements (markdown only):
 - agent: <name>
 - generated: <current ISO-8601>
@@ -824,3 +841,11 @@ status, outputs, findings_count). Add Phase-4-specific fields:
   recap (per user's mandatory-timing-recap rule from v0.3.0 of
   refactoring-supervisor).
 - **Redact secrets** in any echoed output or error.
+- **All file content output via `Write`** (or `Edit` for in-place
+  changes), never via `Bash` heredoc / echo redirect / `tee` /
+  `printf > file`. Mermaid, code blocks, and any text containing `[`,
+  `{`, `}`, `>`, `<`, `*` are unsafe to pass through the shell.
+  Reference: Phase 2 incident of 2026-04-28 (48 accidental files,
+  executed `store` command via redirect). This rule MUST be propagated
+  to every sub-agent dispatch prompt (template above already includes
+  it — verify on every dispatch).

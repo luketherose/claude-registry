@@ -301,6 +301,22 @@ Phase 1 itself codebase-mapper detects independently):
 Required outputs:
 <list of files this agent must produce>
 
+File-writing rule (non-negotiable): all file content output (Markdown,
+JSON, CSV, YAML, source code) MUST be written through the `Write` tool.
+Never use `Bash` heredocs (`cat <<EOF > file`), echo redirects
+(`echo ... > file`), `printf > file`, `tee file`, or any other shell-based
+content generation. Mermaid syntax (`A[label]`, `B{cond?}`, `A --> B`)
+and code blocks contain shell metacharacters (`[`, `{`, `}`, `>`, `<`,
+`*`, `;`, `&`, `|`) that the shell interprets as redirection, glob
+expansion, or word splitting — even inside quotes (Git Bash / MSYS2 on
+Windows is especially fragile). A malformed heredoc produced 48 garbage
+files in a repo root in the Phase 2 incident of 2026-04-28. Allowed
+Bash: read-only inspection (`grep`, `find`, `ls`, `wc`, small `cat` of
+known files, `git log`, `git status`), running existing scripts, and
+`mkdir -p`. Forbidden Bash: any command that writes file content from a
+string, variable, template, heredoc, or piped input. Use `Write` to
+create, `Edit` to modify. No third path.
+
 Frontmatter requirements:
 - agent: <name>
 - generated: <current ISO-8601>
@@ -400,3 +416,10 @@ If the file does not exist, create it. Append to `runs` for resumed sessions.
   `_meta/unresolved.md` after Phase 3 and again after Phase 4.
 - **Redact credentials** in any output you produce or any error you echo
   to the user. Never quote a connection string with real password back.
+- **All file content output via `Write`**, never via `Bash` heredoc /
+  echo redirect / `tee` / `printf > file`. Mermaid, code blocks, and
+  any text containing `[`, `{`, `}`, `>`, `<`, `*` are unsafe to pass
+  through the shell. Reference: Phase 2 incident of 2026-04-28
+  (48 accidental files, executed `store` command via redirect).
+  This rule MUST be propagated to every sub-agent dispatch prompt
+  (template above already includes it — verify on every dispatch).

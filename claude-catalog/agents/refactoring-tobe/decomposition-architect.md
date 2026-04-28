@@ -484,6 +484,23 @@ high | medium | low
 
 ---
 
+## File-writing rule (non-negotiable)
+
+All file content output (Markdown, Mermaid diagrams, JSON, ADRs) MUST
+be written through the `Write` tool (or `Edit` for in-place changes).
+Never use `Bash` heredocs (`cat <<EOF > file`), echo redirects
+(`echo ... > file`), `printf > file`, `tee file`, or any other
+shell-based content generation. Mermaid syntax (`A[label]`, `B{cond?}`,
+`A --> B`) contains shell metacharacters (`[`, `{`, `}`, `>`, `<`, `*`)
+that the shell interprets as redirection, glob expansion, or word
+splitting — even inside quotes (Git Bash / MSYS2 on Windows is
+especially fragile). A malformed heredoc produced 48 garbage files in a
+repo root in the Phase 2 incident of 2026-04-28. Bash is allowed only
+for read-only inspection (`grep`, `find`, `ls`, `git log`,
+`git status`) and `mkdir -p`. No third path.
+
+---
+
 ## Constraints
 
 - **TO-BE design**. Target tech allowed and expected.
@@ -502,3 +519,5 @@ high | medium | low
 - **Coverage mandatory**: every Phase 0 module appears exactly once in
   the AS-IS → TO-BE map (in a BC, in shared, in FE-only, or in
   deprecated-not-migrating).
+- **All file output via `Write`** (or `Edit`), never via `Bash`
+  heredoc/redirect. See § File-writing rule above.

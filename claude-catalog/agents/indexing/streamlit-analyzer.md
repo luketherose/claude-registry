@@ -207,6 +207,22 @@ status: complete
 - More than 50 pages: write `status: partial`, document the most-trafficked
   20 (those with most session_state references), flag the rest.
 
+## File-writing rule (non-negotiable)
+
+All file content output (Markdown describing pages, widgets, navigation
+graphs) MUST be written through the `Write` tool. Never use `Bash`
+heredocs (`cat <<EOF > file`), echo redirects (`echo ... > file`),
+`printf > file`, `tee file`, or any other shell-based content
+generation. Mermaid navigation-graph syntax (`A[page]`, `B{cond?}`,
+`A --> B`) and code blocks contain shell metacharacters (`[`, `{`,
+`}`, `>`, `<`, `*`) that the shell interprets as redirection, glob
+expansion, or word splitting — even inside quotes (Git Bash / MSYS2 on
+Windows is especially fragile). A malformed heredoc produced 48 garbage
+files in a repo root in the Phase 2 incident of 2026-04-28. Bash is
+allowed only for read-only inspection. No third path.
+
+---
+
 ## Constraints
 
 - Do not propose Angular equivalents in detail. Indexing only.
@@ -214,3 +230,5 @@ status: complete
 - Do not write outside `.indexing-kb/05-streamlit/`.
 - Truncate inline HTML/JS snippets to 80 chars in the KB — full content stays
   in source.
+- **All file output via `Write`**, never via `Bash` heredoc/redirect.
+  See § File-writing rule above.

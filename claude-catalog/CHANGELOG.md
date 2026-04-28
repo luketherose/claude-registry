@@ -5,6 +5,23 @@ All notable changes to catalog capabilities are documented here.
 Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending changes.
 
 ## [Unreleased]
+### Fixed
+- **Mermaid shell-injection hardening across all phase pipelines (incident 2026-04-28)** — Phase 2 `state-runtime-analyst` produced 48 accidental files in the repo root by passing Mermaid content through `Bash` heredocs/redirects; one of them captured the output of an unrelated `store` command found on `$PATH`. Root cause: Mermaid syntax (`A[label]`, `B{cond?}`, `A --> B`) and code blocks contain shell metacharacters that Git Bash / MSYS2 on Windows interprets as redirection, glob expansion, or word splitting — even inside fragile quoting. Fix: added a non-negotiable **File-writing rule** to all Mermaid-producing sub-agents and to every phase supervisor's dispatch prompt template, forbidding `Bash` heredocs / echo redirects / `tee` / `printf > file` for any content output and mandating `Write` (or `Edit` for in-place changes) instead. Allowed Bash usage is restricted to read-only inspection and running existing scripts. Affects:
+  - `state-runtime-analyst` bumped to **0.1.1** (offender — direct fix)
+  - `data-access-analyst` bumped to **0.1.1**
+  - `integration-analyst` bumped to **0.1.1**
+  - `technical-analysis-supervisor` bumped to **0.2.1** — rule injected into the sub-agent dispatch prompt template (propagates to all 8 W1 workers + W2 + W3 at runtime)
+  - `functional-analysis-supervisor` bumped to **0.3.1** — same dispatch-template injection
+  - `indexing-supervisor` — same dispatch-template injection (subsequently superseded by PR-02 0.3.0)
+  - `refactoring-tobe-supervisor` bumped to **0.2.1** — same dispatch-template injection (covers Phase 4 codegen too — Mermaid in roadmap, ADRs, decomposition diagrams)
+  - `baseline-testing-supervisor` bumped to **0.2.1** — same dispatch-template injection (covers Python test code generation, also vulnerable to heredoc misquoting)
+  - `ui-surface-analyst` bumped to **0.1.1** (Phase 1 Mermaid producer — navigation graphs)
+  - `user-flow-analyst` bumped to **0.1.1** (Phase 1 Mermaid producer — sequence diagrams)
+  - `decomposition-architect` bumped to **0.1.1** (Phase 4 Mermaid producer — context map)
+  - `migration-roadmap-builder` bumped to **0.1.1** (Phase 4 Mermaid producer — Gantt + topology diagrams)
+  - `business-logic-analyst` — Mermaid producer for state-machine diagrams (subsequently superseded by PR-02 0.2.0)
+  - `streamlit-analyzer` bumped to **0.1.1** (Phase 0 Mermaid producer — navigation graphs)
+
 ### Changed
 - **PR-02 — Phase 0 indexing pipeline is now language-agnostic** (per the design doc landed in PR-01). The supervisor and seven sub-agents shed all hardcoded Python assumptions; the canonical AS-IS stack manifest is now `02-structure/stack.json` (produced by `codebase-mapper`) and is consumed by every downstream phase. Framework-specific analyzers (today only `streamlit-analyzer`) are gated on `stack.frameworks` — they run only when their framework is detected. Polyglot repos are first-class. Affects:
   - `indexing-supervisor` bumped to **0.3.0** — frontmatter description rewritten to drop "Python codebase"; Phase 0 bootstrap extended with generic stack pre-detection (full detection happens in Phase 1 via `codebase-mapper`); Phase 1 dispatch reads `stack.json` and cross-checks framework-specific analyzers; default skip list now language-aware (Python `__pycache__`/`.venv`; JVM `.gradle`/`target`; Rust `target`; Go `vendor`; .NET `bin`/`obj`; Ruby `vendor/bundle`; PHP `vendor`; TS/JS `coverage`/`.next`/`.nuxt`); decision rules generalized ("framework X not detected → skip its analyzer entirely"); dispatch prompt template now includes a `Stack info` block from `stack.json`; escalation trigger generalized from "Python LOC" to "any-language LOC".

@@ -353,6 +353,22 @@ high | medium | low
 
 ---
 
+## File-writing rule (non-negotiable)
+
+All file content output (Markdown with Mermaid Gantt + topology
+diagrams) MUST be written through the `Write` tool (or `Edit` for
+in-place changes). Never use `Bash` heredocs (`cat <<EOF > file`), echo
+redirects (`echo ... > file`), `printf > file`, `tee file`, or any
+other shell-based content generation. Mermaid syntax (`A[label]`,
+`B{cond?}`, `A --> B`, `gantt`) contains shell metacharacters (`[`,
+`{`, `}`, `>`, `<`, `*`) that the shell interprets as redirection,
+glob expansion, or word splitting — even inside quotes (Git Bash /
+MSYS2 on Windows is especially fragile). A malformed heredoc produced
+48 garbage files in a repo root in the Phase 2 incident of 2026-04-28.
+Bash is allowed only for read-only inspection. No third path.
+
+---
+
 ## Constraints
 
 - **TO-BE design**.
@@ -367,3 +383,5 @@ high | medium | low
 - **AS-IS bug carry-over table** mandatory (even if empty — explicit
   "no bugs deferred" entry).
 - Do not write outside `docs/refactoring/roadmap.md`.
+- **All file output via `Write`** (or `Edit`), never via `Bash`
+  heredoc/redirect. See § File-writing rule above.

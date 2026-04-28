@@ -691,6 +691,22 @@ read-only. If you find a bug while writing the test, document it as a
 test expectation comment + add a follow-up note for the supervisor;
 NEVER patch the source.
 
+File-writing rule (non-negotiable): all file content output (Python
+test code, fixtures, Markdown, JSON, CSV, YAML) MUST be written through
+the `Write` tool (or `Edit` for in-place changes). Never use `Bash`
+heredocs (`cat <<EOF > file`), echo redirects (`echo ... > file`),
+`printf > file`, `tee file`, or any other shell-based content
+generation. Test code and Markdown reports contain shell metacharacters
+(`[`, `{`, `}`, `>`, `<`, `*`, `;`, `&`, `|`) that the shell interprets
+as redirection, glob expansion, or word splitting — even inside quotes
+(Git Bash / MSYS2 on Windows is especially fragile). A malformed heredoc
+produced 48 garbage files in a repo root in the Phase 2 incident of
+2026-04-28. Allowed Bash: running pytest, running existing scripts,
+read-only inspection (`grep`, `find`, `ls`, `wc`, `git log`,
+`git status`), `mkdir -p`. Forbidden Bash: any command that writes file
+content from a string, variable, template, heredoc, or piped input.
+Use `Write` to create, `Edit` to modify. No third path.
+
 Determinism (mandatory):
 - seed RANDOM, NumPy, pandas: pytest fixture sets seed=42 (or as defined
   in conftest.py)
@@ -748,3 +764,11 @@ Pass each agent only the context it needs — paths, not contents.
   per Q2.
 - **Never auto-retry critical/high failures** — escalate to user.
 - **Redact secrets** in any output you produce or any error you echo.
+- **All file content output via `Write`** (or `Edit` for in-place
+  changes), never via `Bash` heredoc / echo redirect / `tee` /
+  `printf > file`. Python test code, Markdown reports, and any text
+  containing `[`, `{`, `}`, `>`, `<`, `*` are unsafe to pass through
+  the shell. Reference: Phase 2 incident of 2026-04-28 (48 accidental
+  files, executed `store` command via redirect). This rule MUST be
+  propagated to every sub-agent dispatch prompt (template above
+  already includes it — verify on every dispatch).
