@@ -80,7 +80,7 @@ claude-registry/
 | `functional-analyst` | stable | Requirements, use cases, business processes |
 | `developer-java-spring` | stable | Java/Spring Boot enterprise development |
 | `orchestrator` | beta | Meta-orchestrator (opus): discovers installed agents dynamically, decomposes multi-domain tasks, dispatches specialists in parallel, synthesises results |
-| `refactoring-supervisor` | beta | **Refactoring workflow supervisor (opus, v1.0.0)**: top-level workflow for end-to-end refactoring/migration. Delegates phases sequentially to dedicated supervisors (Phase 0 indexing, Phase 1 functional analysis, Phase 2 technical analysis, Phase 3 baseline testing, Phase 4 TO-BE refactoring). Strict human-in-the-loop with schematic preview before each phase and execution-timing recap after. |
+| `refactoring-supervisor` | beta | **Refactoring workflow supervisor (opus, v1.1.0)**: top-level workflow for end-to-end refactoring/migration. Delegates phases sequentially to dedicated supervisors (Phase 0 indexing, Phase 1 functional analysis, Phase 2 technical analysis, Phase 3 baseline testing, Phase 4 TO-BE refactoring). Strict human-in-the-loop with schematic preview before each phase and execution-timing recap after. v1.1.0: bootstrap detects existing phase outputs and asks the user explicitly per phase to skip / re-run / revise (no more silent auto-skip). |
 | `indexing-supervisor` | beta | **Indexing pipeline supervisor (opus)**: indexes legacy Python codebases (with optional Streamlit) into a markdown KB at `.indexing-kb/`. Dispatches 7 sub-agents in 4 phases. |
 | `codebase-mapper` | beta | Indexing sub-agent: structural inventory (tree, LOC, packages, entrypoints) |
 | `dependency-analyzer` | beta | Indexing sub-agent: external deps + internal import graph + circular deps |
@@ -89,7 +89,7 @@ claude-registry/
 | `data-flow-analyst` | beta | Indexing sub-agent: DB, external APIs, file I/O, env vars, configuration |
 | `business-logic-analyst` | beta | Indexing sub-agent: domain concepts, validation rules, business rules, state machines |
 | `synthesizer` | beta | Indexing sub-agent: final consolidation (overview, bounded contexts, hotspots) |
-| `functional-analysis-supervisor` | beta | **Functional Analysis supervisor (opus)**: Phase 1 AS-IS functional analysis. Reads `.indexing-kb/`, dispatches 5 sub-agents in 3 waves (+ optional challenger), produces `docs/analysis/01-functional/`. Streamlit-aware, strictly AS-IS. |
+| `functional-analysis-supervisor` | beta | **Functional Analysis supervisor (opus, v0.2.0)**: Phase 1 AS-IS functional analysis. Reads `.indexing-kb/`, dispatches 5 sub-agents in 3 waves (+ optional challenger) followed by a parallel export wave (`document-creator` + `presentation-creator`, always ON) producing Accenture-branded PDF + PPTX in `_exports/`. Output at `docs/analysis/01-functional/`. Streamlit-aware, strictly AS-IS. |
 | `actor-feature-mapper` | beta | Functional-analysis sub-agent (W1): actors, roles, personas, feature map, Actor×Feature matrix |
 | `ui-surface-analyst` | beta | Functional-analysis sub-agent (W1): screens, navigation graph, component tree (Streamlit-aware) |
 | `io-catalog-analyst` | beta | Functional-analysis sub-agent (W1): inputs, outputs, transformation matrix (functional perspective) |

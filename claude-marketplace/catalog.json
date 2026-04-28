@@ -1443,11 +1443,11 @@
     },
     {
       "name": "functional-analysis-supervisor",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Single entrypoint for Phase 1 (AS-IS Functional Analysis) of a refactoring/migration workflow. Reads the knowledge base at .indexing-kb/ produced by Phase 0 indexing and orchestrates Sonnet sub-agents in 3 waves to produce a complete functional understanding in docs/analysis/01-functional/. Stack-aware (Streamlit/generic), strictly AS-IS (no target-tech references), generic and reusable across migration scenarios.",
+      "description": "Single entrypoint for Phase 1 (AS-IS Functional Analysis) of a refactoring/migration workflow. Reads the knowledge base at .indexing-kb/ produced by Phase 0 indexing and orchestrates Sonnet sub-agents in 3 waves plus an export wave to produce a complete functional understanding in docs/analysis/01-functional/ and an Accenture-branded PDF + PPTX in _exports/. Stack-aware (Streamlit/generic), strictly AS-IS (no target-tech references), generic and reusable across migration scenarios.",
       "file": "beta/functional-analysis-supervisor.md",
       "dependencies": [
         "actor-feature-mapper",
@@ -1455,7 +1455,9 @@
         "io-catalog-analyst",
         "user-flow-analyst",
         "implicit-logic-analyst",
-        "functional-analysis-challenger"
+        "functional-analysis-challenger",
+        "document-creator",
+        "presentation-creator"
       ],
       "tools": [
         "Read",
@@ -1474,7 +1476,7 @@
         "streamlit"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/"
+      "changelog": "0.2.0: add Export Wave (always ON) — produces Accenture-branded PDF (`_exports/01-functional-report.pdf`) via document-creator and PPTX (`_exports/01-functional-deck.pptx`) via presentation-creator after Wave 3 synthesis. Adds explicit overwrite confirmation when exports already exist. 0.1.0: initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/"
     },
     {
       "name": "actor-feature-mapper",
@@ -1637,11 +1639,11 @@
     },
     {
       "name": "refactoring-supervisor",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Coordinates Phase 0 (indexing), Phase 1 (AS-IS functional analysis), Phase 2 (AS-IS technical analysis), Phase 3 (AS-IS baseline testing), and Phase 4 (TO-BE refactoring — first phase with target tech: Spring Boot + Angular). Strict human-in-the-loop with per-phase recap including execution timings. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check.",
+      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Coordinates Phase 0 (indexing), Phase 1 (AS-IS functional analysis with PDF+PPTX export), Phase 2 (AS-IS technical analysis with PDF+PPTX export), Phase 3 (AS-IS baseline testing), and Phase 4 (TO-BE refactoring — first phase with target tech: Spring Boot + Angular). Strict human-in-the-loop with per-phase recap including execution timings. Bootstrap detects existing phase outputs and asks the user explicitly per phase whether to skip, re-run, or revise — never auto-skip a complete phase silently. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check.",
       "file": "beta/refactoring-supervisor.md",
       "dependencies": [
         "indexing-supervisor",
@@ -1666,7 +1668,7 @@
         "human-in-the-loop"
       ],
       "published": "2026-04-28",
-      "changelog": "1.0.0: milestone — workflow now covers full AS-IS→TO-BE journey (Phases 0–4); registered Phase 4 (refactoring-tobe-supervisor) in the phase registry; added Phase 4 schematic; updated bootstrap detection (.refactoring-kb/, backend/, frontend/); inverse drift rule documented from Phase 4 onward. 0.3.0: registered Phase 3 (baseline-testing-supervisor); mandatory execution-timing block in post-phase recap. 0.2.0: registered Phase 2. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
+      "changelog": "1.1.0: bootstrap now presents a per-phase detection table and asks the user explicitly skip/re-run/revise for every phase that already has outputs (no more silent auto-skip); inconsistent state (manifest=partial/failed/missing) classified separately and recommended for re-run; added --no-resume-prompt opt-in to bypass; updated Phase 1 schematic to include the new export wave. 1.0.0: milestone — workflow now covers full AS-IS→TO-BE journey (Phases 0–4); registered Phase 4 (refactoring-tobe-supervisor) in the phase registry; added Phase 4 schematic; updated bootstrap detection (.refactoring-kb/, backend/, frontend/); inverse drift rule documented from Phase 4 onward. 0.3.0: registered Phase 3 (baseline-testing-supervisor); mandatory execution-timing block in post-phase recap. 0.2.0: registered Phase 2. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
     },
     {
       "name": "technical-analysis-supervisor",

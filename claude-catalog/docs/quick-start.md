@@ -25,7 +25,7 @@ Common capabilities and when to use them:
 | `presentation-creator` | Creating Accenture-branded PowerPoint presentations |
 | `document-creator` | Creating Accenture-branded PDF or Word documents |
 | `indexing-supervisor` | Phase 0: indexing a legacy Python (+ Streamlit) codebase into `.indexing-kb/` |
-| `functional-analysis-supervisor` | Phase 1: AS-IS functional analysis from `.indexing-kb/` to `docs/analysis/01-functional/` |
+| `functional-analysis-supervisor` | Phase 1: AS-IS functional analysis from `.indexing-kb/` to `docs/analysis/01-functional/` (+ Accenture-branded PDF/PPTX exports) |
 | `technical-analysis-supervisor` | Phase 2: AS-IS technical analysis to `docs/analysis/02-technical/` (+ PDF/PPTX exports) |
 | `baseline-testing-supervisor` | Phase 3: AS-IS baseline regression suite at `tests/baseline/` (+ snapshots, benchmarks, optional Postman collection) |
 | `refactoring-tobe-supervisor` | Phase 4: TO-BE refactoring (FIRST phase with target tech — Spring Boot 3 + Angular) — produces `backend/`, `frontend/`, OpenAPI contract, ADRs, migration roadmap |
