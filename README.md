@@ -36,6 +36,7 @@ claude-registry/
       indexing/                pipeline for indexing legacy Python codebases (8 agents)
       functional-analysis/     pipeline for AS-IS functional analysis Phase 1 (6 agents)
       technical-analysis/      pipeline for AS-IS technical analysis Phase 2 (11 agents)
+      baseline-testing/        pipeline for AS-IS baseline testing Phase 3 (8 agents)
       (other agents at root level)
     skills/                  reusable knowledge providers (shared across agents)
       orchestrators/           backend, frontend, documentation orchestrator skills
@@ -70,7 +71,7 @@ claude-registry/
 
 ## Available capabilities
 
-### Agents (40)
+### Agents (48)
 
 | Name | Tier | Description |
 |------|------|-------------|
@@ -78,7 +79,7 @@ claude-registry/
 | `functional-analyst` | stable | Requirements, use cases, business processes |
 | `developer-java-spring` | stable | Java/Spring Boot enterprise development |
 | `orchestrator` | beta | Meta-orchestrator (opus): discovers installed agents dynamically, decomposes multi-domain tasks, dispatches specialists in parallel, synthesises results |
-| `refactoring-supervisor` | beta | **Refactoring workflow supervisor (opus)**: top-level workflow for end-to-end refactoring/migration. Delegates phases sequentially to dedicated supervisors (Phase 0 indexing, Phase 1 functional analysis, Phase 2 technical analysis). Strict human-in-the-loop with schematic preview before each phase. |
+| `refactoring-supervisor` | beta | **Refactoring workflow supervisor (opus)**: top-level workflow for end-to-end refactoring/migration. Delegates phases sequentially to dedicated supervisors (Phase 0 indexing, Phase 1 functional analysis, Phase 2 technical analysis, Phase 3 baseline testing). Strict human-in-the-loop with schematic preview before each phase and execution-timing recap after. |
 | `indexing-supervisor` | beta | **Indexing pipeline supervisor (opus)**: indexes legacy Python codebases (with optional Streamlit) into a markdown KB at `.indexing-kb/`. Dispatches 7 sub-agents in 4 phases. |
 | `codebase-mapper` | beta | Indexing sub-agent: structural inventory (tree, LOC, packages, entrypoints) |
 | `dependency-analyzer` | beta | Indexing sub-agent: external deps + internal import graph + circular deps |
@@ -105,6 +106,14 @@ claude-registry/
 | `security-analyst` | beta | Technical-analysis sub-agent (W1): OWASP Top 10, input validation, secrets in code, STRIDE threat model |
 | `risk-synthesizer` | beta | Technical-analysis sub-agent (W2): unified risk register MD/JSON/CSV, severity matrix, remediation priority |
 | `technical-analysis-challenger` | beta | Technical-analysis sub-agent (W3, always ON): adversarial review for gaps, contradictions, AS-IS violations |
+| `baseline-testing-supervisor` | beta | **Baseline Testing supervisor (opus)**: Phase 3 AS-IS baseline regression suite. Reads `.indexing-kb/` + Phase 1 + Phase 2, dispatches 7 sub-agents in 4 waves (W0 fixtures + W1 fan-out per UC + W2 execution and oracle capture + W3 challenger). Adaptive execution policy (write+execute or write-only). Per-step timing recap. Streamlit-aware. Strictly AS-IS. |
+| `fixture-builder` | beta | Baseline-testing sub-agent (W0): conftest.py with seed/time/network determinism + minimal/realistic/edge fixtures |
+| `usecase-test-writer` | beta | Baseline-testing sub-agent (W1, fan-out per UC): pytest module per use case (happy + alternative + edge), Streamlit AppTest where applicable |
+| `integration-test-writer` | beta | Baseline-testing sub-agent (W1): DB / file system / outbound API tests (mocked) |
+| `benchmark-writer` | beta | Baseline-testing sub-agent (W1): pytest-benchmark + memory profiling — AS-IS performance oracle |
+| `service-collection-builder` | beta | Baseline-testing sub-agent (W1, conditional): Postman 2.1 collection for services exposed by the AS-IS app |
+| `baseline-runner` | beta | Baseline-testing sub-agent (W2): executes the suite, captures snapshots/benchmark JSON/coverage; applies failure policy (xfail/skip/escalate) |
+| `baseline-challenger` | beta | Baseline-testing sub-agent (W3, always ON): adversarial review (coverage, AS-IS source modifications, determinism, oracle integrity, severity-mismatch, Streamlit/Postman) |
 | `technical-analyst` | beta | Technical debt, security, vulnerable dependencies |
 | `developer-python` | beta | Python/FastAPI development |
 | `developer-frontend` | beta | Multi-framework frontend development (Angular, React, Vue, Qwik, Vanilla) |

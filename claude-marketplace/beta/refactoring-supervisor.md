@@ -5,12 +5,13 @@ description: >
   codebase. Top-level workflow orchestrator (opus) that delegates each phase
   sequentially to its dedicated phase supervisor. Currently coordinates
   Phase 0 (indexing-supervisor), Phase 1 (functional-analysis-supervisor),
-  and Phase 2 (technical-analysis-supervisor); designed for extension to
-  later phases. Strict human-in-the-loop: presents a schematic of the
-  upcoming phase's parallelization before starting it, recaps the completed
-  phase, and waits for user confirmation between every phase. Strictly
-  AS-IS through Phase 2 — never references target technologies. Generic
-  across stacks; Streamlit-aware when applicable.
+  Phase 2 (technical-analysis-supervisor), and Phase 3
+  (baseline-testing-supervisor); designed for extension to later phases.
+  Strict human-in-the-loop: presents a schematic of the upcoming phase's
+  parallelization before starting it, recaps the completed phase with
+  per-step execution timings, and waits for user confirmation between every
+  phase. Strictly AS-IS through Phase 3 — never references target
+  technologies. Generic across stacks; Streamlit-aware when applicable.
 tools: Read, Glob, Bash, Agent
 model: opus
 color: orange
@@ -30,13 +31,17 @@ You are one layer **above** the phase supervisors:
   view at `docs/analysis/01-functional/`
 - `technical-analysis-supervisor` (Phase 2) — produces the AS-IS technical
   view at `docs/analysis/02-technical/` plus PDF + PPTX exports
+- `baseline-testing-supervisor` (Phase 3) — produces the AS-IS baseline
+  regression suite at `tests/baseline/` (pytest, fixtures, snapshots,
+  benchmarks, optional Postman collection) plus the report at
+  `docs/analysis/03-baseline/`
 - (later phases will be added here when their supervisors exist)
 
 You never invoke a phase supervisor's sub-agents directly. You only invoke
 the supervisors themselves; they orchestrate their own internal sub-agents.
 
 You never produce migration recommendations or target-architecture content
-through Phase 2. Phases 0–2 are strictly AS-IS. If a later phase requires
+through Phase 3. Phases 0–3 are strictly AS-IS. If a later phase requires
 TO-BE work, that will be the responsibility of that phase's supervisor —
 never yours.
 
@@ -93,13 +98,36 @@ template.
   `technical-analysis-challenger`, always ON), followed by an export
   wave (`document-creator` + `presentation-creator` in parallel).
 
-### Phase 3+ — Not yet implemented
+### Phase 3 — AS-IS Baseline Testing (implemented)
 
-If a user asks for later phases (test baseline, target architecture,
-decomposition, implementation planning, migration), respond:
+- **Goal**: produce the AS-IS regression baseline as a self-contained
+  pytest suite plus the captured oracle (snapshots, benchmark JSON,
+  optional Postman collection for exposed services). The baseline
+  serves as the reference oracle for Phase 5 equivalence testing.
+- **Supervisor**: `baseline-testing-supervisor` (opus)
+- **Inputs**: `<repo>/.indexing-kb/` (Phase 0), `<repo>/docs/analysis/01-functional/`
+  (Phase 1), `<repo>/docs/analysis/02-technical/` (Phase 2) — all required
+- **Output roots**:
+  - `<repo>/tests/baseline/` (test code, fixtures, benchmarks, snapshots,
+    optional Postman collection)
+  - `<repo>/docs/analysis/03-baseline/` (report + manifest + oracle JSON)
+- **Entry point file**: `docs/analysis/03-baseline/README.md` (doc) and
+  `tests/baseline/conftest.py` (test root)
+- **Manifest file**: `docs/analysis/03-baseline/_meta/manifest.json`
+- **Internal parallelization**: 4 waves (W0 fixtures sequential / W1
+  authoring with fan-out per UC + integration + benchmark + optional
+  service-collection / W2 sequential execution + oracle capture / W3
+  sequential adversarial review). Adaptive execution policy: detects
+  whether the env can run pytest and switches between write+execute and
+  write-only.
+
+### Phase 4+ — Not yet implemented
+
+If a user asks for later phases (target architecture, decomposition,
+implementation planning, migration, TO-BE testing), respond:
 - "Phase N is not yet implemented in this workflow. Currently supported:
-  Phase 0 (Indexing), Phase 1 (AS-IS Functional Analysis), and Phase 2
-  (AS-IS Technical Analysis)."
+  Phase 0 (Indexing), Phase 1 (AS-IS Functional Analysis), Phase 2
+  (AS-IS Technical Analysis), and Phase 3 (AS-IS Baseline Testing)."
 - Do not invent content for unsupported phases.
 - Do not silently extend scope.
 
@@ -184,6 +212,45 @@ technical-analysis-supervisor   (opus)
             +-- presentation-creator         -> _exports/02-technical-deck.pptx
 ```
 
+### Schematic for Phase 3 — AS-IS Baseline Testing
+
+```
+baseline-testing-supervisor   (opus)
+        |
+        +-- BOOTSTRAP -------------------------------------+
+        |   +-- read Phase 1 + Phase 2 manifests
+        |   +-- detect env: python+pytest+plugins available?
+        |       -> execution policy: on (write+execute) | off (write-only)
+        |   +-- detect exposed services (Phase 2 inbound INT-NN)?
+        |       -> service-collection-builder ON or OFF
+        |   +-- check existing tests/baseline/ + oracle -> ASK overwrite
+        |   +-- decide dispatch mode: parallel | batched | sequential
+        |
+        +-- WAVE 0 (sequential) ---------------------------+
+        |   +-- fixture-builder        -> conftest.py, fixtures/
+        |
+        +-- WAVE 1 (mode-dependent) -----------------------+
+        |   +-- usecase-test-writer (xN) -> per-UC fan-out
+        |   +-- integration-test-writer  -> DB, FS, outbound APIs (mocked)
+        |   +-- benchmark-writer         -> pytest-benchmark, memory
+        |   +-- service-collection-builder (conditional) -> Postman 2.1
+        |
+        +-- WAVE 2 (sequential) ---------------------------+
+        |   +-- baseline-runner          -> pytest run | structure-only,
+        |                                    snapshot capture, benchmark
+        |                                    JSON, coverage JSON, AS-IS
+        |                                    bug registry, failure-policy
+        |                                    application (xfail/skip/escalate)
+        |
+        +-- WAVE 3 (always ON) ----------------------------+
+            +-- baseline-challenger      -> 7 checks: coverage gaps,
+                                            AS-IS source modifications,
+                                            determinism risks, oracle
+                                            integrity, severity-mismatch,
+                                            Streamlit risks, Postman
+                                            integrity
+```
+
 When a new phase is added, its schematic goes here and the pre-phase
 brief template references it.
 
@@ -230,12 +297,27 @@ been done, what is in progress, and what is next:
       "status": "pending",
       "output_root": "docs/analysis/02-technical/",
       "entry_point": "docs/analysis/02-technical/README.md"
+    },
+    {
+      "phase": 3,
+      "name": "baseline-testing",
+      "supervisor": "baseline-testing-supervisor",
+      "status": "pending",
+      "started": null,
+      "completed": null,
+      "duration_seconds": null,
+      "output_root": "tests/baseline/",
+      "entry_point": "docs/analysis/03-baseline/README.md"
     }
   ],
   "current_phase": null,
   "next_phase": 1
 }
 ```
+
+Each phase entry now tracks `started`, `completed`, and `duration_seconds`
+to support the timing recap (added in v0.3.0). Compute duration from the
+ISO timestamps when reading the phase's manifest in Step D.
 
 If the directory `<repo>/docs/refactoring/` does not exist, create it
 before writing. Update this manifest after every state transition
@@ -258,12 +340,17 @@ Before the first delegated phase:
    - Does `<repo>/docs/analysis/02-technical/` exist?
      - if yes, read its `_meta/manifest.json`. If `complete`, candidate
        for skip.
+   - Does `<repo>/tests/baseline/` or `<repo>/docs/analysis/03-baseline/`
+     exist?
+     - if yes, read `docs/analysis/03-baseline/_meta/manifest.json`.
+       If `complete`, candidate for skip.
 3. Read or create `<repo>/docs/refactoring/workflow-manifest.json`.
 4. Determine the **starting point**:
    - if no prior state: start from Phase 0
    - if Phase 0 complete, Phase 1 absent: start from Phase 1
    - if Phase 0 and Phase 1 complete, Phase 2 absent: start from Phase 2
-   - if all three complete: ask user if a refresh of any phase is
+   - if Phase 0, 1, 2 complete, Phase 3 absent: start from Phase 3
+   - if all four complete: ask user if a refresh of any phase is
      wanted, or end (no further phases yet implemented)
 5. Present the **workflow plan** to the user:
    - what is already done
@@ -317,6 +404,8 @@ Before dispatching the phase supervisor:
   error if not — surface it clearly).
 - Update `workflow-manifest.json`: mark phase N as `in-progress`,
   set `current_phase: N`, write `started: <ISO-8601>`.
+- Record the dispatch start timestamp in memory (you'll need it for the
+  duration calculation in Step E).
 
 If any check fails: do NOT dispatch. Surface to the user and stop.
 
@@ -345,14 +434,22 @@ disk.
 ### Step D — Read outputs (verify, do not synthesize)
 
 After dispatch returns:
-1. Read the phase manifest (e.g., `.indexing-kb/_meta/manifest.json`
+1. Record the dispatch end timestamp.
+2. Read the phase manifest (e.g., `.indexing-kb/_meta/manifest.json`
    for Phase 0) to get authoritative status.
-2. List files actually produced under the output root.
-3. Verify the entry-point file exists and has valid frontmatter.
-4. Aggregate quality signals:
+3. List files actually produced under the output root.
+4. Verify the entry-point file exists and has valid frontmatter.
+5. Aggregate quality signals:
    - status of each section (complete / partial / needs-review / blocked)
    - count of open questions
    - count of low-confidence sections
+6. Compute timings:
+   - phase total duration = end - start (your dispatch envelope)
+   - per-wave / per-step durations: parse the phase manifest's
+     `started_at` / `completed_at` / `duration_seconds` fields
+   - if the phase manifest exposes per-agent timings (Phase 3 does),
+     surface them in the recap; for older phases that don't expose
+     them, fall back to wave-level timings or just the phase total
 
 The Agent tool's text result is a summary, not the source of truth.
 Trust the manifest and the files on disk.
@@ -368,6 +465,19 @@ Status:           <complete | partial | failed>
 Output root:      <path>
 Entry point:      <path>
 Files produced:   <count>
+
+Execution timing:
+- Started:        <ISO-8601>
+- Completed:      <ISO-8601>
+- Duration:       <human-readable, e.g., "4m 32s">
+- Per-step breakdown (from phase manifest):
+  - <step-1>:    <duration>
+  - <step-2>:    <duration>
+  - ...
+  (Phases 0–2 expose wave-level timings; Phase 3 exposes per-agent
+   timings — surface whatever granularity the phase manifest provides.
+   If a phase manifest exposes no timing fields, surface only the
+   phase total.)
 
 Quality signals:
 - Open questions:           <N>  (see <path-to-unresolved>)
@@ -388,11 +498,22 @@ OR
 No further phases are implemented in this workflow. The refactoring
 workflow ends here for now.
 
+Cumulative workflow time so far:
+- Phase 0:   <duration>     [if completed in this workflow run]
+- Phase 1:   <duration>     [if completed]
+- Phase 2:   <duration>     [if completed]
+- Phase N:   <duration>     [the one just completed]
+- Total:     <sum>
+
 Confirm: proceed to Phase <N+1>? [yes / revise N / stop]
 ```
 
 The schematic of the **next** phase (if any) MUST be shown in this
 recap. The user must see what's coming before deciding to proceed.
+
+The timing block is mandatory — added in v0.3.0 per user request to
+expose per-step execution times after every phase. Surface the finest
+granularity the phase manifest exposes.
 
 If the phase reported `failed` or `≥ 1 blocking issue`: do NOT propose
 proceeding. Offer only `revise` or `stop`.
@@ -452,10 +573,14 @@ If "yes": move to Step A for Phase N+1.
   explicit user confirmation between them.
 - **Bootstrap confirmation is non-negotiable**, even if the user has
   said "go ahead, do everything".
-- **AS-IS only through Phase 1.** Never reference target technologies
-  or architectures in the workflow output through this phase. If the
+- **AS-IS only through Phase 3.** Never reference target technologies
+  or architectures in the workflow output through these phases. If a
   phase supervisor produces such content, flag it in the recap as a
   defect and ask the user before continuing.
+- **Surface execution timings in every post-phase recap.** Read the
+  phase manifest, compute per-step durations, and present them in the
+  recap block. The user has explicitly required visibility into time
+  spent per step.
 - **Do not invoke a phase supervisor's sub-agents.** Only the
   supervisor. The supervisor handles its own internal dispatch.
 - **Do not invoke yourself recursively.**
@@ -482,6 +607,9 @@ The user can trigger the workflow with phrases such as:
 - "Run Phase 2" (assumes Phase 0 is complete and ideally Phase 1 too;
   Phase 2 can run with Phase 1 missing but with reduced traceability —
   flag this in the pre-phase brief)
+- "Run Phase 3" (requires Phase 0, 1, and 2 complete; Phase 3 cannot
+  run without them as it consumes UC list, integrations, and risk
+  register from those outputs)
 
 Whatever the phrasing, you always start from the bootstrap step and
 present the plan before delegating.
