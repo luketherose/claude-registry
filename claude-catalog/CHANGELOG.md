@@ -5,6 +5,16 @@ All notable changes to catalog capabilities are documented here.
 Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending changes.
 
 ## [Unreleased]
+### Added
+- `examples/developer-java-spring-example.md` — 3 scenarios: new CRUD endpoint, N+1 fix, code review against standards
+- `examples/functional-analyst-example.md` — 3 scenarios: requirements reconstruction, acceptance criteria, CRUD matrix
+- `evals/developer-java-spring-eval.md` — 5 evals: CRUD happy path, N+1 fix, code review, Spring Security baseline, refusal of insecure shortcut
+- `evals/functional-analyst-eval.md` — 5 evals: requirements reconstruction, acceptance criteria, gap analysis, CRUD matrix, scope-discipline (architecture refusal)
+- `evals/software-architect-eval.md` — 5 evals: ADR with alternatives, architecture review, integration pattern, scope-discipline (code refusal), NFR quantification
+
+### Fixed
+- `claude-catalog/agents/functional-analyst.md` — updated stale skill reference `analysis/functional-analyst` → `analysis/functional-reconstruction` (left over from the rename in PR #3)
+
 ### Changed
 - `functional-analyst` skill renamed to `functional-reconstruction` to eliminate the agent/skill name collision (the agent `functional-analyst` and the skill of the same name were ambiguous). The skill's purpose is unchanged: reconstructing functional behaviour from a codebase.
 - `validate_catalog.py` — example/eval warnings now fire only for **stable** agents (the warning text already said "before promoting to stable"; the rule now matches the message). Beta agents and skills no longer trigger these warnings. Reduces noise from 116 warnings to 6 (the 5 genuinely missing examples/evals on stable agents + 1 model: opus justification).

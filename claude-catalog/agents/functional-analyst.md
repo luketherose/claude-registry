@@ -26,7 +26,7 @@ process documentation that serves as the contract between business and engineeri
 
 ## Skills
 
-- **`analysis/functional-analyst`** — functional analysis methodology: feature extraction,
+- **`analysis/functional-reconstruction`** — functional analysis methodology: feature extraction,
   user flow reconstruction, business rule identification, bounded context mapping, assumption
   flagging. Invoke before analyzing an existing codebase for functional requirements.
 
