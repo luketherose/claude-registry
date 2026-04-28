@@ -34,6 +34,7 @@ claude-registry/
   claude-catalog/          ← source (development and review)
     agents/                  subagent .md files with YAML frontmatter
       indexing/                pipeline for indexing legacy Python codebases (8 agents)
+      functional-analysis/     pipeline for AS-IS functional analysis Phase 1 (6 agents)
       (other agents at root level)
     skills/                  reusable knowledge providers (shared across agents)
       orchestrators/           backend, frontend, documentation orchestrator skills
@@ -68,7 +69,7 @@ claude-registry/
 
 ## Available capabilities
 
-### Agents (22)
+### Agents (28)
 
 | Name | Tier | Description |
 |------|------|-------------|
@@ -84,6 +85,13 @@ claude-registry/
 | `data-flow-analyst` | beta | Indexing sub-agent: DB, external APIs, file I/O, env vars, configuration |
 | `business-logic-analyst` | beta | Indexing sub-agent: domain concepts, validation rules, business rules, state machines |
 | `synthesizer` | beta | Indexing sub-agent: final consolidation (overview, bounded contexts, hotspots) |
+| `functional-analysis-supervisor` | beta | **Functional Analysis supervisor (opus)**: Phase 1 AS-IS functional analysis. Reads `.indexing-kb/`, dispatches 5 sub-agents in 3 waves (+ optional challenger), produces `docs/analysis/01-functional/`. Streamlit-aware, strictly AS-IS. |
+| `actor-feature-mapper` | beta | Functional-analysis sub-agent (W1): actors, roles, personas, feature map, Actor×Feature matrix |
+| `ui-surface-analyst` | beta | Functional-analysis sub-agent (W1): screens, navigation graph, component tree (Streamlit-aware) |
+| `io-catalog-analyst` | beta | Functional-analysis sub-agent (W1): inputs, outputs, transformation matrix (functional perspective) |
+| `user-flow-analyst` | beta | Functional-analysis sub-agent (W2): use cases, user flows, Mermaid sequence diagrams with reruns |
+| `implicit-logic-analyst` | beta | Functional-analysis sub-agent (W2): hidden validation, state machines, callback chains, magic numbers |
+| `functional-analysis-challenger` | beta | Functional-analysis sub-agent (W3, opt-in): adversarial review for gaps, contradictions, AS-IS violations |
 | `technical-analyst` | beta | Technical debt, security, vulnerable dependencies |
 | `developer-python` | beta | Python/FastAPI development |
 | `developer-frontend` | beta | Multi-framework frontend development (Angular, React, Vue, Qwik, Vanilla) |
