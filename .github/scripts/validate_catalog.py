@@ -180,7 +180,7 @@ def check_supporting_files(catalog_root: Path) -> list[Finding]:
     agents_dir = catalog_root / "agents"
     skills_dir = catalog_root / "skills"
 
-    for agent_file in sorted(agents_dir.glob("*.md")):
+    for agent_file in sorted(agents_dir.rglob("*.md")):
         name = agent_file.stem
         if not (examples_dir / f"{name}-example.md").exists():
             findings.append(Finding("warning", f"examples/{name}-example.md",
@@ -232,7 +232,7 @@ def check_marketplace_sync(repo_root: Path, catalog_root: Path) -> list[Finding]
     agents_dir = catalog_root / "agents"
     skills_dir = catalog_root / "skills"
 
-    for agent_file in sorted(agents_dir.glob("*.md")):
+    for agent_file in sorted(agents_dir.rglob("*.md")):
         name = agent_file.stem
         if name not in published:
             findings.append(Finding("error", str(agent_file.relative_to(repo_root)),
@@ -319,7 +319,7 @@ def check_model_conventions(
                 elif "skills" in filepath.parts:
                     _check_file(filepath, "skill")
     else:
-        for filepath in sorted(agents_dir.glob("*.md")):
+        for filepath in sorted(agents_dir.rglob("*.md")):
             _check_file(filepath, "agent")
         if skills_dir.exists():
             for filepath in sorted(skills_dir.rglob("*.md")):
@@ -441,7 +441,7 @@ def main():
                     all_findings.extend(validate_agent_file(filepath, file_type="skill"))
                     validated_files.append(path_str)
     else:
-        for filepath in sorted(agents_dir.glob("*.md")):
+        for filepath in sorted(agents_dir.rglob("*.md")):
             all_findings.extend(validate_agent_file(filepath, file_type="agent"))
             validated_files.append(str(filepath.relative_to(repo_root)))
         if skills_dir.exists():

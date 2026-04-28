@@ -33,7 +33,11 @@ If you just want to install capabilities in your project without reading everyth
 claude-registry/
   claude-catalog/          ← source (development and review)
     agents/                  subagent .md files with YAML frontmatter
+      indexing/                pipeline for indexing legacy Python codebases (8 agents)
+      (other agents at root level)
     skills/                  reusable knowledge providers (shared across agents)
+      orchestrators/           backend, frontend, documentation orchestrator skills
+      (other skills grouped by topic)
     examples/                example invocations for capabilities
     evals/                   validation scenarios
     hooks/                   scripts and configurations for Claude Code hooks
@@ -64,7 +68,7 @@ claude-registry/
 
 ## Available capabilities
 
-### Agents (14)
+### Agents (22)
 
 | Name | Tier | Description |
 |------|------|-------------|
@@ -72,6 +76,14 @@ claude-registry/
 | `functional-analyst` | stable | Requirements, use cases, business processes |
 | `developer-java-spring` | stable | Java/Spring Boot enterprise development |
 | `orchestrator` | beta | Meta-orchestrator (opus): discovers installed agents dynamically, decomposes multi-domain tasks, dispatches specialists in parallel, synthesises results |
+| `indexing-supervisor` | beta | **Indexing pipeline supervisor (opus)**: indexes legacy Python codebases (with optional Streamlit) into a markdown KB at `.indexing-kb/`. Dispatches 7 sub-agents in 4 phases. |
+| `codebase-mapper` | beta | Indexing sub-agent: structural inventory (tree, LOC, packages, entrypoints) |
+| `dependency-analyzer` | beta | Indexing sub-agent: external deps + internal import graph + circular deps |
+| `streamlit-analyzer` | beta | Indexing sub-agent: pages, session_state, widgets, caching, anti-patterns |
+| `module-documenter` | beta | Indexing sub-agent: per-package API documentation (parallel fan-out) |
+| `data-flow-analyst` | beta | Indexing sub-agent: DB, external APIs, file I/O, env vars, configuration |
+| `business-logic-analyst` | beta | Indexing sub-agent: domain concepts, validation rules, business rules, state machines |
+| `synthesizer` | beta | Indexing sub-agent: final consolidation (overview, bounded contexts, hotspots) |
 | `technical-analyst` | beta | Technical debt, security, vulnerable dependencies |
 | `developer-python` | beta | Python/FastAPI development |
 | `developer-frontend` | beta | Multi-framework frontend development (Angular, React, Vue, Qwik, Vanilla) |
