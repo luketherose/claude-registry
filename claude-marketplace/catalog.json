@@ -2830,6 +2830,187 @@
       ],
       "published": "2026-04-28",
       "changelog": "Initial release"
+    },
+    {
+      "name": "developer-go",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Production-ready Go: standard library first, table-driven tests, log/slog, context propagation, errors-as-values. Covers HTTP services (net/http, chi, gin), CLIs (cobra), worker daemons. Tooling: gofmt, goimports, golangci-lint.",
+      "file": "beta/developer-go.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Edit",
+        "Write",
+        "Bash",
+        "Grep",
+        "Glob"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "go",
+        "golang",
+        "backend",
+        "developer"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "developer-rust",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Production-ready Rust on stable: thiserror/anyhow boundaries, tokio async, structured concurrency, tracing. Covers HTTP services (axum, actix-web), CLIs (clap), async daemons. Tooling: cargo fmt, clippy -D warnings, cargo audit.",
+      "file": "beta/developer-rust.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Edit",
+        "Write",
+        "Bash",
+        "Grep",
+        "Glob"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "rust",
+        "backend",
+        "developer",
+        "async"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "developer-kotlin",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Production-ready Kotlin for JVM backends: Spring Boot 3 with Kotlin idioms (constructor injection, ConfigurationProperties data classes), or Ktor. Coroutines + structured concurrency. Sealed class hierarchies, value classes, no `!!` in production. Tooling: ktlint, detekt, mockk, JUnit 5.",
+      "file": "beta/developer-kotlin.md",
+      "dependencies": [
+        "java-spring-standards",
+        "spring-architecture",
+        "spring-data-jpa",
+        "testing-standards"
+      ],
+      "tools": [
+        "Read",
+        "Edit",
+        "Write",
+        "Bash",
+        "Grep",
+        "Glob"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "kotlin",
+        "spring-boot",
+        "ktor",
+        "jvm",
+        "backend",
+        "developer"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "developer-csharp",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Production-ready C#/.NET 8+: ASP.NET Core Web APIs (controllers and minimal APIs), nullable reference types, records for DTOs, IOptions<T> with validation, ILogger<T> + LoggerMessage source generators, EF Core. xUnit + FluentAssertions + Testcontainers. Architecture tests with NetArchTest.",
+      "file": "beta/developer-csharp.md",
+      "dependencies": [
+        "rest-api-standards",
+        "testing-standards"
+      ],
+      "tools": [
+        "Read",
+        "Edit",
+        "Write",
+        "Bash",
+        "Grep",
+        "Glob"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "csharp",
+        "dotnet",
+        "aspnet-core",
+        "backend",
+        "developer"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "developer-ruby",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Production-ready Ruby on Rails 7+: service objects, form objects, query objects to keep models small. Sidekiq with idempotent jobs (pass IDs, never AR objects). RSpec + factory_bot, simplecov, brakeman. RuboCop with rails/rspec/performance plugins. Optional Sorbet/RBS for type signatures.",
+      "file": "beta/developer-ruby.md",
+      "dependencies": [
+        "rest-api-standards",
+        "testing-standards"
+      ],
+      "tools": [
+        "Read",
+        "Edit",
+        "Write",
+        "Bash",
+        "Grep",
+        "Glob"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "ruby",
+        "rails",
+        "sidekiq",
+        "backend",
+        "developer"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial release"
+    },
+    {
+      "name": "developer-php",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Production-ready PHP 8.2+ with strict_types, typed properties, readonly classes, enums, attributes. Laravel 10/11 (with Domain/Application/Infrastructure layering) or Symfony 6/7 (data mapper Doctrine). PHPStan level 8 baseline, Pest or PHPUnit 10, Composer 2. Idempotent queue jobs.",
+      "file": "beta/developer-php.md",
+      "dependencies": [
+        "rest-api-standards",
+        "testing-standards"
+      ],
+      "tools": [
+        "Read",
+        "Edit",
+        "Write",
+        "Bash",
+        "Grep",
+        "Glob"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "php",
+        "laravel",
+        "symfony",
+        "backend",
+        "developer"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial release"
     }
   ]
 }
