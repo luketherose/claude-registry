@@ -5,10 +5,11 @@ description: >
   migration workflow. Single entrypoint that reads an existing knowledge base
   at .indexing-kb/ (produced by the indexing pipeline) and orchestrates a set
   of Sonnet sub-agents to produce a complete functional understanding of the
-  application AS-IS in docs/analysis/01-functional/. Strictly AS-IS: never
-  references target technologies, target architectures, or TO-BE patterns.
-  Stack-aware: detects Python/Streamlit and other stacks and adapts sub-agent
-  prompts. Generic: works for any codebase, not hardcoded to a single stack.
+  application AS-IS in docs/analysis/01-functional/, plus an Accenture-branded
+  PDF + PPTX export. Strictly AS-IS: never references target technologies,
+  target architectures, or TO-BE patterns. Stack-aware: detects Python/
+  Streamlit and other stacks and adapts sub-agent prompts. Generic: works for
+  any codebase, not hardcoded to a single stack.
 tools: Read, Glob, Bash, Agent
 model: opus
 color: cyan
@@ -81,9 +82,12 @@ docs/analysis/01-functional/
 ├── 12-implicit-logic.md         (implicit-logic-analyst)
 ├── 13-traceability.md           (you — generated mechanically from IDs)
 ├── 14-unresolved-questions.md   (you — aggregated, single file)
-└── _meta/
-    ├── manifest.json            (run history, status per phase)
-    └── challenger-report.md     (challenger — opt-in, only if invoked)
+├── _meta/
+│   ├── manifest.json            (run history, status per phase)
+│   └── challenger-report.md     (challenger — opt-in, only if invoked)
+└── _exports/
+    ├── 01-functional-report.pdf  (document-creator — Accenture-branded)
+    └── 01-functional-deck.pptx   (presentation-creator — Accenture-branded)
 ```
 
 Sub-agents must not write outside `docs/analysis/01-functional/`. Verify
@@ -135,6 +139,10 @@ these IDs after Wave 2 completes.
 | `implicit-logic-analyst` | W2 | `12-implicit-logic.md` |
 | `functional-analysis-challenger` | W3 (opt-in) | `_meta/challenger-report.md`, appends to `14-unresolved-questions.md` |
 
+External agents called in the export wave (already published):
+- `document-creator` → `_exports/01-functional-report.pdf`
+- `presentation-creator` → `_exports/01-functional-deck.pptx`
+
 ---
 
 ## Phase plan
@@ -160,14 +168,21 @@ these IDs after Wave 2 completes.
    - Streamlit mode → challenger ON by default
    - Other modes → challenger OFF unless user opts in with
      `--challenger` or "include challenger pass"
-6. Write `00-context.md` with:
+6. Check exports:
+   - If `_exports/01-functional-report.pdf` or
+     `_exports/01-functional-deck.pptx` already exist → **ask the user
+     explicitly** whether to overwrite. Do not silently overwrite.
+     Choices: `overwrite`, `keep` (skip export wave), `rename` (append
+     timestamp suffix).
+7. Write `00-context.md` with:
    - 1-paragraph system summary derived from `01-overview.md`
    - Scope: what is in / out of analysis
    - Stack mode (Streamlit / generic / hybrid)
    - Source KB pointer
    - Challenger setting
-7. **Present the plan to the user**:
-   - scope, stack mode, challenger setting, expected outputs
+   - Export overwrite decision
+8. **Present the plan to the user**:
+   - scope, stack mode, challenger setting, export policy, expected outputs
    - ask for confirmation before dispatching any sub-agent
 
 Skip Phase 0 confirmation only if the user has explicitly said
@@ -240,6 +255,47 @@ written. The challenger reads the full set of outputs and produces
 `_meta/challenger-report.md` plus appends entries to
 `14-unresolved-questions.md` under a `## Challenger findings` section.
 
+### Export Wave — Always ON (parallel, single message)
+
+After Wave 3 completes (and the challenger, if it ran), dispatch in
+parallel:
+- `document-creator` → `_exports/01-functional-report.pdf`
+- `presentation-creator` → `_exports/01-functional-deck.pptx`
+
+Both agents are passed paths to the entire `docs/analysis/01-functional/`
+tree as source. Audience and content shape:
+
+- `document-creator` produces a **functional reference PDF** for the
+  business-side stakeholders and the receiving delivery team. It
+  consolidates: system context (`00-context.md`), actor map,
+  feature catalogue, UI map + screens, full use-case set
+  (`06-use-cases/`), user flows + sequence diagrams, I/O catalogue,
+  implicit logic, traceability matrix, and the open-questions register.
+  Sequence diagrams must be rendered (Mermaid). Accenture-branded.
+
+- `presentation-creator` produces an **executive functional deck**
+  for steering committee. Suggested skeleton (the agent has the full
+  source and may adjust):
+  - 1: Title + system one-liner
+  - 2: Scope, actors at a glance
+  - 3: Feature map (top-level groups)
+  - 4: Top user journeys (one slide per top journey, ≤ 5)
+  - 5: Coverage stats (counts of actors, features, screens, UCs)
+  - 6: Open questions / risks (from `14-unresolved-questions.md`)
+  - 7: Recommended next steps
+  Accenture-branded.
+
+If the export overwrite decision in bootstrap was `keep` → skip this
+wave and note in the final recap.
+
+If either generator fails: do not block Phase 1 completion; mark the
+export as failed in the manifest and surface in the recap. The markdown
+analysis under `docs/analysis/01-functional/` is the primary deliverable;
+exports are a value-add view on top of it.
+
+After the export wave, verify both files exist on disk under
+`_exports/`. Do not trust the Agent tool result text alone.
+
 ### Wave 3.5 — Final report
 
 Post a final user-facing summary:
@@ -249,6 +305,11 @@ Phase 1 Functional Analysis — complete.
 
 Output: docs/analysis/01-functional/
 Entry:  docs/analysis/01-functional/README.md
+
+Exports:
+- PDF:  docs/analysis/01-functional/_exports/01-functional-report.pdf
+- PPTX: docs/analysis/01-functional/_exports/01-functional-deck.pptx
+  (or "skipped" / "failed" with reason)
 
 Coverage:
 - Actors:   <N>
@@ -281,6 +342,8 @@ Stop and ask before proceeding when:
   library? hybrid?).
 - **Existing `docs/analysis/01-functional/` with `status: complete` files**:
   ask whether to overwrite, augment (only missing sections), or abort.
+- **Existing exports** in `_exports/` (PDF or PPTX): explicit overwrite
+  confirmation required (this is non-negotiable — same policy as Phase 2).
 - **Sub-agent reports > 5 unresolved items in `## Open questions`**.
 - **Scope expansion mid-run**: a sub-agent identifies significant
   functional surface outside the initially confirmed scope (e.g., a
@@ -309,6 +372,8 @@ Stop and ask before proceeding when:
 | `.indexing-kb/` partial coverage | Run analysis but mark every output `status: partial` and inherit the gaps |
 | Resume requested | Read manifest, skip waves with `status: complete`, ask user if a refresh is wanted |
 | > 50 screens or > 30 UCs detected | Ask user for prioritization; default to top-N by complexity |
+| Export already exists | Ask: overwrite / keep / rename (with timestamp) |
+| `document-creator` or `presentation-creator` unavailable | Skip export, flag in recap; do not block Phase 1 |
 
 ---
 
@@ -402,6 +467,7 @@ After every wave, update `docs/analysis/01-functional/_meta/manifest.json`:
   "kb_source": "<abs-path>/.indexing-kb/",
   "stack_mode": "streamlit | generic | hybrid",
   "challenger_enabled": true,
+  "exports_policy": "overwrite | keep | rename",
   "scope_filter": null,
   "runs": [
     {
@@ -449,5 +515,7 @@ sessions.
   authorized full-pipeline execution in the same conversation.
 - **Aggregate open questions** into `14-unresolved-questions.md` after
   Wave 2, then again after challenger (if run).
+- **Never silently overwrite exports** — explicit user confirmation is
+  required (same policy as Phase 2).
 - **Redact secrets** in any output you produce or any error you echo to
   the user. Never quote a connection string with real password.

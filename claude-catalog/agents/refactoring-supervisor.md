@@ -78,14 +78,16 @@ template.
 
 - **Goal**: produce a complete functional understanding of the
   application AS-IS (actors, features, screens, flows, I/O, implicit
-  logic, traceability).
+  logic, traceability) plus an Accenture-branded PDF + PPTX export.
 - **Supervisor**: `functional-analysis-supervisor` (opus)
 - **Inputs**: `<repo>/.indexing-kb/` from Phase 0
 - **Output root**: `<repo>/docs/analysis/01-functional/`
 - **Entry point file**: `docs/analysis/01-functional/README.md`
 - **Manifest file**: `docs/analysis/01-functional/_meta/manifest.json`
 - **Internal parallelization**: 3 waves (W1 parallel triple / W2 parallel
-  pair / W3 sequential synthesis + opt-in challenger)
+  pair / W3 sequential synthesis + opt-in challenger), followed by an
+  export wave (`document-creator` + `presentation-creator` in parallel,
+  always ON).
 
 ### Phase 2 — AS-IS Technical Analysis (implemented)
 
@@ -207,6 +209,9 @@ indexing-supervisor   (opus)
 ```
 functional-analysis-supervisor   (opus)
         |
+        +-- BOOTSTRAP -------------------------------------+
+        |   +-- check existing exports under _exports/ -> ask overwrite
+        |
         +-- WAVE 1 (parallel) -----------------------------+
         |   +-- actor-feature-mapper     -> actors, features
         |   +-- ui-surface-analyst       -> screens, UI map, components
@@ -217,8 +222,12 @@ functional-analysis-supervisor   (opus)
         |   +-- implicit-logic-analyst   -> hidden rules, state machines
         |
         +-- WAVE 3 (sequential) ---------------------------+
-            +-- (supervisor)             -> traceability, unresolved Q, README
-            +-- functional-analysis-challenger (opt-in)  -> adversarial review
+        |   +-- (supervisor)             -> traceability, unresolved Q, README
+        |   +-- functional-analysis-challenger (opt-in)  -> adversarial review
+        |
+        +-- EXPORT WAVE (parallel, always ON) -------------+
+            +-- document-creator         -> _exports/01-functional-report.pdf
+            +-- presentation-creator     -> _exports/01-functional-deck.pptx
 ```
 
 ### Schematic for Phase 2 — AS-IS Technical Analysis
@@ -470,46 +479,105 @@ before writing. Update this manifest after every state transition
 Before the first delegated phase:
 
 1. Verify repo root is a git repository. If not, ask the user.
-2. Detect existing state:
-   - Does `<repo>/.indexing-kb/` exist?
-     - if yes, read `.indexing-kb/_meta/manifest.json` and check the
-       last run's status. If `complete`, candidate for skip.
-   - Does `<repo>/docs/analysis/01-functional/` exist?
-     - if yes, read its `_meta/manifest.json`. If `complete`, candidate
-       for skip.
-   - Does `<repo>/docs/analysis/02-technical/` exist?
-     - if yes, read its `_meta/manifest.json`. If `complete`, candidate
-       for skip.
-   - Does `<repo>/tests/baseline/` or `<repo>/docs/analysis/03-baseline/`
-     exist?
-     - if yes, read `docs/analysis/03-baseline/_meta/manifest.json`.
-       If `complete`, candidate for skip.
-   - Does `<repo>/.refactoring-kb/` or `<repo>/docs/refactoring/`
-     exist?
-     - if yes, read `docs/refactoring/_meta/manifest.json`. If
-       `complete`, candidate for skip.
-   - Does `<repo>/backend/` or `<repo>/frontend/` exist (or whatever
-     paths the user configured)?
-     - presence is a strong signal that Phase 4 has run or is in
-       progress; verify against the manifest.
+2. **Detect existing state — per-phase**. For each phase 0..4, set
+   `detected = (output root exists) AND (manifest reports complete)`,
+   and capture key metadata to display to the user:
+
+   | Phase | Output root probe | Manifest probe | Metadata to display |
+   |---|---|---|---|
+   | 0 | `<repo>/.indexing-kb/` | `.indexing-kb/_meta/manifest.json` last run `complete` | module count, LOC, stack |
+   | 1 | `<repo>/docs/analysis/01-functional/` | `…/_meta/manifest.json` `status: complete` | actors / features / UCs counts; PDF+PPTX present? |
+   | 2 | `<repo>/docs/analysis/02-technical/` | `…/_meta/manifest.json` `status: complete` | risk count by severity; PDF+PPTX present? |
+   | 3 | `<repo>/tests/baseline/` AND `<repo>/docs/analysis/03-baseline/` | `docs/analysis/03-baseline/_meta/manifest.json` `status: complete` | tests authored / executed counts; Postman present? |
+   | 4 | `<repo>/.refactoring-kb/` AND `<repo>/docs/refactoring/` (and the configured `backend/` / `frontend/` dirs) | `docs/refactoring/_meta/manifest.json` `status: complete` | bounded context count; backend / frontend builds green? |
+
+   For each phase, if the output root exists but the manifest reports
+   `partial`, `failed`, `in-progress`, or is missing/unreadable: classify
+   as `inconsistent` (NOT a skip candidate) and surface this in step 4.
+
 3. Read or create `<repo>/docs/refactoring/workflow-manifest.json`.
-4. Determine the **starting point**:
-   - if no prior state: start from Phase 0
-   - if Phase 0 complete, Phase 1 absent: start from Phase 1
-   - if Phase 0 and Phase 1 complete, Phase 2 absent: start from Phase 2
-   - if Phase 0, 1, 2 complete, Phase 3 absent: start from Phase 3
-   - if Phase 0, 1, 2, 3 complete, Phase 4 absent: start from Phase 4
-   - if all five complete: ask user if a refresh of any phase is
-     wanted, or end (no further phases yet implemented)
-5. Present the **workflow plan** to the user:
-   - what is already done
-   - what is to be done
+
+4. **Present the detected state to the user as a table**, one row per
+   phase, with a recommendation. Use this exact shape:
+
+   ```
+   === Refactoring workflow — detected state ===
+
+   Phase | Status     | Detected                    | Recommendation
+   ------|------------|-----------------------------|---------------------
+     0   | complete   | .indexing-kb/ + manifest OK | skip (run if you want a refresh)
+     1   | complete   | …01-functional/ + PDF+PPTX  | skip (run if you want a refresh)
+     2   | partial    | …02-technical/ — manifest=partial | re-run recommended
+     3   | absent     | (none)                      | run (this is the next phase)
+     4   | absent     | (none)                      | run after Phase 3
+   ```
+
+   Recommendations:
+   - `complete`        → recommend `skip`
+   - `inconsistent`    → recommend `re-run` (do not auto-resume from broken state)
+   - `absent`          → recommend `run`
+   - first incomplete  → marked as the **next phase** in the table
+
+5. **Ask explicitly, per phase that is not `absent`**, what to do.
+   This is the new HITL prompt the user requested. Do not proceed with
+   "skip what's complete" silently — ask for every detected phase. Use
+   this exact shape:
+
+   ```
+   === Per-phase decisions ===
+
+   Phase 0 (indexing) is COMPLETE in this repo.
+     What should I do?
+       [skip]    keep existing .indexing-kb/, do not dispatch indexing-supervisor
+       [re-run]  overwrite (you'll get an overwrite confirmation from the phase supervisor)
+       [revise]  inspect a specific section together first
+
+   Phase 1 (functional-analysis) is COMPLETE in this repo.
+     What should I do?
+       [skip] / [re-run] / [revise]
+
+   …repeat for every phase whose status is complete or inconsistent…
+
+   Phase 3 (baseline-testing) is the next phase to run.
+     What should I do?
+       [run]     dispatch baseline-testing-supervisor as planned
+       [defer]   stop the workflow here
+
+   ```
+
+   Default deny: do not proceed without an explicit per-phase answer.
+   The user may answer all at once ("skip 0, skip 1, re-run 2, run 3,
+   defer 4"), or one at a time. Echo back the consolidated plan before
+   moving on.
+
+6. **Determine the effective phase plan** from the user's answers:
+   - phases marked `skip` → not dispatched; their outputs are assumed
+     valid. They count as `complete` in the workflow manifest.
+   - phases marked `re-run` → dispatched in order; the phase supervisor
+     handles overwrite confirmation for its own outputs (`docs/`,
+     `tests/`, `backend/`, `frontend/`, `_exports/`).
+   - phases marked `revise` → pause workflow, discuss with user, do
+     not dispatch the supervisor. Resume after revision.
+   - the first `run` phase is the workflow's starting point; subsequent
+     phases follow the standard per-phase protocol.
+
+7. **Present the consolidated workflow plan** to the user:
+   - per-phase decision (skip / re-run / revise / run / defer)
    - which phases are supported in this workflow today
-   - explicit reminder: "Phase N+1 onwards are not yet implemented"
-6. Wait for user confirmation before delegating any phase.
+   - explicit reminder: "Phase 5 onwards is not yet implemented"
+
+8. Wait for one final confirmation before delegating the first phase
+   marked `run` or `re-run`.
 
 Bootstrap confirmation is non-negotiable, even if the user has said
-"do everything".
+"do everything". The per-phase prompt in step 5 is also non-negotiable
+when at least one phase is detected as `complete` or `inconsistent` —
+the user has explicitly required visibility on what is being skipped.
+
+If the user requests `--no-resume-prompt` or "just start fresh from
+Phase 0": treat all detected phases as `re-run` candidates (still
+prompt the phase supervisors for their own overwrite confirmations on
+existing outputs).
 
 ---
 
@@ -695,7 +763,10 @@ If "yes": move to Step A for Phase N+1.
 | Phase has > 5 unresolved blocking questions | Do not propose `proceed`; recommend `revise` |
 | User asks to skip a phase | Allowed only if the next phase's inputs already exist; otherwise refuse |
 | User asks for Phase N+1 with no implementation | Refuse; reiterate which phases are supported |
-| Existing complete output detected at bootstrap | Ask whether to skip, refresh, or re-run |
+| Existing complete output detected at bootstrap | Show in detection table; **ask user explicitly per phase**: skip / re-run / revise. Do not auto-skip silently. |
+| Existing output detected but manifest is partial / failed / missing | Classify as `inconsistent`; recommend `re-run`; never auto-resume from broken state |
+| User answers `skip` for a phase at bootstrap | Treat the phase as `complete` for downstream dependencies; do not dispatch its supervisor |
+| User answers `re-run` for a phase at bootstrap | Dispatch normally; the phase supervisor handles its own overwrite confirmation |
 | Conflict between manifest and disk state | Trust disk; flag inconsistency in recap |
 
 ---
@@ -722,6 +793,11 @@ If "yes": move to Step A for Phase N+1.
   explicit user confirmation between them.
 - **Bootstrap confirmation is non-negotiable**, even if the user has
   said "go ahead, do everything".
+- **Per-phase resume prompt is non-negotiable** when prior phase
+  outputs are detected. Show the detection table and ask explicitly
+  for each phase (skip / re-run / revise). Never auto-skip a complete
+  phase silently — the user has required visibility on which phases
+  are being reused vs re-run.
 - **AS-IS only through Phase 3; TO-BE allowed from Phase 4 onward.**
   Phases 0–3 must not reference target technologies; the phase
   supervisor's drift checks enforce this. From Phase 4 onward, target
