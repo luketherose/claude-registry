@@ -1,7 +1,7 @@
 {
   "_comment": "Team convention \u2014 not an official Claude Code format. This manifest tracks published capabilities.",
   "version": "1.0",
-  "generated": "2026-04-26",
+  "generated": "2026-04-28",
   "repository": "claude-registry",
   "capabilities": [
     {
@@ -1476,7 +1476,7 @@
         "streamlit"
       ],
       "published": "2026-04-28",
-      "changelog": "0.3.0: bootstrap detects `exports-only-eligible` state (analysis complete but ≥ 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.2.0: add Export Wave (always ON) — produces Accenture-branded PDF (`_exports/01-functional-report.pdf`) via document-creator and PPTX (`_exports/01-functional-deck.pptx`) via presentation-creator after Wave 3 synthesis. Adds explicit overwrite confirmation when exports already exist. 0.1.0: initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/"
+      "changelog": "0.3.0: bootstrap detects `exports-only-eligible` state (analysis complete but \u2265 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.2.0: add Export Wave (always ON) \u2014 produces Accenture-branded PDF (`_exports/01-functional-report.pdf`) via document-creator and PPTX (`_exports/01-functional-deck.pptx`) via presentation-creator after Wave 3 synthesis. Adds explicit overwrite confirmation when exports already exist. 0.1.0: initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/"
     },
     {
       "name": "actor-feature-mapper",
@@ -1510,7 +1510,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of functional-analysis-supervisor (Wave 1). Inventories the UI surface AS-IS: screens, navigation map, component tree. Strong Streamlit awareness — treats each page-script as a screen and widgets as first-class components. Strictly AS-IS.",
+      "description": "Sub-agent of functional-analysis-supervisor (Wave 1). Inventories the UI surface AS-IS: screens, navigation map, component tree. Strong Streamlit awareness \u2014 treats each page-script as a screen and widgets as first-class components. Strictly AS-IS.",
       "file": "beta/ui-surface-analyst.md",
       "dependencies": [],
       "tools": [
@@ -1563,7 +1563,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of functional-analysis-supervisor (Wave 2). Derives use cases, user flows, and Mermaid sequence diagrams from Wave 1 outputs. Streamlit-aware — handles reactive rerun-driven flows that have no explicit routing. Strictly AS-IS.",
+      "description": "Sub-agent of functional-analysis-supervisor (Wave 2). Derives use cases, user flows, and Mermaid sequence diagrams from Wave 1 outputs. Streamlit-aware \u2014 handles reactive rerun-driven flows that have no explicit routing. Strictly AS-IS.",
       "file": "beta/user-flow-analyst.md",
       "dependencies": [],
       "tools": [
@@ -1616,7 +1616,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Optional adversarial sub-agent of functional-analysis-supervisor (Wave 3). Cross-validates the full set of Phase 1 outputs by looking for gaps, contradictions, unverified claims, and AS-IS violations. Does NOT rewrite — only flags findings. Default ON in Streamlit mode, opt-in otherwise.",
+      "description": "Optional adversarial sub-agent of functional-analysis-supervisor (Wave 3). Cross-validates the full set of Phase 1 outputs by looking for gaps, contradictions, unverified claims, and AS-IS violations. Does NOT rewrite \u2014 only flags findings. Default ON in Streamlit mode, opt-in otherwise.",
       "file": "beta/functional-analysis-challenger.md",
       "dependencies": [],
       "tools": [
@@ -1643,7 +1643,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Coordinates the full AS-IS→TO-BE→validation journey: Phase 0 (indexing), Phase 1 (AS-IS functional analysis with PDF+PPTX export), Phase 2 (AS-IS technical analysis with PDF+PPTX export), Phase 3 (AS-IS baseline testing), Phase 4 (TO-BE refactoring — first phase with target tech: Spring Boot + Angular), and Phase 5 (TO-BE testing & equivalence verification — final go-live gate, produces deliverable equivalence report requiring PO sign-off). Strict human-in-the-loop with per-phase recap including execution timings. Bootstrap detects existing phase outputs and asks the user explicitly per phase whether to skip, re-run, or revise — never auto-skip a complete phase silently. For Phases 1 and 2, when the analysis is complete but the Accenture-branded export is missing, offers a fourth choice `regenerate-exports` that runs only the export wave without re-doing the analysis. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check; Phase 5 measures TO-BE against AS-IS oracle.",
+      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Coordinates the full AS-IS\u2192TO-BE\u2192validation journey: Phase 0 (indexing), Phase 1 (AS-IS functional analysis with PDF+PPTX export), Phase 2 (AS-IS technical analysis with PDF+PPTX export), Phase 3 (AS-IS baseline testing), Phase 4 (TO-BE refactoring \u2014 first phase with target tech: Spring Boot + Angular), and Phase 5 (TO-BE testing & equivalence verification \u2014 final go-live gate, produces deliverable equivalence report requiring PO sign-off). Strict human-in-the-loop with per-phase recap including execution timings. Bootstrap detects existing phase outputs and asks the user explicitly per phase whether to skip, re-run, or revise \u2014 never auto-skip a complete phase silently. For Phases 1 and 2, when the analysis is complete but the Accenture-branded export is missing, offers a fourth choice `regenerate-exports` that runs only the export wave without re-doing the analysis. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check; Phase 5 measures TO-BE against AS-IS oracle.",
       "file": "beta/refactoring-supervisor.md",
       "dependencies": [
         "indexing-supervisor",
@@ -1669,7 +1669,7 @@
         "human-in-the-loop"
       ],
       "published": "2026-04-28",
-      "changelog": "2.0.0: MAJOR milestone — workflow now covers the full AS-IS→TO-BE→validation journey (Phases 0–5). Registered Phase 5 (tobe-testing-supervisor) in the phase registry; added Phase 5 schematic; updated bootstrap detection table with row for Phase 5 (output root + PO sign-off state); updated workflow manifest schema with phase-5 entry (test_outputs, po_signoff). Phase 5 is the final go-live gate — produces the deliverable equivalence report requiring PO sign-off. 1.2.0: bootstrap detects `complete-but-exports-missing` sub-state for Phases 1 and 2 (analysis complete but ≥ 1 export file absent on disk) and offers a fourth choice `regenerate-exports` in the per-phase prompt; selecting it dispatches the phase supervisor with `Resume mode: exports-only`, skipping W1/W2/W3 and running only the export wave. The choice is unavailable for Phases 0/3/4 (no PDF/PPTX exports). Default recommendation when offered. 1.1.0: bootstrap now presents a per-phase detection table and asks the user explicitly skip/re-run/revise for every phase that already has outputs (no more silent auto-skip); inconsistent state (manifest=partial/failed/missing) classified separately and recommended for re-run; added --no-resume-prompt opt-in to bypass; updated Phase 1 schematic to include the new export wave. 1.0.0: milestone — workflow now covers full AS-IS→TO-BE journey (Phases 0–4); registered Phase 4 (refactoring-tobe-supervisor) in the phase registry; added Phase 4 schematic; updated bootstrap detection (.refactoring-kb/, backend/, frontend/); inverse drift rule documented from Phase 4 onward. 0.3.0: registered Phase 3 (baseline-testing-supervisor); mandatory execution-timing block in post-phase recap. 0.2.0: registered Phase 2. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
+      "changelog": "2.0.0: MAJOR milestone \u2014 workflow now covers the full AS-IS\u2192TO-BE\u2192validation journey (Phases 0\u20135). Registered Phase 5 (tobe-testing-supervisor) in the phase registry; added Phase 5 schematic; updated bootstrap detection table with row for Phase 5 (output root + PO sign-off state); updated workflow manifest schema with phase-5 entry (test_outputs, po_signoff). Phase 5 is the final go-live gate \u2014 produces the deliverable equivalence report requiring PO sign-off. 1.2.0: bootstrap detects `complete-but-exports-missing` sub-state for Phases 1 and 2 (analysis complete but \u2265 1 export file absent on disk) and offers a fourth choice `regenerate-exports` in the per-phase prompt; selecting it dispatches the phase supervisor with `Resume mode: exports-only`, skipping W1/W2/W3 and running only the export wave. The choice is unavailable for Phases 0/3/4 (no PDF/PPTX exports). Default recommendation when offered. 1.1.0: bootstrap now presents a per-phase detection table and asks the user explicitly skip/re-run/revise for every phase that already has outputs (no more silent auto-skip); inconsistent state (manifest=partial/failed/missing) classified separately and recommended for re-run; added --no-resume-prompt opt-in to bypass; updated Phase 1 schematic to include the new export wave. 1.0.0: milestone \u2014 workflow now covers full AS-IS\u2192TO-BE journey (Phases 0\u20134); registered Phase 4 (refactoring-tobe-supervisor) in the phase registry; added Phase 4 schematic; updated bootstrap detection (.refactoring-kb/, backend/, frontend/); inverse drift rule documented from Phase 4 onward. 0.3.0: registered Phase 3 (baseline-testing-supervisor); mandatory execution-timing block in post-phase recap. 0.2.0: registered Phase 2. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
     },
     {
       "name": "technical-analysis-supervisor",
@@ -1677,7 +1677,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Phase 2 supervisor (opus). Orchestrates 8 Sonnet workers in waves to produce AS-IS technical analysis at docs/analysis/02-technical/, plus Accenture-branded PDF and PPTX exports. Reads .indexing-kb/ (Phase 0) and optionally docs/analysis/01-functional/ (Phase 1). Decides dispatch mode (parallel | batched | sequential) based on KB size and user flag. Detects an `exports-only` resume mode: when the analysis is already complete but one or both exports are missing, offers to regenerate only the missing exports without re-running the W1/W2/W3 workers. Strict human-in-the-loop. Strictly AS-IS — never references target technologies.",
+      "description": "Phase 2 supervisor (opus). Orchestrates 8 Sonnet workers in waves to produce AS-IS technical analysis at docs/analysis/02-technical/, plus Accenture-branded PDF and PPTX exports. Reads .indexing-kb/ (Phase 0) and optionally docs/analysis/01-functional/ (Phase 1). Decides dispatch mode (parallel | batched | sequential) based on KB size and user flag. Detects an `exports-only` resume mode: when the analysis is already complete but one or both exports are missing, offers to regenerate only the missing exports without re-running the W1/W2/W3 workers. Strict human-in-the-loop. Strictly AS-IS \u2014 never references target technologies.",
       "file": "beta/technical-analysis-supervisor.md",
       "dependencies": [
         "code-quality-analyst",
@@ -1712,7 +1712,7 @@
         "streamlit"
       ],
       "published": "2026-04-28",
-      "changelog": "0.2.0: bootstrap detects `exports-only-eligible` state (analysis complete but ≥ 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.1.0: initial beta release: Phase 2 supervisor with 3 waves (8 W1 workers + W2 synthesizer + W3 challenger) and parallel export wave (PDF + PPTX). Adaptive dispatch mode based on repo size."
+      "changelog": "0.2.0: bootstrap detects `exports-only-eligible` state (analysis complete but \u2265 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.1.0: initial beta release: Phase 2 supervisor with 3 waves (8 W1 workers + W2 synthesizer + W3 challenger) and parallel export wave (PDF + PPTX). Adaptive dispatch mode based on repo size."
     },
     {
       "name": "code-quality-analyst",
@@ -1774,7 +1774,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze the external dependency posture of a codebase AS-IS: pinning, deprecations, known vulnerabilities (CVE/GHSA), license posture. Produces a dependency inventory plus an SBOM-lite JSON. Static analysis only — no network calls. Strictly AS-IS.",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze the external dependency posture of a codebase AS-IS: pinning, deprecations, known vulnerabilities (CVE/GHSA), license posture. Produces a dependency inventory plus an SBOM-lite JSON. Static analysis only \u2014 no network calls. Strictly AS-IS.",
       "file": "beta/dependency-security-analyst.md",
       "dependencies": [],
       "tools": [
@@ -1803,7 +1803,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze data flow and data access patterns of a codebase AS-IS: origin → transformation → validation → sink, DB/file/cache/serialization patterns. Mermaid diagrams. Strictly AS-IS.",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze data flow and data access patterns of a codebase AS-IS: origin \u2192 transformation \u2192 validation \u2192 sink, DB/file/cache/serialization patterns. Mermaid diagrams. Strictly AS-IS.",
       "file": "beta/data-access-analyst.md",
       "dependencies": [],
       "tools": [
@@ -1913,7 +1913,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze code-level security posture of a codebase AS-IS: OWASP Top 10 coverage, input validation, sanitization, secrets in code, threat-model surface (STRIDE). Complements dependency-security-analyst (library CVEs) — does not duplicate it. Strictly AS-IS.",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze code-level security posture of a codebase AS-IS: OWASP Top 10 coverage, input validation, sanitization, secrets in code, threat-model surface (STRIDE). Complements dependency-security-analyst (library CVEs) \u2014 does not duplicate it. Strictly AS-IS.",
       "file": "beta/security-analyst.md",
       "dependencies": [],
       "tools": [
@@ -1941,7 +1941,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of technical-analysis-supervisor (Wave 2). Use to consolidate Wave 1 findings into a unified risk register (markdown + JSON + CSV), severity matrix (likelihood × impact), and ordered remediation backlog. Cross-references with Phase 1 features and use cases when available. Discovers no new findings — only consolidates. Strictly AS-IS.",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 2). Use to consolidate Wave 1 findings into a unified risk register (markdown + JSON + CSV), severity matrix (likelihood \u00d7 impact), and ordered remediation backlog. Cross-references with Phase 1 features and use cases when available. Discovers no new findings \u2014 only consolidates. Strictly AS-IS.",
       "file": "beta/risk-synthesizer.md",
       "dependencies": [],
       "tools": [
@@ -1967,7 +1967,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of technical-analysis-supervisor (Wave 3, always ON). Use to perform an adversarial review of all Phase 2 outputs: orphan IDs, contradictions, unverified claims, coverage gaps, AS-IS violations, Streamlit-specific risks. Does NOT rewrite — only flags findings. Strictly AS-IS.",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 3, always ON). Use to perform an adversarial review of all Phase 2 outputs: orphan IDs, contradictions, unverified claims, coverage gaps, AS-IS violations, Streamlit-specific risks. Does NOT rewrite \u2014 only flags findings. Strictly AS-IS.",
       "file": "beta/technical-analysis-challenger.md",
       "dependencies": [],
       "tools": [
@@ -1994,7 +1994,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Phase 3 supervisor (opus). Orchestrates 7 Sonnet workers in 4 waves to produce the AS-IS baseline regression suite at tests/baseline/ (pytest, fixtures, snapshots, benchmarks, optional Postman collection if services exposed) plus the report at docs/analysis/03-baseline/. Reads .indexing-kb/ + Phase 1 + Phase 2. Adaptive execution policy (auto-detects pytest readiness; falls back to write-only). Per-step recaps with execution timings. Failure policy: critical/high escalate; medium/low get xfail with AS-IS bug record. Never modifies AS-IS source code. On invocation, detects existing baseline outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding — never auto-overwrites a complete baseline silently. Strict human-in-the-loop. Strictly AS-IS.",
+      "description": "Phase 3 supervisor (opus). Orchestrates 7 Sonnet workers in 4 waves to produce the AS-IS baseline regression suite at tests/baseline/ (pytest, fixtures, snapshots, benchmarks, optional Postman collection if services exposed) plus the report at docs/analysis/03-baseline/. Reads .indexing-kb/ + Phase 1 + Phase 2. Adaptive execution policy (auto-detects pytest readiness; falls back to write-only). Per-step recaps with execution timings. Failure policy: critical/high escalate; medium/low get xfail with AS-IS bug record. Never modifies AS-IS source code. On invocation, detects existing baseline outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding \u2014 never auto-overwrites a complete baseline silently. Strict human-in-the-loop. Strictly AS-IS.",
       "file": "beta/baseline-testing-supervisor.md",
       "dependencies": [
         "fixture-builder",
@@ -2025,7 +2025,7 @@
         "streamlit"
       ],
       "published": "2026-04-28",
-      "changelog": "0.2.0: bootstrap detects existing baseline outputs (`tests/baseline/` + `docs/analysis/03-baseline/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` because the oracle (snapshots + benchmarks) is precious — re-running resets the equivalence reference for Phase 5; inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 3 supervisor with 4 waves (W0 fixtures + W1 authoring with per-UC fan-out + W2 execution & oracle capture + W3 challenger). Adaptive execution policy. Conditional Postman generation when services are exposed. Mandatory timing recap per step."
+      "changelog": "0.2.0: bootstrap detects existing baseline outputs (`tests/baseline/` + `docs/analysis/03-baseline/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` because the oracle (snapshots + benchmarks) is precious \u2014 re-running resets the equivalence reference for Phase 5; inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 3 supervisor with 4 waves (W0 fixtures + W1 authoring with per-UC fan-out + W2 execution & oracle capture + W3 challenger). Adaptive execution policy. Conditional Postman generation when services are exposed. Mandatory timing recap per step."
     },
     {
       "name": "fixture-builder",
@@ -2060,7 +2060,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of baseline-testing-supervisor (Wave 1, fan-out per UC). Use to write the baseline pytest module for ONE use case from Phase 1: happy + alternative + edge tests with streamlit.testing.v1.AppTest where applicable. Never modifies AS-IS source — bugs found are documented for the runner's failure policy. Strictly AS-IS.",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 1, fan-out per UC). Use to write the baseline pytest module for ONE use case from Phase 1: happy + alternative + edge tests with streamlit.testing.v1.AppTest where applicable. Never modifies AS-IS source \u2014 bugs found are documented for the runner's failure policy. Strictly AS-IS.",
       "file": "beta/usecase-test-writer.md",
       "dependencies": [],
       "tools": [
@@ -2143,7 +2143,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of baseline-testing-supervisor (Wave 1, conditional — only if services exposed). Use to produce a Postman 2.1 collection of the services the AS-IS app exposes: per-endpoint happy + edge requests, auth setup, response assertions, environment file. Captures the AS-IS service-level contract for Phase 5 equivalence verification. Strictly AS-IS.",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 1, conditional \u2014 only if services exposed). Use to produce a Postman 2.1 collection of the services the AS-IS app exposes: per-endpoint happy + edge requests, auth setup, response assertions, environment file. Captures the AS-IS service-level contract for Phase 5 equivalence verification. Strictly AS-IS.",
       "file": "beta/service-collection-builder.md",
       "dependencies": [],
       "tools": [
@@ -2200,7 +2200,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of baseline-testing-supervisor (Wave 3, always ON). Use to perform an adversarial review of Phase 3 outputs: coverage gaps, AS-IS source modifications (forbidden), determinism risks, oracle integrity, severity-mismatch in bug dispositions, Streamlit-specific risks, Postman collection integrity. Does NOT rewrite — only flags findings. Strictly AS-IS.",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 3, always ON). Use to perform an adversarial review of Phase 3 outputs: coverage gaps, AS-IS source modifications (forbidden), determinism risks, oracle integrity, severity-mismatch in bug dispositions, Streamlit-specific risks, Postman collection integrity. Does NOT rewrite \u2014 only flags findings. Strictly AS-IS.",
       "file": "beta/baseline-challenger.md",
       "dependencies": [],
       "tools": [
@@ -2228,7 +2228,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Phase 4 supervisor (opus). FIRST phase with target tech (Spring Boot 3 + Angular). Reads .indexing-kb/ + Phase 1/2/3 outputs and orchestrates 9 Sonnet workers in 6 waves to produce: bounded-context decomposition + ADRs (W1), OpenAPI 3.1 contract (W2), Spring Boot scaffold + JPA + per-UC logic translation + Angular workspace (W3 parallel BE+FE), hardening + observability + security (W4), migration roadmap with strangler fig (W5), adversarial review with AS-IS↔TO-BE traceability (W6 always ON). Strict dependency chain (W1→W2→W3→W4→W5→W6) with three HITL checkpoints. Adaptive verification (mvn compile + ng build best-effort). Code generation scope configurable: scaffold-todo (default) | full | structural. Per-step execution timings. Inverse drift rule: target tech allowed; AS-IS-only leaks forbidden without ADR. On invocation, detects existing TO-BE outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding — never auto-overwrites generated code silently.",
+      "description": "Phase 4 supervisor (opus). FIRST phase with target tech (Spring Boot 3 + Angular). Reads .indexing-kb/ + Phase 1/2/3 outputs and orchestrates 9 Sonnet workers in 6 waves to produce: bounded-context decomposition + ADRs (W1), OpenAPI 3.1 contract (W2), Spring Boot scaffold + JPA + per-UC logic translation + Angular workspace (W3 parallel BE+FE), hardening + observability + security (W4), migration roadmap with strangler fig (W5), adversarial review with AS-IS\u2194TO-BE traceability (W6 always ON). Strict dependency chain (W1\u2192W2\u2192W3\u2192W4\u2192W5\u2192W6) with three HITL checkpoints. Adaptive verification (mvn compile + ng build best-effort). Code generation scope configurable: scaffold-todo (default) | full | structural. Per-step execution timings. Inverse drift rule: target tech allowed; AS-IS-only leaks forbidden without ADR. On invocation, detects existing TO-BE outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding \u2014 never auto-overwrites generated code silently.",
       "file": "beta/refactoring-tobe-supervisor.md",
       "dependencies": [
         "decomposition-architect",
@@ -2266,7 +2266,7 @@
         "strangler-fig"
       ],
       "published": "2026-04-28",
-      "changelog": "0.2.0: bootstrap detects existing TO-BE outputs (`.refactoring-kb/`, `docs/refactoring/`, `backend/`, `frontend/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` (re-running overwrites generated code that may have been hand-edited); inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 4 supervisor with 9 sub-agents in 6 waves; first phase with target tech; strict dependency chain with 3 HITL checkpoints; adaptive verification; configurable code-generation scope; AS-IS↔TO-BE traceability matrix produced by W6 challenger."
+      "changelog": "0.2.0: bootstrap detects existing TO-BE outputs (`.refactoring-kb/`, `docs/refactoring/`, `backend/`, `frontend/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` (re-running overwrites generated code that may have been hand-edited); inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 4 supervisor with 9 sub-agents in 6 waves; first phase with target tech; strict dependency chain with 3 HITL checkpoints; adaptive verification; configurable code-generation scope; AS-IS\u2194TO-BE traceability matrix produced by W6 challenger."
     },
     {
       "name": "decomposition-architect",
@@ -2274,7 +2274,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 1). Use to produce the TO-BE bounded-context decomposition (DDD-style with context map), aggregate design, AS-IS↔TO-BE module mapping, ADR-001 (architecture style: modular monolith vs microservices), and ADR-002 (target stack: Spring Boot version, Java version, Angular version, target DB). Output BLOCKS all subsequent Phase 4 workers. TO-BE design with inverse drift rule.",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 1). Use to produce the TO-BE bounded-context decomposition (DDD-style with context map), aggregate design, AS-IS\u2194TO-BE module mapping, ADR-001 (architecture style: modular monolith vs microservices), and ADR-002 (target stack: Spring Boot version, Java version, Angular version, target DB). Output BLOCKS all subsequent Phase 4 workers. TO-BE design with inverse drift rule.",
       "file": "beta/decomposition-architect.md",
       "dependencies": [],
       "tools": [
@@ -2418,7 +2418,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, frontend track). Use to produce the Angular 17+ workspace with standalone components: core layer (auth/error/correlation-id interceptors, auth/role guards, base services), shared layer (components, pipes, models), one lazy-loaded feature module per bounded context with screens-as-components, OpenAPI typed client (typescript-angular generator), routing, env config. Streamlit-specific translations documented (session_state→signals, st.cache_data→shareReplay, etc.). TO-BE design.",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, frontend track). Use to produce the Angular 17+ workspace with standalone components: core layer (auth/error/correlation-id interceptors, auth/role guards, base services), shared layer (components, pipes, models), one lazy-loaded feature module per bounded context with screens-as-components, OpenAPI typed client (typescript-angular generator), routing, env config. Streamlit-specific translations documented (session_state\u2192signals, st.cache_data\u2192shareReplay, etc.). TO-BE design.",
       "file": "beta/frontend-scaffolder.md",
       "dependencies": [],
       "tools": [
@@ -2478,7 +2478,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 5). Use to produce the migration roadmap: strangler fig plan with per-bounded-context milestones, cutover topology (reverse proxy / API gateway / DNS), rollback plans, go-live criteria (equivalence vs Phase 3, p95 ≤ 110% baseline), AS-IS bug carry-over table, communication plan, Mermaid Gantt + topology diagrams. Stakeholder-facing (TL;DR ≤ 1 page). TO-BE design.",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 5). Use to produce the migration roadmap: strangler fig plan with per-bounded-context milestones, cutover topology (reverse proxy / API gateway / DNS), rollback plans, go-live criteria (equivalence vs Phase 3, p95 \u2264 110% baseline), AS-IS bug carry-over table, communication plan, Mermaid Gantt + topology diagrams. Stakeholder-facing (TL;DR \u2264 1 page). TO-BE design.",
       "file": "beta/migration-roadmap-builder.md",
       "dependencies": [],
       "tools": [
@@ -2506,7 +2506,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 6, always ON). Use to produce the AS-IS↔TO-BE traceability matrix and perform 8 adversarial checks on Phase 4 outputs: coverage gaps (orphan UCs / orphan TO-BE files), OpenAPI↔code drift, ADR completeness, AS-IS bug carry-over consistency, performance hypothesis sanity, security regression, equivalence claims integrity, AS-IS-only leak in TO-BE (inverse drift), AS-IS source modification detection. Does NOT rewrite — only flags findings. TO-BE phase.",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 6, always ON). Use to produce the AS-IS\u2194TO-BE traceability matrix and perform 8 adversarial checks on Phase 4 outputs: coverage gaps (orphan UCs / orphan TO-BE files), OpenAPI\u2194code drift, ADR completeness, AS-IS bug carry-over consistency, performance hypothesis sanity, security regression, equivalence claims integrity, AS-IS-only leak in TO-BE (inverse drift), AS-IS source modification detection. Does NOT rewrite \u2014 only flags findings. TO-BE phase.",
       "file": "beta/phase4-challenger.md",
       "dependencies": [],
       "tools": [
@@ -2535,7 +2535,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Phase 5 supervisor (opus). Validates the TO-BE codebase against the AS-IS baseline. Reads tests/baseline/ (Phase 3 oracle), docs/analysis/01-functional/ (Phase 1 UCs), docs/refactoring/api/openapi.yaml (Phase 4 contract), backend/ + frontend/ (Phase 4 codebase). Orchestrates 8 Sonnet workers in 5 waves: equivalence test authoring per UC, backend tests (JUnit 5 + Mockito + Testcontainers + Spring Cloud Contract), frontend tests (Jest + Angular Testing Library + Playwright E2E), security tests (OWASP Top 10), performance comparison (p95 ≤ +10% gate), execution & oracle capture, equivalence synthesis, challenger. Adaptive execution policy. Failure policy: critical/high regressions escalate; medium/low go to TBUG registry with xfail. AS-IS and TO-BE source code remain read-only. On invocation, detects existing Phase 5 outputs and asks the user explicitly whether to skip, re-run, or revise. Final go-live gate — produces the deliverable equivalence report requiring PO sign-off.",
+      "description": "Phase 5 supervisor (opus). Validates the TO-BE codebase against the AS-IS baseline. Reads tests/baseline/ (Phase 3 oracle), docs/analysis/01-functional/ (Phase 1 UCs), docs/refactoring/api/openapi.yaml (Phase 4 contract), backend/ + frontend/ (Phase 4 codebase). Orchestrates 8 Sonnet workers in 5 waves: equivalence test authoring per UC, backend tests (JUnit 5 + Mockito + Testcontainers + Spring Cloud Contract), frontend tests (Jest + Angular Testing Library + Playwright E2E), security tests (OWASP Top 10), performance comparison (p95 \u2264 +10% gate), execution & oracle capture, equivalence synthesis, challenger. Adaptive execution policy. Failure policy: critical/high regressions escalate; medium/low go to TBUG registry with xfail. AS-IS and TO-BE source code remain read-only. On invocation, detects existing Phase 5 outputs and asks the user explicitly whether to skip, re-run, or revise. Final go-live gate \u2014 produces the deliverable equivalence report requiring PO sign-off.",
       "file": "beta/tobe-testing-supervisor.md",
       "dependencies": [
         "equivalence-test-writer",
@@ -2602,7 +2602,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Produces the backend TO-BE test suite for a Spring Boot 3 codebase: unit tests (JUnit 5 + Mockito), integration tests (Testcontainers), and contract tests (Spring Cloud Contract — verifies vs OpenAPI 3.1). Organised per bounded context. Targets > 80% line coverage and > 70% branch coverage. Never modifies production code. Anchors expected behaviour to Phase 1 UCs and Phase 3 baseline oracle.",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Produces the backend TO-BE test suite for a Spring Boot 3 codebase: unit tests (JUnit 5 + Mockito), integration tests (Testcontainers), and contract tests (Spring Cloud Contract \u2014 verifies vs OpenAPI 3.1). Organised per bounded context. Targets > 80% line coverage and > 70% branch coverage. Never modifies production code. Anchors expected behaviour to Phase 1 UCs and Phase 3 baseline oracle.",
       "file": "beta/backend-test-writer.md",
       "dependencies": [],
       "tools": [
@@ -2632,7 +2632,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Produces the frontend TO-BE test suite for an Angular 17+ codebase: component tests (Jest + Angular Testing Library) and E2E tests (Playwright). Component tests organised per feature module. E2E specs derived from Phase 1 user-flows. Targets > 80% line coverage. Never modifies production code. Equivalence is at the user-flow level, not pixel level (Streamlit→Angular layouts naturally diverge).",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Produces the frontend TO-BE test suite for an Angular 17+ codebase: component tests (Jest + Angular Testing Library) and E2E tests (Playwright). Component tests organised per feature module. E2E specs derived from Phase 1 user-flows. Targets > 80% line coverage. Never modifies production code. Equivalence is at the user-flow level, not pixel level (Streamlit\u2192Angular layouts naturally diverge).",
       "file": "beta/frontend-test-writer.md",
       "dependencies": [],
       "tools": [
@@ -2721,7 +2721,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of tobe-testing-supervisor (Wave 3, sequential). Executes the TO-BE test suites authored in Wave 1 and the load scenarios from Wave 2 (when execute_policy permits). Captures JaCoCo coverage, Spring Cloud Contract verifier results, Playwright traces, k6/Gatling JSON. Classifies failures: critical/high → escalate (test stays failing); medium/low → xfail with TBUG registry entry. The only Phase 5 worker permitted to add @Disabled / xfail / test.skip markers. Never modifies production code or re-authors tests.",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 3, sequential). Executes the TO-BE test suites authored in Wave 1 and the load scenarios from Wave 2 (when execute_policy permits). Captures JaCoCo coverage, Spring Cloud Contract verifier results, Playwright traces, k6/Gatling JSON. Classifies failures: critical/high \u2192 escalate (test stays failing); medium/low \u2192 xfail with TBUG registry entry. The only Phase 5 worker permitted to add @Disabled / xfail / test.skip markers. Never modifies production code or re-authors tests.",
       "file": "beta/tobe-test-runner.md",
       "dependencies": [],
       "tools": [
@@ -2751,7 +2751,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of tobe-testing-supervisor (Wave 4, sequential). Reads all Phase 5 outputs (equivalence, backend, frontend, contract tests, performance comparison, security findings, TBUG registry) plus Phase 1 UC list and produces the consolidated 01-equivalence-report.md — the deliverable signed by the Product Owner. Per UC verdict: equivalent | accepted-difference | regression-blocking | regression-accepted | not-tested-with-reason. Quality gate with 8 items. Discovers no new findings; only consolidates and classifies. Also writes README.md (Phase 5 entry point). Never modifies test or production code.",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 4, sequential). Reads all Phase 5 outputs (equivalence, backend, frontend, contract tests, performance comparison, security findings, TBUG registry) plus Phase 1 UC list and produces the consolidated 01-equivalence-report.md \u2014 the deliverable signed by the Product Owner. Per UC verdict: equivalent | accepted-difference | regression-blocking | regression-accepted | not-tested-with-reason. Quality gate with 8 items. Discovers no new findings; only consolidates and classifies. Also writes README.md (Phase 5 entry point). Never modifies test or production code.",
       "file": "beta/equivalence-synthesizer.md",
       "dependencies": [],
       "tools": [
@@ -2780,7 +2780,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of tobe-testing-supervisor (Wave 5, always ON). Adversarial reviewer: 8 cross-cutting checks — UC coverage gaps, OpenAPI↔TO-BE drift, AS-IS source modifications (forbidden), TO-BE source modifications in Phase 5 (forbidden), mocked-when-shouldn't, equivalence claim integrity, AS-IS-bug-carry-over consistency, PO sign-off completeness, performance gate compliance. Produces _meta/challenger-report.md with CHL-NN entries; appends to 14-unresolved-questions.md. Flags; does NOT rewrite tests or reports.",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 5, always ON). Adversarial reviewer: 8 cross-cutting checks \u2014 UC coverage gaps, OpenAPI\u2194TO-BE drift, AS-IS source modifications (forbidden), TO-BE source modifications in Phase 5 (forbidden), mocked-when-shouldn't, equivalence claim integrity, AS-IS-bug-carry-over consistency, PO sign-off completeness, performance gate compliance. Produces _meta/challenger-report.md with CHL-NN entries; appends to 14-unresolved-questions.md. Flags; does NOT rewrite tests or reports.",
       "file": "beta/tobe-testing-challenger.md",
       "dependencies": [],
       "tools": [
@@ -2801,6 +2801,35 @@
       ],
       "published": "2026-04-28",
       "changelog": "Initial beta release"
+    },
+    {
+      "name": "wiki-writer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Authors GitHub wikis organized around the Diataxis framework (Tutorials, How-to, Reference, Explanation). Reads the codebase, README, CHANGELOG, ADRs, and existing docs to produce Home/_Sidebar/_Footer plus topic pages as Markdown files in a local wiki/ directory ready for review via PR before pushing to the wiki repository. Never auto-pushes \u2014 the wiki is a public-facing artifact and pushes require explicit user authorization. Adapts tone and depth to audience (end-user, contributor, operator, integrator).",
+      "file": "beta/wiki-writer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "Write",
+        "Edit",
+        "WebFetch"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "documentation",
+        "wiki",
+        "github",
+        "diataxis",
+        "technical-writing"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial release"
     }
   ]
 }

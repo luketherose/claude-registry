@@ -73,7 +73,7 @@ claude-registry/
 
 ## Available capabilities
 
-### Agents (58)
+### Agents (59)
 
 | Name | Tier | Description |
 |------|------|-------------|
@@ -143,6 +143,7 @@ claude-registry/
 | `debugger` | beta | Bug diagnosis from stack traces, logs, and code |
 | `api-designer` | beta | REST API design and review, OpenAPI specs |
 | `documentation-writer` | beta | READMEs, runbooks, architectural guides |
+| `wiki-writer` | beta | GitHub wikis organized around the Diataxis framework (Tutorials, How-to, Reference, Explanation); writes wiki/*.md for PR review, never auto-pushes |
 | `presentation-creator` | beta | Accenture-branded slides (.pptx) from project documents |
 | `document-creator` | beta | Accenture-branded documents (PDF/DOCX) from project documents |
 
