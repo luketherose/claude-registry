@@ -6,6 +6,14 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 ### Added
+- **Functional Analysis pipeline (6 new agents, beta)** — supervisor pattern for **Phase 1 AS-IS Functional Analysis** of a refactoring/migration workflow. Reads the knowledge base produced by Phase 0 indexing (`.indexing-kb/`) and produces a complete functional understanding at `docs/analysis/01-functional/`. Strictly AS-IS — never references target technologies. Generic and reusable across migration scenarios; Streamlit-aware where applicable:
+  - `functional-analysis-supervisor@0.1.0` — opus, single entrypoint, dispatches 5 sub-agents in 3 waves (W1 discovery / W2 behavior / W3 synthesis), produces traceability matrix + unresolved questions, escalates to user on ambiguity, default Streamlit-mode adjustments
+  - `actor-feature-mapper@0.1.0` — sonnet (W1), actors + features + Actor×Feature matrix (tightly coupled because who-can-do-what is one concept)
+  - `ui-surface-analyst@0.1.0` — sonnet (W1), screens + navigation graph + component tree, Streamlit-aware (page-as-screen, widgets-as-components, reactive transitions)
+  - `io-catalog-analyst@0.1.0` — sonnet (W1), inputs + outputs + transformation matrix (functional perspective, not infrastructure)
+  - `user-flow-analyst@0.1.0` — sonnet (W2), use cases + user flows + Mermaid sequence diagrams with reruns made explicit
+  - `implicit-logic-analyst@0.1.0` — sonnet (W2), hidden validation, state machines, callback chains, magic numbers, silent fallbacks; complements (does not duplicate) `business-logic-analyst` from Phase 0
+  - `functional-analysis-challenger@0.1.0` — sonnet (W3, opt-in; default ON in Streamlit mode), adversarial review for gaps, contradictions, unverified claims, AS-IS violations; flags but does not rewrite
 - `examples/developer-java-spring-example.md` — 3 scenarios: new CRUD endpoint, N+1 fix, code review against standards
 - `examples/functional-analyst-example.md` — 3 scenarios: requirements reconstruction, acceptance criteria, CRUD matrix
 - `evals/developer-java-spring-eval.md` — 5 evals: CRUD happy path, N+1 fix, code review, Spring Security baseline, refusal of insecure shortcut

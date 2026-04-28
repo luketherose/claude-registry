@@ -1440,6 +1440,200 @@
       ],
       "published": "2026-04-26",
       "changelog": "Initial beta release"
+    },
+    {
+      "name": "functional-analysis-supervisor",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Single entrypoint for Phase 1 (AS-IS Functional Analysis) of a refactoring/migration workflow. Reads the knowledge base at .indexing-kb/ produced by Phase 0 indexing and orchestrates Sonnet sub-agents in 3 waves to produce a complete functional understanding in docs/analysis/01-functional/. Stack-aware (Streamlit/generic), strictly AS-IS (no target-tech references), generic and reusable across migration scenarios.",
+      "file": "beta/functional-analysis-supervisor.md",
+      "dependencies": [
+        "actor-feature-mapper",
+        "ui-surface-analyst",
+        "io-catalog-analyst",
+        "user-flow-analyst",
+        "implicit-logic-analyst",
+        "functional-analysis-challenger"
+      ],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Agent"
+      ],
+      "model": "opus",
+      "tags": [
+        "functional-analysis",
+        "as-is",
+        "supervisor",
+        "phase-1",
+        "migration",
+        "refactoring",
+        "streamlit"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/"
+    },
+    {
+      "name": "actor-feature-mapper",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of functional-analysis-supervisor (Wave 1). Extracts actors, roles, personas, and the full feature map of an application AS-IS from the .indexing-kb/ knowledge base. Couples actor and feature analysis because who-can-do-what is one concept. Strictly AS-IS.",
+      "file": "beta/actor-feature-mapper.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "functional-analysis",
+        "sub-agent",
+        "actors",
+        "features",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "ui-surface-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of functional-analysis-supervisor (Wave 1). Inventories the UI surface AS-IS: screens, navigation map, component tree. Strong Streamlit awareness — treats each page-script as a screen and widgets as first-class components. Strictly AS-IS.",
+      "file": "beta/ui-surface-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "functional-analysis",
+        "sub-agent",
+        "ui",
+        "screens",
+        "streamlit",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "io-catalog-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of functional-analysis-supervisor (Wave 1). Inventories all functional inputs, outputs, and the transformation matrix of an application AS-IS. Functional perspective (user-perceived I/O), not infrastructure perspective. Strictly AS-IS.",
+      "file": "beta/io-catalog-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "functional-analysis",
+        "sub-agent",
+        "io",
+        "transformations",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "user-flow-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of functional-analysis-supervisor (Wave 2). Derives use cases, user flows, and Mermaid sequence diagrams from Wave 1 outputs. Streamlit-aware — handles reactive rerun-driven flows that have no explicit routing. Strictly AS-IS.",
+      "file": "beta/user-flow-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "functional-analysis",
+        "sub-agent",
+        "use-cases",
+        "user-flows",
+        "sequence-diagrams",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "implicit-logic-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of functional-analysis-supervisor (Wave 2). Extracts IMPLICIT business and validation logic embedded in widget parameters, conditional rendering, state-driven branches, callback chains, and magic numbers. Highest value in Streamlit codebases. Complements business-logic-analyst (which captures explicit rules). Strictly AS-IS.",
+      "file": "beta/implicit-logic-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "functional-analysis",
+        "sub-agent",
+        "implicit-logic",
+        "streamlit",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "functional-analysis-challenger",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Optional adversarial sub-agent of functional-analysis-supervisor (Wave 3). Cross-validates the full set of Phase 1 outputs by looking for gaps, contradictions, unverified claims, and AS-IS violations. Does NOT rewrite — only flags findings. Default ON in Streamlit mode, opt-in otherwise.",
+      "file": "beta/functional-analysis-challenger.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "functional-analysis",
+        "sub-agent",
+        "review",
+        "challenger",
+        "adversarial",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
     }
   ]
 }
