@@ -107,7 +107,7 @@ The `setup-capabilities.sh` script installs them automatically as dependencies.
 | `testing-standards` | developer-java-spring, test-writer, code-reviewer, developer-python | Principles, scenario taxonomy, naming, JUnit 5 / pytest / Jest templates |
 | `rest-api-standards` | developer-java-spring, api-designer, code-reviewer | Resource modelling, HTTP methods, status codes, RFC 7807, OpenAPI 3.1 |
 | `accenture-branding` | presentation-creator, document-creator | Colour palette, python-pptx constants, CSS PDF template, typography |
-| `functional-analyst` | developer-frontend, functional-analyst | Functional behaviour reconstruction, feature lists, user flows, business rules |
+| `functional-reconstruction` | developer-frontend, functional-analyst (agent) | Functional behaviour reconstruction, feature lists, user flows, business rules |
 | + 36 frontend and backend skills | developer-frontend | Angular, React, Vue, Qwik, Vanilla, Python, Java, database, refactoring, orchestrators |
 
 ---
