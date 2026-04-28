@@ -11,10 +11,15 @@ description: >
   extension to later phases. Strict human-in-the-loop: presents a
   schematic of the upcoming phase's parallelization before starting it,
   recaps the completed phase with per-step execution timings, and waits
-  for user confirmation between every phase. AS-IS only through Phase 3;
-  TO-BE allowed from Phase 4 onward (with inverse drift check forbidding
-  AS-IS-only leaks in TO-BE design). Generic across stacks; Streamlit-
-  aware when applicable.
+  for user confirmation between every phase. Bootstrap detects existing
+  phase outputs and asks the user explicitly per phase whether to skip,
+  re-run, or revise — never auto-skip a complete phase silently. For
+  Phases 1 and 2, when the analysis is complete but the Accenture-branded
+  PDF/PPTX export is missing, offers a fourth choice `regenerate-exports`
+  that runs only the export wave without re-doing the analysis. AS-IS
+  only through Phase 3; TO-BE allowed from Phase 4 onward (with inverse
+  drift check forbidding AS-IS-only leaks in TO-BE design). Generic
+  across stacks; Streamlit-aware when applicable.
 tools: Read, Glob, Bash, Agent
 model: opus
 color: orange
@@ -495,6 +500,20 @@ Before the first delegated phase:
    `partial`, `failed`, `in-progress`, or is missing/unreadable: classify
    as `inconsistent` (NOT a skip candidate) and surface this in step 4.
 
+   **Sub-state — exports-missing (Phases 1 and 2 only)**. For phases 1
+   and 2, additionally check whether the Accenture-branded exports are
+   present on disk:
+   - Phase 1: `docs/analysis/01-functional/_exports/01-functional-report.pdf`
+     AND `docs/analysis/01-functional/_exports/01-functional-deck.pptx`
+   - Phase 2: `docs/analysis/02-technical/_exports/02-technical-report.pdf`
+     AND `docs/analysis/02-technical/_exports/02-technical-deck.pptx`
+
+   If the manifest reports `complete` AND **at least one** of the two
+   export files is missing on disk, mark the phase as
+   `complete-but-exports-missing`. List which file(s) are missing in
+   the metadata column. This sub-state unlocks the new
+   `regenerate-exports` option in step 5.
+
 3. Read or create `<repo>/docs/refactoring/workflow-manifest.json`.
 
 4. **Present the detected state to the user as a table**, one row per
@@ -503,20 +522,21 @@ Before the first delegated phase:
    ```
    === Refactoring workflow — detected state ===
 
-   Phase | Status     | Detected                    | Recommendation
-   ------|------------|-----------------------------|---------------------
-     0   | complete   | .indexing-kb/ + manifest OK | skip (run if you want a refresh)
-     1   | complete   | …01-functional/ + PDF+PPTX  | skip (run if you want a refresh)
-     2   | partial    | …02-technical/ — manifest=partial | re-run recommended
-     3   | absent     | (none)                      | run (this is the next phase)
-     4   | absent     | (none)                      | run after Phase 3
+   Phase | Status                        | Detected                                  | Recommendation
+   ------|-------------------------------|-------------------------------------------|---------------------
+     0   | complete                      | .indexing-kb/ + manifest OK               | skip (run if you want a refresh)
+     1   | complete-but-exports-missing  | …01-functional/ — PDF present, PPTX missing | regenerate-exports
+     2   | partial                       | …02-technical/ — manifest=partial         | re-run recommended
+     3   | absent                        | (none)                                    | run (this is the next phase)
+     4   | absent                        | (none)                                    | run after Phase 3
    ```
 
    Recommendations:
-   - `complete`        → recommend `skip`
-   - `inconsistent`    → recommend `re-run` (do not auto-resume from broken state)
-   - `absent`          → recommend `run`
-   - first incomplete  → marked as the **next phase** in the table
+   - `complete`                       → recommend `skip`
+   - `complete-but-exports-missing`   → recommend `regenerate-exports` (Phases 1 and 2 only)
+   - `inconsistent`                   → recommend `re-run` (do not auto-resume from broken state)
+   - `absent`                         → recommend `run`
+   - first incomplete                 → marked as the **next phase** in the table
 
 5. **Ask explicitly, per phase that is not `absent`**, what to do.
    This is the new HITL prompt the user requested. Do not proceed with
@@ -532,9 +552,24 @@ Before the first delegated phase:
        [re-run]  overwrite (you'll get an overwrite confirmation from the phase supervisor)
        [revise]  inspect a specific section together first
 
-   Phase 1 (functional-analysis) is COMPLETE in this repo.
+   Phase 1 (functional-analysis) is COMPLETE BUT EXPORTS ARE MISSING in this repo.
+     Missing: <list of missing export files>
+     What should I do?
+       [regenerate-exports]  dispatch functional-analysis-supervisor in
+                              `exports-only` resume mode — runs ONLY the
+                              export wave (document-creator + presentation-creator),
+                              reusing the existing analysis. Fast, no W1/W2/W3
+                              re-run.
+       [skip]                keep existing analysis, accept that the export(s)
+                              are missing
+       [re-run]               re-run the full pipeline from W1 (overwrites the
+                              existing analysis)
+       [revise]               inspect together first
+
+   Phase 2 (technical-analysis) is COMPLETE in this repo.
      What should I do?
        [skip] / [re-run] / [revise]
+       (also [regenerate-exports] if exports are missing)
 
    …repeat for every phase whose status is complete or inconsistent…
 
@@ -545,14 +580,25 @@ Before the first delegated phase:
 
    ```
 
+   The `regenerate-exports` choice is offered ONLY for phases 1 and 2,
+   and ONLY when the phase is in sub-state `complete-but-exports-missing`.
+   For all other phases / states, the choices remain skip / re-run / revise
+   (or run / defer for the next phase).
+
    Default deny: do not proceed without an explicit per-phase answer.
-   The user may answer all at once ("skip 0, skip 1, re-run 2, run 3,
-   defer 4"), or one at a time. Echo back the consolidated plan before
-   moving on.
+   The user may answer all at once ("skip 0, regenerate-exports 1, skip 2,
+   run 3, defer 4"), or one at a time. Echo back the consolidated plan
+   before moving on.
 
 6. **Determine the effective phase plan** from the user's answers:
    - phases marked `skip` → not dispatched; their outputs are assumed
      valid. They count as `complete` in the workflow manifest.
+   - phases marked `regenerate-exports` (Phases 1 and 2 only) →
+     dispatched with the option `resume_mode: exports-only` in the
+     prompt. The phase supervisor will detect this, skip its W1/W2/W3
+     waves, and dispatch ONLY the export wave for the missing file(s).
+     Existing analysis under `docs/analysis/0N-*` is treated as the
+     source of truth and is not modified. Faster than `re-run`.
    - phases marked `re-run` → dispatched in order; the phase supervisor
      handles overwrite confirmation for its own outputs (`docs/`,
      `tests/`, `backend/`, `frontend/`, `_exports/`).
@@ -637,12 +683,17 @@ You are <supervisor-name>, invoked by refactoring-supervisor.
 Repo root:        <abs-path>
 Output root:      <as defined in your standard contract>
 Mode:             <fresh | resume>
+Resume mode:      <fresh | resume-incomplete | exports-only | full-rerun>
 User options:     <e.g., "challenger ON" for functional-analysis>
 
-Run your standard pipeline. You retain full authority for your own
-human-in-the-loop checkpoints; the workflow supervisor will not
-override them. Report back when you have completed your final report
-and the manifest is updated.
+Run your standard pipeline. If `Resume mode: exports-only` is set
+(only valid for functional-analysis-supervisor and technical-analysis-
+supervisor), skip your W1/W2/W3 waves and run ONLY the export wave
+for the missing file(s). The workflow supervisor has already verified
+the existing analysis is `complete`. You retain full authority for
+your own human-in-the-loop checkpoints; the workflow supervisor will
+not override them. Report back when you have completed your final
+report and the manifest is updated.
 ```
 
 Pass paths and options, not contents. The phase supervisor reads from
@@ -765,8 +816,11 @@ If "yes": move to Step A for Phase N+1.
 | User asks for Phase N+1 with no implementation | Refuse; reiterate which phases are supported |
 | Existing complete output detected at bootstrap | Show in detection table; **ask user explicitly per phase**: skip / re-run / revise. Do not auto-skip silently. |
 | Existing output detected but manifest is partial / failed / missing | Classify as `inconsistent`; recommend `re-run`; never auto-resume from broken state |
+| Phase 1 or 2 complete but ≥ 1 export file missing | Classify as `complete-but-exports-missing`; recommend `regenerate-exports`; offer it as a fourth choice in the per-phase prompt |
 | User answers `skip` for a phase at bootstrap | Treat the phase as `complete` for downstream dependencies; do not dispatch its supervisor |
+| User answers `regenerate-exports` for Phase 1 or 2 | Dispatch the phase supervisor with `Resume mode: exports-only` — it will skip W1/W2/W3 and run only the export wave for the missing file(s) |
 | User answers `re-run` for a phase at bootstrap | Dispatch normally; the phase supervisor handles its own overwrite confirmation |
+| User selects `regenerate-exports` for Phase 0, 3, or 4 | Refuse: this option is only available for Phase 1 (functional analysis) and Phase 2 (technical analysis), the only phases that produce PDF/PPTX exports |
 | Conflict between manifest and disk state | Trust disk; flag inconsistency in recap |
 
 ---
@@ -795,9 +849,10 @@ If "yes": move to Step A for Phase N+1.
   said "go ahead, do everything".
 - **Per-phase resume prompt is non-negotiable** when prior phase
   outputs are detected. Show the detection table and ask explicitly
-  for each phase (skip / re-run / revise). Never auto-skip a complete
-  phase silently — the user has required visibility on which phases
-  are being reused vs re-run.
+  for each phase (skip / re-run / revise — plus `regenerate-exports`
+  for Phases 1 and 2 when in sub-state `complete-but-exports-missing`).
+  Never auto-skip a complete phase silently — the user has required
+  visibility on which phases are being reused vs re-run.
 - **AS-IS only through Phase 3; TO-BE allowed from Phase 4 onward.**
   Phases 0–3 must not reference target technologies; the phase
   supervisor's drift checks enforce this. From Phase 4 onward, target

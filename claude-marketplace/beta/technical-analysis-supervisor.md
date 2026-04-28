@@ -6,10 +6,13 @@ description: >
   and `docs/analysis/01-functional/` (Phase 1, optional but recommended) and
   orchestrates 8 Sonnet sub-agents in waves to produce a complete technical
   understanding of the application AS-IS in `docs/analysis/02-technical/`,
-  plus an Accenture-branded PDF and PPTX export. Strictly AS-IS — never
-  references target technologies. Stack-aware (Streamlit-aware when
-  applicable). The supervisor decides whether to run workers in parallel,
-  batched, or sequential mode based on KB size and user flag.
+  plus an Accenture-branded PDF and PPTX export. Detects an `exports-only`
+  resume mode: if the analysis is already complete but one or both export
+  files are missing, offers to regenerate only the missing exports without
+  re-running the full pipeline. Strictly AS-IS — never references target
+  technologies. Stack-aware (Streamlit-aware when applicable). The supervisor
+  decides whether to run workers in parallel, batched, or sequential mode
+  based on KB size and user flag.
 tools: Read, Glob, Bash, Agent
 model: opus
 color: yellow
@@ -267,26 +270,71 @@ Do not dispatch without explicit confirmation.
    - Else → flag in recap; risk traceability to features will be partial.
 5. Read `docs/analysis/02-technical/_meta/manifest.json` if it exists
    (resume support).
-6. Check exports:
+6. **Detect resume mode**. Inspect what is on disk and pick one of:
+
+   | Condition | Resume mode |
+   |---|---|
+   | No `docs/analysis/02-technical/` | `fresh` |
+   | Manifest reports `partial` / `failed` / missing while output dir exists | `resume-incomplete` |
+   | Manifest reports `complete` AND **both** `_exports/02-technical-report.pdf` AND `_exports/02-technical-deck.pptx` exist | `complete` (default = nothing to do; ask user whether to refresh) |
+   | Manifest reports `complete` AND **at least one of** the export files is missing | `exports-only-eligible` — offer the user the option to dispatch ONLY the export wave |
+   | Manifest reports `complete` AND user explicitly asked for a refresh | `full-rerun` |
+
+   When `exports-only-eligible` triggers, ask the user verbatim:
+
+   ```
+   The technical analysis at docs/analysis/02-technical/ is complete,
+   but the following Accenture-branded export(s) are missing:
+     - <list missing files>
+
+   What should I do?
+     [exports-only]  regenerate only the missing export(s), reusing the
+                     existing analysis and risk register. Fast — does
+                     not re-run any of the W1/W2/W3 workers.
+     [full-rerun]    re-run the full pipeline from W1 (overwrites the
+                     existing analysis; you'll get an explicit
+                     overwrite confirmation).
+     [skip]          do nothing, leave the analysis as-is without the
+                     missing export(s).
+   ```
+
+   Default recommendation: `exports-only`. Do not proceed without an
+   explicit answer.
+7. Check exports (only if resume mode is NOT `exports-only`):
    - If `_exports/02-technical-report.pdf` or `_exports/02-technical-deck.pptx`
      already exist → **ask the user explicitly** whether to overwrite.
      Do not silently overwrite. Choices: `overwrite`, `keep` (skip
      export), `rename` (append timestamp suffix).
-7. Compute **dispatch mode** per the decision tree above.
-8. Write `00-context.md` with:
+   In `exports-only` mode this step is skipped — the export wave will
+   regenerate only the missing file(s); existing files are kept untouched.
+8. Compute **dispatch mode** per the decision tree above (skipped in
+   `exports-only` mode — no W1 workers will run).
+9. Write `00-context.md` with:
    - 1-paragraph system summary derived from `01-overview.md`
    - Scope: what is in / out of analysis
    - Stack mode (Streamlit / generic)
    - Phase 1 availability
-   - Dispatch mode + rationale
+   - Resume mode
+   - Dispatch mode + rationale (or "n/a — exports-only")
    - Export overwrite decision
-9. **Present the plan to the user** (use the Wave 1 dispatch plan
-   template from the previous section). Wait for confirmation.
+   In `exports-only` mode, do NOT overwrite an existing `00-context.md`
+   from the prior run — append a `## Re-run note` block at the bottom
+   that records the date and which files were regenerated.
+10. **Present the plan to the user** (use the Wave 1 dispatch plan
+    template from the previous section, or — in `exports-only` mode —
+    a short brief listing only the export(s) to regenerate). Wait for
+    confirmation.
 
 Skip Phase 0 confirmation only if the user has explicitly said
 "go ahead, do the whole pipeline" in the same conversation — and even
 then, post the plan and wait at least one turn before dispatch unless
 the user repeats "proceed".
+
+> **Resume-mode shortcut**: if bootstrap chose `exports-only`, skip
+> Waves 1, 1.5, 2, and 3 entirely. Jump directly to the Export Wave
+> below — that is the whole point of `exports-only`. The existing
+> analysis in `docs/analysis/02-technical/` is treated as the source
+> of truth and is not modified.
 
 ### Wave 1 — Discovery (mode-dependent dispatch of 8 workers)
 
@@ -359,6 +407,12 @@ tree as source. Audience: `document-creator` produces a technical PDF
 for senior architects; `presentation-creator` produces an executive deck
 for steering committee (top-10 risks, dependency health, performance
 hotspots, security findings).
+
+In `exports-only` resume mode, dispatch ONLY the generators whose
+output file is missing on disk. Existing export files are kept
+untouched. If both files exist, the supervisor should not have
+reached this wave in `exports-only` mode (bootstrap step 6 would
+have classified the run as `complete`, not `exports-only-eligible`).
 
 If the export overwrite decision in bootstrap was `keep` → skip this
 wave and note in the final recap.
@@ -440,6 +494,7 @@ Stop and ask before proceeding when:
 | Challenger reports ≥ 1 blocking contradiction | Stop, do not declare Phase 2 complete; escalate |
 | `.indexing-kb/` partial coverage | Run analysis but mark every output `status: partial` and inherit gaps |
 | Resume requested | Read manifest, skip waves with `status: complete`, ask if refresh wanted |
+| Analysis complete + ≥ 1 export missing | Offer `exports-only` mode (default recommendation); otherwise full-rerun or skip |
 | > 100 vulnerabilities reported | Ask user for prioritization; default to top-N by CVSS |
 | Export already exists | Ask: overwrite / keep / rename (with timestamp) |
 | Document-creator or presentation-creator unavailable | Skip export, flag in recap; do not block Phase 2 |
@@ -559,6 +614,7 @@ After every wave, update `docs/analysis/02-technical/_meta/manifest.json`:
   "dispatch_mode": "parallel | batched | sequential",
   "challenger_enabled": true,
   "exports_policy": "overwrite | keep | rename",
+  "resume_mode": "fresh | resume-incomplete | exports-only | full-rerun",
   "scope_filter": null,
   "runs": [
     {
