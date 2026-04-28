@@ -1639,18 +1639,19 @@
     },
     {
       "name": "refactoring-supervisor",
-      "version": "1.2.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Coordinates Phase 0 (indexing), Phase 1 (AS-IS functional analysis with PDF+PPTX export), Phase 2 (AS-IS technical analysis with PDF+PPTX export), Phase 3 (AS-IS baseline testing), and Phase 4 (TO-BE refactoring — first phase with target tech: Spring Boot + Angular). Strict human-in-the-loop with per-phase recap including execution timings. Bootstrap detects existing phase outputs and asks the user explicitly per phase whether to skip, re-run, or revise — never auto-skip a complete phase silently. For Phases 1 and 2, when the analysis is complete but the Accenture-branded export is missing, offers a fourth choice `regenerate-exports` that runs only the export wave without re-doing the analysis. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check.",
+      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Coordinates the full AS-IS→TO-BE→validation journey: Phase 0 (indexing), Phase 1 (AS-IS functional analysis with PDF+PPTX export), Phase 2 (AS-IS technical analysis with PDF+PPTX export), Phase 3 (AS-IS baseline testing), Phase 4 (TO-BE refactoring — first phase with target tech: Spring Boot + Angular), and Phase 5 (TO-BE testing & equivalence verification — final go-live gate, produces deliverable equivalence report requiring PO sign-off). Strict human-in-the-loop with per-phase recap including execution timings. Bootstrap detects existing phase outputs and asks the user explicitly per phase whether to skip, re-run, or revise — never auto-skip a complete phase silently. For Phases 1 and 2, when the analysis is complete but the Accenture-branded export is missing, offers a fourth choice `regenerate-exports` that runs only the export wave without re-doing the analysis. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check; Phase 5 measures TO-BE against AS-IS oracle.",
       "file": "beta/refactoring-supervisor.md",
       "dependencies": [
         "indexing-supervisor",
         "functional-analysis-supervisor",
         "technical-analysis-supervisor",
         "baseline-testing-supervisor",
-        "refactoring-tobe-supervisor"
+        "refactoring-tobe-supervisor",
+        "tobe-testing-supervisor"
       ],
       "tools": [
         "Read",
@@ -1668,7 +1669,7 @@
         "human-in-the-loop"
       ],
       "published": "2026-04-28",
-      "changelog": "1.2.0: bootstrap detects `complete-but-exports-missing` sub-state for Phases 1 and 2 (analysis complete but ≥ 1 export file absent on disk) and offers a fourth choice `regenerate-exports` in the per-phase prompt; selecting it dispatches the phase supervisor with `Resume mode: exports-only`, skipping W1/W2/W3 and running only the export wave. The choice is unavailable for Phases 0/3/4 (no PDF/PPTX exports). Default recommendation when offered. 1.1.0: bootstrap now presents a per-phase detection table and asks the user explicitly skip/re-run/revise for every phase that already has outputs (no more silent auto-skip); inconsistent state (manifest=partial/failed/missing) classified separately and recommended for re-run; added --no-resume-prompt opt-in to bypass; updated Phase 1 schematic to include the new export wave. 1.0.0: milestone — workflow now covers full AS-IS→TO-BE journey (Phases 0–4); registered Phase 4 (refactoring-tobe-supervisor) in the phase registry; added Phase 4 schematic; updated bootstrap detection (.refactoring-kb/, backend/, frontend/); inverse drift rule documented from Phase 4 onward. 0.3.0: registered Phase 3 (baseline-testing-supervisor); mandatory execution-timing block in post-phase recap. 0.2.0: registered Phase 2. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
+      "changelog": "2.0.0: MAJOR milestone — workflow now covers the full AS-IS→TO-BE→validation journey (Phases 0–5). Registered Phase 5 (tobe-testing-supervisor) in the phase registry; added Phase 5 schematic; updated bootstrap detection table with row for Phase 5 (output root + PO sign-off state); updated workflow manifest schema with phase-5 entry (test_outputs, po_signoff). Phase 5 is the final go-live gate — produces the deliverable equivalence report requiring PO sign-off. 1.2.0: bootstrap detects `complete-but-exports-missing` sub-state for Phases 1 and 2 (analysis complete but ≥ 1 export file absent on disk) and offers a fourth choice `regenerate-exports` in the per-phase prompt; selecting it dispatches the phase supervisor with `Resume mode: exports-only`, skipping W1/W2/W3 and running only the export wave. The choice is unavailable for Phases 0/3/4 (no PDF/PPTX exports). Default recommendation when offered. 1.1.0: bootstrap now presents a per-phase detection table and asks the user explicitly skip/re-run/revise for every phase that already has outputs (no more silent auto-skip); inconsistent state (manifest=partial/failed/missing) classified separately and recommended for re-run; added --no-resume-prompt opt-in to bypass; updated Phase 1 schematic to include the new export wave. 1.0.0: milestone — workflow now covers full AS-IS→TO-BE journey (Phases 0–4); registered Phase 4 (refactoring-tobe-supervisor) in the phase registry; added Phase 4 schematic; updated bootstrap detection (.refactoring-kb/, backend/, frontend/); inverse drift rule documented from Phase 4 onward. 0.3.0: registered Phase 3 (baseline-testing-supervisor); mandatory execution-timing block in post-phase recap. 0.2.0: registered Phase 2. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
     },
     {
       "name": "technical-analysis-supervisor",
@@ -2523,6 +2524,279 @@
         "challenger",
         "adversarial",
         "traceability",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "tobe-testing-supervisor",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Phase 5 supervisor (opus). Validates the TO-BE codebase against the AS-IS baseline. Reads tests/baseline/ (Phase 3 oracle), docs/analysis/01-functional/ (Phase 1 UCs), docs/refactoring/api/openapi.yaml (Phase 4 contract), backend/ + frontend/ (Phase 4 codebase). Orchestrates 8 Sonnet workers in 5 waves: equivalence test authoring per UC, backend tests (JUnit 5 + Mockito + Testcontainers + Spring Cloud Contract), frontend tests (Jest + Angular Testing Library + Playwright E2E), security tests (OWASP Top 10), performance comparison (p95 ≤ +10% gate), execution & oracle capture, equivalence synthesis, challenger. Adaptive execution policy. Failure policy: critical/high regressions escalate; medium/low go to TBUG registry with xfail. AS-IS and TO-BE source code remain read-only. On invocation, detects existing Phase 5 outputs and asks the user explicitly whether to skip, re-run, or revise. Final go-live gate — produces the deliverable equivalence report requiring PO sign-off.",
+      "file": "beta/tobe-testing-supervisor.md",
+      "dependencies": [
+        "equivalence-test-writer",
+        "backend-test-writer",
+        "frontend-test-writer",
+        "security-test-writer",
+        "performance-comparator",
+        "tobe-test-runner",
+        "equivalence-synthesizer",
+        "tobe-testing-challenger"
+      ],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Agent"
+      ],
+      "model": "opus",
+      "tags": [
+        "tobe-testing",
+        "supervisor",
+        "phase-5",
+        "equivalence",
+        "regression",
+        "go-live",
+        "spring-boot",
+        "angular",
+        "playwright"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release: Phase 5 supervisor with 8 sub-agents in 5 waves; adaptive execute policy; failure policy with TBUG registry; final go-live gate with PO sign-off; HITL checkpoint after Wave 1; resume modes (skip/re-run/revise)."
+    },
+    {
+      "name": "equivalence-test-writer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 1, fan-out per UC). One invocation per use case. Produces a Python pytest harness under tests/equivalence/test_uc_<id>.py that drives the TO-BE deployment (HTTP calls or Playwright for Streamlit-derived UCs) and compares its output against the Phase 3 AS-IS snapshot for the same UC. Differences classified as equivalent, accepted-difference (PO sign-off), or regression per a configurable tolerance policy. Never modifies AS-IS or TO-BE source code.",
+      "file": "beta/equivalence-test-writer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "tobe-testing",
+        "sub-agent",
+        "equivalence",
+        "pytest",
+        "snapshot",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "backend-test-writer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Produces the backend TO-BE test suite for a Spring Boot 3 codebase: unit tests (JUnit 5 + Mockito), integration tests (Testcontainers), and contract tests (Spring Cloud Contract — verifies vs OpenAPI 3.1). Organised per bounded context. Targets > 80% line coverage and > 70% branch coverage. Never modifies production code. Anchors expected behaviour to Phase 1 UCs and Phase 3 baseline oracle.",
+      "file": "beta/backend-test-writer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "tobe-testing",
+        "sub-agent",
+        "spring-boot",
+        "junit",
+        "mockito",
+        "testcontainers",
+        "spring-cloud-contract",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "frontend-test-writer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Produces the frontend TO-BE test suite for an Angular 17+ codebase: component tests (Jest + Angular Testing Library) and E2E tests (Playwright). Component tests organised per feature module. E2E specs derived from Phase 1 user-flows. Targets > 80% line coverage. Never modifies production code. Equivalence is at the user-flow level, not pixel level (Streamlit→Angular layouts naturally diverge).",
+      "file": "beta/frontend-test-writer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "tobe-testing",
+        "sub-agent",
+        "angular",
+        "jest",
+        "angular-testing-library",
+        "playwright",
+        "e2e",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "security-test-writer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Authors the TO-BE security test suite: authentication/authorisation tests, input-validation tests, CSRF/CORS verification, OWASP Top 10 coverage (A01-A10), optional ZAP baseline scan automation. Cross-references Phase 2 AS-IS security findings to ensure no regression. Writes 05-security-findings.md. Never modifies production code.",
+      "file": "beta/security-test-writer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "tobe-testing",
+        "sub-agent",
+        "security",
+        "owasp",
+        "spring-security",
+        "zap",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "performance-comparator",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 2). Authors load-test scenarios (Gatling or k6) for the TO-BE backend and compares results against Phase 3 AS-IS benchmark. Per-UC p95/p99 deltas, throughput, memory comparison. Flags p95 > +10% as regression-soft (PO sign-off) and > +25% as regression-hard (escalate). Documents env caveats (CPU, RAM, JVM). Streamlit-aware comparison methodology. Never modifies production code.",
+      "file": "beta/performance-comparator.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "tobe-testing",
+        "sub-agent",
+        "performance",
+        "load-test",
+        "gatling",
+        "k6",
+        "benchmark",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "tobe-test-runner",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 3, sequential). Executes the TO-BE test suites authored in Wave 1 and the load scenarios from Wave 2 (when execute_policy permits). Captures JaCoCo coverage, Spring Cloud Contract verifier results, Playwright traces, k6/Gatling JSON. Classifies failures: critical/high → escalate (test stays failing); medium/low → xfail with TBUG registry entry. The only Phase 5 worker permitted to add @Disabled / xfail / test.skip markers. Never modifies production code or re-authors tests.",
+      "file": "beta/tobe-test-runner.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write",
+        "Edit"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "tobe-testing",
+        "sub-agent",
+        "execution",
+        "coverage",
+        "jacoco",
+        "playwright",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "equivalence-synthesizer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 4, sequential). Reads all Phase 5 outputs (equivalence, backend, frontend, contract tests, performance comparison, security findings, TBUG registry) plus Phase 1 UC list and produces the consolidated 01-equivalence-report.md — the deliverable signed by the Product Owner. Per UC verdict: equivalent | accepted-difference | regression-blocking | regression-accepted | not-tested-with-reason. Quality gate with 8 items. Discovers no new findings; only consolidates and classifies. Also writes README.md (Phase 5 entry point). Never modifies test or production code.",
+      "file": "beta/equivalence-synthesizer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "tobe-testing",
+        "sub-agent",
+        "synthesis",
+        "equivalence",
+        "po-signoff",
+        "deliverable",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "tobe-testing-challenger",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 5, always ON). Adversarial reviewer: 8 cross-cutting checks — UC coverage gaps, OpenAPI↔TO-BE drift, AS-IS source modifications (forbidden), TO-BE source modifications in Phase 5 (forbidden), mocked-when-shouldn't, equivalence claim integrity, AS-IS-bug-carry-over consistency, PO sign-off completeness, performance gate compliance. Produces _meta/challenger-report.md with CHL-NN entries; appends to 14-unresolved-questions.md. Flags; does NOT rewrite tests or reports.",
+      "file": "beta/tobe-testing-challenger.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "tobe-testing",
+        "sub-agent",
+        "review",
+        "challenger",
+        "adversarial",
         "to-be"
       ],
       "published": "2026-04-28",

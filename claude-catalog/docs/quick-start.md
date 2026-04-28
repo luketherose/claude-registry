@@ -29,7 +29,8 @@ Common capabilities and when to use them:
 | `technical-analysis-supervisor` | Phase 2: AS-IS technical analysis to `docs/analysis/02-technical/` (+ PDF/PPTX exports; supports `exports-only` resume mode) |
 | `baseline-testing-supervisor` | Phase 3: AS-IS baseline regression suite at `tests/baseline/` (+ snapshots, benchmarks, optional Postman collection) |
 | `refactoring-tobe-supervisor` | Phase 4: TO-BE refactoring (FIRST phase with target tech — Spring Boot 3 + Angular) — produces `backend/`, `frontend/`, OpenAPI contract, ADRs, migration roadmap |
-| `refactoring-supervisor` | End-to-end refactoring workflow (Phases 0–4, with HITL + per-step execution timings between phases) |
+| `tobe-testing-supervisor` | Phase 5: TO-BE testing & equivalence verification — final go-live gate. Produces backend/frontend/E2E tests, equivalence harness vs Phase 3 baseline, performance comparison, security findings, and the deliverable `01-equivalence-report.md` requiring PO sign-off |
+| `refactoring-supervisor` | End-to-end refactoring workflow (Phases 0–5, with HITL + per-step execution timings between phases) |
 
 ---
 
