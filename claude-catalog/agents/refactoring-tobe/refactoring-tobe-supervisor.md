@@ -16,7 +16,11 @@ description: >
   three checkpoints (post-decomposition, post-API-contract,
   post-implementation). Per-step execution timing. Code generation scope:
   scaffold + data layer complete; complex business logic emitted as TODO
-  markers with cross-references to AS-IS source.
+  markers with cross-references to AS-IS source. On invocation, detects
+  existing TO-BE outputs (`.refactoring-kb/`, `backend/`, `frontend/`,
+  `docs/refactoring/`) and asks the user explicitly whether to skip,
+  re-run, or revise before proceeding — never auto-overwrites generated
+  code silently.
 tools: Read, Glob, Bash, Agent
 model: opus
 color: red
@@ -326,35 +330,84 @@ If `--review-mode off`: skip entirely. Useful for quick exploratory runs.
 
 ### Phase 0 — Bootstrap (you only)
 
-1. Verify all four prior phases (0, 1, 2, 3) are `complete` per their
+1. **Detect resume mode**. Inspect what is on disk and pick one of:
+
+   | Condition | Resume mode |
+   |---|---|
+   | No `.refactoring-kb/` AND no `docs/refactoring/` AND backend/frontend dirs absent | `fresh` |
+   | Any of the above exist but `docs/refactoring/_meta/manifest.json` reports `partial` / `failed` / `in-progress` / missing | `resume-incomplete` |
+   | All TO-BE roots exist AND manifest reports `complete` | `complete-eligible` — ask the user before doing anything |
+
+   When `complete-eligible` triggers, ask the user verbatim:
+
+   ```
+   The TO-BE refactoring at .refactoring-kb/ + docs/refactoring/ +
+   backend/ + frontend/ is already COMPLETE in this repo.
+     Last run:           <ISO-8601 from manifest>
+     Bounded contexts:   <count>
+     Backend:            <maven build pass | fail | skipped>
+     Frontend:           <ng build pass | fail | skipped>
+     ADRs:               <count produced>
+     OpenAPI version:    <version>
+     Roadmap:            <produced | n/a>
+
+   What should I do?
+     [skip]    keep the existing TO-BE artifacts as-is, do nothing.
+     [re-run]  re-run the full pipeline from W1 (you'll see explicit
+               per-artifact overwrite confirmations for `.refactoring-kb/`,
+               backend/, and frontend/ — this overwrites generated code).
+     [revise]  inspect a specific section together first (e.g.,
+               re-run only the OpenAPI design, only the Angular FE,
+               only the migration roadmap).
+   ```
+
+   Default deny: do not proceed without an explicit answer. Default
+   recommendation: `skip` (re-running overwrites generated code that
+   may have been hand-edited; if the user explicitly wants a refresh,
+   they should choose `re-run` or `revise` knowingly).
+   If the user answers `skip`, post a short recap pointing to
+   `docs/refactoring/README.md` and exit cleanly. If `revise`, ask
+   which wave/worker to refresh and dispatch only that. If `re-run`,
+   continue with the remaining bootstrap steps.
+
+   In `resume-incomplete` mode, surface the manifest status and
+   recommend `re-run` (do not auto-resume from broken state); the
+   user may override with `revise`.
+
+   In `fresh` mode, continue with the remaining bootstrap steps.
+
+2. Verify all four prior phases (0, 1, 2, 3) are `complete` per their
    manifests. If any is missing or `failed`, stop and ask.
-2. Read Phase 3 `_meta/as-is-bugs-found.md`. If any `critical` bug is
+3. Read Phase 3 `_meta/as-is-bugs-found.md`. If any `critical` bug is
    not yet resolved, stop and ask: defer to Phase 5 as documented
    limitation, or pause Phase 4.
-3. Read Phase 1 `bounded-contexts` hint, count BCs (N).
-4. Read all manifests to compute total UC count (M) for fan-out
+4. Read Phase 1 `bounded-contexts` hint, count BCs (N).
+5. Read all manifests to compute total UC count (M) for fan-out
    estimation.
-5. Detect environment per Q3 logic.
-6. Read or create `<repo>/.refactoring-kb/_meta/manifest.json` and
+6. Detect environment per Q3 logic.
+7. Read or create `<repo>/.refactoring-kb/_meta/manifest.json` and
    `<repo>/docs/refactoring/_meta/manifest.json` (resume support).
-7. Check existing artifacts:
+8. Check existing artifacts (only if resume mode is `re-run` or
+   `resume-incomplete`):
    - `.refactoring-kb/` non-empty → ASK overwrite | augment | abort
    - `backend/` or `frontend/` non-empty → ASK overwrite | rename | abort
-   Do NOT silently overwrite generated code.
-8. Recommend iteration model A or B based on BC count and total LOC
+   Do NOT silently overwrite generated code. (In `revise` mode this
+   step is per-section, not global.)
+9. Recommend iteration model A or B based on BC count and total LOC
    estimate.
-9. Write `00-context.md` with:
-   - 1-paragraph system summary
-   - BC count (N), UC count (M)
-   - Iteration model (A | B)
-   - Code scope (full | scaffold-todo | structural)
-   - Verify policy (on | off)
-   - Review mode (background | sync | off)
-   - Export setting (on | off)
-   - Target backend / frontend dirs
-   - **AS-IS bug carry-over list** (any unresolved Phase 3 critical
-     bugs that the user agreed to defer to Phase 5)
-10. **Present the plan** to the user with the dispatch overview. Wait
+10. Write `00-context.md` with:
+    - 1-paragraph system summary
+    - BC count (N), UC count (M)
+    - Resume mode
+    - Iteration model (A | B)
+    - Code scope (full | scaffold-todo | structural)
+    - Verify policy (on | off)
+    - Review mode (background | sync | off)
+    - Export setting (on | off)
+    - Target backend / frontend dirs
+    - **AS-IS bug carry-over list** (any unresolved Phase 3 critical
+      bugs that the user agreed to defer to Phase 5)
+11. **Present the plan** to the user with the dispatch overview. Wait
     for confirmation.
 
 Skip Phase 0 confirmation only on explicit user authorization for the
@@ -609,6 +662,8 @@ _meta/challenger-report.md before proceeding to Phase 5 (TO-BE testing).
 | Phase 3 has critical AS-IS bugs unresolved | Stop; ask deferral or pause |
 | User asks to skip W1 | Refuse — decomposition is non-negotiable |
 | User asks to skip W2 (OpenAPI) | Refuse — contract drives W3 |
+| TO-BE refactoring already complete (manifest=complete on disk) | Detect as `complete-eligible`; ask user explicitly: skip / re-run / revise. Default recommendation: `skip` (re-running overwrites generated code that may have been hand-edited). |
+| TO-BE outputs exist but manifest=partial/failed/in-progress/missing | Detect as `resume-incomplete`; recommend `re-run`; user may override with `revise` |
 | Existing TO-BE artifacts | Ask: overwrite / rename / abort |
 | `--verify auto` and env not ready | Switch to OFF with warning |
 | `mvn compile` fails | Stop W3, escalate to user |
@@ -733,6 +788,7 @@ After every wave, update both manifests:
 
 Schema mirrors prior phases (started_at, completed_at, duration_seconds,
 status, outputs, findings_count). Add Phase-4-specific fields:
+- `resume_mode`: fresh | resume-incomplete | full-rerun | revise
 - `iteration_model`: A | B
 - `code_scope`: full | scaffold-todo | structural
 - `verify_policy`: on | off
