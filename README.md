@@ -73,7 +73,7 @@ claude-registry/
 
 ## Available capabilities
 
-### Agents (59)
+### Agents (65)
 
 | Name | Tier | Description |
 |------|------|-------------|
@@ -138,6 +138,12 @@ claude-registry/
 | `technical-analyst` | beta | Technical debt, security, vulnerable dependencies |
 | `developer-python` | beta | Python/FastAPI development |
 | `developer-frontend` | beta | Multi-framework frontend development (Angular, React, Vue, Qwik, Vanilla) |
+| `developer-go` | beta | Production-ready Go (net/http, chi, gin, cobra); standard library first, table-driven tests, log/slog, context propagation, errors-as-values |
+| `developer-rust` | beta | Production-ready Rust on stable (axum, actix-web, clap, tokio); thiserror/anyhow boundaries, structured concurrency, tracing |
+| `developer-kotlin` | beta | Production-ready Kotlin for JVM (Spring Boot 3 with Kotlin idioms or Ktor); coroutines, sealed hierarchies, value classes, no `!!` in production |
+| `developer-csharp` | beta | Production-ready C#/.NET 8+ (ASP.NET Core controllers + minimal APIs); nullable reference types, records, IOptions<T> with validation, EF Core |
+| `developer-ruby` | beta | Production-ready Ruby on Rails 7+ with service/form/query objects; Sidekiq idempotent jobs, RSpec + factory_bot, RuboCop |
+| `developer-php` | beta | Production-ready PHP 8.2+ (Laravel 10/11 layered or Symfony 6/7 data-mapper); strict_types, readonly classes, enums, PHPStan level 8 |
 | `code-reviewer` | beta | Structured code review on PRs or changed files |
 | `test-writer` | beta | JUnit 5, Mockito, Testcontainers, pytest tests |
 | `debugger` | beta | Bug diagnosis from stack traces, logs, and code |
