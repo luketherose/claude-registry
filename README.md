@@ -37,6 +37,7 @@ claude-registry/
       functional-analysis/     pipeline for AS-IS functional analysis Phase 1 (6 agents)
       technical-analysis/      pipeline for AS-IS technical analysis Phase 2 (11 agents)
       baseline-testing/        pipeline for AS-IS baseline testing Phase 3 (8 agents)
+      refactoring-tobe/        pipeline for TO-BE refactoring Phase 4 (10 agents)
       (other agents at root level)
     skills/                  reusable knowledge providers (shared across agents)
       orchestrators/           backend, frontend, documentation orchestrator skills
@@ -71,7 +72,7 @@ claude-registry/
 
 ## Available capabilities
 
-### Agents (48)
+### Agents (58)
 
 | Name | Tier | Description |
 |------|------|-------------|
@@ -79,7 +80,7 @@ claude-registry/
 | `functional-analyst` | stable | Requirements, use cases, business processes |
 | `developer-java-spring` | stable | Java/Spring Boot enterprise development |
 | `orchestrator` | beta | Meta-orchestrator (opus): discovers installed agents dynamically, decomposes multi-domain tasks, dispatches specialists in parallel, synthesises results |
-| `refactoring-supervisor` | beta | **Refactoring workflow supervisor (opus)**: top-level workflow for end-to-end refactoring/migration. Delegates phases sequentially to dedicated supervisors (Phase 0 indexing, Phase 1 functional analysis, Phase 2 technical analysis, Phase 3 baseline testing). Strict human-in-the-loop with schematic preview before each phase and execution-timing recap after. |
+| `refactoring-supervisor` | beta | **Refactoring workflow supervisor (opus, v1.0.0)**: top-level workflow for end-to-end refactoring/migration. Delegates phases sequentially to dedicated supervisors (Phase 0 indexing, Phase 1 functional analysis, Phase 2 technical analysis, Phase 3 baseline testing, Phase 4 TO-BE refactoring). Strict human-in-the-loop with schematic preview before each phase and execution-timing recap after. |
 | `indexing-supervisor` | beta | **Indexing pipeline supervisor (opus)**: indexes legacy Python codebases (with optional Streamlit) into a markdown KB at `.indexing-kb/`. Dispatches 7 sub-agents in 4 phases. |
 | `codebase-mapper` | beta | Indexing sub-agent: structural inventory (tree, LOC, packages, entrypoints) |
 | `dependency-analyzer` | beta | Indexing sub-agent: external deps + internal import graph + circular deps |
@@ -114,6 +115,16 @@ claude-registry/
 | `service-collection-builder` | beta | Baseline-testing sub-agent (W1, conditional): Postman 2.1 collection for services exposed by the AS-IS app |
 | `baseline-runner` | beta | Baseline-testing sub-agent (W2): executes the suite, captures snapshots/benchmark JSON/coverage; applies failure policy (xfail/skip/escalate) |
 | `baseline-challenger` | beta | Baseline-testing sub-agent (W3, always ON): adversarial review (coverage, AS-IS source modifications, determinism, oracle integrity, severity-mismatch, Streamlit/Postman) |
+| `refactoring-tobe-supervisor` | beta | **Refactoring TO-BE supervisor (opus)**: Phase 4 — first phase with target tech (Spring Boot 3 + Angular). Reads Phases 0–3, dispatches 9 sub-agents in 6 waves (decomposition + ADRs → OpenAPI → BE+FE parallel scaffolds + per-UC translation → hardening → roadmap → challenger). Strict dependency chain with 3 HITL checkpoints. Adaptive verification (mvn compile + ng build). |
+| `decomposition-architect` | beta | Refactoring-tobe sub-agent (W1): bounded-context decomposition (DDD), aggregates, AS-IS↔TO-BE module map, ADR-001 (architecture style) + ADR-002 (target stack) |
+| `api-contract-designer` | beta | Refactoring-tobe sub-agent (W2): OpenAPI 3.1 contract (single source of truth), Postman TO-BE collection, ADR-003 (auth flow) |
+| `backend-scaffolder` | beta | Refactoring-tobe sub-agent (W3 BE step 1): Spring Boot 3 Maven scaffold (controllers from OpenAPI, DTOs, services with TODOs, error handler RFC 7807, security baseline) |
+| `data-mapper` | beta | Refactoring-tobe sub-agent (W3 BE step 2): JPA entities, value objects, enums, Flyway migrations, Spring Data JPA repositories (DDD-honoring) |
+| `logic-translator` | beta | Refactoring-tobe sub-agent (W3 BE step 3, fan-out per UC): translates one UC from AS-IS Python to Java/Spring; never touches AS-IS source |
+| `frontend-scaffolder` | beta | Refactoring-tobe sub-agent (W3 FE): Angular 17+ workspace (standalone components, lazy modules per BC, OpenAPI typed client, Streamlit translations) |
+| `hardening-architect` | beta | Refactoring-tobe sub-agent (W4): observability (JSON logging + correlation-id, Micrometer + Prometheus, OpenTelemetry) and security (Spring Security 6 baseline, OWASP headers, CSP), ADR-004 + ADR-005 |
+| `migration-roadmap-builder` | beta | Refactoring-tobe sub-agent (W5): strangler-fig roadmap with per-BC milestones, rollback plans, go-live criteria, AS-IS bug carry-over |
+| `phase4-challenger` | beta | Refactoring-tobe sub-agent (W6, always ON): AS-IS↔TO-BE traceability matrix + 8 adversarial checks (coverage, OpenAPI↔code drift, ADR completeness, perf hypothesis, security regression, equivalence, AS-IS-only leak) |
 | `technical-analyst` | beta | Technical debt, security, vulnerable dependencies |
 | `developer-python` | beta | Python/FastAPI development |
 | `developer-frontend` | beta | Multi-framework frontend development (Angular, React, Vue, Qwik, Vanilla) |

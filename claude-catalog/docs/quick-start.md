@@ -28,7 +28,8 @@ Common capabilities and when to use them:
 | `functional-analysis-supervisor` | Phase 1: AS-IS functional analysis from `.indexing-kb/` to `docs/analysis/01-functional/` |
 | `technical-analysis-supervisor` | Phase 2: AS-IS technical analysis to `docs/analysis/02-technical/` (+ PDF/PPTX exports) |
 | `baseline-testing-supervisor` | Phase 3: AS-IS baseline regression suite at `tests/baseline/` (+ snapshots, benchmarks, optional Postman collection) |
-| `refactoring-supervisor` | End-to-end refactoring workflow (Phases 0–3, with HITL + per-step execution timings between phases) |
+| `refactoring-tobe-supervisor` | Phase 4: TO-BE refactoring (FIRST phase with target tech — Spring Boot 3 + Angular) — produces `backend/`, `frontend/`, OpenAPI contract, ADRs, migration roadmap |
+| `refactoring-supervisor` | End-to-end refactoring workflow (Phases 0–4, with HITL + per-step execution timings between phases) |
 
 ---
 
