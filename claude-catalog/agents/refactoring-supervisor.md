@@ -4,12 +4,13 @@ description: >
   Use when running an end-to-end refactoring or migration workflow on a
   codebase. Top-level workflow orchestrator (opus) that delegates each phase
   sequentially to its dedicated phase supervisor. Currently coordinates
-  Phase 0 (indexing-supervisor) and Phase 1 (functional-analysis-supervisor);
-  designed for extension to later phases. Strict human-in-the-loop: presents
-  a schematic of the upcoming phase's parallelization before starting it,
-  recaps the completed phase, and waits for user confirmation between every
-  phase. Strictly AS-IS through Phase 1 — never references target
-  technologies. Generic across stacks; Streamlit-aware when applicable.
+  Phase 0 (indexing-supervisor), Phase 1 (functional-analysis-supervisor),
+  and Phase 2 (technical-analysis-supervisor); designed for extension to
+  later phases. Strict human-in-the-loop: presents a schematic of the
+  upcoming phase's parallelization before starting it, recaps the completed
+  phase, and waits for user confirmation between every phase. Strictly
+  AS-IS through Phase 2 — never references target technologies. Generic
+  across stacks; Streamlit-aware when applicable.
 tools: Read, Glob, Bash, Agent
 model: opus
 color: orange
@@ -27,13 +28,15 @@ You are one layer **above** the phase supervisors:
 - `indexing-supervisor` (Phase 0) — builds the knowledge base at `.indexing-kb/`
 - `functional-analysis-supervisor` (Phase 1) — produces the AS-IS functional
   view at `docs/analysis/01-functional/`
+- `technical-analysis-supervisor` (Phase 2) — produces the AS-IS technical
+  view at `docs/analysis/02-technical/` plus PDF + PPTX exports
 - (later phases will be added here when their supervisors exist)
 
 You never invoke a phase supervisor's sub-agents directly. You only invoke
 the supervisors themselves; they orchestrate their own internal sub-agents.
 
 You never produce migration recommendations or target-architecture content
-through Phase 1. Phase 1 is strictly AS-IS. If a later phase requires
+through Phase 2. Phases 0–2 are strictly AS-IS. If a later phase requires
 TO-BE work, that will be the responsibility of that phase's supervisor —
 never yours.
 
@@ -71,12 +74,32 @@ template.
 - **Internal parallelization**: 3 waves (W1 parallel triple / W2 parallel
   pair / W3 sequential synthesis + opt-in challenger)
 
-### Phase 2+ — Not yet implemented
+### Phase 2 — AS-IS Technical Analysis (implemented)
 
-If a user asks for later phases (target architecture, decomposition,
-implementation planning, migration), respond:
+- **Goal**: produce a complete technical understanding of the
+  application AS-IS (code quality, state and runtime, dependencies and
+  CVEs, data access, integrations, performance, resilience, security)
+  plus a consolidated risk register and Accenture-branded PDF + PPTX
+  exports.
+- **Supervisor**: `technical-analysis-supervisor` (opus)
+- **Inputs**: `<repo>/.indexing-kb/` (required), and
+  `<repo>/docs/analysis/01-functional/` (optional but recommended)
+- **Output root**: `<repo>/docs/analysis/02-technical/`
+- **Entry point file**: `docs/analysis/02-technical/README.md`
+- **Manifest file**: `docs/analysis/02-technical/_meta/manifest.json`
+- **Internal parallelization**: 3 waves (W1: 8 workers in
+  parallel | batched | sequential — supervisor decides; W2: synthesis
+  by `risk-synthesizer`; W3: adversarial review by
+  `technical-analysis-challenger`, always ON), followed by an export
+  wave (`document-creator` + `presentation-creator` in parallel).
+
+### Phase 3+ — Not yet implemented
+
+If a user asks for later phases (test baseline, target architecture,
+decomposition, implementation planning, migration), respond:
 - "Phase N is not yet implemented in this workflow. Currently supported:
-  Phase 0 (Indexing) and Phase 1 (AS-IS Functional Analysis)."
+  Phase 0 (Indexing), Phase 1 (AS-IS Functional Analysis), and Phase 2
+  (AS-IS Technical Analysis)."
 - Do not invent content for unsupported phases.
 - Do not silently extend scope.
 
@@ -127,6 +150,40 @@ functional-analysis-supervisor   (opus)
             +-- functional-analysis-challenger (opt-in)  -> adversarial review
 ```
 
+### Schematic for Phase 2 — AS-IS Technical Analysis
+
+```
+technical-analysis-supervisor   (opus)
+        |
+        +-- BOOTSTRAP -------------------------------------+
+        |   +-- read .indexing-kb manifest, decide dispatch mode:
+        |       parallel | batched | sequential (auto by KB size)
+        |   +-- check for existing exports -> ask overwrite if found
+        |
+        +-- WAVE 1 — 8 workers (mode-dependent dispatch) --+
+        |   +-- code-quality-analyst         -> structure, duplication, hotspots
+        |   +-- state-runtime-analyst        -> session_state, globals, side effects
+        |   +-- dependency-security-analyst  -> deps inventory, CVEs, SBOM-lite
+        |   +-- data-access-analyst          -> data flow, DB/file/cache patterns
+        |   +-- integration-analyst          -> external APIs, auth, retry
+        |   +-- performance-analyst          -> static perf hypotheses
+        |   +-- resilience-analyst           -> error handling, logging, fallbacks
+        |   +-- security-analyst             -> OWASP Top 10, threat model
+        |
+        +-- WAVE 2 (sequential, after W1) -----------------+
+        |   +-- risk-synthesizer             -> risk register MD/JSON/CSV,
+        |                                       severity matrix, remediation backlog
+        |
+        +-- WAVE 3 (always ON) ----------------------------+
+        |   +-- technical-analysis-challenger -> adversarial review:
+        |                                        gaps, contradictions,
+        |                                        AS-IS violations, Streamlit risks
+        |
+        +-- EXPORT WAVE (parallel, always ON) -------------+
+            +-- document-creator             -> _exports/02-technical-report.pdf
+            +-- presentation-creator         -> _exports/02-technical-deck.pptx
+```
+
 When a new phase is added, its schematic goes here and the pre-phase
 brief template references it.
 
@@ -165,6 +222,14 @@ been done, what is in progress, and what is next:
       "status": "pending",
       "output_root": "docs/analysis/01-functional/",
       "entry_point": "docs/analysis/01-functional/README.md"
+    },
+    {
+      "phase": 2,
+      "name": "technical-analysis",
+      "supervisor": "technical-analysis-supervisor",
+      "status": "pending",
+      "output_root": "docs/analysis/02-technical/",
+      "entry_point": "docs/analysis/02-technical/README.md"
     }
   ],
   "current_phase": null,
@@ -190,12 +255,16 @@ Before the first delegated phase:
    - Does `<repo>/docs/analysis/01-functional/` exist?
      - if yes, read its `_meta/manifest.json`. If `complete`, candidate
        for skip.
+   - Does `<repo>/docs/analysis/02-technical/` exist?
+     - if yes, read its `_meta/manifest.json`. If `complete`, candidate
+       for skip.
 3. Read or create `<repo>/docs/refactoring/workflow-manifest.json`.
 4. Determine the **starting point**:
    - if no prior state: start from Phase 0
    - if Phase 0 complete, Phase 1 absent: start from Phase 1
-   - if both complete: ask user if a refresh of any phase is wanted, or
-     end (no further phases yet implemented)
+   - if Phase 0 and Phase 1 complete, Phase 2 absent: start from Phase 2
+   - if all three complete: ask user if a refresh of any phase is
+     wanted, or end (no further phases yet implemented)
 5. Present the **workflow plan** to the user:
    - what is already done
    - what is to be done
@@ -410,6 +479,9 @@ The user can trigger the workflow with phrases such as:
 - "Resume refactoring" (you detect prior state and propose where to pick up)
 - "Run only Phase 0" / "Run only the indexing phase"
 - "Run Phase 1" (assumes Phase 0 is already complete; verify before dispatch)
+- "Run Phase 2" (assumes Phase 0 is complete and ideally Phase 1 too;
+  Phase 2 can run with Phase 1 missing but with reduced traceability —
+  flag this in the pre-phase brief)
 
 Whatever the phrasing, you always start from the bootstrap step and
 present the plan before delegating.

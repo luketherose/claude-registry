@@ -35,6 +35,7 @@ claude-registry/
     agents/                  subagent .md files with YAML frontmatter
       indexing/                pipeline for indexing legacy Python codebases (8 agents)
       functional-analysis/     pipeline for AS-IS functional analysis Phase 1 (6 agents)
+      technical-analysis/      pipeline for AS-IS technical analysis Phase 2 (11 agents)
       (other agents at root level)
     skills/                  reusable knowledge providers (shared across agents)
       orchestrators/           backend, frontend, documentation orchestrator skills
@@ -69,7 +70,7 @@ claude-registry/
 
 ## Available capabilities
 
-### Agents (29)
+### Agents (40)
 
 | Name | Tier | Description |
 |------|------|-------------|
@@ -77,7 +78,7 @@ claude-registry/
 | `functional-analyst` | stable | Requirements, use cases, business processes |
 | `developer-java-spring` | stable | Java/Spring Boot enterprise development |
 | `orchestrator` | beta | Meta-orchestrator (opus): discovers installed agents dynamically, decomposes multi-domain tasks, dispatches specialists in parallel, synthesises results |
-| `refactoring-supervisor` | beta | **Refactoring workflow supervisor (opus)**: top-level workflow for end-to-end refactoring/migration. Delegates phases sequentially to dedicated supervisors (Phase 0 indexing, Phase 1 functional analysis). Strict human-in-the-loop with schematic preview before each phase. |
+| `refactoring-supervisor` | beta | **Refactoring workflow supervisor (opus)**: top-level workflow for end-to-end refactoring/migration. Delegates phases sequentially to dedicated supervisors (Phase 0 indexing, Phase 1 functional analysis, Phase 2 technical analysis). Strict human-in-the-loop with schematic preview before each phase. |
 | `indexing-supervisor` | beta | **Indexing pipeline supervisor (opus)**: indexes legacy Python codebases (with optional Streamlit) into a markdown KB at `.indexing-kb/`. Dispatches 7 sub-agents in 4 phases. |
 | `codebase-mapper` | beta | Indexing sub-agent: structural inventory (tree, LOC, packages, entrypoints) |
 | `dependency-analyzer` | beta | Indexing sub-agent: external deps + internal import graph + circular deps |
@@ -93,6 +94,17 @@ claude-registry/
 | `user-flow-analyst` | beta | Functional-analysis sub-agent (W2): use cases, user flows, Mermaid sequence diagrams with reruns |
 | `implicit-logic-analyst` | beta | Functional-analysis sub-agent (W2): hidden validation, state machines, callback chains, magic numbers |
 | `functional-analysis-challenger` | beta | Functional-analysis sub-agent (W3, opt-in): adversarial review for gaps, contradictions, AS-IS violations |
+| `technical-analysis-supervisor` | beta | **Technical Analysis supervisor (opus)**: Phase 2 AS-IS technical analysis. Reads `.indexing-kb/` + Phase 1, dispatches 8 W1 sub-agents (parallel/batched/sequential — adaptive) + W2 synthesizer + W3 challenger, then exports PDF + PPTX. Streamlit-aware. Strictly AS-IS. |
+| `code-quality-analyst` | beta | Technical-analysis sub-agent (W1): codebase map, duplication, complexity hotspots, monolith smells |
+| `state-runtime-analyst` | beta | Technical-analysis sub-agent (W1): session state, globals, side effects, state-flow diagram (Streamlit-aware) |
+| `dependency-security-analyst` | beta | Technical-analysis sub-agent (W1): dependency inventory, CVEs, deprecation watch, license posture, SBOM-lite JSON |
+| `data-access-analyst` | beta | Technical-analysis sub-agent (W1): data flow, DB/file/cache/serialization patterns |
+| `integration-analyst` | beta | Technical-analysis sub-agent (W1): external integrations, auth/timeout/retry, integration map |
+| `performance-analyst` | beta | Technical-analysis sub-agent (W1): N+1, hot loops, blocking I/O, caching gaps (static analysis) |
+| `resilience-analyst` | beta | Technical-analysis sub-agent (W1): error handling, logging, silent failures, fallback chains |
+| `security-analyst` | beta | Technical-analysis sub-agent (W1): OWASP Top 10, input validation, secrets in code, STRIDE threat model |
+| `risk-synthesizer` | beta | Technical-analysis sub-agent (W2): unified risk register MD/JSON/CSV, severity matrix, remediation priority |
+| `technical-analysis-challenger` | beta | Technical-analysis sub-agent (W3, always ON): adversarial review for gaps, contradictions, AS-IS violations |
 | `technical-analyst` | beta | Technical debt, security, vulnerable dependencies |
 | `developer-python` | beta | Python/FastAPI development |
 | `developer-frontend` | beta | Multi-framework frontend development (Angular, React, Vue, Qwik, Vanilla) |
