@@ -1634,6 +1634,36 @@
       ],
       "published": "2026-04-28",
       "changelog": "Initial beta release"
+    },
+    {
+      "name": "refactoring-supervisor",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Currently coordinates Phase 0 (indexing-supervisor) and Phase 1 (functional-analysis-supervisor); designed for extension. Strict human-in-the-loop: presents a schematic of the upcoming phase's parallelization before starting, recaps the completed phase, waits for explicit confirmation between phases. Strictly AS-IS through Phase 1.",
+      "file": "beta/refactoring-supervisor.md",
+      "dependencies": [
+        "indexing-supervisor",
+        "functional-analysis-supervisor"
+      ],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Agent"
+      ],
+      "model": "opus",
+      "tags": [
+        "refactoring",
+        "migration",
+        "workflow",
+        "supervisor",
+        "orchestrator",
+        "human-in-the-loop"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release: top-level workflow supervisor coordinating Phase 0 (indexing) and Phase 1 (AS-IS functional analysis); designed for extension to later phases"
     }
   ]
 }

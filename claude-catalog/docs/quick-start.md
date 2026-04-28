@@ -26,6 +26,7 @@ Common capabilities and when to use them:
 | `document-creator` | Creating Accenture-branded PDF or Word documents |
 | `indexing-supervisor` | Phase 0: indexing a legacy Python (+ Streamlit) codebase into `.indexing-kb/` |
 | `functional-analysis-supervisor` | Phase 1: AS-IS functional analysis from `.indexing-kb/` to `docs/analysis/01-functional/` |
+| `refactoring-supervisor` | End-to-end refactoring workflow (Phase 0 + Phase 1, with HITL between phases) |
 
 ---
 

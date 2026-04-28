@@ -69,7 +69,7 @@ claude-registry/
 
 ## Available capabilities
 
-### Agents (28)
+### Agents (29)
 
 | Name | Tier | Description |
 |------|------|-------------|
@@ -77,6 +77,7 @@ claude-registry/
 | `functional-analyst` | stable | Requirements, use cases, business processes |
 | `developer-java-spring` | stable | Java/Spring Boot enterprise development |
 | `orchestrator` | beta | Meta-orchestrator (opus): discovers installed agents dynamically, decomposes multi-domain tasks, dispatches specialists in parallel, synthesises results |
+| `refactoring-supervisor` | beta | **Refactoring workflow supervisor (opus)**: top-level workflow for end-to-end refactoring/migration. Delegates phases sequentially to dedicated supervisors (Phase 0 indexing, Phase 1 functional analysis). Strict human-in-the-loop with schematic preview before each phase. |
 | `indexing-supervisor` | beta | **Indexing pipeline supervisor (opus)**: indexes legacy Python codebases (with optional Streamlit) into a markdown KB at `.indexing-kb/`. Dispatches 7 sub-agents in 4 phases. |
 | `codebase-mapper` | beta | Indexing sub-agent: structural inventory (tree, LOC, packages, entrypoints) |
 | `dependency-analyzer` | beta | Indexing sub-agent: external deps + internal import graph + circular deps |
