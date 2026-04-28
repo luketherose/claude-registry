@@ -1637,15 +1637,16 @@
     },
     {
       "name": "refactoring-supervisor",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Currently coordinates Phase 0 (indexing-supervisor) and Phase 1 (functional-analysis-supervisor); designed for extension. Strict human-in-the-loop: presents a schematic of the upcoming phase's parallelization before starting, recaps the completed phase, waits for explicit confirmation between phases. Strictly AS-IS through Phase 1.",
+      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Currently coordinates Phase 0 (indexing-supervisor), Phase 1 (functional-analysis-supervisor), and Phase 2 (technical-analysis-supervisor); designed for extension. Strict human-in-the-loop: presents a schematic of the upcoming phase's parallelization before starting, recaps the completed phase, waits for explicit confirmation between phases. Strictly AS-IS through Phase 2.",
       "file": "beta/refactoring-supervisor.md",
       "dependencies": [
         "indexing-supervisor",
-        "functional-analysis-supervisor"
+        "functional-analysis-supervisor",
+        "technical-analysis-supervisor"
       ],
       "tools": [
         "Read",
@@ -1663,7 +1664,324 @@
         "human-in-the-loop"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release: top-level workflow supervisor coordinating Phase 0 (indexing) and Phase 1 (AS-IS functional analysis); designed for extension to later phases"
+      "changelog": "0.2.0: registered Phase 2 (technical-analysis-supervisor) in the phase registry; added schematic and pre/post-phase brief support; updated bootstrap detection. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
+    },
+    {
+      "name": "technical-analysis-supervisor",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Phase 2 supervisor (opus). Orchestrates 8 Sonnet workers in waves to produce AS-IS technical analysis at docs/analysis/02-technical/, plus Accenture-branded PDF and PPTX exports. Reads .indexing-kb/ (Phase 0) and optionally docs/analysis/01-functional/ (Phase 1). Decides dispatch mode (parallel | batched | sequential) based on KB size and user flag. Strict human-in-the-loop. Strictly AS-IS — never references target technologies.",
+      "file": "beta/technical-analysis-supervisor.md",
+      "dependencies": [
+        "code-quality-analyst",
+        "state-runtime-analyst",
+        "dependency-security-analyst",
+        "data-access-analyst",
+        "integration-analyst",
+        "performance-analyst",
+        "resilience-analyst",
+        "security-analyst",
+        "risk-synthesizer",
+        "technical-analysis-challenger",
+        "document-creator",
+        "presentation-creator"
+      ],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Agent"
+      ],
+      "model": "opus",
+      "tags": [
+        "technical-analysis",
+        "supervisor",
+        "phase-2",
+        "as-is",
+        "risk-register",
+        "owasp",
+        "security",
+        "performance",
+        "streamlit"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release: Phase 2 supervisor with 3 waves (8 W1 workers + W2 synthesizer + W3 challenger) and parallel export wave (PDF + PPTX). Adaptive dispatch mode based on repo size."
+    },
+    {
+      "name": "code-quality-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze code quality of a codebase AS-IS: codebase map, logical-component classification (UI/business/adapter/utility), duplication report, complexity hotspots, monolith smells. Strictly AS-IS.",
+      "file": "beta/code-quality-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "technical-analysis",
+        "sub-agent",
+        "code-quality",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "state-runtime-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze application state and runtime behavior AS-IS: session state, module globals, side effects, execution order, lifecycle. Streamlit-aware (st.session_state, reactive rerun model). Strictly AS-IS.",
+      "file": "beta/state-runtime-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "technical-analysis",
+        "sub-agent",
+        "state",
+        "runtime",
+        "streamlit",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "dependency-security-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze the external dependency posture of a codebase AS-IS: pinning, deprecations, known vulnerabilities (CVE/GHSA), license posture. Produces a dependency inventory plus an SBOM-lite JSON. Static analysis only — no network calls. Strictly AS-IS.",
+      "file": "beta/dependency-security-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "technical-analysis",
+        "sub-agent",
+        "dependencies",
+        "security",
+        "cve",
+        "sbom",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "data-access-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze data flow and data access patterns of a codebase AS-IS: origin → transformation → validation → sink, DB/file/cache/serialization patterns. Mermaid diagrams. Strictly AS-IS.",
+      "file": "beta/data-access-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "technical-analysis",
+        "sub-agent",
+        "data-flow",
+        "data-access",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "integration-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze external integrations of a codebase AS-IS: outbound HTTP/API calls, third-party services, message queues, webhooks; protocol, auth, timeout, retry, idempotency, failure handling. Produces an integration map. Strictly AS-IS.",
+      "file": "beta/integration-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "technical-analysis",
+        "sub-agent",
+        "integration",
+        "api",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "performance-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze performance posture of a codebase AS-IS via static analysis only: hot loops, N+1 patterns, blocking I/O on critical paths, missing caching, memory-heavy operations, Streamlit rerun cost. No profiling, no runtime measurement. Strictly AS-IS.",
+      "file": "beta/performance-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "technical-analysis",
+        "sub-agent",
+        "performance",
+        "static-analysis",
+        "streamlit",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "resilience-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze resilience and error-handling posture of a codebase AS-IS: try/except patterns, logging quality (structured vs string, secrets in logs), silent failures, fallback chains, retries, recovery paths. Strictly AS-IS.",
+      "file": "beta/resilience-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "technical-analysis",
+        "sub-agent",
+        "resilience",
+        "error-handling",
+        "logging",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "security-analyst",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze code-level security posture of a codebase AS-IS: OWASP Top 10 coverage, input validation, sanitization, secrets in code, threat-model surface (STRIDE). Complements dependency-security-analyst (library CVEs) — does not duplicate it. Strictly AS-IS.",
+      "file": "beta/security-analyst.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "technical-analysis",
+        "sub-agent",
+        "security",
+        "owasp",
+        "threat-model",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "risk-synthesizer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 2). Use to consolidate Wave 1 findings into a unified risk register (markdown + JSON + CSV), severity matrix (likelihood × impact), and ordered remediation backlog. Cross-references with Phase 1 features and use cases when available. Discovers no new findings — only consolidates. Strictly AS-IS.",
+      "file": "beta/risk-synthesizer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "technical-analysis",
+        "sub-agent",
+        "synthesis",
+        "risk-register",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "technical-analysis-challenger",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 3, always ON). Use to perform an adversarial review of all Phase 2 outputs: orphan IDs, contradictions, unverified claims, coverage gaps, AS-IS violations, Streamlit-specific risks. Does NOT rewrite — only flags findings. Strictly AS-IS.",
+      "file": "beta/technical-analysis-challenger.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "technical-analysis",
+        "sub-agent",
+        "review",
+        "challenger",
+        "adversarial",
+        "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
     }
   ]
 }
