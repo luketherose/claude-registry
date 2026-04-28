@@ -1637,17 +1637,18 @@
     },
     {
       "name": "refactoring-supervisor",
-      "version": "0.3.0",
+      "version": "1.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Currently coordinates Phase 0 (indexing-supervisor), Phase 1 (functional-analysis-supervisor), Phase 2 (technical-analysis-supervisor), and Phase 3 (baseline-testing-supervisor); designed for extension. Strict human-in-the-loop with mandatory per-phase recap including execution timings. Strictly AS-IS through Phase 3.",
+      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Coordinates Phase 0 (indexing), Phase 1 (AS-IS functional analysis), Phase 2 (AS-IS technical analysis), Phase 3 (AS-IS baseline testing), and Phase 4 (TO-BE refactoring — first phase with target tech: Spring Boot + Angular). Strict human-in-the-loop with per-phase recap including execution timings. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check.",
       "file": "beta/refactoring-supervisor.md",
       "dependencies": [
         "indexing-supervisor",
         "functional-analysis-supervisor",
         "technical-analysis-supervisor",
-        "baseline-testing-supervisor"
+        "baseline-testing-supervisor",
+        "refactoring-tobe-supervisor"
       ],
       "tools": [
         "Read",
@@ -1665,7 +1666,7 @@
         "human-in-the-loop"
       ],
       "published": "2026-04-28",
-      "changelog": "0.3.0: registered Phase 3 (baseline-testing-supervisor) in the phase registry; added schematic; mandatory execution-timing block in post-phase recap (per-step durations from phase manifest, plus cumulative workflow time). 0.2.0: registered Phase 2 (technical-analysis-supervisor). 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
+      "changelog": "1.0.0: milestone — workflow now covers full AS-IS→TO-BE journey (Phases 0–4); registered Phase 4 (refactoring-tobe-supervisor) in the phase registry; added Phase 4 schematic; updated bootstrap detection (.refactoring-kb/, backend/, frontend/); inverse drift rule documented from Phase 4 onward. 0.3.0: registered Phase 3 (baseline-testing-supervisor); mandatory execution-timing block in post-phase recap. 0.2.0: registered Phase 2. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
     },
     {
       "name": "technical-analysis-supervisor",
@@ -2214,6 +2215,313 @@
         "challenger",
         "adversarial",
         "as-is"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "refactoring-tobe-supervisor",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Phase 4 supervisor (opus). FIRST phase with target tech (Spring Boot 3 + Angular). Reads .indexing-kb/ + Phase 1/2/3 outputs and orchestrates 9 Sonnet workers in 6 waves to produce: bounded-context decomposition + ADRs (W1), OpenAPI 3.1 contract (W2), Spring Boot scaffold + JPA + per-UC logic translation + Angular workspace (W3 parallel BE+FE), hardening + observability + security (W4), migration roadmap with strangler fig (W5), adversarial review with AS-IS↔TO-BE traceability (W6 always ON). Strict dependency chain (W1→W2→W3→W4→W5→W6) with three HITL checkpoints. Adaptive verification (mvn compile + ng build best-effort). Code generation scope configurable: scaffold-todo (default) | full | structural. Per-step execution timings. Inverse drift rule: target tech allowed; AS-IS-only leaks forbidden without ADR.",
+      "file": "beta/refactoring-tobe-supervisor.md",
+      "dependencies": [
+        "decomposition-architect",
+        "api-contract-designer",
+        "backend-scaffolder",
+        "data-mapper",
+        "logic-translator",
+        "frontend-scaffolder",
+        "hardening-architect",
+        "migration-roadmap-builder",
+        "phase4-challenger",
+        "code-reviewer",
+        "debugger",
+        "documentation-writer",
+        "document-creator",
+        "presentation-creator"
+      ],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Agent"
+      ],
+      "model": "opus",
+      "tags": [
+        "refactoring-tobe",
+        "supervisor",
+        "phase-4",
+        "to-be",
+        "spring-boot",
+        "angular",
+        "openapi",
+        "decomposition",
+        "ddd",
+        "strangler-fig"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release: Phase 4 supervisor with 9 sub-agents in 6 waves; first phase with target tech; strict dependency chain with 3 HITL checkpoints; adaptive verification; configurable code-generation scope; AS-IS↔TO-BE traceability matrix produced by W6 challenger."
+    },
+    {
+      "name": "decomposition-architect",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 1). Use to produce the TO-BE bounded-context decomposition (DDD-style with context map), aggregate design, AS-IS↔TO-BE module mapping, ADR-001 (architecture style: modular monolith vs microservices), and ADR-002 (target stack: Spring Boot version, Java version, Angular version, target DB). Output BLOCKS all subsequent Phase 4 workers. TO-BE design with inverse drift rule.",
+      "file": "beta/decomposition-architect.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "refactoring-tobe",
+        "sub-agent",
+        "decomposition",
+        "ddd",
+        "bounded-context",
+        "adr",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "api-contract-designer",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 2). Use to produce the OpenAPI 3.1 contract (single source of truth for both backend and frontend), design rationale, TO-BE Postman collection, and ADR-003 (auth flow). Every operation has x-uc-ref for traceability. RFC 7807 ProblemDetail for errors; cursor-based pagination; idempotency-key required on POST with side effects. Output BLOCKS Wave 3 implementation. TO-BE design.",
+      "file": "beta/api-contract-designer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "refactoring-tobe",
+        "sub-agent",
+        "openapi",
+        "rest",
+        "contract",
+        "rfc-7807",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "backend-scaffolder",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 1). Use to produce the Spring Boot 3 backend Maven scaffold: package structure per bounded context (api/application/domain/infrastructure), controller skeletons from OpenAPI, DTOs, service skeletons (TODO markers), error handler RFC 7807, security config baseline, idempotency aspect, correlation-id filter, observability hooks. No business logic (logic-translator's job) and no entities (data-mapper's job). TO-BE design.",
+      "file": "beta/backend-scaffolder.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "refactoring-tobe",
+        "sub-agent",
+        "backend",
+        "spring-boot",
+        "scaffold",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "data-mapper",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 2). Use to produce the JPA persistence layer: entities (one per aggregate / entity / value object), Flyway migrations (V<NN>__*.sql), Spring Data JPA repositories, enums (state machines), MapStruct/manual mappers, idempotency entity. Honors DDD aggregate boundaries (cross-aggregate refs by ID only). Schema strategy: greenfield (new) or existing-migration based on Phase 2 access-pattern detection. TO-BE design.",
+      "file": "beta/data-mapper.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "refactoring-tobe",
+        "sub-agent",
+        "backend",
+        "jpa",
+        "flyway",
+        "ddd",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "logic-translator",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 3, fan-out per UC). Use to translate ONE use case from AS-IS Python to Java/Spring code: replace UnsupportedOperationException stubs in service methods with actual implementation; add state-transition methods on entities; honor Phase 2 error handling (never reproduce silent failures); cross-reference Phase 3 baseline tests as oracle. Code-scope-aware (full | scaffold-todo | structural). Each invocation handles one UC; multiple in parallel. Edits existing files; AS-IS source remains read-only. TO-BE design.",
+      "file": "beta/logic-translator.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write",
+        "Edit"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "refactoring-tobe",
+        "sub-agent",
+        "backend",
+        "translation",
+        "fan-out",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "frontend-scaffolder",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, frontend track). Use to produce the Angular 17+ workspace with standalone components: core layer (auth/error/correlation-id interceptors, auth/role guards, base services), shared layer (components, pipes, models), one lazy-loaded feature module per bounded context with screens-as-components, OpenAPI typed client (typescript-angular generator), routing, env config. Streamlit-specific translations documented (session_state→signals, st.cache_data→shareReplay, etc.). TO-BE design.",
+      "file": "beta/frontend-scaffolder.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "refactoring-tobe",
+        "sub-agent",
+        "frontend",
+        "angular",
+        "typescript",
+        "scaffold",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "hardening-architect",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 4). Use to apply production hardening to the TO-BE scaffold: structured JSON logging with logstash-encoder + correlation-id MDC, Micrometer + Prometheus metrics, OpenTelemetry tracing, Spring Security 6 baseline (OWASP secure headers, CORS allowlist, /actuator gating), frontend CSP via meta tag, secrets via env (.env.example), ADR-004 (observability) + ADR-005 (security baseline). Updates application.yml, SecurityConfig, index.html. TO-BE design.",
+      "file": "beta/hardening-architect.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write",
+        "Edit"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "refactoring-tobe",
+        "sub-agent",
+        "hardening",
+        "observability",
+        "security",
+        "owasp",
+        "csp",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "migration-roadmap-builder",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 5). Use to produce the migration roadmap: strangler fig plan with per-bounded-context milestones, cutover topology (reverse proxy / API gateway / DNS), rollback plans, go-live criteria (equivalence vs Phase 3, p95 ≤ 110% baseline), AS-IS bug carry-over table, communication plan, Mermaid Gantt + topology diagrams. Stakeholder-facing (TL;DR ≤ 1 page). TO-BE design.",
+      "file": "beta/migration-roadmap-builder.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "refactoring-tobe",
+        "sub-agent",
+        "roadmap",
+        "strangler-fig",
+        "migration",
+        "to-be"
+      ],
+      "published": "2026-04-28",
+      "changelog": "Initial beta release"
+    },
+    {
+      "name": "phase4-challenger",
+      "version": "0.1.0",
+      "tier": "beta",
+      "type": "agent",
+      "status": "active",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 6, always ON). Use to produce the AS-IS↔TO-BE traceability matrix and perform 8 adversarial checks on Phase 4 outputs: coverage gaps (orphan UCs / orphan TO-BE files), OpenAPI↔code drift, ADR completeness, AS-IS bug carry-over consistency, performance hypothesis sanity, security regression, equivalence claims integrity, AS-IS-only leak in TO-BE (inverse drift), AS-IS source modification detection. Does NOT rewrite — only flags findings. TO-BE phase.",
+      "file": "beta/phase4-challenger.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "refactoring-tobe",
+        "sub-agent",
+        "review",
+        "challenger",
+        "adversarial",
+        "traceability",
+        "to-be"
       ],
       "published": "2026-04-28",
       "changelog": "Initial beta release"
