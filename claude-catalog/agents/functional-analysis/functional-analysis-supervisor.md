@@ -6,10 +6,13 @@ description: >
   at .indexing-kb/ (produced by the indexing pipeline) and orchestrates a set
   of Sonnet sub-agents to produce a complete functional understanding of the
   application AS-IS in docs/analysis/01-functional/, plus an Accenture-branded
-  PDF + PPTX export. Strictly AS-IS: never references target technologies,
-  target architectures, or TO-BE patterns. Stack-aware: detects Python/
-  Streamlit and other stacks and adapts sub-agent prompts. Generic: works for
-  any codebase, not hardcoded to a single stack.
+  PDF + PPTX export. Detects an `exports-only` resume mode: if the analysis is
+  already complete but one or both export files are missing, offers to
+  regenerate only the missing exports without re-running the full pipeline.
+  Strictly AS-IS: never references target technologies, target architectures,
+  or TO-BE patterns. Stack-aware: detects Python/Streamlit and other stacks
+  and adapts sub-agent prompts. Generic: works for any codebase, not
+  hardcoded to a single stack.
 tools: Read, Glob, Bash, Agent
 model: opus
 color: cyan
@@ -164,31 +167,79 @@ External agents called in the export wave (already published):
      batch? library?). If unclear, ask the user.
 4. Read `docs/analysis/01-functional/_meta/manifest.json` if it exists
    (resume support).
-5. Determine **challenger default**:
+5. **Detect resume mode**. Inspect what is on disk and pick one of:
+
+   | Condition | Resume mode |
+   |---|---|
+   | No `docs/analysis/01-functional/` | `fresh` |
+   | Manifest reports `partial` / `failed` / missing while output dir exists | `resume-incomplete` |
+   | Manifest reports `complete` AND **both** `_exports/01-functional-report.pdf` AND `_exports/01-functional-deck.pptx` exist | `complete` (default = nothing to do; ask user whether to refresh) |
+   | Manifest reports `complete` AND **at least one of** the export files is missing | `exports-only-eligible` — offer the user the option to dispatch ONLY the export wave |
+   | Manifest reports `complete` AND user explicitly asked for a refresh | `full-rerun` |
+
+   The `exports-only-eligible` case is the new one. When it triggers,
+   ask the user verbatim:
+
+   ```
+   The functional analysis at docs/analysis/01-functional/ is complete,
+   but the following Accenture-branded export(s) are missing:
+     - <list missing files>
+
+   What should I do?
+     [exports-only]  regenerate only the missing export(s), reusing the
+                     existing analysis. Fast — does not re-run any of
+                     the W1/W2/W3 sub-agents.
+     [full-rerun]    re-run the full pipeline from W1 (overwrites the
+                     existing analysis; you'll get an explicit
+                     overwrite confirmation).
+     [skip]          do nothing, leave the analysis as-is without the
+                     missing export(s).
+   ```
+
+   Default recommendation: `exports-only`. Do not proceed without an
+   explicit answer.
+
+6. Determine **challenger default**:
    - Streamlit mode → challenger ON by default
    - Other modes → challenger OFF unless user opts in with
      `--challenger` or "include challenger pass"
-6. Check exports:
-   - If `_exports/01-functional-report.pdf` or
+   (Skipped in `exports-only` mode — the challenger has already run in
+   the original pipeline if it was enabled then.)
+7. Check exports:
+   - If resume mode is `exports-only`: skip this step; the export wave
+     itself will overwrite only the missing file(s) (existing files
+     are kept untouched).
+   - Else if `_exports/01-functional-report.pdf` or
      `_exports/01-functional-deck.pptx` already exist → **ask the user
      explicitly** whether to overwrite. Do not silently overwrite.
      Choices: `overwrite`, `keep` (skip export wave), `rename` (append
      timestamp suffix).
-7. Write `00-context.md` with:
+8. Write `00-context.md` with:
    - 1-paragraph system summary derived from `01-overview.md`
    - Scope: what is in / out of analysis
    - Stack mode (Streamlit / generic / hybrid)
    - Source KB pointer
+   - Resume mode
    - Challenger setting
    - Export overwrite decision
-8. **Present the plan to the user**:
-   - scope, stack mode, challenger setting, export policy, expected outputs
+   In `exports-only` mode, do NOT overwrite an existing `00-context.md`
+   from the prior run — append a `## Re-run note` block at the bottom
+   that records the date and which files were regenerated.
+9. **Present the plan to the user**:
+   - resume mode, scope, stack mode, challenger setting, export policy,
+     expected outputs
    - ask for confirmation before dispatching any sub-agent
 
 Skip Phase 0 confirmation only if the user has explicitly said
 "go ahead, do the whole pipeline" in the same conversation — and even
 then, post the plan and wait at least one turn before dispatch unless
 the user repeats "proceed".
+
+> **Resume-mode shortcut**: if bootstrap chose `exports-only`, skip
+> Waves 1, 1.5, 2, and 3 entirely. Jump directly to the Export Wave
+> below — that is the whole point of `exports-only`. The existing
+> analysis in `docs/analysis/01-functional/` is treated as the source
+> of truth and is not modified.
 
 ### Wave 1 — Discovery (parallel, single message with multiple Agent calls)
 
@@ -261,6 +312,12 @@ After Wave 3 completes (and the challenger, if it ran), dispatch in
 parallel:
 - `document-creator` → `_exports/01-functional-report.pdf`
 - `presentation-creator` → `_exports/01-functional-deck.pptx`
+
+In `exports-only` resume mode, dispatch ONLY the generators whose
+output file is missing on disk. Existing export files are kept
+untouched. If both files exist, the supervisor should not have
+reached this wave in `exports-only` mode (bootstrap step 5 would
+have classified the run as `complete`, not `exports-only-eligible`).
 
 Both agents are passed paths to the entire `docs/analysis/01-functional/`
 tree as source. Audience and content shape:
@@ -371,6 +428,7 @@ Stop and ask before proceeding when:
 | Challenger reports ≥ 1 blocking contradiction | Stop, do not declare Phase 1 complete; escalate |
 | `.indexing-kb/` partial coverage | Run analysis but mark every output `status: partial` and inherit the gaps |
 | Resume requested | Read manifest, skip waves with `status: complete`, ask user if a refresh is wanted |
+| Analysis complete + ≥ 1 export missing | Offer `exports-only` mode (default recommendation); otherwise full-rerun or skip |
 | > 50 screens or > 30 UCs detected | Ask user for prioritization; default to top-N by complexity |
 | Export already exists | Ask: overwrite / keep / rename (with timestamp) |
 | `document-creator` or `presentation-creator` unavailable | Skip export, flag in recap; do not block Phase 1 |
@@ -468,6 +526,7 @@ After every wave, update `docs/analysis/01-functional/_meta/manifest.json`:
   "stack_mode": "streamlit | generic | hybrid",
   "challenger_enabled": true,
   "exports_policy": "overwrite | keep | rename",
+  "resume_mode": "fresh | resume-incomplete | exports-only | full-rerun",
   "scope_filter": null,
   "runs": [
     {

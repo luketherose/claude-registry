@@ -1443,11 +1443,11 @@
     },
     {
       "name": "functional-analysis-supervisor",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Single entrypoint for Phase 1 (AS-IS Functional Analysis) of a refactoring/migration workflow. Reads the knowledge base at .indexing-kb/ produced by Phase 0 indexing and orchestrates Sonnet sub-agents in 3 waves plus an export wave to produce a complete functional understanding in docs/analysis/01-functional/ and an Accenture-branded PDF + PPTX in _exports/. Stack-aware (Streamlit/generic), strictly AS-IS (no target-tech references), generic and reusable across migration scenarios.",
+      "description": "Single entrypoint for Phase 1 (AS-IS Functional Analysis) of a refactoring/migration workflow. Reads the knowledge base at .indexing-kb/ produced by Phase 0 indexing and orchestrates Sonnet sub-agents in 3 waves plus an export wave to produce a complete functional understanding in docs/analysis/01-functional/ and an Accenture-branded PDF + PPTX in _exports/. Detects an `exports-only` resume mode: when the analysis is already complete but one or both exports are missing, offers to regenerate only the missing exports without re-running the W1/W2/W3 sub-agents. Stack-aware (Streamlit/generic), strictly AS-IS (no target-tech references), generic and reusable across migration scenarios.",
       "file": "beta/functional-analysis-supervisor.md",
       "dependencies": [
         "actor-feature-mapper",
@@ -1476,7 +1476,7 @@
         "streamlit"
       ],
       "published": "2026-04-28",
-      "changelog": "0.2.0: add Export Wave (always ON) — produces Accenture-branded PDF (`_exports/01-functional-report.pdf`) via document-creator and PPTX (`_exports/01-functional-deck.pptx`) via presentation-creator after Wave 3 synthesis. Adds explicit overwrite confirmation when exports already exist. 0.1.0: initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/"
+      "changelog": "0.3.0: bootstrap detects `exports-only-eligible` state (analysis complete but ≥ 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.2.0: add Export Wave (always ON) — produces Accenture-branded PDF (`_exports/01-functional-report.pdf`) via document-creator and PPTX (`_exports/01-functional-deck.pptx`) via presentation-creator after Wave 3 synthesis. Adds explicit overwrite confirmation when exports already exist. 0.1.0: initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/"
     },
     {
       "name": "actor-feature-mapper",
@@ -1639,11 +1639,11 @@
     },
     {
       "name": "refactoring-supervisor",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Coordinates Phase 0 (indexing), Phase 1 (AS-IS functional analysis with PDF+PPTX export), Phase 2 (AS-IS technical analysis with PDF+PPTX export), Phase 3 (AS-IS baseline testing), and Phase 4 (TO-BE refactoring — first phase with target tech: Spring Boot + Angular). Strict human-in-the-loop with per-phase recap including execution timings. Bootstrap detects existing phase outputs and asks the user explicitly per phase whether to skip, re-run, or revise — never auto-skip a complete phase silently. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check.",
+      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Coordinates Phase 0 (indexing), Phase 1 (AS-IS functional analysis with PDF+PPTX export), Phase 2 (AS-IS technical analysis with PDF+PPTX export), Phase 3 (AS-IS baseline testing), and Phase 4 (TO-BE refactoring — first phase with target tech: Spring Boot + Angular). Strict human-in-the-loop with per-phase recap including execution timings. Bootstrap detects existing phase outputs and asks the user explicitly per phase whether to skip, re-run, or revise — never auto-skip a complete phase silently. For Phases 1 and 2, when the analysis is complete but the Accenture-branded export is missing, offers a fourth choice `regenerate-exports` that runs only the export wave without re-doing the analysis. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check.",
       "file": "beta/refactoring-supervisor.md",
       "dependencies": [
         "indexing-supervisor",
@@ -1668,15 +1668,15 @@
         "human-in-the-loop"
       ],
       "published": "2026-04-28",
-      "changelog": "1.1.0: bootstrap now presents a per-phase detection table and asks the user explicitly skip/re-run/revise for every phase that already has outputs (no more silent auto-skip); inconsistent state (manifest=partial/failed/missing) classified separately and recommended for re-run; added --no-resume-prompt opt-in to bypass; updated Phase 1 schematic to include the new export wave. 1.0.0: milestone — workflow now covers full AS-IS→TO-BE journey (Phases 0–4); registered Phase 4 (refactoring-tobe-supervisor) in the phase registry; added Phase 4 schematic; updated bootstrap detection (.refactoring-kb/, backend/, frontend/); inverse drift rule documented from Phase 4 onward. 0.3.0: registered Phase 3 (baseline-testing-supervisor); mandatory execution-timing block in post-phase recap. 0.2.0: registered Phase 2. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
+      "changelog": "1.2.0: bootstrap detects `complete-but-exports-missing` sub-state for Phases 1 and 2 (analysis complete but ≥ 1 export file absent on disk) and offers a fourth choice `regenerate-exports` in the per-phase prompt; selecting it dispatches the phase supervisor with `Resume mode: exports-only`, skipping W1/W2/W3 and running only the export wave. The choice is unavailable for Phases 0/3/4 (no PDF/PPTX exports). Default recommendation when offered. 1.1.0: bootstrap now presents a per-phase detection table and asks the user explicitly skip/re-run/revise for every phase that already has outputs (no more silent auto-skip); inconsistent state (manifest=partial/failed/missing) classified separately and recommended for re-run; added --no-resume-prompt opt-in to bypass; updated Phase 1 schematic to include the new export wave. 1.0.0: milestone — workflow now covers full AS-IS→TO-BE journey (Phases 0–4); registered Phase 4 (refactoring-tobe-supervisor) in the phase registry; added Phase 4 schematic; updated bootstrap detection (.refactoring-kb/, backend/, frontend/); inverse drift rule documented from Phase 4 onward. 0.3.0: registered Phase 3 (baseline-testing-supervisor); mandatory execution-timing block in post-phase recap. 0.2.0: registered Phase 2. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
     },
     {
       "name": "technical-analysis-supervisor",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Phase 2 supervisor (opus). Orchestrates 8 Sonnet workers in waves to produce AS-IS technical analysis at docs/analysis/02-technical/, plus Accenture-branded PDF and PPTX exports. Reads .indexing-kb/ (Phase 0) and optionally docs/analysis/01-functional/ (Phase 1). Decides dispatch mode (parallel | batched | sequential) based on KB size and user flag. Strict human-in-the-loop. Strictly AS-IS — never references target technologies.",
+      "description": "Phase 2 supervisor (opus). Orchestrates 8 Sonnet workers in waves to produce AS-IS technical analysis at docs/analysis/02-technical/, plus Accenture-branded PDF and PPTX exports. Reads .indexing-kb/ (Phase 0) and optionally docs/analysis/01-functional/ (Phase 1). Decides dispatch mode (parallel | batched | sequential) based on KB size and user flag. Detects an `exports-only` resume mode: when the analysis is already complete but one or both exports are missing, offers to regenerate only the missing exports without re-running the W1/W2/W3 workers. Strict human-in-the-loop. Strictly AS-IS — never references target technologies.",
       "file": "beta/technical-analysis-supervisor.md",
       "dependencies": [
         "code-quality-analyst",
@@ -1711,7 +1711,7 @@
         "streamlit"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release: Phase 2 supervisor with 3 waves (8 W1 workers + W2 synthesizer + W3 challenger) and parallel export wave (PDF + PPTX). Adaptive dispatch mode based on repo size."
+      "changelog": "0.2.0: bootstrap detects `exports-only-eligible` state (analysis complete but ≥ 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.1.0: initial beta release: Phase 2 supervisor with 3 waves (8 W1 workers + W2 synthesizer + W3 challenger) and parallel export wave (PDF + PPTX). Adaptive dispatch mode based on repo size."
     },
     {
       "name": "code-quality-analyst",
