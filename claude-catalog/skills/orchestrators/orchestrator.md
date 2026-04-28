@@ -37,6 +37,7 @@ You are the main orchestrator of the skill system. You do not execute the task d
 | Functional analysis, features, user flows, business rules | `/analysis/functional-analyst` |
 | Cross-cutting SOLID/DRY/KISS refactoring, any language | `/refactoring/refactoring-expert` |
 | Dependency mismatches, versions, missing documentation | `/refactoring/dependency-resolver` |
+| Browser control: navigate, screenshot, click, fill, tabs, JS eval, E2E execution | `testing/browser-automation` |
 | Technical and functional documentation, docstrings, flows | `/documentation/doc-expert` |
 | Enterprise functional document (.docx) for stakeholders | `/documentation/functional-document-generator` |
 | Backend technical documentation — architecture, API, DB, security (LaTeX → .docx) | `/documentation/backend-documentation` |

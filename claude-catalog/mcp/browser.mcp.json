@@ -1,0 +1,34 @@
+{
+  "_comment": [
+    "MCP server entry for browser automation via @playwright/mcp (Microsoft).",
+    "Merge the 'browser' key below into the mcpServers object of the project-root .mcp.json.",
+    "Requires Node.js 18+. No additional install needed — npx pulls the package on first run.",
+    "Remove the _comment key before using this file.",
+    "",
+    "Available tool groups exposed by this server:",
+    "  Navigation  : browser_navigate, browser_back, browser_forward, browser_reload",
+    "  Snapshot     : browser_snapshot (accessibility tree), browser_screenshot",
+    "  Interaction  : browser_click, browser_fill, browser_type, browser_press_key,",
+    "                 browser_hover, browser_select_option, browser_drag",
+    "  Tabs         : browser_tab_new, browser_tab_list, browser_tab_select, browser_tab_close",
+    "  Scripting    : browser_evaluate (run arbitrary JS in page context)",
+    "  Waiting      : browser_wait_for (condition, selector, or timeout)",
+    "  Network      : browser_route (intercept/mock requests)",
+    "",
+    "Optional args (add to the 'args' list):",
+    "  --browser chromium|firefox|webkit   (default: chromium)",
+    "  --headless                           run without visible window",
+    "  --viewport-size WxH                 e.g. '1280x720'",
+    "  --isolated                           fresh browser context per session (good for tests)"
+  ],
+  "mcpServers": {
+    "browser": {
+      "_when_to_use": "Gives Claude the ability to control a real browser: navigate pages, take screenshots, click elements, fill forms, switch tabs, emit keyboard/mouse events, and evaluate JavaScript. Used by test-writer for E2E test execution, developer-frontend for visual verification, and any workflow requiring browser interaction or screenshot capture.",
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    }
+  }
+}

@@ -42,6 +42,12 @@ Before writing tests, invoke the following skills:
   utilities, testcontainers-python.
   Invoke when writing Python tests.
 
+- **`testing/browser-automation`** — browser control via the `browser` MCP server
+  (@playwright/mcp): navigate, screenshot, click, fill, tabs, keyboard events, JS eval.
+  Invoke when writing or executing E2E tests that require a real browser, or when
+  the user asks to visually verify a UI feature. Requires the `browser` MCP server
+  registered in the project-root `.mcp.json`.
+
 - **`frontend/react/react-expert`** — React Testing Library, component rendering, user events,
   async utilities, mocking hooks.
   Invoke when writing React component tests.

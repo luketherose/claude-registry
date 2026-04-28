@@ -5,7 +5,17 @@ All notable changes to catalog capabilities are documented here.
 Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending changes.
 
 ## [Unreleased]
+### Changed
+- `master-orchestrator@1.3.0` — hard rule: never pass `output_formats=["md"]` to `functional-analyst` unless the user explicitly opts out; default is always all available formats (`["md","tex","docx","html"]`); rule added both in format resolution block and in "What you never do" section
+
 ### Added
+- `browser-automation@1.0.0` — new skill: browser control via the `browser` MCP server (@playwright/mcp); covers navigate, screenshot, click, fill, tabs, keyboard/mouse events, JS evaluation, E2E test execution; used by test-writer and developer-frontend
+- `master-orchestrator@1.2.0` — adds browser/E2E routing: requests mentioning screenshot, navigate, click, browser, visual test, form interaction route to test-writer with browser-automation skill context
+- `test-writer@0.2.0` — adds browser-automation skill dependency for E2E test writing and execution via the browser MCP server
+- `orchestrator skill` — adds browser-automation to the technical skills routing map
+- `master-orchestrator@1.1.0` — format preference propagation: resolves output_formats from user request and passes them explicitly to functional-analyst; defaults to ["md","tex","docx","html"]; checks pdflatex availability before including PDF in the list
+- `functional-analyst@1.2.0` — mandatory execution pipeline (Steps 0–4): Step 0 format negotiation (checks pandoc/pdflatex availability, defaults to all formats); Step 2 UML generation via uml MCP server is now mandatory for every analysis with flows/actors/states (use-case, activity, state, sequence, ER, component); Step 3 produces tex + docx + html + pdf from a single LaTeX source; Step 4 delivery summary with produced/skipped files and open questions
+- `master-orchestrator@1.0.0` — new agent: master entry point for all project tasks; analyses the request, routes to the correct specialist agent (functional-analyst, developer-frontend, developer-java-spring, developer-python, software-architect, api-designer, code-reviewer, debugger, test-writer, documentation-writer, document-creator, presentation-creator), assembles context from existing artefacts in `test/docs/`, and passes functional analysis output to implementation agents automatically
 - `uml-diagram-generator@1.0.0` — new skill: delegates UML diagram generation (class, sequence, component, activity, state, use-case, ER) to the `uml` MCP server (antoinebou12/uml-mcp); auto-selects diagram type by intent; saves artefacts to `docs/diagrams/`
 - `mcp/uml.mcp.json` — reference MCP server entry for `antoinebou12/uml-mcp` (stdio via `uvx`); merge into project-root `.mcp.json`
 - `developer-frontend@0.1.0` — new agent: multi-framework frontend developer (Angular, React/Next.js/TanStack, Vue 3, Qwik, Vanilla JS/TS); auto-detects stack and loads only relevant skills

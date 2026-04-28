@@ -64,10 +64,11 @@ claude-registry/
 
 ## Available capabilities
 
-### Agents (13)
+### Agents (14)
 
 | Name | Tier | Description |
 |------|------|-------------|
+| `master-orchestrator` | stable | **Main entry point** — routes any request to the right specialist agent; assembles context from existing artefacts automatically |
 | `software-architect` | stable | Architectural analysis, ADRs, trade-off evaluation |
 | `functional-analyst` | stable | Requirements, use cases, business processes |
 | `developer-java-spring` | stable | Java/Spring Boot enterprise development |
