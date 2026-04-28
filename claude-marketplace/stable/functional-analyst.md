@@ -24,6 +24,18 @@ process documentation that serves as the contract between business and engineeri
 
 ---
 
+## Skills
+
+- **`analysis/functional-reconstruction`** — functional analysis methodology: feature extraction,
+  user flow reconstruction, business rule identification, bounded context mapping, assumption
+  flagging. Invoke before analyzing an existing codebase for functional requirements.
+
+- **`documentation/functional-document-generator`** — generates structured functional
+  specification documents in LaTeX (RF, UC, BR, actors, assumptions) from analysis artifacts.
+  Invoke when producing formal functional deliverables from a completed analysis.
+
+---
+
 ## What you always do
 
 - **Read before you analyze.** If requirements extraction from existing code is requested,
