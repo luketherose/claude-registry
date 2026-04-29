@@ -1,7 +1,7 @@
 {
   "_comment": "Team convention \u2014 not an official Claude Code format. This manifest tracks published capabilities.",
   "version": "1.0",
-  "generated": "2026-04-28",
+  "generated": "2026-04-29",
   "repository": "claude-registry",
   "capabilities": [
     {
@@ -1238,11 +1238,11 @@
     },
     {
       "name": "indexing-supervisor",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Single entrypoint for indexing a legacy Python codebase (with optional Streamlit) into a markdown knowledge base inside the repository. Decomposes indexing into phases, dispatches Sonnet sub-agents in parallel where independent, escalates to the user on ambiguity, and produces a final synthesis. Phase 1 only \u2014 indexing and understanding, not migration. On invocation, detects existing `.indexing-kb/` outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding \u2014 never auto-overwrites a complete index silently.",
+      "description": "Single entrypoint for indexing any legacy codebase into a markdown KB at .indexing-kb/. Language-agnostic \u2014 autodetects the AS-IS stack via codebase-mapper and writes a canonical stack.json consumed by every downstream phase. Decomposes indexing into phases, dispatches Sonnet sub-agents in parallel, gates framework-specific analyzers (e.g. streamlit-analyzer runs only when streamlit \u2208 stack.frameworks). Detects existing .indexing-kb/ outputs and prompts skip / re-run / revise before proceeding.",
       "file": "beta/indexing-supervisor.md",
       "dependencies": [
         "codebase-mapper",
@@ -1268,16 +1268,16 @@
         "knowledge-base",
         "legacy"
       ],
-      "published": "2026-04-26",
-      "changelog": "0.2.0: bootstrap detects existing `.indexing-kb/` outputs and asks the user explicitly skip / re-run / revise before doing anything (no more silent auto-skip via escalation trigger); inconsistent state (manifest=partial/failed/missing) classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: opus supervisor + 7 sonnet sub-agents, KB at .indexing-kb/"
+      "published": "2026-04-29",
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
       "name": "codebase-mapper",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of indexing-supervisor. Produces structural inventory: directory tree, file counts, language statistics, top-level package map, entrypoints. No semantic analysis.",
+      "description": "Sub-agent of indexing-supervisor. Produces structural inventory of any codebase: directory tree, file counts per language, top-level package map, entrypoints, and the canonical machine-readable stack.json (primary language, languages, frameworks, build tools, package managers, test frameworks) consumed by all downstream phases. Polyglot codebases supported.",
       "file": "beta/codebase-mapper.md",
       "dependencies": [],
       "tools": [
@@ -1292,16 +1292,16 @@
         "sub-agent",
         "structural"
       ],
-      "published": "2026-04-26",
-      "changelog": "Initial beta release"
+      "published": "2026-04-29",
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
       "name": "dependency-analyzer",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of indexing-supervisor. Extracts external dependencies (pyproject.toml, requirements.txt, setup.py) and builds the internal module dependency graph from imports. Detects circular dependencies and standalone packages.",
+      "description": "Sub-agent of indexing-supervisor. Extracts external dependencies and builds the internal module dependency graph for any-language codebases. Reads the project's build manifests (pyproject.toml, pom.xml, Cargo.toml, go.mod, *.csproj, Gemfile, composer.json, package.json, etc.) and language-appropriate import declarations. Detects circular dependencies and standalone packages. Stack-aware via 02-structure/stack.json.",
       "file": "beta/dependency-analyzer.md",
       "dependencies": [],
       "tools": [
@@ -1316,16 +1316,16 @@
         "sub-agent",
         "dependencies"
       ],
-      "published": "2026-04-26",
-      "changelog": "Initial beta release"
+      "published": "2026-04-29",
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
       "name": "streamlit-analyzer",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of indexing-supervisor. Analyzes Streamlit-specific concerns: pages, session_state, widgets, caching, navigation, custom components, and migration-relevant anti-patterns.",
+      "description": "Framework-specific sub-agent of indexing-supervisor. Analyzes Streamlit-specific concerns: pages, session_state, widgets, caching, navigation, anti-patterns. Invoked ONLY when streamlit is detected in stack.frameworks. Pattern (canonical for any future framework-specific analyzer): gated on stack.frameworks, runs in parallel with codebase-mapper and dependency-analyzer in Phase 1.",
       "file": "beta/streamlit-analyzer.md",
       "dependencies": [],
       "tools": [
@@ -1341,16 +1341,16 @@
         "streamlit",
         "frontend"
       ],
-      "published": "2026-04-26",
-      "changelog": "Initial beta release"
+      "published": "2026-04-29",
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
       "name": "module-documenter",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of indexing-supervisor. Documents one Python package end-to-end at the API level: purpose, public interface, key data structures, internal organization. One invocation per package, parallelizable.",
+      "description": "Sub-agent of indexing-supervisor. Documents one package or module of a codebase end-to-end at the API level. Language-agnostic \u2014 adapts to package conventions of the detected language (Python __init__.py, JVM src/main, Go internal/, Rust crates, .NET *.csproj, Ruby app/, PHP namespaces, JS/TS src/). One invocation per top-level package, parallelizable.",
       "file": "beta/module-documenter.md",
       "dependencies": [],
       "tools": [
@@ -1366,16 +1366,16 @@
         "documentation",
         "modules"
       ],
-      "published": "2026-04-26",
-      "changelog": "Initial beta release"
+      "published": "2026-04-29",
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
       "name": "data-flow-analyst",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of indexing-supervisor. Identifies data crossings between application and outside world: database access, external API calls, file I/O, environment variables, configuration sources.",
+      "description": "Sub-agent of indexing-supervisor. Identifies all data crossings between the application and the outside world: database access, external API calls, file I/O, environment variables, and configuration sources. Language-agnostic \u2014 reads stack.json to know which library patterns to grep for (SQLAlchemy/JPA/sqlx/EF Core/ActiveRecord/Eloquent/Prisma; requests/WebClient/reqwest/HttpClient/Guzzle/axios; etc.).",
       "file": "beta/data-flow-analyst.md",
       "dependencies": [],
       "tools": [
@@ -1391,16 +1391,16 @@
         "data-flow",
         "integrations"
       ],
-      "published": "2026-04-26",
-      "changelog": "Initial beta release"
+      "published": "2026-04-29",
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
       "name": "business-logic-analyst",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of indexing-supervisor. Extracts business rules, validation logic, and domain concepts. Produces a domain-level view (glossary, rules, state machines) independent of file structure.",
+      "description": "Sub-agent of indexing-supervisor. Extracts business rules, validation logic, and domain concepts from a codebase in any language. Stack-aware \u2014 adapts validation/rule grep patterns to the language declared in stack.json (Pydantic for Python; Bean Validation / @Valid for JVM; class-validator / zod for TS; FluentValidation for C#; Rails validators; FormRequest for Laravel; etc.).",
       "file": "beta/business-logic-analyst.md",
       "dependencies": [],
       "tools": [
@@ -1416,8 +1416,8 @@
         "business-logic",
         "domain"
       ],
-      "published": "2026-04-26",
-      "changelog": "Initial beta release"
+      "published": "2026-04-29",
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
       "name": "synthesizer",

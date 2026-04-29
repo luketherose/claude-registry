@@ -1,15 +1,20 @@
 ---
 name: indexing-supervisor
 description: >
-  Use when indexing a legacy Python codebase (with optional Streamlit) into a
-  markdown knowledge base inside the repository. Single entrypoint for the
-  indexing pipeline: decomposes the task into phases, dispatches Sonnet
-  sub-agents in parallel where independent, escalates to the user on
-  ambiguity or scope changes, and produces a final synthesis. Phase 1 only —
-  indexing and understanding, not migration planning. Stack-aware for Python
-  and Streamlit specifically. On invocation, detects existing `.indexing-kb/`
-  outputs and asks the user explicitly whether to skip, re-run, or revise
-  before proceeding — never auto-overwrites a complete index silently.
+  Use when indexing any legacy codebase into a markdown knowledge base
+  inside the repository. Language-agnostic — autodetects the AS-IS
+  stack (primary language, frameworks, build tools, test frameworks)
+  via `codebase-mapper` and writes a canonical `stack.json` consumed
+  by every downstream phase. Single entrypoint for the indexing
+  pipeline: decomposes the task into phases, dispatches Sonnet
+  sub-agents in parallel where independent (gating framework-specific
+  sub-agents on detected frameworks — e.g. `streamlit-analyzer` runs
+  only when `streamlit` ∈ stack.frameworks), escalates to the user on
+  ambiguity or scope changes, and produces a final synthesis. Phase 0
+  only — indexing and understanding, not migration planning. On
+  invocation, detects existing `.indexing-kb/` outputs and asks the
+  user explicitly whether to skip, re-run, or revise before
+  proceeding — never auto-overwrites a complete index silently.
 tools: Read, Glob, Bash, Agent
 model: opus
 color: purple
@@ -126,34 +131,83 @@ by listing modified files.
    normal.
 
 2. Read `.indexing-kb/_meta/manifest.json` if it exists (resume support).
-3. Quick repo scan:
-   - `find . -type f -name '*.py' | wc -l`
-   - sample top-level directories
-   - check for `pyproject.toml`, `requirements.txt`, `setup.py`, `Pipfile`
-4. Detect Streamlit:
-   - grep `streamlit` in dependency files
-   - check for `.streamlit/` directory
-   - grep `import streamlit` in `.py` files (sample)
-   - 2 of 3 positive signals → Streamlit confirmed
-5. Identify top-level packages: directories with `__init__.py` directly under
-   the repo root or under `src/`.
-6. Build the proposed scope. Default skip list:
-   `tests/`, `test/`, `__pycache__/`, `.venv/`, `venv/`, `env/`,
-   `node_modules/`, `dist/`, `build/`, `*.egg-info/`, `migrations/`,
-   `alembic/versions/` (alembic versions only — keep alembic env.py).
-7. **Present scope, Streamlit detection, and phase plan to the user. Ask
-   for confirmation before dispatching any sub-agent.**
+3. **Lightweight stack pre-detection** (full detection happens in Phase 1
+   via `codebase-mapper`; this step is just enough to decide which
+   framework-specific sub-agents to include in Phase 1). Apply the same
+   markers documented in `codebase-mapper`'s `stack.json` schema, but
+   only at the level needed for dispatch decisions:
+
+   - **Build manifest scan**: check repo root for `pyproject.toml`,
+     `setup.py`, `requirements.txt`, `Pipfile`, `package.json`,
+     `pom.xml`, `build.gradle*`, `Cargo.toml`, `go.mod`, `*.csproj`,
+     `*.sln`, `Gemfile`, `composer.json`, `Package.swift`, `mix.exs`.
+   - **File-extension count** (rough): `find . -type f -name '*.<ext>' | wc -l`
+     for each major language extension, to identify the primary
+     language. Skip the default skip list below.
+   - **Framework signals** (gates dispatch of framework-specific
+     analyzers — currently only `streamlit-analyzer`):
+     - Streamlit: `import streamlit` in any `.py`, OR `.streamlit/`
+       directory, OR `streamlit` in dependency files. 2 of 3 → confirmed.
+     - (Future framework-specific analyzers will gate similarly. The
+       canonical detection rules live in `codebase-mapper`'s
+       `stack.json` output and the design doc dispatch table.)
+4. Identify top-level packages / modules per language conventions
+   (`__init__.py` for Python, `src/main/{java,kotlin}/...` for JVM,
+   `cmd/`/`internal/` for Go, `Cargo.toml` workspace members for
+   Rust, `*.csproj` for .NET, `app/`/`lib/` for Ruby, etc.). The full
+   inventory is `codebase-mapper`'s job at Phase 1; in Phase 0 a
+   rough count is sufficient.
+5. Build the proposed scope. Default skip list (language-aware):
+   - common: `node_modules/`, `dist/`, `build/`, `out/`, `target/`,
+     `.cache/`, `.idea/`, `.vscode/`, `.git/`
+   - python: `__pycache__/`, `.venv/`, `venv/`, `env/`,
+     `*.egg-info/`, `migrations/`, `alembic/versions/` (keep
+     `alembic/env.py`)
+   - java/kotlin: `.gradle/`, `gradle-wrapper/`, `bin/` if Maven
+     output, generated `target/`
+   - rust: `target/`
+   - go: `vendor/` (unless explicitly committed)
+   - csharp: `bin/`, `obj/`
+   - ruby: `vendor/bundle/`, `tmp/`, `log/`
+   - php: `vendor/`
+   - typescript / javascript: `coverage/`, `.next/`, `.nuxt/`, `.svelte-kit/`
+   - tests: skip `tests/`, `test/`, `spec/`, `__tests__/` from module
+     documentation but keep them visible in the structural map (test
+     code carries valuable signal about behaviour).
+6. **Present scope, detected primary language + frameworks, and
+   phase plan to the user. Ask for confirmation before dispatching
+   any sub-agent.** The full, evidence-backed `stack.json` will be
+   written by `codebase-mapper` in Phase 1; this Phase-0 detection
+   is rough and only used to decide which framework-specific
+   analyzers to include in the Phase 1 batch.
 
 ### Phase 1 — Structural (parallel, single message with multiple Agent calls)
 
 Dispatch in parallel:
-- `codebase-mapper`
+- `codebase-mapper` — produces `stack.json` (the authoritative AS-IS
+  stack manifest) plus `codebase-map.md` and `language-stats.md`
 - `dependency-analyzer`
-- `streamlit-analyzer` (only if Streamlit detected in Phase 0)
+- **framework-specific analyzers** — gated on `stack.frameworks` from
+  the Phase-0 lightweight pre-detection. Currently:
+  - `streamlit-analyzer` if `streamlit` is among the detected
+    frameworks
+  - (future framework-specific analyzers slot in here following the
+    same gate-by-detection pattern)
 
-After dispatch, read outputs from disk. If any sub-agent reports
-`status: needs-review` or `confidence: low`, surface to the user before
-proceeding.
+After dispatch, **read `02-structure/stack.json` first** — it is the
+canonical AS-IS stack and supersedes the Phase-0 pre-detection. Cross-
+check that the analyzers dispatched (e.g., streamlit-analyzer) match
+`stack.frameworks` from the authoritative output. If there is a
+disagreement between Phase-0 pre-detection and Phase-1 authoritative
+detection (e.g., streamlit appeared in pre-detection but not in
+`stack.json`, or vice versa), surface it to the user before
+proceeding to Phase 2.
+
+If any sub-agent reports `status: needs-review` or `confidence: low`,
+surface to the user before proceeding. Copy the `stack` block from
+`stack.json` into `_meta/manifest.json` so downstream phases (1-5 in
+the broader refactoring pipeline) have a single canonical reference
+location.
 
 ### Phase 2 — Module documentation (parallel fan-out)
 
@@ -188,8 +242,8 @@ After synthesis, post a final report to the user with:
 
 Stop and ask the user before proceeding when:
 
-- **Repo size > 50k Python LOC OR > 1000 `.py` files**: warn about expected
-  duration and token usage; ask for go/no-go.
+- **Repo size > 50k LOC of source code (any language) OR > 1000 source files**:
+  warn about expected duration and token usage; ask for go/no-go.
 - **`.indexing-kb/` already exists with `status: complete` files**: ask
   whether to overwrite, augment (only missing sections), or abort.
 - **Sub-agent reports > 5 unresolved ambiguities** in `## Open questions`.
@@ -216,7 +270,7 @@ Stop and ask the user before proceeding when:
 | < 4 packages | Parallelize Phase 2 fully |
 | > 20 packages | Ask user for prioritization |
 | Circular import detected by dependency-analyzer | Run `module-documenter` sequentially (warn user) |
-| Streamlit not detected | Skip `streamlit-analyzer` entirely; do not create `05-streamlit/` |
+| Framework `X` not detected (Streamlit, etc.) | Skip the corresponding framework-specific analyzer (e.g., `streamlit-analyzer`) entirely; do not create its target directory (e.g., `05-streamlit/`) |
 | Phase 1 fails (any sub-agent) | Stop pipeline, do not proceed to Phase 2 |
 | Phase 2/3 single sub-agent fails | Continue with others; flag failure in manifest |
 | Sub-agent retried once already | Do not retry again; escalate |
@@ -236,6 +290,13 @@ Skip list: <list>
 
 Scope (specific to this invocation):
 <e.g. for module-documenter: "Document package <pkg-path>">
+
+Stack info (from .indexing-kb/02-structure/stack.json after Phase 1; in
+Phase 1 itself codebase-mapper detects independently):
+- Primary language: <python | java | go | …>
+- Languages: [<list>]
+- Frameworks: [<list>]
+- Test frameworks: [<list>]
 
 Required outputs:
 <list of files this agent must produce>
