@@ -61,15 +61,17 @@ when installing: the script handles them automatically.
 
 ## Step 3: Manual copy (alternative)
 
-If you prefer to copy files manually:
+If you prefer to copy files manually, look up the file path in
+`claude-marketplace/catalog.json` (the `file` field is the single source of
+truth) — capabilities live in topic subfolders:
 
 ```bash
 mkdir -p .claude/agents
-cp path/to/claude-marketplace/stable/software-architect.md .claude/agents/
+cp path/to/claude-marketplace/stable/architecture/software-architect.md .claude/agents/
 ```
 
 Check `catalog.json` for any `"dependencies"` listed for the capability you install,
-and copy those skill files from `claude-marketplace/skills/` as well.
+and copy those skill files from `claude-marketplace/skills/<topic>/` as well.
 
 ---
 
@@ -131,7 +133,7 @@ By default, you get whatever is in the marketplace at the time you install. If y
 project needs to stay on a specific version:
 
 1. Check `claude-marketplace/catalog.json` for the version you want
-2. Check out the git tag: `git checkout software-architect@1.0.0 -- claude-marketplace/stable/software-architect.md`
+2. Check out the git tag: `git checkout software-architect@1.0.0 -- claude-marketplace/stable/architecture/software-architect.md`
 3. Copy that version to your project
 
 Document the pinned version in your project's CLAUDE.md so the team knows why

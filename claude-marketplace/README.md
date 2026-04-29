@@ -16,12 +16,27 @@ release process (`claude-catalog/release-process.md`).
 
 ```
 claude-marketplace/
-  stable/         — Production-ready capabilities, safe to use in all projects
-  beta/           — New or experimental capabilities, use with awareness
-  docs/           — User-facing documentation
-  scripts/        — Publish and promote automation
-  catalog.json    — Master manifest of all published capabilities
+  stable/<topic>/<name>.md    — Production-ready capabilities, grouped by topic
+  beta/<topic>/<name>.md      — New or experimental capabilities, grouped by topic
+  skills/<topic>/<name>.md    — Shared knowledge providers (skills), grouped by topic.
+                                 Front-end skills are nested one level deeper:
+                                 skills/frontend/<framework>/<name>.md
+  docs/                       — User-facing documentation
+  scripts/                    — Publish and promote automation
+  catalog.json                — Master manifest of all published capabilities
+                                 (the `file` field is the single source of truth
+                                 for the on-disk path of each capability)
 ```
+
+The folder layout mirrors `claude-catalog/` so that finding a capability is the same operation in both places.
+
+### Topics in use
+
+| Tier | Topics |
+|------|--------|
+| `stable/` | `analysis`, `architecture`, `developers` |
+| `beta/` | `analysis`, `api`, `baseline-testing`, `developers`, `documentation`, `functional-analysis`, `indexing`, `orchestration`, `quality`, `refactoring-tobe`, `technical-analysis`, `tobe-testing` |
+| `skills/` | `analysis`, `api`, `backend`, `branding`, `database`, `documentation`, `frontend` (+ `angular/`, `react/`, `qwik/`, `vue/`, `vanilla/`), `orchestrators`, `python`, `refactoring`, `testing`, `utils` |
 
 ---
 

@@ -139,19 +139,33 @@ def validate_catalog_json(catalog_path: Path) -> tuple[list[Finding], dict]:
                         f"`{file_field}` has `name: {fm.get('name')}` "
                         f"but catalog entry is `{name}`. They must match."))
 
-            # Check file path convention: {tier}/{name}.md or skills/{name}.md
+            # Check file path convention. Two formats are accepted:
+            #   1. Flat:    {tier}/{name}.md          or  skills/{name}.md
+            #   2. Nested:  {tier}/<topic>/{name}.md  or  skills/<topic>[/<sub>]/{name}.md
+            # Subfolders MAY be nested arbitrarily deep. The leading segment
+            # must match the tier ("stable" / "beta" / "skills") and the leaf
+            # filename must be exactly "{name}.md".
             if tier and name:
-                expected = f"skills/{name}.md" if tier == "skill" else f"{tier}/{name}.md"
-                if file_field != expected:
+                root = "skills" if tier == "skill" else tier
+                parts = file_field.split("/")
+                ok = (
+                    len(parts) >= 2
+                    and parts[0] == root
+                    and parts[-1] == f"{name}.md"
+                    and all(p and not p.startswith(".") for p in parts)
+                )
+                if not ok:
+                    flat = f"{root}/{name}.md"
+                    nested = f"{root}/<topic>/{name}.md"
                     findings.append(Finding("error", loc,
-                        f"`file: {file_field}` — expected `{expected}` "
+                        f"`file: {file_field}` — expected `{flat}` or `{nested}` "
                         f"based on tier and name."))
 
     return findings, catalog
 
 
 def check_orphan_files(marketplace_root: Path, catalog: dict) -> list[Finding]:
-    """Error on .md files in stable/, beta/, or skills/ with no catalog.json entry."""
+    """Error on .md files in stable/, beta/, or skills/ (recursively) with no catalog.json entry."""
     findings = []
     catalog_files = {
         cap.get("file")
@@ -162,8 +176,10 @@ def check_orphan_files(marketplace_root: Path, catalog: dict) -> list[Finding]:
         tier_dir = marketplace_root / subdir
         if not tier_dir.exists():
             continue
-        for md_file in sorted(tier_dir.glob("*.md")):
-            rel = f"{subdir}/{md_file.name}"
+        # rglob — files may live in thematic subfolders (e.g. beta/indexing/foo.md,
+        # skills/frontend/angular/bar.md).
+        for md_file in sorted(tier_dir.rglob("*.md")):
+            rel = md_file.relative_to(marketplace_root).as_posix()
             if rel not in catalog_files:
                 findings.append(Finding("error", rel,
                     f"`{rel}` has no entry in catalog.json. "

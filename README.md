@@ -61,10 +61,12 @@ claude-registry/
     CHANGELOG.md
 
   claude-marketplace/      ← distribution (approved capabilities only)
-    stable/                  production-ready capabilities
-    beta/                    new or experimental capabilities
-    skills/                  shared skills (installed automatically as dependencies)
-    catalog.json             manifest with versions, metadata, and dependencies
+    stable/<topic>/          production-ready capabilities, grouped by topic
+    beta/<topic>/            new or experimental capabilities, grouped by topic
+    skills/<topic>/          shared skills, grouped by topic
+                              (skills/frontend/<framework>/ for Angular/React/Qwik/Vue/Vanilla)
+    catalog.json             manifest — `file` field is the source of truth
+                              for the on-disk path of every capability
 
   guida-operativa.pdf      ← read this first
   pitch-claude-registry.pptx

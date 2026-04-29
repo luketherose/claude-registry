@@ -128,10 +128,29 @@ install_capability() {
   local name="$1" tier="$2" is_dep="${3:-}"
   local src
 
-  if [[ "$tier" == "skill" ]]; then
-    src="$MARKETPLACE_ROOT/skills/$name.md"
+  # Resolve the source path from catalog.json's `file` field (single source of
+  # truth — no path inference needed). Files may live in topic subfolders, e.g.
+  # `beta/indexing/foo.md` or `skills/frontend/angular/bar.md`.
+  local relpath
+  relpath=$(python3 - "$CATALOG" "$name" <<'PYEOF'
+import json, sys
+catalog = json.load(open(sys.argv[1]))
+name = sys.argv[2]
+for cap in catalog.get("capabilities", []):
+    if cap.get("name") == name:
+        print(cap.get("file", ""))
+        break
+PYEOF
+)
+  if [[ -n "$relpath" ]]; then
+    src="$MARKETPLACE_ROOT/$relpath"
   else
-    src="$MARKETPLACE_ROOT/$tier/$name.md"
+    # Backward-compatible fallback for entries that somehow lack a `file` field
+    if [[ "$tier" == "skill" ]]; then
+      src="$MARKETPLACE_ROOT/skills/$name.md"
+    else
+      src="$MARKETPLACE_ROOT/$tier/$name.md"
+    fi
   fi
 
   local dst="$AGENTS_DIR/$name.md"
