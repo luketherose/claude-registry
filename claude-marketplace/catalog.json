@@ -741,7 +741,7 @@
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use to load Angular standards: modern Angular 18+ conventions (standalone, signals, inject(), input/output functions, @if/@for control flow), strict smart/dumb separation, services own HTTP and business logic, OnPush change detection, RxJS integration, Reactive Forms, file/folder structure by feature, and best-guess + TODO over conservative stubs. Use for new components, FE refactoring, or Angular architectural review.",
+      "description": "Use to load Angular standards: modern Angular 18+ conventions (standalone, signals, inject(), input/output functions, @if/@for control flow), strict smart/dumb separation, services own HTTP and business logic, mandatory external templates and styles (templateUrl + styleUrls, no inline template literals), OnPush change detection, RxJS integration, Reactive Forms, file/folder structure by feature, and best-guess + TODO over conservative stubs. Use for new components, FE refactoring, or Angular architectural review.",
       "file": "skills/angular-expert.md",
       "dependencies": [],
       "tools": [
@@ -755,7 +755,7 @@
         "skill"
       ],
       "published": "2026-04-29",
-      "changelog": "Modernise to Angular 18+ (standalone, signals, inject(), @if/@for); add strict smart/dumb separation rule with forbidden HTTP-in-component examples; pull style guide rules from https://angular.dev/style-guide; add best-guess + explicit TODO directive (no conservative stubs)."
+      "changelog": "Modernise to Angular 18+ (standalone, signals, inject(), @if/@for); add strict smart/dumb separation rule with forbidden HTTP-in-component examples; mandate external templates and styles (templateUrl + styleUrls, no inline template literals); pull style guide rules from https://angular.dev/style-guide; add best-guess + explicit TODO directive (no conservative stubs)."
     },
     {
       "name": "ngrx-expert",

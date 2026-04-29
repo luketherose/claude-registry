@@ -95,40 +95,54 @@ This is the most frequently violated rule in our generated code. **Apply it with
 
 **Defect to avoid**: a "page component" that injects `HttpClient`, calls the API directly, transforms the payload inline, and renders the result. This is three responsibilities collapsed into one — split it.
 
+**File layout per component** (mandatory): every component is a triplet of co-located files — `name.component.ts`, `name.component.html`, `name.component.scss` (or `.css`). The `.ts` references them via `templateUrl` and `styleUrls`. See "External templates and styles" rule below for rationale.
+
 ```typescript
-// ✅ Dumb component (signals + readonly inputs)
+// ✅ Dumb component — externalised template + styles
+// item-card.component.ts
 @Component({
   selector: 'app-item-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <article class="card">
-      <h3>{{ item().name }}</h3>
-      <button (click)="selected.emit(item())">Select</button>
-    </article>
-  `
+  templateUrl: './item-card.component.html',
+  styleUrls: ['./item-card.component.scss']
 })
 export class ItemCardComponent {
   readonly item = input.required<Item>();
   readonly selected = output<Item>();
 }
+```
 
-// ✅ Smart component (orchestrates only — no template heaviness, no HTTP)
+```html
+<!-- item-card.component.html -->
+<article class="card">
+  <h3>{{ item().name }}</h3>
+  <button (click)="selected.emit(item())">Select</button>
+</article>
+```
+
+```typescript
+// ✅ Smart component — orchestrates only, externalised template + styles
+// item-list-page.component.ts
 @Component({
   selector: 'app-item-list-page',
   standalone: true,
   imports: [ItemCardComponent, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    @for (item of items(); track item.id) {
-      <app-item-card [item]="item" (selected)="onSelect($event)" />
-    }
-  `
+  templateUrl: './item-list-page.component.html',
+  styleUrls: ['./item-list-page.component.scss']
 })
 export class ItemListPageComponent {
   private readonly itemFacade = inject(ItemFacade);
   protected readonly items = this.itemFacade.items;   // signal
   protected onSelect(item: Item) { this.itemFacade.selectItem(item.id); }
+}
+```
+
+```html
+<!-- item-list-page.component.html -->
+@for (item of items(); track item.id) {
+  <app-item-card [item]="item" (selected)="onSelect($event)" />
 }
 ```
 
@@ -335,11 +349,50 @@ Pulled from the official style guide at https://angular.dev/style-guide. These a
 - Use `protected` (not `public`) for component members accessed only from the template.
 
 ### Templates
+- **External template files are the default** — every component declares `templateUrl: './name.component.html'`, never an inline `template:` literal. Inline templates allowed only for trivial components (≤ 5 lines of markup, no bindings beyond a single `{{ value }}`) and never for any component containing more than one element. See § External templates and styles below.
 - Avoid complex template logic — refactor into `computed()` signals or component methods.
 - Prefer direct `[class]` and `[style]` bindings over `NgClass` / `NgStyle`.
 - Use the new control-flow blocks (`@if`, `@for`, `@switch`) over `*ngIf`, `*ngFor`, `*ngSwitch` in new code.
 - For `@for`, always provide `track` (mandatory in modern Angular).
 - Event handler names describe the action, not the trigger: `onSaveProfile()` not `onClick()`.
+
+### External templates and styles (mandatory)
+
+Every component is a triplet of co-located files: `<name>.component.ts`, `<name>.component.html`, `<name>.component.scss` (or `.css`). The `.ts` references them with `templateUrl` and `styleUrls`. **Inline `template:` and `styles:` in the `@Component` decorator are forbidden** for any non-trivial component.
+
+```typescript
+// ✅ CORRECT — external template + styles
+@Component({
+  selector: 'app-user-profile',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.scss']
+})
+export class UserProfileComponent { /* ... */ }
+
+// ❌ WRONG — inline template
+@Component({
+  selector: 'app-user-profile',
+  template: `
+    <section class="profile">
+      <h2>{{ user().name }}</h2>
+      <!-- ... 30 more lines ... -->
+    </section>
+  `,
+  styles: [`.profile { padding: 1rem; }`]
+})
+export class UserProfileComponent { /* ... */ }
+```
+
+**Why this is non-negotiable**:
+- IDE tooling — Angular Language Service, autocomplete, template type-checking, and Prettier all behave better against `.html` files than against template literals.
+- Diffs — template-only changes don't pollute the `.ts` diff and vice versa, easing review.
+- Separation of concerns at the file level — markup, behaviour, and styling are three concerns and three files.
+- Designers and accessibility tooling can edit `.html`/`.scss` without touching TypeScript.
+- Search/grep — finding "where is this markup defined" is unambiguous.
+
+**Allowed exception**: trivial micro-components used as render-prop wrappers (≤ 5 markup lines, single binding, no logic) may use `template:`. When in doubt, externalise.
 
 ### File and folder structure
 - File names: kebab-case, separator `-` (`user-profile.ts`, not `userProfile.ts`).
