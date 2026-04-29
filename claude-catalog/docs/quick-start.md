@@ -14,7 +14,7 @@ Common capabilities and when to use them:
 |------------|---------|
 | `software-architect` | Designing or reviewing architecture, writing ADRs |
 | `functional-analyst` | Extracting requirements, writing use cases, mapping processes |
-| `developer-java-spring` | Writing or reviewing Spring Boot code |
+| `developer-java` | Writing or reviewing Spring Boot code |
 | `technical-analyst` | Auditing technical debt, security posture, code quality |
 | `developer-python` | Writing or reviewing Python code |
 | `code-reviewer` | Reviewing a PR or set of changed files |
@@ -45,7 +45,7 @@ The easiest way to install capabilities is the interactive setup script:
 The script:
 - Shows the full capability list with tiers
 - Lets you select by number, or type `all` to install all stable capabilities
-- **Automatically installs skill dependencies** — if you select `developer-java-spring`,
+- **Automatically installs skill dependencies** — if you select `developer-java`,
   the script also copies `java-spring-standards`, `testing-standards`, and
   `rest-api-standards` into your project's `.claude/agents/`
 - Updates your project's `.claude/settings.json` with the `Agent(name)` permission rules
@@ -95,7 +95,7 @@ add explicit `Agent(name)` rules to your `.claude/settings.json`:
     "allow": [
       "Agent(software-architect)",
       "Agent(functional-analyst)",
-      "Agent(developer-java-spring)"
+      "Agent(developer-java)"
     ]
   }
 }
@@ -111,8 +111,8 @@ yourself.
 If a capability needs project-specific context (your company's naming conventions,
 your specific frameworks, domain vocabulary), create a project-local override:
 
-1. Copy the capability: `cp .claude/agents/developer-java-spring.md .claude/agents/developer-java-spring-payments.md`
-2. Change the `name` field: `name: developer-java-spring-payments`
+1. Copy the capability: `cp .claude/agents/developer-java.md .claude/agents/developer-java-payments.md`
+2. Change the `name` field: `name: developer-java-payments`
 3. Add project-specific context at the end of the system prompt:
    ```
    ## Project context (Payments Service)

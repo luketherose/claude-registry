@@ -57,7 +57,7 @@ to `.claude/settings.json`:
     "allow": [
       "Agent(software-architect)",
       "Agent(functional-analyst)",
-      "Agent(developer-java-spring)"
+      "Agent(developer-java)"
     ]
   }
 }
@@ -86,7 +86,7 @@ internal libraries, your domain vocabulary), create a local specialization:
 
 1. Copy the capability with a new name:
    ```bash
-   cp .claude/agents/developer-java-spring.md .claude/agents/developer-java-spring-{project}.md
+   cp .claude/agents/developer-java.md .claude/agents/developer-java-{project}.md
    ```
 2. Change the `name` field in the frontmatter to match the new filename
 3. Append a "Project context" section at the end of the system prompt:

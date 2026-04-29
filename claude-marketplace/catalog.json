@@ -79,13 +79,13 @@
       "changelog": "Initial release \u2014 skill variant extracted from catalog"
     },
     {
-      "name": "developer-java-spring",
-      "version": "1.1.0",
+      "name": "developer-java",
+      "version": "2.0.0",
       "type": "agent",
       "tier": "stable",
       "status": "active",
-      "description": "Writes production-ready Java/Spring Boot code with clean architecture, JUnit 5 testing, Spring Security, structured logging, and RFC 7807 error handling.",
-      "file": "stable/developer-java-spring.md",
+      "description": "Use when writing, reviewing, or refactoring Java code. Produces production-ready code with clean architecture, proper layering, constructor injection, JUnit 5 + Testcontainers testing, structured logging, RFC 7807 error handling, Micrometer observability, OpenAPI documentation. Currently specialised on Spring Boot 3 (the dominant enterprise Java case); also handles Micronaut, Quarkus, Helidon, and plain Java SE when the user declares the framework explicitly. Future siblings (developer-java-micronaut, developer-java-quarkus) will specialise per framework.",
+      "file": "stable/developer-java.md",
       "dependencies": [
         "java-spring-standards",
         "testing-standards",
@@ -103,11 +103,13 @@
       "tags": [
         "java",
         "spring-boot",
+        "micronaut",
+        "quarkus",
         "backend",
         "developer"
       ],
-      "published": "2026-04-20",
-      "changelog": "v1.1.0: Extracted standards to java-spring-standards, testing-standards, rest-api-standards skills"
+      "published": "2026-04-28",
+      "changelog": "BREAKING: renamed from developer-java-spring; generalised to support multiple Java frameworks (Spring Boot remains default)."
     },
     {
       "name": "technical-analyst",

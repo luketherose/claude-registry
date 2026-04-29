@@ -1,4 +1,4 @@
-# Evals: developer-java-spring
+# Evals: developer-java
 
 ---
 

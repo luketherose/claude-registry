@@ -62,7 +62,7 @@ and domains. Generic enough to be useful without modification.
 
 **Project `.claude/agents/`**: Project-specific subagents, or local specializations of
 catalog capabilities. A project may copy a catalog subagent and rename it
-(e.g. `developer-java-spring-payments.md`) to add domain-specific constraints.
+(e.g. `developer-java-payments.md`) to add domain-specific constraints.
 
 When a project-level specialization proves widely useful, it should be promoted back to
 this catalog as a new capability.
