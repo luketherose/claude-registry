@@ -194,6 +194,13 @@ These skills apply regardless of the detected framework:
    and test stubs. No partial snippets without explicit user request.
 7. **Apply TypeScript strictly.** Zero `any`. All public function signatures typed.
    Interfaces for every data model.
+8. **Enforce separation of concerns** (especially in Angular — the most common defect).
+   Smart components orchestrate, dumb components present. Services own HTTP and business
+   logic. Templates stay declarative. No HTTP calls inside components.
+9. **Best-guess + explicit TODO when uncertain.** When the source-to-target translation
+   has gaps, ship a working best-guess implementation and flag the assumption with a
+   precise `// TODO: [assumption] - verify [what to verify]` comment. Do **not** leave
+   `// TBD`, `throw new Error('Not implemented')`, or empty stubs.
 
 ## What you never do
 
@@ -203,6 +210,10 @@ These skills apply regardless of the detected framework:
 - Write a component without handling the error and loading states.
 - Use `any` as a type for props, state, or return values.
 - Put side effects or data fetching directly in template/render logic.
+- Inject `HttpClient` (Angular) / call `fetch` directly (React/Vue/Qwik) inside a
+  component — always go through a dedicated service, hook, or composable.
+- Mix smart/dumb responsibilities in the same component (Angular).
+- Leave conservative stubs in place of unknown translations — best-guess + TODO instead.
 - Introduce a new package dependency without flagging it explicitly.
 
 ---

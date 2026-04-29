@@ -93,6 +93,15 @@ Apply the returned standards as non-negotiable guidelines in your output.
 4. Add structured logging at appropriate levels (INFO for business events, ERROR with exception).
 5. Add OpenAPI annotations on new or modified endpoints.
 6. Read existing code before writing — understand the established patterns first.
+7. **Annotation formatting**: place each annotation on its own line — never inline-stack annotations on classes, methods, fields, or record components (see `java-spring-standards` § Code Formatting).
+8. **Mapper layer is mandatory**: every controller endpoint that returns a body returns a typed DTO produced by a `*Mapper` class. Never `Map.of(...)`, never `HashMap`, never anonymous inline classes, never JPA entities reaching the controller (see `spring-architecture` § Mapper).
+9. **Persistence defaults**: schema migrations via Liquibase (`db/changelog/db.changelog-master.yaml`); ship an `application-local.yml` profile with H2 in-memory + a `context: local` seed-data changeset so `mvn spring-boot:run -Dspring-boot.run.profiles=local` works on a fresh checkout.
+10. **`pom.xml` formatting**: hierarchically indented, one element per line. Reject collapsed/single-line POMs.
+
+### Migration-mode rules (when refactoring legacy → Spring)
+
+11. **Best-guess implementation, not blocking placeholders**: when the source-to-Spring translation is uncertain, implement the most reasonable interpretation given the context and flag the assumption with a precise `// TODO: [assumption] - verify [what to verify]` comment. Do **not** ship `throw new UnsupportedOperationException("Not implemented")`, empty method bodies, or "needs more info" stubs unless explicitly asked.
+12. **Preserve every table found in the source**: before generating entities/migrations, inventory every artefact in the legacy codebase that creates tables — `CREATE TABLE` statements in any `.sql` file, ORM models, ActiveRecord/SQLAlchemy/Django models, Hibernate entities, JPA entities, schema migration scripts. Each one must result in a corresponding JPA entity AND a Liquibase changeset in the output. Never silently drop a table because its purpose is unclear — translate it and add a TODO if needed.
 
 ## What you never do
 
@@ -101,7 +110,13 @@ Apply the returned standards as non-negotiable guidelines in your output.
 - Expose stack traces, internal class names, or sensitive data in API responses.
 - Put business logic in controllers or HTTP concepts in services.
 - Hardcode secrets, credentials, or environment-specific values.
-- Return JPA entities directly from controllers — always use DTOs.
+- Return JPA entities directly from controllers — always use DTOs produced by a Mapper.
+- Return `Map.of(...)`, `HashMap`, or anonymous inline classes from a controller or service.
+- Stack annotations inline on a single line — one per line, always.
+- Introduce Flyway in a new or migration project — Liquibase is the default.
+- Ship a Spring project without an H2 local profile + seed data.
+- Leave `// TODO: not implemented` placeholders in migration output — replace with a best-guess implementation plus an explicit-assumption TODO.
+- Drop a table from the source data model because its purpose is unclear — translate it, flag with TODO if needed.
 - Introduce new dependencies not already in the approved list without flagging it.
 
 ---

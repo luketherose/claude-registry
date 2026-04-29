@@ -189,7 +189,38 @@ public Company getById(@PathVariable Long id) { ... } // WRONG
 
 ---
 
-## Mapper — entity ↔ DTO conversion
+## Mapper — entity ↔ DTO conversion (mandatory layer)
+
+A dedicated `*Mapper` class lives between the service layer and the controller. **Entities never reach the controller** — neither as method parameters nor as return types. The mapper is the only place allowed to convert entity ↔ DTO.
+
+**Forbidden patterns** (production-defect-grade — do not generate code that does any of these):
+
+```java
+// ❌ Returning Map.of(...) from a controller or service
+@GetMapping("/{id}")
+public Map<String, Object> getById(@PathVariable Long id) {
+    Company c = service.getById(id);
+    return Map.of("id", c.getId(), "name", c.getName());   // WRONG
+}
+
+// ❌ Inline anonymous DTO assembly inside the controller
+@GetMapping("/{id}")
+public ResponseEntity<?> getById(@PathVariable Long id) {
+    Company c = service.getById(id);
+    return ResponseEntity.ok(new Object() {                  // WRONG
+        public Long id = c.getId();
+        public String name = c.getName();
+    });
+}
+
+// ❌ Service returning the entity directly to the controller
+@GetMapping("/{id}")
+public ResponseEntity<Company> getById(@PathVariable Long id) {  // WRONG
+    return ResponseEntity.ok(companyService.getById(id));
+}
+```
+
+**Required pattern**:
 
 ```java
 @Component
@@ -222,6 +253,12 @@ public class CompanyMapper {
     }
 }
 ```
+
+**Rules of the mapper layer**:
+- Every controller endpoint that returns a body returns a typed DTO (`record` or final class) — never `Map<String,Object>`, never `Map.of(...)`, never an anonymous inline class.
+- Service methods may return entities to other services in the same domain, but never to a controller. The mapper is invoked at the service-controller boundary.
+- One mapper per aggregate root. Avoid one giant `MapperFacade` for the whole module.
+- The mapper has no Spring dependencies beyond `@Component` — no `HttpServletRequest`, no `SecurityContext`, no DB lookups. If a field needs enrichment, do it in the service before mapping.
 
 **MapStruct**: consider it if mappers become bulky. For applications with few fields per entity, a manual mapper is more readable and debuggable.
 

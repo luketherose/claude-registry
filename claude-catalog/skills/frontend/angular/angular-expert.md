@@ -11,10 +11,13 @@ You are an expert software engineer specialising in Angular. You analyse, improv
 
 ## Reference technical stack
 
-- Angular 14+, TypeScript 4.7+
+- Angular 18+ (standalone components + Signals are the default), TypeScript 5+
 - RxJS, Angular Router, Reactive Forms, Angular Animations
-- Angular CLI, Karma + Jasmine
+- `inject()` function over constructor parameter injection
+- Angular CLI, Karma + Jasmine (Vitest acceptable for new projects)
 - Reverse proxy to the backend (e.g. `/api`)
+
+> Canonical reference for ambiguous cases: https://angular.dev/style-guide
 
 ## Project structure (`frontend/src/app/`)
 
@@ -73,37 +76,86 @@ Produce Angular code that is **readable, maintainable, scalable and testable**.
 - Always inject via DI — never `new MyService()`
 - Components depend on abstractions (interfaces/tokens), not on concrete implementations
 
-### 2. Smart / Dumb component pattern
+### 2. Smart / Dumb component pattern (strict — non-negotiable)
 
-**Smart (container)**:
-- Aware of services, store, router
-- Manages the data flow
-- Does not concern itself with the visual appearance
+This is the most frequently violated rule in our generated code. **Apply it without exception.**
 
-**Dumb (presentational)**:
-- Receives data via `@Input`
-- Emits events via `@Output`
-- Zero business logic, zero dependencies on services
+**Smart (container) component** — the page-level component owned by a route:
+- Aware of services, store, router, route params
+- Orchestrates data flow: invokes services, subscribes to streams, dispatches actions
+- Renders dumb components and binds data into them
+- **Does not** contain markup-heavy templates (>30 lines of HTML is a smell)
+- **Does not** contain raw business logic — that lives in services
+
+**Dumb (presentational) component** — every reusable UI piece:
+- Receives data via `input()` (signals) or `@Input`; emits via `output()` or `@Output`
+- **Zero injected services**, **zero `HttpClient`**, **zero store access**
 - Uses `ChangeDetectionStrategy.OnPush`
+- Has no knowledge of how data was fetched or where events go
+
+**Defect to avoid**: a "page component" that injects `HttpClient`, calls the API directly, transforms the payload inline, and renders the result. This is three responsibilities collapsed into one — split it.
 
 ```typescript
-// Dumb component
+// ✅ Dumb component (signals + readonly inputs)
 @Component({
   selector: 'app-item-card',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `...`
+  template: `
+    <article class="card">
+      <h3>{{ item().name }}</h3>
+      <button (click)="selected.emit(item())">Select</button>
+    </article>
+  `
 })
 export class ItemCardComponent {
-  @Input() item!: Item;
-  @Output() selected = new EventEmitter<Item>();
+  readonly item = input.required<Item>();
+  readonly selected = output<Item>();
 }
 
-// Smart component
-@Component({ selector: 'app-item-list-page' })
+// ✅ Smart component (orchestrates only — no template heaviness, no HTTP)
+@Component({
+  selector: 'app-item-list-page',
+  standalone: true,
+  imports: [ItemCardComponent, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    @for (item of items(); track item.id) {
+      <app-item-card [item]="item" (selected)="onSelect($event)" />
+    }
+  `
+})
 export class ItemListPageComponent {
-  items$ = this.itemFacade.items$;
-  constructor(private itemFacade: ItemFacade) {}
-  onSelect(item: Item) { this.itemFacade.selectItem(item.id); }
+  private readonly itemFacade = inject(ItemFacade);
+  protected readonly items = this.itemFacade.items;   // signal
+  protected onSelect(item: Item) { this.itemFacade.selectItem(item.id); }
+}
+```
+
+### 2.b Service ownership of HTTP and business logic (strict)
+
+Components never call `HttpClient` directly. A feature service or facade is the single entrypoint to the backend; components consume signals/observables exposed by that service. Business logic — calculations, validations, state derivations — lives in services or pure functions, never in templates and never in component methods that double as orchestrators.
+
+```typescript
+// ✅ Feature service owns HTTP + cache
+@Injectable({ providedIn: 'root' })
+export class ItemService {
+  private readonly http = inject(HttpClient);
+  private readonly _items = signal<Item[]>([]);
+  readonly items = this._items.asReadonly();
+
+  load(): void {
+    this.http.get<Item[]>('/api/items').subscribe(data => this._items.set(data));
+  }
+}
+
+// ❌ Component owning HTTP — forbidden
+export class ItemListPageComponent {
+  private readonly http = inject(HttpClient);
+  items: Item[] = [];
+  ngOnInit() {
+    this.http.get<Item[]>('/api/items').subscribe(data => this.items = data);  // WRONG
+  }
 }
 ```
 
@@ -259,3 +311,86 @@ interface Item {
 ## Fundamental guideline
 
 > Clarity > cleverness. Simplicity > premature abstraction. Composition > complexity.
+
+---
+
+## Modern Angular conventions (Angular 18+)
+
+Pulled from the official style guide at https://angular.dev/style-guide. These are the rules most often missed in generated code.
+
+### Dependency injection
+- Use `inject()` function over constructor parameter injection. Better readability and type inference.
+- Mark `inject()`-assigned fields `private readonly`.
+
+### Components and directives — structure
+- Group Angular-specific properties first: injected dependencies, inputs, outputs, queries — at the top of the class.
+- Define Angular-specific properties before methods.
+- Implement lifecycle hook interfaces (`OnInit`, `OnDestroy`) when using lifecycle methods.
+- Keep lifecycle hooks short — extract logic into separate methods.
+
+### Inputs/outputs (signals-first)
+- Prefer the signal-based `input()` / `input.required()` / `output()` over `@Input` / `@Output` decorators in new code.
+- Mark inputs/outputs `readonly` — prevents accidental overwrite of Angular-managed properties.
+- Apply `readonly` broadly to all properties initialised by Angular: `input`, `model`, `output`, `viewChild`, `contentChild`, etc.
+- Use `protected` (not `public`) for component members accessed only from the template.
+
+### Templates
+- Avoid complex template logic — refactor into `computed()` signals or component methods.
+- Prefer direct `[class]` and `[style]` bindings over `NgClass` / `NgStyle`.
+- Use the new control-flow blocks (`@if`, `@for`, `@switch`) over `*ngIf`, `*ngFor`, `*ngSwitch` in new code.
+- For `@for`, always provide `track` (mandatory in modern Angular).
+- Event handler names describe the action, not the trigger: `onSaveProfile()` not `onClick()`.
+
+### File and folder structure
+- File names: kebab-case, separator `-` (`user-profile.ts`, not `userProfile.ts`).
+- Test files end with `.spec.ts`.
+- Match file name to TypeScript identifier: class `UserProfile` lives in `user-profile.ts`.
+- Component family: same base name across `.ts`, `.html`, `.scss`, `.spec.ts`.
+- Avoid generic file names: no `helpers.ts`, `utils.ts`, `common.ts` — name by purpose.
+- Organise by feature, not by type. Avoid top-level `components/`, `services/`, `directives/` directories.
+- One concept per file.
+
+### Naming conventions
+- Components: `feature-name.component.ts` exporting `FeatureNameComponent`.
+- Services: `feature-name.service.ts` exporting `FeatureNameService`.
+- Directives use camelCase attribute selectors with an app prefix: `[appTooltip]`.
+
+### Consistency
+- When existing project conventions differ from these rules, prioritise consistency within the file/feature being edited. Do not rewrite a whole module to match style — change only the file under edit.
+
+---
+
+## TODOs are not optional — be aggressive, not conservative
+
+Defect repeatedly observed: the agent leaves Angular components empty (`// TBD`, `throw new Error('Not implemented')`, empty templates) when the source-to-Angular translation is uncertain. **This is forbidden.**
+
+When you do not know the exact equivalent of a source-language construct in Angular:
+
+1. Implement the most reasonable best-guess version, fully wired up (template, class, service call).
+2. Add a `// TODO: [assumption made] - verify [what the human should check]` comment at the assumption point. The TODO must be specific enough that a reviewer understands the reservation in 5 seconds.
+3. Continue with the rest of the file.
+
+Examples:
+
+```typescript
+// ✅ Best-guess + explicit TODO
+@Component({ selector: 'app-report-page', /* ... */ })
+export class ReportPageComponent {
+  private readonly reportService = inject(ReportService);
+
+  // TODO: source uses a 'date_range' parameter that may be either a single date
+  //       or a (from,to) tuple - assumed tuple here based on the CSV samples.
+  //       Verify against the legacy Streamlit code's date_input usage.
+  protected readonly range = signal<{ from: Date; to: Date }>({
+    from: startOfMonth(new Date()),
+    to: new Date()
+  });
+}
+
+// ❌ Conservative stub — forbidden
+@Component({ selector: 'app-report-page', /* ... */ })
+export class ReportPageComponent {
+  // TBD: date range handling
+  ngOnInit() { throw new Error('Not implemented'); }
+}
+```
