@@ -342,17 +342,80 @@ Public service interface methods require Javadoc describing the contract (not th
 
 ---
 
+## Code Formatting (non-negotiable)
+
+### Annotation formatting — one per line, vertically stacked
+
+Each annotation goes on its own line. Never inline-stack annotations on a single line, neither on classes, methods, fields, nor parameters. Logical groups of field annotations may be separated by a blank line.
+
+```java
+// ❌ WRONG — annotations inlined
+@Entity @Table(name = "companies") public class Company { ... }
+
+@NotNull @Size(max = 50) private String name;
+
+// ✅ CORRECT — one annotation per line
+@Entity
+@Table(name = "companies")
+public class Company { ... }
+
+@NotNull
+@Size(max = 50)
+private String name;
+```
+
+For records, the same rule applies to component declarations:
+
+```java
+public record CompanyCreateRequest(
+    @NotBlank
+    @Size(max = 200)
+    String name,
+
+    @NotBlank
+    @Pattern(regexp = "^[0-9]{11}$")
+    String vatNumber,
+
+    @Email
+    String email
+) {}
+```
+
+### POM file formatting
+
+`pom.xml` is XML — it must be hierarchically indented, one element per line, never collapsed. Use 4-space indentation (Maven default). Generated POMs that are written as a single line or with all `<dependency>` blocks on one line each are rejected.
+
+```xml
+<!-- ✅ CORRECT -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+
+<!-- ❌ WRONG -->
+<dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-web</artifactId></dependency>
+```
+
+### Inline response construction — forbidden
+
+Controllers and services must never return `Map.of(...)`, `HashMap<>`, or anonymous inline classes as response bodies. Always return a typed DTO produced by a `*Mapper` class. See `spring-architecture` for the full mapper-layer rules.
+
+---
+
 ## Maven Conventions
 
 - Always inherit from `spring-boot-starter-parent` or `spring-boot-dependencies` BOM
 - Use `<dependencyManagement>` — no inline version tags for Spring-managed dependencies
-- Profiles: `dev` (H2/embedded), `test` (Testcontainers), `prod` (external DB, structured logging)
+- Profiles: `local` (H2 in-memory + Liquibase + seed data), `test` (Testcontainers), `prod` (external DB, structured logging)
 - `application.yml` preferred over `application.properties`
 - JaCoCo minimum 70% line coverage enforced in CI
 - SpotBugs: zero HIGH findings gate; OWASP Dependency Check: no CRITICAL CVEs
+- **Schema migration tool: Liquibase** (preferred over Flyway). Default changelog at `db/changelog/db.changelog-master.yaml`.
+- **Local-dev database: H2 in-memory**, configured via `application-local.yml` with Liquibase applying both schema and a seed-data changeset so a fresh checkout is runnable with zero external dependencies.
 
 Approved dependencies:
 `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, `spring-boot-starter-security`,
 `spring-boot-starter-validation`, `spring-boot-starter-actuator`, `spring-boot-starter-test`,
 `springdoc-openapi-starter-webmvc-ui`, `logstash-logback-encoder`,
-`micrometer-tracing-bridge-otel`, `testcontainers`, `testcontainers-postgresql`
+`micrometer-tracing-bridge-otel`, `liquibase-core`, `h2` (runtime, scope `runtime`),
+`testcontainers`, `testcontainers-postgresql`

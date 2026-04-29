@@ -80,11 +80,11 @@
     },
     {
       "name": "developer-java",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "type": "agent",
       "tier": "stable",
       "status": "active",
-      "description": "Use when writing, reviewing, or refactoring Java code. Produces production-ready code with clean architecture, proper layering, constructor injection, JUnit 5 + Testcontainers testing, structured logging, RFC 7807 error handling, Micrometer observability, OpenAPI documentation. Currently specialised on Spring Boot 3 (the dominant enterprise Java case); also handles Micronaut, Quarkus, Helidon, and plain Java SE when the user declares the framework explicitly. Future siblings (developer-java-micronaut, developer-java-quarkus) will specialise per framework.",
+      "description": "Use when writing, reviewing, or refactoring Java code. Produces production-ready code with clean architecture, mandatory DTO+Mapper layer (no entities crossing layers, no Map.of inline), one-annotation-per-line formatting, hierarchically indented POMs, Liquibase migrations + H2 local-dev profile by default, JUnit 5 + Testcontainers testing, structured logging, RFC 7807 error handling, Micrometer observability, OpenAPI documentation. In migration mode: best-guess implementation with explicit TODOs over conservative stubs; preserves every table found in the source data model. Currently specialised on Spring Boot 3; also handles Micronaut, Quarkus, Helidon, and plain Java SE when the user declares the framework explicitly.",
       "file": "stable/developer-java.md",
       "dependencies": [
         "java-spring-standards",
@@ -108,8 +108,8 @@
         "backend",
         "developer"
       ],
-      "published": "2026-04-28",
-      "changelog": "BREAKING: renamed from developer-java-spring; generalised to support multiple Java frameworks (Spring Boot remains default)."
+      "published": "2026-04-29",
+      "changelog": "Add mandatory DTO+Mapper layer rule (no Map.of, no entities to controller); annotation formatting (one per line); Liquibase + H2 local profile defaults; migration-mode rules (best-guess + TODO; preserve all source tables); POM multi-line indentation."
     },
     {
       "name": "technical-analyst",
@@ -359,11 +359,11 @@
     },
     {
       "name": "java-spring-standards",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use to retrieve authoritative Java/Spring Boot standards: package structure, layering rules, testing patterns (JUnit 5 + Testcontainers), error handling (RFC 7807), logging, security, observability, and Maven conventions.",
+      "description": "Use to retrieve authoritative Java/Spring Boot standards: package structure, layering rules, code formatting (one annotation per line, multi-line POM, no inline Map.of), testing patterns (JUnit 5 + Testcontainers), error handling (RFC 7807), logging, security, observability, and Maven conventions (Liquibase preferred, H2 local profile mandatory).",
       "file": "skills/java-spring-standards.md",
       "dependencies": [],
       "tools": [
@@ -376,8 +376,8 @@
         "standards",
         "skill"
       ],
-      "published": "2026-04-20",
-      "changelog": "Initial release \u2014 extracted from developer-java-spring and java-spring-conventions policy"
+      "published": "2026-04-29",
+      "changelog": "Add Code Formatting section (one annotation per line, multi-line POM, no inline Map.of); switch Maven Conventions defaults to Liquibase + H2 local profile."
     },
     {
       "name": "testing-standards",
@@ -452,11 +452,11 @@
     },
     {
       "name": "developer-frontend",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "type": "agent",
       "tier": "beta",
       "status": "active",
-      "description": "Use when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack \u2014 does not load Angular skills for a React project or vice versa. Produces production-ready, typed, accessible, tested frontend code following the conventions of the detected framework.",
+      "description": "Use when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack. Enforces strict separation of concerns (smart vs dumb components, services own HTTP and business logic). When the source-to-target translation is uncertain, ships a best-guess implementation with explicit TODOs rather than conservative stubs. Produces production-ready, typed, accessible, tested frontend code.",
       "file": "beta/developer-frontend.md",
       "dependencies": [
         "angular-expert",
@@ -494,8 +494,8 @@
         "typescript",
         "developer"
       ],
-      "published": "2026-04-22",
-      "changelog": "Initial beta release"
+      "published": "2026-04-29",
+      "changelog": "Add strict separation-of-concerns rule (smart/dumb, services own HTTP); add best-guess + TODO directive for unknown translations (no conservative stubs)."
     },
     {
       "name": "tech-analyst",
@@ -542,11 +542,11 @@
     },
     {
       "name": "spring-architecture",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use to load Spring layered-architecture standards: Controller/Service/Repository/Entity structure, DTO separation, Bean Validation, global exception handling, mapper pattern, structured logging, naming conventions, and module implementation order.",
+      "description": "Use to load Spring layered-architecture standards: Controller/Service/Repository/Entity structure, DTO separation, mandatory Mapper layer (forbids Map.of, anonymous inline classes, and entities reaching controllers), Bean Validation, global exception handling, structured logging, naming conventions, and module implementation order.",
       "file": "skills/spring-architecture.md",
       "dependencies": [],
       "tools": [
@@ -606,16 +606,16 @@
         "standards",
         "skill"
       ],
-      "published": "2026-04-22",
-      "changelog": "Initial release"
+      "published": "2026-04-29",
+      "changelog": "Strengthen Mapper section: forbid Map.of, anonymous inline classes, and entities reaching the controller; mandatory mapper layer at the service-controller boundary."
     },
     {
       "name": "postgresql-expert",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use to load PostgreSQL standards: relational design, data modelling, data types, indices, performance tuning, Flyway migrations, transaction management, data integrity, security, and monitoring. Works alongside spring-data-jpa; does not duplicate the ORM layer.",
+      "description": "Use to load PostgreSQL standards: relational design, data modelling, data types, indices, performance tuning, Liquibase migrations (preferred over Flyway), H2 local-dev profile with seed data, transaction management, data integrity, security, and monitoring. Works alongside spring-data-jpa; does not duplicate the ORM layer.",
       "file": "skills/postgresql-expert.md",
       "dependencies": [],
       "tools": [
@@ -627,8 +627,8 @@
         "postgresql",
         "skill"
       ],
-      "published": "2026-04-22",
-      "changelog": "Initial release"
+      "published": "2026-04-29",
+      "changelog": "Switch default migration tool from Flyway to Liquibase (Flyway only when project already uses it); add H2 in-memory local-dev profile section with seed-data changeset gated on context: local; rewrite migration examples in Liquibase YAML."
     },
     {
       "name": "backend-documentation",
@@ -737,11 +737,11 @@
     },
     {
       "name": "angular-expert",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use to load Angular standards: component architecture, smart/dumb pattern, OnPush change detection, RxJS integration, Reactive Forms, lazy loading, and SOLID principles applied to Angular. Use for new components, FE refactoring, or Angular architectural review.",
+      "description": "Use to load Angular standards: modern Angular 18+ conventions (standalone, signals, inject(), input/output functions, @if/@for control flow), strict smart/dumb separation, services own HTTP and business logic, OnPush change detection, RxJS integration, Reactive Forms, file/folder structure by feature, and best-guess + TODO over conservative stubs. Use for new components, FE refactoring, or Angular architectural review.",
       "file": "skills/angular-expert.md",
       "dependencies": [],
       "tools": [
@@ -754,8 +754,8 @@
         "standards",
         "skill"
       ],
-      "published": "2026-04-22",
-      "changelog": "Initial release"
+      "published": "2026-04-29",
+      "changelog": "Modernise to Angular 18+ (standalone, signals, inject(), @if/@for); add strict smart/dumb separation rule with forbidden HTTP-in-component examples; pull style guide rules from https://angular.dev/style-guide; add best-guess + explicit TODO directive (no conservative stubs)."
     },
     {
       "name": "ngrx-expert",
