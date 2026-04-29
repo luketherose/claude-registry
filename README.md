@@ -166,6 +166,7 @@ The `setup-capabilities.sh` script installs them automatically as dependencies.
 | `testing-standards` | developer-java, test-writer, code-reviewer, developer-python | Principles, scenario taxonomy, naming, JUnit 5 / pytest / Jest templates |
 | `rest-api-standards` | developer-java, api-designer, code-reviewer | Resource modelling, HTTP methods, status codes, RFC 7807, OpenAPI 3.1 |
 | `accenture-branding` | presentation-creator, document-creator | Colour palette, python-pptx constants, CSS PDF template, typography |
+| `unicredit-design-system` | developer-frontend (auto-loaded when the client is UniCredit) | UniCredit brand & Bricks DS — logo rules, palette (`#E30613` red + neutrals + states), typography fallback stack, 8 px spacing grid, ready-to-paste `--uc-*` CSS tokens, ~70 Bricks components, EN 301 549 / WCAG 2.1 AA accessibility targets, tone of voice |
 | `functional-reconstruction` | developer-frontend, functional-analyst (agent) | Functional behaviour reconstruction, feature lists, user flows, business rules |
 | + 36 frontend and backend skills | developer-frontend | Angular, React, Vue, Qwik, Vanilla, Python, Java, database, refactoring, orchestrators |
 

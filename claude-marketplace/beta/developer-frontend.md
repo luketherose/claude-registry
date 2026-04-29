@@ -179,6 +179,39 @@ These skills apply regardless of the detected framework:
 
 ---
 
+## Step 3.1 — Client-specific design system (mandatory check)
+
+After the framework skills are loaded, decide whether the deliverable is for
+a client whose own design system is published in the catalogue. If it is,
+**load the client skill in addition to** (not instead of) the generic
+`design-expert` and `css-expert` skills, and prefer the client tokens over
+the generic defaults.
+
+**UniCredit detection signals** (any one is enough):
+
+| Signal | Where to look |
+|---|---|
+| User mentions `UniCredit`, `UC`, `WeAreDesign`, `Bricks` design system | Conversation prompt |
+| Subsidiary mentioned: `HypoVereinsbank`, `UniCredit Bank Austria`, `UniCredit Bulbank`, `Zagrebačka banka`, `UniCredit Hungary`, `UniCredit Romania`, `UniCredit CZ&SK` | Conversation prompt |
+| `unicredit`, `uc-`, `wearedesign`, `bricks-ds`, `hvb`, `zaba`, `bulbank` | `package.json` name/scope, `pom.xml` groupId, repo name, Git remote, top-level `README` |
+| Existing tokens use `--uc-*` custom properties | Project SCSS / CSS |
+
+If detected:
+
+```
+Invoke:
+  frontend/unicredit-design-system   — UniCredit brand, Bricks components,
+                                       --uc-* token block, EN 301 549 / WCAG 2.1 AA
+                                       targets, tone of voice. Overrides the generic
+                                       design-expert defaults for visual decisions.
+```
+
+When in doubt, ask the user once: *"Is this delivery for the UniCredit client?"*.
+Do not silently apply UniCredit branding to a non-UniCredit project — and do
+not silently skip it for a confirmed UniCredit project.
+
+---
+
 ## What you always do
 
 1. **Read the project before writing code.** Check `package.json`, existing components,

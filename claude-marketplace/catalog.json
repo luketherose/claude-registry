@@ -452,11 +452,11 @@
     },
     {
       "name": "developer-frontend",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "type": "agent",
       "tier": "beta",
       "status": "active",
-      "description": "Use when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack. Enforces strict separation of concerns (smart vs dumb components, services own HTTP and business logic). When the source-to-target translation is uncertain, ships a best-guess implementation with explicit TODOs rather than conservative stubs. Produces production-ready, typed, accessible, tested frontend code.",
+      "description": "Use when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack. Detects client-specific design systems (e.g. UniCredit) from project signals and loads the matching skill on top of the generic design tokens. Enforces strict separation of concerns (smart vs dumb components, services own HTTP and business logic). When the source-to-target translation is uncertain, ships a best-guess implementation with explicit TODOs rather than conservative stubs. Produces production-ready, typed, accessible, tested frontend code.",
       "file": "beta/developer-frontend.md",
       "dependencies": [
         "angular-expert",
@@ -472,6 +472,7 @@
         "vanilla-expert",
         "css-expert",
         "design-expert",
+        "unicredit-design-system",
         "testing-standards",
         "rest-api-standards",
         "refactoring-expert"
@@ -495,7 +496,7 @@
         "developer"
       ],
       "published": "2026-04-29",
-      "changelog": "Add strict separation-of-concerns rule (smart/dumb, services own HTTP); add best-guess + TODO directive for unknown translations (no conservative stubs)."
+      "changelog": "Detect client-specific design systems and load the matching skill (UniCredit Bricks added). Existing strict separation-of-concerns rules and best-guess + TODO directive preserved."
     },
     {
       "name": "tech-analyst",
@@ -842,6 +843,32 @@
       ],
       "published": "2026-04-22",
       "changelog": "Initial release"
+    },
+    {
+      "name": "unicredit-design-system",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when building, reviewing, or refactoring a frontend whose end client is UniCredit (UC banking group, including UniCredit Bank Italy/Germany/Austria/CEE). Provides UniCredit brand identity rules (logo, colors, typography), the Bricks design-system component catalogue, accessibility targets (EN 301 549 / WCAG 2.1 AA), tone of voice, and ready-to-use design tokens for HTML/CSS/SCSS. Loaded automatically by the frontend-developer agent (Angular, React, Vue, Qwik, Vanilla) whenever the project is identified as a UniCredit deliverable; otherwise out of scope.",
+      "file": "skills/unicredit-design-system.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "frontend",
+        "design-system",
+        "client-specific",
+        "unicredit",
+        "bricks",
+        "wearedesign",
+        "accessibility",
+        "skill"
+      ],
+      "published": "2026-04-29",
+      "changelog": "Initial release — reconstructs UniCredit's public brand and Bricks design system into ready-to-paste --uc-* tokens, component inventory, EN 301 549 / WCAG 2.1 AA accessibility targets, and tone-of-voice guidance for the developer-frontend agent."
     },
     {
       "name": "qwik-expert",
