@@ -197,7 +197,7 @@ developer or load a stack-specific skill consults this table.
 | Stack language | Frameworks (sub-flavours) | Developer agent | Skills loaded |
 |---|---|---|---|
 | python | streamlit, fastapi, django, flask | `developer-python` | `python-expert`; `streamlit-expert` if framework=streamlit |
-| java | spring-boot, micronaut, quarkus | `developer-java-spring` (or future generic `developer-java`) | `java-spring-standards`, `spring-expert`, `spring-architecture`, `spring-data-jpa`, `java-expert` |
+| java | spring-boot (default), micronaut, quarkus, helidon, java-se | `developer-java` | `java-spring-standards`, `spring-expert`, `spring-architecture`, `spring-data-jpa`, `java-expert` (Spring skills loaded only when stack.frameworks contains spring-boot) |
 | kotlin | spring-boot, ktor, android | `developer-kotlin` | `java-spring-standards`, `spring-architecture`, `spring-data-jpa`, `java-expert` (Kotlin reuses Spring skills + adds Kotlin idioms in the agent itself) |
 | go | gin, chi, fiber, std | `developer-go` | (none yet — `go-standards` skill is roadmap) |
 | rust | axum, actix-web, rocket, tokio | `developer-rust` | (none yet — `rust-standards` skill is roadmap) |
@@ -400,12 +400,13 @@ manifest for unsupported languages in Phase 3 / 4 / 5).
 
 ## Open questions
 
-1. **Generic developer-java vs. developer-java-spring**? Today the
-   Java agent is Spring-Boot-specialised. If we ever need to support
-   non-Spring Java (Micronaut, Quarkus, Java SE), do we generalise the
-   existing agent or add siblings?
-   - **Tentative answer**: keep `developer-java-spring` as today; add
-     siblings as needed. Spring is the dominant case.
+1. **Generic developer-java vs. developer-java-spring**? ✅ **Decided
+   in PR-01**: renamed `developer-java-spring` → `developer-java`
+   (MAJOR bump 1.0.0 → 2.0.0). Spring Boot remains the default
+   framework; Micronaut/Quarkus/Helidon/Java SE are handled with
+   explicit user guidance. Future siblings (`developer-java-micronaut`,
+   `developer-java-quarkus`) can specialise per framework when there
+   is enough demand.
 
 2. **Frontend framework detection granularity**? `developer-frontend`
    handles Angular/React/Vue/Qwik/Vanilla via skills. Should the
@@ -422,15 +423,24 @@ manifest for unsupported languages in Phase 3 / 4 / 5).
      consumed by ≥ 2 supervisors.
 
 4. **Does each `developer-*` agent need to ship a "scaffold a fresh
-   project" capability**? Today only `developer-java-spring` and
-   `developer-frontend` are exercised in this role (via Phase 4
-   scaffolders). Tomorrow if Phase 4 dispatches to `developer-go`,
-   `developer-go` must know how to scaffold a Go module. The current
-   agent already covers idiomatic project layout — but actual
-   scaffolding (creating `cmd/`, `internal/`, etc.) is implicit.
-   - **Tentative answer**: extend each developer agent's "Project
-     structure" section to be **executable** — i.e., provide commands
-     and templates the agent uses to bootstrap. Tracked under PR-06.
+   project" capability**? ✅ **Decided in PR-01**: yes. Each
+   `developer-*` agent's "Project structure" section will be extended
+   to be **executable** — provide commands and templates the agent
+   uses to bootstrap a project from scratch given a bounded-context
+   decomposition. This is needed for Phase 4's dispatcher pattern
+   (sub-agents like `backend-scaffolder` hand off to the appropriate
+   `developer-*` agent). Tracked under PR-06; no change in PR-01.
+
+5. **Migration profiles location**? ✅ **Decided in PR-01**: deferred.
+   A YAML file at `claude-catalog/docs/migration-profiles.yaml` is
+   the proposed home, but it is not added until at least one
+   supervisor consumes it. Tracked under the PR that first introduces
+   profile consumption (likely PR-06).
+
+6. **Frontend framework granularity**? ✅ **Decided in PR-01**:
+   `frameworks[]` (array). Multiple framework markers are possible
+   (e.g. Next.js + TanStack Query), so the schema must accommodate
+   them. Single-framework projects emit a one-element array.
 
 These are recorded for resolution during the relevant downstream PR.
 

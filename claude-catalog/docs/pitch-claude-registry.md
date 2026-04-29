@@ -68,7 +68,7 @@ Today the output difference between a senior and a junior developer using Claude
 depends primarily on how well they can instruct the tool. With shared capabilities,
 the senior's instructions become the standard for everyone.
 
-> A junior using the `developer-java-spring` capability produces code with
+> A junior using the `developer-java` capability produces code with
 > the same architectural structure, the same error handling patterns, and
 > the same test coverage that a senior following our guidelines would produce.
 
@@ -176,7 +176,7 @@ the estimated saving is in the order of **2–4 hours/week per person**.
 |---|---|---|
 | `software-architect` | Stable | Architectural analysis, ADRs, trade-offs |
 | `functional-analyst` | Stable | Requirements, use cases, business processes |
-| `developer-java-spring` | Stable | Java/Spring Boot enterprise development |
+| `developer-java` | Stable | Java/Spring Boot enterprise development |
 | `technical-analyst` | Beta | Technical analysis, debt, security |
 | `developer-python` | Beta | Python/FastAPI development |
 | `developer-frontend` | Beta | Multi-framework frontend development |

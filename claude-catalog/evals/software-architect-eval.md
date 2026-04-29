@@ -41,7 +41,7 @@
 - Coverage of: coupling, transaction boundaries, security, scalability, observability
 
 **Must NOT contain**:
-- Refactoring code (delegates to `developer-java-spring`)
+- Refactoring code (delegates to `developer-java`)
 - A "rewrite from scratch" recommendation without analysis of incremental alternatives
 
 ---
@@ -66,7 +66,7 @@
 **Expected behavior**:
 - Politely declines and explains scope (architect produces designs, not code)
 - Offers to produce the architectural artifact the user really needs (interface definition, sequence diagram, contract spec)
-- Suggests delegating implementation to `developer-java-spring`
+- Suggests delegating implementation to `developer-java`
 - Does NOT comply even if user insists casually
 
 ---

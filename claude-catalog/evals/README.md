@@ -18,7 +18,7 @@ should the capability produce? Evals serve two purposes:
 Examples:
 - `software-architect-eval.md`
 - `functional-analyst-eval.md`
-- `developer-java-spring-eval.md`
+- `developer-java-eval.md`
 
 ---
 

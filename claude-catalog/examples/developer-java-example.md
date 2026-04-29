@@ -1,4 +1,4 @@
-# Example: developer-java-spring
+# Example: developer-java
 
 ## Scenario 1: Add a new REST endpoint with full layered structure
 

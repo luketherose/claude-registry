@@ -80,7 +80,7 @@ claude-registry/
 |------|------|-------------|
 | `software-architect` | stable | Architectural analysis, ADRs, trade-off evaluation |
 | `functional-analyst` | stable | Requirements, use cases, business processes |
-| `developer-java-spring` | stable | Java/Spring Boot enterprise development |
+| `developer-java` | stable | Java/Spring Boot enterprise development |
 | `orchestrator` | beta | Meta-orchestrator (opus): discovers installed agents dynamically, decomposes multi-domain tasks, dispatches specialists in parallel, synthesises results |
 | `refactoring-supervisor` | beta | **Refactoring workflow supervisor (opus, v2.0.0)**: top-level workflow for end-to-end refactoring/migration. Delegates phases sequentially to dedicated supervisors (Phase 0 indexing, Phase 1 functional analysis, Phase 2 technical analysis, Phase 3 baseline testing, Phase 4 TO-BE refactoring, Phase 5 TO-BE testing & equivalence verification). Strict human-in-the-loop with schematic preview before each phase and execution-timing recap after. **v2.0.0**: MAJOR milestone — workflow now covers the full AS-IS→TO-BE→validation journey (Phases 0–5); Phase 5 is the final go-live gate with PO sign-off on the equivalence report. v1.2.0: when Phase 1 or 2 analysis is complete but the PDF/PPTX export is missing, offers a `regenerate-exports` choice that runs only the export wave. v1.1.0: bootstrap asks the user explicitly per phase to skip / re-run / revise (no more silent auto-skip). |
 | `indexing-supervisor` | beta | **Indexing pipeline supervisor (opus, v0.2.0)**: indexes legacy Python codebases (with optional Streamlit) into a markdown KB at `.indexing-kb/`. Dispatches 7 sub-agents in 4 phases. v0.2.0: bootstrap detects existing `.indexing-kb/` and asks the user explicitly skip / re-run / revise before proceeding. |
@@ -162,9 +162,9 @@ The `setup-capabilities.sh` script installs them automatically as dependencies.
 
 | Name | Used by | Contents |
 |------|---------|----------|
-| `java-spring-standards` | developer-java-spring, code-reviewer, test-writer | Package structure, layering, testing, error handling, logging, security, Micrometer |
-| `testing-standards` | developer-java-spring, test-writer, code-reviewer, developer-python | Principles, scenario taxonomy, naming, JUnit 5 / pytest / Jest templates |
-| `rest-api-standards` | developer-java-spring, api-designer, code-reviewer | Resource modelling, HTTP methods, status codes, RFC 7807, OpenAPI 3.1 |
+| `java-spring-standards` | developer-java, code-reviewer, test-writer | Package structure, layering, testing, error handling, logging, security, Micrometer |
+| `testing-standards` | developer-java, test-writer, code-reviewer, developer-python | Principles, scenario taxonomy, naming, JUnit 5 / pytest / Jest templates |
+| `rest-api-standards` | developer-java, api-designer, code-reviewer | Resource modelling, HTTP methods, status codes, RFC 7807, OpenAPI 3.1 |
 | `accenture-branding` | presentation-creator, document-creator | Colour palette, python-pptx constants, CSS PDF template, typography |
 | `functional-reconstruction` | developer-frontend, functional-analyst (agent) | Functional behaviour reconstruction, feature lists, user flows, business rules |
 | + 36 frontend and backend skills | developer-frontend | Angular, React, Vue, Qwik, Vanilla, Python, Java, database, refactoring, orchestrators |

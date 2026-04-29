@@ -13,14 +13,14 @@ Format: `{role}.md` or `{role}-{specialization}.md`
 Good:
   software-architect.md
   functional-analyst.md
-  developer-java-spring.md
+  developer-java.md
   code-reviewer.md
   api-designer.md
 
 Bad:
   SoftwareArchitect.md       ← PascalCase
   java_spring_dev.md         ← underscores
-  developer-java-spring-v2.md ← version in name
+  developer-java-v2.md ← version in name
   spring-boot-helper.md      ← technology-first, not role-first
 ```
 
@@ -30,7 +30,7 @@ Must match the filename (without `.md`). This is what appears in the Claude UI a
 what you use in `Agent(name)` permission rules.
 
 ```yaml
-name: developer-java-spring   ← matches developer-java-spring.md
+name: developer-java   ← matches developer-java.md
 ```
 
 ## Git tag format for releases
@@ -42,7 +42,7 @@ name: developer-java-spring   ← matches developer-java-spring.md
 Examples:
 ```
 software-architect@1.0.0
-developer-java-spring@2.1.0
+developer-java@2.1.0
 functional-analyst@1.3.1
 ```
 

@@ -33,7 +33,7 @@ Every release is tagged in git:
 ```
 software-architect@1.0.0
 functional-analyst@1.2.0
-developer-java-spring@1.0.1
+developer-java@1.0.1
 ```
 
 To see all releases of a capability:

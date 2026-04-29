@@ -6,7 +6,8 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 ### Changed
-- **Reorganized: developer agents grouped under `claude-catalog/agents/developers/`** — the 9 `developer-*` agents (`developer-csharp`, `developer-frontend`, `developer-go`, `developer-java-spring`, `developer-kotlin`, `developer-php`, `developer-python`, `developer-ruby`, `developer-rust`) now live in a dedicated subdirectory for catalog hygiene. Marketplace layout is unchanged (stays flat under `claude-marketplace/beta/`); `catalog.json` `file` fields unchanged. Catalog validation scans recursively so this is a pure organizational change. README structure section updated.
+- **BREAKING: `developer-java-spring` renamed to `developer-java` (MAJOR bump 1.0.0 → 2.0.0)** — opens the path to specialising additional Java frameworks (Micronaut, Quarkus, Helidon) without forking the entire agent. The renamed `developer-java@2.0.0` keeps Spring Boot 3 as the default framework (the dominant enterprise case) and the existing skill dependencies (`java-spring-standards`, `spring-expert`, `spring-architecture`, `spring-data-jpa`, `java-expert`); when the user invokes it on a non-Spring Java codebase, the agent operates with explicit framework guidance. Files renamed: `agents/developers/developer-java-spring.md` → `developers/developer-java.md`; `marketplace/stable/developer-java-spring.md` → `stable/developer-java.md`; `evals/developer-java-spring-eval.md` → `evals/developer-java-eval.md`; `examples/developer-java-spring-example.md` → `examples/developer-java-example.md`. **Migration for consumers**: pull the registry, re-run `setup-capabilities.sh`, replace any `Agent(developer-java-spring)` references in your `settings.json` with `Agent(developer-java)`. The old name is deleted (not deprecated) — this is a clean rename with version 2.0.0; the historical CHANGELOG entries below still mention the old name as historical fact. Per governance: a `name` field change is always breaking because Claude uses it for delegation routing. The cross-references in capability tables, naming conventions, governance examples, eval scenarios, settings examples, pitch deck, quick-start, and consumer docs were updated in lockstep.
+- **Reorganized: developer agents grouped under `claude-catalog/agents/developers/`** — the 9 `developer-*` agents (`developer-csharp`, `developer-frontend`, `developer-go`, `developer-java`, `developer-kotlin`, `developer-php`, `developer-python`, `developer-ruby`, `developer-rust`) now live in a dedicated subdirectory for catalog hygiene. Marketplace layout is unchanged (stays flat under `claude-marketplace/beta/`); `catalog.json` `file` fields unchanged. Catalog validation scans recursively so this is a pure organizational change. README structure section updated.
 
 ### Added
 - **Design doc: language-agnostic refactoring pipeline** — `claude-catalog/docs/language-agnostic-design.md`. Describes the target architecture for making `refactoring-supervisor` and all six phase supervisors free of language-specific assumptions. Single source of truth for the AS-IS stack via `codebase-mapper`'s new `stack:` block in `_meta/manifest.json`; canonical dispatch table mapping language → developer agent + skills; TO-BE stack via ADR-002 (decision-driven, not auto-detected); migration plan across 8 follow-up PRs (one per phase). This PR is **PR-01** (organizational + design only — no logic changes); PR-02 to PR-08 implement the refactor phase by phase.
@@ -83,9 +84,9 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
   - `user-flow-analyst@0.1.0` — sonnet (W2), use cases + user flows + Mermaid sequence diagrams with reruns made explicit
   - `implicit-logic-analyst@0.1.0` — sonnet (W2), hidden validation, state machines, callback chains, magic numbers, silent fallbacks; complements (does not duplicate) `business-logic-analyst` from Phase 0
   - `functional-analysis-challenger@0.1.0` — sonnet (W3, opt-in; default ON in Streamlit mode), adversarial review for gaps, contradictions, unverified claims, AS-IS violations; flags but does not rewrite
-- `examples/developer-java-spring-example.md` — 3 scenarios: new CRUD endpoint, N+1 fix, code review against standards
+- `examples/developer-java-example.md` — 3 scenarios: new CRUD endpoint, N+1 fix, code review against standards
 - `examples/functional-analyst-example.md` — 3 scenarios: requirements reconstruction, acceptance criteria, CRUD matrix
-- `evals/developer-java-spring-eval.md` — 5 evals: CRUD happy path, N+1 fix, code review, Spring Security baseline, refusal of insecure shortcut
+- `evals/developer-java-eval.md` — 5 evals: CRUD happy path, N+1 fix, code review, Spring Security baseline, refusal of insecure shortcut
 - `evals/functional-analyst-eval.md` — 5 evals: requirements reconstruction, acceptance criteria, gap analysis, CRUD matrix, scope-discipline (architecture refusal)
 - `evals/software-architect-eval.md` — 5 evals: ADR with alternatives, architecture review, integration pattern, scope-discipline (code refusal), NFR quantification
 
@@ -141,7 +142,7 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 - `rest-api-standards@1.0.0` — skill: REST design rules, HTTP methods, status codes, RFC 7807, OpenAPI 3.1
 
 ### Changed
-- `developer-java-spring@1.1.0` — delegates standards to java-spring-standards, testing-standards, rest-api-standards skills
+- `developer-java@1.1.0` — delegates standards to java-spring-standards, testing-standards, rest-api-standards skills
 - `test-writer@0.2.0` — delegates to testing-standards and java-spring-standards skills
 - `code-reviewer@0.2.0` — delegates to java-spring-standards, testing-standards, rest-api-standards skills (fulfills v1.0 TODO)
 - `api-designer@0.2.0` — delegates to rest-api-standards skill
@@ -167,7 +168,7 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 - Initial catalog structure
 - `software-architect@1.0.0` — full capability
 - `functional-analyst@1.0.0` — full capability
-- `developer-java-spring@1.0.0` — full capability
+- `developer-java@1.0.0` — full capability
 - `technical-analyst@0.1.0` — initial draft (beta)
 - `developer-python@0.1.0` — initial draft (beta)
 - `code-reviewer@0.1.0` — initial draft (beta)

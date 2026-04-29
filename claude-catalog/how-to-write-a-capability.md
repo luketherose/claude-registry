@@ -284,7 +284,7 @@ Before opening a PR, verify:
 
 **Do not** create a new capability just to add technology-specific details that could
 be provided as context at invocation time. For example, do not create
-`developer-java-spring-microservices.md` if `developer-java-spring.md` can handle
+`developer-java-microservices.md` if `developer-java.md` can handle
 microservices with the right context in the user message.
 
 ---

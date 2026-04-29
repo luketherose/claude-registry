@@ -62,7 +62,7 @@ Use this checklist when reviewing a PR that adds or modifies a capability.
 
 - [ ] Filename follows `{role}.md` or `{role}-{specialization}.md` pattern
 - [ ] No version numbers in filename
-- [ ] No technology-first naming (e.g. `spring-developer.md` instead of `developer-java-spring.md`)
+- [ ] No technology-first naming (e.g. `spring-developer.md` instead of `developer-java.md`)
 
 ## 8. Common issues to watch for
 
