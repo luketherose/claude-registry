@@ -5,6 +5,12 @@ All notable changes to catalog capabilities are documented here.
 Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending changes.
 
 ## [Unreleased]
+### Changed
+- **Reorganized: developer agents grouped under `claude-catalog/agents/developers/`** — the 9 `developer-*` agents (`developer-csharp`, `developer-frontend`, `developer-go`, `developer-java-spring`, `developer-kotlin`, `developer-php`, `developer-python`, `developer-ruby`, `developer-rust`) now live in a dedicated subdirectory for catalog hygiene. Marketplace layout is unchanged (stays flat under `claude-marketplace/beta/`); `catalog.json` `file` fields unchanged. Catalog validation scans recursively so this is a pure organizational change. README structure section updated.
+
+### Added
+- **Design doc: language-agnostic refactoring pipeline** — `claude-catalog/docs/language-agnostic-design.md`. Describes the target architecture for making `refactoring-supervisor` and all six phase supervisors free of language-specific assumptions. Single source of truth for the AS-IS stack via `codebase-mapper`'s new `stack:` block in `_meta/manifest.json`; canonical dispatch table mapping language → developer agent + skills; TO-BE stack via ADR-002 (decision-driven, not auto-detected); migration plan across 8 follow-up PRs (one per phase). This PR is **PR-01** (organizational + design only — no logic changes); PR-02 to PR-08 implement the refactor phase by phase.
+
 ### Added
 - **Six new `developer-*` agents (beta)** — production-ready code agents for languages not previously covered. Each is opinionated on idioms, framework defaults, error handling, logging, testing, and dependency management; each carries the post-2026-04-28 **File-writing rule** (mandates `Write`/`Edit`, forbids `Bash` heredoc/redirect for content output). All sonnet, all `Read, Edit, Write, Bash, Grep, Glob`.
   - `developer-go@0.1.0` — Go (net/http, chi, gin, cobra). Standard library first; minimal third-party deps; table-driven tests; `log/slog` + correlation IDs; `context.Context` plumbed through I/O paths; `errors.Is/As` + `%w` wrapping; goroutines paired with shutdown signalling; HTTP server with explicit timeouts; `golangci-lint` baseline (`errcheck`, `govet`, `staticcheck`, `gosimple`, `ineffassign`, `unused`, `gofmt`, `revive`).

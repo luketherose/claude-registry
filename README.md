@@ -33,13 +33,14 @@ If you just want to install capabilities in your project without reading everyth
 claude-registry/
   claude-catalog/          ← source (development and review)
     agents/                  subagent .md files with YAML frontmatter
-      indexing/                pipeline for indexing legacy Python codebases (8 agents)
+      indexing/                pipeline for indexing a legacy codebase (8 agents)
       functional-analysis/     pipeline for AS-IS functional analysis Phase 1 (6 agents)
       technical-analysis/      pipeline for AS-IS technical analysis Phase 2 (11 agents)
       baseline-testing/        pipeline for AS-IS baseline testing Phase 3 (8 agents)
       refactoring-tobe/        pipeline for TO-BE refactoring Phase 4 (10 agents)
       tobe-testing/            pipeline for TO-BE testing & equivalence verification Phase 5 (9 agents)
-      (other agents at root level)
+      developers/              language-specific developer agents (9: Java/Spring, Python, Frontend, Go, Rust, Kotlin, C#, Ruby, PHP)
+      (other agents at root level — orchestrator, role-based agents, etc.)
     skills/                  reusable knowledge providers (shared across agents)
       orchestrators/           backend, frontend, documentation orchestrator skills
       (other skills grouped by topic)
