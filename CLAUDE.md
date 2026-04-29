@@ -61,12 +61,18 @@ This repository has two areas with distinct responsibilities:
 ### Publish flow
 
 ```
-claude-catalog/agents/foo.md   ── publish script ──→   claude-marketplace/beta/foo.md
-claude-catalog/skills/bar.md   ── publish script ──→   claude-marketplace/skills/bar.md
-                                                         claude-marketplace/catalog.json  ← manifest
+claude-catalog/agents/<topic>/foo.md  ── publish script ──→  claude-marketplace/beta/<topic>/foo.md
+claude-catalog/skills/<topic>/bar.md  ── publish script ──→  claude-marketplace/skills/<topic>/bar.md
+                                                                claude-marketplace/catalog.json  ← manifest
 ```
 
-To publish: `./claude-marketplace/scripts/publish.sh <name> <version> <tier>`
+To publish: `./claude-marketplace/scripts/publish.sh <name> <version> <tier> [--topic <topic>]`
+
+The publish script auto-resolves `<topic>` from (1) the `--topic` flag, (2) the
+existing `catalog.json` entry, (3) the catalog source path
+(`claude-catalog/agents/<topic>/<name>.md`), in that order. It also removes any
+stale copies of the capability under the same tier (e.g. left behind by a
+re-grouping) so no orphan file remains in the marketplace.
 
 ### CI validation flow (sequential)
 
@@ -85,8 +91,10 @@ PRs go through two gates in sequence — the second only starts if the first is 
    ├── catalog.json valid (semver, tier, status, required fields)
    ├── every referenced file exists on disk
    ├── file frontmatter name matches the catalog entry name
-   ├── path convention: {tier}/{name}.md or skills/{name}.md
-   └── no orphan files in stable/, beta/, skills/
+   ├── path convention: {tier}/<topic>/{name}.md or skills/<topic>/{name}.md
+   │     (flat {tier}/{name}.md and skills/{name}.md still accepted —
+   │      see "Marketplace directory layout" below)
+   └── no orphan files in stable/, beta/, skills/ (recursive)
 ```
 
 **Practical consequence**: if you open a PR that adds capabilities to the catalog without publishing them to the marketplace, `validate-catalog` blocks the PR before `validate-marketplace` even starts.
@@ -121,5 +129,6 @@ Use them when appropriate:
 - Versioning: SemVer with git tag `name@MAJOR.MINOR.PATCH`
 - Skills: `model: haiku`, `tools: Read` — do not add other tools without justification in the PR
 - Agents using `model: opus`: must either (a) be the meta-orchestrator (auto-allowed), or (b) carry a `model_justification:` frontmatter field of at least 40 chars explaining the reasoning-depth requirement. Without one, the validator emits a warning asking for justification in the PR description. Inline frontmatter is preferred — the rationale stays with the agent definition.
-- **Catalog directory layout**: agents and skills MAY be grouped into thematic subdirectories (e.g., `agents/indexing/`, `skills/orchestrators/`, `skills/documentation/`). Validation scans recursively (`rglob`).
-- **Marketplace directory layout**: stays FLAT regardless of catalog grouping. Files live at `stable/<name>.md`, `beta/<name>.md`, or `skills/<name>.md` directly. The `file` field in `catalog.json` reflects this flat path.
+- **Catalog directory layout**: agents and skills are grouped into thematic subdirectories (e.g., `agents/indexing/`, `agents/orchestration/`, `agents/quality/`, `skills/frontend/angular/`, `skills/orchestrators/`, `skills/documentation/`). Single-file root entries are tolerated for transitional states but should be moved into a topic folder when the topic gains a second sibling. Validation scans recursively (`rglob`).
+- **Marketplace directory layout**: mirrors the catalog grouping. Files live at `stable/<topic>/<name>.md`, `beta/<topic>/<name>.md`, or `skills/<topic>[/<sub>]/<name>.md`. The `file` field in `catalog.json` is the single source of truth — both the publish script and `setup-capabilities.sh` read it directly. Both flat paths (`<tier>/<name>.md`, `skills/<name>.md`) and nested paths are accepted by the validator, but new capabilities should always be published into a topic folder.
+- **Marketplace topics** (used as folder names): for agents — `analysis`, `api`, `architecture`, `baseline-testing`, `developers`, `documentation`, `functional-analysis`, `indexing`, `orchestration`, `quality`, `refactoring-tobe`, `technical-analysis`, `tobe-testing`. For skills — `analysis`, `api`, `backend`, `branding`, `database`, `documentation`, `frontend` (with framework subfolders `angular/`, `react/`, `qwik/`, `vue/`, `vanilla/`), `orchestrators`, `python`, `refactoring`, `testing`, `utils`. Add a new topic folder when a third capability of the same kind appears; until then place the capability in the closest existing folder rather than spawning a one-off topic.

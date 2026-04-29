@@ -69,8 +69,8 @@ published from `claude-catalog/` to `claude-marketplace/`.** Modifying only
 the catalog does not affect consumers.
 
 ```
-claude-catalog/agents/foo.md         publish        claude-marketplace/beta/foo.md
-                                  ─────────►       claude-marketplace/catalog.json (manifest)
+claude-catalog/agents/<topic>/foo.md       publish        claude-marketplace/beta/<topic>/foo.md
+                                        ─────────►       claude-marketplace/catalog.json (manifest)
 ```
 
 ## Two CI gates

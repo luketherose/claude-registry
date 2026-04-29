@@ -11,7 +11,7 @@
       "tier": "stable",
       "status": "active",
       "description": "Analyzes and designs system architecture; writes ADRs; reasons about trade-offs across security, performance, scalability, cost, and maintainability.",
-      "file": "stable/software-architect.md",
+      "file": "stable/architecture/software-architect.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -38,7 +38,7 @@
       "tier": "stable",
       "status": "active",
       "description": "Extracts and documents functional requirements, use cases, business processes, and acceptance criteria.",
-      "file": "stable/functional-analyst.md",
+      "file": "stable/analysis/functional-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -63,7 +63,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use when reconstructing the functional behaviour of an existing codebase. Produces feature lists, user flows, business rules, use cases, and functional dependencies in docs/functional/. Use before a migration, refactoring, or to document existing functionality for a new team.",
-      "file": "skills/functional-reconstruction.md",
+      "file": "skills/analysis/functional-reconstruction.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -85,7 +85,7 @@
       "tier": "stable",
       "status": "active",
       "description": "Use when writing, reviewing, or refactoring Java code. Produces production-ready code with clean architecture, mandatory DTO+Mapper layer (no entities crossing layers, no Map.of inline), one-annotation-per-line formatting, hierarchically indented POMs, Liquibase migrations + H2 local-dev profile by default, JUnit 5 + Testcontainers testing, structured logging, RFC 7807 error handling, Micrometer observability, OpenAPI documentation. In migration mode: best-guess implementation with explicit TODOs over conservative stubs; preserves every table found in the source data model. Currently specialised on Spring Boot 3; also handles Micronaut, Quarkus, Helidon, and plain Java SE when the user declares the framework explicitly.",
-      "file": "stable/developer-java.md",
+      "file": "stable/developers/developer-java.md",
       "dependencies": [
         "java-spring-standards",
         "testing-standards",
@@ -118,7 +118,7 @@
       "tier": "beta",
       "status": "active",
       "description": "Produces structured technical analysis: tech debt inventory, security posture, dependency vulnerabilities, observability gaps, and CI/CD assessment.",
-      "file": "beta/technical-analyst.md",
+      "file": "beta/analysis/technical-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -144,7 +144,7 @@
       "tier": "beta",
       "status": "active",
       "description": "Writes production-ready Python following PEP 8, type hints, pytest, pydantic v2, structlog, and uv dependency management. FastAPI and general backend.",
-      "file": "beta/developer-python.md",
+      "file": "beta/developers/developer-python.md",
       "dependencies": [
         "testing-standards"
       ],
@@ -173,7 +173,7 @@
       "tier": "beta",
       "status": "active",
       "description": "Reviews code for correctness, security, test coverage, performance, and maintainability. Produces structured review with blocking issues, suggestions, and overall recommendation.",
-      "file": "beta/code-reviewer.md",
+      "file": "beta/quality/code-reviewer.md",
       "dependencies": [
         "java-spring-standards",
         "testing-standards",
@@ -201,7 +201,7 @@
       "tier": "beta",
       "status": "active",
       "description": "Writes unit, integration, and controller tests for existing code. Supports JUnit 5 + Mockito, pytest, and Jest. Identifies and fills test coverage gaps.",
-      "file": "beta/test-writer.md",
+      "file": "beta/quality/test-writer.md",
       "dependencies": [
         "testing-standards",
         "java-spring-standards"
@@ -230,7 +230,7 @@
       "tier": "beta",
       "status": "active",
       "description": "Diagnoses bugs by tracing from symptom to root cause. Produces a debug report with root cause analysis and minimal targeted fix.",
-      "file": "beta/debugger.md",
+      "file": "beta/quality/debugger.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -254,7 +254,7 @@
       "tier": "beta",
       "status": "active",
       "description": "Designs and reviews REST API contracts. Produces OpenAPI 3.1 YAML and design rationale. Enforces REST maturity, consistent status codes, and RFC 7807 errors.",
-      "file": "beta/api-designer.md",
+      "file": "beta/api/api-designer.md",
       "dependencies": [
         "rest-api-standards"
       ],
@@ -281,7 +281,7 @@
       "tier": "beta",
       "status": "active",
       "description": "Writes technical documentation: READMEs, runbooks, API guides, architecture overviews, and onboarding guides. Reads code before writing \u2014 never documents what should be, only what is.",
-      "file": "beta/documentation-writer.md",
+      "file": "beta/documentation/documentation-writer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -305,7 +305,7 @@
       "tier": "beta",
       "status": "active",
       "description": "Creates Accenture-branded PowerPoint presentations (.pptx) from project docs, estimation files, or any source materials. Handles business and technical audiences. Covers problem, solution, architecture, dependencies, and timeline. Uses python-pptx with full Accenture brand compliance.",
-      "file": "beta/presentation-creator.md",
+      "file": "beta/documentation/presentation-creator.md",
       "dependencies": [
         "accenture-branding"
       ],
@@ -334,7 +334,7 @@
       "tier": "beta",
       "status": "active",
       "description": "Creates Accenture-branded technical documents (PDF via HTML/Chrome or Word .docx) from project docs and estimation files. Covers executive summary, problem, solution, architecture, component inventory, effort estimate, risks. Handles business and technical audiences.",
-      "file": "beta/document-creator.md",
+      "file": "beta/documentation/document-creator.md",
       "dependencies": [
         "accenture-branding"
       ],
@@ -364,7 +364,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to retrieve authoritative Java/Spring Boot standards: package structure, layering rules, code formatting (one annotation per line, multi-line POM, no inline Map.of), testing patterns (JUnit 5 + Testcontainers), error handling (RFC 7807), logging, security, observability, and Maven conventions (Liquibase preferred, H2 local profile mandatory).",
-      "file": "skills/java-spring-standards.md",
+      "file": "skills/backend/java-spring-standards.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -386,7 +386,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to retrieve authoritative testing standards: principles, scenario taxonomy, method naming, Arrange-Act-Assert structure, and JUnit 5, pytest, Jest framework templates.",
-      "file": "skills/testing-standards.md",
+      "file": "skills/testing/testing-standards.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -410,7 +410,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to retrieve Accenture brand standards: color palette, python-pptx constants, CSS template for PDF generation, typography rules, slide layout specifications.",
-      "file": "skills/accenture-branding.md",
+      "file": "skills/branding/accenture-branding.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -434,7 +434,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to retrieve REST API design standards: resource modeling, HTTP methods, status codes, versioning, pagination, RFC 7807 error format, and OpenAPI 3.1 rules.",
-      "file": "skills/rest-api-standards.md",
+      "file": "skills/api/rest-api-standards.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -457,7 +457,7 @@
       "tier": "beta",
       "status": "active",
       "description": "Use when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack. Detects client-specific design systems (e.g. UniCredit) from project signals and loads the matching skill on top of the generic design tokens. Enforces strict separation of concerns (smart vs dumb components, services own HTTP and business logic). When the source-to-target translation is uncertain, ships a best-guess implementation with explicit TODOs rather than conservative stubs. Produces production-ready, typed, accessible, tested frontend code.",
-      "file": "beta/developer-frontend.md",
+      "file": "beta/developers/developer-frontend.md",
       "dependencies": [
         "angular-expert",
         "ngrx-expert",
@@ -505,7 +505,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use when analysing a repository's technical structure. Produces module maps, dependency graphs, bounded contexts, data flows, integration points, and semantic indices. Use as the first step in an analysis, migration, or architectural-understanding pipeline.",
-      "file": "skills/tech-analyst.md",
+      "file": "skills/analysis/tech-analyst.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -525,7 +525,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load Java 17+ core standards: records, sealed classes, Optional, Stream API, Lombok patterns, concurrency, custom exceptions, logging conventions, and document generation (Apache POI, iText). Does not cover Spring Boot, JPA, or layered architecture.",
-      "file": "skills/java-expert.md",
+      "file": "skills/backend/java-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -548,7 +548,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load Spring layered-architecture standards: Controller/Service/Repository/Entity structure, DTO separation, mandatory Mapper layer (forbids Map.of, anonymous inline classes, and entities reaching controllers), Bean Validation, global exception handling, structured logging, naming conventions, and module implementation order.",
-      "file": "skills/spring-architecture.md",
+      "file": "skills/backend/spring-architecture.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -571,7 +571,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load JPA/Hibernate standards: entity design, relations, fetch strategies, N+1 solutions, transaction management, JPQL queries, second-level cache, bulk operations, automatic auditing, and performance optimisations.",
-      "file": "skills/spring-data-jpa.md",
+      "file": "skills/backend/spring-data-jpa.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -594,7 +594,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load Spring Boot 3.x standards: IoC/DI, auto-configuration, profiles, ConfigurationProperties, WebClient for external APIs, Spring Security 6 with JWT, and testing patterns (MockMvc, @WebMvcTest, @SpringBootTest).",
-      "file": "skills/spring-expert.md",
+      "file": "skills/backend/spring-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -617,7 +617,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load PostgreSQL standards: relational design, data modelling, data types, indices, performance tuning, Liquibase migrations (preferred over Flyway), H2 local-dev profile with seed data, transaction management, data integrity, security, and monitoring. Works alongside spring-data-jpa; does not duplicate the ORM layer.",
-      "file": "skills/postgresql-expert.md",
+      "file": "skills/database/postgresql-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -638,7 +638,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use when generating enterprise technical documentation for a Java/Spring Boot backend. Reads pre-existing analyses and source code to produce a backend-doc.tex covering architecture, API reference, data model, business logic, security, and error handling. Ready for pandoc conversion.",
-      "file": "skills/backend-documentation.md",
+      "file": "skills/documentation/backend-documentation.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -659,7 +659,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use when producing technical or functional documentation for Python/Streamlit, Java/Spring Boot, or Angular projects. Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented. Saves output to docs/.",
-      "file": "skills/doc-expert.md",
+      "file": "skills/documentation/doc-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -680,7 +680,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use when generating enterprise technical documentation for a full-stack project. Interprets a Word template, coordinates backend-documentation and frontend-documentation skills, ensures cross-layer consistency (DTO names, API contracts), and produces backend-doc.tex and frontend-doc.tex ready for pandoc.",
-      "file": "skills/documentation-orchestrator.md",
+      "file": "skills/documentation/documentation-orchestrator.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -701,7 +701,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use when generating enterprise technical documentation for an Angular frontend. Reads pre-existing analyses and Angular code to produce a frontend-doc.tex covering module architecture, smart/dumb components, NgRx store, routing, API services, design system, and performance. Ready for pandoc conversion.",
-      "file": "skills/frontend-documentation.md",
+      "file": "skills/documentation/frontend-documentation.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -722,7 +722,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to convert existing functional documentation into an enterprise LaTeX document deliverable to stakeholders. Reads from docs/functional/, interprets a provided Word template, and generates a complete .tex file ready for pandoc conversion to .docx. Does not invent functionality not supported by the source content.",
-      "file": "skills/functional-document-generator.md",
+      "file": "skills/documentation/functional-document-generator.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -743,7 +743,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load Angular standards: modern Angular 18+ conventions (standalone, signals, inject(), input/output functions, @if/@for control flow), strict smart/dumb separation, services own HTTP and business logic, mandatory external templates and styles (templateUrl + styleUrls, no inline template literals), OnPush change detection, RxJS integration, Reactive Forms, file/folder structure by feature, and best-guess + TODO over conservative stubs. Use for new components, FE refactoring, or Angular architectural review.",
-      "file": "skills/angular-expert.md",
+      "file": "skills/frontend/angular/angular-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -765,7 +765,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load NgRx standards: store design, event-driven actions, pure reducers, memoised selectors, effects, facade pattern, state normalisation, and guidance on when NgRx is appropriate versus simpler alternatives.",
-      "file": "skills/ngrx-expert.md",
+      "file": "skills/frontend/angular/ngrx-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -787,7 +787,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load RxJS standards for Angular: naming conventions, flattening strategies (switchMap/mergeMap/concatMap), subscription management, memory safety, stream combination, error handling, and pipeline clarity. Covers anti-patterns to eliminate.",
-      "file": "skills/rxjs-expert.md",
+      "file": "skills/frontend/angular/rxjs-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -809,7 +809,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load CSS/SCSS standards: design tokens, BEM naming, specificity rules, modularity, mobile-first responsive design, theming, and layout patterns. Use for SCSS refactoring, design system integration, or eliminating fragile inline styles.",
-      "file": "skills/css-expert.md",
+      "file": "skills/frontend/css-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -830,7 +830,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use when designing layouts, mockups, or style specifications for new frontend components. Applies the company design system and coordinates with the project's framework skill and css-expert. Invoke before implementing any new UI component.",
-      "file": "skills/design-expert.md",
+      "file": "skills/frontend/design-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -851,7 +851,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use when building, reviewing, or refactoring a frontend whose end client is UniCredit (UC banking group, including UniCredit Bank Italy/Germany/Austria/CEE). Provides UniCredit brand identity rules (logo, colors, typography), the Bricks design-system component catalogue, accessibility targets (EN 301 549 / WCAG 2.1 AA), tone of voice, and ready-to-use design tokens for HTML/CSS/SCSS. Loaded automatically by the frontend-developer agent (Angular, React, Vue, Qwik, Vanilla) whenever the project is identified as a UniCredit deliverable; otherwise out of scope.",
-      "file": "skills/unicredit-design-system.md",
+      "file": "skills/frontend/unicredit-design-system.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -868,7 +868,7 @@
         "skill"
       ],
       "published": "2026-04-29",
-      "changelog": "Initial release — reconstructs UniCredit's public brand and Bricks design system into ready-to-paste --uc-* tokens, component inventory, EN 301 549 / WCAG 2.1 AA accessibility targets, and tone-of-voice guidance for the developer-frontend agent."
+      "changelog": "Initial release \u2014 reconstructs UniCredit's public brand and Bricks design system into ready-to-paste --uc-* tokens, component inventory, EN 301 549 / WCAG 2.1 AA accessibility targets, and tone-of-voice guidance for the developer-frontend agent."
     },
     {
       "name": "qwik-expert",
@@ -877,7 +877,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load Qwik and Qwik City standards: resumability, lazy components, signals, server-side loaders/actions, and file-based routing. Use for web apps with extreme performance requirements and minimum Time To Interactive.",
-      "file": "skills/qwik-expert.md",
+      "file": "skills/frontend/qwik/qwik-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -899,7 +899,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load Next.js 14+ App Router standards: React Server Components, Server Actions, file-based routing, metadata API, multi-level caching, and deployment patterns. Does not cover the Pages Router.",
-      "file": "skills/nextjs.md",
+      "file": "skills/frontend/react/nextjs.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -921,7 +921,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load React 18+ standards: component architecture, hooks, TypeScript integration, performance optimisation (memo/useCallback/useMemo), Suspense, concurrent features, and testing with React Testing Library. For data fetching use tanstack-query; for routing use tanstack; for SSR use nextjs.",
-      "file": "skills/react-expert.md",
+      "file": "skills/frontend/react/react-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -943,7 +943,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load TanStack Query v5 standards: useQuery, useMutation, useInfiniteQuery, QueryClient configuration, cache invalidation, optimistic updates, and prefetching. Replaces useEffect for server state management in React.",
-      "file": "skills/tanstack-query.md",
+      "file": "skills/frontend/react/tanstack-query.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -965,7 +965,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load TanStack Start standards for full-stack React: SSR, Server Functions, streaming, file-based routing, and end-to-end type safety. Use for new full-stack React apps that do not require the Next.js ecosystem.",
-      "file": "skills/tanstack-start.md",
+      "file": "skills/frontend/react/tanstack-start.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -987,7 +987,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load TanStack Router standards: type-safe file-based routing, route definitions, loaders, search params, lazy routes, and per-route error boundaries. Type-safe alternative to React Router.",
-      "file": "skills/tanstack.md",
+      "file": "skills/frontend/react/tanstack.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -1009,7 +1009,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load Vanilla JS/TS standards: Web Components, ES Modules, modern DOM APIs, Custom Events, Intersection/MutationObserver, strict TypeScript, and Vite bundling. Use for independent widgets, reusable libraries, or projects where a framework is overkill.",
-      "file": "skills/vanilla-expert.md",
+      "file": "skills/frontend/vanilla/vanilla-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -1031,7 +1031,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load Vue 3 Composition API standards: components, composables, Pinia state management, Vue Router 4, TypeScript patterns, performance optimisation, and testing with Vitest and Vue Test Utils. Does not cover Vue 2 or the Options API.",
-      "file": "skills/vue-expert.md",
+      "file": "skills/frontend/vue/vue-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -1053,7 +1053,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use for complex or multi-skill backend tasks. Coordinates java-expert, spring-expert, spring-data-jpa, spring-architecture, and postgresql-expert; interprets the request context and guarantees cross-layer consistency from Controller to DB.",
-      "file": "skills/backend-orchestrator.md",
+      "file": "skills/orchestrators/backend-orchestrator.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -1074,7 +1074,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use for complex or multi-skill frontend tasks. Coordinates Angular, NgRx, RxJS, React, Vue, Qwik, CSS/SCSS, Design, and FE Refactoring skills; guarantees architectural and stylistic consistency across design, implementation, and state management.",
-      "file": "skills/frontend-orchestrator.md",
+      "file": "skills/orchestrators/frontend-orchestrator.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -1095,7 +1095,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load Python production standards: mandatory type hints, project structure, Pydantic v2, pytest, structlog, and dependency management (uv/pip-tools). Covers FastAPI services, CLIs, data pipelines, and scripts. Does not cover Streamlit \u2014 use streamlit-expert for that.",
-      "file": "skills/python-expert.md",
+      "file": "skills/python/python-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -1116,7 +1116,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to load Streamlit standards: page structure, session_state management, caching, reusable components, and PostgreSQL/API integration. Use for developing or maintaining Streamlit web apps. For pure Python logic use python-expert.",
-      "file": "skills/streamlit-expert.md",
+      "file": "skills/python/streamlit-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -1137,7 +1137,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use when a dependency conflict blocks another skill: incompatible library versions, breaking changes after an update, absent documentation, inconsistent behaviour, transitive conflicts, or deprecated APIs. Support skill only \u2014 do not activate for simple version updates without conflicts.",
-      "file": "skills/dependency-resolver.md",
+      "file": "skills/refactoring/dependency-resolver.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -1158,7 +1158,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use when refactoring code in any language to improve internal structure without changing functional behaviour. Applies SOLID, DRY, KISS, YAGNI, Separation of Concerns, high cohesion/low coupling, testability, and readability.",
-      "file": "skills/refactoring-expert.md",
+      "file": "skills/refactoring/refactoring-expert.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -1179,7 +1179,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use when generating commit messages. Produces a terse, intent-focused Conventional Commits subject line (max 72 chars) with a body only when the reasoning is non-obvious. No emojis, no AI credits. Outputs message text in a code block only \u2014 does not run git.",
-      "file": "skills/caveman-commit.md",
+      "file": "skills/utils/caveman-commit.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -1200,7 +1200,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use when reviewing code and producing PR comments. Each comment follows the format L<line>: <severity> <problem>. <fix>. No hedging, no code repetition, no motivational asides. Produces comments ready to paste into a PR.",
-      "file": "skills/caveman-review.md",
+      "file": "skills/utils/caveman-review.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -1221,7 +1221,7 @@
       "tier": "skill",
       "status": "active",
       "description": "Use to activate token-efficient communication mode (approx. 75% token reduction). Switches responses to terse, direct prose: no filler words, no hedging, no pleasantries. Preserves exact technical terminology and code unchanged.",
-      "file": "skills/caveman.md",
+      "file": "skills/utils/caveman.md",
       "dependencies": [],
       "tools": [
         "Read"
@@ -1247,7 +1247,7 @@
         "frontend-orchestrator",
         "documentation-orchestrator"
       ],
-      "file": "beta/orchestrator.md",
+      "file": "beta/orchestration/orchestrator.md",
       "tools": [
         "Read",
         "Glob",
@@ -1270,7 +1270,7 @@
       "type": "agent",
       "status": "active",
       "description": "Single entrypoint for indexing any legacy codebase into a markdown KB at .indexing-kb/. Language-agnostic \u2014 autodetects the AS-IS stack via codebase-mapper and writes a canonical stack.json consumed by every downstream phase. Decomposes indexing into phases, dispatches Sonnet sub-agents in parallel, gates framework-specific analyzers (e.g. streamlit-analyzer runs only when streamlit \u2208 stack.frameworks). Detects existing .indexing-kb/ outputs and prompts skip / re-run / revise before proceeding.",
-      "file": "beta/indexing-supervisor.md",
+      "file": "beta/indexing/indexing-supervisor.md",
       "dependencies": [
         "codebase-mapper",
         "dependency-analyzer",
@@ -1305,7 +1305,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of indexing-supervisor. Produces structural inventory of any codebase: directory tree, file counts per language, top-level package map, entrypoints, and the canonical machine-readable stack.json (primary language, languages, frameworks, build tools, package managers, test frameworks) consumed by all downstream phases. Polyglot codebases supported.",
-      "file": "beta/codebase-mapper.md",
+      "file": "beta/indexing/codebase-mapper.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1329,7 +1329,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of indexing-supervisor. Extracts external dependencies and builds the internal module dependency graph for any-language codebases. Reads the project's build manifests (pyproject.toml, pom.xml, Cargo.toml, go.mod, *.csproj, Gemfile, composer.json, package.json, etc.) and language-appropriate import declarations. Detects circular dependencies and standalone packages. Stack-aware via 02-structure/stack.json.",
-      "file": "beta/dependency-analyzer.md",
+      "file": "beta/indexing/dependency-analyzer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1353,7 +1353,7 @@
       "type": "agent",
       "status": "active",
       "description": "Framework-specific sub-agent of indexing-supervisor. Analyzes Streamlit-specific concerns: pages, session_state, widgets, caching, navigation, anti-patterns. Invoked ONLY when streamlit is detected in stack.frameworks. Pattern (canonical for any future framework-specific analyzer): gated on stack.frameworks, runs in parallel with codebase-mapper and dependency-analyzer in Phase 1.",
-      "file": "beta/streamlit-analyzer.md",
+      "file": "beta/indexing/streamlit-analyzer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1378,7 +1378,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of indexing-supervisor. Documents one package or module of a codebase end-to-end at the API level. Language-agnostic \u2014 adapts to package conventions of the detected language (Python __init__.py, JVM src/main, Go internal/, Rust crates, .NET *.csproj, Ruby app/, PHP namespaces, JS/TS src/). One invocation per top-level package, parallelizable.",
-      "file": "beta/module-documenter.md",
+      "file": "beta/indexing/module-documenter.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1403,7 +1403,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of indexing-supervisor. Identifies all data crossings between the application and the outside world: database access, external API calls, file I/O, environment variables, and configuration sources. Language-agnostic \u2014 reads stack.json to know which library patterns to grep for (SQLAlchemy/JPA/sqlx/EF Core/ActiveRecord/Eloquent/Prisma; requests/WebClient/reqwest/HttpClient/Guzzle/axios; etc.).",
-      "file": "beta/data-flow-analyst.md",
+      "file": "beta/indexing/data-flow-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1428,7 +1428,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of indexing-supervisor. Extracts business rules, validation logic, and domain concepts from a codebase in any language. Stack-aware \u2014 adapts validation/rule grep patterns to the language declared in stack.json (Pydantic for Python; Bean Validation / @Valid for JVM; class-validator / zod for TS; FluentValidation for C#; Rails validators; FormRequest for Laravel; etc.).",
-      "file": "beta/business-logic-analyst.md",
+      "file": "beta/indexing/business-logic-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1453,7 +1453,7 @@
       "type": "agent",
       "status": "active",
       "description": "Final consolidation sub-agent of indexing-supervisor. Reads all prior phase outputs from the KB and produces system overview, bounded context hypothesis, complexity hotspot map, indexing report, and the index page.",
-      "file": "beta/synthesizer.md",
+      "file": "beta/indexing/synthesizer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1477,7 +1477,7 @@
       "type": "agent",
       "status": "active",
       "description": "Single entrypoint for Phase 1 (AS-IS Functional Analysis) of a refactoring/migration workflow. Reads the knowledge base at .indexing-kb/ produced by Phase 0 indexing and orchestrates Sonnet sub-agents in 3 waves plus an export wave to produce a complete functional understanding in docs/analysis/01-functional/ and an Accenture-branded PDF + PPTX in _exports/. Detects an `exports-only` resume mode: when the analysis is already complete but one or both exports are missing, offers to regenerate only the missing exports without re-running the W1/W2/W3 sub-agents. Stack-aware (Streamlit/generic), strictly AS-IS (no target-tech references), generic and reusable across migration scenarios.",
-      "file": "beta/functional-analysis-supervisor.md",
+      "file": "beta/functional-analysis/functional-analysis-supervisor.md",
       "dependencies": [
         "actor-feature-mapper",
         "ui-surface-analyst",
@@ -1514,7 +1514,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of functional-analysis-supervisor (Wave 1). Extracts actors, roles, personas, and the full feature map of an application AS-IS from the .indexing-kb/ knowledge base. Couples actor and feature analysis because who-can-do-what is one concept. Strictly AS-IS.",
-      "file": "beta/actor-feature-mapper.md",
+      "file": "beta/functional-analysis/actor-feature-mapper.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1540,7 +1540,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of functional-analysis-supervisor (Wave 1). Inventories the UI surface AS-IS: screens, navigation map, component tree. Strong Streamlit awareness \u2014 treats each page-script as a screen and widgets as first-class components. Strictly AS-IS.",
-      "file": "beta/ui-surface-analyst.md",
+      "file": "beta/functional-analysis/ui-surface-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1567,7 +1567,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of functional-analysis-supervisor (Wave 1). Inventories all functional inputs, outputs, and the transformation matrix of an application AS-IS. Functional perspective (user-perceived I/O), not infrastructure perspective. Strictly AS-IS.",
-      "file": "beta/io-catalog-analyst.md",
+      "file": "beta/functional-analysis/io-catalog-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1593,7 +1593,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of functional-analysis-supervisor (Wave 2). Derives use cases, user flows, and Mermaid sequence diagrams from Wave 1 outputs. Streamlit-aware \u2014 handles reactive rerun-driven flows that have no explicit routing. Strictly AS-IS.",
-      "file": "beta/user-flow-analyst.md",
+      "file": "beta/functional-analysis/user-flow-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1620,7 +1620,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of functional-analysis-supervisor (Wave 2). Extracts IMPLICIT business and validation logic embedded in widget parameters, conditional rendering, state-driven branches, callback chains, and magic numbers. Highest value in Streamlit codebases. Complements business-logic-analyst (which captures explicit rules). Strictly AS-IS.",
-      "file": "beta/implicit-logic-analyst.md",
+      "file": "beta/functional-analysis/implicit-logic-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1646,7 +1646,7 @@
       "type": "agent",
       "status": "active",
       "description": "Optional adversarial sub-agent of functional-analysis-supervisor (Wave 3). Cross-validates the full set of Phase 1 outputs by looking for gaps, contradictions, unverified claims, and AS-IS violations. Does NOT rewrite \u2014 only flags findings. Default ON in Streamlit mode, opt-in otherwise.",
-      "file": "beta/functional-analysis-challenger.md",
+      "file": "beta/functional-analysis/functional-analysis-challenger.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1673,7 +1673,7 @@
       "type": "agent",
       "status": "active",
       "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Coordinates the full AS-IS\u2192TO-BE\u2192validation journey: Phase 0 (indexing), Phase 1 (AS-IS functional analysis with PDF+PPTX export), Phase 2 (AS-IS technical analysis with PDF+PPTX export), Phase 3 (AS-IS baseline testing), Phase 4 (TO-BE refactoring \u2014 first phase with target tech: Spring Boot + Angular), and Phase 5 (TO-BE testing & equivalence verification \u2014 final go-live gate, produces deliverable equivalence report requiring PO sign-off). Strict human-in-the-loop with per-phase recap including execution timings. Bootstrap detects existing phase outputs and asks the user explicitly per phase whether to skip, re-run, or revise \u2014 never auto-skip a complete phase silently. For Phases 1 and 2, when the analysis is complete but the Accenture-branded export is missing, offers a fourth choice `regenerate-exports` that runs only the export wave without re-doing the analysis. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check; Phase 5 measures TO-BE against AS-IS oracle.",
-      "file": "beta/refactoring-supervisor.md",
+      "file": "beta/orchestration/refactoring-supervisor.md",
       "dependencies": [
         "indexing-supervisor",
         "functional-analysis-supervisor",
@@ -1707,7 +1707,7 @@
       "type": "agent",
       "status": "active",
       "description": "Phase 2 supervisor (opus). Orchestrates 8 Sonnet workers in waves to produce AS-IS technical analysis at docs/analysis/02-technical/, plus Accenture-branded PDF and PPTX exports. Reads .indexing-kb/ (Phase 0) and optionally docs/analysis/01-functional/ (Phase 1). Decides dispatch mode (parallel | batched | sequential) based on KB size and user flag. Detects an `exports-only` resume mode: when the analysis is already complete but one or both exports are missing, offers to regenerate only the missing exports without re-running the W1/W2/W3 workers. Strict human-in-the-loop. Strictly AS-IS \u2014 never references target technologies.",
-      "file": "beta/technical-analysis-supervisor.md",
+      "file": "beta/technical-analysis/technical-analysis-supervisor.md",
       "dependencies": [
         "code-quality-analyst",
         "state-runtime-analyst",
@@ -1750,7 +1750,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze code quality of a codebase AS-IS: codebase map, logical-component classification (UI/business/adapter/utility), duplication report, complexity hotspots, monolith smells. Strictly AS-IS.",
-      "file": "beta/code-quality-analyst.md",
+      "file": "beta/technical-analysis/code-quality-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1776,7 +1776,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze application state and runtime behavior AS-IS: session state, module globals, side effects, execution order, lifecycle. Streamlit-aware (st.session_state, reactive rerun model). Strictly AS-IS.",
-      "file": "beta/state-runtime-analyst.md",
+      "file": "beta/technical-analysis/state-runtime-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1804,7 +1804,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze the external dependency posture of a codebase AS-IS: pinning, deprecations, known vulnerabilities (CVE/GHSA), license posture. Produces a dependency inventory plus an SBOM-lite JSON. Static analysis only \u2014 no network calls. Strictly AS-IS.",
-      "file": "beta/dependency-security-analyst.md",
+      "file": "beta/technical-analysis/dependency-security-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1833,7 +1833,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze data flow and data access patterns of a codebase AS-IS: origin \u2192 transformation \u2192 validation \u2192 sink, DB/file/cache/serialization patterns. Mermaid diagrams. Strictly AS-IS.",
-      "file": "beta/data-access-analyst.md",
+      "file": "beta/technical-analysis/data-access-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1860,7 +1860,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze external integrations of a codebase AS-IS: outbound HTTP/API calls, third-party services, message queues, webhooks; protocol, auth, timeout, retry, idempotency, failure handling. Produces an integration map. Strictly AS-IS.",
-      "file": "beta/integration-analyst.md",
+      "file": "beta/technical-analysis/integration-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1887,7 +1887,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze performance posture of a codebase AS-IS via static analysis only: hot loops, N+1 patterns, blocking I/O on critical paths, missing caching, memory-heavy operations, Streamlit rerun cost. No profiling, no runtime measurement. Strictly AS-IS.",
-      "file": "beta/performance-analyst.md",
+      "file": "beta/technical-analysis/performance-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1915,7 +1915,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze resilience and error-handling posture of a codebase AS-IS: try/except patterns, logging quality (structured vs string, secrets in logs), silent failures, fallback chains, retries, recovery paths. Strictly AS-IS.",
-      "file": "beta/resilience-analyst.md",
+      "file": "beta/technical-analysis/resilience-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1943,7 +1943,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze code-level security posture of a codebase AS-IS: OWASP Top 10 coverage, input validation, sanitization, secrets in code, threat-model surface (STRIDE). Complements dependency-security-analyst (library CVEs) \u2014 does not duplicate it. Strictly AS-IS.",
-      "file": "beta/security-analyst.md",
+      "file": "beta/technical-analysis/security-analyst.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1971,7 +1971,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of technical-analysis-supervisor (Wave 2). Use to consolidate Wave 1 findings into a unified risk register (markdown + JSON + CSV), severity matrix (likelihood \u00d7 impact), and ordered remediation backlog. Cross-references with Phase 1 features and use cases when available. Discovers no new findings \u2014 only consolidates. Strictly AS-IS.",
-      "file": "beta/risk-synthesizer.md",
+      "file": "beta/technical-analysis/risk-synthesizer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -1997,7 +1997,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of technical-analysis-supervisor (Wave 3, always ON). Use to perform an adversarial review of all Phase 2 outputs: orphan IDs, contradictions, unverified claims, coverage gaps, AS-IS violations, Streamlit-specific risks. Does NOT rewrite \u2014 only flags findings. Strictly AS-IS.",
-      "file": "beta/technical-analysis-challenger.md",
+      "file": "beta/technical-analysis/technical-analysis-challenger.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2024,7 +2024,7 @@
       "type": "agent",
       "status": "active",
       "description": "Phase 3 supervisor (opus). Orchestrates 7 Sonnet workers in 4 waves to produce the AS-IS baseline regression suite at tests/baseline/ (pytest, fixtures, snapshots, benchmarks, optional Postman collection if services exposed) plus the report at docs/analysis/03-baseline/. Reads .indexing-kb/ + Phase 1 + Phase 2. Adaptive execution policy (auto-detects pytest readiness; falls back to write-only). Per-step recaps with execution timings. Failure policy: critical/high escalate; medium/low get xfail with AS-IS bug record. Never modifies AS-IS source code. On invocation, detects existing baseline outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding \u2014 never auto-overwrites a complete baseline silently. Strict human-in-the-loop. Strictly AS-IS.",
-      "file": "beta/baseline-testing-supervisor.md",
+      "file": "beta/baseline-testing/baseline-testing-supervisor.md",
       "dependencies": [
         "fixture-builder",
         "usecase-test-writer",
@@ -2063,7 +2063,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of baseline-testing-supervisor (Wave 0). Use to produce the test data layer of the AS-IS baseline regression suite: minimal/realistic/edge fixtures plus a conftest.py with global determinism setup (seed fix, time freeze, network mock). Strictly AS-IS.",
-      "file": "beta/fixture-builder.md",
+      "file": "beta/baseline-testing/fixture-builder.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2090,7 +2090,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of baseline-testing-supervisor (Wave 1, fan-out per UC). Use to write the baseline pytest module for ONE use case from Phase 1: happy + alternative + edge tests with streamlit.testing.v1.AppTest where applicable. Never modifies AS-IS source \u2014 bugs found are documented for the runner's failure policy. Strictly AS-IS.",
-      "file": "beta/usecase-test-writer.md",
+      "file": "beta/baseline-testing/usecase-test-writer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2118,7 +2118,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of baseline-testing-supervisor (Wave 1). Use to write baseline integration tests covering DB, file system, outbound external APIs (mocked via responses/respx), and cache layers. Tests target boundaries the app CALLS (vs services it exposes). Strictly AS-IS.",
-      "file": "beta/integration-test-writer.md",
+      "file": "beta/baseline-testing/integration-test-writer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2145,7 +2145,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of baseline-testing-supervisor (Wave 1). Use to write baseline performance benchmarks: per-UC pytest-benchmark scripts, memory profiling probes via tracemalloc, optional throughput probes. Output is the AS-IS performance oracle for Phase 5 relative SLA gating. Deterministic. Strictly AS-IS.",
-      "file": "beta/benchmark-writer.md",
+      "file": "beta/baseline-testing/benchmark-writer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2173,7 +2173,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of baseline-testing-supervisor (Wave 1, conditional \u2014 only if services exposed). Use to produce a Postman 2.1 collection of the services the AS-IS app exposes: per-endpoint happy + edge requests, auth setup, response assertions, environment file. Captures the AS-IS service-level contract for Phase 5 equivalence verification. Strictly AS-IS.",
-      "file": "beta/service-collection-builder.md",
+      "file": "beta/baseline-testing/service-collection-builder.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2201,7 +2201,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of baseline-testing-supervisor (Wave 2). Use to execute the baseline regression suite and capture the oracle artifacts (snapshots, benchmark JSON, coverage JSON). Applies the failure policy: critical/high escalate; medium/low get xfail with AS-IS bug record. Honors execution policy (write+execute or write-only). Only worker permitted to add xfail/skip markers to test files. Never modifies AS-IS source. Strictly AS-IS.",
-      "file": "beta/baseline-runner.md",
+      "file": "beta/baseline-testing/baseline-runner.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2230,7 +2230,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of baseline-testing-supervisor (Wave 3, always ON). Use to perform an adversarial review of Phase 3 outputs: coverage gaps, AS-IS source modifications (forbidden), determinism risks, oracle integrity, severity-mismatch in bug dispositions, Streamlit-specific risks, Postman collection integrity. Does NOT rewrite \u2014 only flags findings. Strictly AS-IS.",
-      "file": "beta/baseline-challenger.md",
+      "file": "beta/baseline-testing/baseline-challenger.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2258,7 +2258,7 @@
       "type": "agent",
       "status": "active",
       "description": "Phase 4 supervisor (opus). FIRST phase with target tech (Spring Boot 3 + Angular). Reads .indexing-kb/ + Phase 1/2/3 outputs and orchestrates 9 Sonnet workers in 6 waves to produce: bounded-context decomposition + ADRs (W1), OpenAPI 3.1 contract (W2), Spring Boot scaffold + JPA + per-UC logic translation + Angular workspace (W3 parallel BE+FE), hardening + observability + security (W4), migration roadmap with strangler fig (W5), adversarial review with AS-IS\u2194TO-BE traceability (W6 always ON). Strict dependency chain (W1\u2192W2\u2192W3\u2192W4\u2192W5\u2192W6) with three HITL checkpoints. Adaptive verification (mvn compile + ng build best-effort). Code generation scope configurable: scaffold-todo (default) | full | structural. Per-step execution timings. Inverse drift rule: target tech allowed; AS-IS-only leaks forbidden without ADR. On invocation, detects existing TO-BE outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding \u2014 never auto-overwrites generated code silently.",
-      "file": "beta/refactoring-tobe-supervisor.md",
+      "file": "beta/refactoring-tobe/refactoring-tobe-supervisor.md",
       "dependencies": [
         "decomposition-architect",
         "api-contract-designer",
@@ -2304,7 +2304,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of refactoring-tobe-supervisor (Wave 1). Use to produce the TO-BE bounded-context decomposition (DDD-style with context map), aggregate design, AS-IS\u2194TO-BE module mapping, ADR-001 (architecture style: modular monolith vs microservices), and ADR-002 (target stack: Spring Boot version, Java version, Angular version, target DB). Output BLOCKS all subsequent Phase 4 workers. TO-BE design with inverse drift rule.",
-      "file": "beta/decomposition-architect.md",
+      "file": "beta/refactoring-tobe/decomposition-architect.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2333,7 +2333,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of refactoring-tobe-supervisor (Wave 2). Use to produce the OpenAPI 3.1 contract (single source of truth for both backend and frontend), design rationale, TO-BE Postman collection, and ADR-003 (auth flow). Every operation has x-uc-ref for traceability. RFC 7807 ProblemDetail for errors; cursor-based pagination; idempotency-key required on POST with side effects. Output BLOCKS Wave 3 implementation. TO-BE design.",
-      "file": "beta/api-contract-designer.md",
+      "file": "beta/refactoring-tobe/api-contract-designer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2362,7 +2362,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 1). Use to produce the Spring Boot 3 backend Maven scaffold: package structure per bounded context (api/application/domain/infrastructure), controller skeletons from OpenAPI, DTOs, service skeletons (TODO markers), error handler RFC 7807, security config baseline, idempotency aspect, correlation-id filter, observability hooks. No business logic (logic-translator's job) and no entities (data-mapper's job). TO-BE design.",
-      "file": "beta/backend-scaffolder.md",
+      "file": "beta/refactoring-tobe/backend-scaffolder.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2390,7 +2390,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 2). Use to produce the JPA persistence layer: entities (one per aggregate / entity / value object), Flyway migrations (V<NN>__*.sql), Spring Data JPA repositories, enums (state machines), MapStruct/manual mappers, idempotency entity. Honors DDD aggregate boundaries (cross-aggregate refs by ID only). Schema strategy: greenfield (new) or existing-migration based on Phase 2 access-pattern detection. TO-BE design.",
-      "file": "beta/data-mapper.md",
+      "file": "beta/refactoring-tobe/data-mapper.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2419,7 +2419,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 3, fan-out per UC). Use to translate ONE use case from AS-IS Python to Java/Spring code: replace UnsupportedOperationException stubs in service methods with actual implementation; add state-transition methods on entities; honor Phase 2 error handling (never reproduce silent failures); cross-reference Phase 3 baseline tests as oracle. Code-scope-aware (full | scaffold-todo | structural). Each invocation handles one UC; multiple in parallel. Edits existing files; AS-IS source remains read-only. TO-BE design.",
-      "file": "beta/logic-translator.md",
+      "file": "beta/refactoring-tobe/logic-translator.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2448,7 +2448,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, frontend track). Use to produce the Angular 17+ workspace with standalone components: core layer (auth/error/correlation-id interceptors, auth/role guards, base services), shared layer (components, pipes, models), one lazy-loaded feature module per bounded context with screens-as-components, OpenAPI typed client (typescript-angular generator), routing, env config. Streamlit-specific translations documented (session_state\u2192signals, st.cache_data\u2192shareReplay, etc.). TO-BE design.",
-      "file": "beta/frontend-scaffolder.md",
+      "file": "beta/refactoring-tobe/frontend-scaffolder.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2477,7 +2477,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of refactoring-tobe-supervisor (Wave 4). Use to apply production hardening to the TO-BE scaffold: structured JSON logging with logstash-encoder + correlation-id MDC, Micrometer + Prometheus metrics, OpenTelemetry tracing, Spring Security 6 baseline (OWASP secure headers, CORS allowlist, /actuator gating), frontend CSP via meta tag, secrets via env (.env.example), ADR-004 (observability) + ADR-005 (security baseline). Updates application.yml, SecurityConfig, index.html. TO-BE design.",
-      "file": "beta/hardening-architect.md",
+      "file": "beta/refactoring-tobe/hardening-architect.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2508,7 +2508,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of refactoring-tobe-supervisor (Wave 5). Use to produce the migration roadmap: strangler fig plan with per-bounded-context milestones, cutover topology (reverse proxy / API gateway / DNS), rollback plans, go-live criteria (equivalence vs Phase 3, p95 \u2264 110% baseline), AS-IS bug carry-over table, communication plan, Mermaid Gantt + topology diagrams. Stakeholder-facing (TL;DR \u2264 1 page). TO-BE design.",
-      "file": "beta/migration-roadmap-builder.md",
+      "file": "beta/refactoring-tobe/migration-roadmap-builder.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2536,7 +2536,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of refactoring-tobe-supervisor (Wave 6, always ON). Use to produce the AS-IS\u2194TO-BE traceability matrix and perform 8 adversarial checks on Phase 4 outputs: coverage gaps (orphan UCs / orphan TO-BE files), OpenAPI\u2194code drift, ADR completeness, AS-IS bug carry-over consistency, performance hypothesis sanity, security regression, equivalence claims integrity, AS-IS-only leak in TO-BE (inverse drift), AS-IS source modification detection. Does NOT rewrite \u2014 only flags findings. TO-BE phase.",
-      "file": "beta/phase4-challenger.md",
+      "file": "beta/refactoring-tobe/phase4-challenger.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2565,7 +2565,7 @@
       "type": "agent",
       "status": "active",
       "description": "Phase 5 supervisor (opus). Validates the TO-BE codebase against the AS-IS baseline. Reads tests/baseline/ (Phase 3 oracle), docs/analysis/01-functional/ (Phase 1 UCs), docs/refactoring/api/openapi.yaml (Phase 4 contract), backend/ + frontend/ (Phase 4 codebase). Orchestrates 8 Sonnet workers in 5 waves: equivalence test authoring per UC, backend tests (JUnit 5 + Mockito + Testcontainers + Spring Cloud Contract), frontend tests (Jest + Angular Testing Library + Playwright E2E), security tests (OWASP Top 10), performance comparison (p95 \u2264 +10% gate), execution & oracle capture, equivalence synthesis, challenger. Adaptive execution policy. Failure policy: critical/high regressions escalate; medium/low go to TBUG registry with xfail. AS-IS and TO-BE source code remain read-only. On invocation, detects existing Phase 5 outputs and asks the user explicitly whether to skip, re-run, or revise. Final go-live gate \u2014 produces the deliverable equivalence report requiring PO sign-off.",
-      "file": "beta/tobe-testing-supervisor.md",
+      "file": "beta/tobe-testing/tobe-testing-supervisor.md",
       "dependencies": [
         "equivalence-test-writer",
         "backend-test-writer",
@@ -2604,7 +2604,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of tobe-testing-supervisor (Wave 1, fan-out per UC). One invocation per use case. Produces a Python pytest harness under tests/equivalence/test_uc_<id>.py that drives the TO-BE deployment (HTTP calls or Playwright for Streamlit-derived UCs) and compares its output against the Phase 3 AS-IS snapshot for the same UC. Differences classified as equivalent, accepted-difference (PO sign-off), or regression per a configurable tolerance policy. Never modifies AS-IS or TO-BE source code.",
-      "file": "beta/equivalence-test-writer.md",
+      "file": "beta/tobe-testing/equivalence-test-writer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2632,7 +2632,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Produces the backend TO-BE test suite for a Spring Boot 3 codebase: unit tests (JUnit 5 + Mockito), integration tests (Testcontainers), and contract tests (Spring Cloud Contract \u2014 verifies vs OpenAPI 3.1). Organised per bounded context. Targets > 80% line coverage and > 70% branch coverage. Never modifies production code. Anchors expected behaviour to Phase 1 UCs and Phase 3 baseline oracle.",
-      "file": "beta/backend-test-writer.md",
+      "file": "beta/tobe-testing/backend-test-writer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2662,7 +2662,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Produces the frontend TO-BE test suite for an Angular 17+ codebase: component tests (Jest + Angular Testing Library) and E2E tests (Playwright). Component tests organised per feature module. E2E specs derived from Phase 1 user-flows. Targets > 80% line coverage. Never modifies production code. Equivalence is at the user-flow level, not pixel level (Streamlit\u2192Angular layouts naturally diverge).",
-      "file": "beta/frontend-test-writer.md",
+      "file": "beta/tobe-testing/frontend-test-writer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2692,7 +2692,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Authors the TO-BE security test suite: authentication/authorisation tests, input-validation tests, CSRF/CORS verification, OWASP Top 10 coverage (A01-A10), optional ZAP baseline scan automation. Cross-references Phase 2 AS-IS security findings to ensure no regression. Writes 05-security-findings.md. Never modifies production code.",
-      "file": "beta/security-test-writer.md",
+      "file": "beta/tobe-testing/security-test-writer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2721,7 +2721,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of tobe-testing-supervisor (Wave 2). Authors load-test scenarios (Gatling or k6) for the TO-BE backend and compares results against Phase 3 AS-IS benchmark. Per-UC p95/p99 deltas, throughput, memory comparison. Flags p95 > +10% as regression-soft (PO sign-off) and > +25% as regression-hard (escalate). Documents env caveats (CPU, RAM, JVM). Streamlit-aware comparison methodology. Never modifies production code.",
-      "file": "beta/performance-comparator.md",
+      "file": "beta/tobe-testing/performance-comparator.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2751,7 +2751,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of tobe-testing-supervisor (Wave 3, sequential). Executes the TO-BE test suites authored in Wave 1 and the load scenarios from Wave 2 (when execute_policy permits). Captures JaCoCo coverage, Spring Cloud Contract verifier results, Playwright traces, k6/Gatling JSON. Classifies failures: critical/high \u2192 escalate (test stays failing); medium/low \u2192 xfail with TBUG registry entry. The only Phase 5 worker permitted to add @Disabled / xfail / test.skip markers. Never modifies production code or re-authors tests.",
-      "file": "beta/tobe-test-runner.md",
+      "file": "beta/tobe-testing/tobe-test-runner.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2781,7 +2781,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of tobe-testing-supervisor (Wave 4, sequential). Reads all Phase 5 outputs (equivalence, backend, frontend, contract tests, performance comparison, security findings, TBUG registry) plus Phase 1 UC list and produces the consolidated 01-equivalence-report.md \u2014 the deliverable signed by the Product Owner. Per UC verdict: equivalent | accepted-difference | regression-blocking | regression-accepted | not-tested-with-reason. Quality gate with 8 items. Discovers no new findings; only consolidates and classifies. Also writes README.md (Phase 5 entry point). Never modifies test or production code.",
-      "file": "beta/equivalence-synthesizer.md",
+      "file": "beta/tobe-testing/equivalence-synthesizer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2810,7 +2810,7 @@
       "type": "agent",
       "status": "active",
       "description": "Sub-agent of tobe-testing-supervisor (Wave 5, always ON). Adversarial reviewer: 8 cross-cutting checks \u2014 UC coverage gaps, OpenAPI\u2194TO-BE drift, AS-IS source modifications (forbidden), TO-BE source modifications in Phase 5 (forbidden), mocked-when-shouldn't, equivalence claim integrity, AS-IS-bug-carry-over consistency, PO sign-off completeness, performance gate compliance. Produces _meta/challenger-report.md with CHL-NN entries; appends to 14-unresolved-questions.md. Flags; does NOT rewrite tests or reports.",
-      "file": "beta/tobe-testing-challenger.md",
+      "file": "beta/tobe-testing/tobe-testing-challenger.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2838,7 +2838,7 @@
       "type": "agent",
       "status": "active",
       "description": "Authors GitHub wikis organized around the Diataxis framework (Tutorials, How-to, Reference, Explanation). Reads the codebase, README, CHANGELOG, ADRs, and existing docs to produce Home/_Sidebar/_Footer plus topic pages as Markdown files in a local wiki/ directory ready for review via PR before pushing to the wiki repository. Never auto-pushes \u2014 the wiki is a public-facing artifact and pushes require explicit user authorization. Adapts tone and depth to audience (end-user, contributor, operator, integrator).",
-      "file": "beta/wiki-writer.md",
+      "file": "beta/documentation/wiki-writer.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2867,7 +2867,7 @@
       "type": "agent",
       "status": "active",
       "description": "Production-ready Go: standard library first, table-driven tests, log/slog, context propagation, errors-as-values. Covers HTTP services (net/http, chi, gin), CLIs (cobra), worker daemons. Tooling: gofmt, goimports, golangci-lint.",
-      "file": "beta/developer-go.md",
+      "file": "beta/developers/developer-go.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2894,7 +2894,7 @@
       "type": "agent",
       "status": "active",
       "description": "Production-ready Rust on stable: thiserror/anyhow boundaries, tokio async, structured concurrency, tracing. Covers HTTP services (axum, actix-web), CLIs (clap), async daemons. Tooling: cargo fmt, clippy -D warnings, cargo audit.",
-      "file": "beta/developer-rust.md",
+      "file": "beta/developers/developer-rust.md",
       "dependencies": [],
       "tools": [
         "Read",
@@ -2921,7 +2921,7 @@
       "type": "agent",
       "status": "active",
       "description": "Production-ready Kotlin for JVM backends: Spring Boot 3 with Kotlin idioms (constructor injection, ConfigurationProperties data classes), or Ktor. Coroutines + structured concurrency. Sealed class hierarchies, value classes, no `!!` in production. Tooling: ktlint, detekt, mockk, JUnit 5.",
-      "file": "beta/developer-kotlin.md",
+      "file": "beta/developers/developer-kotlin.md",
       "dependencies": [
         "java-spring-standards",
         "spring-architecture",
@@ -2955,7 +2955,7 @@
       "type": "agent",
       "status": "active",
       "description": "Production-ready C#/.NET 8+: ASP.NET Core Web APIs (controllers and minimal APIs), nullable reference types, records for DTOs, IOptions<T> with validation, ILogger<T> + LoggerMessage source generators, EF Core. xUnit + FluentAssertions + Testcontainers. Architecture tests with NetArchTest.",
-      "file": "beta/developer-csharp.md",
+      "file": "beta/developers/developer-csharp.md",
       "dependencies": [
         "rest-api-standards",
         "testing-standards"
@@ -2986,7 +2986,7 @@
       "type": "agent",
       "status": "active",
       "description": "Production-ready Ruby on Rails 7+: service objects, form objects, query objects to keep models small. Sidekiq with idempotent jobs (pass IDs, never AR objects). RSpec + factory_bot, simplecov, brakeman. RuboCop with rails/rspec/performance plugins. Optional Sorbet/RBS for type signatures.",
-      "file": "beta/developer-ruby.md",
+      "file": "beta/developers/developer-ruby.md",
       "dependencies": [
         "rest-api-standards",
         "testing-standards"
@@ -3017,7 +3017,7 @@
       "type": "agent",
       "status": "active",
       "description": "Production-ready PHP 8.2+ with strict_types, typed properties, readonly classes, enums, attributes. Laravel 10/11 (with Domain/Application/Infrastructure layering) or Symfony 6/7 (data mapper Doctrine). PHPStan level 8 baseline, Pest or PHPUnit 10, Composer 2. Idempotent queue jobs.",
-      "file": "beta/developer-php.md",
+      "file": "beta/developers/developer-php.md",
       "dependencies": [
         "rest-api-standards",
         "testing-standards"

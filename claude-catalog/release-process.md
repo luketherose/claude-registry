@@ -59,28 +59,33 @@ git push origin catalog@2026-04-19
 ## Step 4: Run the publish script
 
 The publish script copies the subagent file from `claude-catalog/agents/` to the
-appropriate tier in `claude-marketplace/` and updates `catalog.json`.
+appropriate tier and topic in `claude-marketplace/` and updates `catalog.json`.
 
 ```bash
-# Publish to stable tier
+# Publish to stable tier (topic auto-resolved from the catalog source path)
 ./claude-marketplace/scripts/publish.sh software-architect 1.1.0 stable
 
-# Publish to beta tier (for new or experimental capabilities)
-./claude-marketplace/scripts/publish.sh technical-analyst 0.2.0 beta
+# Publish to beta tier with an explicit topic
+./claude-marketplace/scripts/publish.sh technical-analyst 0.2.0 beta --topic analysis
 ```
 
 The script will:
-1. Copy the `.md` file to `claude-marketplace/{tier}/{name}.md`
-2. Update the `version`, `tier`, and `published` fields in `catalog.json`
-3. Commit the marketplace changes with message `release: {name}@{version}`
+1. Resolve the topic — `--topic` flag, then existing `catalog.json` entry, then catalog source path (`claude-catalog/agents/<topic>/<name>.md`)
+2. Copy the `.md` file to `claude-marketplace/{tier}/{topic}/{name}.md`
+3. Remove any stale copies of the same capability under the same tier (so a re-grouping never leaves orphan files behind)
+4. Update the `version`, `tier`, `file`, and `published` fields in `catalog.json`
+5. Commit the marketplace changes with message `release: {name}@{version}`
 
 ---
 
 ## Step 5: Verify the published capability
 
 ```bash
-# Check the published file exists
-ls claude-marketplace/stable/software-architect.md
+# Resolve the published path from catalog.json (single source of truth)
+python3 -c "import json; print([c['file'] for c in json.load(open('claude-marketplace/catalog.json'))['capabilities'] if c.get('name')=='software-architect'][0])"
+
+# Check the published file exists at the resolved path
+ls claude-marketplace/stable/architecture/software-architect.md
 
 # Check catalog.json is updated
 cat claude-marketplace/catalog.json | grep -A8 '"name": "software-architect"'

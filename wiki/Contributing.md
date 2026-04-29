@@ -82,7 +82,7 @@ Add an entry to `claude-marketplace/catalog.json`:
   "type": "agent",
   "status": "active",
   "description": "Use when ...",
-  "file": "beta/my-agent-name.md",
+  "file": "beta/<topic>/my-agent-name.md",
   "dependencies": [],
   "tools": ["Read", "Grep", "Glob", "Write"],
   "model": "sonnet",
@@ -92,10 +92,12 @@ Add an entry to `claude-marketplace/catalog.json`:
 }
 ```
 
-Mirror the file:
+Mirror the file (use the topic subfolder — see "Marketplace topics" in the
+project `CLAUDE.md` or the `claude-marketplace/README.md` for the full list):
 
 ```bash
-cp claude-catalog/agents/my-agent-name.md claude-marketplace/beta/my-agent-name.md
+mkdir -p claude-marketplace/beta/<topic>
+cp claude-catalog/agents/<topic>/my-agent-name.md claude-marketplace/beta/<topic>/my-agent-name.md
 ```
 
 Add a `CHANGELOG.md` entry under `[Unreleased]`:
@@ -137,9 +139,10 @@ only. They are invoked by agents, not by users.
 
 ```bash
 git checkout -b add/my-skill-name
-# Write claude-catalog/skills/my-skill-name.md
-# Mirror to claude-marketplace/skills/my-skill-name.md
-# Add entry to catalog.json with "type": "skill", "tier": "skill"
+# Write claude-catalog/skills/<topic>/my-skill-name.md
+# Mirror to claude-marketplace/skills/<topic>/my-skill-name.md
+# Add entry to catalog.json with "type": "skill", "tier": "skill",
+#   "file": "skills/<topic>/my-skill-name.md"
 # Add "my-skill-name" to the "dependencies" list of every agent that uses it
 # Add CHANGELOG.md entry under [Unreleased]
 # Validate, commit, push, PR

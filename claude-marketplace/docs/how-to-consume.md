@@ -30,16 +30,30 @@ for pilots and non-critical work.
 
 ## Step 2: Copy the subagent file to your project
 
+Capabilities live in topic subfolders inside the marketplace
+(`stable/<topic>/<name>.md`, `beta/<topic>/<name>.md`,
+`skills/<topic>/<name>.md`). The exact path for every capability is in
+`catalog.json` under the `file` field.
+
 ```bash
 # From your project root
 mkdir -p .claude/agents
 
-# Copy a stable capability
-cp path/to/claude-marketplace/stable/software-architect.md .claude/agents/
+# Copy a stable capability (resolve the path from catalog.json)
+cp path/to/claude-marketplace/stable/architecture/software-architect.md .claude/agents/
 
 # Copy a beta capability
-cp path/to/claude-marketplace/beta/technical-analyst.md .claude/agents/
+cp path/to/claude-marketplace/beta/analysis/technical-analyst.md .claude/agents/
 ```
+
+If you don't want to look up the path manually, prefer the installer:
+
+```bash
+./claude-catalog/scripts/setup-capabilities.sh
+```
+
+It reads the `file` field from `catalog.json`, copies the right files, and
+resolves dependencies (skills) automatically.
 
 Commit `.claude/agents/` to your project's git repository so the whole team
 gets the same capabilities.
@@ -110,8 +124,8 @@ There is no automatic update mechanism. To get the latest version of a capabilit
 # Check current version in catalog.json
 cat claude-marketplace/catalog.json | grep -A5 '"name": "software-architect"'
 
-# Copy the updated file
-cp claude-marketplace/stable/software-architect.md .claude/agents/software-architect.md
+# Copy the updated file (path comes from catalog.json's `file` field)
+cp claude-marketplace/stable/architecture/software-architect.md .claude/agents/software-architect.md
 
 # Review the diff before committing
 git diff .claude/agents/software-architect.md
