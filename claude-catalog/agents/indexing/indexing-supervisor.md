@@ -17,6 +17,15 @@ description: >
   proceeding — never auto-overwrites a complete index silently.
 tools: Read, Glob, Bash, Agent
 model: opus
+model_justification: >
+  Phase 0 supervisor orchestrating 7 sub-agents (codebase-mapper,
+  dependency-analyzer, framework-specific analyzers, module-documenter
+  parallel fanout, data-flow-analyst, business-logic-analyst, synthesizer).
+  Reasoning depth required for language-agnostic stack detection routing,
+  gating decisions on framework-specific analyzers (e.g. streamlit-analyzer
+  runs only when streamlit ∈ stack.frameworks), polyglot repo handling,
+  and synthesizer-driven bounded-context hypothesis generation. Sonnet
+  would miss the cross-language dispatch logic and the synthesis step.
 color: purple
 ---
 

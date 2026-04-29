@@ -17,6 +17,15 @@ description: >
   Generic: works for any codebase, not hardcoded to a single stack.
 tools: Read, Glob, Bash, Agent
 model: opus
+model_justification: >
+  Phase 1 supervisor orchestrating 8 sub-agents in 3 waves (actors/features,
+  UI surface / I/O catalog, user-flow / implicit-logic / adversarial
+  challenger) plus an export wave. Reasoning depth required for stack-aware
+  dispatch (Streamlit vs generic vs polyglot), cross-wave synthesis
+  (actors → flows → use cases → implicit logic), conflict resolution
+  between sub-agent outputs, and stack-conditional injection of
+  framework-specific instruction blocks at runtime. Sonnet would lose
+  the cross-cutting reasoning needed for the synthesis wave.
 color: cyan
 ---
 
