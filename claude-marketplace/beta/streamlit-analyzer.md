@@ -1,15 +1,15 @@
 ---
 name: streamlit-analyzer
 description: >
-  Framework-specific analyzer for Streamlit. Analyzes pages,
+  Use to analyze Streamlit-specific concerns: pages,
   session_state usage, widgets, caching, navigation, custom components,
-  and migration-relevant anti-patterns. Invoked **only** when
-  `streamlit` is detected in `stack.frameworks` (the canonical AS-IS
-  stack manifest produced by `codebase-mapper`); otherwise the
-  indexing-supervisor skips this agent entirely. Critical for migration
-  since Streamlit's reactive script-as-page model has no direct
-  equivalent in conventional web frameworks (the migration target
-  decided in Phase 4 — typically Angular/React/Vue/Qwik via
+  and migration-relevant anti-patterns. Framework-specific analyzer
+  invoked **only** when `streamlit` is detected in `stack.frameworks`
+  (the canonical AS-IS stack manifest produced by `codebase-mapper`);
+  otherwise the indexing-supervisor skips this agent entirely. Critical
+  for migration since Streamlit's reactive script-as-page model has no
+  direct equivalent in conventional web frameworks (the migration
+  target decided in Phase 4 — typically Angular/React/Vue/Qwik via
   `developer-frontend` — must explicitly reproduce the rerun semantics).
 tools: Read, Glob, Bash, Write
 model: sonnet

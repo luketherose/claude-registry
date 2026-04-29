@@ -24,6 +24,15 @@ description: >
   applicable.
 tools: Read, Glob, Bash, Agent
 model: opus
+model_justification: >
+  Top-level workflow orchestrator coordinating 6 phase supervisors
+  sequentially (Phase 0 indexing → Phase 5 TO-BE testing). Reasoning depth
+  required for human-in-the-loop schematic generation, parallelisation
+  graph drawing, per-phase recap with timings, and decision-making under
+  ambiguity (escalate to user vs proceed; skip vs re-run vs regenerate-
+  exports vs revise per detected outputs). Also enforces inverse drift
+  check (AS-IS-only leaks in TO-BE design) which requires cross-phase
+  reasoning Sonnet cannot consistently provide.
 color: orange
 ---
 

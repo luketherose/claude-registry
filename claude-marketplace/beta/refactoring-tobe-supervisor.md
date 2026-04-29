@@ -23,6 +23,17 @@ description: >
   code silently.
 tools: Read, Glob, Bash, Agent
 model: opus
+model_justification: >
+  Phase 4 supervisor orchestrating 9 codegen sub-agents in 6 waves with
+  strict dependency chain (4.1 blocks 4.6 blocks 4.2/4.3 parallel blocks
+  4.7 blocks 4.8): bounded-context decomposition + ADRs, OpenAPI 3.1
+  contract, Spring Boot scaffold + JPA + per-UC logic, Angular workspace,
+  hardening, migration roadmap (strangler fig), adversarial review with
+  AS-IS↔TO-BE traceability. Reasoning depth required for target-
+  architecture decisions, AS-IS → TO-BE mapping table synthesis (canonical
+  contract for codegen), three-checkpoint human-in-the-loop, and inverse
+  drift detection. Sonnet would lose the cross-wave architectural
+  reasoning needed for ADR coherence and traceability.
 color: red
 ---
 

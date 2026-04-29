@@ -29,8 +29,12 @@ VALID_COLORS = {"red", "blue", "green", "yellow", "purple", "orange", "pink", "c
 KNOWN_FRONTMATTER_KEYS = {
     "name", "description", "tools", "disallowedTools", "model", "permissionMode",
     "maxTurns", "color", "initialPrompt", "background", "effort", "isolation",
-    "skills", "mcpServers", "hooks", "memory",
+    "skills", "mcpServers", "hooks", "memory", "model_justification",
 }
+
+# An inline `model_justification:` frontmatter field of at least this many chars
+# silences the "model: opus — justify this in the PR description" warning.
+MIN_MODEL_JUSTIFICATION_LENGTH = 40
 
 # Tools that skill agents should not have (they are knowledge providers, not actors)
 SKILL_DISALLOWED_TOOLS = {"Edit", "Write", "Bash", "Agent"}
@@ -290,6 +294,8 @@ def check_model_conventions(
             return
         model = str(fm["model"])
         name = filepath.stem
+        justification = str(fm.get("model_justification", "")).strip()
+        has_inline_justification = len(justification) >= MIN_MODEL_JUSTIFICATION_LENGTH
 
         if file_type == "agent":
             if name == "orchestrator":
@@ -304,9 +310,11 @@ def check_model_conventions(
                     findings.append(Finding("error", str(filepath.relative_to(repo_root)),
                         f"`{name}`: agent must use `model: sonnet` or `model: opus`, "
                         "not `model: haiku`. Agents need reasoning capability."))
-                if model == "opus":
+                if model == "opus" and not has_inline_justification:
                     findings.append(Finding("warning", str(filepath.relative_to(repo_root)),
-                        f"`{name}`: model: opus — justify this in the PR description"))
+                        f"`{name}`: model: opus — justify in the PR description, "
+                        f"or add a `model_justification:` frontmatter field "
+                        f"(min {MIN_MODEL_JUSTIFICATION_LENGTH} chars)."))
         else:
             # skill
             if "orchestrator" in name and name in SPECIALIZED_ORCHESTRATORS:
@@ -321,9 +329,11 @@ def check_model_conventions(
                     findings.append(Finding("error", str(filepath.relative_to(repo_root)),
                         f"`{name}`: skill must use `model: haiku`, "
                         f"got `model: {model}`."))
-            if model == "opus":
+            if model == "opus" and not has_inline_justification:
                 findings.append(Finding("warning", str(filepath.relative_to(repo_root)),
-                    f"`{name}`: model: opus — justify this in the PR description"))
+                    f"`{name}`: model: opus — justify in the PR description, "
+                    f"or add a `model_justification:` frontmatter field "
+                    f"(min {MIN_MODEL_JUSTIFICATION_LENGTH} chars)."))
 
     if changed_files is not None:
         for path_str in changed_files:

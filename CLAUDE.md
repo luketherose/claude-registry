@@ -120,5 +120,6 @@ Use them when appropriate:
 - Capability file names: `kebab-case`, no version in the name (`developer-java-spring.md`, not `developer-java-spring-v1.md`)
 - Versioning: SemVer with git tag `name@MAJOR.MINOR.PATCH`
 - Skills: `model: haiku`, `tools: Read` — do not add other tools without justification in the PR
+- Agents using `model: opus`: must either (a) be the meta-orchestrator (auto-allowed), or (b) carry a `model_justification:` frontmatter field of at least 40 chars explaining the reasoning-depth requirement. Without one, the validator emits a warning asking for justification in the PR description. Inline frontmatter is preferred — the rationale stays with the agent definition.
 - **Catalog directory layout**: agents and skills MAY be grouped into thematic subdirectories (e.g., `agents/indexing/`, `skills/orchestrators/`, `skills/documentation/`). Validation scans recursively (`rglob`).
 - **Marketplace directory layout**: stays FLAT regardless of catalog grouping. Files live at `stable/<name>.md`, `beta/<name>.md`, or `skills/<name>.md` directly. The `file` field in `catalog.json` reflects this flat path.

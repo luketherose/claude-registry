@@ -18,6 +18,16 @@ description: >
   human-in-the-loop.
 tools: Read, Glob, Bash, Agent
 model: opus
+model_justification: >
+  Phase 3 supervisor coordinating 8 sub-agents in 3 waves (fixture builders,
+  service-collection, test writers, runner, challenger). Reasoning depth
+  required for cross-wave dependency analysis (test fixtures must align
+  with service-collection topology before test generation), test-scenario
+  synthesis from functional + technical specs, adaptive execution policy
+  (write+execute vs write-only based on env), failure triage (critical/high
+  escalation vs xfail with AS-IS bug note), and challenger-driven coverage
+  gap iteration. Sonnet would lose continuity across waves and miss
+  cross-cutting test gaps.
 color: green
 ---
 

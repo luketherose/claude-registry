@@ -21,6 +21,17 @@ description: >
   and asks the user explicitly whether to skip, re-run, or revise.
 tools: Read, Glob, Bash, Agent
 model: opus
+model_justification: >
+  Phase 5 supervisor orchestrating 8 sub-agents in 5 waves: per-tier test
+  writers (backend JUnit/Mockito/Testcontainers/Spring Cloud Contract,
+  frontend Jest/Angular Testing Library/Playwright, security OWASP Top 10,
+  performance comparison vs Phase 3 benchmarks), tobe-test-runner,
+  equivalence-test-writer, equivalence-synthesizer, challenger. Reasoning
+  depth required for AS-IS↔TO-BE equivalence verification, multi-tier
+  test synthesis, parity-validation strategy, and equivalence-failure
+  root-cause synthesis across heterogeneous test outputs. This is the
+  final go-live gate with PO sign-off — quality of reasoning here directly
+  gates production rollout.
 color: blue
 ---
 

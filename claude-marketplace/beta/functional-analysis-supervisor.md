@@ -10,11 +10,22 @@ description: >
   already complete but one or both export files are missing, offers to
   regenerate only the missing exports without re-running the full pipeline.
   Strictly AS-IS: never references target technologies, target architectures,
-  or TO-BE patterns. Stack-aware: detects Python/Streamlit and other stacks
-  and adapts sub-agent prompts. Generic: works for any codebase, not
-  hardcoded to a single stack.
+  or TO-BE patterns. Stack-aware: reads the canonical stack manifest at
+  `.indexing-kb/02-structure/stack.json` (produced by Phase 0
+  `codebase-mapper`) and injects framework-conditional instructions into
+  sub-agent prompts based on the detected primary language and frameworks.
+  Generic: works for any codebase, not hardcoded to a single stack.
 tools: Read, Glob, Bash, Agent
 model: opus
+model_justification: >
+  Phase 1 supervisor orchestrating 8 sub-agents in 3 waves (actors/features,
+  UI surface / I/O catalog, user-flow / implicit-logic / adversarial
+  challenger) plus an export wave. Reasoning depth required for stack-aware
+  dispatch (Streamlit vs generic vs polyglot), cross-wave synthesis
+  (actors → flows → use cases → implicit logic), conflict resolution
+  between sub-agent outputs, and stack-conditional injection of
+  framework-specific instruction blocks at runtime. Sonnet would lose
+  the cross-cutting reasoning needed for the synthesis wave.
 color: cyan
 ---
 
@@ -160,11 +171,24 @@ External agents called in the export wave (already published):
    If any of these is missing, stop and ask the user.
 2. Read `.indexing-kb/00-index.md`, `01-overview.md`,
    `08-synthesis/bounded-contexts.md` (if present) to build a mental map.
-3. **Detect stack mode**:
-   - If `.indexing-kb/05-streamlit/` exists with non-empty content →
-     **Streamlit mode ON**.
-   - Else, look at `01-overview.md` for stack hints (CLI? web service?
-     batch? library?). If unclear, ask the user.
+3. **Detect stack mode** by reading the canonical AS-IS stack manifest
+   at `.indexing-kb/02-structure/stack.json` (produced by Phase 0
+   `codebase-mapper`). The supervisor uses these fields:
+   - `stack.primary_language` — drives language-specific guidance
+     (Python/Java/Kotlin/Go/Rust/C#/Ruby/PHP/TypeScript/JavaScript/...)
+   - `stack.frameworks` — drives framework-conditional adjustments
+     (e.g. `streamlit` → page-as-screen + reactive-rerun guidance;
+     `rails`/`laravel`/`django`/`spring-mvc` → request-per-screen + MVC
+     conventions; `angular`/`react`/`vue`/`qwik`/`nextjs`/`tanstack-start`
+     → SPA / file-based-routing screens)
+   - `stack.confidence` — if `low`, surface to the user before proceeding
+
+   If `.indexing-kb/02-structure/stack.json` is missing (Phase 0 from a
+   pre-PR-02 run): fall back to a quick check of
+   `.indexing-kb/05-streamlit/` (legacy Streamlit detection) and
+   `01-overview.md` hints (CLI? web service? batch? library?). If still
+   unclear, ask the user. The framework-conditional block below already
+   handles "no framework" gracefully.
 4. Read `docs/analysis/01-functional/_meta/manifest.json` if it exists
    (resume support).
 5. **Detect resume mode**. Inspect what is on disk and pick one of:
@@ -200,8 +224,15 @@ External agents called in the export wave (already published):
    explicit answer.
 
 6. Determine **challenger default**:
-   - Streamlit mode → challenger ON by default
-   - Other modes → challenger OFF unless user opts in with
+   - **Implicit-logic-heavy stacks** → challenger ON by default. These
+     are stacks where significant business logic is interleaved with UI
+     or framework callbacks and is hard to surface from static analysis
+     alone:
+     - `streamlit` (script-as-page reactive rerun model)
+     - any future stack flagged in
+       `claude-catalog/docs/language-agnostic-design.md` as
+       implicit-logic-heavy
+   - Other stacks → challenger OFF unless user opts in with
      `--challenger` or "include challenger pass"
    (Skipped in `exports-only` mode — the challenger has already run in
    the original pipeline if it was enabled then.)
@@ -217,7 +248,8 @@ External agents called in the export wave (already published):
 8. Write `00-context.md` with:
    - 1-paragraph system summary derived from `01-overview.md`
    - Scope: what is in / out of analysis
-   - Stack mode (Streamlit / generic / hybrid)
+   - Stack info (verbatim from `02-structure/stack.json`):
+     `primary_language`, `languages[]`, `frameworks[]`, `confidence`
    - Source KB pointer
    - Resume mode
    - Challenger setting
@@ -445,7 +477,12 @@ You are the <name> sub-agent in the Phase 1 Functional Analysis pipeline.
 Repo root:        <abs-path>
 Knowledge base:   <abs-path>/.indexing-kb/
 Output root:      <abs-path>/docs/analysis/01-functional/
-Stack mode:       <streamlit | generic | hybrid>
+Stack info (verbatim from .indexing-kb/02-structure/stack.json):
+  primary_language: <python | java | kotlin | go | rust | csharp | ruby | php | typescript | javascript | …>
+  languages:        [<list>]
+  frameworks:       [<list — e.g. streamlit, django, fastapi, spring-boot, rails, laravel, angular, nextjs, …>]
+  test_frameworks:  [<list>]
+  confidence:       <high|medium|low>
 Scope filter:     <e.g., "billing module only" or "full repo">
 
 Wave 1 outputs already on disk (only if you are a Wave 2 agent):
@@ -484,8 +521,19 @@ any command that writes file content from a string, variable, template,
 heredoc, or piped input. Use `Write` to create, `Edit` to modify.
 No third path.
 
-Streamlit-aware adjustments (only if stack mode = streamlit):
-<inject the Streamlit instructions block>
+Framework-conditional adjustments — inject ONLY the blocks whose
+framework appears in `stack.frameworks`. Each framework block tells the
+sub-agent how to map UI / state / flow / I/O concepts in that framework
+to the functional analysis vocabulary. Multiple blocks may apply to a
+polyglot/multi-framework repo (inject all that match).
+
+If no framework matches and `stack.primary_language` is also absent or
+generic (CLI tool, library, batch job): proceed with the universal
+analysis — actors are inferred from authn/authz code paths or absence
+thereof; "screens" become "command-line invocations" or "scheduled
+runs"; "UI components" become "command-line flags" or "library API
+surface"; "navigation" becomes "command sequence" or "library call
+order".
 
 Frontmatter requirements:
 - agent: <name>

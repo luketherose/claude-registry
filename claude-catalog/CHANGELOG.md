@@ -6,6 +6,13 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 ### Changed
+- **Validator: silence `model: opus` warning when an inline justification is provided.** `validate_catalog.py` now accepts a `model_justification:` frontmatter field on agents/skills. When present and at least 40 chars long, it suppresses the "model: opus — justify in the PR description" warning. The justification stays with the agent definition (where it is most useful for future contributors) instead of being buried in a PR description that decays after merge. Added `model_justification` to `KNOWN_FRONTMATTER_KEYS`. CLAUDE.md governance section updated to document the convention.
+- **Inline `model_justification:` added to all 7 phase supervisors** that run on `model: opus` (`indexing-supervisor`, `functional-analysis-supervisor`, `technical-analysis-supervisor`, `baseline-testing-supervisor`, `refactoring-tobe-supervisor`, `tobe-testing-supervisor`, `refactoring-supervisor`). Each justification names the wave structure, the cross-cutting reasoning required, and what would degrade if the agent were downgraded to Sonnet. The meta-orchestrator (`orchestrator`) does not need a justification — opus is mandatory for it by validator rule.
+
+### Fixed
+- `streamlit-analyzer` description now starts with "Use to analyze ..." instead of "Framework-specific analyzer for ..." — satisfies the validator rule that descriptions start with "Use when/for/to" (used by Claude Code's automatic delegation routing).
+
+### Changed
 - **Code-generation conventions hardening (six capabilities bumped 2026-04-29)** — driven by recurring defects observed in generated code:
   - `developer-java` bumped to **2.1.0** — new "What you always do" rules: annotation formatting (one per line), mandatory DTO+Mapper layer (no `Map.of`, no entities reaching controllers), persistence defaults (Liquibase + H2 local profile), POM multi-line indentation. New "Migration-mode rules" section: best-guess implementation with explicit `// TODO: [assumption] - verify [what]` over conservative stubs; preserve every table found in source data model.
   - `java-spring-standards` bumped to **1.1.0** — new "Code Formatting (non-negotiable)" section covering annotation formatting (one per line, vertically stacked), POM multi-line indentation, and the prohibition on inline response construction (`Map.of`, anonymous inline classes). Maven Conventions section switched to Liquibase (preferred over Flyway), `local` profile (H2 in-memory + Liquibase + seed data), and added `liquibase-core` + `h2` to approved dependencies.

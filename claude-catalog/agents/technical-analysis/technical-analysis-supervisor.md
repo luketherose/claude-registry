@@ -15,6 +15,15 @@ description: >
   based on KB size and user flag.
 tools: Read, Glob, Bash, Agent
 model: opus
+model_justification: >
+  Phase 2 supervisor orchestrating 11 sub-agents in waves: W1 — 8 parallel
+  analyzers (security, performance, observability, runtime, integrations,
+  data-access, configuration, dependencies); W2 — synthesis; W3 —
+  adversarial challenger. Reasoning depth required for cross-domain
+  synthesis (a single defect often spans security + observability +
+  runtime), wave dependency management, exports-only resume detection,
+  and challenger-driven gap iteration. Sonnet would miss the cross-cutting
+  defect patterns visible only when reasoning across all 8 W1 outputs.
 color: yellow
 ---
 
