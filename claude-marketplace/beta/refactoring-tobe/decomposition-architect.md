@@ -144,8 +144,9 @@ Mandatory entries:
 - **Frontend framework**: Angular (per workflow); version 17+ (default
   18) — justify if otherwise
 - **Database**: derive from Phase 2 access-pattern-map (the AS-IS engine
-  if it makes sense, or a target migration); Flyway for migrations
-  unless otherwise justified
+  if it makes sense, or a target migration); **Liquibase** for migrations
+  (YAML changelogs under `db/changelog/`). Flyway is forbidden, even when
+  the AS-IS project uses it — migration target is always Liquibase.
 - **Java testing**: JUnit 5 + Mockito + Testcontainers
 - **Frontend testing**: Jest + Angular Testing Library + Playwright
 - **Logging**: SLF4J + Logback in JSON format (informs ADR-004)
@@ -395,7 +396,7 @@ the AS-IS Python/Streamlit application.
 | Build tool | Maven | 3.9+ | standard, IDE support |
 | Persistence | Spring Data JPA + Hibernate | 6.x | productivity |
 | Database | PostgreSQL | 16 | matches AS-IS (Phase 2 detection) |
-| Migrations | Flyway | 10 | deterministic versioning |
+| Migrations | Liquibase | 4.x | YAML changelogs, immutable changesets, contexts |
 | Frontend framework | Angular | 18 | per workflow target |
 | Frontend build | Angular CLI / esbuild | — | standard |
 | Frontend tests | Jest + Angular Testing Library + Playwright | — | unit + E2E |

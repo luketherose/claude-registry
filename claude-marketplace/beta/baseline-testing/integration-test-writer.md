@@ -93,8 +93,11 @@ Patterns to cover:
 - **Connection setup** under test config (in-memory SQLite or
   testcontainer per Phase 2 engine detection — fall back to SQLite if
   testcontainers / Docker unavailable)
-- **Schema setup**: apply Alembic / Flyway / hand-written SQL files
-  under fixture
+- **Schema setup**: apply whatever the AS-IS uses (Alembic / Flyway /
+  Liquibase / hand-written SQL / Django/Rails migrations) under fixture.
+  This is detection-only — replicate the AS-IS toolchain to produce a
+  faithful baseline; do not migrate it to a different tool here. The
+  TO-BE rebuild always uses Liquibase (see `data-mapper`).
 - **Read patterns**: each canonical read query (from access-pattern-map)
   returns the expected shape against fixture data
 - **Write patterns**: insert / update / upsert produces the expected

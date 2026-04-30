@@ -405,7 +405,7 @@ refactoring-tobe-supervisor   (opus) — FIRST phase with target tech
         |   |                            error handler RFC 7807,
         |   |                            security config baseline
         |   |   2. data-mapper         → JPA entities, value objects,
-        |   |                            enums, Flyway migrations,
+        |   |                            enums, Liquibase YAML changelogs,
         |   |                            Spring Data JPA repositories
         |   |   3. logic-translator    → fan-out per UC: translate
         |   |      (×N)                  AS-IS Python service methods

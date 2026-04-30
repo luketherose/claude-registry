@@ -80,7 +80,7 @@
     },
     {
       "name": "developer-java",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "type": "agent",
       "tier": "stable",
       "status": "active",
@@ -108,8 +108,8 @@
         "backend",
         "developer"
       ],
-      "published": "2026-04-29",
-      "changelog": "Add mandatory DTO+Mapper layer rule (no Map.of, no entities to controller); annotation formatting (one per line); Liquibase + H2 local profile defaults; migration-mode rules (best-guess + TODO; preserve all source tables); POM multi-line indentation."
+      "published": "2026-04-30",
+      "changelog": "Strengthen 'never do': introducing Flyway in any project is forbidden; TO-BE migrations are always Liquibase. postgresql-expert reference line updated."
     },
     {
       "name": "technical-analyst",
@@ -359,7 +359,7 @@
     },
     {
       "name": "java-spring-standards",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
@@ -376,8 +376,8 @@
         "standards",
         "skill"
       ],
-      "published": "2026-04-29",
-      "changelog": "Add Code Formatting section (one annotation per line, multi-line POM, no inline Map.of); switch Maven Conventions defaults to Liquibase + H2 local profile."
+      "published": "2026-04-30",
+      "changelog": "Schema migration tool line hardened: Liquibase is the only supported tool; Flyway is forbidden."
     },
     {
       "name": "testing-standards",
@@ -612,7 +612,7 @@
     },
     {
       "name": "postgresql-expert",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
@@ -628,8 +628,8 @@
         "postgresql",
         "skill"
       ],
-      "published": "2026-04-29",
-      "changelog": "Switch default migration tool from Flyway to Liquibase (Flyway only when project already uses it); add H2 in-memory local-dev profile section with seed-data changeset gated on context: local; rewrite migration examples in Liquibase YAML."
+      "published": "2026-04-30",
+      "changelog": "Liquibase is now 'the only supported migration tool' (no longer 'preferred over Flyway'); Flyway loophole removed; AS-IS Flyway migration recipe (liquibase generateChangeLog) added."
     },
     {
       "name": "backend-documentation",
@@ -1048,7 +1048,7 @@
     },
     {
       "name": "backend-orchestrator",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
@@ -1064,8 +1064,8 @@
         "pipeline",
         "skill"
       ],
-      "published": "2026-04-22",
-      "changelog": "Initial release"
+      "published": "2026-04-30",
+      "changelog": "Capability table, decision matrix, and output strategy switched from 'Flyway migration' to 'Liquibase migration' / 'Liquibase YAML changelog'."
     },
     {
       "name": "frontend-orchestrator",
@@ -1668,7 +1668,7 @@
     },
     {
       "name": "refactoring-supervisor",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1697,8 +1697,8 @@
         "orchestrator",
         "human-in-the-loop"
       ],
-      "published": "2026-04-28",
-      "changelog": "2.0.0: MAJOR milestone \u2014 workflow now covers the full AS-IS\u2192TO-BE\u2192validation journey (Phases 0\u20135). Registered Phase 5 (tobe-testing-supervisor) in the phase registry; added Phase 5 schematic; updated bootstrap detection table with row for Phase 5 (output root + PO sign-off state); updated workflow manifest schema with phase-5 entry (test_outputs, po_signoff). Phase 5 is the final go-live gate \u2014 produces the deliverable equivalence report requiring PO sign-off. 1.2.0: bootstrap detects `complete-but-exports-missing` sub-state for Phases 1 and 2 (analysis complete but \u2265 1 export file absent on disk) and offers a fourth choice `regenerate-exports` in the per-phase prompt; selecting it dispatches the phase supervisor with `Resume mode: exports-only`, skipping W1/W2/W3 and running only the export wave. The choice is unavailable for Phases 0/3/4 (no PDF/PPTX exports). Default recommendation when offered. 1.1.0: bootstrap now presents a per-phase detection table and asks the user explicitly skip/re-run/revise for every phase that already has outputs (no more silent auto-skip); inconsistent state (manifest=partial/failed/missing) classified separately and recommended for re-run; added --no-resume-prompt opt-in to bypass; updated Phase 1 schematic to include the new export wave. 1.0.0: milestone \u2014 workflow now covers full AS-IS\u2192TO-BE journey (Phases 0\u20134); registered Phase 4 (refactoring-tobe-supervisor) in the phase registry; added Phase 4 schematic; updated bootstrap detection (.refactoring-kb/, backend/, frontend/); inverse drift rule documented from Phase 4 onward. 0.3.0: registered Phase 3 (baseline-testing-supervisor); mandatory execution-timing block in post-phase recap. 0.2.0: registered Phase 2. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
+      "published": "2026-04-30",
+      "changelog": "Wave 3 BE step 2 diagram updated: data-mapper now emits Liquibase YAML changelogs (Flyway removed everywhere in the registry)."
     },
     {
       "name": "technical-analysis-supervisor",
@@ -1828,7 +1828,7 @@
     },
     {
       "name": "data-access-analyst",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1850,8 +1850,8 @@
         "data-access",
         "as-is"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "published": "2026-04-30",
+      "changelog": "Schema-migrations detection list extended (Liquibase / Django / Rails) with explicit note: detection is informational; Phase 4 always rebuilds with Liquibase."
     },
     {
       "name": "integration-analyst",
@@ -2113,7 +2113,7 @@
     },
     {
       "name": "integration-test-writer",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2135,8 +2135,8 @@
         "pytest",
         "as-is"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "published": "2026-04-30",
+      "changelog": "Schema-setup line clarified as detection-only; replicate the AS-IS toolchain for the baseline; TO-BE rebuild always uses Liquibase."
     },
     {
       "name": "benchmark-writer",
@@ -2253,7 +2253,7 @@
     },
     {
       "name": "refactoring-tobe-supervisor",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2294,12 +2294,12 @@
         "ddd",
         "strangler-fig"
       ],
-      "published": "2026-04-28",
-      "changelog": "0.2.0: bootstrap detects existing TO-BE outputs (`.refactoring-kb/`, `docs/refactoring/`, `backend/`, `frontend/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` (re-running overwrites generated code that may have been hand-edited); inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 4 supervisor with 9 sub-agents in 6 waves; first phase with target tech; strict dependency chain with 3 HITL checkpoints; adaptive verification; configurable code-generation scope; AS-IS\u2194TO-BE traceability matrix produced by W6 challenger."
+      "published": "2026-04-30",
+      "changelog": "Pipeline diagram, output tree, data-mapper hand-off, and reporting block all switched from Flyway to Liquibase YAML changelogs."
     },
     {
       "name": "decomposition-architect",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2323,8 +2323,8 @@
         "adr",
         "to-be"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "published": "2026-04-30",
+      "changelog": "ADR-002 mandates Liquibase YAML changelogs; technology table updated (Migrations | Liquibase 4.x)."
     },
     {
       "name": "api-contract-designer",
@@ -2357,7 +2357,7 @@
     },
     {
       "name": "backend-scaffolder",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2380,12 +2380,12 @@
         "scaffold",
         "to-be"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "published": "2026-04-30",
+      "changelog": "Replace Flyway Maven deps + spring.flyway config with Liquibase + spring.liquibase / db.changelog-master.yaml. Add H2 to test/local profile."
     },
     {
       "name": "data-mapper",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2409,12 +2409,12 @@
         "ddd",
         "to-be"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "published": "2026-04-30",
+      "changelog": "Switch from Flyway to Liquibase YAML changelogs (master + per-change files); rewrite Section 6 with full YAML examples; constraints section forbids Flyway even when AS-IS uses it."
     },
     {
       "name": "logic-translator",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2438,8 +2438,8 @@
         "fan-out",
         "to-be"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "published": "2026-04-30",
+      "changelog": "Forbidden-write list: db/migration/ (Flyway) -> db/changelog/ (Liquibase)."
     },
     {
       "name": "frontend-scaffolder",
@@ -2916,7 +2916,7 @@
     },
     {
       "name": "developer-kotlin",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2945,8 +2945,8 @@
         "backend",
         "developer"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial release"
+      "published": "2026-04-30",
+      "changelog": "Project scaffold: db/migration/ (Flyway) -> db/changelog/ (Liquibase YAML changelogs)."
     },
     {
       "name": "developer-csharp",

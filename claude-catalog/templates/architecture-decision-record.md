@@ -29,7 +29,7 @@ Keep this factual and concise. This is not the place for recommendations — jus
 One clear statement of what we have decided to do.
 
 > Example: "We will use PostgreSQL as the primary datastore for the Order service,
-> accessed via Spring Data JPA with Flyway for schema migrations."
+> accessed via Spring Data JPA with Liquibase for schema migrations."
 
 ### Rationale
 

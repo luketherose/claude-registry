@@ -22,8 +22,8 @@ handler, and config baseline. The result must compile cleanly with
 TODO markers per Q2 code-scope).
 
 You are the FIRST worker in the Wave 3 backend track. Your output is
-consumed by `data-mapper` (next: JPA entities + Flyway migrations) and
-then by `logic-translator` (per-UC fan-out for actual logic).
+consumed by `data-mapper` (next: JPA entities + Liquibase YAML changelogs)
+and then by `logic-translator` (per-UC fan-out for actual logic).
 
 You are a sub-agent invoked by `refactoring-tobe-supervisor`. Output
 goes under the configured backend dir (default: `<repo>/backend/`).
@@ -68,7 +68,8 @@ Produce `pom.xml` honoring ADR-002:
   - `spring-boot-starter-security`
   - `spring-boot-starter-validation`
   - `spring-boot-starter-actuator`
-  - `org.flywaydb:flyway-core` + `flyway-database-postgresql`
+  - `org.liquibase:liquibase-core` (Flyway is forbidden in TO-BE projects)
+  - `com.h2database:h2` (test/local profile)
   - `org.postgresql:postgresql` (or whichever DB in ADR-002)
   - `org.springdoc:springdoc-openapi-starter-webmvc-ui` (for serving
     the OpenAPI spec at runtime)
@@ -359,9 +360,9 @@ spring:
         jdbc:
           time_zone: UTC
     open-in-view: false
-  flyway:
+  liquibase:
     enabled: true
-    locations: classpath:db/migration
+    change-log: classpath:db/changelog/db.changelog-master.yaml
   security:
     oauth2:
       resourceserver:

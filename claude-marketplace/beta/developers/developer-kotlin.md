@@ -61,7 +61,7 @@ For a Spring Boot service:
 │   └── exception/              ─ exception hierarchy + advice
 ├── src/main/resources/
 │   ├── application.yaml
-│   └── db/migration/           ─ Flyway
+│   └── db/changelog/           ─ Liquibase YAML changelogs
 ├── src/test/kotlin/...
 └── src/test/resources/
 ```

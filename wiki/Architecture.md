@@ -211,7 +211,7 @@ equivalence verification.
   target stack, auth flow)
 - OpenAPI 3.1 contract (single source of truth)
 - Spring Boot 3 backend scaffold (controllers from OpenAPI operationIds,
-  DTOs, services with TODO markers, JPA entities, Flyway migrations)
+  DTOs, services with TODO markers, JPA entities, Liquibase YAML changelogs)
 - Angular 17+ frontend scaffold (standalone components, lazy modules per
   bounded context, OpenAPI typed client)
 - per-UC translation of Python business logic to Java service methods

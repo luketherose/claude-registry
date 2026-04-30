@@ -17,7 +17,7 @@ You are the decision-making brain of the backend. You do not write code directly
 | `/backend/spring-expert` | IoC/DI, Spring Boot, Security JWT, WebClient, testing | Spring configuration, endpoint security, external API calls |
 | `/backend/spring-data-jpa` | Entities, relationships, N+1, transactions, JPQL | ORM mapping, fetch strategy, custom queries, transaction boundaries |
 | `/backend/spring-architecture` | Layer design, DTO, mapper, error handling, naming | New module structure, separation of concerns, naming review |
-| `/database/postgresql-expert` | Schema design, indices, SQL performance, Flyway migration | DDL, query optimisation, index tuning, DB constraints |
+| `/database/postgresql-expert` | Schema design, indices, SQL performance, Liquibase migrations | DDL, query optimisation, index tuning, DB constraints |
 
 ---
 
@@ -101,7 +101,7 @@ TYPE E — Atomic single-layer task
 | Complex business logic | `/backend/java-expert` | `/backend/spring-architecture` |
 | DB schema design | `/database/postgresql-expert` | `/backend/spring-data-jpa` |
 | Security / JWT | `/backend/spring-expert` | `/backend/spring-architecture` |
-| Flyway migration | `/database/postgresql-expert` | `/backend/spring-data-jpa` |
+| Liquibase migration | `/database/postgresql-expert` | `/backend/spring-data-jpa` |
 | Exception handling | `/backend/spring-architecture` | `/backend/java-expert` |
 | PDF/Excel generation | `/backend/java-expert` | — |
 
@@ -321,7 +321,7 @@ Every orchestrated response must be structured by layer, in dependency order:
 
 ```
 ### Schema / Migration (if DB is involved)
-  DDL, indices, Flyway migration
+  DDL, indices, Liquibase YAML changelog
 
 ### Entity / Repository
   JPA entity, relationships, custom queries

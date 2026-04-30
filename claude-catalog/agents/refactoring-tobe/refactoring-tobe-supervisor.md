@@ -155,7 +155,7 @@ backend/                                        (Spring Boot 3 — Maven)
 │   └── shared/                                 (cross-cutting: error, security, telemetry)
 ├── src/main/resources/
 │   ├── application.yml
-│   └── db/migration/                           (Flyway)
+│   └── db/changelog/                           (Liquibase YAML)
 └── src/test/java/                              (unit-test scaffold; Phase 5 fills it)
 
 frontend/                                       (Angular workspace)
@@ -269,8 +269,8 @@ Workers produce:
 - complete project scaffold (pom.xml, package structure, controllers,
   services, repositories, DTOs, mappers, error handlers, security
   config, Angular workspace + modules + components + services + guards)
-- complete data layer (JPA entities, Flyway migrations, repository
-  signatures)
+- complete data layer (JPA entities, Liquibase YAML changelogs,
+  repository signatures)
 - complete API contract implementation (OpenAPI-generated controller
   signatures, DTO from schema)
 - **TODO markers** for complex business logic — each TODO carries:
@@ -467,9 +467,9 @@ Two parallel tracks dispatched in a single tool call:
    per BC from W1), controller skeletons (signatures from OpenAPI),
    service skeletons, error handler RFC 7807, security config baseline,
    Spring config files
-2. `data-mapper` — JPA entities for each aggregate from W1, Flyway
-   migrations from inferred schema, repository interfaces (Spring Data
-   JPA), test fixtures via @TestEntityManager
+2. `data-mapper` — JPA entities for each aggregate from W1, Liquibase
+   YAML changelogs from inferred schema, repository interfaces (Spring
+   Data JPA), test fixtures via @TestEntityManager
 3. `logic-translator` (fan-out per UC) — for each UC-NN: translate the
    AS-IS Python module(s) into Java service methods. Per Q2 mode:
    - `full`: complete translation
@@ -599,7 +599,7 @@ Backend (Spring Boot):
 - Controllers:                <N>
 - Services:                   <N>
 - JPA entities:               <N>
-- Flyway migrations:          <N>
+- Liquibase changesets:       <N>
 - Verification:               <mvn compile pass | fail | skipped>
 
 Frontend (Angular):

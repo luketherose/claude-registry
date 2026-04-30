@@ -123,7 +123,7 @@ claude-registry/
 | `decomposition-architect` | beta | Refactoring-tobe sub-agent (W1): bounded-context decomposition (DDD), aggregates, AS-IS↔TO-BE module map, ADR-001 (architecture style) + ADR-002 (target stack) |
 | `api-contract-designer` | beta | Refactoring-tobe sub-agent (W2): OpenAPI 3.1 contract (single source of truth), Postman TO-BE collection, ADR-003 (auth flow) |
 | `backend-scaffolder` | beta | Refactoring-tobe sub-agent (W3 BE step 1): Spring Boot 3 Maven scaffold (controllers from OpenAPI, DTOs, services with TODOs, error handler RFC 7807, security baseline) |
-| `data-mapper` | beta | Refactoring-tobe sub-agent (W3 BE step 2): JPA entities, value objects, enums, Flyway migrations, Spring Data JPA repositories (DDD-honoring) |
+| `data-mapper` | beta | Refactoring-tobe sub-agent (W3 BE step 2): JPA entities, value objects, enums, Liquibase YAML changelogs, Spring Data JPA repositories (DDD-honoring) |
 | `logic-translator` | beta | Refactoring-tobe sub-agent (W3 BE step 3, fan-out per UC): translates one UC from AS-IS Python to Java/Spring; never touches AS-IS source |
 | `frontend-scaffolder` | beta | Refactoring-tobe sub-agent (W3 FE): Angular 17+ workspace (standalone components, lazy modules per BC, OpenAPI typed client, Streamlit translations) |
 | `hardening-architect` | beta | Refactoring-tobe sub-agent (W4): observability (JSON logging + correlation-id, Micrometer + Prometheus, OpenTelemetry) and security (Spring Security 6 baseline, OWASP headers, CSP), ADR-004 + ADR-005 |
