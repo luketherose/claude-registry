@@ -97,7 +97,9 @@ For each storage technology in use, capture access patterns:
     concatenated)
   - parameterized queries
   - ORM (SQLAlchemy declarative / classical / Core)
-  - schema migrations: Alembic / Flyway / hand-written SQL files / none
+  - schema migrations: Alembic / Flyway / Liquibase / Django migrations /
+    Rails migrations / hand-written SQL files / none (detection only —
+    Phase 4 always rebuilds with Liquibase regardless of the AS-IS tool)
 - Tables touched (from KB or from grep)
 - Bulk operations: in-memory pandas.to_sql, chunked, individual inserts
 

@@ -1,7 +1,7 @@
 {
   "_comment": "Team convention \u2014 not an official Claude Code format. This manifest tracks published capabilities.",
   "version": "1.0",
-  "generated": "2026-04-29",
+  "generated": "2026-04-30",
   "repository": "claude-registry",
   "capabilities": [
     {
@@ -80,7 +80,7 @@
     },
     {
       "name": "developer-java",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "type": "agent",
       "tier": "stable",
       "status": "active",
@@ -108,8 +108,8 @@
         "backend",
         "developer"
       ],
-      "published": "2026-04-29",
-      "changelog": "Add mandatory DTO+Mapper layer rule (no Map.of, no entities to controller); annotation formatting (one per line); Liquibase + H2 local profile defaults; migration-mode rules (best-guess + TODO; preserve all source tables); POM multi-line indentation."
+      "published": "2026-04-30",
+      "changelog": "Strengthen 'never do': introducing Flyway in any project is forbidden; TO-BE migrations are always Liquibase. postgresql-expert reference line updated."
     },
     {
       "name": "technical-analyst",
@@ -359,7 +359,7 @@
     },
     {
       "name": "java-spring-standards",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
@@ -376,8 +376,8 @@
         "standards",
         "skill"
       ],
-      "published": "2026-04-29",
-      "changelog": "Add Code Formatting section (one annotation per line, multi-line POM, no inline Map.of); switch Maven Conventions defaults to Liquibase + H2 local profile."
+      "published": "2026-04-30",
+      "changelog": "Schema migration tool line hardened: Liquibase is the only supported tool; Flyway is forbidden."
     },
     {
       "name": "testing-standards",
@@ -452,11 +452,11 @@
     },
     {
       "name": "developer-frontend",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "type": "agent",
       "tier": "beta",
       "status": "active",
-      "description": "Use when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack. Detects client-specific design systems (e.g. UniCredit) from project signals and loads the matching skill on top of the generic design tokens. Enforces strict separation of concerns (smart vs dumb components, services own HTTP and business logic). When the source-to-target translation is uncertain, ships a best-guess implementation with explicit TODOs rather than conservative stubs. Produces production-ready, typed, accessible, tested frontend code.",
+      "description": "Use when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack. Detects client-specific design systems (e.g. UniCredit) from project signals and loads the matching skill on top of the generic design tokens. Enforces strict separation of concerns (smart vs dumb components, services own HTTP and business logic) and, for Angular, the full 4-file family per component (.ts + .html + .scss + .spec.ts) with no inline templates or styles. When the source-to-target translation is uncertain, ships a best-guess implementation with explicit TODOs rather than conservative stubs. Produces production-ready, typed, accessible, tested frontend code.",
       "file": "beta/developers/developer-frontend.md",
       "dependencies": [
         "angular-expert",
@@ -495,8 +495,8 @@
         "typescript",
         "developer"
       ],
-      "published": "2026-04-29",
-      "changelog": "Detect client-specific design systems and load the matching skill (UniCredit Bricks added). Existing strict separation-of-concerns rules and best-guess + TODO directive preserved."
+      "published": "2026-04-30",
+      "changelog": "Angular 4-file family promoted to non-negotiable invariant: every component is .ts + .html + .scss + .spec.ts; inline template:/styles: literals forbidden (allowed exception: trivial render-prop wrappers \u2264 5 markup lines). Output format gains per-framework file-expectations table; quality self-check verifies the 4 files are present. The triplet+spec rule previously lived only in the angular-expert skill and was being lost when the skill content competed for attention with the higher-salience invariants list."
     },
     {
       "name": "tech-analyst",
@@ -612,11 +612,11 @@
     },
     {
       "name": "postgresql-expert",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use to load PostgreSQL standards: relational design, data modelling, data types, indices, performance tuning, Liquibase migrations (preferred over Flyway), H2 local-dev profile with seed data, transaction management, data integrity, security, and monitoring. Works alongside spring-data-jpa; does not duplicate the ORM layer.",
+      "description": "Use to load PostgreSQL standards: relational design, data modelling, data types, indices, performance tuning, Liquibase migrations (the only supported tool \u2014 Flyway is forbidden), H2 local-dev profile with seed data, transaction management, data integrity, security, and monitoring. Works alongside spring-data-jpa; does not duplicate the ORM layer.",
       "file": "skills/database/postgresql-expert.md",
       "dependencies": [],
       "tools": [
@@ -628,8 +628,8 @@
         "postgresql",
         "skill"
       ],
-      "published": "2026-04-29",
-      "changelog": "Switch default migration tool from Flyway to Liquibase (Flyway only when project already uses it); add H2 in-memory local-dev profile section with seed-data changeset gated on context: local; rewrite migration examples in Liquibase YAML."
+      "published": "2026-04-30",
+      "changelog": "Liquibase is now 'the only supported migration tool' (no longer 'preferred over Flyway'); Flyway loophole removed; AS-IS Flyway migration recipe (liquibase generateChangeLog) added."
     },
     {
       "name": "backend-documentation",
@@ -1048,7 +1048,7 @@
     },
     {
       "name": "backend-orchestrator",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
@@ -1064,8 +1064,8 @@
         "pipeline",
         "skill"
       ],
-      "published": "2026-04-22",
-      "changelog": "Initial release"
+      "published": "2026-04-30",
+      "changelog": "Capability table, decision matrix, and output strategy switched from 'Flyway migration' to 'Liquibase migration' / 'Liquibase YAML changelog'."
     },
     {
       "name": "frontend-orchestrator",
@@ -1668,11 +1668,11 @@
     },
     {
       "name": "refactoring-supervisor",
-      "version": "2.0.0",
+      "version": "2.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Coordinates the full AS-IS\u2192TO-BE\u2192validation journey: Phase 0 (indexing), Phase 1 (AS-IS functional analysis with PDF+PPTX export), Phase 2 (AS-IS technical analysis with PDF+PPTX export), Phase 3 (AS-IS baseline testing), Phase 4 (TO-BE refactoring \u2014 first phase with target tech: Spring Boot + Angular), and Phase 5 (TO-BE testing & equivalence verification \u2014 final go-live gate, produces deliverable equivalence report requiring PO sign-off). Strict human-in-the-loop with per-phase recap including execution timings. Bootstrap detects existing phase outputs and asks the user explicitly per phase whether to skip, re-run, or revise \u2014 never auto-skip a complete phase silently. For Phases 1 and 2, when the analysis is complete but the Accenture-branded export is missing, offers a fourth choice `regenerate-exports` that runs only the export wave without re-doing the analysis. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check; Phase 5 measures TO-BE against AS-IS oracle.",
+      "description": "Top-level workflow orchestrator (opus) for end-to-end refactoring/migration on a codebase. Delegates each phase sequentially to its dedicated phase supervisor. Coordinates the full AS-IS\u2192TO-BE\u2192validation journey: Phase 0 (indexing), Phase 1 (AS-IS functional analysis with PDF+PPTX export), Phase 2 (AS-IS technical analysis with PDF+PPTX export), Phase 3 (AS-IS baseline testing), Phase 4 (TO-BE refactoring \u2014 first phase with target tech: Spring Boot + Angular; default code-scope `full` so the phase ends with few TODOs, soft budget \u2264 1 TODO per 10 UCs audited in the post-phase recap), and Phase 5 (TO-BE testing & equivalence verification \u2014 final go-live gate, runs as an iterative loop where each dispatch is one iteration, the supervisor surfaces a pass/fail recap with pass-rate % and trend, and the user chooses iterate / accept / stop until all tests pass or the residual delta is explicitly accepted; produces deliverable equivalence report requiring PO sign-off, blocked while critical or high failures remain). Strict human-in-the-loop with per-phase recap including execution timings. Bootstrap detects existing phase outputs and asks the user explicitly per phase whether to skip, re-run, or revise \u2014 never auto-skip a complete phase silently. For Phases 1 and 2, when the analysis is complete but the Accenture-branded export is missing, offers a fourth choice `regenerate-exports` that runs only the export wave without re-doing the analysis. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check; Phase 5 measures TO-BE against AS-IS oracle.",
       "file": "beta/orchestration/refactoring-supervisor.md",
       "dependencies": [
         "indexing-supervisor",
@@ -1697,8 +1697,8 @@
         "orchestrator",
         "human-in-the-loop"
       ],
-      "published": "2026-04-28",
-      "changelog": "2.0.0: MAJOR milestone \u2014 workflow now covers the full AS-IS\u2192TO-BE\u2192validation journey (Phases 0\u20135). Registered Phase 5 (tobe-testing-supervisor) in the phase registry; added Phase 5 schematic; updated bootstrap detection table with row for Phase 5 (output root + PO sign-off state); updated workflow manifest schema with phase-5 entry (test_outputs, po_signoff). Phase 5 is the final go-live gate \u2014 produces the deliverable equivalence report requiring PO sign-off. 1.2.0: bootstrap detects `complete-but-exports-missing` sub-state for Phases 1 and 2 (analysis complete but \u2265 1 export file absent on disk) and offers a fourth choice `regenerate-exports` in the per-phase prompt; selecting it dispatches the phase supervisor with `Resume mode: exports-only`, skipping W1/W2/W3 and running only the export wave. The choice is unavailable for Phases 0/3/4 (no PDF/PPTX exports). Default recommendation when offered. 1.1.0: bootstrap now presents a per-phase detection table and asks the user explicitly skip/re-run/revise for every phase that already has outputs (no more silent auto-skip); inconsistent state (manifest=partial/failed/missing) classified separately and recommended for re-run; added --no-resume-prompt opt-in to bypass; updated Phase 1 schematic to include the new export wave. 1.0.0: milestone \u2014 workflow now covers full AS-IS\u2192TO-BE journey (Phases 0\u20134); registered Phase 4 (refactoring-tobe-supervisor) in the phase registry; added Phase 4 schematic; updated bootstrap detection (.refactoring-kb/, backend/, frontend/); inverse drift rule documented from Phase 4 onward. 0.3.0: registered Phase 3 (baseline-testing-supervisor); mandatory execution-timing block in post-phase recap. 0.2.0: registered Phase 2. 0.1.0: initial beta release coordinating Phase 0 and Phase 1."
+      "published": "2026-04-30",
+      "changelog": "Wave 3 BE step 2 diagram updated: data-mapper now emits Liquibase YAML changelogs (Flyway removed everywhere in the registry)."
     },
     {
       "name": "technical-analysis-supervisor",
@@ -1828,7 +1828,7 @@
     },
     {
       "name": "data-access-analyst",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1850,8 +1850,8 @@
         "data-access",
         "as-is"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "published": "2026-04-30",
+      "changelog": "Schema-migrations detection list extended (Liquibase / Django / Rails) with explicit note: detection is informational; Phase 4 always rebuilds with Liquibase."
     },
     {
       "name": "integration-analyst",
@@ -2113,7 +2113,7 @@
     },
     {
       "name": "integration-test-writer",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2135,8 +2135,8 @@
         "pytest",
         "as-is"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "published": "2026-04-30",
+      "changelog": "Schema-setup line clarified as detection-only; replicate the AS-IS toolchain for the baseline; TO-BE rebuild always uses Liquibase."
     },
     {
       "name": "benchmark-writer",
@@ -2253,7 +2253,7 @@
     },
     {
       "name": "refactoring-tobe-supervisor",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2294,12 +2294,12 @@
         "ddd",
         "strangler-fig"
       ],
-      "published": "2026-04-28",
-      "changelog": "0.2.0: bootstrap detects existing TO-BE outputs (`.refactoring-kb/`, `docs/refactoring/`, `backend/`, `frontend/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` (re-running overwrites generated code that may have been hand-edited); inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 4 supervisor with 9 sub-agents in 6 waves; first phase with target tech; strict dependency chain with 3 HITL checkpoints; adaptive verification; configurable code-generation scope; AS-IS\u2194TO-BE traceability matrix produced by W6 challenger."
+      "published": "2026-04-30",
+      "changelog": "Pipeline diagram, output tree, data-mapper hand-off, and reporting block all switched from Flyway to Liquibase YAML changelogs."
     },
     {
       "name": "decomposition-architect",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2323,8 +2323,8 @@
         "adr",
         "to-be"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "published": "2026-04-30",
+      "changelog": "ADR-002 mandates Liquibase YAML changelogs; technology table updated (Migrations | Liquibase 4.x)."
     },
     {
       "name": "api-contract-designer",
@@ -2357,7 +2357,7 @@
     },
     {
       "name": "backend-scaffolder",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2380,16 +2380,16 @@
         "scaffold",
         "to-be"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "published": "2026-04-30",
+      "changelog": "Replace Flyway Maven deps + spring.flyway config with Liquibase + spring.liquibase / db.changelog-master.yaml. Add H2 to test/local profile."
     },
     {
       "name": "data-mapper",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 2). Use to produce the JPA persistence layer: entities (one per aggregate / entity / value object), Flyway migrations (V<NN>__*.sql), Spring Data JPA repositories, enums (state machines), MapStruct/manual mappers, idempotency entity. Honors DDD aggregate boundaries (cross-aggregate refs by ID only). Schema strategy: greenfield (new) or existing-migration based on Phase 2 access-pattern detection. TO-BE design.",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 2). Use to produce the JPA persistence layer: entities (one per aggregate / entity / value object), Liquibase YAML changelogs (db/changelog/<NN>__*.yaml + master changelog), Spring Data JPA repositories, enums (state machines), MapStruct/manual mappers, idempotency entity. Honors DDD aggregate boundaries (cross-aggregate refs by ID only). Schema strategy: greenfield (new) or existing-migration based on Phase 2 access-pattern detection. Flyway is forbidden \u2014 Liquibase is the only migration tool. TO-BE design.",
       "file": "beta/refactoring-tobe/data-mapper.md",
       "dependencies": [],
       "tools": [
@@ -2405,16 +2405,16 @@
         "sub-agent",
         "backend",
         "jpa",
-        "flyway",
+        "liquibase",
         "ddd",
         "to-be"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "published": "2026-04-30",
+      "changelog": "Switch from Flyway to Liquibase YAML changelogs (master + per-change files); rewrite Section 6 with full YAML examples; constraints section forbids Flyway even when AS-IS uses it."
     },
     {
       "name": "logic-translator",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2438,8 +2438,8 @@
         "fan-out",
         "to-be"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "published": "2026-04-30",
+      "changelog": "Forbidden-write list: db/migration/ (Flyway) -> db/changelog/ (Liquibase)."
     },
     {
       "name": "frontend-scaffolder",
@@ -2916,7 +2916,7 @@
     },
     {
       "name": "developer-kotlin",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2945,8 +2945,8 @@
         "backend",
         "developer"
       ],
-      "published": "2026-04-28",
-      "changelog": "Initial release"
+      "published": "2026-04-30",
+      "changelog": "Project scaffold: db/migration/ (Flyway) -> db/changelog/ (Liquibase YAML changelogs)."
     },
     {
       "name": "developer-csharp",

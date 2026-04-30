@@ -102,7 +102,7 @@ the manifest at the date in the page footer.
 | `decomposition-architect` | beta | Bounded-context decomposition (DDD), AS-IS↔TO-BE module map, ADR-001 + ADR-002 |
 | `api-contract-designer` | beta | OpenAPI 3.1 contract (single source of truth), Postman TO-BE collection, ADR-003 |
 | `backend-scaffolder` | beta | Spring Boot 3 Maven scaffold (controllers from OpenAPI, DTOs, services with TODOs) |
-| `data-mapper` | beta | JPA entities, value objects, enums, Flyway migrations, Spring Data JPA repositories |
+| `data-mapper` | beta | JPA entities, value objects, enums, Liquibase YAML changelogs, Spring Data JPA repositories |
 | `logic-translator` | beta | Translates one UC from AS-IS Python to Java/Spring (fan-out per UC); AS-IS read-only |
 | `frontend-scaffolder` | beta | Angular 17+ workspace (standalone components, lazy modules per BC, OpenAPI typed client) |
 | `hardening-architect` | beta | Observability (JSON logging + correlation-id, Micrometer + Prometheus, OpenTelemetry) and security baseline |

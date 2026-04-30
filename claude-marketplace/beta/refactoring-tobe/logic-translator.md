@@ -327,7 +327,7 @@ You **never** write to:
 - `<bc>/api/` (controllers and DTOs are owned by `backend-scaffolder`;
   if a DTO field is missing, surface in Open questions, do not add)
 - `<bc>/infrastructure/` (repositories owned by `data-mapper`)
-- `db/migration/` (Flyway owned by `data-mapper`)
+- `db/changelog/` (Liquibase owned by `data-mapper`)
 
 ### Reporting (text response)
 

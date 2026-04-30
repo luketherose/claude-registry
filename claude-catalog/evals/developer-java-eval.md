@@ -9,7 +9,7 @@
 **User prompt**: "Add CRUD for `Order` (id, customer_id, total, status). Status enum: DRAFT, PENDING, FULFILLED."
 
 **Expected output characteristics**:
-- Flyway migration with `orders` table, FK + index on `customer_id`, CHECK constraint on `status`
+- Liquibase YAML changelog with `orders` table, FK + index on `customer_id`, CHECK constraint on `status`, rollback block
 - `Order` JPA entity: `@NoArgsConstructor`, `@EqualsAndHashCode(of="id")`, `FetchType.LAZY`, `@Enumerated(EnumType.STRING)` aligned to TEXT DDL
 - DTOs as records: `OrderCreateRequest` with `@Valid` constraints, `OrderResponse`
 - `OrderService` interface + `OrderServiceImpl` with `@Transactional(readOnly = true)` default and `@Transactional` on writes

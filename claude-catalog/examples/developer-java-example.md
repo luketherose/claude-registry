@@ -12,7 +12,7 @@
 1. Loads `java-spring-standards`, `testing-standards`, `rest-api-standards` skills
 2. Reads existing `customer/` and `invoice/` packages to mirror their structure
 3. Produces the full layered output in dependency order:
-   - **Migration**: Flyway `V<N>__create_allocations.sql` with FK indexes and constraints
+   - **Migration**: Liquibase `db/changelog/<NN>__create_allocations.yaml` with FK indexes and constraints (rollback block included)
    - **Entity**: `Allocation` with `@NoArgsConstructor`, `@EqualsAndHashCode(of="id")`, `FetchType.LAZY` on relationships
    - **Repository**: `AllocationRepository extends JpaRepository<Allocation, Long>`
    - **DTOs**: `AllocationCreateRequest` (validated), `AllocationResponse` (records)

@@ -410,7 +410,7 @@ Controllers and services must never return `Map.of(...)`, `HashMap<>`, or anonym
 - `application.yml` preferred over `application.properties`
 - JaCoCo minimum 70% line coverage enforced in CI
 - SpotBugs: zero HIGH findings gate; OWASP Dependency Check: no CRITICAL CVEs
-- **Schema migration tool: Liquibase** (preferred over Flyway). Default changelog at `db/changelog/db.changelog-master.yaml`.
+- **Schema migration tool: Liquibase** — the only supported migration tool. Flyway is forbidden. Default changelog at `db/changelog/db.changelog-master.yaml`.
 - **Local-dev database: H2 in-memory**, configured via `application-local.yml` with Liquibase applying both schema and a seed-data changeset so a fresh checkout is runnable with zero external dependencies.
 
 Approved dependencies:

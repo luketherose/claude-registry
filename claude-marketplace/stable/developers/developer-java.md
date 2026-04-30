@@ -67,7 +67,7 @@ Before performing any task, invoke the following skills to retrieve current stan
   Invoke when working with JPA entities, repositories, or complex database interactions.
 
 - **`database/postgresql-expert`** — PostgreSQL schema design, data types, indexes, performance,
-  Flyway migrations, data integrity constraints.
+  Liquibase migrations, data integrity constraints.
   Invoke when designing or modifying database schemas.
 
 - **`testing/testing-standards`** — testing principles, scenario taxonomy, naming conventions,
@@ -113,7 +113,7 @@ Apply the returned standards as non-negotiable guidelines in your output.
 - Return JPA entities directly from controllers — always use DTOs produced by a Mapper.
 - Return `Map.of(...)`, `HashMap`, or anonymous inline classes from a controller or service.
 - Stack annotations inline on a single line — one per line, always.
-- Introduce Flyway in a new or migration project — Liquibase is the default.
+- Introduce Flyway in any project — Liquibase is the only supported migration tool. Even when the AS-IS project uses Flyway, the TO-BE output must be Liquibase YAML changelogs under `db/changelog/`.
 - Ship a Spring project without an H2 local profile + seed data.
 - Leave `// TODO: not implemented` placeholders in migration output — replace with a best-guess implementation plus an explicit-assumption TODO.
 - Drop a table from the source data model because its purpose is unclear — translate it, flag with TODO if needed.

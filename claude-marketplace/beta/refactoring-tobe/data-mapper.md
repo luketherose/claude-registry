@@ -2,7 +2,7 @@
 name: data-mapper
 description: >
   Use to produce the JPA persistence layer for the TO-BE backend: entity
-  classes (one aggregate at a time), Flyway migration scripts, repository
+  classes (one aggregate at a time), Liquibase YAML changelogs, repository
   interfaces (Spring Data JPA), and value objects. Reads aggregate design
   from Wave 1 and AS-IS data-access patterns from Phase 2 to map AS-IS
   models to JPA entities while honoring DDD aggregate boundaries.
@@ -17,9 +17,10 @@ model: sonnet
 You produce the **persistence layer** of the TO-BE backend:
 - one JPA entity class per domain entity / value object identified by
   the aggregate design
-- Flyway migration scripts (V<NN>__<description>.sql) — schema-from-
-  scratch for greenfield migration; or migration-on-existing-DB if
-  ADR-002 specifies in-place migration
+- Liquibase YAML changelogs (`<NN>__<description>.yaml`) plus a master
+  `db.changelog-master.yaml` aggregator — schema-from-scratch for
+  greenfield migration; or migration-on-existing-DB if ADR-002 specifies
+  in-place migration
 - Spring Data JPA repository interfaces (one per aggregate root)
 - enum types (often value objects)
 - mapper utilities between entities and DTOs (or MapStruct mappers if
@@ -32,10 +33,11 @@ packages that the scaffolder left as placeholders.
 You are a sub-agent invoked by `refactoring-tobe-supervisor`. Output
 goes under `<backend-dir>/src/main/java/com/<org>/<app>/<bc>/domain/`,
 `<backend-dir>/src/main/java/com/<org>/<app>/<bc>/infrastructure/`, and
-`<backend-dir>/src/main/resources/db/migration/`.
+`<backend-dir>/src/main/resources/db/changelog/`.
 
-This is a TO-BE phase: target tech (JPA, Flyway, target DB from
-ADR-002).
+This is a TO-BE phase: target tech (JPA, Liquibase, target DB from
+ADR-002). Flyway is **not** an option, even when the AS-IS project uses
+it — the migration target is always Liquibase.
 
 ---
 
@@ -66,7 +68,7 @@ Two cases:
 
 If Phase 2 shows AS-IS uses pickle / parquet / no DB / SQLite as cache:
 - design schema from scratch driven by aggregates from Wave 1
-- Flyway migrations start at V1
+- Liquibase changelogs start at id `01` (filename `01__baseline_schema.yaml`)
 - no concept of "preserve AS-IS data"; data migration is a separate
   one-off ETL out of Phase 4 scope (note in roadmap)
 
@@ -81,8 +83,8 @@ documented schema:
   - introduce surrogate keys where AS-IS used composite keys
   - extract value objects (e.g., Money(amount, currency) into a
     @Embeddable)
-- Flyway `V1__baseline.sql` snapshots the AS-IS schema
-- subsequent V<NN>__<change>.sql migrations introduce TO-BE changes
+- Liquibase `01__baseline_existing.yaml` snapshots the AS-IS schema
+- subsequent `<NN>__<change>.yaml` changelogs introduce TO-BE changes
 
 The decision is recorded in a migration-strategy section of
 `docs/refactoring/4.1-decomposition/aggregate-design.md` (or a new
@@ -280,48 +282,121 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 If the AS-IS access-pattern-map flagged raw SQL for performance,
 preserve a `@Query(nativeQuery = true)` form here with a TODO.
 
-### 6. Flyway migrations
+### 6. Liquibase changelogs
 
-Generate one or more migration scripts under
-`<backend-dir>/src/main/resources/db/migration/`:
+Generate one master aggregator + one changelog file per logical change
+under `<backend-dir>/src/main/resources/db/changelog/`:
 
-#### `V1__baseline_schema.sql`
+```
+<backend-dir>/src/main/resources/db/changelog/
+  db.changelog-master.yaml      ← aggregator, includes every changelog below
+  01__baseline_schema.yaml      ← TO-BE baseline (greenfield) or AS-IS snapshot (Case B)
+  02__<next-change>.yaml        ← subsequent changes
+  ...
+  zz__seed-data.yaml            ← optional, gated on context: local
+```
 
-```sql
--- Baseline schema for <app>.
--- BCs covered in this migration: BC-01 (Identity & Access), BC-02 (Payments)
--- Generated from .refactoring-kb/00-decomposition/aggregate-design.md
--- ADR-002: target DB = PostgreSQL 16; Flyway versioned migrations.
+#### `db.changelog-master.yaml`
 
-CREATE TABLE users (
-    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email         VARCHAR(255) NOT NULL,
-    password_hash VARCHAR(60)  NOT NULL,
-    status        VARCHAR(20)  NOT NULL,
-    created_at    TIMESTAMPTZ  NOT NULL,
-    updated_at    TIMESTAMPTZ  NOT NULL,
-    version       BIGINT       NOT NULL DEFAULT 0,
-    CONSTRAINT uk_users_email UNIQUE (email)
-);
+```yaml
+databaseChangeLog:
+  - includeAll:
+      path: classpath:db/changelog/
+      filter: "\\d{2}__.+\\.yaml"
+      relativeToChangelogFile: false
+```
 
-CREATE INDEX idx_users_status ON users (status);
+If you prefer explicit ordering over `includeAll`, list every changelog
+in order:
 
--- ... additional tables for BC-02, etc.
+```yaml
+databaseChangeLog:
+  - include: { file: db/changelog/01__baseline_schema.yaml }
+  - include: { file: db/changelog/02__add_audit_columns.yaml }
+  # ... append new changelogs at the bottom; never reorder published entries
+```
+
+#### `01__baseline_schema.yaml`
+
+```yaml
+databaseChangeLog:
+  - changeSet:
+      id: 01-create-users
+      author: data-mapper
+      comment: >
+        Baseline schema for <app>. BCs: BC-01 (Identity & Access).
+        Generated from .refactoring-kb/00-decomposition/aggregate-design.md.
+        ADR-002: target DB = PostgreSQL 16; Liquibase YAML changelogs.
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints: { primaryKey: true, nullable: false }
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints: { nullable: false }
+              - column:
+                  name: password_hash
+                  type: varchar(60)
+                  constraints: { nullable: false }
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints: { nullable: false }
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints: { nullable: false }
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  constraints: { nullable: false }
+              - column:
+                  name: version
+                  type: bigint
+                  defaultValueNumeric: 0
+                  constraints: { nullable: false }
+        - addUniqueConstraint:
+            tableName: users
+            columnNames: email
+            constraintName: uk_users_email
+        - createIndex:
+            tableName: users
+            indexName: idx_users_status
+            columns:
+              - column: { name: status }
+      rollback:
+        - dropTable: { tableName: users }
+
+  # ... additional changeSets for BC-02, etc.
 ```
 
 Rules:
-- one V<NN> per logical change (avoid mega-migrations)
-- never edit a published migration; always add a new one
-- use `gen_random_uuid()` (PG 13+) for UUID defaults
-- `TIMESTAMPTZ` for time-of-day fields
+- one changeSet per logical change (avoid mega-changesets)
+- **never edit a deployed changeSet** — its checksum is recorded in
+  `DATABASECHANGELOG`; always add a new one with the next id
+- author = `data-mapper` (or the human author when hand-edited)
+- prefer YAML over SQL/XML formats — diffs and conditional logic are
+  cleaner; raw SQL is allowed only inside a `sql:` change when YAML
+  cannot express the operation (e.g., DB-specific functions)
+- always include a `rollback:` block (Liquibase needs it for
+  `liquibase rollback`); for irreversible changes, emit `<empty />`
+  rollback with a comment
 - explicit constraint names (forward-compatible)
 - indexes on common query patterns from Phase 2
-- comments referencing BC and source
+- contexts: tag environment-specific changesets with `context: local`
+  (e.g., seed data) — production changelogs run unconditionally
 
-For Case B (existing schema migration), the first migration is
-`V1__baseline_existing.sql` that captures the AS-IS schema (typically
-from `pg_dump --schema-only` if the user supplied it; otherwise inferred
-from `.indexing-kb/06-data-flow/database.md`). Subsequent migrations
+For Case B (existing schema migration), the first changelog is
+`01__baseline_existing.yaml` that captures the AS-IS schema (typically
+from `liquibase generateChangeLog --url=jdbc:postgresql://...` against a
+copy of the existing DB; otherwise inferred from
+`.indexing-kb/06-data-flow/database.md`). Subsequent changelogs
 introduce changes.
 
 ### 7. MapStruct mappers (optional)
@@ -376,8 +451,9 @@ public interface IdempotencyKeyJpaRepository
         extends IdempotencyKeyRepository, JpaRepository<IdempotencyKeyEntity, String> {}
 ```
 
-Plus a Flyway migration for the `idempotency_keys` table (in V1 or
-later).
+Plus a Liquibase changeSet for the `idempotency_keys` table (appended
+to `01__baseline_schema.yaml` or as its own `<NN>__idempotency.yaml`
+changelog).
 
 ---
 
@@ -392,7 +468,8 @@ later).
   (overwriting scaffolder's placeholder)
 - `<backend-dir>/src/main/java/com/<org>/<app>/shared/idempotency/IdempotencyKeyEntity.java`
 - `<backend-dir>/src/main/java/com/<org>/<app>/shared/idempotency/IdempotencyKeyJpaRepository.java`
-- `<backend-dir>/src/main/resources/db/migration/V<NN>__*.sql`
+- `<backend-dir>/src/main/resources/db/changelog/db.changelog-master.yaml`
+- `<backend-dir>/src/main/resources/db/changelog/<NN>__*.yaml`
 - `<backend-dir>/src/main/java/com/<org>/<app>/<bc>/domain/README.md`
   (overwrite scaffolder's placeholder with: aggregates list,
    invariants, cross-references)
@@ -411,11 +488,11 @@ later).
 - Value objects:          <N>
 - Enums:                  <N>
 - Repositories:           <N>
-- Flyway migrations:      <N>
+- Liquibase changesets:  <N>
 
 ## Schema strategy
 - Case A (greenfield) | Case B (existing-schema migration)
-- Migrations starting at: V1
+- Changelogs starting at: 01
 
 ## Compile readiness
 - After this worker, mvn compile expected to pass for the BE track
@@ -448,15 +525,18 @@ high | medium | low
 
 ## Constraints
 
-- **TO-BE persistence**: JPA, Flyway, target DB from ADR-002.
+- **TO-BE persistence**: JPA, Liquibase (YAML changelogs), target DB
+  from ADR-002. Flyway is forbidden — never introduce it, even when the
+  AS-IS project uses it.
 - **DDD aggregates honored**: cross-aggregate references by ID only.
 - **No setters by default**: factory methods + state-changing
   operations enforce invariants.
 - **`@Version` on roots** for optimistic locking.
 - **`@Enumerated(EnumType.STRING)` always** (never ORDINAL).
 - **Instant for time** (UTC).
-- **Flyway migrations are immutable**: never edit a published V<NN>;
-  add a new V<NN+1>.
+- **Liquibase changesets are immutable**: once a changeSet has been
+  deployed, its checksum is recorded in `DATABASECHANGELOG`; never edit
+  it. Add a new changeSet with the next id.
 - **Header comments mandatory**: BC, aggregate role, invariants, AS-IS
   source ref.
 - **AS-IS source read-only**.
@@ -464,4 +544,4 @@ high | medium | low
   validation rules drawn from Phase 1 implicit-logic).
 - Do not write outside `<backend-dir>/src/main/java/com/<org>/<app>/<bc>/domain/`,
   `infrastructure/`, `shared/idempotency/`, and
-  `<backend-dir>/src/main/resources/db/migration/`.
+  `<backend-dir>/src/main/resources/db/changelog/`.
