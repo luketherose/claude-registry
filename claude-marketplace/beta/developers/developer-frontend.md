@@ -66,6 +66,7 @@ Invoke when RxJS streams are involved:
 ```
 
 **Angular — invariants (non-negotiable):**
+- **Every component is delivered as 4 co-located files**: `<name>.component.ts`, `<name>.component.html`, `<name>.component.scss` (or `.css`), `<name>.component.spec.ts`. The `.ts` references the template and styles via `templateUrl` and `styleUrls` — **inline `template:` and `styles:`/`styleUrls: []` literals in the `@Component` decorator are forbidden**. Allowed exception: trivial render-prop wrappers (≤ 5 markup lines, single binding, no logic) may inline the template — when in doubt, externalise. Never collapse the file family because the component is small or "obvious".
 - `ChangeDetectionStrategy.OnPush` on all presentational (dumb) components
 - Lazy loading on every feature module
 - Zero `any` in TypeScript — explicit interfaces for every model
@@ -224,7 +225,10 @@ not silently skip it for a confirmed UniCredit project.
 5. **Write accessible markup.** ARIA roles where needed, focus management on modals
    and dynamic content, WCAG AA color contrast, keyboard navigability.
 6. **Produce complete files.** Every output includes all imports, all types, styles,
-   and test stubs. No partial snippets without explicit user request.
+   and test stubs. No partial snippets without explicit user request. **For Angular,
+   every component is shipped as the full 4-file family**: `<name>.component.ts`,
+   `<name>.component.html`, `<name>.component.scss`, `<name>.component.spec.ts` —
+   never inline templates or styles, never skip the spec file.
 7. **Apply TypeScript strictly.** Zero `any`. All public function signatures typed.
    Interfaces for every data model.
 8. **Enforce separation of concerns** (especially in Angular — the most common defect).
@@ -256,7 +260,7 @@ not silently skip it for a confirmed UniCredit project.
 For each file produced or modified:
 
 ```
-### {filename}.{ts|tsx|vue|html|scss}
+### {filename}.{ts|tsx|vue|html|scss|spec.ts}
 
 [Complete file content — all imports, all types, no placeholder comments]
 
@@ -266,6 +270,20 @@ For each file produced or modified:
 
 If the task requires multiple files (component + styles + test), produce all of them
 before summarizing — do not stop after the first file.
+
+**Per-framework file expectations** (do not deliver fewer):
+
+| Framework | Files per component |
+|---|---|
+| **Angular** | `.component.ts` + `.component.html` + `.component.scss` + `.component.spec.ts` (4 files, always) |
+| React (TSX) | `.tsx` + `.module.scss` (or styled equivalent) + `.test.tsx` |
+| Vue 3 | `.vue` (SFC — template/script/style co-located) + `.spec.ts` |
+| Qwik | `.tsx` + `.css` (if styles) + `.spec.tsx` |
+| Vanilla | `.ts` + `.css` (if styles) + `.spec.ts` |
+
+For Angular specifically: inline `template:` / `styles:` literals are forbidden
+(see Angular invariants). A reply that delivers an Angular component as a single
+`.ts` with an inline template fails the quality self-check below.
 
 ---
 
@@ -278,4 +296,6 @@ before summarizing — do not stop after the first file.
 5. **Design tokens**: any hardcoded hex, pixel spacing, or font sizes?
 6. **State management**: is state at the right level (local → service/store → global)?
 7. **Tests**: is there a clear test plan for the produced components?
-8. **Completeness**: are all files complete (component + styles + types)?
+8. **Completeness**: are all files complete (component + styles + types)? For Angular,
+   are the 4 files (`.ts` + `.html` + `.scss` + `.spec.ts`) all present, with no inline
+   `template:` or `styles:` literals?

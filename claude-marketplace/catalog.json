@@ -1,7 +1,7 @@
 {
   "_comment": "Team convention \u2014 not an official Claude Code format. This manifest tracks published capabilities.",
   "version": "1.0",
-  "generated": "2026-04-29",
+  "generated": "2026-04-30",
   "repository": "claude-registry",
   "capabilities": [
     {
@@ -452,11 +452,11 @@
     },
     {
       "name": "developer-frontend",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "type": "agent",
       "tier": "beta",
       "status": "active",
-      "description": "Use when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack. Detects client-specific design systems (e.g. UniCredit) from project signals and loads the matching skill on top of the generic design tokens. Enforces strict separation of concerns (smart vs dumb components, services own HTTP and business logic). When the source-to-target translation is uncertain, ships a best-guess implementation with explicit TODOs rather than conservative stubs. Produces production-ready, typed, accessible, tested frontend code.",
+      "description": "Use when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack. Detects client-specific design systems (e.g. UniCredit) from project signals and loads the matching skill on top of the generic design tokens. Enforces strict separation of concerns (smart vs dumb components, services own HTTP and business logic) and, for Angular, the full 4-file family per component (.ts + .html + .scss + .spec.ts) with no inline templates or styles. When the source-to-target translation is uncertain, ships a best-guess implementation with explicit TODOs rather than conservative stubs. Produces production-ready, typed, accessible, tested frontend code.",
       "file": "beta/developers/developer-frontend.md",
       "dependencies": [
         "angular-expert",
@@ -495,8 +495,8 @@
         "typescript",
         "developer"
       ],
-      "published": "2026-04-29",
-      "changelog": "Detect client-specific design systems and load the matching skill (UniCredit Bricks added). Existing strict separation-of-concerns rules and best-guess + TODO directive preserved."
+      "published": "2026-04-30",
+      "changelog": "Angular 4-file family promoted to non-negotiable invariant: every component is .ts + .html + .scss + .spec.ts; inline template:/styles: literals forbidden (allowed exception: trivial render-prop wrappers \u2264 5 markup lines). Output format gains per-framework file-expectations table; quality self-check verifies the 4 files are present. The triplet+spec rule previously lived only in the angular-expert skill and was being lost when the skill content competed for attention with the higher-salience invariants list."
     },
     {
       "name": "tech-analyst",
@@ -616,7 +616,7 @@
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use to load PostgreSQL standards: relational design, data modelling, data types, indices, performance tuning, Liquibase migrations (preferred over Flyway), H2 local-dev profile with seed data, transaction management, data integrity, security, and monitoring. Works alongside spring-data-jpa; does not duplicate the ORM layer.",
+      "description": "Use to load PostgreSQL standards: relational design, data modelling, data types, indices, performance tuning, Liquibase migrations (the only supported tool \u2014 Flyway is forbidden), H2 local-dev profile with seed data, transaction management, data integrity, security, and monitoring. Works alongside spring-data-jpa; does not duplicate the ORM layer.",
       "file": "skills/database/postgresql-expert.md",
       "dependencies": [],
       "tools": [
@@ -2389,7 +2389,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 2). Use to produce the JPA persistence layer: entities (one per aggregate / entity / value object), Flyway migrations (V<NN>__*.sql), Spring Data JPA repositories, enums (state machines), MapStruct/manual mappers, idempotency entity. Honors DDD aggregate boundaries (cross-aggregate refs by ID only). Schema strategy: greenfield (new) or existing-migration based on Phase 2 access-pattern detection. TO-BE design.",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 2). Use to produce the JPA persistence layer: entities (one per aggregate / entity / value object), Liquibase YAML changelogs (db/changelog/<NN>__*.yaml + master changelog), Spring Data JPA repositories, enums (state machines), MapStruct/manual mappers, idempotency entity. Honors DDD aggregate boundaries (cross-aggregate refs by ID only). Schema strategy: greenfield (new) or existing-migration based on Phase 2 access-pattern detection. Flyway is forbidden \u2014 Liquibase is the only migration tool. TO-BE design.",
       "file": "beta/refactoring-tobe/data-mapper.md",
       "dependencies": [],
       "tools": [
@@ -2405,7 +2405,7 @@
         "sub-agent",
         "backend",
         "jpa",
-        "flyway",
+        "liquibase",
         "ddd",
         "to-be"
       ],
