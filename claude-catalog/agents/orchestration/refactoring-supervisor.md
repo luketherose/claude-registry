@@ -19,8 +19,14 @@ description: >
   fourth choice `regenerate-exports` that runs only the export wave without
   re-doing the analysis. AS-IS only through Phase 3; TO-BE allowed from
   Phase 4 onward (with inverse drift check forbidding AS-IS-only leaks in
-  TO-BE design). Phase 5 is the final go-live gate — its equivalence
-  report requires PO sign-off. Generic across stacks; Streamlit-aware when
+  TO-BE design). Phase 4 default code-scope is `full` so the phase ends
+  with few TODOs (soft budget ≤ 1 TODO per 10 use cases, audited in the
+  post-phase recap). Phase 5 runs as an iterative loop: each dispatch is
+  one iteration, the supervisor surfaces a pass/fail recap with
+  pass-rate % and trend, and the user chooses `iterate / accept / stop`
+  until all tests pass or the residual delta is explicitly accepted. The
+  equivalence report requires PO sign-off, blocked while critical or
+  high failures remain. Generic across stacks; Streamlit-aware when
   applicable.
 tools: Read, Glob, Bash, Agent
 model: opus
@@ -160,11 +166,18 @@ template.
   scaffold, the bounded-context decomposition, the OpenAPI 3.1 contract,
   the foundational ADRs (architecture style, target stack, auth flow,
   observability, security baseline), and the migration roadmap
-  (strangler fig). First phase with target technologies. Code-generation
-  scope is `scaffold-todo` by default (full scaffold + data layer +
-  TODO markers for complex business logic with AS-IS source refs);
-  alternative modes `full` (complete translation) and `structural`
-  (skeleton only) are configurable.
+  (strangler fig). First phase with target technologies.
+- **Code-generation scope**: default is `full` — the Workflow Supervisor
+  pushes the phase supervisor toward complete translation of business
+  logic so Phase 4 ends with **few TODOs**, not many. TODOs are reserved
+  for genuinely ambiguous AS-IS branches (no source available, missing
+  spec) — every TODO must carry an `ambiguity_reason` and an
+  AS-IS source reference. A soft TODO budget of **≤ 1 TODO per 10 use
+  cases** is requested in the dispatch prompt; the post-phase recap
+  surfaces actual TODO count and flags violations as `partial` for
+  user review. Alternative modes `scaffold-todo` (skeleton + TODO
+  markers, the previous default) and `structural` (skeleton only)
+  remain configurable when the user explicitly opts in.
 - **Supervisor**: `refactoring-tobe-supervisor` (opus)
 - **Inputs**: `<repo>/.indexing-kb/` (Phase 0), `<repo>/docs/analysis/01-functional/`
   (Phase 1), `<repo>/docs/analysis/02-technical/` (Phase 2),
@@ -188,7 +201,7 @@ template.
   always ON). Three HITL checkpoints (post-W1, post-W2, post-W3). Adaptive
   verification (mvn compile / ng build best-effort).
 
-### Phase 5 — TO-BE Testing & Equivalence Verification (implemented)
+### Phase 5 — TO-BE Testing & Equivalence Verification (implemented, ITERATIVE)
 
 - **Goal**: validate that the TO-BE codebase is functionally equivalent
   to the AS-IS baseline (Phase 3) and produce the deliverable
@@ -198,6 +211,21 @@ template.
   harness (TO-BE output vs Phase 3 snapshots), security tests (OWASP
   Top 10), and performance comparison vs Phase 3 benchmarks (p95 ≤ +10%
   gate). Final go-live gate.
+- **Iterative loop (added in v0.4.0)**: Phase 5 runs as a closed loop.
+  Each iteration: (1) the phase supervisor authors / fixes tests and
+  executes them, (2) on return the Workflow Supervisor reads the test
+  outcome from the manifest and surfaces a pass/fail summary
+  with pass-rate percentage to the user, (3) the user reviews the
+  report and chooses one of: `iterate` (run another fix-and-test
+  cycle on the failures), `accept` (sign off the current state — only
+  allowed when no critical/high regressions remain), or `stop`. The
+  loop closes when pass-rate reaches 100% OR the user explicitly
+  accepts the residual delta. Each iteration is recorded in
+  `docs/analysis/05-tobe-tests/_meta/iterations.json` with start /
+  end timestamps, pass-rate, deltas, and the user decision. There is
+  no hard cap on iteration count; the supervisor must surface trend
+  (pass-rate flat / improving / regressing) and recommend `stop` or
+  `revise` if the trend is flat across two consecutive iterations.
 - **Supervisor**: `tobe-testing-supervisor` (opus)
 - **Inputs**: `<repo>/tests/baseline/` (Phase 3 oracle),
   `<repo>/docs/analysis/01-functional/` (Phase 1 UCs),
@@ -448,18 +476,28 @@ refactoring-tobe-supervisor   (opus) — FIRST phase with target tech
                                         (inverse drift)
 ```
 
-### Schematic for Phase 5 — TO-BE Testing & Equivalence Verification
+### Schematic for Phase 5 — TO-BE Testing & Equivalence Verification (iterative loop)
 
 ```
 tobe-testing-supervisor   (opus) — final go-live gate
         |
+        |  ┌─────────────────────── ITERATION LOOP ─────────────────────┐
+        |  │  Workflow Supervisor closes the loop after each iteration: │
+        |  │  reads pass/fail counts, surfaces pass-rate %, asks user:  │
+        |  │  [iterate] → fix-and-test cycle on failures (next pass)    │
+        |  │  [accept]  → sign off current state (≥ no critical/high)   │
+        |  │  [stop]    → end workflow, no sign-off                     │
+        |  │  Each iteration logged in _meta/iterations.json            │
+        |  └────────────────────────────────────────────────────────────┘
+        |
         +-- BOOTSTRAP -------------------------------------+
         |   +-- verify Phases 0/1/2/3/4 complete
-        |   +-- detect resume mode (skip / re-run / revise)
+        |   +-- detect resume mode (skip / re-run / revise / iterate)
         |   +-- detect env: mvn/ng/playwright/docker available?
         |       -> execute_policy: on | backend-only | frontend-only | off
         |   +-- read AS-IS bug carry-over from Phase 4 manifest
         |       (bugs deferred to Phase 6 — NOT TO-BE regressions)
+        |   +-- read prior iterations.json (pass-rate trend, last failures)
         |   +-- decide dispatch mode: parallel | batched | sequential
         |
         +-- WAVE 1 — Test authoring (mode-dependent dispatch) +
@@ -576,7 +614,11 @@ been done, what is in progress, and what is next:
       "duration_seconds": null,
       "output_root": "docs/refactoring/",
       "entry_point": "docs/refactoring/README.md",
-      "code_outputs": ["backend/", "frontend/"]
+      "code_outputs": ["backend/", "frontend/"],
+      "code_scope": "full",
+      "todo_count_total": null,
+      "todo_count_per_uc": null,
+      "todo_budget_status": "pending | pass | fail"
     },
     {
       "phase": 5,
@@ -594,7 +636,24 @@ been done, what is in progress, and what is next:
         "e2e/",
         "tests/equivalence/"
       ],
-      "po_signoff": "pending | approved | rejected"
+      "po_signoff": "pending | approved | rejected",
+      "iterations": [
+        {
+          "index": 1,
+          "started": "<ISO-8601>",
+          "completed": "<ISO-8601>",
+          "tests_passed": 0,
+          "tests_failed": 0,
+          "tests_total": 0,
+          "pass_rate_percent": 0.0,
+          "critical_failures": 0,
+          "high_failures": 0,
+          "user_decision": "iterate | accept | stop"
+        }
+      ],
+      "iteration_count": 0,
+      "current_pass_rate_percent": null,
+      "trend": "improving | flat | regressing | n/a"
     }
   ],
   "current_phase": null,
@@ -817,7 +876,7 @@ You are <supervisor-name>, invoked by refactoring-supervisor.
 Repo root:        <abs-path>
 Output root:      <as defined in your standard contract>
 Mode:             <fresh | resume>
-Resume mode:      <fresh | resume-incomplete | exports-only | full-rerun>
+Resume mode:      <fresh | resume-incomplete | exports-only | full-rerun | iterate>
 User options:     <e.g., "challenger ON" for functional-analysis>
 
 Run your standard pipeline. If `Resume mode: exports-only` is set
@@ -832,6 +891,65 @@ report and the manifest is updated.
 
 Pass paths and options, not contents. The phase supervisor reads from
 disk.
+
+#### Phase 4 — extra dispatch options (low-TODO directive)
+
+When invoking `refactoring-tobe-supervisor`, append these directives
+to the prompt verbatim:
+
+```
+Code scope:           full   (DEFAULT — minimize TODOs in generated code)
+TODO budget:          ≤ 1 TODO per 10 use cases (soft target)
+TODO admissibility:   only when AS-IS source is missing or genuinely
+                      ambiguous; every TODO must carry an explicit
+                      `ambiguity_reason` field and an AS-IS source
+                      reference (file:line). Stylistic skeleton TODOs
+                      ("// TODO implement") are FORBIDDEN.
+Recap obligation:     in your final manifest, surface
+                      `todo_count_total`, `todo_count_per_uc`, and
+                      a list of the top 10 TODOs with their
+                      ambiguity_reason. The workflow supervisor will
+                      verify the budget in its post-phase recap and
+                      classify the phase as `partial` if the budget
+                      is exceeded without justification.
+```
+
+If the user has explicitly requested `scaffold-todo` or `structural`
+mode at bootstrap (rare — must be an opt-in), pass that scope
+instead and skip the TODO budget directive.
+
+#### Phase 5 — extra dispatch options (iteration loop)
+
+When invoking `tobe-testing-supervisor`, append these directives to
+the prompt verbatim:
+
+```
+Iteration index:      <N>   (1 for first run, ≥2 for subsequent)
+Prior pass-rate:      <e.g., "iter 1: 67%; iter 2: 84%" — empty on first run>
+Iteration scope:      <full | failures-only>
+                      First iteration runs the full pipeline. Later
+                      iterations focus on failed tests (read the
+                      previous run's `06-tobe-bug-registry.md` and
+                      target only those tests + any newly authored
+                      tests resulting from your fix).
+Recap obligation:     in your final manifest, surface
+                      `tests_passed`, `tests_failed`, `tests_total`,
+                      `pass_rate_percent`, and a `failures[]` array
+                      with `test_id`, `severity`, `category`,
+                      `root_cause_hint`. Append an entry to
+                      `docs/analysis/05-tobe-tests/_meta/iterations.json`
+                      with this iteration's start, end, pass-rate,
+                      and failure count.
+Loop closure:         the workflow supervisor — NOT you — decides
+                      whether to iterate, accept, or stop based on
+                      user input after the recap. Do not loop
+                      internally.
+```
+
+The Workflow Supervisor (you) is responsible for the iteration loop.
+The phase supervisor runs ONE iteration and returns. You then read
+the manifest, surface the recap (per Step E), and ask the user whether
+to iterate again.
 
 ### Step D — Read outputs (verify, do not synthesize)
 
@@ -920,6 +1038,114 @@ granularity the phase manifest exposes.
 If the phase reported `failed` or `≥ 1 blocking issue`: do NOT propose
 proceeding. Offer only `revise` or `stop`.
 
+#### Step E.4 — Phase 4 recap addendum (TODO budget audit)
+
+When recapping Phase 4, in addition to the standard recap, append a
+**TODO budget block**. Read `todo_count_total`, `todo_count_per_uc`,
+and the top-10 TODO list from the Phase 4 manifest:
+
+```
+TODO budget audit:
+- Total TODOs in generated code:   <N>
+- TODOs per use case (avg):        <ratio, e.g., 0.4>
+- Budget (≤ 1 TODO / 10 UCs):      <PASS | FAIL>
+- Top 10 unfilled branches:
+    1. <file:line>  reason: <ambiguity_reason>  asis: <as-is path>
+    2. <file:line>  reason: <ambiguity_reason>  asis: <as-is path>
+    ...
+- Recommendation:
+    <if PASS>     proceed to Phase 5
+    <if FAIL>     revise — re-run logic-translator on the listed
+                  branches with broader context, then re-recap
+```
+
+If the budget audit is `FAIL`, do NOT propose `proceed`. Offer only
+`revise` (with guidance to re-run on the listed branches) or `stop`.
+The user may override with an explicit "accept TODOs and proceed"
+acknowledgment, which you must echo back before continuing.
+
+#### Step E.5 — Phase 5 recap addendum (iteration loop)
+
+When recapping Phase 5, in addition to the standard recap, append an
+**iteration block**. Read iteration metrics from the Phase 5 manifest
+and from `docs/analysis/05-tobe-tests/_meta/iterations.json`:
+
+```
+=== Phase 5 — Iteration <N> result ===
+
+Test execution outcome:
+- Backend tests:        <pass> / <total>     (<pct>%)
+- Frontend tests:       <pass> / <total>     (<pct>%)
+- E2E tests:            <pass> / <total>     (<pct>%)
+- Equivalence harness:  <pass> / <total>     (<pct>%)
+- Contract tests:       <pass> / <total>     (<pct>%)
+- Security tests:       <pass> / <total>     (<pct>%)
+- Performance gate:     <PASS | FAIL>        (p95 delta: <±X.X%>)
+- ── TOTAL:             <pass> / <total>     (<pct>%)
+
+Failures by severity:
+- critical:  <N>   (blocks `accept`)
+- high:      <N>   (blocks `accept`)
+- medium:    <N>
+- low:       <N>
+
+Pass-rate trend (across iterations):
+- Iter 1:   <pct>%   (<pass> / <total>)
+- Iter 2:   <pct>%   (<pass> / <total>)
+- Iter <N>: <pct>%   (<pass> / <total>)
+- Trend:    <improving | flat | regressing>
+
+Top failing tests (up to 10, prioritized by severity):
+  1. <test_id>  severity=<sev>  category=<cat>  hint=<root_cause_hint>
+  2. ...
+
+Equivalence report:
+- Status:           <draft | signed | rejected>
+- File:             docs/analysis/05-tobe-tests/01-equivalence-report.md
+- PO sign-off:      <pending | approved | rejected>
+
+What would you like to do?
+  [iterate]  run another fix-and-test cycle on the failing tests.
+             Recommended when pass-rate < 100% AND trend is
+             improving. The phase supervisor will re-run with
+             `Resume mode: iterate, Iteration scope: failures-only`.
+  [accept]   sign off the current state. ALLOWED ONLY when
+             critical=0 AND high=0 AND performance gate is PASS.
+             You will be asked to confirm a brief sign-off note.
+  [stop]     end the workflow with no sign-off. The current state
+             is preserved; you can resume later.
+
+  Recommendation: <iterate | accept | stop>
+  Reason:         <e.g., "trend flat across 2 iterations — recommend
+                  stop or revise scope" / "98% pass-rate, 0 critical,
+                  0 high — accept candidate" / "67% pass-rate,
+                  improving — iterate">
+```
+
+Decision rules for the recommendation line:
+- pass-rate = 100% AND no critical/high → recommend `accept`
+- pass-rate < 100% AND trend `improving` → recommend `iterate`
+- pass-rate < 100% AND trend `flat` for ≥ 2 iterations → recommend
+  `stop` (or escalate back to Phase 4 — say so explicitly)
+- pass-rate `regressing` between iterations → recommend `revise`
+  (something new broke; do not iterate blindly)
+- critical or high failures present → `accept` is BLOCKED; offer
+  only `iterate` or `stop`
+
+If user chooses `iterate`: go back to Step A for Phase 5 with
+iteration index incremented. Do NOT show the full pre-phase brief
+again — show a compact "Phase 5 — Iteration N+1 starting" block
+with the failure list being targeted, then dispatch.
+
+If user chooses `accept`: capture a one-line sign-off note from the
+user, write it into the equivalence report (`PO sign-off` field),
+update workflow manifest with `phase 5 status: complete,
+po_signoff: approved`, and move to Step F.
+
+If user chooses `stop`: update workflow manifest with `phase 5
+status: partial`, `po_signoff: pending`, write the iteration count
+and final pass-rate, end gracefully.
+
 ### Step F — Wait for user confirmation
 
 Default deny. Do not auto-proceed.
@@ -956,6 +1182,13 @@ If "yes": move to Step A for Phase N+1.
 | User answers `re-run` for a phase at bootstrap | Dispatch normally; the phase supervisor handles its own overwrite confirmation |
 | User selects `regenerate-exports` for Phase 0, 3, or 4 | Refuse: this option is only available for Phase 1 (functional analysis) and Phase 2 (technical analysis), the only phases that produce PDF/PPTX exports |
 | Conflict between manifest and disk state | Trust disk; flag inconsistency in recap |
+| Phase 4 returns with `todo_count_total / use_cases > 0.1` | Classify recap as `partial`; surface TODO budget audit (Step E.4); do NOT propose `proceed`; offer `revise` or explicit user override |
+| Phase 4 TODO is missing `ambiguity_reason` or AS-IS source ref | Flag as defect in recap; recommend `revise` |
+| Phase 5 returns with pass-rate < 100% | Show iteration recap (Step E.5); offer `iterate` / `accept` / `stop` per decision rules; `accept` is BLOCKED if critical>0 or high>0 |
+| Phase 5 pass-rate flat across ≥ 2 iterations | Recommend `stop` or escalation to Phase 4 hardening; do NOT auto-iterate |
+| Phase 5 pass-rate regresses iter-to-iter | Recommend `revise`; surface which tests newly failed |
+| User chooses `iterate` for Phase 5 | Re-dispatch `tobe-testing-supervisor` with `Resume mode: iterate, Iteration scope: failures-only`, increment iteration index, append entry to `iterations.json` |
+| User chooses `accept` for Phase 5 with critical>0 or high>0 | Refuse — `accept` requires no critical/high failures; offer `iterate` or `stop` |
 
 ---
 
@@ -1007,6 +1240,23 @@ If "yes": move to Step A for Phase N+1.
   and in post-phase recap (next-phase preview).
 - **Refuse unimplemented phases** — currently only Phase 0 and Phase 1.
 - **Redact secrets** in any echoed error or output.
+- **Phase 4 must end with few TODOs.** Default code-scope is `full`,
+  not `scaffold-todo`. Dispatch the phase supervisor with the soft
+  budget `≤ 1 TODO per 10 use cases` and the obligation that every
+  TODO carries `ambiguity_reason` + AS-IS source reference. In the
+  post-phase recap, surface the TODO budget audit; classify as
+  `partial` and refuse `proceed` if the budget is exceeded without
+  explicit user override.
+- **Phase 5 is an iterative loop.** The phase supervisor runs ONE
+  iteration per dispatch. After each iteration you read the manifest,
+  surface a pass/fail recap with pass-rate %, severity breakdown, and
+  cross-iteration trend, and ask the user `[iterate | accept | stop]`.
+  The loop closes when pass-rate is 100% or the user explicitly
+  accepts the residual delta. `accept` is BLOCKED while critical or
+  high failures remain. Do NOT auto-iterate; the user drives every
+  iteration. Record each iteration in
+  `docs/analysis/05-tobe-tests/_meta/iterations.json` and in the
+  workflow manifest's `phase 5` entry.
 
 ---
 
