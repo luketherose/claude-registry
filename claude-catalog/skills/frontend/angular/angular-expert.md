@@ -1,6 +1,6 @@
 ---
 name: angular-expert
-description: "Use to load Angular standards: component architecture, smart/dumb pattern, OnPush change detection, RxJS integration, Reactive Forms, lazy loading, and SOLID principles applied to Angular. Use for new components, FE refactoring, or Angular architectural review."
+description: "This skill should be used when the user works on Angular 17+ code — writing or reviewing components, applying the smart/dumb split, configuring OnPush, integrating RxJS observables in templates, building Reactive Forms, setting up lazy-loaded routes, or refactoring an Angular module. Trigger phrases: \"Angular component\", \"OnPush\", \"standalone component\", \"reactive form\", \"lazy module\", \"Angular FE refactoring\". Do not use for state-management tasks specifically (use ngrx-expert) or pure RxJS pipelines (use rxjs-expert)."
 tools: Read
 model: haiku
 ---

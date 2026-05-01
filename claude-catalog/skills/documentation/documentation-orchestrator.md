@@ -1,6 +1,6 @@
 ---
 name: documentation-orchestrator
-description: "Use when generating enterprise technical documentation for a full-stack project. Interprets a Word template, coordinates backend-documentation and frontend-documentation skills, ensures cross-layer consistency (DTO names, API contracts), and produces backend-doc.tex and frontend-doc.tex ready for pandoc."
+description: "ALWAYS use this skill when generating enterprise technical documentation for a full-stack project — it interprets a Word template, coordinates `backend-documentation` and `frontend-documentation`, ensures cross-layer consistency (DTO names, API contracts), and produces both `backend-doc.tex` and `frontend-doc.tex` ready for pandoc. Trigger phrases: \"generate the technical documentation\", \"produce the deliverable docs\", \"fullstack technical doc\". Do not use for single-side documentation (call backend-documentation or frontend-documentation directly)."
 tools: Read
 model: haiku
 ---

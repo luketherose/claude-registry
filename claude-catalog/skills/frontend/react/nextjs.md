@@ -1,6 +1,6 @@
 ---
 name: nextjs
-description: "Use to load Next.js 14+ App Router standards: React Server Components, Server Actions, file-based routing, metadata API, multi-level caching, and deployment patterns. Does not cover the Pages Router."
+description: "This skill should be used when working with Next.js 14+ App Router — React Server Components, Server Actions, file-based routing, metadata API, multi-level caching, deployment patterns. Trigger phrases: \"Next.js app router\", \"Server Component\", \"Server Action\", \"generateMetadata\", \"app/ directory\", \"Next.js caching\". Does NOT cover the legacy Pages Router. Do not use for plain React (use react-expert) or for full-stack outside the Next ecosystem (use tanstack-start)."
 tools: Read
 model: haiku
 ---

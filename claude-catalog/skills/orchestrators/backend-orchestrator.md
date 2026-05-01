@@ -1,6 +1,6 @@
 ---
 name: backend-orchestrator
-description: "Use for complex or multi-skill backend tasks. Coordinates java-expert, spring-expert, spring-data-jpa, spring-architecture, and postgresql-expert; interprets the request context and guarantees cross-layer consistency from Controller to DB."
+description: "ALWAYS use this skill when a backend task spans more than one Java/Spring layer — the user asks to add a new endpoint end-to-end, design a module from Controller to DB, refactor an existing feature across Service/Repository/Entity, or resolve cross-layer inconsistencies. Trigger phrases: \"add a new endpoint end-to-end\", \"wire a service\", \"from controller to database\", \"full backend feature\", \"design this module Controller to DB\". Coordinates java-expert, spring-expert, spring-data-jpa, spring-architecture, postgresql-expert, and guarantees cross-layer consistency. Do not use for single-layer tasks (use the targeted skill directly)."
 tools: Read
 model: haiku
 ---

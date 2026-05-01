@@ -1,6 +1,6 @@
 ---
 name: frontend-orchestrator
-description: "Use for complex or multi-skill frontend tasks. Coordinates Angular, NgRx, RxJS, React, Vue, Qwik, CSS/SCSS, Design, and FE Refactoring skills; guarantees architectural and stylistic consistency across design, implementation, and state management."
+description: "ALWAYS use this skill when a frontend task spans multiple concerns — the user asks to design a feature mixing routing, state management, styling, and API calls; the framework is undecided; or the request explicitly asks for cross-skill coordination. Trigger phrases: \"design a feature end-to-end\", \"review the architecture of this FE module\", \"plan the FE for X\", \"NgRx + RxJS + design system together\". Coordinates Angular, NgRx, RxJS, React, Vue, Qwik, CSS/SCSS, Design, FE Refactoring skills. Do not use for single-framework, single-concern tasks (use the targeted skill directly)."
 tools: Read
 model: haiku
 ---

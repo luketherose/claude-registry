@@ -1,6 +1,6 @@
 ---
 name: tanstack
-description: "Use to load TanStack Router standards: type-safe file-based routing, route definitions, loaders, search params, lazy routes, and per-route error boundaries. Type-safe alternative to React Router."
+description: "This skill should be used when adding type-safe routing to a React app with TanStack Router — file-based routes, route definitions, loaders, search params, lazy routes, per-route error boundaries. Trigger phrases: \"TanStack Router\", \"type-safe routing\", \"route loader\", \"search params\", \"replace React Router\". Type-safe alternative to React Router. Do not use for Next.js (which has its own router) or Remix-style data loading."
 tools: Read
 model: haiku
 ---

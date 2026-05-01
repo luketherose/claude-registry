@@ -1,6 +1,6 @@
 ---
 name: spring-architecture
-description: "Use to load Spring layered-architecture standards: Controller/Service/Repository/Entity structure, DTO separation, Bean Validation, global exception handling, mapper pattern, structured logging, naming conventions, and module implementation order."
+description: "This skill should be used when designing or reviewing the LAYERING of a Spring Boot module — Controller/Service/Repository/Entity boundaries, DTO+mapper introduction, Bean Validation placement, global exception handling, naming conventions, or module implementation order. Trigger phrases: \"add a new module\", \"where does this belong\", \"split this controller\", \"DTO mapping\", \"how do I layer this Spring code\". Do not use for Spring Boot configuration concerns (use spring-expert) or JPA/ORM specifics (use spring-data-jpa)."
 tools: Read
 model: haiku
 ---

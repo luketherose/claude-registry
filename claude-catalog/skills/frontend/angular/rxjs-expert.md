@@ -1,6 +1,6 @@
 ---
 name: rxjs-expert
-description: "Use to load RxJS standards for Angular: naming conventions, flattening strategies (switchMap/mergeMap/concatMap), subscription management, memory safety, stream combination, error handling, and pipeline clarity. Covers anti-patterns to eliminate."
+description: "This skill should be used when working with RxJS in an Angular project — naming conventions, flattening strategies (switchMap/mergeMap/concatMap/exhaustMap), subscription management, memory safety, stream combination, error handling, pipeline clarity, elimination of anti-patterns (nested subscribes, manual unsubscribe leaks). Trigger phrases: \"switchMap vs mergeMap\", \"unsubscribe properly\", \"combine these observables\", \"RxJS pipeline\", \"Subject vs BehaviorSubject\". Do not use for component design (use angular-expert) or NgRx effects (use ngrx-expert)."
 tools: Read
 model: haiku
 ---

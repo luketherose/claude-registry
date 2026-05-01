@@ -1,6 +1,6 @@
 ---
 name: vue-expert
-description: "Use to load Vue 3 Composition API standards: components, composables, Pinia state management, Vue Router 4, TypeScript patterns, performance optimisation, and testing with Vitest and Vue Test Utils. Does not cover Vue 2 or the Options API."
+description: "This skill should be used when working with Vue 3 Composition API — components, composables, Pinia state management, Vue Router 4, TypeScript patterns, performance optimisation, testing with Vitest and Vue Test Utils. Trigger phrases: \"Vue 3 component\", \"composable\", \"Pinia store\", \"Vue Router\", \"Vitest test\". Does NOT cover Vue 2 or the Options API. Do not use for React (use react-expert) or Nuxt-specific concerns."
 tools: Read
 model: haiku
 ---

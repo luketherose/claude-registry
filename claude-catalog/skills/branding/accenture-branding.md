@@ -1,11 +1,6 @@
 ---
 name: accenture-branding
-description: >
-  Use to retrieve Accenture brand standards: color palette (hex values and
-  python-pptx/CSS constants), typography rules (fonts and sizes), slide layout
-  specifications, HTML/CSS template for PDF generation, and usage guidelines.
-  Called by presentation-creator and document-creator before generating any output.
-  Returns structured brand constants ready to use in python-pptx scripts or HTML/CSS.
+description: "This skill should be used when an agent (presentation-creator, document-creator) generates an Accenture-branded deliverable and needs the brand reference data — color palette (hex values, python-pptx + CSS constants), typography (fonts and sizes), slide layout specs, HTML/CSS template for PDF, and usage guidelines. Trigger phrases: \"Accenture branding\", \"Accenture deck\", \"Accenture PDF template\", \"brand colors\". Do not use for client-specific design systems (e.g., UniCredit Bricks — use unicredit-design-system)."
 tools: Read
 model: haiku
 color: purple

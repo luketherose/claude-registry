@@ -1,11 +1,6 @@
 ---
 name: testing-standards
-description: >
-  Use to retrieve authoritative testing standards: principles, test scenario taxonomy,
-  method naming conventions, Arrange-Act-Assert structure, and framework-specific
-  templates for JUnit 5 + Mockito (Java), pytest (Python), and Jest (TypeScript).
-  Called by test-writer, developer, and reviewer agents. Returns structured reference
-  material and complete test templates, not generated test code for a specific class.
+description: "This skill should be used when an agent (test-writer, developer, code-reviewer) needs the canonical testing standards: principles, scenario taxonomy, naming conventions, Arrange-Act-Assert structure, framework templates for JUnit 5 + Mockito (Java), pytest (Python), Jest (TypeScript). Trigger phrases: \"testing standards\", \"how should I structure these tests\", \"AAA pattern\", \"JUnit template\", \"pytest fixture conventions\". Returns reference material and complete test templates, not generated test code. Do not trigger directly from a coding prompt — invoked by the agents above."
 tools: Read
 model: haiku
 color: cyan

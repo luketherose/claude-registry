@@ -1,6 +1,6 @@
 ---
 name: dependency-resolver
-description: "Use when a dependency conflict blocks another skill: incompatible library versions, breaking changes after an update, absent documentation, inconsistent behaviour, transitive conflicts, or deprecated APIs. Support skill only — do not activate for simple version updates without conflicts."
+description: "This skill should be used when a dependency conflict blocks progress — the user reports `NoSuchMethodError`, \"works locally fails in CI\", incompatible peer deps, \"2.x conflicts with 1.x\", or a major-version bump that broke the build. Trigger phrases: \"NoSuchMethodError\", \"incompatible peer deps\", \"X conflicts with Y\", \"after upgrading Z it broke\", \"transitive dependency conflict\", \"deprecated API\". Investigates incompatible library versions, breaking changes, missing/outdated docs, transitive conflicts, and deprecated APIs. Support skill — do not use for routine version updates with no conflict."
 tools: Read
 model: haiku
 ---

@@ -1,6 +1,6 @@
 ---
 name: caveman-commit
-description: "Use when generating commit messages. Produces a terse, intent-focused Conventional Commits subject line (max 72 chars) with a body only when the reasoning is non-obvious. No emojis, no AI credits. Outputs message text in a code block only — does not run git."
+description: "This skill should be used when the user asks for a commit message — triggers include \"write a commit\", \"commit message for this\", \"conventional commit\", \"cc:\". Produces a terse, intent-focused Conventional Commits subject line (max 72 chars) with a body only when reasoning is non-obvious. No emojis, no AI credits. Outputs message text in a code block only — does not run git. Do not use for PR review comments (use caveman-review) or general terse output (use caveman)."
 tools: Read
 model: haiku
 ---

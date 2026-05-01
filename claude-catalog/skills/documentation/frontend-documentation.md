@@ -1,6 +1,6 @@
 ---
 name: frontend-documentation
-description: "Use when generating enterprise technical documentation for an Angular frontend. Reads pre-existing analyses and Angular code to produce a frontend-doc.tex covering module architecture, smart/dumb components, NgRx store, routing, API services, design system, and performance. Ready for pandoc conversion."
+description: "This skill should be used when generating enterprise technical documentation for an Angular frontend, typically as part of a documentation-orchestrator pipeline. Trigger phrases: \"document this Angular app\", \"generate the frontend technical doc\", \"produce frontend-doc.tex\". Reads pre-existing analyses + Angular code and produces a `frontend-doc.tex` covering module architecture, smart/dumb components, NgRx store, routing, API services, design system, and performance. Ready for pandoc. Do not use for backend documentation (use backend-documentation)."
 tools: Read
 model: haiku
 ---

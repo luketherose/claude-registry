@@ -1,6 +1,6 @@
 ---
 name: functional-reconstruction
-description: "Use when reconstructing the functional behaviour of an existing codebase. Produces feature lists, user flows, business rules, use cases, and functional dependencies in docs/functional/. Use before a migration, refactoring, or to document existing functionality for a new team."
+description: "This skill should be used when the user asks to reconstruct, document, or describe the existing functional behaviour of a codebase before a migration, refactoring, or onboarding. Trigger phrases: \"document existing functionality\", \"reconstruct the features\", \"map the user flows of this codebase\", \"we need to migrate, document the AS-IS first\". Produces feature lists, user flows, business rules, use cases, and functional dependencies in `docs/functional/`. Do not use to write new requirements — that is functional-analyst."
 tools: Read
 model: haiku
 ---

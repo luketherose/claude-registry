@@ -1,6 +1,6 @@
 ---
 name: qwik-expert
-description: "Use to load Qwik and Qwik City standards: resumability, lazy components, signals, server-side loaders/actions, and file-based routing. Use for web apps with extreme performance requirements and minimum Time To Interactive."
+description: "This skill should be used when working on a Qwik or Qwik City app — resumability, lazy components, signals, server-side loaders/actions, file-based routing, Qwik-specific performance patterns. Trigger phrases: \"Qwik component\", \"resumability\", \"Qwik signals\", \"route loader\", \"minimum TTI\". Use when extreme performance and minimum Time To Interactive are required. Do not use for general React or Angular FE work (use react-expert or angular-expert)."
 tools: Read
 model: haiku
 ---

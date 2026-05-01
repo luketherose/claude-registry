@@ -1,6 +1,6 @@
 ---
 name: refactoring-expert
-description: "Use when refactoring code in any language to improve internal structure without changing functional behaviour. Applies SOLID, DRY, KISS, YAGNI, Separation of Concerns, high cohesion/low coupling, testability, and readability."
+description: "This skill should be used when refactoring code in any language to improve internal structure without changing behaviour. Trigger phrases: \"refactor this\", \"clean this up\", \"improve the design\", \"extract method/class\", \"reduce coupling\", \"apply SOLID\", \"too long, too complex\". Applies SOLID, DRY, KISS, YAGNI, Separation of Concerns, high cohesion / low coupling, testability, readability. Do not use to add new features or fix bugs (use the language developer skill or debugger)."
 tools: Read
 model: haiku
 ---

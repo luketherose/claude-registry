@@ -76,7 +76,7 @@ claude-registry/
 
 ## Available capabilities
 
-### Agents (65)
+### Agents (66)
 
 | Name | Tier | Description |
 |------|------|-------------|
@@ -148,6 +148,7 @@ claude-registry/
 | `developer-ruby` | beta | Production-ready Ruby on Rails 7+ with service/form/query objects; Sidekiq idempotent jobs, RSpec + factory_bot, RuboCop |
 | `developer-php` | beta | Production-ready PHP 8.2+ (Laravel 10/11 layered or Symfony 6/7 data-mapper); strict_types, readonly classes, enums, PHPStan level 8 |
 | `code-reviewer` | beta | Structured code review on PRs or changed files |
+| `registry-auditor` | beta | **Registry quality audit (sonnet, v0.1.0)**: audits agents/skills/CLAUDE.md against Anthropic's four official rubrics (`agent-development`, `skill-development`, `skill-creator`, `claude-md-improver` from `anthropics/claude-plugins-official`). Produces grade per area, registry-wide patterns, top-10 files to rewrite, reference templates, word-count outliers, and script-able quick wins. Read-only. |
 | `test-writer` | beta | JUnit 5, Mockito, Testcontainers, pytest tests |
 | `debugger` | beta | Bug diagnosis from stack traces, logs, and code |
 | `api-designer` | beta | REST API design and review, OpenAPI specs |

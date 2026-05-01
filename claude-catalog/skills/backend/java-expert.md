@@ -1,6 +1,6 @@
 ---
 name: java-expert
-description: "Use to load Java 17+ core standards: records, sealed classes, Optional, Stream API, Lombok patterns, concurrency, custom exceptions, logging conventions, and document generation (Apache POI, iText). Does not cover Spring Boot, JPA, or layered architecture."
+description: "This skill should be used when working with Java 17+ language features outside the Spring layer — records, sealed classes, Optional, Stream API, Lombok, concurrency (CompletableFuture, virtual threads), custom exception hierarchies, SLF4J logging conventions, and document generation (Apache POI, iText). Trigger phrases: \"Java records\", \"sealed class\", \"Optional best practice\", \"Stream API\", \"POI\", \"iText\". Do not use for Spring Boot configuration (use spring-expert), JPA (use spring-data-jpa), or layered architecture (use spring-architecture)."
 tools: Read
 model: haiku
 ---

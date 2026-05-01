@@ -1,6 +1,6 @@
 ---
 name: uml-diagram-generator
-description: "Use when producing UML diagrams for documentation, architecture design, system modeling, or code-structure explanation. Routes requests to the 'uml' MCP server (antoinebou12/uml-mcp) and selects the correct diagram type automatically: class for structure, sequence for interactions, component for architecture, activity for behaviour, ER for data models. Saves rendered diagrams to docs/diagrams/."
+description: "This skill should be used when producing UML diagrams for documentation, architecture design, system modeling, or code-structure explanation. Trigger phrases: \"draw a class diagram\", \"sequence diagram for this flow\", \"component diagram\", \"ER diagram\", \"activity diagram\", \"state machine diagram\". Routes requests to the `uml` MCP server (antoinebou12/uml-mcp) and selects the diagram type automatically: class for structure, sequence for interactions, component for architecture, activity for behaviour, ER for data models. Saves rendered SVG/PNG and PlantUML source side-by-side under `docs/diagrams/`. Forbids inline PlantUML/Mermaid in surrounding `.md` — the artefact must be rendered. Do not use for non-UML diagrams (e.g. infographics, BPMN, free-form architecture sketches)."
 tools: Read
 model: haiku
 ---

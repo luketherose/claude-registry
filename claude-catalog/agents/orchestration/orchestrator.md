@@ -10,6 +10,12 @@ description: >
   language or framework.
 tools: Read, Glob, Agent
 model: opus
+model_justification: >
+  Meta-orchestrator that decomposes ambiguous multi-domain tasks, picks the right
+  specialists from a dynamic registry, plans parallel dispatch, and synthesises
+  heterogeneous outputs into a coherent result. The reasoning depth required to
+  reconcile cross-domain trade-offs and recover from partial sub-agent failures
+  exceeds what `sonnet` reliably produces in a single pass.
 color: purple
 ---
 

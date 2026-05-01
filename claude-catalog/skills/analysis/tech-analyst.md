@@ -1,6 +1,6 @@
 ---
 name: tech-analyst
-description: "Use when analysing a repository's technical structure. Produces module maps, dependency graphs, bounded contexts, data flows, integration points, and semantic indices. Use as the first step in an analysis, migration, or architectural-understanding pipeline."
+description: "This skill should be used when an analysis, migration, or architecture-understanding pipeline starts and the codebase needs a structural map first. Trigger phrases: \"analyse this repo\", \"map the modules\", \"what is the structure of this codebase\", \"index this project\". Produces module maps, dependency graphs, bounded contexts, data flows, integration points, and a semantic index. Do not use for technical-debt findings — that is technical-analyst."
 tools: Read
 model: haiku
 ---

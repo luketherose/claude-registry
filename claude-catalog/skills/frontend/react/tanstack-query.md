@@ -1,6 +1,6 @@
 ---
 name: tanstack-query
-description: "Use to load TanStack Query v5 standards: useQuery, useMutation, useInfiniteQuery, QueryClient configuration, cache invalidation, optimistic updates, and prefetching. Replaces useEffect for server state management in React."
+description: "This skill should be used when working with TanStack Query v5 in a React app — useQuery, useMutation, useInfiniteQuery, QueryClient configuration, cache invalidation, optimistic updates, prefetching. Trigger phrases: \"useQuery\", \"useMutation\", \"invalidateQueries\", \"optimistic update\", \"prefetch a query\", \"replace useEffect with TanStack Query\". Replaces useEffect for server state management. Do not use for client-only state or for routing (use tanstack)."
 tools: Read
 model: haiku
 ---

@@ -1,6 +1,6 @@
 ---
 name: doc-expert
-description: "Use when producing technical or functional documentation for Python/Streamlit, Java/Spring Boot, or Angular projects. Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented. Saves output to docs/."
+description: "This skill should be used when producing technical or functional documentation for a Python/Streamlit, Java/Spring Boot, or Angular project. Trigger phrases: \"document this code\", \"write the technical docs\", \"generate the module guide\", \"add docstrings + flow descriptions\". Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented; saves to `docs/`. Do not use to generate enterprise LaTeX deliverables (use functional-document-generator or backend/frontend-documentation)."
 tools: Read
 model: haiku
 ---

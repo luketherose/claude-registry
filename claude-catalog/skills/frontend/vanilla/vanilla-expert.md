@@ -1,6 +1,6 @@
 ---
 name: vanilla-expert
-description: "Use to load Vanilla JS/TS standards: Web Components, ES Modules, modern DOM APIs, Custom Events, Intersection/MutationObserver, strict TypeScript, and Vite bundling. Use for independent widgets, reusable libraries, or projects where a framework is overkill."
+description: "This skill should be used when building independent widgets, reusable libraries, or projects where a framework would be overkill — Web Components, ES Modules, modern DOM APIs, Custom Events, Intersection/MutationObserver, strict TypeScript, Vite bundling. Trigger phrases: \"Web Component\", \"no framework\", \"lightweight widget\", \"pure TypeScript DOM\". Do not use for full Angular/React/Vue/Qwik apps."
 tools: Read
 model: haiku
 ---
