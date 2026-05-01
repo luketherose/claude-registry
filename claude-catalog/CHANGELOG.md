@@ -5,7 +5,16 @@ All notable changes to catalog capabilities are documented here.
 Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending changes.
 
 ## [Unreleased]
+### Changed
+- **`refactoring-tobe-supervisor.md` body trimmed from 38 795 → 16 890 chars (−56%) via the supervisor-extraction recipe.** Validates the recipe end-to-end on the largest non-deferred supervisor. Phase narrative, mode descriptions, prompt boilerplate, and recap schema were extracted into 5 reference docs under `claude-catalog/docs/refactoring-tobe/`; the supervisor body keeps only decision logic (escalation triggers, decision rules, inverse drift check, manifest update, hard constraints) plus a `## Reference docs` anchor table that lists every extracted file with one line on when to read it. Body still over the 10 000-char rubric ceiling but down by half — further trimming would require extracting decision logic, which the recipe explicitly forbids.
+
 ### Added
+- **`claude-catalog/docs/refactoring-tobe/`** — 5 reference docs extracted from `refactoring-tobe-supervisor.md`:
+  - `output-layout.md` (4.4 KB) — full output directory tree + frontmatter contract for every artefact + Java/TS header-comment contract
+  - `iteration-and-scope-modes.md` (3.7 KB) — Q1 iteration model (A/B), Q2 code-generation scope (full / scaffold-todo / structural), Q3 verification policy, Q4 code-review policy
+  - `phase-plan.md` (10.2 KB) — Phase 0 bootstrap dialog + Wave 1–6 dispatch templates + Export wave, with HITL checkpoint prompts and per-wave escalation conditions
+  - `dispatch-prompt-template.md` (4.3 KB) — sub-agent prompt boilerplate (paths, modes, file-writing rules, frontmatter requirements)
+  - `final-recap-template.md` (2.4 KB) — closing-report schema with all timing, traceability, and quality fields
 - **`claude-catalog/docs/supervisor-extraction-template.md`** — concrete recipe + worked example for extracting per-phase / per-wave content out of a large supervisor agent body into reference docs. Documents when to extract (body >10k chars, content is reference material not decision logic), the target layout (`claude-catalog/docs/<topic>/`), the `## Reference docs` anchor section pattern in the supervisor body, the doc skeleton, and a fully worked Phase 4 W1 example. Referenced from `CLAUDE.md` so the next contributor extracting a supervisor has a copy-adapt starting point. Closes the registry-auditor's CLAUDE.md "Actionability 14/15" gap.
 
 ### Changed
