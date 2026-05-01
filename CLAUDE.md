@@ -126,6 +126,23 @@ The full catalog is in `claude-marketplace/catalog.json`; the README capability 
 
 ---
 
+## Capability quick reference (audit ↔ remediation loop)
+
+The two primary touch-points when working on the registry itself:
+
+| Action | Capability or doc |
+|---|---|
+| Audit the registry against Anthropic rubrics | invoke `registry-auditor` — read-only; produces grade per area + top files to rewrite + quick wins |
+| Extract per-phase content out of an oversized supervisor body | follow [`claude-catalog/docs/supervisor-extraction-template.md`](claude-catalog/docs/supervisor-extraction-template.md) — recipe + worked example |
+| Run the validator locally before opening a PR | `python3 .github/scripts/validate_catalog.py` (gate 1) and `python3 .github/scripts/validate_marketplace.py` (gate 2) |
+| Scaffold a new rubric-compliant agent or skill | `./claude-catalog/scripts/new-capability.sh --type {agent,skill} <name>` — templates ship with `## When to invoke` skeleton, rubric description prefix, `Typical triggers include …` placeholder, `Do not use…` clause, and the `See "When to invoke" in the agent body for worked scenarios.` pointer |
+| Publish an approved capability to the marketplace | `./claude-marketplace/scripts/publish.sh <name> <version> <tier>` — auto-resolves topic and removes orphan files |
+| Review a PR on this repo | invoke `code-reviewer` |
+
+The audit ↔ remediation loop is: run `registry-auditor` → read the top-10 list → fix one or more files → re-run validator → re-run `registry-auditor` to confirm the metric moved. The supervisor-extraction template is the canonical fix for body-length warnings on the 6 phase supervisors.
+
+---
+
 ## Conventions
 
 - Language: English for all `.md` files and capability system prompts
