@@ -276,27 +276,34 @@
     },
     {
       "name": "documentation-writer",
-      "version": "0.1.0",
+      "version": "0.5.0",
       "type": "agent",
       "tier": "beta",
       "status": "active",
-      "description": "Writes technical documentation: READMEs, runbooks, API guides, architecture overviews, and onboarding guides. Reads code before writing \u2014 never documents what should be, only what is.",
+      "description": "Writes technical documentation: READMEs, runbooks, API guides, architecture overviews, and onboarding guides. Reads code before writing \u2014 never documents what should be, only what is. **Always negotiates the output format with the user before generating** \u2014 supports Markdown, LaTeX, HTML, PDF (via pandoc + pdflatex), and DOCX. Detects local toolchain and offers only the formats that can actually be produced. Defaults to multi-format output (md + tex + html + pdf) when the toolchain is complete. Delegates UML diagrams (component, sequence, class, activity, state, use-case, ER) to the uml-diagram-generator skill \u2014 never inlines raw PlantUML/Mermaid.",
       "file": "beta/documentation/documentation-writer.md",
-      "dependencies": [],
+      "dependencies": [
+        "doc-expert",
+        "uml-diagram-generator"
+      ],
       "tools": [
         "Read",
         "Grep",
         "Glob",
+        "Bash",
         "Write"
       ],
       "model": "sonnet",
       "tags": [
         "documentation",
         "readme",
-        "runbook"
+        "runbook",
+        "latex",
+        "pdf",
+        "uml"
       ],
-      "published": "2026-04-19",
-      "changelog": "Initial beta release"
+      "published": "2026-05-01",
+      "changelog": "v0.5.0: Step 0 mandatory output-format negotiation (md/tex/html/pdf/docx) with toolchain detection; uml-diagram-generator skill delegation; Bash tool added for pandoc/pdflatex probing"
     },
     {
       "name": "presentation-creator",
@@ -654,11 +661,11 @@
     },
     {
       "name": "doc-expert",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use when producing technical or functional documentation for Python/Streamlit, Java/Spring Boot, or Angular projects. Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented. Saves output to docs/.",
+      "description": "Use when producing technical or functional documentation for Python/Streamlit, Java/Spring Boot, or Angular projects. Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented. Format-aware: produces Markdown that round-trips through pandoc to LaTeX/HTML/PDF/DOCX. Diagrams delegated to uml-diagram-generator \u2014 never inlines raw PlantUML/Mermaid. Saves output to docs/.",
       "file": "skills/documentation/doc-expert.md",
       "dependencies": [],
       "tools": [
@@ -671,7 +678,55 @@
         "skill"
       ],
       "published": "2026-04-22",
-      "changelog": "Initial release"
+      "changelog": "v1.1.0: documentation principles add format-aware authoring (md round-trip via pandoc) and mandatory delegation of diagrams to uml-diagram-generator (no inline PlantUML/Mermaid)"
+    },
+    {
+      "name": "uml-diagram-generator",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when producing UML diagrams for documentation, architecture design, system modeling, or code-structure explanation. Routes requests to the 'uml' MCP server (antoinebou12/uml-mcp) and selects the correct diagram type automatically: class for structure, sequence for interactions, component for architecture, activity for behaviour, ER for data models. Saves rendered diagrams to docs/diagrams/.",
+      "file": "skills/documentation/uml-diagram-generator.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "documentation",
+        "diagram",
+        "uml",
+        "plantuml",
+        "mcp",
+        "skill"
+      ],
+      "published": "2026-05-01",
+      "changelog": "v1.0.0: initial release \u2014 routes UML diagram generation to the antoinebou12/uml-mcp MCP server (stdio via uvx); auto-selects diagram type by intent; saves rendered artefacts (SVG/PNG) and source (.puml) under docs/diagrams/"
+    },
+    {
+      "name": "browser-automation",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use when controlling a real browser: navigating pages, taking screenshots, clicking elements, filling forms, switching tabs, emitting keyboard/mouse events, evaluating JavaScript, or running E2E tests via Playwright. Delegates all browser interactions to the 'browser' MCP server (@playwright/mcp).",
+      "file": "skills/testing/browser-automation.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "testing",
+        "browser",
+        "playwright",
+        "e2e",
+        "mcp",
+        "skill"
+      ],
+      "published": "2026-05-01",
+      "changelog": "v1.0.0: initial release \u2014 routes browser control to the @playwright/mcp MCP server (stdio via npx); navigation/observation/interaction/tabs/scripting/waiting/network tool groups documented"
     },
     {
       "name": "documentation-orchestrator",
