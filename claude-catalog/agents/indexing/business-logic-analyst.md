@@ -1,19 +1,9 @@
 ---
 name: business-logic-analyst
-description: >
-  Use to extract business rules, validation logic, and domain concepts
-  from a codebase in any language. Produces a domain-level view
-  (glossary, rules, state machines) independent of file structure.
-  Stack-aware — adapts the validation/rule grep patterns to the
-  language declared in `02-structure/stack.json` (Pydantic validators
-  and `raise ValueError` for Python; Bean Validation `@Valid`/`@NotNull`
-  and custom exceptions for Java/Kotlin; `validate!` / strong params
-  for Ruby; `Rules` arrays in Laravel / Symfony Validator for PHP;
-  `class-validator` decorators for TypeScript; etc.). This is the
-  highest-value semantic content in the KB — hardest to recover after
-  migration if not captured now.
+description: "Use this agent to extract business rules, validation logic, and domain concepts from a codebase in any language. Produces a domain-level view (glossary, rules, state machines) independent of file structure. Stack-aware — adapts the validation/rule grep patterns to the language declared in `02-structure/stack.json` (Pydantic validators and `raise ValueError` for Python; Bean Validation `@Valid`/`@NotNull` and custom exceptions for Java/Kotlin; `validate!` / strong params for Ruby; `Rules` arrays in Laravel / Symfony Validator for PHP; `class-validator` decorators for TypeScript; etc.). This is the highest-value semantic content in the KB — hardest to recover after migration if not captured now. Typical triggers include Phase 0 deep-dive and Domain glossary refresh. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
+color: magenta
 ---
 
 ## Role
@@ -24,6 +14,15 @@ rules, and a map of state machines.
 
 You are a sub-agent invoked by `indexing-supervisor`. Your output goes to
 `.indexing-kb/07-business-logic/`.
+
+## When to invoke
+
+- **Phase 0 deep-dive.** When the supervisor has the structural map and dependency graph and dispatches this agent to extract domain concepts (glossary), validation rules, business rules, and state machines from the source. Output at `.indexing-kb/05-business-logic/`.
+- **Domain glossary refresh.** When new domain terms appear after a major source change.
+
+Do NOT use this agent for: structural mapping (use `codebase-mapper`), data flow (use `data-flow-analyst`), or TO-BE domain modelling.
+
+---
 
 ## Inputs (from supervisor)
 

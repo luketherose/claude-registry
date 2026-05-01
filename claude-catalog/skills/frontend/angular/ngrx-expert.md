@@ -1,6 +1,6 @@
 ---
 name: ngrx-expert
-description: "Use to load NgRx standards: store design, event-driven actions, pure reducers, memoised selectors, effects, facade pattern, state normalisation, and guidance on when NgRx is appropriate versus simpler alternatives."
+description: "This skill should be used when the user designs, reviews, or refactors NgRx state management — store design, event-driven actions, pure reducers, memoised selectors, effects, facade pattern, state normalisation. Also use when deciding whether NgRx is the right choice or a simpler alternative (signals, services) is enough. Trigger phrases: \"NgRx store\", \"add an action\", \"reducer\", \"memoised selector\", \"effect\", \"should I use NgRx\". Do not use for general Angular component patterns (use angular-expert)."
 tools: Read
 model: haiku
 ---

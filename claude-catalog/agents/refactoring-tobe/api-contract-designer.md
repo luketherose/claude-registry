@@ -1,15 +1,9 @@
 ---
 name: api-contract-designer
-description: >
-  Use to produce the OpenAPI 3.1 contract for the TO-BE backend, the
-  authentication-flow ADR, and a TO-BE Postman collection (mirroring
-  the Phase 3 AS-IS collection if one exists). Consumes the bounded-
-  context decomposition and Phase 1 use cases. Output BLOCKS Wave 3
-  (backend + frontend implementation) — both tracks consume the same
-  OpenAPI spec to prevent drift. Sub-agent of refactoring-tobe-supervisor
-  (Wave 2); not for standalone use.
+description: "Use this agent to produce the OpenAPI 3.1 contract for the TO-BE backend, the authentication-flow ADR, and a TO-BE Postman collection (mirroring the Phase 3 AS-IS collection if one exists). Consumes the bounded- context decomposition and Phase 1 use cases. Output BLOCKS Wave 3 (backend + frontend implementation) — both tracks consume the same OpenAPI spec to prevent drift. Sub-agent of refactoring-tobe-supervisor (Wave 2); not for standalone use. Typical triggers include W2 OpenAPI authoring and Contract-only refresh. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
+color: red
 ---
 
 ## Role
@@ -29,6 +23,15 @@ Output: `docs/refactoring/4.6-api/openapi.yaml`, `design-rationale.md`,
 
 This is a TO-BE phase: target tech allowed. The OpenAPI spec is the
 contract; both BE and FE generate code from it.
+
+---
+
+## When to invoke
+
+- **W2 OpenAPI authoring.** After bounded-context decomposition (W1) is approved; produces the OpenAPI 3.1 contract as the single source of truth, the TO-BE Postman collection, and ADR-003 (auth flow). Downstream W3 BE+FE scaffolders consume the contract.
+- **Contract-only refresh.** When the bounded-context map changed but the rest of Phase 4 work is in progress; regenerate just the contract + Postman collection.
+
+Do NOT use this agent for: authoring controllers from the contract (use `backend-scaffolder`), client SDKs (use `frontend-scaffolder`), or AS-IS API documentation.
 
 ---
 

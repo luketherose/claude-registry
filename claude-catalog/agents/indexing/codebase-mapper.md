@@ -1,16 +1,9 @@
 ---
 name: codebase-mapper
-description: >
-  Use to produce a structural inventory of any codebase: directory tree,
-  file counts, language statistics, top-level package map, entrypoints,
-  and a machine-readable stack detection block (primary language,
-  languages, frameworks, build tools, package managers, test frameworks)
-  consumed by all downstream phases of the refactoring pipeline. Polyglot
-  codebases supported (multiple languages reported with confidence and
-  evidence). No semantic analysis. Not for standalone use — invoked only
-  as part of the indexing pipeline.
+description: "Use this agent to produce a structural inventory of any codebase: directory tree, file counts, language statistics, top-level package map, entrypoints, and a machine-readable stack detection block (primary language, languages, frameworks, build tools, package managers, test frameworks) consumed by all downstream phases of the refactoring pipeline. Polyglot codebases supported (multiple languages reported with confidence and evidence). No semantic analysis. Not for standalone use — invoked only as part of the indexing pipeline. Typical triggers include Phase 0 entry — stack detection + structural map and Polyglot disambiguation. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
+color: magenta
 ---
 
 ## Role
@@ -25,6 +18,15 @@ consumed by every supervisor at Phases 1-5.
 
 You are a sub-agent invoked by `indexing-supervisor`. Your output is
 markdown + JSON files under `.indexing-kb/02-structure/`.
+
+## When to invoke
+
+- **Phase 0 entry — stack detection + structural map.** First Phase-0 agent; auto-detects primary language, frameworks, build tools, and test frameworks from the filesystem and dependency manifests, writes the canonical `stack.json`, then produces the directory tree, file/LOC counts, top-level package map, and entrypoint inventory at `.indexing-kb/02-structure/`.
+- **Polyglot disambiguation.** When the repo contains multiple languages and the supervisor needs the primary stack identified before gating downstream framework-specific analyzers.
+
+Do NOT use this agent for: dependency graphs (use `dependency-analyzer`), business logic (use `business-logic-analyst`), or any TO-BE work.
+
+---
 
 ## Inputs (from supervisor)
 

@@ -1,6 +1,6 @@
 ---
 name: spring-data-jpa
-description: "Use to load JPA/Hibernate standards: entity design, relations, fetch strategies, N+1 solutions, transaction management, JPQL queries, second-level cache, bulk operations, automatic auditing, and performance optimisations."
+description: "This skill should be used when working with JPA/Hibernate inside a Spring project — entity design, relations, fetch strategies, N+1 fixes, transaction boundaries, JPQL queries, second-level cache, bulk operations, automatic auditing, performance tuning. Trigger phrases: \"JPA entity\", \"@OneToMany\", \"N+1 query\", \"@Transactional placement\", \"Hibernate fetch\". Do not use for raw SQL or migrations (use postgresql-expert) or Spring Boot wiring (use spring-expert)."
 tools: Read
 model: haiku
 ---
@@ -234,7 +234,7 @@ public interface CompanyProjection {
 List<CompanyProjection> findProjectedByStatus(CompanyStatus status);
 ```
 
-**When to use a projection**: when you have large entities but the query only needs to return 3–4 fields. Avoids hydrating the entire entity just to serialise it partially.
+**When to use a projection**: when entities are large but the query only needs to return 3–4 fields. Avoids hydrating the entire entity just to serialise it partially.
 
 ---
 

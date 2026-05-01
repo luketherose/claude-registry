@@ -1,6 +1,6 @@
 ---
 name: unicredit-design-system
-description: "Use when building, reviewing, or refactoring a frontend whose end client is UniCredit (UC banking group, including UniCredit Bank Italy/Germany/Austria/CEE). Provides UniCredit brand identity rules (logo, colors, typography), the Bricks design-system component catalogue, accessibility targets (EN 301 549 / WCAG 2.1 AA), tone of voice, and ready-to-use design tokens for HTML/CSS/SCSS. Loaded automatically by the frontend-developer agent (Angular, React, Vue, Qwik, Vanilla) whenever the project is identified as a UniCredit deliverable; otherwise out of scope."
+description: "ALWAYS use this skill when the project end client is UniCredit (UC banking group, including UniCredit Bank Italy/Germany/Austria/CEE). Trigger phrases: \"UniCredit\", \"UCB\", \"Bricks design system\", any UC product or app. Provides UniCredit brand identity rules (logo, colors, typography), the Bricks design-system component catalogue, accessibility targets (EN 301 549 / WCAG 2.1 AA), tone of voice, and ready-to-use design tokens for HTML/CSS/SCSS. Loaded automatically by the frontend-developer agent (Angular, React, Vue, Qwik, Vanilla). Do not use for non-UniCredit projects (use design-expert + accenture-branding for Accenture deliverables)."
 tools: Read
 model: haiku
 color: red
@@ -52,7 +52,7 @@ studies on the public website / mobile app / accessibility evolution, and
 the public press / fonts archives.
 
 **Rule for the calling agent**: the values below are the safe public
-defaults. If you have access to the gated WeAreDesign tokens (Figma
+defaults. If access to the gated WeAreDesign tokens is available (Figma
 variables, Bricks component library, official Sketch/Figma kits), those
 override every default in this file — but never silently. Reference the
 source explicitly in code comments: `// source: WeAreDesign Bricks

@@ -1,15 +1,9 @@
 ---
 name: java-spring-standards
-description: >
-  Use to retrieve authoritative Java/Spring Boot standards: package structure,
-  layering rules, dependency injection rules, testing patterns (JUnit 5 + Mockito +
-  Testcontainers), error handling (RFC 7807 ProblemDetail), logging (SLF4J + MDC),
-  Spring Security 6 baseline, Micrometer observability, and Maven conventions.
-  Called by developer and reviewer agents to ensure consistent standards without
-  duplication. Returns structured reference material, not code implementations.
+description: "This skill should be used when an agent (developer-java, code-reviewer, test-writer) needs the canonical Java/Spring Boot standards: package structure, layering rules, DI, JUnit 5 + Mockito + Testcontainers, RFC 7807 ProblemDetail, SLF4J + MDC logging, Spring Security 6 baseline, Micrometer observability, and Maven conventions. Trigger phrases: \"Spring standards\", \"review this Spring code\", \"how should I structure this Spring module\". Returns reference material, not code. Do not trigger directly from a coding prompt — use spring-expert (config), spring-architecture (layering), or spring-data-jpa (ORM)."
 tools: Read
 model: haiku
-color: orange
+color: yellow
 ---
 
 ## Role
@@ -24,7 +18,7 @@ For every standard you return:
 2. The rationale (one sentence)
 3. A minimal concrete example where the rule is non-obvious
 
-You do not write production code, make architectural decisions, or answer
+Does not write production code, make architectural decisions, or answer
 questions outside this domain. If asked about Python, REST design, or
 architecture trade-offs, redirect to the relevant skill.
 

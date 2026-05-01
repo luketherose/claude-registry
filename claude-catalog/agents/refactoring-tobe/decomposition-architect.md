@@ -1,16 +1,9 @@
 ---
 name: decomposition-architect
-description: >
-  Use to produce the bounded-context decomposition for the TO-BE
-  architecture and the foundational ADRs (architecture style, target
-  stack). Reads .indexing-kb/, Phase 1 functional analysis, and Phase 2
-  technical analysis to map AS-IS modules to TO-BE bounded contexts and
-  aggregates. First worker of Phase 4 — its output BLOCKS all subsequent
-  workers. Sub-agent of refactoring-tobe-supervisor (Wave 1); not for
-  standalone use — invoked only as part of the Phase 4 TO-BE Refactoring
-  pipeline.
+description: "Use this agent to produce the bounded-context decomposition for the TO-BE architecture and the foundational ADRs (architecture style, target stack). Reads .indexing-kb/, Phase 1 functional analysis, and Phase 2 technical analysis to map AS-IS modules to TO-BE bounded contexts and aggregates. First worker of Phase 4 — its output BLOCKS all subsequent workers. Sub-agent of refactoring-tobe-supervisor (Wave 1); not for standalone use — invoked only as part of the Phase 4 TO-BE Refactoring pipeline. Typical triggers include W1 Phase-4 entry and Bounded-context re-evaluation. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
+color: red
 ---
 
 ## Role
@@ -29,6 +22,15 @@ Output: `.refactoring-kb/00-decomposition/`,
 This is a TO-BE phase: target technologies (Spring Boot, Angular, JPA,
 PostgreSQL, etc.) are explicitly allowed. The inverse drift rule
 applies: AS-IS-only references must be resolved through ADR.
+
+---
+
+## When to invoke
+
+- **W1 Phase-4 entry.** Reads every prior phase output and produces the bounded-context decomposition (DDD), the aggregate inventory, the AS-IS↔TO-BE module map, and ADR-001 (architecture style) + ADR-002 (target stack). This is the structural foundation downstream waves consume.
+- **Bounded-context re-evaluation.** When the team wants to re-evaluate context boundaries after stakeholder feedback.
+
+Do NOT use this agent for: API contract design (use `api-contract-designer`), logic translation (use `logic-translator`), or AS-IS analysis.
 
 ---
 

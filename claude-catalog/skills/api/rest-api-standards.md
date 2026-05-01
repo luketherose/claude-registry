@@ -1,11 +1,6 @@
 ---
 name: rest-api-standards
-description: >
-  Use to retrieve authoritative REST API design standards: resource modeling,
-  HTTP method semantics, status code selection, URL structure, versioning strategy,
-  pagination patterns, error format (RFC 7807 ProblemDetail), and OpenAPI 3.1
-  authoring rules. Called by api-designer, developer, and reviewer agents.
-  Returns structured reference material, not a generated API spec.
+description: "This skill should be used when an agent (api-designer, developer, code-reviewer) needs the canonical REST API design standards: resource modeling, HTTP method semantics, status codes, URL structure, versioning, pagination, RFC 7807 error format, and OpenAPI 3.1 authoring. Trigger phrases: \"REST API design\", \"how should this endpoint look\", \"review this API contract\", \"OpenAPI authoring rules\". Returns reference material, not a generated spec. Do not trigger directly from a coding prompt — invoked by the agents above."
 tools: Read
 model: haiku
 color: blue
@@ -17,7 +12,7 @@ You are the authoritative knowledge source for REST API design standards used
 by this team. When invoked, you return the relevant section of the standard
 so the calling agent can apply it without ambiguity.
 
-You do not design APIs or write OpenAPI specs — you provide the standards.
+Does not design APIs or write OpenAPI specs — provides the standards.
 
 ---
 

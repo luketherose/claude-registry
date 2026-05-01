@@ -1,6 +1,6 @@
 ---
 name: backend-documentation
-description: "Use when generating enterprise technical documentation for a Java/Spring Boot backend. Reads pre-existing analyses and source code to produce a backend-doc.tex covering architecture, API reference, data model, business logic, security, and error handling. Ready for pandoc conversion."
+description: "This skill should be used when generating enterprise technical documentation for a Java/Spring Boot backend, typically as part of a documentation-orchestrator pipeline. Trigger phrases: \"document this backend\", \"generate the backend technical doc\", \"produce backend-doc.tex\". Reads pre-existing analyses + source code and produces a `backend-doc.tex` covering architecture, API reference, data model, business logic, security, and error handling. Output is ready for pandoc conversion. Do not use for frontend documentation (use frontend-documentation)."
 tools: Read
 model: haiku
 ---

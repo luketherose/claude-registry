@@ -1,18 +1,9 @@
 ---
 name: dependency-analyzer
-description: >
-  Use to extract external dependencies and build the internal module
-  dependency graph for a codebase in any language. Reads the project's
-  build manifests (pyproject.toml/setup.py/requirements.txt/Pipfile for
-  Python; pom.xml/build.gradle* for Java/Kotlin; Cargo.toml for Rust;
-  go.mod for Go; *.csproj for C#; Gemfile for Ruby; composer.json for
-  PHP; package.json for JS/TS) plus the language-appropriate import
-  declarations to detect circular dependencies and standalone packages.
-  Stack-aware — reads `02-structure/stack.json` to know which manifests
-  and import syntaxes apply. Not for standalone use — invoked only as
-  part of the indexing pipeline.
+description: "Use this agent to extract external dependencies and build the internal module dependency graph for a codebase in any language. Reads the project's build manifests (pyproject.toml/setup.py/requirements.txt/Pipfile for Python; pom.xml/build.gradle* for Java/Kotlin; Cargo.toml for Rust; go.mod for Go; *.csproj for C#; Gemfile for Ruby; composer.json for PHP; package.json for JS/TS) plus the language-appropriate import declarations to detect circular dependencies and standalone packages. Stack-aware — reads `02-structure/stack.json` to know which manifests and import syntaxes apply. Not for standalone use — invoked only as part of the indexing pipeline. Typical triggers include Phase 0 dependency mapping and Pre-Phase-4 dependency audit. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
+color: magenta
 ---
 
 ## Role
@@ -29,6 +20,15 @@ deps section per language and a unified internal graph.
 
 You are a sub-agent invoked by `indexing-supervisor`. Your output goes
 to `.indexing-kb/03-dependencies/`.
+
+## When to invoke
+
+- **Phase 0 dependency mapping.** Extracts external dependencies from `pyproject.toml`/`requirements.txt`/`setup.py`/`Pipfile` and builds the internal module-import graph. Detects circular dependencies and standalone packages. Output at `.indexing-kb/03-dependencies/`.
+- **Pre-Phase-4 dependency audit.** When the team wants the dependency posture before Phase 4 to inform target-stack ADRs.
+
+Do NOT use this agent for: dependency-security CVE scanning (use `dependency-security-analyst` in Phase 2), data-flow inventory (use `data-flow-analyst`), or version bumps.
+
+---
 
 ## Inputs (from supervisor)
 

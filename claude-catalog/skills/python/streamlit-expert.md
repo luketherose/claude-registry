@@ -1,6 +1,6 @@
 ---
 name: streamlit-expert
-description: "Use to load Streamlit standards: page structure, session_state management, caching, reusable components, and PostgreSQL/API integration. Use for developing or maintaining Streamlit web apps. For pure Python logic use python-expert."
+description: "This skill should be used when developing or maintaining a Streamlit web app — page structure, session_state management, caching (`@st.cache_data`, `@st.cache_resource`), reusable components, PostgreSQL/API integration, Streamlit-specific anti-patterns. Trigger phrases: \"Streamlit page\", \"session_state\", \"st.cache\", \"multipage Streamlit\", \"Streamlit form\", \"st.experimental_rerun\". Do not use for pure Python logic outside the UI (use python-expert) or for non-Streamlit web frameworks."
 tools: Read
 model: haiku
 ---

@@ -18,6 +18,7 @@ Common capabilities and when to use them:
 | `technical-analyst` | Auditing technical debt, security posture, code quality |
 | `developer-python` | Writing or reviewing Python code |
 | `code-reviewer` | Reviewing a PR or set of changed files |
+| `registry-auditor` | Auditing a Claude Code agent/skill registry against Anthropic's official rubrics — produces grade, registry-wide patterns, top-10 files to rewrite, reference templates, and quick wins (read-only) |
 | `test-writer` | Writing tests for existing code |
 | `debugger` | Diagnosing a bug from error message + code |
 | `api-designer` | Designing or reviewing REST API contracts |

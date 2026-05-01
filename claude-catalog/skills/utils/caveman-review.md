@@ -1,6 +1,6 @@
 ---
 name: caveman-review
-description: "Use when reviewing code and producing PR comments. Each comment follows the format L<line>: <severity> <problem>. <fix>. No hedging, no code repetition, no motivational asides. Produces comments ready to paste into a PR."
+description: "This skill should be used when the user asks for code-review comments or PR review — triggers include \"review this PR\", \"review the diff\", \"comments for this change\", \"PR feedback\". Each comment follows the format `L<line>: <severity> <problem>. <fix>.`. No hedging, no code repetition, no motivational asides. Produces comments ready to paste into a PR. Do not use for commit messages (use caveman-commit) or general terse output (use caveman)."
 tools: Read
 model: haiku
 ---

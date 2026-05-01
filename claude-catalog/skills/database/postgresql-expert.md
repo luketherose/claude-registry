@@ -1,6 +1,6 @@
 ---
 name: postgresql-expert
-description: "Use to load PostgreSQL standards: relational design, data modelling, data types, indices, performance tuning, Liquibase migrations (the only supported tool — Flyway is forbidden), H2 local-dev profile, transaction management, data integrity, security, and monitoring. Works alongside spring-data-jpa; does not duplicate the ORM layer."
+description: "This skill should be used when the user works with PostgreSQL — designing tables, writing or reviewing SQL, picking indices, tuning queries, authoring Liquibase migrations, configuring transactions, or setting up the H2 local-dev profile. Trigger phrases: \"PostgreSQL\", \"Postgres\", \"Liquibase changelog\", \"SQL performance\", \"index tuning\", \"H2 local profile\". Liquibase is the only supported migration tool — Flyway is forbidden; if Flyway appears, this skill should redirect to Liquibase. Do not use for ORM/JPA mapping concerns (use spring-data-jpa)."
 tools: Read
 model: haiku
 ---

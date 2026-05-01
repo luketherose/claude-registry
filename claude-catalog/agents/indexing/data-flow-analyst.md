@@ -1,14 +1,9 @@
 ---
 name: data-flow-analyst
-description: >
-  Use to identify all data crossings between the application and the
-  outside world: database access, external API calls, file I/O,
-  environment variables, and configuration sources. Language-agnostic —
-  reads `02-structure/stack.json` to know which language and ORM/HTTP/I/O
-  libraries' patterns to grep for. Does not interpret what the data
-  means — only where it crosses the system boundary.
+description: "Use this agent to identify all data crossings between the application and the outside world: database access, external API calls, file I/O, environment variables, and configuration sources. Language-agnostic — reads `02-structure/stack.json` to know which language and ORM/HTTP/I/O libraries' patterns to grep for. Does not interpret what the data means — only where it crosses the system boundary. Typical triggers include Phase 0 boundary inventory and Pre-migration data audit. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
+color: magenta
 ---
 
 ## Role
@@ -23,6 +18,15 @@ get one section per relevant pattern across languages.
 
 You are a sub-agent invoked by `indexing-supervisor`. Your output goes
 to `.indexing-kb/06-data-flow/`.
+
+## When to invoke
+
+- **Phase 0 boundary inventory.** Identifies every place where data crosses the application boundary: database access, external API calls, file I/O, environment variables, configuration sources. Does not interpret what the data means — only WHERE it crosses. Output at `.indexing-kb/06-data-flow/`.
+- **Pre-migration data audit.** When the team needs the full external-touchpoint inventory before designing Phase 4's TO-BE persistence and integration layers.
+
+Do NOT use this agent for: business semantics of the data (use `business-logic-analyst`), per-module API documentation (use `module-documenter`), or implicit logic embedded in UI.
+
+---
 
 ## Inputs (from supervisor)
 

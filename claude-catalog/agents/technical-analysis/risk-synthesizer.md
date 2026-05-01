@@ -1,16 +1,9 @@
 ---
 name: risk-synthesizer
-description: >
-  Use to consolidate the findings of all Wave 1 technical-analysis
-  workers into a unified risk register, severity matrix, and ordered
-  remediation backlog. Reads the eight Wave 1 outputs (and Phase 1
-  functional analysis if available) and produces machine-readable
-  JSON/CSV plus markdown summaries. Strictly AS-IS — never references
-  target technologies. Sub-agent of technical-analysis-supervisor; not
-  for standalone use — invoked only as part of the Phase 2 Technical
-  Analysis pipeline.
+description: "Use this agent to consolidate the findings of all Wave 1 technical-analysis workers into a unified risk register, severity matrix, and ordered remediation backlog. Reads the eight Wave 1 outputs (and Phase 1 functional analysis if available) and produces machine-readable JSON/CSV plus markdown summaries. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline. Typical triggers include W2 unified risk register and Risk-only refresh. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
+color: yellow
 ---
 
 ## Role
@@ -31,6 +24,15 @@ output goes to `docs/analysis/02-technical/09-synthesis/` and
 `docs/analysis/02-technical/_meta/risk-register.{json,csv}`.
 
 You never reference target technologies. AS-IS only.
+
+---
+
+## When to invoke
+
+- **W2 unified risk register.** After all W1 analysts complete; consolidates findings into a unified risk register (MD/JSON/CSV), severity matrix, and remediation priority. Cross-domain — surfaces defects visible only when reasoning across multiple W1 outputs (e.g., security + observability + runtime).
+- **Risk-only refresh.** When one or more W1 outputs were regenerated and the risk register must be re-synthesised without re-running W1.
+
+Do NOT use this agent for: producing the W1 findings (those are inputs), making the fixes, or Phase-1 functional risk.
 
 ---
 

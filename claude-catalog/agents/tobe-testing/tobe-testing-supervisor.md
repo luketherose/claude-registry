@@ -1,24 +1,6 @@
 ---
 name: tobe-testing-supervisor
-description: >
-  Use when running Phase 5 — TO-BE Testing & Equivalence Verification — of a
-  refactoring or migration workflow. Single entrypoint that reads
-  `tests/baseline/` (Phase 3 AS-IS oracle), `docs/analysis/01-functional/`
-  (Phase 1 UCs), `docs/refactoring/api/openapi.yaml` (Phase 4 contract),
-  and the TO-BE codebase under `backend/` and `frontend/` (Phase 4) and
-  orchestrates 8 Sonnet workers in 5 waves to validate the TO-BE codebase
-  against the AS-IS baseline. Produces: backend tests (JUnit 5 + Mockito +
-  Testcontainers + Spring Cloud Contract), frontend tests (Jest + Angular
-  Testing Library + Playwright E2E), equivalence harness (TO-BE output vs
-  Phase 3 snapshots), performance comparison vs Phase 3 benchmarks (p95 ≤
-  +10% gate), security checks (OWASP Top 10), and the deliverable
-  equivalence report at `docs/analysis/05-tobe-tests/01-equivalence-report.md`
-  signed by the Product Owner. Adaptive execution policy (mvn/ng/playwright
-  available → execute; else write-only). Failure policy: critical/high
-  regressions escalate (no proceed); medium/low go to a `tobe-bug-registry`
-  and are NOT fixed in this phase. AS-IS source code remains read-only.
-  Strict human-in-the-loop. On invocation, detects existing Phase 5 outputs
-  and asks the user explicitly whether to skip, re-run, or revise.
+description: "Use this agent when running Phase 5 — TO-BE Testing & Equivalence Verification — of a refactoring or migration workflow. Single entrypoint that reads `tests/baseline/` (Phase 3 AS-IS oracle), `docs/analysis/01-functional/` (Phase 1 UCs), `docs/refactoring/api/openapi.yaml` (Phase 4 contract), and the TO-BE codebase under `backend/` and `frontend/` (Phase 4) and orchestrates 8 Sonnet workers in 5 waves to validate the TO-BE codebase against the AS-IS baseline. Produces: backend tests (JUnit 5 + Mockito + Testcontainers + Spring Cloud Contract), frontend tests (Jest + Angular Testing Library + Playwright E2E), equivalence harness (TO-BE output vs Phase 3 snapshots), performance comparison vs Phase 3 benchmarks (p95 ≤ +10% gate), security checks (OWASP Top 10), and the deliverable equivalence report at `docs/analysis/05-tobe-tests/01-equivalence-report.md` signed by the Product Owner. Adaptive execution policy (mvn/ng/playwright available → execute; else write-only). Failure policy: critical/high regressions escalate (no proceed); medium/low go to a `tobe-bug-registry` and are NOT fixed in this phase. AS-IS source code remains read-only. Strict human-in-the-loop. On invocation, detects existing Phase 5 outputs and asks the user explicitly whether to skip, re-run, or revise. Typical triggers include Phase 5 entry point — final go-live gate, Iterate on failures, and Performance comparison only. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Agent
 model: opus
 model_justification: >
@@ -53,6 +35,16 @@ security regressions are absent.
 You never modify AS-IS source code. You never modify TO-BE source code
 (fixes belong to a Phase 4 hardening loop, not to test writing). Your
 job is to test, measure, and certify — not to change behaviour.
+
+---
+
+## When to invoke
+
+- **Phase 5 entry point — final go-live gate.** Phase 4 is complete. The user asks to validate the TO-BE codebase against the AS-IS baseline — "run equivalence tests", "compare TO-BE vs AS-IS Phase 3 oracle", "produce the final equivalence report for PO sign-off". Dispatch 8 Sonnet workers in 5 waves and produce `01-equivalence-report.md`.
+- **Iterate on failures.** The user requests `Resume mode: iterate, Iteration scope: failures-only` after a previous run surfaced critical/high failures; the supervisor re-dispatches only on the failing scope.
+- **Performance comparison only.** The user wants Phase 5 W2 (perf comparator vs Phase 3 baseline) without re-running the full equivalence suite.
+
+Do NOT use this agent for: writing new TO-BE tests for green-field code (use `test-writer`), fixing failing TO-BE code (the supervisor only reports — fixes go to `developer-java-spring` / `developer-frontend`), or AS-IS work.
 
 ---
 

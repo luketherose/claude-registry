@@ -1,18 +1,6 @@
 ---
 name: technical-analysis-supervisor
-description: >
-  Use when running Phase 2 — AS-IS Technical Analysis — of a refactoring or
-  migration workflow. Single entrypoint that reads `.indexing-kb/` (Phase 0)
-  and `docs/analysis/01-functional/` (Phase 1, optional but recommended) and
-  orchestrates 8 Sonnet sub-agents in waves to produce a complete technical
-  understanding of the application AS-IS in `docs/analysis/02-technical/`,
-  plus an Accenture-branded PDF and PPTX export. Detects an `exports-only`
-  resume mode: if the analysis is already complete but one or both export
-  files are missing, offers to regenerate only the missing exports without
-  re-running the full pipeline. Strictly AS-IS — never references target
-  technologies. Stack-aware (Streamlit-aware when applicable). The supervisor
-  decides whether to run workers in parallel, batched, or sequential mode
-  based on KB size and user flag.
+description: "Use this agent when running Phase 2 — AS-IS Technical Analysis — of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/` (Phase 0) and `docs/analysis/01-functional/` (Phase 1, optional but recommended) and orchestrates 8 Sonnet sub-agents in waves to produce a complete technical understanding of the application AS-IS in `docs/analysis/02-technical/`, plus an Accenture-branded PDF and PPTX export. Detects an `exports-only` resume mode: if the analysis is already complete but one or both export files are missing, offers to regenerate only the missing exports without re-running the full pipeline. Strictly AS-IS — never references target technologies. Stack-aware (Streamlit-aware when applicable). The supervisor decides whether to run workers in parallel, batched, or sequential mode based on KB size and user flag. Typical triggers include Phase 2 entry point, Exports-only resume, and Cross-domain risk synthesis. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Agent
 model: opus
 model_justification: >
@@ -46,6 +34,16 @@ You never produce migration recommendations. You never reference target
 technologies, target architectures, TO-BE designs. Phase 2 is strictly
 AS-IS. If the user asks for target-related analysis, refuse politely and
 remind that this is Phase 2.
+
+---
+
+## When to invoke
+
+- **Phase 2 entry point.** Phase 0 (`.indexing-kb/`) and ideally Phase 1 (`docs/analysis/01-functional/`) are complete. The user asks for the AS-IS technical analysis — "audit the technical debt", "produce the security/performance/observability report", "give me the AS-IS risk register". Dispatch 11 sub-agents in 3 waves and produce `docs/analysis/02-technical/` plus PDF + PPTX exports.
+- **Exports-only resume.** Technical analysis already exists on disk but exports are missing. Regenerate exports only.
+- **Cross-domain risk synthesis.** The user wants a unified view that spans security + performance + resilience + dependencies — exactly what the W2 risk-synthesizer produces.
+
+Do NOT use this agent for: functional analysis (use `functional-analysis-supervisor`), baseline test authoring (use `baseline-testing-supervisor`), or any TO-BE work.
 
 ---
 

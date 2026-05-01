@@ -25,7 +25,7 @@ KNOWN_TOOLS = {
     "WebFetch", "WebSearch", "LSP", "NotebookEdit", "TodoWrite",
 }
 VALID_MODELS = {"sonnet", "opus", "haiku"}
-VALID_COLORS = {"red", "blue", "green", "yellow", "purple", "orange", "pink", "cyan"}
+VALID_COLORS = {"red", "blue", "green", "yellow", "magenta", "cyan"}
 KNOWN_FRONTMATTER_KEYS = {
     "name", "description", "tools", "disallowedTools", "model", "permissionMode",
     "maxTurns", "color", "initialPrompt", "background", "effort", "isolation",
@@ -89,6 +89,12 @@ def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Findin
                 f"`name: {name}` must be lowercase letters, digits, and hyphens only."))
 
     # --- description ---
+    # Description prefix rules follow Anthropic's official rubrics:
+    #   - skills (skill-development rubric): "This skill should be used when…"
+    #     or the rubric-endorsed pushy variant "ALWAYS use this skill when…".
+    #   - agents (agent-development rubric): "Use when/for/to…" preserved as the
+    #     registry's agent convention; the rubric prose-trigger format is
+    #     compatible with this prefix.
     if "description" not in fm:
         findings.append(Finding("error", str(filepath),
             "Missing required frontmatter field: `description`"))
@@ -97,9 +103,30 @@ def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Findin
         if not desc:
             findings.append(Finding("error", str(filepath),
                 "`description` is empty."))
-        elif not re.match(r"^Use (when|for|to)\b", desc, re.IGNORECASE):
+        elif file_type == "skill":
+            if not re.match(
+                r"^(This skill should be used when|ALWAYS use this skill when)\b",
+                desc,
+            ):
+                findings.append(Finding("warning", str(filepath),
+                    "`description` should start with \"This skill should be used when…\" "
+                    "(or the pushy variant \"ALWAYS use this skill when…\") per the "
+                    "Anthropic skill-development rubric. "
+                    f"Got: \"{desc[:80]}\""))
+            if not re.search(r'"[^"]+"', desc):
+                findings.append(Finding("warning", str(filepath),
+                    "`description` is missing verbatim trigger phrases. The Anthropic "
+                    "skill-creator rubric requires concrete utterances like "
+                    '`Trigger phrases: "phrase 1", "phrase 2"`.'))
+            if not re.search(r"\b(do not|does not|not for)\b", desc, re.IGNORECASE):
+                findings.append(Finding("warning", str(filepath),
+                    "`description` is missing a scope-out clause (e.g. `Do not use…`). "
+                    "Without it, sibling skills cannot be disambiguated."))
+        elif not re.match(r"^Use (this agent )?(when|for|to)\b", desc, re.IGNORECASE):
             findings.append(Finding("warning", str(filepath),
-                f"`description` should start with \"Use when\", \"Use for\", or \"Use to\". "
+                "`description` should start with \"Use this agent when\" "
+                "(per the Anthropic agent-development rubric) or the legacy "
+                "\"Use when/for/to\" prefix. "
                 f"Got: \"{desc[:80]}\""))
         if 0 < len(desc) < 40:
             findings.append(Finding("warning", str(filepath),
@@ -158,6 +185,11 @@ def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Findin
                 f"Known keys: {', '.join(sorted(KNOWN_FRONTMATTER_KEYS))}"))
 
     # --- body ---
+    # Body checks include rubric-driven heuristics:
+    #   - agents: warn if `## When to invoke` is missing (Anthropic
+    #     agent-development rubric §7) and if body exceeds the 10 000 char
+    #     ceiling (rubric §9). Both are warnings, not errors, because the
+    #     registry may have legitimate exceptions (top-level supervisors).
     stripped_body = body.strip()
     if not stripped_body:
         findings.append(Finding("error", str(filepath),
@@ -173,6 +205,18 @@ def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Findin
             findings.append(Finding("warning", str(filepath),
                 "System prompt does not define a role. "
                 "Consider adding a '## Role' section or 'You are...' opening."))
+        if file_type == "agent":
+            if "## when to invoke" not in body_lower:
+                findings.append(Finding("warning", str(filepath),
+                    "Agent body is missing a `## When to invoke` section. "
+                    "Per the Anthropic agent-development rubric, the description "
+                    "should name 2-4 trigger scenarios in prose and the body "
+                    "should detail them under `## When to invoke`."))
+            if len(stripped_body) > 10_000:
+                findings.append(Finding("warning", str(filepath),
+                    f"Agent body is {len(stripped_body)} chars — over the "
+                    "10 000-char rubric ceiling. Consider extracting per-phase or "
+                    "per-template content into `claude-catalog/docs/<topic>/`."))
 
     return findings
 

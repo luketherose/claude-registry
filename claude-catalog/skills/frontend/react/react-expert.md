@@ -1,6 +1,6 @@
 ---
 name: react-expert
-description: "Use to load React 18+ standards: component architecture, hooks, TypeScript integration, performance optimisation (memo/useCallback/useMemo), Suspense, concurrent features, and testing with React Testing Library. For data fetching use tanstack-query; for routing use tanstack; for SSR use nextjs."
+description: "This skill should be used when working with React 18+ — component architecture, hooks, TypeScript prop typing, performance optimisation (memo/useCallback/useMemo), Suspense, concurrent features, React Testing Library. Trigger phrases: \"React component\", \"custom hook\", \"memo this\", \"TypeScript props\", \"Suspense boundary\", \"RTL test\". For data fetching use tanstack-query, for routing use tanstack, for SSR/Next ecosystem use nextjs. Do not use for plain Vanilla JS (use vanilla-expert)."
 tools: Read
 model: haiku
 ---

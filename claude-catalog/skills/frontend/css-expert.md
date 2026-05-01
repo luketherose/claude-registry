@@ -1,6 +1,6 @@
 ---
 name: css-expert
-description: "Use to load CSS/SCSS standards: design tokens, BEM naming, specificity rules, modularity, mobile-first responsive design, theming, and layout patterns. Use for SCSS refactoring, design system integration, or eliminating fragile inline styles."
+description: "This skill should be used when writing, refactoring, or reviewing CSS/SCSS — design tokens, BEM naming, specificity rules, modularity, mobile-first responsive design, theming, layout patterns. Trigger phrases: \"refactor this SCSS\", \"BEM naming\", \"design tokens\", \"specificity issue\", \"eliminate inline styles\", \"responsive layout\". Do not use for component design (use design-expert) or framework-specific styling (Angular, React, Vue have their own skills)."
 tools: Read
 model: haiku
 ---
@@ -119,7 +119,7 @@ In Angular, state classes are managed with:
 
 ## Specificity — keep it low
 
-**Rule**: the highest specificity you should ever write is a single class.
+**Rule**: the highest specificity ever written should be a single class.
 
 ```scss
 // ❌ Avoid — specificity too high

@@ -1,6 +1,6 @@
 ---
 name: caveman
-description: "Use to activate token-efficient communication mode (approx. 75% token reduction). Switches responses to terse, direct prose: no filler words, no hedging, no pleasantries. Preserves exact technical terminology and code unchanged."
+description: "This skill should be used when the user asks for terser, more direct output — explicit triggers include \"caveman mode\", \"caveman lite|full|ultra\", \"be terse\", \"cut the fluff\", \"token-efficient\". Activates token-efficient communication mode (~75% token reduction). Switches responses to compressed prose with articles, fillers, hedging, and pleasantries removed; preserves exact technical terminology and code unchanged. Do not use for commit messages (use caveman-commit) or PR comments (use caveman-review)."
 tools: Read
 model: haiku
 ---

@@ -1,17 +1,6 @@
 ---
 name: frontend-test-writer
-description: >
-  Use to write the TO-BE frontend test suite for an Angular 17+ codebase
-  scaffolded in Phase 4. Sub-agent of tobe-testing-supervisor (Wave 1).
-  Produces component tests (Jest +
-  Angular Testing Library), E2E tests (Playwright). Component tests
-  are organised per feature module (mirrors `frontend/src/app/features/<bc>/`
-  layout). E2E tests are derived from Phase 1 user flows. Targets > 80%
-  line coverage on the frontend. Never modifies production code. Anchors
-  expected behaviour to Phase 1 UCs and Phase 1 user flows; uses Phase 3
-  AS-IS Streamlit snapshot only as a soft reference (the visual layout
-  in TO-BE Angular is NOT expected to mirror Streamlit — the equivalence
-  is at the user-flow level, not pixel level).
+description: "Use this agent to write the TO-BE frontend test suite for an Angular 17+ codebase scaffolded in Phase 4. Sub-agent of tobe-testing-supervisor (Wave 1). Produces component tests (Jest + Angular Testing Library), E2E tests (Playwright). Component tests are organised per feature module (mirrors `frontend/src/app/features/<bc>/` layout). E2E tests are derived from Phase 1 user flows. Targets > 80% line coverage on the frontend. Never modifies production code. Anchors expected behaviour to Phase 1 UCs and Phase 1 user flows; uses Phase 3 AS-IS Streamlit snapshot only as a soft reference (the visual layout in TO-BE Angular is NOT expected to mirror Streamlit — the equivalence is at the user-flow level, not pixel level). Typical triggers include W1 TO-BE frontend coverage and Component-only re-author. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: blue
@@ -37,6 +26,15 @@ You do NOT modify production code.
 The visual layout of the Angular frontend is NOT expected to match
 the Streamlit AS-IS frontend pixel-by-pixel. Equivalence is at the
 **user-flow** level: same input → same outcome → same persisted state.
+
+---
+
+## When to invoke
+
+- **W1 TO-BE frontend coverage.** Reads the Angular workspace from Phase 4; emits unit tests per component (RTL/Vitest/Jasmine depending on stack) plus Playwright E2E flows derived from `user-flow-analyst` outputs. Coverage target: >70% statement.
+- **Component-only re-author.** When a single component's signature changed and only its tests need regenerating.
+
+Do NOT use this agent for: backend tests (use `backend-test-writer`), equivalence tests (use `equivalence-test-writer`), or AS-IS work.
 
 ---
 

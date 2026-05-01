@@ -1,6 +1,6 @@
 ---
 name: angular-expert
-description: "Use to load Angular standards: component architecture, smart/dumb pattern, OnPush change detection, RxJS integration, Reactive Forms, lazy loading, and SOLID principles applied to Angular. Use for new components, FE refactoring, or Angular architectural review."
+description: "This skill should be used when the user works on Angular 17+ code — writing or reviewing components, applying the smart/dumb split, configuring OnPush, integrating RxJS observables in templates, building Reactive Forms, setting up lazy-loaded routes, or refactoring an Angular module. Trigger phrases: \"Angular component\", \"OnPush\", \"standalone component\", \"reactive form\", \"lazy module\", \"Angular FE refactoring\". Do not use for state-management tasks specifically (use ngrx-expert) or pure RxJS pipelines (use rxjs-expert)."
 tools: Read
 model: haiku
 ---
@@ -417,7 +417,7 @@ export class UserProfileComponent { /* ... */ }
 
 Defect repeatedly observed: the agent leaves Angular components empty (`// TBD`, `throw new Error('Not implemented')`, empty templates) when the source-to-Angular translation is uncertain. **This is forbidden.**
 
-When you do not know the exact equivalent of a source-language construct in Angular:
+When the exact equivalent of a source-language construct in Angular is unknown:
 
 1. Implement the most reasonable best-guess version, fully wired up (template, class, service call).
 2. Add a `// TODO: [assumption made] - verify [what the human should check]` comment at the assumption point. The TODO must be specific enough that a reviewer understands the reservation in 5 seconds.

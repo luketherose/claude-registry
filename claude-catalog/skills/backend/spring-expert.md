@@ -1,6 +1,6 @@
 ---
 name: spring-expert
-description: "Use to load Spring Boot 3.x standards: IoC/DI, auto-configuration, profiles, ConfigurationProperties, WebClient for external APIs, Spring Security 6 with JWT, and testing patterns (MockMvc, @WebMvcTest, @SpringBootTest)."
+description: "This skill should be used when working with Spring Boot 3.x configuration and runtime concerns — IoC/DI, auto-configuration, profiles, @ConfigurationProperties, WebClient for external APIs, Spring Security 6 with JWT, MockMvc and @WebMvcTest/@SpringBootTest test patterns. Trigger phrases: \"Spring Boot config\", \"@ConfigurationProperties\", \"WebClient\", \"Spring Security JWT\", \"MockMvc test\". Do not use for layering decisions (use spring-architecture) or JPA (use spring-data-jpa)."
 tools: Read
 model: haiku
 ---

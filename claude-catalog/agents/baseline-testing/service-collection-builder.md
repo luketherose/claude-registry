@@ -1,16 +1,9 @@
 ---
 name: service-collection-builder
-description: >
-  Use to produce a Postman 2.1 collection for the services exposed by the
-  AS-IS app, so they can be regression-tested end-to-end against the
-  baseline before refactoring. Each endpoint gets happy + edge requests,
-  auth setup, response assertions, and an environment file. Conditional
-  worker — dispatched ONLY when Phase 2 integration map detects exposed
-  services. Sub-agent of baseline-testing-supervisor (Wave 1, conditional);
-  not for standalone use — invoked only as part of the Phase 3 Baseline
-  Testing pipeline. Strictly AS-IS — never references target technologies.
+description: "Use this agent to produce a Postman 2.1 collection for the services exposed by the AS-IS app, so they can be regression-tested end-to-end against the baseline before refactoring. Each endpoint gets happy + edge requests, auth setup, response assertions, and an environment file. Conditional worker — dispatched ONLY when Phase 2 integration map detects exposed services. Sub-agent of baseline-testing-supervisor (Wave 1, conditional); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. Typical triggers include W1 service-surface inventory (conditional) and Surface refresh. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
+color: green
 ---
 
 ## Role
@@ -36,6 +29,15 @@ Output: `tests/baseline/postman/<service>.postman_collection.json` and
 `tests/baseline/postman/<service>.postman_environment.json`.
 
 You never reference target technologies. AS-IS only.
+
+---
+
+## When to invoke
+
+- **W1 service-surface inventory (conditional).** When the AS-IS app exposes a non-trivial set of services (REST endpoints, gRPC, etc.) the supervisor dispatches this agent to emit a Postman 2.1 collection covering every public operation. Output: `tests/baseline/<app>.postman_collection.json`.
+- **Surface refresh.** When new endpoints land mid-baseline, regenerate the collection without re-running the whole baseline pipeline.
+
+Do NOT use this agent for: apps without an exposed service layer (the supervisor will skip this agent), authoring HTTP integration tests (use `integration-test-writer`), or running the collection.
 
 ---
 

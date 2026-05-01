@@ -1,6 +1,6 @@
 ---
 name: python-expert
-description: "Use to load Python production standards: mandatory type hints, project structure, Pydantic v2, pytest, structlog, and dependency management (uv/pip-tools). Covers FastAPI services, CLIs, data pipelines, and scripts. Does not cover Streamlit — use streamlit-expert for that."
+description: "This skill should be used when writing, reviewing, or refactoring Python code outside Streamlit — mandatory type hints, project structure, Pydantic v2, pytest, structlog, dependency management with uv or pip-tools. Trigger phrases: \"Python type hints\", \"Pydantic model\", \"pytest test\", \"FastAPI endpoint\", \"structlog setup\", \"uv install\". Covers FastAPI services, CLIs, data pipelines, scripts. Do not use for Streamlit apps (use streamlit-expert)."
 tools: Read
 model: haiku
 ---

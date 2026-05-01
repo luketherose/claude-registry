@@ -1,6 +1,6 @@
 ---
 name: functional-document-generator
-description: "Use to convert existing functional documentation into an enterprise LaTeX document deliverable to stakeholders. Reads from docs/functional/, interprets a provided Word template, and generates a complete .tex file ready for pandoc conversion to .docx. Does not invent functionality not supported by the source content."
+description: "This skill should be used when converting existing functional documentation into an enterprise LaTeX deliverable for stakeholders. Trigger phrases: \"generate the functional document\", \"produce the .docx for the client\", \"convert docs/functional to LaTeX\", \"Word-template-driven functional doc\". Reads from `docs/functional/`, interprets a provided Word template, and generates a complete `.tex` file ready for pandoc → `.docx`. Does not invent functionality not supported by the source content. Do not use to write the functional analysis itself (use functional-analyst)."
 tools: Read
 model: haiku
 ---

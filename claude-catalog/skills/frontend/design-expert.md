@@ -1,6 +1,6 @@
 ---
 name: design-expert
-description: "Use when designing layouts, mockups, or style specifications for new frontend components. Applies the company design system and coordinates with the project's framework skill and css-expert. Invoke before implementing any new UI component."
+description: "This skill should be used when designing layouts, mockups, or style specifications BEFORE implementing a new frontend component. Trigger phrases: \"design this component\", \"mockup for this view\", \"style spec\", \"layout for this page\", \"before I implement, what should it look like\". Applies the company design system and coordinates with the framework skill (angular-expert / react-expert / vue-expert / qwik-expert / vanilla-expert) and css-expert. Do not use during implementation — invoke before."
 tools: Read
 model: haiku
 ---

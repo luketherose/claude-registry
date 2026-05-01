@@ -119,8 +119,9 @@ if [[ "$TYPE" == "skill" ]]; then
 ---
 name: $NAME
 description: >
-  Use to retrieve TODO — descrivi i contenuti della skill in modo preciso.
-  Inizia con "Use to retrieve" e elenca i topic coperti.
+  This skill should be used when TODO — descrivi la condizione di trigger.
+  Trigger phrases: "TODO esempio 1", "TODO esempio 2", "TODO esempio 3".
+  Do not use TODO — indica una sibling skill o uno scope che NON copre.
 tools: Read
 model: haiku
 color: cyan
@@ -154,7 +155,9 @@ name: $NAME
 description: >
   Use when TODO — descrivi la condizione di trigger in modo preciso.
   Inizia con "Use when" e indica i task specifici che questo subagent gestisce.
+  Typical triggers include TODO scenario 1, TODO scenario 2, and TODO scenario 3.
   Indica anche cosa NON fa (se c'è un'altra capability per quello).
+  See "When to invoke" in the agent body for worked scenarios.
 tools: Read, Grep, Glob
 model: sonnet
 color: blue
@@ -164,6 +167,16 @@ color: blue
 
 TODO: Definisci il ruolo. Inizia con "You are a senior..."
 Chi è questo subagent? Su cosa è autorevole?
+
+---
+
+## When to invoke
+
+- **TODO scenario 1.** Quando l'utente dice "TODO utterance 1" o si presenta TODO contesto. Output: TODO.
+- **TODO scenario 2.** TODO descrizione + utterance + output.
+- **TODO scenario 3.** TODO descrizione + utterance + output.
+
+Do NOT use this agent for: TODO sibling agent / out-of-scope task.
 
 ---
 

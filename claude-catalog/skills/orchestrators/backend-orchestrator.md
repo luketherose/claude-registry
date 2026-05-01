@@ -1,6 +1,6 @@
 ---
 name: backend-orchestrator
-description: "Use for complex or multi-skill backend tasks. Coordinates java-expert, spring-expert, spring-data-jpa, spring-architecture, and postgresql-expert; interprets the request context and guarantees cross-layer consistency from Controller to DB."
+description: "ALWAYS use this skill when a backend task spans more than one Java/Spring layer — the user asks to add a new endpoint end-to-end, design a module from Controller to DB, refactor an existing feature across Service/Repository/Entity, or resolve cross-layer inconsistencies. Trigger phrases: \"add a new endpoint end-to-end\", \"wire a service\", \"from controller to database\", \"full backend feature\", \"design this module Controller to DB\". Coordinates java-expert, spring-expert, spring-data-jpa, spring-architecture, postgresql-expert, and guarantees cross-layer consistency. Do not use for single-layer tasks (use the targeted skill directly)."
 tools: Read
 model: haiku
 ---
@@ -37,10 +37,10 @@ Before activating any backend skill, query sources in this order:
 ### When to consult pre-existing analysis artefacts
 
 **Use analysis artefacts when:**
-- You need to implement a Service that replicates legacy logic — read the source code or the corresponding pre-indexed chunks
-- You are deciding the public interface of a service — the inputs/outputs of available artefacts tell you what goes in and what comes out
-- You want to understand the dependencies of a module without reading all the code
-- You need to validate whether a JPA entity is complete with respect to the business logic
+- Implementing a Service that replicates legacy logic — read the source code or the corresponding pre-indexed chunks
+- Deciding the public interface of a service — the inputs/outputs of available artefacts tell what goes in and what comes out
+- Understanding the dependencies of a module without reading all the code
+- Validating whether a JPA entity is complete with respect to the business logic
 
 **How to navigate them:**
 1. Identify the relevant bounded context (the project's bounded contexts)
@@ -217,14 +217,14 @@ When two skills suggest different approaches, the priority is:
 
 ```
 Use Entity when:
-  - You are inside the repository/service layer and have not yet serialised
-  - You are updating JPA state (dirty checking)
+  - Inside the repository/service layer and the data has not yet been serialised
+  - Updating JPA state (dirty checking)
 
 Use DTO when:
-  - You are leaving the service (towards the controller)
-  - You are entering the service (from the controller)
-  - You are at the public interface of a service
-  - You are serialising towards an external API
+  - Leaving the service (towards the controller)
+  - Entering the service (from the controller)
+  - At the public interface of a service
+  - Serialising towards an external API
 
 Never pass an Entity beyond the service→controller boundary.
 ```
@@ -245,7 +245,7 @@ Use native query when:
   - Critical performance on queries with many rows (EXPLAIN has confirmed the problem)
 
 Use Projection when:
-  - You need to return a subset of columns from a large entity
+  - Returning a subset of columns from a large entity is required
   - The query is read-only and the full entity is not needed for dirty checking
 ```
 
