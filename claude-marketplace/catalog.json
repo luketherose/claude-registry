@@ -195,6 +195,32 @@
       "changelog": "v0.2.0: Added skill-based language-specific review (fulfills v1.0 TODO)"
     },
     {
+      "name": "registry-auditor",
+      "version": "0.1.0",
+      "type": "agent",
+      "tier": "beta",
+      "status": "active",
+      "description": "Audits a Claude Code agent/skill registry against Anthropic's official rubrics (agent-development, skill-development, skill-creator, claude-md-improver). Produces a structured Markdown report with overall grade, registry-wide patterns, top 10 files to rewrite, reference templates, and quick-win bulk fixes. Strictly read-only.",
+      "file": "beta/quality/registry-auditor.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "audit",
+        "quality",
+        "registry",
+        "rubric",
+        "governance"
+      ],
+      "published": "2026-05-01",
+      "changelog": "Initial beta release \u2014 audits agents/skills/CLAUDE.md against the four official Anthropic rubrics shipped in claude-plugins-official"
+    },
+    {
       "name": "test-writer",
       "version": "0.2.0",
       "type": "agent",
