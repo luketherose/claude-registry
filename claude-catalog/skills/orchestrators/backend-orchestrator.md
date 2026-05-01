@@ -37,10 +37,10 @@ Before activating any backend skill, query sources in this order:
 ### When to consult pre-existing analysis artefacts
 
 **Use analysis artefacts when:**
-- You need to implement a Service that replicates legacy logic — read the source code or the corresponding pre-indexed chunks
-- You are deciding the public interface of a service — the inputs/outputs of available artefacts tell you what goes in and what comes out
-- You want to understand the dependencies of a module without reading all the code
-- You need to validate whether a JPA entity is complete with respect to the business logic
+- Implementing a Service that replicates legacy logic — read the source code or the corresponding pre-indexed chunks
+- Deciding the public interface of a service — the inputs/outputs of available artefacts tell what goes in and what comes out
+- Understanding the dependencies of a module without reading all the code
+- Validating whether a JPA entity is complete with respect to the business logic
 
 **How to navigate them:**
 1. Identify the relevant bounded context (the project's bounded contexts)
@@ -245,7 +245,7 @@ Use native query when:
   - Critical performance on queries with many rows (EXPLAIN has confirmed the problem)
 
 Use Projection when:
-  - You need to return a subset of columns from a large entity
+  - Returning a subset of columns from a large entity is required
   - The query is read-only and the full entity is not needed for dirty checking
 ```
 

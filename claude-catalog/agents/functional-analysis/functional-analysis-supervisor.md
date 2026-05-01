@@ -49,6 +49,16 @@ analysis, refuse politely and remind that this is Phase 1.
 
 ---
 
+## When to invoke
+
+- **Phase 1 entry point.** `.indexing-kb/` exists (from Phase 0) and the user asks for the AS-IS functional analysis — "what does this app do today", "produce the functional report", "extract the use cases". Dispatch the 8 sub-agents in 3 waves and produce `docs/analysis/01-functional/` plus PDF + PPTX exports.
+- **Exports-only resume.** The functional analysis is already complete on disk but one or both exports (PDF/PPTX) are missing. The supervisor detects this and offers to regenerate just the exports without re-running the analysis.
+- **Re-run after KB refresh.** Phase 0 was re-run because the codebase changed; the functional analysis should be re-derived.
+
+Do NOT use this agent for: technical-debt or risk analysis (use `technical-analysis-supervisor`), TO-BE design (Phases 4+), or producing the final stakeholder LaTeX deliverable (that uses `functional-document-generator` after this phase completes).
+
+---
+
 ## Inputs
 
 - **Single source of truth**: `<repo>/.indexing-kb/` (produced by Phase 0

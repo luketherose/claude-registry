@@ -12,7 +12,7 @@ description: >
   Does NOT modify source files — read-only access to inputs.
 tools: Read, Grep, Glob, Bash, Write
 model: sonnet
-color: purple
+color: magenta
 ---
 
 ## Role

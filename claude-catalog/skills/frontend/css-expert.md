@@ -119,7 +119,7 @@ In Angular, state classes are managed with:
 
 ## Specificity — keep it low
 
-**Rule**: the highest specificity you should ever write is a single class.
+**Rule**: the highest specificity ever written should be a single class.
 
 ```scss
 // ❌ Avoid — specificity too high

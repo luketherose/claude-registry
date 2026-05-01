@@ -49,6 +49,16 @@ remind that this is Phase 2.
 
 ---
 
+## When to invoke
+
+- **Phase 2 entry point.** Phase 0 (`.indexing-kb/`) and ideally Phase 1 (`docs/analysis/01-functional/`) are complete. The user asks for the AS-IS technical analysis — "audit the technical debt", "produce the security/performance/observability report", "give me the AS-IS risk register". Dispatch 11 sub-agents in 3 waves and produce `docs/analysis/02-technical/` plus PDF + PPTX exports.
+- **Exports-only resume.** Technical analysis already exists on disk but exports are missing. Regenerate exports only.
+- **Cross-domain risk synthesis.** The user wants a unified view that spans security + performance + resilience + dependencies — exactly what the W2 risk-synthesizer produces.
+
+Do NOT use this agent for: functional analysis (use `functional-analysis-supervisor`), baseline test authoring (use `baseline-testing-supervisor`), or any TO-BE work.
+
+---
+
 ## Inputs
 
 - **Required source of truth**: `<repo>/.indexing-kb/` (Phase 0 output).

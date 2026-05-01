@@ -112,13 +112,17 @@ PRs go through two gates in sequence — the second only starts if the first is 
 
 ## Capabilities available in this project
 
-This repository has its own capabilities installed in `.claude/agents/`.
-Use them when appropriate:
+The catalog currently holds **76 agents** and **41 skills**. The ones most useful while working on the registry itself:
 
+- `registry-auditor` — audits agents/skills/CLAUDE.md against Anthropic's official rubrics; produces a structured report with grade, registry-wide patterns, top files to rewrite, and quick wins. Read-only.
+- `code-reviewer` — for PR review on the registry source itself
 - `document-creator` — to regenerate `guida-operativa.pdf`
 - `presentation-creator` — to regenerate `pitch-claude-registry.pptx`
 - `software-architect` — for architectural decisions on the registry itself
 - `documentation-writer` — to update governance `.md` files and guides
+- `wiki-writer` — to keep the GitHub wiki in sync with capability changes
+
+The full catalog is in `claude-marketplace/catalog.json`; the README capability table is the human-readable index.
 
 ---
 
@@ -129,6 +133,9 @@ Use them when appropriate:
 - Versioning: SemVer with git tag `name@MAJOR.MINOR.PATCH`
 - Skills: `model: haiku`, `tools: Read` — do not add other tools without justification in the PR
 - Agents using `model: opus`: must either (a) be the meta-orchestrator (auto-allowed), or (b) carry a `model_justification:` frontmatter field of at least 40 chars explaining the reasoning-depth requirement. Without one, the validator emits a warning asking for justification in the PR description. Inline frontmatter is preferred — the rationale stays with the agent definition.
+- **Skill description rubric (Anthropic `skill-development`)**: every skill description must (a) start with `This skill should be used when…` (or the pushy variant `ALWAYS use this skill when…` for skills Claude tends to undertrigger), (b) include 2–3 verbatim trigger phrases between double quotes, (c) carry an explicit `Do not use…` (or equivalent) scope-out clause to disambiguate sibling skills. Enforced by `validate_catalog.py`.
+- **Agent rubric (Anthropic `agent-development`)**: every agent body should contain a `## When to invoke` section listing 2–4 worked scenarios as prose bullets and a `Do NOT use this agent for:` line. Body length should stay under 10 000 chars; supervisors with phase-by-phase content should extract per-phase narrative into `claude-catalog/docs/<topic>/`. Both checks emit warnings in `validate_catalog.py` (gradual rollout — not yet errors).
+- **Color frontmatter**: only `red`, `blue`, `green`, `yellow`, `magenta`, `cyan` are accepted (Anthropic spec). `purple`, `orange`, `pink` are not valid.
 - **Catalog directory layout**: agents and skills are grouped into thematic subdirectories (e.g., `agents/indexing/`, `agents/orchestration/`, `agents/quality/`, `skills/frontend/angular/`, `skills/orchestrators/`, `skills/documentation/`). Single-file root entries are tolerated for transitional states but should be moved into a topic folder when the topic gains a second sibling. Validation scans recursively (`rglob`).
 - **Marketplace directory layout**: mirrors the catalog grouping. Files live at `stable/<topic>/<name>.md`, `beta/<topic>/<name>.md`, or `skills/<topic>[/<sub>]/<name>.md`. The `file` field in `catalog.json` is the single source of truth — both the publish script and `setup-capabilities.sh` read it directly. Both flat paths (`<tier>/<name>.md`, `skills/<name>.md`) and nested paths are accepted by the validator, but new capabilities should always be published into a topic folder.
 - **Marketplace topics** (used as folder names): for agents — `analysis`, `api`, `architecture`, `baseline-testing`, `developers`, `documentation`, `functional-analysis`, `indexing`, `orchestration`, `quality`, `refactoring-tobe`, `technical-analysis`, `tobe-testing`. For skills — `analysis`, `api`, `backend`, `branding`, `database`, `documentation`, `frontend` (with framework subfolders `angular/`, `react/`, `qwik/`, `vue/`, `vanilla/`), `orchestrators`, `python`, `refactoring`, `testing`, `utils`. Add a new topic folder when a third capability of the same kind appears; until then place the capability in the closest existing folder rather than spawning a one-off topic.

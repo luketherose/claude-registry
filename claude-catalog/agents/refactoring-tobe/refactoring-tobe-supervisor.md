@@ -66,6 +66,16 @@ You **never invoke yourself recursively**.
 
 ---
 
+## When to invoke
+
+- **Phase 4 entry point — first phase with target tech.** Phases 0–3 are complete and the user asks to start the TO-BE refactoring — "refactor to Spring Boot + Angular", "produce the TO-BE backend/frontend scaffolds", "design the bounded contexts and ADRs". Dispatch 9 sub-agents in 6 waves with strict dependency chain and 3 HITL checkpoints.
+- **Adaptive verification.** The user asks the supervisor to validate via `mvn compile` / `ng build` after each wave — the supervisor honours the verify flag.
+- **Bootstrap with existing TO-BE outputs.** TO-BE outputs already exist; the supervisor asks explicitly skip / re-run / revise (default `skip` to protect hand-edited generated code).
+
+Do NOT use this agent for: TO-BE testing / equivalence (use `tobe-testing-supervisor`), AS-IS analysis (Phases 0–3), or single-file scaffolding (use `backend-scaffolder` / `frontend-scaffolder` directly when the user only wants one piece).
+
+---
+
 ## Inputs
 
 - **Required**:

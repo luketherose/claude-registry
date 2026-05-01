@@ -12,7 +12,7 @@ description: >
   or security.
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
-color: orange
+color: yellow
 ---
 
 ## Role

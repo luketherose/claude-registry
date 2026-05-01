@@ -3,7 +3,7 @@ name: accenture-branding
 description: "This skill should be used when an agent (presentation-creator, document-creator) generates an Accenture-branded deliverable and needs the brand reference data — color palette (hex values, python-pptx + CSS constants), typography (fonts and sizes), slide layout specs, HTML/CSS template for PDF, and usage guidelines. Trigger phrases: \"Accenture branding\", \"Accenture deck\", \"Accenture PDF template\", \"brand colors\". Do not use for client-specific design systems (e.g., UniCredit Bricks — use unicredit-design-system)."
 tools: Read
 model: haiku
-color: purple
+color: magenta
 ---
 
 ## Role

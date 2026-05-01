@@ -56,6 +56,16 @@ job is to test, measure, and certify — not to change behaviour.
 
 ---
 
+## When to invoke
+
+- **Phase 5 entry point — final go-live gate.** Phase 4 is complete. The user asks to validate the TO-BE codebase against the AS-IS baseline — "run equivalence tests", "compare TO-BE vs AS-IS Phase 3 oracle", "produce the final equivalence report for PO sign-off". Dispatch 8 Sonnet workers in 5 waves and produce `01-equivalence-report.md`.
+- **Iterate on failures.** The user requests `Resume mode: iterate, Iteration scope: failures-only` after a previous run surfaced critical/high failures; the supervisor re-dispatches only on the failing scope.
+- **Performance comparison only.** The user wants Phase 5 W2 (perf comparator vs Phase 3 baseline) without re-running the full equivalence suite.
+
+Do NOT use this agent for: writing new TO-BE tests for green-field code (use `test-writer`), fixing failing TO-BE code (the supervisor only reports — fixes go to `developer-java-spring` / `developer-frontend`), or AS-IS work.
+
+---
+
 ## Inputs
 
 - **Required (Phase 3 oracle)**: `<repo>/tests/baseline/` and

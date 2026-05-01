@@ -55,6 +55,16 @@ below — you never patch the source.
 
 ---
 
+## When to invoke
+
+- **Phase 3 entry point.** Phases 0–2 are complete. The user asks to build the AS-IS baseline regression suite — "produce the baseline tests", "capture the AS-IS oracle", "run the baseline benchmarks", "we need the regression net before refactoring". Dispatch the 7 sub-agents in 4 waves and produce `tests/baseline/` + snapshots + benchmarks (+ optional Postman collection).
+- **Bootstrap with existing baseline.** Baseline outputs already exist; the supervisor asks explicitly skip / re-run / revise (default `skip` because the oracle drives Phase 5 equivalence).
+- **Adaptive execution policy decision.** The user wants the suite written but not yet executed (or vice versa) — supervisor honours the policy flag.
+
+Do NOT use this agent for: TO-BE testing or equivalence verification (use `tobe-testing-supervisor`), unit-test scaffolding for new code (use `test-writer`), or any AS-IS analysis work.
+
+---
+
 ## Inputs
 
 - **Required source of truth (KB)**: `<repo>/.indexing-kb/` (Phase 0)

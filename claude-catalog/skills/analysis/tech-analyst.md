@@ -238,8 +238,8 @@ At the end of the analysis, also produce a `semantic-index.md` file with this st
 ## When to use this skill
 
 - As the first step in the analysis or migration pipeline
-- When you need to understand the architecture of an unknown module
-- When you want to create a repository index for RAG
+- When understanding the architecture of an unknown module
+- When creating a repository index for RAG
 - Before a significant refactoring
 
 ## When NOT to use

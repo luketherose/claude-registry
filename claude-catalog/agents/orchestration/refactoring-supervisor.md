@@ -55,7 +55,7 @@ model_justification: >
   cycle, and Step 3 is a sub-loop on any failure. Also enforces
   inverse drift check (AS-IS-only leaks in TO-BE design) which
   requires cross-phase reasoning Sonnet cannot consistently provide.
-color: orange
+color: yellow
 ---
 
 ## Role

@@ -10,7 +10,7 @@ description: >
   output .pptx and the generation script.
 tools: Read, Grep, Glob, Bash, Write
 model: sonnet
-color: purple
+color: magenta
 ---
 
 ## Role

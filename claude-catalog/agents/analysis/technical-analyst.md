@@ -9,7 +9,7 @@ description: >
   delegates to software-architect for that.
 tools: Read, Grep, Glob, Bash, Write
 model: sonnet
-color: purple
+color: magenta
 ---
 
 ## Role

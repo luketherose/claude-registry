@@ -25,7 +25,7 @@ KNOWN_TOOLS = {
     "WebFetch", "WebSearch", "LSP", "NotebookEdit", "TodoWrite",
 }
 VALID_MODELS = {"sonnet", "opus", "haiku"}
-VALID_COLORS = {"red", "blue", "green", "yellow", "purple", "orange", "pink", "cyan"}
+VALID_COLORS = {"red", "blue", "green", "yellow", "magenta", "cyan"}
 KNOWN_FRONTMATTER_KEYS = {
     "name", "description", "tools", "disallowedTools", "model", "permissionMode",
     "maxTurns", "color", "initialPrompt", "background", "effort", "isolation",
