@@ -38,9 +38,9 @@ Choose the diagram type from the intent of the request, not from the words the u
 
 When ambiguous, default to: **class** for "structure", **sequence** for "interaction / flow between things", **component** for "architecture / high-level system".
 
-## Inputs you need
+## Inputs required
 
-Before calling the MCP server, confirm you have:
+Before calling the MCP server, confirm the prerequisites:
 
 1. The **scope** — which files, modules, or services are in the diagram
 2. The **intent** — which of the types above applies (do not ask the user; infer, then state your choice)

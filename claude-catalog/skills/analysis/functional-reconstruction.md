@@ -33,7 +33,7 @@ Look in folders such as `docs/functional/`, `docs/specs/`, `wiki/` or equivalent
 **If the module is already in these lists**: extend/correct rather than rewrite from scratch.
 
 ### Technical documentation for validation
-Use available technical analysis (e.g. graph, RAG, `docs/graph/`) to **validate** the functional flows you are documenting:
+Use available technical analysis (e.g. graph, RAG, `docs/graph/`) to **validate** the functional flows being documented:
 - Source code in the chunks/modules shows the real implementation
 - Already extracted business rules are a starting point
 - Compare: if the documentation diverges from the code → the real code is the source of truth

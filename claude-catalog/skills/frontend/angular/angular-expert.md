@@ -417,7 +417,7 @@ export class UserProfileComponent { /* ... */ }
 
 Defect repeatedly observed: the agent leaves Angular components empty (`// TBD`, `throw new Error('Not implemented')`, empty templates) when the source-to-Angular translation is uncertain. **This is forbidden.**
 
-When you do not know the exact equivalent of a source-language construct in Angular:
+When the exact equivalent of a source-language construct in Angular is unknown:
 
 1. Implement the most reasonable best-guess version, fully wired up (template, class, service call).
 2. Add a `// TODO: [assumption made] - verify [what the human should check]` comment at the assumption point. The TODO must be specific enough that a reviewer understands the reservation in 5 seconds.

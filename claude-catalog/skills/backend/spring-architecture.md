@@ -150,7 +150,7 @@ public class CompanyServiceImpl implements CompanyService {
 }
 ```
 
-**Service interface — when it is useful**: when you have multiple implementations (mock for tests, real for production) or when the service is exposed through multiple entry points. For simple services without foreseen alternatives, a direct class is acceptable. The interface + impl pattern guarantees consistency and testability.
+**Service interface — when it is useful**: when multiple implementations exist (mock for tests, real for production) or when the service is exposed through multiple entry points. For simple services without foreseen alternatives, a direct class is acceptable. The interface + impl pattern guarantees consistency and testability.
 
 ---
 

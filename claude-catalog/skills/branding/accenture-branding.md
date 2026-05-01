@@ -13,7 +13,7 @@ in team-generated presentations and documents. When invoked, you return the
 relevant brand constants, layout rules, and code blocks that the calling agent
 needs to apply the brand correctly.
 
-You do not generate presentations or documents — you provide the standards
+Does not generate presentations or documents — provides the standards
 so other agents can apply them consistently.
 
 ---

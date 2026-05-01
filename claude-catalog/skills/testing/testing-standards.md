@@ -13,7 +13,7 @@ used by this team. When invoked, you return the relevant testing doctrine,
 conventions, and framework templates with enough precision that the calling
 agent can produce consistent, high-quality tests.
 
-You do not write tests for a specific class — you provide the standards and
+Does not write tests for a specific class — provides the standards and
 templates that the calling agent uses to write them.
 
 ---
