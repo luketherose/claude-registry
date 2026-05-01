@@ -6,6 +6,16 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 ### Changed
+- **4 phase supervisors trimmed via the supervisor-extraction recipe.** All 4 medium supervisors (>27k chars) now under 16k:
+  - `baseline-testing-supervisor`: 32 622 → **14 789 chars (−55%)**, 5 reference docs in `claude-catalog/docs/baseline-testing/` (output-layout, policies, phase-plan, recap-templates, dispatch-prompt-template)
+  - `tobe-testing-supervisor`: 32 860 → **15 485 chars (−53%)**, 4 reference docs in `claude-catalog/docs/tobe-testing/` (output-layout, policies, phase-plan, dispatch-prompt-template)
+  - `technical-analysis-supervisor`: 30 087 → **14 060 chars (−53%)**, 4 reference docs in `claude-catalog/docs/technical-analysis/` (output-layout, dispatch-mode, phase-plan, dispatch-prompt-template)
+  - `functional-analysis-supervisor`: 29 855 → **12 968 chars (−57%)**, 3 reference docs in `claude-catalog/docs/functional-analysis/` (output-layout, phase-plan, dispatch-prompt-template)
+
+  Each supervisor body now keeps only decision logic (escalation triggers, decision rules, drift check / preservation rules, manifest update, hard constraints) plus a `## Reference docs` anchor table that lists every extracted file with one line on when to read it. Phase narrative, mode descriptions, prompt boilerplate, recap templates, and output-layout schemas are read on demand. Validates the supervisor-extraction recipe across the whole Phase 1–5 pipeline.
+
+  Bodies still over the 10 000-char rubric ceiling but down by half — further trimming would require extracting decision logic, which the recipe explicitly forbids.
+
 - **`refactoring-tobe-supervisor.md` body trimmed from 38 795 → 16 890 chars (−56%) via the supervisor-extraction recipe.** Validates the recipe end-to-end on the largest non-deferred supervisor. Phase narrative, mode descriptions, prompt boilerplate, and recap schema were extracted into 5 reference docs under `claude-catalog/docs/refactoring-tobe/`; the supervisor body keeps only decision logic (escalation triggers, decision rules, inverse drift check, manifest update, hard constraints) plus a `## Reference docs` anchor table that lists every extracted file with one line on when to read it. Body still over the 10 000-char rubric ceiling but down by half — further trimming would require extracting decision logic, which the recipe explicitly forbids.
 
 ### Added
