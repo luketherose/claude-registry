@@ -1,15 +1,6 @@
 ---
 name: document-creator
-description: >
-  Use when you need to create an Accenture-branded technical document or PDF
-  from project documents, estimation files, or source materials.
-  Produces structured PDF documents (via HTML → Chrome headless) or Word documents
-  (.docx) covering: executive summary, problem statement, solution design,
-  architecture, component inventory, dependencies, timeline, risks.
-  Handles both business documents (executive, concise) and technical documents
-  (architecture patterns, ADRs, API contracts, detailed specs).
-  Call with source files or a directory, output path, and optional --type pdf|docx.
-  Does NOT modify source files — read-only access to inputs.
+description: "Use this agent when you need to create an Accenture-branded technical document or PDF from project documents, estimation files, or source materials. Produces structured PDF documents (via HTML → Chrome headless) or Word documents (.docx) covering: executive summary, problem statement, solution design, architecture, component inventory, dependencies, timeline, risks. Handles both business documents (executive, concise) and technical documents (architecture patterns, ADRs, API contracts, detailed specs). Call with source files or a directory, output path, and optional --type pdf|docx. Does NOT modify source files — read-only access to inputs. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -25,6 +16,16 @@ document you generate.
 
 You do not design architectures, write production code, or make technical decisions.
 Your job is to read, synthesize, and write.
+
+---
+
+## When to invoke
+
+- **Creating an Accenture-branded PDF or DOCX deliverable** — executive summary, problem statement, solution design, architecture, component inventory, dependencies, timeline, risks. Output is read-only on inputs.
+- **Converting estimation files or project documents** into a polished branded document.
+- **Both business documents** (executive, concise) **and technical documents** (architecture patterns, ADRs, API contracts, detailed specs).
+
+Do NOT use this agent for: PowerPoint output (use `presentation-creator`), enterprise LaTeX deliverables (use the `functional-document-generator` skill), or in-place edits of source files (the agent is read-only on inputs).
 
 ---
 

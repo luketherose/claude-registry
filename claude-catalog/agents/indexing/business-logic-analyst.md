@@ -1,19 +1,9 @@
 ---
 name: business-logic-analyst
-description: >
-  Use to extract business rules, validation logic, and domain concepts
-  from a codebase in any language. Produces a domain-level view
-  (glossary, rules, state machines) independent of file structure.
-  Stack-aware — adapts the validation/rule grep patterns to the
-  language declared in `02-structure/stack.json` (Pydantic validators
-  and `raise ValueError` for Python; Bean Validation `@Valid`/`@NotNull`
-  and custom exceptions for Java/Kotlin; `validate!` / strong params
-  for Ruby; `Rules` arrays in Laravel / Symfony Validator for PHP;
-  `class-validator` decorators for TypeScript; etc.). This is the
-  highest-value semantic content in the KB — hardest to recover after
-  migration if not captured now.
+description: "Use this agent to extract business rules, validation logic, and domain concepts from a codebase in any language. Produces a domain-level view (glossary, rules, state machines) independent of file structure. Stack-aware — adapts the validation/rule grep patterns to the language declared in `02-structure/stack.json` (Pydantic validators and `raise ValueError` for Python; Bean Validation `@Valid`/`@NotNull` and custom exceptions for Java/Kotlin; `validate!` / strong params for Ruby; `Rules` arrays in Laravel / Symfony Validator for PHP; `class-validator` decorators for TypeScript; etc.). This is the highest-value semantic content in the KB — hardest to recover after migration if not captured now. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
+color: magenta
 ---
 
 ## Role
@@ -24,6 +14,15 @@ rules, and a map of state machines.
 
 You are a sub-agent invoked by `indexing-supervisor`. Your output goes to
 `.indexing-kb/07-business-logic/`.
+
+## When to invoke
+
+- **Phase 0 dispatch.** Invoked by `indexing-supervisor` during the appropriate wave to produce extract business rules, validation logic, and domain concepts from a codebase in any language. Indexing only — no migration planning, no TO-BE.
+- **Standalone use.** When the user explicitly asks for extract business rules, validation logic, and domain concepts from a codebase in any language outside the `indexing-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: functional or technical analysis (use the relevant phase supervisor) or TO-BE work.
+
+---
 
 ## Inputs (from supervisor)
 

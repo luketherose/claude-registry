@@ -1,18 +1,9 @@
 ---
 name: dependency-analyzer
-description: >
-  Use to extract external dependencies and build the internal module
-  dependency graph for a codebase in any language. Reads the project's
-  build manifests (pyproject.toml/setup.py/requirements.txt/Pipfile for
-  Python; pom.xml/build.gradle* for Java/Kotlin; Cargo.toml for Rust;
-  go.mod for Go; *.csproj for C#; Gemfile for Ruby; composer.json for
-  PHP; package.json for JS/TS) plus the language-appropriate import
-  declarations to detect circular dependencies and standalone packages.
-  Stack-aware — reads `02-structure/stack.json` to know which manifests
-  and import syntaxes apply. Not for standalone use — invoked only as
-  part of the indexing pipeline.
+description: "Use this agent to extract external dependencies and build the internal module dependency graph for a codebase in any language. Reads the project's build manifests (pyproject.toml/setup.py/requirements.txt/Pipfile for Python; pom.xml/build.gradle* for Java/Kotlin; Cargo.toml for Rust; go.mod for Go; *.csproj for C#; Gemfile for Ruby; composer.json for PHP; package.json for JS/TS) plus the language-appropriate import declarations to detect circular dependencies and standalone packages. Stack-aware — reads `02-structure/stack.json` to know which manifests and import syntaxes apply. Not for standalone use — invoked only as part of the indexing pipeline. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
+color: magenta
 ---
 
 ## Role
@@ -29,6 +20,15 @@ deps section per language and a unified internal graph.
 
 You are a sub-agent invoked by `indexing-supervisor`. Your output goes
 to `.indexing-kb/03-dependencies/`.
+
+## When to invoke
+
+- **Phase 0 dispatch.** Invoked by `indexing-supervisor` during the appropriate wave to produce extract external dependencies and build the internal module dependency graph for a codebase in any language. Indexing only — no migration planning, no TO-BE.
+- **Standalone use.** When the user explicitly asks for extract external dependencies and build the internal module dependency graph for a codebase in any language outside the `indexing-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: functional or technical analysis (use the relevant phase supervisor) or TO-BE work.
+
+---
 
 ## Inputs (from supervisor)
 

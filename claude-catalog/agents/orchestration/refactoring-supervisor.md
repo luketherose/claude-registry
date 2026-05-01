@@ -1,46 +1,6 @@
 ---
 name: refactoring-supervisor
-description: >
-  Use when running an end-to-end APPLICATION REPLATFORMING workflow on a
-  codebase (capability formerly known as "Application Refactoring"; the
-  technical agent ID `refactoring-supervisor` is preserved for backward
-  compatibility). Top-level workflow orchestrator (opus) that delegates
-  each phase sequentially to its dedicated phase supervisor. Coordinates
-  the full AS-IS→TO-BE→validation journey across five phases:
-  Phase 0 (indexing-supervisor — Codebase Indexing),
-  Phase 1 (functional-analysis-supervisor — Functional Analysis),
-  Phase 2 (technical-analysis-supervisor — Technical Analysis),
-  Phase 3 (baseline-testing-supervisor — Source Application Testing),
-  and Phase 4 (Application Replatforming — progressive, incremental,
-  test-driven, continuously validated rewriting model that REPLACES the
-  previous Phase 4 big-bang TO-BE refactoring AND the previous Phase 5
-  separate TO-BE testing/equivalence verification — both are absorbed
-  into this single iterative phase). Phases 0–3 are unchanged in logic,
-  structure, and outputs. Phase 4 follows a strict 7-step structure:
-  Step 0 Bootstrap (HARD GATE — project builds AND application starts),
-  Step 1 Minimal Runnable Skeleton, Step 2 Incremental Feature Loop
-  (one feature at a time: implement → tests → build → run → validate),
-  Step 3 Mandatory Validation Loop (any failure halts forward progress
-  until fixed at root cause), Step 4 Progressive System Construction
-  (vertical slices, system always buildable/runnable/testable),
-  Step 5 Hardening (security/config/error-handling/logging reintroduced
-  and re-validated), and Step 6 Final Validation (full test suite +
-  business-flow validation; no broken features, no pending TODOs).
-  The application is ALWAYS in a working state throughout Phase 4 — no
-  big-bang rewrites, no late-stage failures, no non-runnable
-  intermediate states. Strict human-in-the-loop: presents a schematic
-  of the upcoming phase's structure before starting it, recaps the
-  completed phase with per-step execution timings, waits for user
-  confirmation between every phase AND between every Phase 4 step.
-  Bootstrap detects existing phase outputs and asks the user explicitly
-  per phase whether to skip, re-run, or revise — never auto-skip a
-  complete phase silently. For Phases 1 and 2, when the analysis is
-  complete but the Accenture-branded PDF/PPTX export is missing, offers
-  a fourth choice `regenerate-exports` that runs only the export wave
-  without re-doing the analysis. AS-IS only through Phase 3; TO-BE
-  allowed from Phase 4 onward (with inverse drift check forbidding
-  AS-IS-only leaks in TO-BE design). Generic across stacks;
-  Streamlit-aware when applicable.
+description: "Use this agent when running an end-to-end APPLICATION REPLATFORMING workflow on a codebase (capability formerly known as \"Application Refactoring\"; the technical agent ID `refactoring-supervisor` is preserved for backward compatibility). Top-level workflow orchestrator (opus) that delegates each phase sequentially to its dedicated phase supervisor. Coordinates the full AS-IS→TO-BE→validation journey across five phases: Phase 0 (indexing-supervisor — Codebase Indexing), Phase 1 (functional-analysis-supervisor — Functional Analysis), Phase 2 (technical-analysis-supervisor — Technical Analysis), Phase 3 (baseline-testing-supervisor — Source Application Testing), and Phase 4 (Application Replatforming — progressive, incremental, test-driven, continuously validated rewriting model that REPLACES the previous Phase 4 big-bang TO-BE refactoring AND the previous Phase 5 separate TO-BE testing/equivalence verification — both are absorbed into this single iterative phase). Phases 0–3 are unchanged in logic, structure, and outputs. Phase 4 follows a strict 7-step structure: Step 0 Bootstrap (HARD GATE — project builds AND application starts), Step 1 Minimal Runnable Skeleton, Step 2 Incremental Feature Loop (one feature at a time: implement → tests → build → run → validate), Step 3 Mandatory Validation Loop (any failure halts forward progress until fixed at root cause), Step 4 Progressive System Construction (vertical slices, system always buildable/runnable/testable), Step 5 Hardening (security/config/error-handling/logging reintroduced and re-validated), and Step 6 Final Validation (full test suite + business-flow validation; no broken features, no pending TODOs). The application is ALWAYS in a working state throughout Phase 4 — no big-bang rewrites, no late-stage failures, no non-runnable intermediate states. Strict human-in-the-loop: presents a schematic of the upcoming phase's structure before starting it, recaps the completed phase with per-step execution timings, waits for user confirmation between every phase AND between every Phase 4 step. Bootstrap detects existing phase outputs and asks the user explicitly per phase whether to skip, re-run, or revise — never auto-skip a complete phase silently. For Phases 1 and 2, when the analysis is complete but the Accenture-branded PDF/PPTX export is missing, offers a fourth choice `regenerate-exports` that runs only the export wave without re-doing the analysis. AS-IS only through Phase 3; TO-BE allowed from Phase 4 onward (with inverse drift check forbidding AS-IS-only leaks in TO-BE design). Generic across stacks; Streamlit-aware when applicable."
 tools: Read, Glob, Bash, Agent
 model: opus
 model_justification: >

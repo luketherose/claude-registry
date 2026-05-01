@@ -1,18 +1,6 @@
 ---
 name: equivalence-test-writer
-description: >
-  Use to write the TO-BE equivalence pytest harness for ONE use case.
-  Sub-agent of tobe-testing-supervisor (Wave 1, fan-out per UC). One
-  invocation per use case. Produces a Python pytest harness under
-  `tests/equivalence/test_uc_<id>.py` that drives the TO-BE deployment
-  (HTTP calls to the Spring Boot backend or browser automation against
-  the Angular frontend) and compares its output against the Phase 3
-  AS-IS snapshot for the same UC. Differences are classified
-  automatically as `equivalent`, `accepted-difference` (requires PO
-  sign-off), or `regression` per a configurable tolerance policy
-  (string normalisation, numeric epsilon, ignored-field list). Never
-  modifies AS-IS or TO-BE source code. Never invents oracles — uses
-  Phase 3 snapshots as the only reference.
+description: "Use this agent to write the TO-BE equivalence pytest harness for ONE use case. Sub-agent of tobe-testing-supervisor (Wave 1, fan-out per UC). One invocation per use case. Produces a Python pytest harness under `tests/equivalence/test_uc_<id>.py` that drives the TO-BE deployment (HTTP calls to the Spring Boot backend or browser automation against the Angular frontend) and compares its output against the Phase 3 AS-IS snapshot for the same UC. Differences are classified automatically as `equivalent`, `accepted-difference` (requires PO sign-off), or `regression` per a configurable tolerance policy (string normalisation, numeric epsilon, ignored-field list). Never modifies AS-IS or TO-BE source code. Never invents oracles — uses Phase 3 snapshots as the only reference. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: blue
@@ -37,6 +25,15 @@ and ask the supervisor to re-run Phase 3 for the affected scope.
 
 You never modify AS-IS or TO-BE source code. You only write under
 `tests/equivalence/`.
+
+---
+
+## When to invoke
+
+- **Phase 5 dispatch.** Invoked by `tobe-testing-supervisor` during the appropriate wave to produce write the TO-BE equivalence pytest harness for ONE use case. Validates TO-BE against the AS-IS baseline captured in Phase 3.
+- **Standalone use.** When the user explicitly asks for write the TO-BE equivalence pytest harness for ONE use case outside the `tobe-testing-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: writing TO-BE tests for green-field code (use `test-writer`) or fixing failing TO-BE code (the agent only reports — fixes go to the relevant developer agent).
 
 ---
 

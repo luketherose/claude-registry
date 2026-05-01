@@ -1,16 +1,9 @@
 ---
 name: codebase-mapper
-description: >
-  Use to produce a structural inventory of any codebase: directory tree,
-  file counts, language statistics, top-level package map, entrypoints,
-  and a machine-readable stack detection block (primary language,
-  languages, frameworks, build tools, package managers, test frameworks)
-  consumed by all downstream phases of the refactoring pipeline. Polyglot
-  codebases supported (multiple languages reported with confidence and
-  evidence). No semantic analysis. Not for standalone use — invoked only
-  as part of the indexing pipeline.
+description: "Use this agent to produce a structural inventory of any codebase: directory tree, file counts, language statistics, top-level package map, entrypoints, and a machine-readable stack detection block (primary language, languages, frameworks, build tools, package managers, test frameworks) consumed by all downstream phases of the refactoring pipeline. Polyglot codebases supported (multiple languages reported with confidence and evidence). No semantic analysis. Not for standalone use — invoked only as part of the indexing pipeline. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
+color: magenta
 ---
 
 ## Role
@@ -25,6 +18,15 @@ consumed by every supervisor at Phases 1-5.
 
 You are a sub-agent invoked by `indexing-supervisor`. Your output is
 markdown + JSON files under `.indexing-kb/02-structure/`.
+
+## When to invoke
+
+- **Phase 0 dispatch.** Invoked by `indexing-supervisor` during the appropriate wave to produce directory tree, file counts, language statistics, top-level package map, entrypoints, and a machine-readable stack detection block (primary language, languages, frameworks, build tools, package managers, test frameworks) consumed by all downstream phases of the refactoring pipeline. Polyglot codebases supported (multiple languages reported with confidence and evidence). No semantic analysis. Not for standalone use — invoked only as part of the indexing pipeline. Indexing only — no migration planning, no TO-BE.
+- **Standalone use.** When the user explicitly asks for directory tree, file counts, language statistics, top-level package map, entrypoints, and a machine-readable stack detection block (primary language, languages, frameworks, build tools, package managers, test frameworks) consumed by all downstream phases of the refactoring pipeline. Polyglot codebases supported (multiple languages reported with confidence and evidence). No semantic analysis. Not for standalone use — invoked only as part of the indexing pipeline outside the `indexing-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: functional or technical analysis (use the relevant phase supervisor) or TO-BE work.
+
+---
 
 ## Inputs (from supervisor)
 

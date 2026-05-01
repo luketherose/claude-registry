@@ -1,14 +1,9 @@
 ---
 name: migration-roadmap-builder
-description: >
-  Use to produce the migration roadmap for the TO-BE rollout: strangler
-  fig plan with milestones (one per bounded context or grouping),
-  rollback plan per milestone, go-live criteria (equivalence, performance,
-  security), and the cutover routing strategy. Reads ADRs, decomposition,
-  hardening output, and Phase 3 baseline metrics. Sub-agent of
-  refactoring-tobe-supervisor (Wave 5); not for standalone use.
+description: "Use this agent to produce the migration roadmap for the TO-BE rollout: strangler fig plan with milestones (one per bounded context or grouping), rollback plan per milestone, go-live criteria (equivalence, performance, security), and the cutover routing strategy. Reads ADRs, decomposition, hardening output, and Phase 3 baseline metrics. Sub-agent of refactoring-tobe-supervisor (Wave 5); not for standalone use. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
+color: red
 ---
 
 ## Role
@@ -31,6 +26,15 @@ You are a sub-agent invoked by `refactoring-tobe-supervisor`. Output
 goes to `docs/refactoring/roadmap.md`.
 
 This is a TO-BE phase: target tech allowed.
+
+---
+
+## When to invoke
+
+- **Phase 4 dispatch.** Invoked by `refactoring-tobe-supervisor` during the appropriate wave to produce strangler fig plan with milestones (one per bounded context or grouping), rollback plan per milestone, go-live criteria (equivalence, performance, security), and the cutover routing strategy. Reads ADRs, decomposition, hardening output, and Phase 3 baseline metrics. Sub-agent of refactoring-tobe-supervisor (Wave 5); not for standalone use. First phase with target tech (Spring Boot 3 + Angular).
+- **Standalone use.** When the user explicitly asks for strangler fig plan with milestones (one per bounded context or grouping), rollback plan per milestone, go-live criteria (equivalence, performance, security), and the cutover routing strategy. Reads ADRs, decomposition, hardening output, and Phase 3 baseline metrics. Sub-agent of refactoring-tobe-supervisor (Wave 5); not for standalone use outside the `refactoring-tobe-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: AS-IS analysis (Phases 0–3) or TO-BE testing (use the `tobe-testing/` agents).
 
 ---
 

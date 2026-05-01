@@ -1,20 +1,6 @@
 ---
 name: indexing-supervisor
-description: >
-  Use when indexing any legacy codebase into a markdown knowledge base
-  inside the repository. Language-agnostic — autodetects the AS-IS
-  stack (primary language, frameworks, build tools, test frameworks)
-  via `codebase-mapper` and writes a canonical `stack.json` consumed
-  by every downstream phase. Single entrypoint for the indexing
-  pipeline: decomposes the task into phases, dispatches Sonnet
-  sub-agents in parallel where independent (gating framework-specific
-  sub-agents on detected frameworks — e.g. `streamlit-analyzer` runs
-  only when `streamlit` ∈ stack.frameworks), escalates to the user on
-  ambiguity or scope changes, and produces a final synthesis. Phase 0
-  only — indexing and understanding, not migration planning. On
-  invocation, detects existing `.indexing-kb/` outputs and asks the
-  user explicitly whether to skip, re-run, or revise before
-  proceeding — never auto-overwrites a complete index silently.
+description: "Use this agent when indexing any legacy codebase into a markdown knowledge base inside the repository. Language-agnostic — autodetects the AS-IS stack (primary language, frameworks, build tools, test frameworks) via `codebase-mapper` and writes a canonical `stack.json` consumed by every downstream phase. Single entrypoint for the indexing pipeline: decomposes the task into phases, dispatches Sonnet sub-agents in parallel where independent (gating framework-specific sub-agents on detected frameworks — e.g. `streamlit-analyzer` runs only when `streamlit` ∈ stack.frameworks), escalates to the user on ambiguity or scope changes, and produces a final synthesis. Phase 0 only — indexing and understanding, not migration planning. On invocation, detects existing `.indexing-kb/` outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding — never auto-overwrites a complete index silently. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Agent
 model: opus
 model_justification: >

@@ -1,26 +1,6 @@
 ---
 name: refactoring-tobe-supervisor
-description: >
-  Use when running Phase 4 — TO-BE Refactoring — of a refactoring or
-  migration workflow. First phase in which target technologies (Spring
-  Boot 3, Angular, JPA, OpenAPI) are explicitly allowed. Reads all prior
-  phase outputs (.indexing-kb/, docs/analysis/01-functional/,
-  docs/analysis/02-technical/, tests/baseline/) and orchestrates 9 Sonnet
-  workers in 6 waves to produce: bounded-context decomposition + ADRs,
-  OpenAPI 3.1 contract, Spring Boot backend scaffold + JPA entities +
-  per-UC logic translation, Angular workspace, hardening configuration,
-  migration roadmap (strangler fig), and adversarial review with
-  AS-IS↔TO-BE traceability. Strict dependency chain: 4.1 blocks 4.6
-  blocks 4.2/4.3 (parallel) blocks 4.7 blocks 4.8. Adaptive verification
-  (mvn compile / ng build best-effort). Strict human-in-the-loop with
-  three checkpoints (post-decomposition, post-API-contract,
-  post-implementation). Per-step execution timing. Code generation scope:
-  scaffold + data layer complete; complex business logic emitted as TODO
-  markers with cross-references to AS-IS source. On invocation, detects
-  existing TO-BE outputs (`.refactoring-kb/`, `backend/`, `frontend/`,
-  `docs/refactoring/`) and asks the user explicitly whether to skip,
-  re-run, or revise before proceeding — never auto-overwrites generated
-  code silently.
+description: "Use this agent when running Phase 4 — TO-BE Refactoring — of a refactoring or migration workflow. First phase in which target technologies (Spring Boot 3, Angular, JPA, OpenAPI) are explicitly allowed. Reads all prior phase outputs (.indexing-kb/, docs/analysis/01-functional/, docs/analysis/02-technical/, tests/baseline/) and orchestrates 9 Sonnet workers in 6 waves to produce: bounded-context decomposition + ADRs, OpenAPI 3.1 contract, Spring Boot backend scaffold + JPA entities + per-UC logic translation, Angular workspace, hardening configuration, migration roadmap (strangler fig), and adversarial review with AS-IS↔TO-BE traceability. Strict dependency chain: 4.1 blocks 4.6 blocks 4.2/4.3 (parallel) blocks 4.7 blocks 4.8. Adaptive verification (mvn compile / ng build best-effort). Strict human-in-the-loop with three checkpoints (post-decomposition, post-API-contract, post-implementation). Per-step execution timing. Code generation scope: scaffold + data layer complete; complex business logic emitted as TODO markers with cross-references to AS-IS source. On invocation, detects existing TO-BE outputs (`.refactoring-kb/`, `backend/`, `frontend/`, `docs/refactoring/`) and asks the user explicitly whether to skip, re-run, or revise before proceeding — never auto-overwrites generated code silently. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Agent
 model: opus
 model_justification: >

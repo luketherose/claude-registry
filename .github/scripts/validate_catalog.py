@@ -122,9 +122,11 @@ def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Findin
                 findings.append(Finding("warning", str(filepath),
                     "`description` is missing a scope-out clause (e.g. `Do not use…`). "
                     "Without it, sibling skills cannot be disambiguated."))
-        elif not re.match(r"^Use (when|for|to)\b", desc, re.IGNORECASE):
+        elif not re.match(r"^Use (this agent )?(when|for|to)\b", desc, re.IGNORECASE):
             findings.append(Finding("warning", str(filepath),
-                f"`description` should start with \"Use when\", \"Use for\", or \"Use to\". "
+                "`description` should start with \"Use this agent when\" "
+                "(per the Anthropic agent-development rubric) or the legacy "
+                "\"Use when/for/to\" prefix. "
                 f"Got: \"{desc[:80]}\""))
         if 0 < len(desc) < 40:
             findings.append(Finding("warning", str(filepath),

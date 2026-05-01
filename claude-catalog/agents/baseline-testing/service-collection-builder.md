@@ -1,16 +1,9 @@
 ---
 name: service-collection-builder
-description: >
-  Use to produce a Postman 2.1 collection for the services exposed by the
-  AS-IS app, so they can be regression-tested end-to-end against the
-  baseline before refactoring. Each endpoint gets happy + edge requests,
-  auth setup, response assertions, and an environment file. Conditional
-  worker — dispatched ONLY when Phase 2 integration map detects exposed
-  services. Sub-agent of baseline-testing-supervisor (Wave 1, conditional);
-  not for standalone use — invoked only as part of the Phase 3 Baseline
-  Testing pipeline. Strictly AS-IS — never references target technologies.
+description: "Use this agent to produce a Postman 2.1 collection for the services exposed by the AS-IS app, so they can be regression-tested end-to-end against the baseline before refactoring. Each endpoint gets happy + edge requests, auth setup, response assertions, and an environment file. Conditional worker — dispatched ONLY when Phase 2 integration map detects exposed services. Sub-agent of baseline-testing-supervisor (Wave 1, conditional); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
+color: green
 ---
 
 ## Role
@@ -36,6 +29,15 @@ Output: `tests/baseline/postman/<service>.postman_collection.json` and
 `tests/baseline/postman/<service>.postman_environment.json`.
 
 You never reference target technologies. AS-IS only.
+
+---
+
+## When to invoke
+
+- **Phase 3 dispatch.** Invoked by `baseline-testing-supervisor` during the appropriate wave to produce produce a Postman 2. Strictly AS-IS — never references TO-BE technology.
+- **Standalone use.** When the user explicitly asks for produce a Postman 2 outside the `baseline-testing-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: TO-BE testing or equivalence verification (use the `tobe-testing/` agents), or unit-test scaffolding for new code (use `test-writer`).
 
 ---
 

@@ -1,16 +1,6 @@
 ---
 name: backend-test-writer
-description: >
-  Use to write the TO-BE backend test suite for a Spring Boot 3 codebase
-  scaffolded in Phase 4. Sub-agent of tobe-testing-supervisor (Wave 1).
-  Produces unit tests (JUnit 5 +
-  Mockito), integration tests (Testcontainers for Postgres/Kafka/etc.),
-  and contract tests (Spring Cloud Contract — verifies vs the OpenAPI
-  3.1 produced in Phase 4). Organises tests per bounded context
-  (mirrors `backend/src/main/java/<bc>/` layout). Targets > 80% line
-  coverage and > 70% branch coverage. Never modifies production code.
-  Anchors expected behaviour to Phase 1 UC specs and Phase 3 baseline
-  oracle (snapshots, fixtures).
+description: "Use this agent to write the TO-BE backend test suite for a Spring Boot 3 codebase scaffolded in Phase 4. Sub-agent of tobe-testing-supervisor (Wave 1). Produces unit tests (JUnit 5 + Mockito), integration tests (Testcontainers for Postgres/Kafka/etc.), and contract tests (Spring Cloud Contract — verifies vs the OpenAPI 3.1 produced in Phase 4). Organises tests per bounded context (mirrors `backend/src/main/java/<bc>/` layout). Targets > 80% line coverage and > 70% branch coverage. Never modifies production code. Anchors expected behaviour to Phase 1 UC specs and Phase 3 baseline oracle (snapshots, fixtures). See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: blue
@@ -35,6 +25,15 @@ three layers of tests:
 You do NOT write Phase 5 equivalence tests (that is
 `equivalence-test-writer`). You do NOT write E2E tests (that is
 `frontend-test-writer`). You do NOT modify production code.
+
+---
+
+## When to invoke
+
+- **Phase 5 dispatch.** Invoked by `tobe-testing-supervisor` during the appropriate wave to produce write the TO-BE backend test suite for a Spring Boot 3 codebase scaffolded in Phase 4. Validates TO-BE against the AS-IS baseline captured in Phase 3.
+- **Standalone use.** When the user explicitly asks for write the TO-BE backend test suite for a Spring Boot 3 codebase scaffolded in Phase 4 outside the `tobe-testing-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: writing TO-BE tests for green-field code (use `test-writer`) or fixing failing TO-BE code (the agent only reports — fixes go to the relevant developer agent).
 
 ---
 

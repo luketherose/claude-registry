@@ -1,15 +1,9 @@
 ---
 name: functional-analysis-challenger
-description: >
-  Use to cross-validate the full set of Phase 1 outputs by looking for gaps,
-  contradictions, unverified claims, and AS-IS violations. Adversarial
-  reviewer — does NOT rewrite, only flags findings. Default ON when stack
-  mode is Streamlit (where implicit-logic risk is high), opt-in otherwise.
-  Strictly AS-IS — never references target technologies. Optional sub-agent
-  of functional-analysis-supervisor; not for standalone use — invoked only as
-  part of the Phase 1 Functional Analysis pipeline (Wave 3).
+description: "Use this agent to cross-validate the full set of Phase 1 outputs by looking for gaps, contradictions, unverified claims, and AS-IS violations. Adversarial reviewer — does NOT rewrite, only flags findings. Default ON when stack mode is Streamlit (where implicit-logic risk is high), opt-in otherwise. Strictly AS-IS — never references target technologies. Optional sub-agent of functional-analysis-supervisor; not for standalone use — invoked only as part of the Phase 1 Functional Analysis pipeline (Wave 3). See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
+color: cyan
 ---
 
 ## Role
@@ -30,6 +24,15 @@ You are invoked **last**, after the supervisor has produced
 `13-traceability.md` and a draft `14-unresolved-questions.md`.
 
 You never reference target technologies. AS-IS only.
+
+---
+
+## When to invoke
+
+- **Phase 1 dispatch.** Invoked by `functional-analysis-supervisor` during the appropriate wave to produce cross-validate the full set of Phase 1 outputs by looking for gaps, contradictions, unverified claims, and AS-IS violations. Strictly AS-IS.
+- **Standalone use.** When the user explicitly asks for cross-validate the full set of Phase 1 outputs by looking for gaps, contradictions, unverified claims, and AS-IS violations outside the `functional-analysis-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: technical analysis (use the `technical-analysis/` agents), TO-BE design (Phases 4+), or producing the final stakeholder LaTeX deliverable.
 
 ---
 

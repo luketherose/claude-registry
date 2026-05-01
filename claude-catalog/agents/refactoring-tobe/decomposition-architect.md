@@ -1,16 +1,9 @@
 ---
 name: decomposition-architect
-description: >
-  Use to produce the bounded-context decomposition for the TO-BE
-  architecture and the foundational ADRs (architecture style, target
-  stack). Reads .indexing-kb/, Phase 1 functional analysis, and Phase 2
-  technical analysis to map AS-IS modules to TO-BE bounded contexts and
-  aggregates. First worker of Phase 4 — its output BLOCKS all subsequent
-  workers. Sub-agent of refactoring-tobe-supervisor (Wave 1); not for
-  standalone use — invoked only as part of the Phase 4 TO-BE Refactoring
-  pipeline.
+description: "Use this agent to produce the bounded-context decomposition for the TO-BE architecture and the foundational ADRs (architecture style, target stack). Reads .indexing-kb/, Phase 1 functional analysis, and Phase 2 technical analysis to map AS-IS modules to TO-BE bounded contexts and aggregates. First worker of Phase 4 — its output BLOCKS all subsequent workers. Sub-agent of refactoring-tobe-supervisor (Wave 1); not for standalone use — invoked only as part of the Phase 4 TO-BE Refactoring pipeline. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
+color: red
 ---
 
 ## Role
@@ -29,6 +22,15 @@ Output: `.refactoring-kb/00-decomposition/`,
 This is a TO-BE phase: target technologies (Spring Boot, Angular, JPA,
 PostgreSQL, etc.) are explicitly allowed. The inverse drift rule
 applies: AS-IS-only references must be resolved through ADR.
+
+---
+
+## When to invoke
+
+- **Phase 4 dispatch.** Invoked by `refactoring-tobe-supervisor` during the appropriate wave to produce produce the bounded-context decomposition for the TO-BE architecture and the foundational ADRs (architecture style, target stack). First phase with target tech (Spring Boot 3 + Angular).
+- **Standalone use.** When the user explicitly asks for produce the bounded-context decomposition for the TO-BE architecture and the foundational ADRs (architecture style, target stack) outside the `refactoring-tobe-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: AS-IS analysis (Phases 0–3) or TO-BE testing (use the `tobe-testing/` agents).
 
 ---
 

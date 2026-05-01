@@ -1,14 +1,9 @@
 ---
 name: fixture-builder
-description: >
-  Use to produce the test data layer of the AS-IS baseline regression
-  suite: minimal, realistic, and edge fixtures for use cases plus a
-  conftest.py with global determinism setup (seed fix, time freeze,
-  network mock). Sub-agent of baseline-testing-supervisor (Wave 0); not
-  for standalone use — invoked only as part of the Phase 3 Baseline
-  Testing pipeline. Strictly AS-IS — never references target technologies.
+description: "Use this agent to produce the test data layer of the AS-IS baseline regression suite: minimal, realistic, and edge fixtures for use cases plus a conftest.py with global determinism setup (seed fix, time freeze, network mock). Sub-agent of baseline-testing-supervisor (Wave 0); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
+color: green
 ---
 
 ## Role
@@ -27,6 +22,15 @@ You are a sub-agent invoked by `baseline-testing-supervisor`. Output:
 
 You never reference target technologies. AS-IS only. Tests are Python +
 pytest.
+
+---
+
+## When to invoke
+
+- **Phase 3 dispatch.** Invoked by `baseline-testing-supervisor` during the appropriate wave to produce minimal, realistic, and edge fixtures for use cases plus a conftest.py with global determinism setup (seed fix, time freeze, network mock). Sub-agent of baseline-testing-supervisor (Wave 0); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. Strictly AS-IS — never references TO-BE technology.
+- **Standalone use.** When the user explicitly asks for minimal, realistic, and edge fixtures for use cases plus a conftest.py with global determinism setup (seed fix, time freeze, network mock). Sub-agent of baseline-testing-supervisor (Wave 0); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies outside the `baseline-testing-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: TO-BE testing or equivalence verification (use the `tobe-testing/` agents), or unit-test scaffolding for new code (use `test-writer`).
 
 ---
 

@@ -1,20 +1,9 @@
 ---
 name: module-documenter
-description: >
-  Use to document one package or module of a codebase end-to-end at the
-  API level: purpose, public interface (exported classes/functions),
-  key data structures, internal organization. Language-agnostic — adapts
-  to the package conventions of the detected language (Python packages
-  via `__init__.py`, Java/Kotlin packages via `src/main/{java,kotlin}/`,
-  Go modules under `cmd/`/`internal/`, Rust crates declared in
-  `Cargo.toml`, .NET projects via `*.csproj`, Ruby `app/`/`lib/`
-  directories, PHP namespaces from `composer.json` autoload, JS/TS
-  packages under `src/`/`app/`/`packages/`). Reads
-  `02-structure/stack.json` to know which conventions apply. One
-  invocation per top-level package — runs in parallel with other
-  module-documenter invocations targeting different packages.
+description: "Use this agent to document one package or module of a codebase end-to-end at the API level: purpose, public interface (exported classes/functions), key data structures, internal organization. Language-agnostic — adapts to the package conventions of the detected language (Python packages via `__init__.py`, Java/Kotlin packages via `src/main/{java,kotlin}/`, Go modules under `cmd/`/`internal/`, Rust crates declared in `Cargo.toml`, .NET projects via `*.csproj`, Ruby `app/`/`lib/` directories, PHP namespaces from `composer.json` autoload, JS/TS packages under `src/`/`app/`/`packages/`). Reads `02-structure/stack.json` to know which conventions apply. One invocation per top-level package — runs in parallel with other module-documenter invocations targeting different packages. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
+color: magenta
 ---
 
 ## Role
@@ -29,6 +18,15 @@ apply the conventions appropriate to the package's language.
 
 You are a sub-agent invoked by `indexing-supervisor`, once per package.
 Your output goes to `.indexing-kb/04-modules/<package-name>.md`.
+
+## When to invoke
+
+- **Phase 0 dispatch.** Invoked by `indexing-supervisor` during the appropriate wave to produce purpose, public interface (exported classes/functions), key data structures, internal organization. Language-agnostic — adapts to the package conventions of the detected language (Python packages via `__init__.py`, Java/Kotlin packages via `src/main/{java,kotlin}/`, Go modules under `cmd/`/`internal/`, Rust crates declared in `Cargo.toml`, .NET projects via `*.csproj`, Ruby `app/`/`lib/` directories, PHP namespaces from `composer.json` autoload, JS/TS packages under `src/`/`app/`/`packages/`). Reads `02-structure/stack.json` to know which conventions apply. One invocation per top-level package — runs in parallel with other module-documenter invocations targeting different packages. Indexing only — no migration planning, no TO-BE.
+- **Standalone use.** When the user explicitly asks for purpose, public interface (exported classes/functions), key data structures, internal organization. Language-agnostic — adapts to the package conventions of the detected language (Python packages via `__init__.py`, Java/Kotlin packages via `src/main/{java,kotlin}/`, Go modules under `cmd/`/`internal/`, Rust crates declared in `Cargo.toml`, .NET projects via `*.csproj`, Ruby `app/`/`lib/` directories, PHP namespaces from `composer.json` autoload, JS/TS packages under `src/`/`app/`/`packages/`). Reads `02-structure/stack.json` to know which conventions apply. One invocation per top-level package — runs in parallel with other module-documenter invocations targeting different packages outside the `indexing-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: functional or technical analysis (use the relevant phase supervisor) or TO-BE work.
+
+---
 
 ## Inputs (from supervisor)
 

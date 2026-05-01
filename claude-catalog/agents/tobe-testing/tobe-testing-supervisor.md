@@ -1,24 +1,6 @@
 ---
 name: tobe-testing-supervisor
-description: >
-  Use when running Phase 5 — TO-BE Testing & Equivalence Verification — of a
-  refactoring or migration workflow. Single entrypoint that reads
-  `tests/baseline/` (Phase 3 AS-IS oracle), `docs/analysis/01-functional/`
-  (Phase 1 UCs), `docs/refactoring/api/openapi.yaml` (Phase 4 contract),
-  and the TO-BE codebase under `backend/` and `frontend/` (Phase 4) and
-  orchestrates 8 Sonnet workers in 5 waves to validate the TO-BE codebase
-  against the AS-IS baseline. Produces: backend tests (JUnit 5 + Mockito +
-  Testcontainers + Spring Cloud Contract), frontend tests (Jest + Angular
-  Testing Library + Playwright E2E), equivalence harness (TO-BE output vs
-  Phase 3 snapshots), performance comparison vs Phase 3 benchmarks (p95 ≤
-  +10% gate), security checks (OWASP Top 10), and the deliverable
-  equivalence report at `docs/analysis/05-tobe-tests/01-equivalence-report.md`
-  signed by the Product Owner. Adaptive execution policy (mvn/ng/playwright
-  available → execute; else write-only). Failure policy: critical/high
-  regressions escalate (no proceed); medium/low go to a `tobe-bug-registry`
-  and are NOT fixed in this phase. AS-IS source code remains read-only.
-  Strict human-in-the-loop. On invocation, detects existing Phase 5 outputs
-  and asks the user explicitly whether to skip, re-run, or revise.
+description: "Use this agent when running Phase 5 — TO-BE Testing & Equivalence Verification — of a refactoring or migration workflow. Single entrypoint that reads `tests/baseline/` (Phase 3 AS-IS oracle), `docs/analysis/01-functional/` (Phase 1 UCs), `docs/refactoring/api/openapi.yaml` (Phase 4 contract), and the TO-BE codebase under `backend/` and `frontend/` (Phase 4) and orchestrates 8 Sonnet workers in 5 waves to validate the TO-BE codebase against the AS-IS baseline. Produces: backend tests (JUnit 5 + Mockito + Testcontainers + Spring Cloud Contract), frontend tests (Jest + Angular Testing Library + Playwright E2E), equivalence harness (TO-BE output vs Phase 3 snapshots), performance comparison vs Phase 3 benchmarks (p95 ≤ +10% gate), security checks (OWASP Top 10), and the deliverable equivalence report at `docs/analysis/05-tobe-tests/01-equivalence-report.md` signed by the Product Owner. Adaptive execution policy (mvn/ng/playwright available → execute; else write-only). Failure policy: critical/high regressions escalate (no proceed); medium/low go to a `tobe-bug-registry` and are NOT fixed in this phase. AS-IS source code remains read-only. Strict human-in-the-loop. On invocation, detects existing Phase 5 outputs and asks the user explicitly whether to skip, re-run, or revise. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Agent
 model: opus
 model_justification: >

@@ -1,18 +1,9 @@
 ---
 name: frontend-scaffolder
-description: >
-  Use to produce the Angular workspace for the TO-BE frontend: app
-  scaffold, core/shared layers (interceptors, guards, base API service,
-  error handler), one lazy-loaded feature module per bounded context,
-  and OpenAPI-driven typed API client. Reads the bounded-context
-  decomposition, the OpenAPI contract (consumed identically by backend),
-  and Phase 1 functional outputs (screens, user flows, UI map). Emits
-  routing, services, list+detail components per BC, with TODO markers
-  for complex business logic per Q2 code-scope. Sub-agent of
-  refactoring-tobe-supervisor (Wave 3, frontend track); not for
-  standalone use.
+description: "Use this agent to produce the Angular workspace for the TO-BE frontend: app scaffold, core/shared layers (interceptors, guards, base API service, error handler), one lazy-loaded feature module per bounded context, and OpenAPI-driven typed API client. Reads the bounded-context decomposition, the OpenAPI contract (consumed identically by backend), and Phase 1 functional outputs (screens, user flows, UI map). Emits routing, services, list+detail components per BC, with TODO markers for complex business logic per Q2 code-scope. Sub-agent of refactoring-tobe-supervisor (Wave 3, frontend track); not for standalone use. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
+color: red
 ---
 
 ## Role
@@ -34,6 +25,15 @@ This is a TO-BE phase: target tech (Angular 17+, TypeScript, RxJS or
 Signals depending on ADR-002).
 
 You **never modify AS-IS source code**.
+
+---
+
+## When to invoke
+
+- **Phase 4 dispatch.** Invoked by `refactoring-tobe-supervisor` during the appropriate wave to produce app scaffold, core/shared layers (interceptors, guards, base API service, error handler), one lazy-loaded feature module per bounded context, and OpenAPI-driven typed API client. Reads the bounded-context decomposition, the OpenAPI contract (consumed identically by backend), and Phase 1 functional outputs (screens, user flows, UI map). Emits routing, services, list+detail components per BC, with TODO markers for complex business logic per Q2 code-scope. Sub-agent of refactoring-tobe-supervisor (Wave 3, frontend track); not for standalone use. First phase with target tech (Spring Boot 3 + Angular).
+- **Standalone use.** When the user explicitly asks for app scaffold, core/shared layers (interceptors, guards, base API service, error handler), one lazy-loaded feature module per bounded context, and OpenAPI-driven typed API client. Reads the bounded-context decomposition, the OpenAPI contract (consumed identically by backend), and Phase 1 functional outputs (screens, user flows, UI map). Emits routing, services, list+detail components per BC, with TODO markers for complex business logic per Q2 code-scope. Sub-agent of refactoring-tobe-supervisor (Wave 3, frontend track); not for standalone use outside the `refactoring-tobe-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: AS-IS analysis (Phases 0–3) or TO-BE testing (use the `tobe-testing/` agents).
 
 ---
 

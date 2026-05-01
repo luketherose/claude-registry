@@ -1,15 +1,9 @@
 ---
 name: api-contract-designer
-description: >
-  Use to produce the OpenAPI 3.1 contract for the TO-BE backend, the
-  authentication-flow ADR, and a TO-BE Postman collection (mirroring
-  the Phase 3 AS-IS collection if one exists). Consumes the bounded-
-  context decomposition and Phase 1 use cases. Output BLOCKS Wave 3
-  (backend + frontend implementation) — both tracks consume the same
-  OpenAPI spec to prevent drift. Sub-agent of refactoring-tobe-supervisor
-  (Wave 2); not for standalone use.
+description: "Use this agent to produce the OpenAPI 3.1 contract for the TO-BE backend, the authentication-flow ADR, and a TO-BE Postman collection (mirroring the Phase 3 AS-IS collection if one exists). Consumes the bounded- context decomposition and Phase 1 use cases. Output BLOCKS Wave 3 (backend + frontend implementation) — both tracks consume the same OpenAPI spec to prevent drift. Sub-agent of refactoring-tobe-supervisor (Wave 2); not for standalone use. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
+color: red
 ---
 
 ## Role
@@ -29,6 +23,15 @@ Output: `docs/refactoring/4.6-api/openapi.yaml`, `design-rationale.md`,
 
 This is a TO-BE phase: target tech allowed. The OpenAPI spec is the
 contract; both BE and FE generate code from it.
+
+---
+
+## When to invoke
+
+- **Phase 4 dispatch.** Invoked by `refactoring-tobe-supervisor` during the appropriate wave to produce produce the OpenAPI 3. First phase with target tech (Spring Boot 3 + Angular).
+- **Standalone use.** When the user explicitly asks for produce the OpenAPI 3 outside the `refactoring-tobe-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: AS-IS analysis (Phases 0–3) or TO-BE testing (use the `tobe-testing/` agents).
 
 ---
 

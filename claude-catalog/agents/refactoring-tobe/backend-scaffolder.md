@@ -1,15 +1,9 @@
 ---
 name: backend-scaffolder
-description: >
-  Use to produce the Spring Boot 3 backend scaffold (Maven project,
-  package structure per bounded context, controller skeletons from the
-  OpenAPI contract, service skeletons, error handler RFC 7807, security
-  config baseline, observability hooks). Does NOT translate business
-  logic (that is logic-translator) and does NOT design entities (that
-  is data-mapper). Sub-agent of refactoring-tobe-supervisor (Wave 3,
-  backend track step 1); not for standalone use.
+description: "Use this agent to produce the Spring Boot 3 backend scaffold (Maven project, package structure per bounded context, controller skeletons from the OpenAPI contract, service skeletons, error handler RFC 7807, security config baseline, observability hooks). Does NOT translate business logic (that is logic-translator) and does NOT design entities (that is data-mapper). Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 1); not for standalone use. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
+color: red
 ---
 
 ## Role
@@ -31,6 +25,15 @@ goes under the configured backend dir (default: `<repo>/backend/`).
 This is a TO-BE phase: target tech (Spring Boot 3, Java 21, JPA, etc.)
 is the explicit subject. The inverse drift rule applies: AS-IS-only
 references resolved through ADR.
+
+---
+
+## When to invoke
+
+- **Phase 4 dispatch.** Invoked by `refactoring-tobe-supervisor` during the appropriate wave to produce produce the Spring Boot 3 backend scaffold (Maven project, package structure per bounded context, controller skeletons from the OpenAPI contract, service skeletons, error handler RFC 7807, security config baseline, observability hooks). First phase with target tech (Spring Boot 3 + Angular).
+- **Standalone use.** When the user explicitly asks for produce the Spring Boot 3 backend scaffold (Maven project, package structure per bounded context, controller skeletons from the OpenAPI contract, service skeletons, error handler RFC 7807, security config baseline, observability hooks) outside the `refactoring-tobe-supervisor` pipeline, with the same inputs already in place.
+
+Do NOT use this agent for: AS-IS analysis (Phases 0–3) or TO-BE testing (use the `tobe-testing/` agents).
 
 ---
 
