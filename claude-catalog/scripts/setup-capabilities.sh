@@ -21,6 +21,19 @@ REGISTRY_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 MARKETPLACE_ROOT="$REGISTRY_ROOT/claude-marketplace"
 CATALOG="$MARKETPLACE_ROOT/catalog.json"
 
+# py_path: converts a bash path to a form Python can open.
+# On Windows/Git Bash, paths like /c/Users/... are not valid for Python; cygpath -m
+# converts them to C:/Users/... which Python accepts. On macOS/Linux it's a no-op.
+py_path() {
+  if command -v cygpath &>/dev/null; then
+    cygpath -m "$1"
+  else
+    echo "$1"
+  fi
+}
+
+CATALOG_WIN=$(py_path "$CATALOG")
+
 # Parse --global flag
 GLOBAL=false
 ARGS=()
@@ -70,10 +83,11 @@ $GLOBAL && echo -e "  Mode:     ${GREEN}global (all agents + skills)${RESET}"
 echo ""
 
 # Build list of agents from catalog
-CATALOG_TMP=$(mktemp /tmp/claude-catalog-XXXXXX.json)
+# mktemp without a path template works on both macOS (BSD) and Linux/Git Bash (GNU)
+CATALOG_TMP=$(mktemp)
 python3 -c "
 import json
-with open('$CATALOG') as f:
+with open('$CATALOG_WIN') as f:
     data = json.load(f)
 caps = [c for c in data.get('capabilities', [])
         if not any(k.startswith('_') for k in c)
@@ -132,7 +146,7 @@ install_capability() {
   # truth — no path inference needed). Files may live in topic subfolders, e.g.
   # `beta/indexing/foo.md` or `skills/frontend/angular/bar.md`.
   local relpath
-  relpath=$(python3 - "$CATALOG" "$name" <<'PYEOF'
+  relpath=$(python3 - "$CATALOG_WIN" "$name" <<'PYEOF'
 import json, sys
 catalog = json.load(open(sys.argv[1]))
 name = sys.argv[2]
@@ -179,7 +193,7 @@ PYEOF
     if [[ ! -f "$AGENTS_DIR/$dep_name.md" ]]; then
       install_capability "$dep_name" "$dep_tier" "dep"
     fi
-  done < <(python3 - "$name" "$CATALOG" <<'DEPEOF'
+  done < <(python3 - "$name" "$CATALOG_WIN" <<'DEPEOF'
 import json, sys
 name = sys.argv[1]
 all_caps = json.load(open(sys.argv[2])).get('capabilities', [])
@@ -203,7 +217,7 @@ install_all_skills() {
     fi
   done < <(python3 -c "
 import json
-all_caps = json.load(open('$CATALOG')).get('capabilities', [])
+all_caps = json.load(open('$CATALOG_WIN')).get('capabilities', [])
 for c in all_caps:
     if not any(k.startswith('_') for k in c) and c.get('type') == 'skill':
         print(c['name'] + '|skill')
@@ -227,7 +241,7 @@ for c in caps:
   # Install all skills not already pulled in as dependencies
   install_all_skills
 else
-  CAPMAP_TMP=$(mktemp /tmp/claude-capmap-XXXXXX.sh)
+  CAPMAP_TMP=$(mktemp)
   python3 -c "
 import json
 caps = json.load(open('$CATALOG_TMP'))
@@ -258,7 +272,7 @@ if [[ ${#INSTALLED[@]} -gt 0 ]]; then
   echo ""
   echo -e "${BOLD}Updating settings.json:${RESET}"
 
-  python3 - "$SETTINGS_FILE" "${INSTALLED[@]}" <<'PYEOF'
+  python3 - "$(py_path "$SETTINGS_FILE")" "${INSTALLED[@]}" <<'PYEOF'
 import json, sys
 from pathlib import Path
 
