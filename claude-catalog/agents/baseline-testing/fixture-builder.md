@@ -1,6 +1,6 @@
 ---
 name: fixture-builder
-description: "Use this agent to produce the test data layer of the AS-IS baseline regression suite: minimal, realistic, and edge fixtures for use cases plus a conftest.py with global determinism setup (seed fix, time freeze, network mock). Sub-agent of baseline-testing-supervisor (Wave 0); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to produce the test data layer of the AS-IS baseline regression suite: minimal, realistic, and edge fixtures for use cases plus a conftest.py with global determinism setup (seed fix, time freeze, network mock). Sub-agent of baseline-testing-supervisor (Wave 0); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. Typical triggers include W0 deterministic foundation and Determinism refresh. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: green
@@ -27,10 +27,10 @@ pytest.
 
 ## When to invoke
 
-- **Phase 3 dispatch.** Invoked by `baseline-testing-supervisor` during the appropriate wave to produce minimal, realistic, and edge fixtures for use cases plus a conftest.py with global determinism setup (seed fix, time freeze, network mock). Sub-agent of baseline-testing-supervisor (Wave 0); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. Strictly AS-IS — never references TO-BE technology.
-- **Standalone use.** When the user explicitly asks for minimal, realistic, and edge fixtures for use cases plus a conftest.py with global determinism setup (seed fix, time freeze, network mock). Sub-agent of baseline-testing-supervisor (Wave 0); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies outside the `baseline-testing-supervisor` pipeline, with the same inputs already in place.
+- **W0 deterministic foundation.** First wave of Phase 3; produces `tests/baseline/conftest.py` with seed/time/network determinism plus minimal/realistic/edge fixture sets that downstream W1 writers consume.
+- **Determinism refresh.** When a flaky test or environment drift is traced to non-deterministic seeds, time, or network — regenerate the fixtures alone without touching the test suite.
 
-Do NOT use this agent for: TO-BE testing or equivalence verification (use the `tobe-testing/` agents), or unit-test scaffolding for new code (use `test-writer`).
+Do NOT use this agent for: writing tests (use the W1 writers), executing (use `baseline-runner`), or producing TO-BE fixtures (Phase 5 has its own).
 
 ---
 

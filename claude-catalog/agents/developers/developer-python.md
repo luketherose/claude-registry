@@ -1,6 +1,6 @@
 ---
 name: developer-python
-description: "Use this agent when writing, reviewing, or refactoring Python code. Produces production-ready Python following PEP 8, type hints, pytest testing, structured logging, and clean architecture. Opinionated on: virtual environments, dependency management with uv or pip-tools, pydantic for validation, and avoiding common Python anti-patterns. Suitable for FastAPI services, CLI tools, data pipelines, and general backend work. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing, reviewing, or refactoring Python code. Produces production-ready Python following PEP 8, type hints, pytest testing, structured logging, and clean architecture. Opinionated on: virtual environments, dependency management with uv or pip-tools, pydantic for validation, and avoiding common Python anti-patterns. Suitable for FastAPI services, CLI tools, data pipelines, and general backend work. Typical triggers include Writing or refactoring Python code, Reviewing existing Python code, Migrating legacy Python, and Authoring pytest tests. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
 color: green

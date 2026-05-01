@@ -1,6 +1,6 @@
 ---
 name: technical-analyst
-description: "Use this agent when producing a technical analysis of an existing system: technology stack assessment, technical debt inventory, security posture review, observability gaps, dependency vulnerability analysis, code quality metrics interpretation, or CI/CD pipeline evaluation. Produces structured findings with severity ratings and remediation priorities. Does not make architecture recommendations — delegates to software-architect for that. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when producing a technical analysis of an existing system: technology stack assessment, technical debt inventory, security posture review, observability gaps, dependency vulnerability analysis, code quality metrics interpretation, or CI/CD pipeline evaluation. Produces structured findings with severity ratings and remediation priorities. Does not make architecture recommendations — delegates to software-architect for that. Typical triggers include Module-level technical structure mapping, First step of an analysis pipeline, and Repository semantic index for RAG. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Bash, Write
 model: sonnet
 color: magenta

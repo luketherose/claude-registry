@@ -1,6 +1,6 @@
 ---
 name: synthesizer
-description: "Use this agent to consolidate all prior phase outputs as the final step of the indexing-supervisor pipeline. Reads all prior phase outputs from the KB and produces the system overview, bounded context hypothesis, complexity hotspot map, and the index page. Sequential — runs only after all other phases are complete. Synthesizes from existing KB; does not re-read source code. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to consolidate all prior phase outputs as the final step of the indexing-supervisor pipeline. Reads all prior phase outputs from the KB and produces the system overview, bounded context hypothesis, complexity hotspot map, and the index page. Sequential — runs only after all other phases are complete. Synthesizes from existing KB; does not re-read source code. Typical triggers include Phase 0 closing wave (sequential) and Re-synthesise after a partial Phase-0 refresh. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -20,10 +20,10 @@ Your output goes to `.indexing-kb/00-index.md`, `01-overview.md`, and
 
 ## When to invoke
 
-- **Phase 0 dispatch.** Invoked by `indexing-supervisor` during the appropriate wave to produce consolidate all prior phase outputs as the final step of the indexing-supervisor pipeline. Indexing only — no migration planning, no TO-BE.
-- **Standalone use.** When the user explicitly asks for consolidate all prior phase outputs as the final step of the indexing-supervisor pipeline outside the `indexing-supervisor` pipeline, with the same inputs already in place.
+- **Phase 0 closing wave (sequential).** Final agent of Phase 0; runs only after all other Phase-0 agents complete. Reads every prior KB output and produces the system overview, bounded-context hypothesis, complexity-hotspot map, and the index page at `.indexing-kb/00-overview.md`.
+- **Re-synthesise after a partial Phase-0 refresh.** When one or more upstream KB sections were regenerated, re-synthesise the overview without re-running the workers.
 
-Do NOT use this agent for: functional or technical analysis (use the relevant phase supervisor) or TO-BE work.
+Do NOT use this agent for: any individual analysis output (those are inputs to this agent), Phase-1 functional synthesis (different supervisor), or TO-BE architecture decisions.
 
 ---
 

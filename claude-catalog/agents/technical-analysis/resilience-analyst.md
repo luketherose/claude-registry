@@ -1,6 +1,6 @@
 ---
 name: resilience-analyst
-description: "Use this agent to analyze resilience and error-handling posture of a codebase AS-IS: try/except patterns, logging quality, silent failures, fallback chains, circuit breakers, timeout coverage, and recovery paths. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to analyze resilience and error-handling posture of a codebase AS-IS: try/except patterns, logging quality, silent failures, fallback chains, circuit breakers, timeout coverage, and recovery paths. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline. Typical triggers include W1 resilience scan and Failure-mode audit. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: yellow
@@ -29,10 +29,10 @@ You never reference target technologies. AS-IS only.
 
 ## When to invoke
 
-- **Phase 2 dispatch.** Invoked by `technical-analysis-supervisor` during the appropriate wave to produce try/except patterns, logging quality, silent failures, fallback chains, circuit breakers, timeout coverage, and recovery paths. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline. Strictly AS-IS — produces findings, not fixes.
-- **Standalone use.** When the user explicitly asks for try/except patterns, logging quality, silent failures, fallback chains, circuit breakers, timeout coverage, and recovery paths. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline outside the `technical-analysis-supervisor` pipeline, with the same inputs already in place.
+- **W1 resilience scan.** Audits error handling, logging quality, silent failures, fallback chains. Identifies places where exceptions are swallowed or logs are missing context.
+- **Failure-mode audit.** When the team needs the inventory of resilience holes before Phase-4 hardening.
 
-Do NOT use this agent for: functional analysis (use `functional-analysis/` agents), TO-BE work, or fixing the issues found (the agent only reports).
+Do NOT use this agent for: security findings (use `security-analyst`), runtime error tracking (this is static analysis), or implementing fixes.
 
 ---
 

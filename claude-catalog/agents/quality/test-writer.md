@@ -1,6 +1,6 @@
 ---
 name: test-writer
-description: "Use this agent when writing tests for existing code: unit tests, integration tests, or end-to-end tests. Reads the production code, identifies test scenarios (happy path, edge cases, error cases), and produces complete, runnable test code. Supports JUnit 5 + Mockito (Java), pytest (Python), and Jest (JavaScript/TypeScript). Detects and fills gaps in existing test suites. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing tests for existing code: unit tests, integration tests, or end-to-end tests. Reads the production code, identifies test scenarios (happy path, edge cases, error cases), and produces complete, runnable test code. Supports JUnit 5 + Mockito (Java), pytest (Python), and Jest (JavaScript/TypeScript). Detects and fills gaps in existing test suites. Typical triggers include Writing tests for existing code, Filling test-coverage gaps, and Producing complete, runnable test code. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Write, Edit
 model: sonnet
 color: cyan

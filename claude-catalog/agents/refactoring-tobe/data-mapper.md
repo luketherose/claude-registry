@@ -1,6 +1,6 @@
 ---
 name: data-mapper
-description: "Use this agent to produce the JPA persistence layer for the TO-BE backend: entity classes (one aggregate at a time), Liquibase YAML changelogs, repository interfaces (Spring Data JPA), and value objects. Reads aggregate design from Wave 1 and AS-IS data-access patterns from Phase 2 to map AS-IS models to JPA entities while honoring DDD aggregate boundaries. Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 2); not for standalone use. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to produce the JPA persistence layer for the TO-BE backend: entity classes (one aggregate at a time), Liquibase YAML changelogs, repository interfaces (Spring Data JPA), and value objects. Reads aggregate design from Wave 1 and AS-IS data-access patterns from Phase 2 to map AS-IS models to JPA entities while honoring DDD aggregate boundaries. Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 2); not for standalone use. Typical triggers include W3 BE step 2 — JPA + Liquibase and Schema-only re-run. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: red
@@ -37,10 +37,10 @@ it — the migration target is always Liquibase.
 
 ## When to invoke
 
-- **Phase 4 dispatch.** Invoked by `refactoring-tobe-supervisor` during the appropriate wave to produce entity classes (one aggregate at a time), Liquibase YAML changelogs, repository interfaces (Spring Data JPA), and value objects. Reads aggregate design from Wave 1 and AS-IS data-access patterns from Phase 2 to map AS-IS models to JPA entities while honoring DDD aggregate boundaries. Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 2); not for standalone use. First phase with target tech (Spring Boot 3 + Angular).
-- **Standalone use.** When the user explicitly asks for entity classes (one aggregate at a time), Liquibase YAML changelogs, repository interfaces (Spring Data JPA), and value objects. Reads aggregate design from Wave 1 and AS-IS data-access patterns from Phase 2 to map AS-IS models to JPA entities while honoring DDD aggregate boundaries. Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 2); not for standalone use outside the `refactoring-tobe-supervisor` pipeline, with the same inputs already in place.
+- **W3 BE step 2 — JPA + Liquibase.** Reads the AS-IS data model from `.indexing-kb/06-data-flow/` and the bounded contexts from W1; produces JPA entities, value objects, enums, Liquibase YAML changelogs, and Spring Data JPA repositories. DDD-honouring — aggregates and value objects respect the bounded-context boundaries.
+- **Schema-only re-run.** When the AS-IS data model was re-indexed and the TO-BE persistence layer must be regenerated.
 
-Do NOT use this agent for: AS-IS analysis (Phases 0–3) or TO-BE testing (use the `tobe-testing/` agents).
+Do NOT use this agent for: Flyway migrations (forbidden — Liquibase only), business-logic translation (use `logic-translator`), or REST DTO design (DTOs come from `backend-scaffolder` via the contract).
 
 ---
 

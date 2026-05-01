@@ -1,6 +1,6 @@
 ---
 name: backend-scaffolder
-description: "Use this agent to produce the Spring Boot 3 backend scaffold (Maven project, package structure per bounded context, controller skeletons from the OpenAPI contract, service skeletons, error handler RFC 7807, security config baseline, observability hooks). Does NOT translate business logic (that is logic-translator) and does NOT design entities (that is data-mapper). Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 1); not for standalone use. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to produce the Spring Boot 3 backend scaffold (Maven project, package structure per bounded context, controller skeletons from the OpenAPI contract, service skeletons, error handler RFC 7807, security config baseline, observability hooks). Does NOT translate business logic (that is logic-translator) and does NOT design entities (that is data-mapper). Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 1); not for standalone use. Typical triggers include W3 BE step 1 — Spring Boot 3 scaffold and Re-scaffold after contract change. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: red
@@ -30,10 +30,10 @@ references resolved through ADR.
 
 ## When to invoke
 
-- **Phase 4 dispatch.** Invoked by `refactoring-tobe-supervisor` during the appropriate wave to produce produce the Spring Boot 3 backend scaffold (Maven project, package structure per bounded context, controller skeletons from the OpenAPI contract, service skeletons, error handler RFC 7807, security config baseline, observability hooks). First phase with target tech (Spring Boot 3 + Angular).
-- **Standalone use.** When the user explicitly asks for produce the Spring Boot 3 backend scaffold (Maven project, package structure per bounded context, controller skeletons from the OpenAPI contract, service skeletons, error handler RFC 7807, security config baseline, observability hooks) outside the `refactoring-tobe-supervisor` pipeline, with the same inputs already in place.
+- **W3 BE step 1 — Spring Boot 3 scaffold.** Reads the OpenAPI contract from W2; produces the Maven scaffold, controllers (one per OpenAPI tag), DTOs, services with TODOs, an RFC 7807 error handler, and a Spring Security baseline. The skeleton runs but every business method emits `TODO: implement` for `logic-translator` to fill.
+- **Re-scaffold after contract change.** When the OpenAPI contract is renegotiated and the scaffold must be regenerated without re-running data mapping.
 
-Do NOT use this agent for: AS-IS analysis (Phases 0–3) or TO-BE testing (use the `tobe-testing/` agents).
+Do NOT use this agent for: per-UC business-logic translation (use `logic-translator`), JPA entities (use `data-mapper`), or front-end scaffolding (use `frontend-scaffolder`).
 
 ---
 

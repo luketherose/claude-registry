@@ -32,7 +32,7 @@ Before activating any FE skill, determine the project framework:
 
 Before activating FE skills, consult the documentation and analysis artefacts available in the project:
 
-1. **Migration / mapping artefacts** — if available, look for the mapping of the legacy component/page you are migrating to Angular
+1. **Migration / mapping artefacts** — if available, look for the mapping of the legacy component/page being migrated to Angular
 2. **Functional analysis** — for the requirements of the component to implement
 3. **Technical analysis** — to understand the bounded context and dependencies of the component
 4. **Architectural artefacts** — to understand the end-to-end flow in which the FE component fits
@@ -45,7 +45,7 @@ Before activating FE skills, consult the documentation and analysis artefacts av
 3. Identify the component's dependencies in the corresponding bounded context
 
 **For existing FE refactoring:**
-- Consult the architectural artefacts to understand what depends on the component you are modifying
+- Consult the architectural artefacts to understand what depends on the component being modified
 
 **Do not consult** analysis artefacts for purely stylistic tasks or Angular micro-fixes.
 

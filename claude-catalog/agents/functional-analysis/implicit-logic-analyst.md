@@ -1,6 +1,6 @@
 ---
 name: implicit-logic-analyst
-description: "Use this agent to extract IMPLICIT business and validation logic that is not surfaced in the explicit business rules — embedded in widget parameters, conditional rendering, state-driven branches, callback chains, and cross-screen state mutations. Highest value in Streamlit codebases where UI/state/logic are interleaved. May descend into source code for narrowly scoped patterns the KB cannot capture. Strictly AS-IS — never references target technologies. Sub-agent of functional-analysis-supervisor; not for standalone use — invoked only as part of the Phase 1 Functional Analysis pipeline (Wave 2). See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to extract IMPLICIT business and validation logic that is not surfaced in the explicit business rules — embedded in widget parameters, conditional rendering, state-driven branches, callback chains, and cross-screen state mutations. Highest value in Streamlit codebases where UI/state/logic are interleaved. May descend into source code for narrowly scoped patterns the KB cannot capture. Strictly AS-IS — never references target technologies. Sub-agent of functional-analysis-supervisor; not for standalone use — invoked only as part of the Phase 1 Functional Analysis pipeline (Wave 2). Typical triggers include W2 deep-logic extraction (Streamlit-critical) and Targeted re-run after a Streamlit refactor. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: cyan
@@ -35,10 +35,10 @@ You never reference target technologies. AS-IS only.
 
 ## When to invoke
 
-- **Phase 1 dispatch.** Invoked by `functional-analysis-supervisor` during the appropriate wave to produce extract IMPLICIT business and validation logic that is not surfaced in the explicit business rules — embedded in widget parameters, conditional rendering, state-driven branches, callback chains, and cross-screen state mutations. Strictly AS-IS.
-- **Standalone use.** When the user explicitly asks for extract IMPLICIT business and validation logic that is not surfaced in the explicit business rules — embedded in widget parameters, conditional rendering, state-driven branches, callback chains, and cross-screen state mutations outside the `functional-analysis-supervisor` pipeline, with the same inputs already in place.
+- **W2 deep-logic extraction (Streamlit-critical).** Reads sources flagged by `actor-feature-mapper` and extracts IMPLICIT business and validation logic embedded in widget parameters, conditional rendering, state-driven branches, callback chains, and cross-screen state mutations. Highest value in Streamlit codebases where UI/state/logic are interleaved.
+- **Targeted re-run after a Streamlit refactor.** When a Streamlit screen was refactored mid-analysis, re-extract implicit logic for that screen alone.
 
-Do NOT use this agent for: technical analysis (use the `technical-analysis/` agents), TO-BE design (Phases 4+), or producing the final stakeholder LaTeX deliverable.
+Do NOT use this agent for: explicit business rules (those are surfaced by other Phase-1 agents), source-code refactoring (read-only), or TO-BE work.
 
 ---
 

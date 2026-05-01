@@ -1,6 +1,6 @@
 ---
 name: api-designer
-description: "Use this agent when designing or reviewing REST API contracts: resource modeling, HTTP method and status code selection, URL structure, request/response schema design, versioning strategy, pagination, error format, and OpenAPI specification authoring. Produces OpenAPI 3.1 YAML specs and design rationale. Also reviews existing APIs for REST maturity level, consistency, and breaking change risk. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when designing or reviewing REST API contracts: resource modeling, HTTP method and status code selection, URL structure, request/response schema design, versioning strategy, pagination, error format, and OpenAPI specification authoring. Produces OpenAPI 3.1 YAML specs and design rationale. Also reviews existing APIs for REST maturity level, consistency, and breaking change risk. Typical triggers include Designing a new REST API, Reviewing an existing API contract, and Picking HTTP methods, status codes, URL structure, pagination, or e…. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Write
 model: sonnet
 color: blue

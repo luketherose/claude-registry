@@ -1,6 +1,6 @@
 ---
 name: developer-frontend
-description: "Use this agent when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack — does not load Angular skills for a React project or vice versa. Produces production-ready, typed, accessible, tested frontend code following the conventions of the detected framework. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack — does not load Angular skills for a React project or vice versa. Produces production-ready, typed, accessible, tested frontend code following the conventions of the detected framework. Typical triggers include Writing or refactoring frontend code, Component design + implementation, and Migrating UI code. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
 color: yellow

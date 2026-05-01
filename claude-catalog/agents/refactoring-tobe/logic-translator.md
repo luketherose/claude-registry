@@ -1,6 +1,6 @@
 ---
 name: logic-translator
-description: "Use this agent to translate the AS-IS Python business logic for ONE use case into Java/Spring code in the TO-BE backend. Reads the Phase 1 UC spec, the AS-IS Python source, the bounded context aggregates, and the OpenAPI contract. Produces concrete service method bodies (replacing the scaffolder's UnsupportedOperationException stubs) plus any new domain methods on entities. Per Q2 code-scope: in `scaffold-todo` mode, produces happy-path implementation and TODO markers for complex branches; in `full` mode, produces complete translation. Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 3, fan-out per UC); not for standalone use. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to translate the AS-IS Python business logic for ONE use case into Java/Spring code in the TO-BE backend. Reads the Phase 1 UC spec, the AS-IS Python source, the bounded context aggregates, and the OpenAPI contract. Produces concrete service method bodies (replacing the scaffolder's UnsupportedOperationException stubs) plus any new domain methods on entities. Per Q2 code-scope: in `scaffold-todo` mode, produces happy-path implementation and TODO markers for complex branches; in `full` mode, produces complete translation. Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 3, fan-out per UC); not for standalone use. Typical triggers include W3 BE step 3 — fan-out per UC and UC re-translation. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write, Edit
 model: sonnet
 color: red
@@ -35,10 +35,10 @@ translation.
 
 ## When to invoke
 
-- **Phase 4 dispatch.** Invoked by `refactoring-tobe-supervisor` during the appropriate wave to produce in `scaffold-todo` mode, produces happy-path implementation and TODO markers for complex branches; in `full` mode, produces complete translation. Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 3, fan-out per UC); not for standalone use. First phase with target tech (Spring Boot 3 + Angular).
-- **Standalone use.** When the user explicitly asks for in `scaffold-todo` mode, produces happy-path implementation and TODO markers for complex branches; in `full` mode, produces complete translation. Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 3, fan-out per UC); not for standalone use outside the `refactoring-tobe-supervisor` pipeline, with the same inputs already in place.
+- **W3 BE step 3 — fan-out per UC.** One invocation per UC: reads the AS-IS Python source for that UC, the matching Phase-1 use-case spec, and the Phase-3 baseline test for that UC; produces the Java/Spring service implementation that fills the `TODO: implement` left by `backend-scaffolder`. Strictly UC-scoped — never touches another UC's code.
+- **UC re-translation.** When the AS-IS source for a single UC was refactored and the TO-BE translation must be regenerated for that UC alone.
 
-Do NOT use this agent for: AS-IS analysis (Phases 0–3) or TO-BE testing (use the `tobe-testing/` agents).
+Do NOT use this agent for: scaffolding new endpoints (use `backend-scaffolder`), JPA mapping (use `data-mapper`), or AS-IS source modifications.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: dependency-security-analyst
-description: "Use this agent to analyze the external dependency posture of a codebase AS-IS: pinned vs unpinned versions, deprecated libraries, known vulnerabilities (CVE/GHSA), license posture, and dependency-tree health. Produces a dependency inventory plus an SBOM-lite JSON. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to analyze the external dependency posture of a codebase AS-IS: pinned vs unpinned versions, deprecated libraries, known vulnerabilities (CVE/GHSA), license posture, and dependency-tree health. Produces a dependency inventory plus an SBOM-lite JSON. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline. Typical triggers include W1 dependency posture and Pre-go-live security audit. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: yellow
@@ -28,10 +28,10 @@ You never reference target technologies. AS-IS only.
 
 ## When to invoke
 
-- **Phase 2 dispatch.** Invoked by `technical-analysis-supervisor` during the appropriate wave to produce pinned vs unpinned versions, deprecated libraries, known vulnerabilities (CVE/GHSA), license posture, and dependency-tree health. Produces a dependency inventory plus an SBOM-lite JSON. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline. Strictly AS-IS — produces findings, not fixes.
-- **Standalone use.** When the user explicitly asks for pinned vs unpinned versions, deprecated libraries, known vulnerabilities (CVE/GHSA), license posture, and dependency-tree health. Produces a dependency inventory plus an SBOM-lite JSON. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline outside the `technical-analysis-supervisor` pipeline, with the same inputs already in place.
+- **W1 dependency posture.** Produces the dependency inventory, CVE register, deprecation watch, license posture, and an SBOM-lite JSON. May shell out to dependency scanners — that is the justified use of `Bash` access.
+- **Pre-go-live security audit.** When a release is imminent and the dependency posture must be re-checked against the latest CVE feed.
 
-Do NOT use this agent for: functional analysis (use `functional-analysis/` agents), TO-BE work, or fixing the issues found (the agent only reports).
+Do NOT use this agent for: source-code security findings (use `security-analyst`), runtime CVE detection (this is static analysis), or vendoring decisions.
 
 ---
 

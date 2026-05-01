@@ -1,6 +1,6 @@
 ---
 name: debugger
-description: "Use this agent when diagnosing a bug, error, or unexpected behavior in code. Reads error messages, stack traces, logs, and relevant source files to identify root cause and propose a minimal, targeted fix. Does not refactor beyond what is needed to fix the bug. Explains the root cause clearly before proposing the fix. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when diagnosing a bug, error, or unexpected behavior in code. Reads error messages, stack traces, logs, and relevant source files to identify root cause and propose a minimal, targeted fix. Does not refactor beyond what is needed to fix the bug. Explains the root cause clearly before proposing the fix. Typical triggers include Diagnosing a bug from an error message + stack trace + relevant sou…, Identifying the root cause, and Distinguishing real bugs from environment/configuration issues. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Edit, Grep, Glob, Bash
 model: sonnet
 color: red

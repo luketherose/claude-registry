@@ -1,6 +1,6 @@
 ---
 name: benchmark-writer
-description: "Use this agent to write the baseline performance benchmarks for the AS-IS codebase: per-UC pytest-benchmark scripts, memory profiling probes, and (where applicable) throughput probes for hot endpoints. Produces deterministic, reproducible benchmarks consumed by Phase 5 as the performance oracle. Sub-agent of baseline-testing-supervisor (Wave 1); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to write the baseline performance benchmarks for the AS-IS codebase: per-UC pytest-benchmark scripts, memory profiling probes, and (where applicable) throughput probes for hot endpoints. Produces deterministic, reproducible benchmarks consumed by Phase 5 as the performance oracle. Sub-agent of baseline-testing-supervisor (Wave 1); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. Typical triggers include W1 performance authoring (per hot endpoint) and Throughput probe (where applicable). See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: green
@@ -28,10 +28,10 @@ pytest + pytest-benchmark. You **never modify AS-IS source code**.
 
 ## When to invoke
 
-- **Phase 3 dispatch.** Invoked by `baseline-testing-supervisor` during the appropriate wave to produce per-UC pytest-benchmark scripts, memory profiling probes, and (where applicable) throughput probes for hot endpoints. Produces deterministic, reproducible benchmarks consumed by Phase 5 as the performance oracle. Sub-agent of baseline-testing-supervisor (Wave 1); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. Strictly AS-IS — never references TO-BE technology.
-- **Standalone use.** When the user explicitly asks for per-UC pytest-benchmark scripts, memory profiling probes, and (where applicable) throughput probes for hot endpoints. Produces deterministic, reproducible benchmarks consumed by Phase 5 as the performance oracle. Sub-agent of baseline-testing-supervisor (Wave 1); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies outside the `baseline-testing-supervisor` pipeline, with the same inputs already in place.
+- **W1 performance authoring (per hot endpoint).** When the supervisor identifies hot endpoints from `docs/analysis/02-technical/` and dispatches one instance of this agent per endpoint to author `pytest-benchmark` scripts and memory profiling probes. Output: the AS-IS performance oracle for Phase 5 comparison.
+- **Throughput probe (where applicable).** When the AS-IS app exposes services with measurable throughput (HTTP, queue consumers), this agent emits throughput probes alongside the latency benchmarks.
 
-Do NOT use this agent for: TO-BE testing or equivalence verification (use the `tobe-testing/` agents), or unit-test scaffolding for new code (use `test-writer`).
+Do NOT use this agent for: functional regression tests (use `usecase-test-writer`), executing the benchmarks (use `baseline-runner`), or comparing AS-IS vs TO-BE (use `performance-comparator`).
 
 ---
 

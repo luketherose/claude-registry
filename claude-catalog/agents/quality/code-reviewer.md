@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: "Use this agent when performing a code review on a pull request or a set of changed files. Examines code for correctness, security vulnerabilities, test coverage, adherence to project conventions, performance issues, and maintainability concerns. Produces a structured review with line-level comments and an overall recommendation: Approve, Request Changes, or Comment. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when performing a code review on a pull request or a set of changed files. Examines code for correctness, security vulnerabilities, test coverage, adherence to project conventions, performance issues, and maintainability concerns. Produces a structured review with line-level comments and an overall recommendation: Approve, Request Changes, or Comment. Typical triggers include Reviewing a PR or set of changed files, Pre-merge gate, and Spot-review of a single file or function. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Bash
 model: sonnet
 color: red

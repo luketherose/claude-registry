@@ -234,7 +234,7 @@ public interface CompanyProjection {
 List<CompanyProjection> findProjectedByStatus(CompanyStatus status);
 ```
 
-**When to use a projection**: when you have large entities but the query only needs to return 3–4 fields. Avoids hydrating the entire entity just to serialise it partially.
+**When to use a projection**: when entities are large but the query only needs to return 3–4 fields. Avoids hydrating the entire entity just to serialise it partially.
 
 ---
 

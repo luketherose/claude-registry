@@ -1,6 +1,6 @@
 ---
 name: equivalence-synthesizer
-description: "Use this agent to synthesize the deliverable equivalence report (Phase 5). Sub-agent of tobe-testing-supervisor (Wave 4, sequential). Reads all Phase 5 outputs (equivalence test results, backend & frontend test results, contract tests, performance comparison, security findings, TBUG registry) plus Phase 1 UC list and produces the consolidated `01-equivalence-report.md` — the deliverable signed by the Product Owner that certifies TO-BE is functionally equivalent to AS-IS (or documents accepted differences). Also produces the Phase 5 README. Discovers no new findings; only consolidates and classifies. Per UC, produces a verdict: `equivalent`, `accepted-difference`, `regression-blocking`, `regression-accepted`, or `not-tested-with-reason`. Never modifies test code or production code. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to synthesize the deliverable equivalence report (Phase 5). Sub-agent of tobe-testing-supervisor (Wave 4, sequential). Reads all Phase 5 outputs (equivalence test results, backend & frontend test results, contract tests, performance comparison, security findings, TBUG registry) plus Phase 1 UC list and produces the consolidated `01-equivalence-report.md` — the deliverable signed by the Product Owner that certifies TO-BE is functionally equivalent to AS-IS (or documents accepted differences). Also produces the Phase 5 README. Discovers no new findings; only consolidates and classifies. Per UC, produces a verdict: `equivalent`, `accepted-difference`, `regression-blocking`, `regression-accepted`, or `not-tested-with-reason`. Never modifies test code or production code. Typical triggers include W4 equivalence synthesis with PO sign-off and Report regeneration after a Phase-5 iteration. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: blue
@@ -34,10 +34,10 @@ do NOT propose fixes (those belong to a Phase 4 hardening loop).
 
 ## When to invoke
 
-- **Phase 5 dispatch.** Invoked by `tobe-testing-supervisor` during the appropriate wave to produce `equivalent`, `accepted-difference`, `regression-blocking`, `regression-accepted`, or `not-tested-with-reason`. Never modifies test code or production code. Validates TO-BE against the AS-IS baseline captured in Phase 3.
-- **Standalone use.** When the user explicitly asks for `equivalent`, `accepted-difference`, `regression-blocking`, `regression-accepted`, or `not-tested-with-reason`. Never modifies test code or production code outside the `tobe-testing-supervisor` pipeline, with the same inputs already in place.
+- **W4 equivalence synthesis with PO sign-off.** Reads every Phase-5 test result (W1+W2+W3 outputs) and produces the deliverable `01-equivalence-report.md` with the equivalence matrix, severity-classified deltas, perf-comparison summary, security findings, and the PO sign-off block. This is the final go-live gate.
+- **Report regeneration after a Phase-5 iteration.** When `tobe-testing-supervisor` re-dispatches with `Resume mode: iterate`; recompute the equivalence report from the latest results without re-running the tests.
 
-Do NOT use this agent for: writing TO-BE tests for green-field code (use `test-writer`) or fixing failing TO-BE code (the agent only reports — fixes go to the relevant developer agent).
+Do NOT use this agent for: producing tests, executing tests, or AS-IS analysis.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: user-flow-analyst
-description: "Use this agent to derive use cases, user flows, and Mermaid sequence diagrams from already-extracted actors, features, UI surface, and I/O catalog. Streamlit-aware — handles reactive rerun-driven flows that have no explicit routing. Strictly AS-IS — never references target technologies. Sub-agent of functional-analysis-supervisor; not for standalone use — invoked only as part of the Phase 1 Functional Analysis pipeline (Wave 2). See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to derive use cases, user flows, and Mermaid sequence diagrams from already-extracted actors, features, UI surface, and I/O catalog. Streamlit-aware — handles reactive rerun-driven flows that have no explicit routing. Strictly AS-IS — never references target technologies. Sub-agent of functional-analysis-supervisor; not for standalone use — invoked only as part of the Phase 1 Functional Analysis pipeline (Wave 2). Typical triggers include W2 use-case + flow synthesis and UC re-derivation after a feature change. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: cyan
@@ -24,10 +24,10 @@ how the system works **today**, not how it could be reimplemented.
 
 ## When to invoke
 
-- **Phase 1 dispatch.** Invoked by `functional-analysis-supervisor` during the appropriate wave to produce derive use cases, user flows, and Mermaid sequence diagrams from already-extracted actors, features, UI surface, and I/O catalog. Strictly AS-IS.
-- **Standalone use.** When the user explicitly asks for derive use cases, user flows, and Mermaid sequence diagrams from already-extracted actors, features, UI surface, and I/O catalog outside the `functional-analysis-supervisor` pipeline, with the same inputs already in place.
+- **W2 use-case + flow synthesis.** Reads `actor-feature-map.md`, `ui-surface.md`, and `io-catalog.md` from W1 and derives use cases, user flows, and Mermaid sequence diagrams per UC. Streamlit-aware — handles reactive rerun-driven flows that have no explicit routing.
+- **UC re-derivation after a feature change.** When a single feature's behaviour changed, re-derive the affected UCs without re-running W1.
 
-Do NOT use this agent for: technical analysis (use the `technical-analysis/` agents), TO-BE design (Phases 4+), or producing the final stakeholder LaTeX deliverable.
+Do NOT use this agent for: implicit logic capture (use `implicit-logic-analyst`), the actor or feature lists themselves (those are W1 inputs to this agent), or TO-BE flow design.
 
 ---
 

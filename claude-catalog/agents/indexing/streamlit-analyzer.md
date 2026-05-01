@@ -1,6 +1,6 @@
 ---
 name: streamlit-analyzer
-description: "Use this agent to analyze Streamlit-specific concerns: pages, session_state usage, widgets, caching, navigation, custom components, and migration-relevant anti-patterns. Framework-specific analyzer invoked **only** when `streamlit` is detected in `stack.frameworks` (the canonical AS-IS stack manifest produced by `codebase-mapper`); otherwise the indexing-supervisor skips this agent entirely. Critical for migration since Streamlit's reactive script-as-page model has no direct equivalent in conventional web frameworks (the migration target decided in Phase 4 — typically Angular/React/Vue/Qwik via `developer-frontend` — must explicitly reproduce the rerun semantics). See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to analyze Streamlit-specific concerns: pages, session_state usage, widgets, caching, navigation, custom components, and migration-relevant anti-patterns. Framework-specific analyzer invoked **only** when `streamlit` is detected in `stack.frameworks` (the canonical AS-IS stack manifest produced by `codebase-mapper`); otherwise the indexing-supervisor skips this agent entirely. Critical for migration since Streamlit's reactive script-as-page model has no direct equivalent in conventional web frameworks (the migration target decided in Phase 4 — typically Angular/React/Vue/Qwik via `developer-frontend` — must explicitly reproduce the rerun semantics). Typical triggers include Phase 0 Streamlit-specific audit (gated) and Targeted Streamlit re-run. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -18,10 +18,10 @@ You are a sub-agent invoked by `indexing-supervisor`. Your output goes to
 
 ## When to invoke
 
-- **Phase 0 dispatch.** Invoked by `indexing-supervisor` during the appropriate wave to produce pages, session_state usage, widgets, caching, navigation, custom components, and migration-relevant anti-patterns. Framework-specific analyzer invoked **only** when `streamlit` is detected in `stack.frameworks` (the canonical AS-IS stack manifest produced by `codebase-mapper`); otherwise the indexing-supervisor skips this agent entirely. Critical for migration since Streamlit's reactive script-as-page model has no direct equivalent in conventional web frameworks (the migration target decided in Phase 4 — typically Angular/React/Vue/Qwik via `developer-frontend` — must explicitly reproduce the rerun semantics). Indexing only — no migration planning, no TO-BE.
-- **Standalone use.** When the user explicitly asks for pages, session_state usage, widgets, caching, navigation, custom components, and migration-relevant anti-patterns. Framework-specific analyzer invoked **only** when `streamlit` is detected in `stack.frameworks` (the canonical AS-IS stack manifest produced by `codebase-mapper`); otherwise the indexing-supervisor skips this agent entirely. Critical for migration since Streamlit's reactive script-as-page model has no direct equivalent in conventional web frameworks (the migration target decided in Phase 4 — typically Angular/React/Vue/Qwik via `developer-frontend` — must explicitly reproduce the rerun semantics) outside the `indexing-supervisor` pipeline, with the same inputs already in place.
+- **Phase 0 Streamlit-specific audit (gated).** Runs only when `streamlit ∈ stack.frameworks`; analyses pages, `session_state` usage, widgets, caching (`@st.cache_data` / `@st.cache_resource`), navigation patterns, custom components, and Streamlit-specific anti-patterns. Critical for migration since Streamlit's reactive script-as-page model has no Angular equivalent.
+- **Targeted Streamlit re-run.** When Streamlit pages were refactored mid-analysis.
 
-Do NOT use this agent for: functional or technical analysis (use the relevant phase supervisor) or TO-BE work.
+Do NOT use this agent for: non-Streamlit Python apps (the supervisor skips this agent automatically), structural mapping (use `codebase-mapper`), or TO-BE UI design.
 
 ---
 

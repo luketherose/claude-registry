@@ -1,6 +1,6 @@
 ---
 name: orchestrator
-description: "Use this agent when a task spans multiple domains, requires several specialists, or is ambiguous in scope. Dynamically discovers available agents, decomposes the request into independent subtasks, dispatches agents in parallel where possible, and synthesises their outputs into a single coherent result. Stack-agnostic: works for any combination of backend, frontend, database, infrastructure, documentation, migration, or porting tasks regardless of language or framework. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when a task spans multiple domains, requires several specialists, or is ambiguous in scope. Dynamically discovers available agents, decomposes the request into independent subtasks, dispatches agents in parallel where possible, and synthesises their outputs into a single coherent result. Stack-agnostic: works for any combination of backend, frontend, database, infrastructure, documentation, migration, or porting tasks regardless of language or framework. Typical triggers include Multi-domain request, Ambiguous scope, Cross-stack refactor, and Heterogeneous deliverable. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Agent
 model: opus
 model_justification: >

@@ -1,6 +1,6 @@
 ---
 name: technical-analysis-challenger
-description: "Use this agent to perform an adversarial review of Phase 2 Technical Analysis outputs. Reads all Wave 1 artifacts plus the synthesized risk register and reports gaps, contradictions, unverified claims, AS-IS violations (target-tech leaks), and Streamlit-specific risks that may have been missed. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to perform an adversarial review of Phase 2 Technical Analysis outputs. Reads all Wave 1 artifacts plus the synthesized risk register and reports gaps, contradictions, unverified claims, AS-IS violations (target-tech leaks), and Streamlit-specific risks that may have been missed. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline. Typical triggers include W3 challenger gate (always ON) and Pre-deliverable gate. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: yellow
@@ -26,10 +26,10 @@ You never reference target technologies. AS-IS only.
 
 ## When to invoke
 
-- **Phase 2 dispatch.** Invoked by `technical-analysis-supervisor` during the appropriate wave to produce perform an adversarial review of Phase 2 Technical Analysis outputs. Strictly AS-IS — produces findings, not fixes.
-- **Standalone use.** When the user explicitly asks for perform an adversarial review of Phase 2 Technical Analysis outputs outside the `technical-analysis-supervisor` pipeline, with the same inputs already in place.
+- **W3 challenger gate (always ON).** When all W1+W2 outputs are written; looks for gaps, contradictions, AS-IS violations, and unverified claims in the technical analysis.
+- **Pre-deliverable gate.** When the user is about to ship the Phase-2 PDF/PPTX and wants a final adversarial pass.
 
-Do NOT use this agent for: functional analysis (use `functional-analysis/` agents), TO-BE work, or fixing the issues found (the agent only reports).
+Do NOT use this agent for: writing findings (use the W1 analysts), making fixes, or Phase-1 functional gap detection.
 
 ---
 

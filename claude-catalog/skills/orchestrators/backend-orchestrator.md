@@ -217,14 +217,14 @@ When two skills suggest different approaches, the priority is:
 
 ```
 Use Entity when:
-  - You are inside the repository/service layer and have not yet serialised
-  - You are updating JPA state (dirty checking)
+  - Inside the repository/service layer and the data has not yet been serialised
+  - Updating JPA state (dirty checking)
 
 Use DTO when:
-  - You are leaving the service (towards the controller)
-  - You are entering the service (from the controller)
-  - You are at the public interface of a service
-  - You are serialising towards an external API
+  - Leaving the service (towards the controller)
+  - Entering the service (from the controller)
+  - At the public interface of a service
+  - Serialising towards an external API
 
 Never pass an Entity beyond the service→controller boundary.
 ```

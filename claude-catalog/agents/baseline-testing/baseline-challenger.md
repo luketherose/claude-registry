@@ -1,6 +1,6 @@
 ---
 name: baseline-challenger
-description: "Use this agent to perform an adversarial review of Phase 3 Baseline Testing outputs. Reads all worker outputs (fixtures, test files, benchmarks, Postman collection, runner report) and reports gaps, contradictions, AS-IS source modifications (forbidden), determinism risks, oracle integrity issues, severity-mismatch in bug dispositions, and Streamlit-specific risks. Sub-agent of baseline-testing-supervisor (Wave 3, always ON); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to perform an adversarial review of Phase 3 Baseline Testing outputs. Reads all worker outputs (fixtures, test files, benchmarks, Postman collection, runner report) and reports gaps, contradictions, AS-IS source modifications (forbidden), determinism risks, oracle integrity issues, severity-mismatch in bug dispositions, and Streamlit-specific risks. Sub-agent of baseline-testing-supervisor (Wave 3, always ON); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS. Typical triggers include W3 challenger gate and Pre-Phase-4 gate. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: green
@@ -23,10 +23,10 @@ You never reference target technologies. AS-IS only.
 
 ## When to invoke
 
-- **Phase 3 dispatch.** Invoked by `baseline-testing-supervisor` during the appropriate wave to produce perform an adversarial review of Phase 3 Baseline Testing outputs. Strictly AS-IS — never references TO-BE technology.
-- **Standalone use.** When the user explicitly asks for perform an adversarial review of Phase 3 Baseline Testing outputs outside the `baseline-testing-supervisor` pipeline, with the same inputs already in place.
+- **W3 challenger gate.** When `baseline-testing-supervisor` has finished W0–W2 and needs an adversarial review before declaring Phase 3 complete. Looks for coverage holes, AS-IS source modifications, non-determinism, oracle-integrity issues, severity-mismatch, and Streamlit/Postman pitfalls.
+- **Pre-Phase-4 gate.** When the user is about to start Phase 4 and wants a final pass on the baseline before the AS-IS oracle is frozen.
 
-Do NOT use this agent for: TO-BE testing or equivalence verification (use the `tobe-testing/` agents), or unit-test scaffolding for new code (use `test-writer`).
+Do NOT use this agent for: writing the actual tests (use `usecase-test-writer` / `integration-test-writer`), executing the suite (use `baseline-runner`), or fixing the issues found (the agent only flags).
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: dependency-analyzer
-description: "Use this agent to extract external dependencies and build the internal module dependency graph for a codebase in any language. Reads the project's build manifests (pyproject.toml/setup.py/requirements.txt/Pipfile for Python; pom.xml/build.gradle* for Java/Kotlin; Cargo.toml for Rust; go.mod for Go; *.csproj for C#; Gemfile for Ruby; composer.json for PHP; package.json for JS/TS) plus the language-appropriate import declarations to detect circular dependencies and standalone packages. Stack-aware — reads `02-structure/stack.json` to know which manifests and import syntaxes apply. Not for standalone use — invoked only as part of the indexing pipeline. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to extract external dependencies and build the internal module dependency graph for a codebase in any language. Reads the project's build manifests (pyproject.toml/setup.py/requirements.txt/Pipfile for Python; pom.xml/build.gradle* for Java/Kotlin; Cargo.toml for Rust; go.mod for Go; *.csproj for C#; Gemfile for Ruby; composer.json for PHP; package.json for JS/TS) plus the language-appropriate import declarations to detect circular dependencies and standalone packages. Stack-aware — reads `02-structure/stack.json` to know which manifests and import syntaxes apply. Not for standalone use — invoked only as part of the indexing pipeline. Typical triggers include Phase 0 dependency mapping and Pre-Phase-4 dependency audit. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -23,10 +23,10 @@ to `.indexing-kb/03-dependencies/`.
 
 ## When to invoke
 
-- **Phase 0 dispatch.** Invoked by `indexing-supervisor` during the appropriate wave to produce extract external dependencies and build the internal module dependency graph for a codebase in any language. Indexing only — no migration planning, no TO-BE.
-- **Standalone use.** When the user explicitly asks for extract external dependencies and build the internal module dependency graph for a codebase in any language outside the `indexing-supervisor` pipeline, with the same inputs already in place.
+- **Phase 0 dependency mapping.** Extracts external dependencies from `pyproject.toml`/`requirements.txt`/`setup.py`/`Pipfile` and builds the internal module-import graph. Detects circular dependencies and standalone packages. Output at `.indexing-kb/03-dependencies/`.
+- **Pre-Phase-4 dependency audit.** When the team wants the dependency posture before Phase 4 to inform target-stack ADRs.
 
-Do NOT use this agent for: functional or technical analysis (use the relevant phase supervisor) or TO-BE work.
+Do NOT use this agent for: dependency-security CVE scanning (use `dependency-security-analyst` in Phase 2), data-flow inventory (use `data-flow-analyst`), or version bumps.
 
 ---
 

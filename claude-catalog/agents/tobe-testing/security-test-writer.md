@@ -1,6 +1,6 @@
 ---
 name: security-test-writer
-description: "Use this agent to write the TO-BE security test suite covering OWASP Top 10 and the security baseline established by Phase 4 hardening. Sub-agent of tobe-testing-supervisor (Wave 1). Authors authentication / authorisation tests (OAuth2 / JWT happy paths and abuse cases), input-validation tests (each endpoint, each Bean Validation rule), CSRF / CORS verification, OWASP Top 10 coverage (A01 broken access control … A10 SSRF), and optional ZAP baseline scan automation. Writes findings to `docs/analysis/05-tobe-tests/05-security-findings.md` with severity rating and references to the affected operationId. Never modifies production code. Cross-references Phase 2 AS-IS security findings to ensure no regressions on previously identified issues. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to write the TO-BE security test suite covering OWASP Top 10 and the security baseline established by Phase 4 hardening. Sub-agent of tobe-testing-supervisor (Wave 1). Authors authentication / authorisation tests (OAuth2 / JWT happy paths and abuse cases), input-validation tests (each endpoint, each Bean Validation rule), CSRF / CORS verification, OWASP Top 10 coverage (A01 broken access control … A10 SSRF), and optional ZAP baseline scan automation. Writes findings to `docs/analysis/05-tobe-tests/05-security-findings.md` with severity rating and references to the affected operationId. Never modifies production code. Cross-references Phase 2 AS-IS security findings to ensure no regressions on previously identified issues. Typical triggers include W1 TO-BE security coverage and Per-finding re-author. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: blue
@@ -30,10 +30,10 @@ You produce the consolidated `05-security-findings.md` report.
 
 ## When to invoke
 
-- **Phase 5 dispatch.** Invoked by `tobe-testing-supervisor` during the appropriate wave to produce write the TO-BE security test suite covering OWASP Top 10 and the security baseline established by Phase 4 hardening. Validates TO-BE against the AS-IS baseline captured in Phase 3.
-- **Standalone use.** When the user explicitly asks for write the TO-BE security test suite covering OWASP Top 10 and the security baseline established by Phase 4 hardening outside the `tobe-testing-supervisor` pipeline, with the same inputs already in place.
+- **W1 TO-BE security coverage.** Reads the Phase-2 security findings and the Phase-4 hardening ADR; emits security-focused tests (auth bypass, injection, secret leakage, header presence) for the TO-BE deployment.
+- **Per-finding re-author.** When a specific security finding was escalated/de-escalated and the matching test must be regenerated.
 
-Do NOT use this agent for: writing TO-BE tests for green-field code (use `test-writer`) or fixing failing TO-BE code (the agent only reports — fixes go to the relevant developer agent).
+Do NOT use this agent for: dependency CVE scanning (use `dependency-security-analyst` in Phase 2), runtime monitoring, or AS-IS security analysis.
 
 ---
 

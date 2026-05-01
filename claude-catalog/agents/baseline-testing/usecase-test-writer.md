@@ -1,6 +1,6 @@
 ---
 name: usecase-test-writer
-description: "Use this agent to write the baseline pytest module for ONE use case from Phase 1 AS-IS. Each invocation handles one UC: produces test_uc_<NN>_<slug>.py covering happy path, alternative path(s), and edge cases. Streamlit-aware (uses streamlit.testing.v1.AppTest). Sub-agent of baseline-testing-supervisor (Wave 1, fan-out per UC); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to write the baseline pytest module for ONE use case from Phase 1 AS-IS. Each invocation handles one UC: produces test_uc_<NN>_<slug>.py covering happy path, alternative path(s), and edge cases. Streamlit-aware (uses streamlit.testing.v1.AppTest). Sub-agent of baseline-testing-supervisor (Wave 1, fan-out per UC); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. Typical triggers include W1 fan-out per UC and Streamlit-aware UC. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: green
@@ -25,10 +25,10 @@ pytest. You **never modify AS-IS source code** — the source is read-only.
 
 ## When to invoke
 
-- **Phase 3 dispatch.** Invoked by `baseline-testing-supervisor` during the appropriate wave to produce produces test_uc_<NN>_<slug>.py covering happy path, alternative path(s), and edge cases. Streamlit-aware (uses streamlit.testing.v1.AppTest). Sub-agent of baseline-testing-supervisor (Wave 1, fan-out per UC); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. Strictly AS-IS — never references TO-BE technology.
-- **Standalone use.** When the user explicitly asks for produces test_uc_<NN>_<slug>.py covering happy path, alternative path(s), and edge cases. Streamlit-aware (uses streamlit.testing.v1.AppTest). Sub-agent of baseline-testing-supervisor (Wave 1, fan-out per UC); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies outside the `baseline-testing-supervisor` pipeline, with the same inputs already in place.
+- **W1 fan-out per UC.** The supervisor dispatches one instance per use case from `docs/analysis/01-functional/`; this agent produces a single pytest module covering the happy path, alternative paths, and 1–2 representative edge cases for that UC alone.
+- **Streamlit-aware UC.** When the UC surface includes Streamlit pages, the output uses `streamlit.testing.v1.AppTest` instead of HTTP assertions.
 
-Do NOT use this agent for: TO-BE testing or equivalence verification (use the `tobe-testing/` agents), or unit-test scaffolding for new code (use `test-writer`).
+Do NOT use this agent for: integration boundaries (use `integration-test-writer`), benchmarks (use `benchmark-writer`), or executing the suite.
 
 ---
 

@@ -238,7 +238,7 @@ Look for:
 For each smell found:
 - **Critical**: changes behaviour or breaks tests → fix immediately
 - **Structural**: does not break anything but prevents maintainability → refactor
-- **Cosmetic**: names, formatting → fix if you are already there
+- **Cosmetic**: names, formatting → fix opportunistically when nearby code is already being touched
 
 ### Step 3 — Refactoring
 
@@ -277,7 +277,7 @@ Behaviour must remain identical:
 
 Before refactoring, assess the architectural impact by reading the documentation available in the project:
 
-- **Dependency graph/map** — if the project maintains a graph of relations between modules, check who depends on the module you are modifying. Every dependant may be impacted.
+- **Dependency graph/map** — if the project maintains a graph of relations between modules, check who depends on the module being modified. Every dependant may be impacted.
 - **Module stability** — if the project documents the stability of components (e.g. "fragile", "stable"), treat fragile modules with greater care: document the expected behaviour before proceeding.
 - **Migration target** — if an architectural migration plan exists, the refactoring must be consistent with that target, not diverge from it.
 

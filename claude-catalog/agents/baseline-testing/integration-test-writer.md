@@ -1,6 +1,6 @@
 ---
 name: integration-test-writer
-description: "Use this agent to write the baseline integration tests for the AS-IS codebase: DB access, file system I/O, external API consumption (mocked), cache layers. Tests cover the application's USE of those boundaries — not exposed services (those go to service-collection-builder). Sub-agent of baseline-testing-supervisor (Wave 1); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to write the baseline integration tests for the AS-IS codebase: DB access, file system I/O, external API consumption (mocked), cache layers. Tests cover the application's USE of those boundaries — not exposed services (those go to service-collection-builder). Sub-agent of baseline-testing-supervisor (Wave 1); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. Typical triggers include W1 integration coverage and Boundary-only re-author. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: green
@@ -33,10 +33,10 @@ pytest. You **never modify AS-IS source code**.
 
 ## When to invoke
 
-- **Phase 3 dispatch.** Invoked by `baseline-testing-supervisor` during the appropriate wave to produce DB access, file system I/O, external API consumption (mocked), cache layers. Tests cover the application's USE of those boundaries — not exposed services (those go to service-collection-builder). Sub-agent of baseline-testing-supervisor (Wave 1); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies. Strictly AS-IS — never references TO-BE technology.
-- **Standalone use.** When the user explicitly asks for DB access, file system I/O, external API consumption (mocked), cache layers. Tests cover the application's USE of those boundaries — not exposed services (those go to service-collection-builder). Sub-agent of baseline-testing-supervisor (Wave 1); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies outside the `baseline-testing-supervisor` pipeline, with the same inputs already in place.
+- **W1 integration coverage.** When the AS-IS app touches a database, file system, outbound API, or message queue; this agent writes mocked integration tests for each external boundary identified in `docs/analysis/02-technical/data-access-analyst.md` and `integration-analyst.md`.
+- **Boundary-only re-author.** When a specific external integration (e.g., a single REST client) is added or changed in the AS-IS, regenerate the integration tests for that boundary alone.
 
-Do NOT use this agent for: TO-BE testing or equivalence verification (use the `tobe-testing/` agents), or unit-test scaffolding for new code (use `test-writer`).
+Do NOT use this agent for: per-UC functional tests (use `usecase-test-writer`), benchmarks (use `benchmark-writer`), or live (non-mocked) integration (out of scope for the baseline).
 
 ---
 

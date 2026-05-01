@@ -52,7 +52,7 @@ studies on the public website / mobile app / accessibility evolution, and
 the public press / fonts archives.
 
 **Rule for the calling agent**: the values below are the safe public
-defaults. If you have access to the gated WeAreDesign tokens (Figma
+defaults. If access to the gated WeAreDesign tokens is available (Figma
 variables, Bricks component library, official Sketch/Figma kits), those
 override every default in this file — but never silently. Reference the
 source explicitly in code comments: `// source: WeAreDesign Bricks

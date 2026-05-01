@@ -1,6 +1,6 @@
 ---
 name: developer-go
-description: "Use this agent when writing, reviewing, or refactoring Go code. Produces production-ready Go following effective-go conventions, the standard project layout, table-driven tests, structured logging with `log/slog`, context propagation, and explicit error handling. Opinionated on: standard library first, minimal dependencies, golangci-lint, and avoiding common Go anti-patterns (init abuse, panic in libraries, naked returns in long functions, ignoring `context.Context`). Covers HTTP services (net/http, chi, gin), CLIs (cobra), and worker daemons. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing, reviewing, or refactoring Go code. Produces production-ready Go following effective-go conventions, the standard project layout, table-driven tests, structured logging with `log/slog`, context propagation, and explicit error handling. Opinionated on: standard library first, minimal dependencies, golangci-lint, and avoiding common Go anti-patterns (init abuse, panic in libraries, naked returns in long functions, ignoring `context.Context`). Covers HTTP services (net/http, chi, gin), CLIs (cobra), and worker daemons. Typical triggers include Writing Go code, Reviewing or refactoring Go code, and Adding tests with the `testing` package + `testify` / `gomock`. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
 color: cyan

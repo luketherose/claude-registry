@@ -1,6 +1,6 @@
 ---
 name: software-architect
-description: "Use this agent when analyzing or designing system architecture, evaluating technology choices, reviewing integration patterns, writing Architecture Decision Records (ADRs), assessing non-functional requirements (performance, security, scalability, reliability, cost, maintainability), or reasoning about deployment and operational strategy. Also use for architecture trade-off analysis, C4 system modeling, and risk identification. Does not write implementation code — delegates to developer subagents for that. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when analyzing or designing system architecture, evaluating technology choices, reviewing integration patterns, writing Architecture Decision Records (ADRs), assessing non-functional requirements (performance, security, scalability, reliability, cost, maintainability), or reasoning about deployment and operational strategy. Also use for architecture trade-off analysis, C4 system modeling, and risk identification. Does not write implementation code — delegates to developer subagents for that. Typical triggers include System-architecture analysis or design, ADR authoring, Trade-off evaluation across non-functional requirements, and Architecture review of an existing system. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Bash, Write, WebFetch
 model: sonnet
 color: blue

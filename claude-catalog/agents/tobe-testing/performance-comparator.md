@@ -1,6 +1,6 @@
 ---
 name: performance-comparator
-description: "Use this agent to compare TO-BE performance against the AS-IS benchmark from Phase 3. Sub-agent of tobe-testing-supervisor (Wave 2). Authors load-test scenarios (Gatling or k6) for the TO-BE backend and compares the results against the Phase 3 AS-IS benchmark. Produces `04-performance-comparison.md` with per-UC p95 / p99 deltas, throughput comparison, memory footprint comparison, and a regression flag when p95 exceeds +10% of the AS-IS baseline. Drives load tests through the OpenAPI contract (one scenario per critical UC and per high-traffic endpoint). When `execute_policy` permits, runs the load tests and captures real numbers; otherwise scaffolds the scenarios and marks the report `partial — pending execution`. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to compare TO-BE performance against the AS-IS benchmark from Phase 3. Sub-agent of tobe-testing-supervisor (Wave 2). Authors load-test scenarios (Gatling or k6) for the TO-BE backend and compares the results against the Phase 3 AS-IS benchmark. Produces `04-performance-comparison.md` with per-UC p95 / p99 deltas, throughput comparison, memory footprint comparison, and a regression flag when p95 exceeds +10% of the AS-IS baseline. Drives load tests through the OpenAPI contract (one scenario per critical UC and per high-traffic endpoint). When `execute_policy` permits, runs the load tests and captures real numbers; otherwise scaffolds the scenarios and marks the report `partial — pending execution`. Typical triggers include W2 perf delta vs AS-IS baseline and Targeted operation comparison. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: blue
@@ -28,10 +28,10 @@ measure and compare.
 
 ## When to invoke
 
-- **Phase 5 dispatch.** Invoked by `tobe-testing-supervisor` during the appropriate wave to produce compare TO-BE performance against the AS-IS benchmark from Phase 3. Validates TO-BE against the AS-IS baseline captured in Phase 3.
-- **Standalone use.** When the user explicitly asks for compare TO-BE performance against the AS-IS benchmark from Phase 3 outside the `tobe-testing-supervisor` pipeline, with the same inputs already in place.
+- **W2 perf delta vs AS-IS baseline.** Reads the Phase-3 benchmark JSON and runs the same operations against the deployed TO-BE; emits a per-operation delta report (latency, throughput, memory). Required for the equivalence report's perf section.
+- **Targeted operation comparison.** When a single hot path was optimised and the team wants the perf delta for that operation alone.
 
-Do NOT use this agent for: writing TO-BE tests for green-field code (use `test-writer`) or fixing failing TO-BE code (the agent only reports — fixes go to the relevant developer agent).
+Do NOT use this agent for: writing benchmarks (use `benchmark-writer` in Phase 3), authoring functional tests, or AS-IS analysis.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: hardening-architect
-description: "Use this agent to apply observability and security hardening to the TO-BE scaffold produced in Wave 3: structured JSON logging with correlation-id, Micrometer + Prometheus metrics, OpenTelemetry tracing, Spring Security 6 production baseline, secrets management guidance, frontend security headers and CSP. Updates configuration files (application.yml, environment.ts) and produces ADR-004 (observability) + ADR-005 (security baseline). Sub-agent of refactoring-tobe-supervisor (Wave 4); not for standalone use. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to apply observability and security hardening to the TO-BE scaffold produced in Wave 3: structured JSON logging with correlation-id, Micrometer + Prometheus metrics, OpenTelemetry tracing, Spring Security 6 production baseline, secrets management guidance, frontend security headers and CSP. Updates configuration files (application.yml, environment.ts) and produces ADR-004 (observability) + ADR-005 (security baseline). Sub-agent of refactoring-tobe-supervisor (Wave 4); not for standalone use. Typical triggers include W4 cross-cutting concerns and Hardening refresh. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write, Edit
 model: sonnet
 color: red
@@ -35,10 +35,10 @@ This is a TO-BE phase: target tech.
 
 ## When to invoke
 
-- **Phase 4 dispatch.** Invoked by `refactoring-tobe-supervisor` during the appropriate wave to produce structured JSON logging with correlation-id, Micrometer + Prometheus metrics, OpenTelemetry tracing, Spring Security 6 production baseline, secrets management guidance, frontend security headers and CSP. Updates configuration files (application.yml, environment.ts) and produces ADR-004 (observability) + ADR-005 (security baseline). Sub-agent of refactoring-tobe-supervisor (Wave 4); not for standalone use. First phase with target tech (Spring Boot 3 + Angular).
-- **Standalone use.** When the user explicitly asks for structured JSON logging with correlation-id, Micrometer + Prometheus metrics, OpenTelemetry tracing, Spring Security 6 production baseline, secrets management guidance, frontend security headers and CSP. Updates configuration files (application.yml, environment.ts) and produces ADR-004 (observability) + ADR-005 (security baseline). Sub-agent of refactoring-tobe-supervisor (Wave 4); not for standalone use outside the `refactoring-tobe-supervisor` pipeline, with the same inputs already in place.
+- **W4 cross-cutting concerns.** After backend + frontend scaffolds are in place; produces observability (JSON logging + correlation-id, Micrometer + Prometheus, OpenTelemetry) and security (Spring Security 6 baseline, OWASP headers, CSP). Emits ADR-004 (observability) and ADR-005 (security).
+- **Hardening refresh.** When a security or observability standard tightens and the cross-cutting concerns must be re-derived.
 
-Do NOT use this agent for: AS-IS analysis (Phases 0–3) or TO-BE testing (use the `tobe-testing/` agents).
+Do NOT use this agent for: feature-level code (W3 work), migration timing (use `migration-roadmap-builder`), or TO-BE testing.
 
 ---
 

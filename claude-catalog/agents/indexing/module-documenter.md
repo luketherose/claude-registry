@@ -1,6 +1,6 @@
 ---
 name: module-documenter
-description: "Use this agent to document one package or module of a codebase end-to-end at the API level: purpose, public interface (exported classes/functions), key data structures, internal organization. Language-agnostic — adapts to the package conventions of the detected language (Python packages via `__init__.py`, Java/Kotlin packages via `src/main/{java,kotlin}/`, Go modules under `cmd/`/`internal/`, Rust crates declared in `Cargo.toml`, .NET projects via `*.csproj`, Ruby `app/`/`lib/` directories, PHP namespaces from `composer.json` autoload, JS/TS packages under `src/`/`app/`/`packages/`). Reads `02-structure/stack.json` to know which conventions apply. One invocation per top-level package — runs in parallel with other module-documenter invocations targeting different packages. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to document one package or module of a codebase end-to-end at the API level: purpose, public interface (exported classes/functions), key data structures, internal organization. Language-agnostic — adapts to the package conventions of the detected language (Python packages via `__init__.py`, Java/Kotlin packages via `src/main/{java,kotlin}/`, Go modules under `cmd/`/`internal/`, Rust crates declared in `Cargo.toml`, .NET projects via `*.csproj`, Ruby `app/`/`lib/` directories, PHP namespaces from `composer.json` autoload, JS/TS packages under `src/`/`app/`/`packages/`). Reads `02-structure/stack.json` to know which conventions apply. One invocation per top-level package — runs in parallel with other module-documenter invocations targeting different packages. Typical triggers include Phase 0 module fan-out and Per-module refresh. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -21,10 +21,10 @@ Your output goes to `.indexing-kb/04-modules/<package-name>.md`.
 
 ## When to invoke
 
-- **Phase 0 dispatch.** Invoked by `indexing-supervisor` during the appropriate wave to produce purpose, public interface (exported classes/functions), key data structures, internal organization. Language-agnostic — adapts to the package conventions of the detected language (Python packages via `__init__.py`, Java/Kotlin packages via `src/main/{java,kotlin}/`, Go modules under `cmd/`/`internal/`, Rust crates declared in `Cargo.toml`, .NET projects via `*.csproj`, Ruby `app/`/`lib/` directories, PHP namespaces from `composer.json` autoload, JS/TS packages under `src/`/`app/`/`packages/`). Reads `02-structure/stack.json` to know which conventions apply. One invocation per top-level package — runs in parallel with other module-documenter invocations targeting different packages. Indexing only — no migration planning, no TO-BE.
-- **Standalone use.** When the user explicitly asks for purpose, public interface (exported classes/functions), key data structures, internal organization. Language-agnostic — adapts to the package conventions of the detected language (Python packages via `__init__.py`, Java/Kotlin packages via `src/main/{java,kotlin}/`, Go modules under `cmd/`/`internal/`, Rust crates declared in `Cargo.toml`, .NET projects via `*.csproj`, Ruby `app/`/`lib/` directories, PHP namespaces from `composer.json` autoload, JS/TS packages under `src/`/`app/`/`packages/`). Reads `02-structure/stack.json` to know which conventions apply. One invocation per top-level package — runs in parallel with other module-documenter invocations targeting different packages outside the `indexing-supervisor` pipeline, with the same inputs already in place.
+- **Phase 0 module fan-out.** One invocation per top-level package in the repo, run in parallel. Documents each module end-to-end at the API level: purpose, public interface (exported classes/functions), key data structures, internal organisation. Output at `.indexing-kb/04-modules/<package-name>.md`.
+- **Per-module refresh.** When a single package was significantly refactored and only its module doc needs regenerating.
 
-Do NOT use this agent for: functional or technical analysis (use the relevant phase supervisor) or TO-BE work.
+Do NOT use this agent for: cross-module synthesis (use `synthesizer`), business-logic extraction (use `business-logic-analyst`), or TO-BE module design.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: actor-feature-mapper
-description: "Use this agent to extract actors, roles, personas, and the full feature map of an application AS-IS from an existing knowledge base at .indexing-kb/. Tightly couples actor and feature analysis because who-can-do-what is one concept, not two. Strictly AS-IS — never references target technologies. Sub-agent of functional-analysis-supervisor; not for standalone use — invoked only as part of the Phase 1 Functional Analysis pipeline. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to extract actors, roles, personas, and the full feature map of an application AS-IS from an existing knowledge base at .indexing-kb/. Tightly couples actor and feature analysis because who-can-do-what is one concept, not two. Strictly AS-IS — never references target technologies. Sub-agent of functional-analysis-supervisor; not for standalone use — invoked only as part of the Phase 1 Functional Analysis pipeline. Typical triggers include W1 actor-feature foundation and Actor coverage audit. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: cyan
@@ -24,10 +24,10 @@ patterns. You describe the system as it is today.
 
 ## When to invoke
 
-- **Phase 1 dispatch.** Invoked by `functional-analysis-supervisor` during the appropriate wave to produce extract actors, roles, personas, and the full feature map of an application AS-IS from an existing knowledge base at. Strictly AS-IS.
-- **Standalone use.** When the user explicitly asks for extract actors, roles, personas, and the full feature map of an application AS-IS from an existing knowledge base at outside the `functional-analysis-supervisor` pipeline, with the same inputs already in place.
+- **W1 actor-feature foundation.** First wave of Phase 1; reads `.indexing-kb/` and produces the actor list, role/persona definitions, the full feature map of the application, and the Actor×Feature matrix at `docs/analysis/01-functional/actor-feature-map.md`. Downstream W2 agents consume this.
+- **Actor coverage audit.** When an existing functional report needs verification — does every feature have a defined actor? Does every actor have at least one feature?
 
-Do NOT use this agent for: technical analysis (use the `technical-analysis/` agents), TO-BE design (Phases 4+), or producing the final stakeholder LaTeX deliverable.
+Do NOT use this agent for: implicit business logic (use `implicit-logic-analyst`), UI surface mapping (use `ui-surface-analyst`), or use-case sequence diagrams (use `user-flow-analyst`).
 
 ---
 
