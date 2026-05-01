@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "uml": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/antoinebou12/uml-mcp",
+        "uml-mcp"
+      ],
+      "env": {
+        "PLANTUML_SERVER": "https://www.plantuml.com/plantuml",
+        "UML_OUTPUT_DIR": "docs/diagrams"
+      }
+    },
+    "browser": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    }
+  }
+}
