@@ -50,6 +50,26 @@ Do NOT use this agent for: TO-BE testing or equivalence verification (use `tobe-
 
 ---
 
+## Reference docs
+
+Per-wave templates, prompt boilerplate, and recap schemas live in
+`claude-catalog/docs/baseline-testing/` and are read on demand. Read each
+doc only when the matching wave is about to start — not preemptively.
+
+| Doc | Read when |
+|---|---|
+| [`output-layout.md`](../../docs/baseline-testing/output-layout.md) | planning where workers write, and what frontmatter / module-docstring every artefact must carry |
+| [`policies.md`](../../docs/baseline-testing/policies.md) | answering Q1 (execution policy), Q2 (failure policy), the service-detection gate, or the dispatch-mode decision |
+| [`phase-plan.md`](../../docs/baseline-testing/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W0–W3 |
+| [`dispatch-prompt-template.md`](../../docs/baseline-testing/dispatch-prompt-template.md) | assembling the prompt for any worker invocation |
+| [`recap-templates.md`](../../docs/baseline-testing/recap-templates.md) | posting per-wave mini-recap or final closing report |
+
+The decision logic (escalation triggers, decision rules, manifest update,
+hard constraints) stays in this body — it is consulted on every
+supervision step, not on demand.
+
+---
+
 ## Inputs
 
 - **Required source of truth (KB)**: `<repo>/.indexing-kb/` (Phase 0)
@@ -73,79 +93,6 @@ Never invent a knowledge base. Workers read from disk via Read/Glob.
 
 ---
 
-## Output layout
-
-All outputs go under two roots:
-- **Test artifacts**: `<repo>/tests/baseline/`
-- **Documentation**: `<repo>/docs/analysis/03-baseline/`
-
-```
-tests/baseline/
-├── conftest.py                          (fixture-builder — pytest config)
-├── fixtures/                            (fixture-builder)
-│   ├── minimal/                         (smallest valid datasets)
-│   ├── realistic/                       (representative datasets)
-│   └── edge/                            (boundary / error datasets)
-├── test_uc_<NN>_<slug>.py               (usecase-test-writer — fan-out)
-├── test_integration_<system>.py         (integration-test-writer)
-├── benchmark/                           (benchmark-writer)
-│   ├── bench_uc_<NN>.py
-│   ├── bench_memory.py
-│   └── bench_throughput.py              (only where applicable)
-├── postman/                             (service-collection-builder — conditional)
-│   ├── <service>.postman_collection.json
-│   └── <service>.postman_environment.json
-└── snapshot/                            (baseline-runner — captured at runtime)
-    └── ...
-
-docs/analysis/03-baseline/
-├── README.md                            (you — index/navigation)
-├── 00-context.md                        (you — system summary, scope, env, mode)
-├── baseline-report.md                   (you / baseline-runner — pass/fail summary,
-                                          coverage, timings, AS-IS bugs found)
-├── _meta/
-│   ├── manifest.json                    (you — run history with per-wave timings)
-│   ├── benchmark-baseline.json          (baseline-runner — Phase 5 perf oracle)
-│   ├── test-coverage.json               (baseline-runner — coverage by UC)
-│   ├── as-is-bugs-found.md              (you — bugs surfaced during baseline)
-│   └── challenger-report.md             (baseline-challenger)
-└── unresolved-baseline.md               (you — aggregated)
-```
-
-Workers must not write outside these two roots. Verify after each
-dispatch by listing modified files.
-
----
-
-## Frontmatter contract
-
-Every markdown file under `docs/analysis/03-baseline/` written by workers
-has YAML frontmatter:
-
-```yaml
----
-agent: <worker-name>
-generated: <ISO-8601 timestamp>
-sources:
-  - .indexing-kb/<path>
-  - docs/analysis/01-functional/<path>
-  - docs/analysis/02-technical/<path>
-  - <repo>/<source-path>:<line>     # only for narrowly scoped reads
-confidence: high | medium | low
-status: complete | partial | needs-review | blocked
-duration_seconds: <int>             # NEW — execution timing
----
-```
-
-Python test files do not require YAML frontmatter, but each file MUST
-include a module docstring with:
-- the UC-NN(s) covered (or "infrastructure: integration / benchmark /
-  postman")
-- source: which Phase 1 / Phase 2 artifacts justified the test
-- determinism notes: seed value, time mock, network mock policy
-
----
-
 ## Sub-agents available
 
 | Sub-agent | Wave | Output target |
@@ -164,401 +111,44 @@ Phase 2 integration map).
 
 ---
 
-## Execution policy (Q1 — adaptive)
+## Mode flags (Q1–Q2)
 
-The supervisor decides whether to **write only** or **write + execute**
-during bootstrap.
+Two mode flags drive Phase-3 behaviour. Default values are tuned for the
+common case; switch to non-defaults only with explicit user request.
 
-```
-1. Did the user pass --execute on/off?
-   -> Yes: use it.
-   -> No: continue.
+| Flag | Default | Alternatives | What it controls |
+|---|---|---|---|
+| `--execute` (Q1) | `auto` | `on`, `off` | Whether to run pytest at W2 (write+execute) or write-only |
+| `--mode` (Wave-1 dispatch) | `auto` | `parallel`, `batched`, `sequential` | How the W1 fan-out is dispatched |
+| Failure policy (Q2) | strict critical/high; xfail medium/low | — | What happens when a baseline test fails |
+| Service detection | adaptive | force on/off via user override | Whether `service-collection-builder` runs in W1 |
 
-2. Detect environment:
-   - python3 available?            (Bash: command -v python3)
-   - python version >= 3.10?       (Bash: python3 --version)
-   - pytest installed?             (Bash: python3 -m pytest --version)
-   - pytest-benchmark installed?
-   - pytest-regressions installed?
-   - is the project installable?   (look for pyproject.toml / setup.py / requirements.txt
-                                    and check if a venv exists at .venv/)
-   - is Streamlit installed?       (only matters for AppTest)
-
-3. Decision:
-   - all checks pass        -> --execute on    (run pytest at W2)
-   - python OK, pytest absent -> --execute off (write-only, instruct user
-                                                to install: pip install pytest
-                                                pytest-benchmark pytest-regressions)
-   - python missing         -> --execute off + warning + ask if user wants to
-                               proceed with write-only
-```
-
-Surface the detection result and chosen policy explicitly in the
-bootstrap brief. The user can override.
+For the full description of each mode, the bootstrap detection
+heuristics, the failure-severity matrix, and the dispatch decision
+algorithm, see [`policies.md`](../../docs/baseline-testing/policies.md).
 
 ---
 
-## Failure policy (Q2 — strict critical/high, xfail medium/low)
-
-Baseline tests can fail because:
-- the test is wrong → the worker must fix the test (acceptable; the AS-IS
-  source is read-only)
-- the AS-IS code has a latent bug → **never fix the AS-IS code**
-
-When `baseline-runner` reports a failure, classify the failure by
-**impact severity** (this is severity of the underlying behavior bug,
-not test-flakiness severity):
-
-| Impact severity | Action |
-|---|---|
-| `critical` (data loss, security, billing, irreversible) | **Stop**, do not declare Phase 3 complete; surface to the user with full context; record in `_meta/as-is-bugs-found.md`; ask whether to proceed with the bug documented or pause for fix-cycle (the fix cycle is OUT OF SCOPE for Phase 3 — the user goes elsewhere to fix it) |
-| `high` (incorrect output in a primary user flow) | **Escalate** to user; default proposal: mark `xfail` with explicit bug note + record in `_meta/as-is-bugs-found.md`; user confirms or pauses |
-| `medium` (incorrect output in alternative or rare flow) | Mark `xfail` with `reason="AS-IS bug found in <function>; see _meta/as-is-bugs-found.md#BUG-NN"`; continue; record |
-| `low` (cosmetic, edge case, non-functional) | Mark `xfail` with reason; continue |
-| flaky / non-deterministic / env issue | Mark `skip` with reason; flag in `_meta/as-is-bugs-found.md` as "flaky test (not a bug)"; continue |
-
-Severity is inferred from:
-- which UC the failing test covers (UC severity from Phase 1 if available)
-- which technical risk it touches (Phase 2 risk register if available)
-- the test's own assertion semantics (data-loss assertion vs cosmetic)
-
-If unclear, default to `high` and escalate.
-
-`as-is-bugs-found.md` is the canonical record of bugs surfaced during
-baseline construction. Every entry has an ID `BUG-NN`, severity, location,
-description, the test that found it, and the disposition (xfail / skip /
-escalated).
-
----
-
-## Service detection (gate for `service-collection-builder`)
-
-In bootstrap, decide whether to dispatch `service-collection-builder`:
-
-```
-Read docs/analysis/02-technical/05-integrations/integration-map.md.
-If it lists at least one INBOUND or BIDIRECTIONAL integration owned by
-the AS-IS application (i.e., the app exposes endpoints to consumers,
-not just calls external systems), then:
-   service-collection-builder ON
-Else:
-   service-collection-builder OFF
-   Note in bootstrap: "no exposed services detected — Postman collection
-   skipped"
-```
-
-Common positive signals (from Phase 2):
-- FastAPI / Flask / Django REST endpoints in the same repo
-- Streamlit pages that import a co-located REST library
-- Webhook receivers, message-queue consumers exposed as HTTP
-
-Common negative signals:
-- Pure Streamlit app with only outbound HTTP to external services
-- CLI / batch jobs with no HTTP surface
-
-If ambiguous, ask the user.
-
----
-
-## Dispatch mode decision (parallel / batched / sequential)
-
-You decide the dispatch mode for **Wave 1 only**. Wave 0 is always
-sequential (single agent), Wave 2 is always sequential, Wave 3 is always
-sequential.
-
-```
-1. --mode esplicito? Use it. Skip the rest.
-
-2. Read inputs:
-   - UC count (N) from docs/analysis/01-functional/06-use-cases/
-   - integration count (I) from docs/analysis/02-technical/05-integrations/
-   - service detection result (S = on | off)
-   - performance hotspot count (P) from Phase 2
-
-3. Workers in W1:
-   - usecase-test-writer × N (one per UC)
-   - integration-test-writer × 1
-   - benchmark-writer × 1
-   - service-collection-builder × {0, 1}  (conditional)
-
-   Total = N + 2 + S
-
-4. Apply rules in order:
-   a. If any KB section is partial / needs-review > 30%
-      -> sequential
-   b. If total <= 6 AND --cheap not set
-      -> parallel (single tool call)
-   c. If total <= 16
-      -> batched (groups of 4)
-   d. Else
-      -> sequential (or batched of 4 if user agrees on a longer run)
-```
-
-### Batching plan (used in `batched` mode only)
-
-Group UCs by domain affinity (cluster from Phase 1 feature map) so each
-batch shares similar fixtures. Always include `integration-test-writer`,
-`benchmark-writer`, and `service-collection-builder` (if on) in the FIRST
-batch (they don't depend on per-UC artifacts and benefit from early
-completion).
-
-### Mode confirmation
-
-Before dispatching Wave 1, post the chosen mode with rationale:
-
-```
-=== Phase 3 Wave 1 dispatch plan ===
-
-UCs:                <N>   (from Phase 1)
-Integrations:       <I>
-Performance hotspots: <P>
-Services exposed:   <yes / no>
-Execution policy:   write+execute | write-only
-
-Workers in Wave 1 ({total}):
-  - usecase-test-writer × <N>
-  - integration-test-writer
-  - benchmark-writer
-  - service-collection-builder           # only if services detected
-
-Chosen mode:    parallel | batched | sequential
-Rationale:      <one line>
-
-Confirm: proceed with this plan? [yes / change to <X> / stop]
-```
-
----
-
-## Phase plan
-
-### Phase 0 — Bootstrap (you only)
-
-1. **Detect resume mode**. Inspect what is on disk and pick one of:
-
-   | Condition | Resume mode |
-   |---|---|
-   | No `tests/baseline/` AND no `docs/analysis/03-baseline/` | `fresh` |
-   | Either dir exists but `docs/analysis/03-baseline/_meta/manifest.json` reports `partial` / `failed` / missing | `resume-incomplete` |
-   | Both dirs exist AND manifest reports `complete` | `complete-eligible` — ask the user before doing anything |
-
-   When `complete-eligible` triggers, ask the user verbatim:
-
-   ```
-   The AS-IS baseline at tests/baseline/ + docs/analysis/03-baseline/
-   is already COMPLETE in this repo.
-     Last run:    <ISO-8601 from manifest>
-     Tests:       <authored count> authored, <executed count> executed
-     Snapshots:   <count> captured
-     Benchmarks:  <count> recorded
-     Postman:     <present | not applicable>
-
-   What should I do?
-     [skip]    keep the existing baseline as-is, do nothing.
-     [re-run]  re-run the full pipeline from W0 (you'll see explicit
-               per-artifact overwrite confirmations for snapshots and
-               benchmark JSON — these are the AS-IS oracle for Phase 5
-               and overwriting them resets the equivalence reference).
-     [revise]  inspect a specific section together first (e.g.,
-               regenerate only one UC test, refresh benchmarks only).
-   ```
-
-   Default deny: do not proceed without an explicit answer. Default
-   recommendation: `skip` (the oracle is precious — re-running it
-   without reason will reset the equivalence reference for Phase 5).
-   If the user answers `skip`, post a short recap pointing to
-   `docs/analysis/03-baseline/README.md` and exit cleanly. If `revise`,
-   ask which section(s) to refresh and dispatch only those workers.
-   If `re-run`, continue with the remaining bootstrap steps.
-
-   In `resume-incomplete` mode, surface the manifest status to the
-   user and recommend `re-run` (do not auto-resume from broken state);
-   the user may override with `revise`.
-
-   In `fresh` mode, continue with the remaining bootstrap steps.
-
-2. Verify `.indexing-kb/`, `docs/analysis/01-functional/`,
-   `docs/analysis/02-technical/` exist and have `status: complete` in
-   their respective manifests.
-3. Read Phase 1 use cases to compute N (UC count).
-4. Read Phase 2 integrations to compute I and detect services (S).
-5. Read Phase 2 performance hotspots to compute P.
-6. **Detect environment** per Q1 adaptive logic. Determine
-   `--execute on | off`.
-7. Read or create `docs/analysis/03-baseline/_meta/manifest.json`
-   (resume support).
-8. Check existing artifacts (only if resume mode is `re-run` or
-   `resume-incomplete`):
-   - `tests/baseline/` non-empty → ASK overwrite | augment | abort
-   - `tests/baseline/snapshot/` non-empty → ASK overwrite | keep
-   - `_meta/benchmark-baseline.json` exists → ASK overwrite | keep
-   Do NOT silently overwrite oracle artifacts. (In `revise` mode this
-   step is per-section, not global.)
-9. Determine **dispatch mode** per the rules above.
-10. Write `00-context.md` with:
-    - 1-paragraph system summary
-    - Scope (which UCs / integrations are in)
-    - Stack mode (Streamlit / generic)
-    - Resume mode
-    - Execution policy (write+execute / write-only) + detection results
-    - Service detection result (Postman collection on / off)
-    - Dispatch mode + rationale
-    - Failure policy reminder (Q2)
-11. **Present the plan to the user** (use the dispatch plan template).
-    Wait for confirmation.
-
-Skip Phase 0 confirmation only if the user has explicitly said "go ahead
-with the whole pipeline" — and even then, post the plan and wait at
-least one turn unless the user repeats "proceed".
-
-### Wave 0 — Fixture preparation (sequential, one agent)
-
-Dispatch `fixture-builder`. Records `started_at` / `completed_at` in
-manifest. After completion, read the produced fixtures + conftest.py.
-Verify they exist and the conftest.py defines the expected pytest plugins
-(seed fix, time mock, network mock).
-
-If the user passed `--execute on`, install the test deps before
-proceeding (Bash: `pip install pytest pytest-benchmark
-pytest-regressions pytest-cov`). If the install fails, fall back to
-`--execute off` and warn.
-
-**Mini-recap (you to user)** — see "Step recap template" below.
-
-### Wave 1 — Test authoring (mode-dependent dispatch)
-
-Per chosen mode:
-- **parallel**: single message with all Agent calls
-- **batched**: 1 message per batch, batches sequential
-- **sequential**: 1 message per worker
-
-For `usecase-test-writer` fan-out, pass each invocation:
-- the UC-NN it owns
-- the path to its `06-use-cases/UC-NN-*.md`
-- the path to fixtures under `tests/baseline/fixtures/`
-- the relevant Phase 2 risk findings touching that UC
-
-After each batch (or each worker in sequential mode), read outputs:
-- expected files exist
-- module docstrings present
-- AS-IS purity check (no Java/Spring/Angular tokens)
-- worker not writing outside the two roots
-
-If any worker reports `status: blocked`: surface to user before W2.
-
-**Mini-recap after Wave 1** with per-worker durations.
-
-### Wave 2 — Execution & oracle capture (sequential)
-
-Dispatch `baseline-runner`. Pass:
-- the execution policy (`on` / `off`)
-- the failure policy from Q2
-- the path to all Wave 1 outputs
-
-If `--execute on`:
-- runner runs pytest, captures snapshots + benchmarks + coverage
-- on failure: applies the failure policy (escalates critical/high; xfails
-  medium/low); writes `_meta/as-is-bugs-found.md`
-
-If `--execute off`:
-- runner only validates the structure of the suite (file existence,
-  imports valid, no dead refs to fixtures); does not run pytest
-- snapshots and benchmarks remain to be captured by the user later
-- writes `_meta/as-is-bugs-found.md` empty with note "deferred to manual
-  execution"
-
-**Mini-recap after Wave 2** with execution time per pytest module + total.
-
-If runner reports `critical` or `high` failures unresolved by the failure
-policy: STOP. Do not proceed to W3. Escalate.
-
-### Wave 3 — Challenger (always ON, sequential)
-
-Dispatch `baseline-challenger`. It performs adversarial review of all
-W0/W1/W2 outputs. Output: `_meta/challenger-report.md` plus appends to
-`unresolved-baseline.md`.
-
-If challenger reports `≥ 1 blocking` issue: do not declare Phase 3
-complete; escalate.
-
-**Mini-recap after Wave 3.**
-
-### Final report
-
-Post a final user-facing summary with full timing breakdown and
-disposition. See "Final phase recap template" below.
-
----
-
-## Step recap template (after every wave / after every agent dispatch)
-
-After each wave (or each agent in sequential mode), post a concise
-recap. Keep it tight — 6–10 lines, never verbose.
-
-```
-=== Wave <N>: <name> — completed ===
-
-Duration:  <human-readable, e.g., "2m 14s">
-Agents:    <N> (parallel | batched | sequential)
-Outputs:   <count> files written
-
-Per-agent timings:
-- <agent-1>:  <duration>   [status]
-- <agent-2>:  <duration>   [status]
-- ...
-
-Notes:     <one-line, e.g., "all green" or "1 worker partial — see ...">
-
-Next:      <what comes next>
-```
-
-Compute durations from the manifest's `started_at` / `completed_at`
-fields (ISO-8601). The supervisor records timestamps on dispatch and
-on result.
-
-When workers run in parallel, the per-agent timing is the worker's
-self-reported wall time; the wave duration is the longest among them
-(the parallel envelope), not the sum.
-
----
-
-## Final phase recap template
-
-```
-Phase 3 Baseline Testing — complete.
-
-Output (tests):  tests/baseline/
-Output (docs):   docs/analysis/03-baseline/
-Entry point:     docs/analysis/03-baseline/README.md
-
-Coverage:
-- Use cases tested:        <covered>/<total>  (<pct>%)
-- Integration boundaries:  <N>
-- Benchmarks captured:     <N>
-- Postman collection:      <yes / no>
-
-Test execution (if --execute on):
-- Total pytest run time:   <duration>
-- Passed:                  <N>
-- xfail (AS-IS bugs):      <N>  (see _meta/as-is-bugs-found.md)
-- Skipped (env / flaky):   <N>
-- Failed (unresolved):     <N>  (must be 0 for status: complete)
-
-Per-wave timings:
-- Wave 0 (fixtures):       <duration>
-- Wave 1 (authoring):      <duration>   (<mode>)
-- Wave 2 (execution):      <duration>
-- Wave 3 (challenger):     <duration>
-- Total:                   <duration>
-
-Quality:
-- Open questions:           <N>  (see unresolved-baseline.md)
-- Low-confidence sections:  <N>
-- Challenger findings:      <N>  (blocking | needs-review | nice-to-have)
-- AS-IS bugs surfaced:      <N>  (critical | high | medium | low)
-
-Recommended next: review _meta/as-is-bugs-found.md and unresolved-baseline.md
-before proceeding to Phase 4.
-```
+## Phase plan (overview)
+
+| Step | Wave | Mode | Dispatched agents | Blocks |
+|---|---|---|---|---|
+| Phase 0 | Bootstrap | supervisor only | — | all waves until confirmed |
+| W0 | Fixtures | sequential, single | `fixture-builder` | W1 |
+| W1 | Test authoring | per `--mode` (parallel / batched / sequential) | `usecase-test-writer` × N + `integration-test-writer` + `benchmark-writer` + `service-collection-builder` (conditional) | W2 |
+| W2 | Execution & oracle | sequential, single | `baseline-runner` (per `--execute`) | W3 |
+| W3 | Challenger | always ON, sequential | `baseline-challenger` | completion |
+| Recap | — | supervisor only | — | end |
+
+For the full per-wave dispatch instructions (HITL prompts, escalation
+conditions per wave, install steps for `--execute on`), see
+[`phase-plan.md`](../../docs/baseline-testing/phase-plan.md).
+
+For the per-wave mini-recap and the closing-report schemas, see
+[`recap-templates.md`](../../docs/baseline-testing/recap-templates.md).
+
+For the worker prompt boilerplate, see
+[`dispatch-prompt-template.md`](../../docs/baseline-testing/dispatch-prompt-template.md).
 
 ---
 
@@ -666,80 +256,6 @@ After every wave, update `docs/analysis/03-baseline/_meta/manifest.json`:
 
 The `duration_seconds` and `wave_duration_seconds` fields feed the
 recap templates. Compute them from the ISO timestamps.
-
----
-
-## Sub-agent dispatch — prompt template
-
-Every worker invocation includes:
-
-```
-You are the <name> sub-agent in the Phase 3 Baseline Testing pipeline.
-
-Repo root:           <abs-path>
-KB source:           <abs-path>/.indexing-kb/
-Phase 1 source:      <abs-path>/docs/analysis/01-functional/
-Phase 2 source:      <abs-path>/docs/analysis/02-technical/
-Test root (output):  <abs-path>/tests/baseline/
-Doc root (output):   <abs-path>/docs/analysis/03-baseline/
-Stack mode:          <streamlit | generic>
-Execution policy:    <on | off>
-Scope filter:        <e.g., "UC-04 only" or "all UCs">
-
-Required outputs:
-<list of files this agent must produce>
-
-AS-IS rule (non-negotiable): tests target Python + pytest only. Never
-reference Java, Spring, Angular, JPA, TypeScript, or any target tech.
-Never modify AS-IS source code — your reads of source files are
-read-only. If you find a bug while writing the test, document it as a
-test expectation comment + add a follow-up note for the supervisor;
-NEVER patch the source.
-
-File-writing rule (non-negotiable): all file content output (Python
-test code, fixtures, Markdown, JSON, CSV, YAML) MUST be written through
-the `Write` tool (or `Edit` for in-place changes). Never use `Bash`
-heredocs (`cat <<EOF > file`), echo redirects (`echo ... > file`),
-`printf > file`, `tee file`, or any other shell-based content
-generation. Test code and Markdown reports contain shell metacharacters
-(`[`, `{`, `}`, `>`, `<`, `*`, `;`, `&`, `|`) that the shell interprets
-as redirection, glob expansion, or word splitting — even inside quotes
-(Git Bash / MSYS2 on Windows is especially fragile). A malformed heredoc
-produced 48 garbage files in a repo root in the Phase 2 incident of
-2026-04-28. Allowed Bash: running pytest, running existing scripts,
-read-only inspection (`grep`, `find`, `ls`, `wc`, `git log`,
-`git status`), `mkdir -p`. Forbidden Bash: any command that writes file
-content from a string, variable, template, heredoc, or piped input.
-Use `Write` to create, `Edit` to modify. No third path.
-
-Determinism (mandatory):
-- seed RANDOM, NumPy, pandas: pytest fixture sets seed=42 (or as defined
-  in conftest.py)
-- time: freeze with freezegun or similar to "2024-01-15T10:00:00Z" unless
-  the test specifically tests time-dependent behavior
-- network: mock all outbound HTTP via responses / respx; do not allow
-  real network in baseline tests
-- file system: use tmp_path / tmpdir; never write to real paths
-
-Frontmatter requirements (markdown only):
-- agent: <name>
-- generated: <current ISO-8601>
-- sources: <list of KB / Phase 1 / Phase 2 / source-code references>
-- confidence: <high|medium|low>
-- status: <complete|partial|needs-review|blocked>
-- duration_seconds: <int>  (your wall-clock time)
-
-Python test files:
-- module docstring with: UC-NN(s) covered, sources, determinism notes
-- pytest markers where appropriate (@pytest.mark.streamlit,
-  @pytest.mark.integration, @pytest.mark.slow)
-
-When complete, report: which files you wrote, your confidence, your
-wall-clock duration, and any open questions in a `## Open questions`
-section. Do not write outside the two output roots.
-```
-
-Pass each agent only the context it needs — paths, not contents.
 
 ---
 
