@@ -60,9 +60,11 @@ doc only when the matching wave is about to start — not preemptively.
 |---|---|
 | [`output-layout.md`](../../docs/baseline-testing/output-layout.md) | planning where workers write, and what frontmatter / module-docstring every artefact must carry |
 | [`policies.md`](../../docs/baseline-testing/policies.md) | answering Q1 (execution policy), Q2 (failure policy), the service-detection gate, or the dispatch-mode decision |
+| [`wave-overview.md`](../../docs/baseline-testing/wave-overview.md) | looking up the sub-agents matrix, mode flags, or phase-plan overview |
 | [`phase-plan.md`](../../docs/baseline-testing/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W0–W3 |
 | [`dispatch-prompt-template.md`](../../docs/baseline-testing/dispatch-prompt-template.md) | assembling the prompt for any worker invocation |
 | [`recap-templates.md`](../../docs/baseline-testing/recap-templates.md) | posting per-wave mini-recap or final closing report |
+| [`manifest-schema.md`](../../docs/baseline-testing/manifest-schema.md) | updating `_meta/manifest.json` after each wave (full schema, field rules, timing, update cadence) |
 
 The decision logic (escalation triggers, decision rules, manifest update,
 hard constraints) stays in this body — it is consulted on every
@@ -93,62 +95,18 @@ Never invent a knowledge base. Workers read from disk via Read/Glob.
 
 ---
 
-## Sub-agents available
+## Sub-agents, mode flags, and wave overview
 
-| Sub-agent | Wave | Output target |
-|---|---|---|
-| `fixture-builder` | W0 | `tests/baseline/fixtures/`, `tests/baseline/conftest.py` |
-| `usecase-test-writer` | W1 (fan-out per UC) | `tests/baseline/test_uc_<NN>_<slug>.py` |
-| `integration-test-writer` | W1 | `tests/baseline/test_integration_<system>.py` |
-| `benchmark-writer` | W1 | `tests/baseline/benchmark/` |
-| `service-collection-builder` | W1 (conditional) | `tests/baseline/postman/` |
-| `baseline-runner` | W2 | `tests/baseline/snapshot/`, `_meta/benchmark-baseline.json`, `_meta/test-coverage.json` |
-| `baseline-challenger` | W3 (always ON) | `_meta/challenger-report.md` |
+7 sub-agents run across 4 waves (W0 fixtures → W1 test authoring fan-out
+→ W2 execution & oracle → W3 challenger). Two mode flags drive behaviour:
+`--execute` (Q1, write+execute vs write-only) and `--mode` (Wave-1 dispatch:
+parallel / batched / sequential). `service-collection-builder` runs in W1
+only if the bootstrap detects services exposed by the AS-IS app.
 
-`service-collection-builder` is dispatched only if the bootstrap detects
-exposed services (REST/HTTP endpoints owned by the AS-IS app, from
-Phase 2 integration map).
-
----
-
-## Mode flags (Q1–Q2)
-
-Two mode flags drive Phase-3 behaviour. Default values are tuned for the
-common case; switch to non-defaults only with explicit user request.
-
-| Flag | Default | Alternatives | What it controls |
-|---|---|---|---|
-| `--execute` (Q1) | `auto` | `on`, `off` | Whether to run pytest at W2 (write+execute) or write-only |
-| `--mode` (Wave-1 dispatch) | `auto` | `parallel`, `batched`, `sequential` | How the W1 fan-out is dispatched |
-| Failure policy (Q2) | strict critical/high; xfail medium/low | — | What happens when a baseline test fails |
-| Service detection | adaptive | force on/off via user override | Whether `service-collection-builder` runs in W1 |
-
-For the full description of each mode, the bootstrap detection
-heuristics, the failure-severity matrix, and the dispatch decision
-algorithm, see [`policies.md`](../../docs/baseline-testing/policies.md).
-
----
-
-## Phase plan (overview)
-
-| Step | Wave | Mode | Dispatched agents | Blocks |
-|---|---|---|---|---|
-| Phase 0 | Bootstrap | supervisor only | — | all waves until confirmed |
-| W0 | Fixtures | sequential, single | `fixture-builder` | W1 |
-| W1 | Test authoring | per `--mode` (parallel / batched / sequential) | `usecase-test-writer` × N + `integration-test-writer` + `benchmark-writer` + `service-collection-builder` (conditional) | W2 |
-| W2 | Execution & oracle | sequential, single | `baseline-runner` (per `--execute`) | W3 |
-| W3 | Challenger | always ON, sequential | `baseline-challenger` | completion |
-| Recap | — | supervisor only | — | end |
-
-For the full per-wave dispatch instructions (HITL prompts, escalation
-conditions per wave, install steps for `--execute on`), see
+For the full sub-agents matrix, mode-flag reference, and phase-plan
+overview, see [`wave-overview.md`](../../docs/baseline-testing/wave-overview.md).
+For the per-wave dispatch instructions, see
 [`phase-plan.md`](../../docs/baseline-testing/phase-plan.md).
-
-For the per-wave mini-recap and the closing-report schemas, see
-[`recap-templates.md`](../../docs/baseline-testing/recap-templates.md).
-
-For the worker prompt boilerplate, see
-[`dispatch-prompt-template.md`](../../docs/baseline-testing/dispatch-prompt-template.md).
 
 ---
 
@@ -200,62 +158,20 @@ For the worker prompt boilerplate, see
 
 ## Manifest update
 
-After every wave, update `docs/analysis/03-baseline/_meta/manifest.json`:
+After every wave, update `docs/analysis/03-baseline/_meta/manifest.json`.
+For the full schema, field rules, timing computation, and update cadence,
+see [`manifest-schema.md`](../../docs/baseline-testing/manifest-schema.md).
 
-```json
-{
-  "schema_version": "1.0",
-  "supervisor_version": "0.1.0",
-  "repo_root": "<abs-path>",
-  "kb_source": "<abs-path>/.indexing-kb/",
-  "phase1_source": "<abs-path>/docs/analysis/01-functional/",
-  "phase2_source": "<abs-path>/docs/analysis/02-technical/",
-  "stack_mode": "streamlit | generic",
-  "dispatch_mode": "parallel | batched | sequential",
-  "execution_policy": "on | off",
-  "service_detection": "on | off | ambiguous",
-  "challenger_enabled": true,
-  "resume_mode": "fresh | resume-incomplete | full-rerun | revise",
-  "scope_filter": null,
-  "runs": [
-    {
-      "run_id": "<ISO-8601>",
-      "started_at": "<ISO-8601>",
-      "completed_at": "<ISO-8601>",
-      "duration_seconds": <int>,
-      "waves": [
-        {
-          "wave": 0,
-          "agents": [
-            {
-              "name": "fixture-builder",
-              "started_at": "<ISO-8601>",
-              "completed_at": "<ISO-8601>",
-              "duration_seconds": <int>,
-              "status": "complete | partial | failed",
-              "outputs": ["<paths>"]
-            }
-          ],
-          "wave_duration_seconds": <int>
-        }
-      ],
-      "test_results": {
-        "passed": <int>,
-        "xfail": <int>,
-        "skipped": <int>,
-        "failed_unresolved": <int>,
-        "as_is_bugs_critical": <int>,
-        "as_is_bugs_high": <int>,
-        "as_is_bugs_medium": <int>,
-        "as_is_bugs_low": <int>
-      }
-    }
-  ]
-}
-```
+Hard rules — applied on every update:
 
-The `duration_seconds` and `wave_duration_seconds` fields feed the
-recap templates. Compute them from the ISO timestamps.
+- Always populate `started_at` / `completed_at` / `duration_seconds` from
+  ISO-8601 timestamps; never approximate.
+- After W2, populate `test_results.{passed, xfail, skipped, failed_unresolved}`
+  and `as_is_bugs_{critical,high,medium,low}` from `as-is-bugs-found.md`.
+- `failed_unresolved` must be `0` at completion — non-zero means the
+  supervisor stopped on a critical/high failure pending user triage.
+- If a wave is partial or failed, still write the block with `status`
+  reflecting the outcome — never omit.
 
 ---
 
@@ -287,9 +203,7 @@ recap templates. Compute them from the ISO timestamps.
 - **Redact secrets** in any output you produce or any error you echo.
 - **All file content output via `Write`** (or `Edit` for in-place
   changes), never via `Bash` heredoc / echo redirect / `tee` /
-  `printf > file`. Python test code, Markdown reports, and any text
-  containing `[`, `{`, `}`, `>`, `<`, `*` are unsafe to pass through
-  the shell. Reference: Phase 2 incident of 2026-04-28 (48 accidental
-  files, executed `store` command via redirect). This rule MUST be
-  propagated to every sub-agent dispatch prompt (template above
-  already includes it — verify on every dispatch).
+  `printf > file`. Markdown and Python text containing `[`, `{`, `}`,
+  `>`, `<`, `*` are unsafe through the shell. Ref: Phase 2 incident
+  2026-04-28. This rule MUST be propagated to every sub-agent dispatch
+  prompt (the template already includes it — verify on every dispatch).

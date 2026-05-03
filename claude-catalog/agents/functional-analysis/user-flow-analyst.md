@@ -31,6 +31,20 @@ Do NOT use this agent for: implicit logic capture (use `implicit-logic-analyst`)
 
 ---
 
+## Reference docs
+
+This agent's per-output templates and the file-writing rule live in
+`claude-catalog/docs/functional-analysis/user-flow-analyst/` and are read on
+demand. Read each doc only when the matching step is about to start.
+
+| Doc | Read when |
+|---|---|
+| `use-case-template.md`   | writing the UC index, per-UC files, user-flows file, or sequence-diagrams overview |
+| `mermaid-templates.md`   | drawing a sequence diagram for a UC (Streamlit or generic skeleton + required lanes) |
+| `file-writing-rule.md`   | once at session start — non-negotiable rule on `Write` vs Bash redirects |
+
+---
+
 ## Inputs (from supervisor)
 
 - Repo root path
@@ -111,29 +125,12 @@ For each non-trivial UC, produce a Mermaid sequence diagram showing:
 - transformations triggered (TR-NN)
 - inputs/outputs (IN-NN, OUT-NN)
 
-**Streamlit-mode sequence diagrams must show reruns explicitly**:
+**Streamlit-mode sequence diagrams must show reruns explicitly**. Reruns
+are first-class in Streamlit — do not hide them. For non-Streamlit stacks,
+diagrams are conventional (request → response, no rerun loops).
 
-```mermaid
-sequenceDiagram
-    actor User as A-01
-    participant S2 as S-02 Dashboard
-    participant State as session_state
-    participant T as TR-02 (refresh)
-
-    User->>S2: select dataset (IN-04)
-    S2->>State: set current_dataset
-    Note over S2: rerun
-    S2->>T: invoke with IN-04
-    T->>State: write current_df
-    Note over S2: rerun
-    S2-->>User: render OUT-02 (dataframe), OUT-03 (chart)
-```
-
-Reruns are first-class in Streamlit. Do not hide them — they are the
-defining characteristic of the stack.
-
-For non-Streamlit stacks, sequence diagrams are conventional (request →
-response, no rerun loops).
+→ Read `claude-catalog/docs/functional-analysis/user-flow-analyst/mermaid-templates.md`
+for the Streamlit and generic skeletons and the required lanes per UC.
 
 ### 4. Streamlit-mode flow caveats
 
@@ -165,176 +162,18 @@ the entity**. Add an Open question and flag the UC `status: blocked`.
 
 ## Outputs
 
-### File 1: `docs/analysis/01-functional/06-use-cases/README.md`
+Four files under `docs/analysis/01-functional/`:
 
-```markdown
-# Use cases index
+| # | Path | Content |
+|---|---|---|
+| 1 | `06-use-cases/README.md` | UC index table (ID, name, primary actor, features, screens, status) |
+| 2 | `06-use-cases/UC-NN-<slug>.md` | One file per UC — frontmatter + sections (primary/secondary actors, preconditions, main success scenario, alternate, exceptional, postconditions, sequence diagram, notes, open questions) |
+| 3 | `07-user-flows.md` | High-level narratives chaining UCs into typical journeys |
+| 4 | `08-sequence-diagrams.md` | Index of per-UC diagrams + cross-cutting reusable patterns |
 
-| ID | Name | Primary actor | Features | Screens | Status |
-|---|---|---|---|---|---|
-| UC-01 | Sign in | A-01 | F-00 | S-00 | complete |
-| UC-02 | Generate monthly report | A-01 | F-03 | S-03, S-05 | complete |
-| ... |
-```
-
-### File 2 (per UC): `docs/analysis/01-functional/06-use-cases/UC-NN-<slug>.md`
-
-```markdown
----
-agent: user-flow-analyst
-generated: <ISO-8601>
-sources:
-  - docs/analysis/01-functional/02-features.md#F-03
-  - docs/analysis/01-functional/04-screens/S-03-reports.md
-  - .indexing-kb/07-business-logic/business-rules.md
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
-id: UC-02
-title: "Generate monthly report"
-related:
-  actors: [A-01]
-  features: [F-03]
-  screens: [S-03, S-05]
-  transformations: [TR-01]
-  inputs: [IN-01, IN-02]
-  outputs: [OUT-01, OUT-03]
----
-
-# UC-02 — Generate monthly report
-
-## Primary actor
-A-01 (End user)
-
-## Secondary actors
-- (none)
-
-## Preconditions
-- A-01 is signed in
-- At least one dataset is loaded (state: `current_dataset != None`)
-
-## Main success scenario
-1. A-01 navigates to S-03 (Reports)
-2. A-01 selects month (IN-01) and product filter (IN-02)
-3. A-01 clicks "Generate" button
-4. System validates inputs (see business-rules: month not in future)
-5. System invokes TR-01
-6. S-03 renders OUT-01 (table) and OUT-03 (chart)
-7. A-01 navigates to S-05 (Export) to download
-8. A-01 clicks "Download CSV" — produces OUT-04
-
-## Alternate flows
-- **2a. Month in future**: validation error displayed (see IL-04 for
-  exact validation logic)
-- **5a. No data for month**: render empty state with message (no error)
-
-## Exceptional flows
-- **TR-01 fails**: error toast displayed, S-03 remains in input state
-
-## Postconditions
-- An audit log entry is written for TR-01 (side effect)
-- `current_report` session_state populated with the generated dataset
-
-## Sequence diagram
-\`\`\`mermaid
-sequenceDiagram
-    actor U as A-01
-    participant S3 as S-03 Reports
-    participant TR as TR-01
-    participant State as session_state
-
-    U->>S3: select month, filter (IN-01, IN-02)
-    S3->>State: write filters
-    Note over S3: rerun
-    U->>S3: click Generate
-    S3->>TR: invoke
-    TR->>State: write current_report
-    Note over S3: rerun
-    S3-->>U: render OUT-01, OUT-03
-    U->>S3: navigate to S-05
-\`\`\`
-
-## Notes
-- The "Generate" action triggers st.rerun(); the chart re-renders only
-  if `current_report` changed.
-- See implicit-logic.md IL-04 for input validation specifics.
-
-## Open questions
-- <if any>
-```
-
-### File 3: `docs/analysis/01-functional/07-user-flows.md`
-
-```markdown
----
-agent: user-flow-analyst
-generated: <ISO-8601>
-sources: [<UC files>]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
-
-# User flows
-
-High-level narratives chaining multiple UCs into typical journeys.
-
-## Flow 1 — Monthly reporting cycle
-**Actor**: A-01
-
-1. UC-01 — Sign in
-2. UC-05 — Load latest dataset
-3. UC-02 — Generate monthly report
-4. UC-08 — Share report via email (if applicable)
-
-## Flow 2 — ...
-
-## Open questions
-- <e.g., "Is the typical user expected to chain UC-02 → UC-04 → UC-08, or
-  are these independent goals? KB does not document the intended journey.">
-```
-
-### File 4: `docs/analysis/01-functional/08-sequence-diagrams.md`
-
-```markdown
----
-agent: user-flow-analyst
-generated: <ISO-8601>
-sources: [<UC files>]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
-
-# Sequence diagrams overview
-
-Per-UC sequence diagrams live in their respective `06-use-cases/UC-*.md`
-files. This document catalogs and cross-references them.
-
-## Diagrams index
-
-| UC | Title | Diagram type | Notes |
-|---|---|---|---|
-| UC-02 | Generate monthly report | reactive (Streamlit) | shows reruns |
-| UC-04 | Upload dataset | reactive (Streamlit) | file upload + validation |
-| ... |
-
-## Cross-cutting patterns
-
-### Pattern 1 — Filter → rerun → render (Streamlit-specific)
-Common shape across UC-02, UC-03, UC-05.
-
-\`\`\`mermaid
-sequenceDiagram
-    actor U as Actor
-    participant S as Screen
-    participant State as session_state
-
-    U->>S: change filter widget
-    S->>State: write filter key
-    Note over S: rerun
-    S-->>U: re-render with new filter applied
-\`\`\`
-
-### Pattern 2 — ...
-```
+→ Read `claude-catalog/docs/functional-analysis/user-flow-analyst/use-case-template.md`
+for the exact frontmatter, section order, and sample bodies for all four
+files.
 
 ---
 
@@ -353,18 +192,15 @@ sequenceDiagram
 
 ## File-writing rule (non-negotiable)
 
-All file content output (Markdown with Mermaid sequence diagrams) MUST
-be written through the `Write` tool. Never use `Bash` heredocs
-(`cat <<EOF > file`), echo redirects (`echo ... > file`),
-`printf > file`, `tee file`, or any other shell-based content generation.
-Mermaid syntax (`A[label]`, `B{cond?}`, `A --> B`,
-`Actor->>System: msg`) contains shell metacharacters (`[`, `{`, `}`,
-`>`, `<`, `*`, `&`) that the shell interprets as redirection, glob
-expansion, or word splitting — even inside quotes (Git Bash / MSYS2 on
-Windows is especially fragile). A malformed heredoc produced 48 garbage
-files in a repo root in the Phase 2 incident of 2026-04-28. Use `Write`
-to create files, `Edit` to modify. Bash is allowed only for read-only
-inspection. No third path.
+All file content output MUST go through `Write`. Never use Bash heredocs,
+echo redirects, `printf > file`, `tee file`, or any other shell-based
+content generation — Mermaid metacharacters (`[`, `{`, `}`, `>`, `<`,
+`*`, `&`) break shell quoting and have produced repo-wide corruption in
+past incidents. `Write` to create, `Edit` to modify; Bash is read-only.
+No third path.
+
+→ Read `claude-catalog/docs/functional-analysis/user-flow-analyst/file-writing-rule.md`
+for the full rationale and incident reference.
 
 ---
 

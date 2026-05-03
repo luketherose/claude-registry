@@ -19,6 +19,17 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 - **`refactoring-supervisor.md`** gains a `## Deliberative decision integration` section, six new rows in the decision-rules table covering the trigger-detection paths and failure-handling, and a new entry in the `## Reference docs` table pointing to `claude-catalog/docs/deliberation/integration-replatforming.md`. Default supervisor behaviour stays single-agent — deliberation is invoked only when the user explicitly requests it (prose at confidence ≥ 0.7), the dispatch JSON sets `decisionMode: "deliberative"`, or the supervisor's own self-escalation rule fires (irreversible / production-impacting / compliance-sensitive Phase-4 decision). When deliberation returns `pending_human_approval` the supervisor halts forward progress at the existing HITL gate; when it returns `failed_insufficient_drafts` the supervisor surfaces the failure and asks the user how to proceed — never silently substitutes a single-agent answer.
 
 ### Changed
+- **8 agents (12–13 k chars) trimmed via the supervisor-extraction recipe** — fourth sweep, run as 8 parallel extractions. All 8 now under the 10 000-char rubric ceiling.
+  - `indexing/codebase-mapper` 12 808 → 6 234 (−51%) — 3 ref docs under `docs/indexing/codebase-mapper/`: `classification-tables.md`, `stack-detection-markers.md`, `output-templates.md`.
+  - `baseline-testing/baseline-testing-supervisor` 12 765 → 9 963 (−22%) — 2 new ref docs at `docs/baseline-testing/`: `manifest-schema.md`, `wave-overview.md` (alongside the 5 existing iter-7 docs).
+  - `tobe-testing/security-test-writer` 12 625 → 8 739 (−31%) — 4 ref docs under `docs/tobe-testing/security-test-writer/`: `test-templates.md`, `owasp-matrix.md`, `zap-baseline.md`, `output-doc-template.md`.
+  - `refactoring-tobe/migration-roadmap-builder` 12 567 → ~8 600 (−31%) — 2 ref docs: `roadmap-template.md`, `examples.md`.
+  - `indexing/data-flow-analyst` 12 510 → 5 841 (−53%) — 2 ref docs under `docs/indexing/data-flow-analyst/`: `detection-patterns.md`, `output-schemas.md`.
+  - `baseline-testing/baseline-challenger` 12 437 → 9 228 (−26%) — 1 ref doc: `output-report-template.md`.
+  - `technical-analysis/technical-analysis-supervisor` 12 283 → ~9 900 (−19%) — extended `docs/technical-analysis/output-layout.md` with `## Manifest contract`, new `docs/technical-analysis/sub-agents.md`.
+  - `functional-analysis/user-flow-analyst` 12 113 → 9 331 (−23%) — 3 ref docs under `docs/functional-analysis/user-flow-analyst/`: `use-case-template.md`, `mermaid-templates.md`, `file-writing-rule.md`.
+
+### Changed
 - **9 medium agents (13–16 k chars) trimmed via the supervisor-extraction recipe** — third sweep, run as 9 parallel extractions. Closes 6 of 9 body-length warnings; the remaining 3 are soft warnings (dense decision logic, accepted per the "≤12k tolerance" rule):
   - `baseline-testing/baseline-runner` 15 541 → 8 442 (−46%) — 3 ref docs under `docs/baseline-testing/baseline-runner/`: `output-schemas.md`, `failure-policy.md`, `execution-stages.md`.
   - `refactoring-tobe/api-contract-designer` 15 499 → 8 926 (−42%) — 3 ref docs: `openapi-template.md`, `adr-template.md`, `output-templates.md`.

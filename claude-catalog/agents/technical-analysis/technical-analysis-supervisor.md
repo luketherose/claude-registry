@@ -55,7 +55,8 @@ each doc only when the matching wave is about to start — not preemptively.
 
 | Doc | Read when |
 |---|---|
-| [`output-layout.md`](../../docs/technical-analysis/output-layout.md) | planning where workers write, and what frontmatter / finding-ID schema every artefact must carry |
+| [`output-layout.md`](../../docs/technical-analysis/output-layout.md) | planning where workers write, the frontmatter / finding-ID schema, and the `_meta/manifest.json` schema updated after every wave |
+| [`sub-agents.md`](../../docs/technical-analysis/sub-agents.md) | looking up the W1–W3 roster, output targets, and the phase-plan overview table |
 | [`dispatch-mode.md`](../../docs/technical-analysis/dispatch-mode.md) | deciding the W1 dispatch mode (parallel / batched / sequential) and the batching plan |
 | [`phase-plan.md`](../../docs/technical-analysis/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W3 / Export Wave / final report |
 | [`dispatch-prompt-template.md`](../../docs/technical-analysis/dispatch-prompt-template.md) | assembling the prompt for any sub-agent invocation (incl. Streamlit-aware adjustments block) |
@@ -92,49 +93,9 @@ per-agent) from source code for narrow patterns.
 
 ---
 
-## Sub-agents available (Sonnet)
+## Sub-agents and phase plan
 
-| Sub-agent | Wave | Output target |
-|---|---|---|
-| `code-quality-analyst` | W1 | `01-code-quality/` |
-| `state-runtime-analyst` | W1 | `02-state-runtime/` |
-| `dependency-security-analyst` | W1 | `03-dependencies-security/`, `_meta/dependencies.json` |
-| `data-access-analyst` | W1 | `04-data-access/` |
-| `integration-analyst` | W1 | `05-integrations/` |
-| `performance-analyst` | W1 | `06-performance/` |
-| `resilience-analyst` | W1 | `07-resilience/` |
-| `security-analyst` | W1 | `08-security/` |
-| `risk-synthesizer` | W2 | `09-synthesis/`, `_meta/risk-register.{json,csv}` |
-| `technical-analysis-challenger` | W3 (always ON) | `_meta/challenger-report.md`, appends to `14-unresolved-questions.md` |
-
-External agents called in the export wave (already published):
-- `document-creator` → `_exports/02-technical-report.pdf`
-- `presentation-creator` → `_exports/02-technical-deck.pptx`
-
----
-
-## Phase plan (overview)
-
-| Step | Wave | Mode | Dispatched agents | Blocks |
-|---|---|---|---|---|
-| Phase 0 | Bootstrap | supervisor only | — | all waves until confirmed |
-| W1 | Discovery | per `--mode` (parallel / batched / sequential) | 8 W1 analysts | W2 |
-| W1.5 | HITL checkpoint | user confirm | — | W2 |
-| W2 | Synthesis | sequential, single | `risk-synthesizer` | W3 |
-| W3 | Challenger | always ON | `technical-analysis-challenger` | export wave / completion |
-| Export | Always ON | parallel | `document-creator` + `presentation-creator` | — |
-| Recap | — | supervisor only | — | end |
-
-For the full per-wave dispatch instructions, the bootstrap dialog (incl.
-the `exports-only` resume mode), the HITL checkpoint prompts, and the
-closing-report schema, see
-[`phase-plan.md`](../../docs/technical-analysis/phase-plan.md).
-
-For the W1 dispatch decision tree and the batching plan, see
-[`dispatch-mode.md`](../../docs/technical-analysis/dispatch-mode.md).
-
-For the worker prompt boilerplate (incl. Streamlit-aware adjustments),
-see [`dispatch-prompt-template.md`](../../docs/technical-analysis/dispatch-prompt-template.md).
+11 sub-agents in 3 waves (8 W1 analysts → 1 W2 synthesizer → 1 W3 challenger), plus an export wave (`document-creator` + `presentation-creator`). For the full roster, output targets, and the phase-plan overview table, read [`sub-agents.md`](../../docs/technical-analysis/sub-agents.md). For the per-wave dispatch instructions, the bootstrap dialog (incl. the `exports-only` resume mode), the HITL checkpoint, and the closing-report schema, read [`phase-plan.md`](../../docs/technical-analysis/phase-plan.md).
 
 ---
 
@@ -207,49 +168,7 @@ about **target** technologies, not present ones.
 
 ## Manifest update
 
-After every wave, update `docs/analysis/02-technical/_meta/manifest.json`:
-
-```json
-{
-  "schema_version": "1.0",
-  "supervisor_version": "0.1.0",
-  "repo_root": "<abs-path>",
-  "kb_source": "<abs-path>/.indexing-kb/",
-  "functional_kb": "<abs-path>/docs/analysis/01-functional/ | null",
-  "stack_mode": "streamlit | generic",
-  "dispatch_mode": "parallel | batched | sequential",
-  "challenger_enabled": true,
-  "exports_policy": "overwrite | keep | rename",
-  "resume_mode": "fresh | resume-incomplete | exports-only | full-rerun",
-  "scope_filter": null,
-  "runs": [
-    {
-      "run_id": "<ISO-8601>",
-      "waves": [
-        {
-          "wave": 1,
-          "agents": [
-            "code-quality-analyst", "state-runtime-analyst",
-            "dependency-security-analyst", "data-access-analyst",
-            "integration-analyst", "performance-analyst",
-            "resilience-analyst", "security-analyst"
-          ],
-          "started": "<ISO-8601>",
-          "completed": "<ISO-8601>",
-          "outputs": ["<paths>"],
-          "status": "complete | partial | failed",
-          "findings_count": {
-            "critical": 0, "high": 0, "medium": 0, "low": 0
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-If the file does not exist, create it. Append to `runs` for resumed
-sessions.
+After every wave, update `docs/analysis/02-technical/_meta/manifest.json` per the schema in [`output-layout.md`](../../docs/technical-analysis/output-layout.md#manifest-contract-_metamanifestjson). Append to `runs` for resumed sessions; create the file if missing.
 
 ---
 
