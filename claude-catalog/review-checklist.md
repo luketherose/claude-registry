@@ -76,7 +76,16 @@ Use this checklist when reviewing a PR that adds or modifies a capability.
   (e.g. no testing guidance, no error handling)?
 - **Tool excess**: Does the capability request tools it doesn't actually need?
 
-## 9. Skill-specific checks (only when the PR adds or modifies a skill)
+## 9. Anti-pattern check (for new capabilities or substantial rewrites)
+
+- [ ] Searched `ANTI-PATTERNS.md` for the role keywords of the proposed capability
+- [ ] No matching precedent exists, OR a matching entry exists and the **Do not retry
+      unless** clause is satisfied (state explicitly in the PR discussion which condition
+      changed)
+- [ ] If this PR deprecates an existing capability, an entry has been added to
+      `ANTI-PATTERNS.md` in the same PR (per `GOVERNANCE.md` deprecation rule)
+
+## 10. Skill-specific checks (only when the PR adds or modifies a skill)
 
 - [ ] Skill file is in `claude-catalog/skills/`, not `agents/`
 - [ ] `model: haiku` (knowledge retrieval; justify if higher model needed)
