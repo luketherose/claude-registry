@@ -6,6 +6,15 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 ### Changed
+- **5 large agents (17–19 k chars) trimmed via the supervisor-extraction recipe** — second sweep of the body-length cleanup, applied in parallel to closes 4 of the 5 body-length warnings (one stays at 11 218 — soft warning, dense decision logic):
+  - `refactoring-tobe/hardening-architect` 19 133 → 9 624 (−50%) — 3 ref docs under `docs/refactoring-tobe/hardening-architect/`: `backend-config-templates.md`, `frontend-config-templates.md`, `adr-and-output-templates.md`.
+  - `refactoring-tobe/decomposition-architect` 17 963 → 11 218 (−36%, soft warning accepted) — 3 ref docs: `output-templates.md`, `bounded-context-examples.md`, `adr-template.md`.
+  - `refactoring-tobe/data-mapper` 17 906 → < 10 000 — 3 ref docs: `entity-templates.md`, `liquibase-template.md`, `output-templates.md`.
+  - `indexing/indexing-supervisor` 17 431 → 6 365 (−64%) — 4 ref docs under `docs/indexing/`: `phase-plan.md`, `dispatch-prompt-template.md`, `manifest-spec.md`, `sub-agents-catalog.md`.
+  - `refactoring-tobe/backend-scaffolder` 17 207 → < 10 000 — 5 ref docs: `pom-template.md`, `package-layout.md`, `code-skeletons.md`, `error-and-security.md`, `application-yml-template.md`.
+
+  Each agent body now keeps only `## Role`, `## When to invoke`, `## Reference docs` (anchor table), `## Inputs (from supervisor)` (workers), `## Method` (decision logic), `## Outputs` (compressed), `## Stop conditions`, `## Constraints`. All output templates, ADR skeletons, code boilerplate, JSON/YAML schemas, and example tables moved verbatim to ref docs. No content invented.
+
 - **`refactoring-supervisor` body trimmed from 68 780 → 14 649 chars (−79%) via the supervisor-extraction recipe.** Largest extraction ever applied to this registry (the previous record holder was the 38k → 16k extraction of `refactoring-tobe-supervisor`). Closes the structural rubric warning ("missing `## When to invoke`") and reduces the body-length warning from "68k chars" — drastically over the 10k-char ceiling — to "14.6k". Six reference docs created under `claude-catalog/docs/refactoring-workflow/`:
   - `bootstrap-protocol.md` — Phase 0 of the workflow's own bootstrap (per-phase detection table, HITL prompts, sub-state `complete-but-exports-missing` for Phase 1/2).
   - `schematics.md` — verbatim pre-phase ASCII schematics for Phase 0–4 (paste into Step A of the per-phase protocol).
