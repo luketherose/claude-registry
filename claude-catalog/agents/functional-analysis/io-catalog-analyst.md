@@ -36,6 +36,19 @@ Do NOT use this agent for: data-access patterns (use `data-access-analyst` in Ph
 
 ---
 
+## Reference docs
+
+This agent's output-file shapes and the per-section method details live in
+`claude-catalog/docs/functional-analysis/io-catalog-analyst/` and are read on
+demand. Read each doc only when the matching step is about to start.
+
+| Doc | Read when |
+|---|---|
+| `method-details.md`    | once at session start — full input/output category lists, Streamlit-specific rules, validation-metadata rules |
+| `output-templates.md`  | writing `09-inputs.md`, `10-outputs.md`, or `11-transformations.md` (frontmatter, sections, ID conventions) |
+
+---
+
 ## Inputs (from supervisor)
 
 - Repo root path
@@ -57,261 +70,51 @@ KB sections you must read:
 
 ## Method
 
-### 1. Inputs catalog
+The agent produces three catalogs in order: inputs, outputs, transformations.
+The category lists, exclusion rules, Streamlit-specific rules, and
+validation-as-metadata rule live in `method-details.md` — read it once at
+session start.
 
-An **input** is any data the application receives that is functionally
-meaningful (not infrastructure). Categories:
-
-- **User-supplied at the UI**:
-  - Streamlit: widget values (`st.text_input`, `st.selectbox`,
-    `st.file_uploader`, `st.number_input`, `st.date_input`, ...) — every
-    widget with a `key` is a discrete input
-  - Generic web: form fields, query parameters, route parameters
-  - CLI: arguments, options, flags
-- **File uploads**: explicit `st.file_uploader`, multipart form, file
-  drop zones
-- **External system pushes**: webhooks received, message queue consumers
-- **Scheduled-trigger inputs**: cron-fed parameters, batch input feeds
-- **Configuration as functional input**: feature flags, business
-  parameters in config (NOT infra config like DB host — that is
-  infrastructure)
-
-Do NOT catalog as functional inputs:
-- DB queries (those are internal data access — see `data-flow-analyst`'s
-  output, not yours)
-- HTTP outbound calls to external APIs (these are part of transformations,
-  not user inputs)
-- Logging configuration, language settings, color palettes
-
-### 2. Outputs catalog
-
-An **output** is any data the application emits that is functionally
-meaningful. Categories:
-
-- **Rendered to UI**:
-  - Streamlit: `st.write`, `st.dataframe`, `st.metric`, `st.chart`,
-    `st.markdown`, `st.json`, `st.code`, `st.image`, `st.audio`,
-    `st.video`, `st.map`
-  - Web: rendered templates, JSON responses
-  - CLI: stdout/stderr text, formatted tables, generated files
-- **File downloads**: `st.download_button`, file generation endpoints,
-  exported reports (CSV, Excel, PDF, image)
-- **External system writes**: outbound webhooks, message queue produces,
-  API calls TO third-party systems where the call body carries
-  application data (not just lookups)
-- **Notifications**: email, Slack, SMS, dashboards updated
-
-Do NOT catalog as functional outputs:
-- DB writes (infrastructure-level; in transformations they are an
-  intermediate step but not the user-facing output)
-- Internal logging
-- Cache writes
-
-### 3. Transformation matrix
-
-A **transformation** is a documented mapping from one or more inputs to
-one or more outputs. For each transformation, capture:
-
-- **Trigger**: what causes it to happen (button click, file upload,
-  scheduled job, request received)
-- **Inputs consumed**: list of IN-IDs
-- **Outputs produced**: list of OUT-IDs
-- **Business rules applied** (high-level): "validates email format",
-  "converts currency to EUR", "aggregates by month" — reference
-  `.indexing-kb/07-business-logic/business-rules.md` where possible
-- **Side effects** (mention but do not detail): "writes to DB",
-  "sends email" — these are noted because they affect the user's
-  observation of output completion
-
-Common patterns:
-- 1 input → 1 output (simple form submit)
-- N inputs → 1 output (report aggregating filters)
-- 1 input → N outputs (file upload that updates UI metric AND triggers
-  download AND writes audit log)
-
-### 4. Streamlit-specific I/O
-
-If stack mode is `streamlit`:
-- Every widget is a discrete input (one IN-ID per widget per screen).
-  Do NOT collapse multiple widgets into a single "form input" unless
-  they are inside `st.form` and submitted atomically.
-- `st.cache_data`-decorated functions: their **arguments** are inputs to
-  the cached transformation; their **return value** is an output (often
-  re-rendered downstream).
-- `st.session_state` is **not an input or output by itself** — it is
-  internal state. But session_state keys that are SET from widget inputs
-  on one screen and READ as inputs to transformations on another screen
-  represent a **cross-screen input flow**: capture this in the
-  transformation matrix as a multi-step transformation.
-
-### 5. Validation as input metadata
-
-For each input, capture validation constraints **as metadata**, not as
-separate items (they belong in the input row):
-- type (text / number / date / file / enum)
-- required / optional
-- range / min / max
-- enum values
-- regex / format
-- file size / type constraints
-
-These come from:
-- Streamlit widget params (`min_value`, `max_value`, `format`, `options`,
-  `accept`, `type`)
-- `.indexing-kb/07-business-logic/validation-rules.md`
-- field constraints in module docs
-
-If validation is **embedded in code logic** (not in widget params),
-flag it for `implicit-logic-analyst` rather than capturing all the
-detail here. Just note "see implicit-logic.md IL-NN".
+1. **Inputs catalog.** Walk the KB sections listed above. For each
+   functionally-meaningful piece of incoming data, assign an `IN-NN` ID and
+   capture source, where (screen / endpoint / cron / config), type,
+   validation metadata, and the transformations that consume it. DB queries,
+   outbound HTTP, and pure infra config are **not** functional inputs (see
+   `method-details.md` for the full exclusion list).
+2. **Outputs catalog.** Same walk, but for emitted data: UI render, file
+   download, external write, notification. Assign `OUT-NN` IDs. DB writes,
+   internal logging, and cache writes are **not** functional outputs.
+3. **Transformation matrix.** For each input→output relationship, assign a
+   `TR-NN` ID and capture trigger, inputs consumed, outputs produced,
+   business rules applied (high level — full detail stays in
+   `business-rules.md`), side effects, and any implicit-logic references
+   (`IL-NN`).
+4. **Streamlit specifics** (only if stack mode is `streamlit`): every widget
+   with a `key` is a discrete input; `st.cache_data` arguments are inputs
+   and the return value is an output; `st.session_state` is internal state,
+   not I/O — but cross-screen state flows count as multi-step
+   transformations. Full rules in `method-details.md` §4.
+5. **Validation as input metadata.** Inline validation constraints into the
+   IN-NN row (type, required/optional, range, enum, regex, file
+   constraints). Code-embedded validation gets a one-line "see IL-NN"
+   reference rather than full detail. Full rule in `method-details.md` §5.
 
 ---
 
 ## Outputs
 
-### File 1: `docs/analysis/01-functional/09-inputs.md`
+Three files, all under `docs/analysis/01-functional/`. Frontmatter, sections,
+and ID conventions for each are in `output-templates.md` — read it before
+writing.
 
-```markdown
----
-agent: io-catalog-analyst
-generated: <ISO-8601>
-sources:
-  - .indexing-kb/05-streamlit/ui-patterns.md
-  - .indexing-kb/06-data-flow/file-io.md
-  - .indexing-kb/06-data-flow/external-apis.md
-  - .indexing-kb/07-business-logic/validation-rules.md
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
+| File | Purpose | Key sections |
+|---|---|---|
+| `09-inputs.md`          | inputs catalog (IN-NN)         | Summary, Input catalog, Open questions |
+| `10-outputs.md`         | outputs catalog (OUT-NN)       | Summary, Output catalog, Open questions |
+| `11-transformations.md` | transformation matrix (TR-NN)  | Summary, Transformation catalog, Cross-cutting matrix, Orphans, Open questions |
 
-# Inputs catalog
-
-## Summary
-- Total inputs: <N>
-- User-supplied (UI): <N>
-- File uploads: <N>
-- External system pushes: <N>
-- Scheduled / batch: <N>
-- Configuration (functional): <N>
-
-## Input catalog
-
-### IN-01 — <descriptive name in business language>
-- **Source**: UI widget | file upload | webhook | schedule | config
-- **Where**: <screen S-NN> / <endpoint> / <cron name> / <config path>
-- **Type**: text | number | date | file | enum | structured
-- **Validation**: required, min=0, max=100, regex=`...` (or "see IL-NN")
-- **Used by**: TR-01, TR-03 (transformations)
-- **Sources**:
-  - .indexing-kb/05-streamlit/ui-patterns.md#dashboard-page
-  - .indexing-kb/04-modules/<pkg>.md
-- **Confidence**: high | medium | low
-- **Notes**: <e.g., "actually a JSON blob; structure not enforced">
-
-### IN-02 — ...
-
-## Open questions
-- <e.g., "input IN-04 is a free-text field; the parsing logic is hidden
-  in transform_data() — see implicit-logic.md">
-```
-
-### File 2: `docs/analysis/01-functional/10-outputs.md`
-
-```markdown
----
-agent: io-catalog-analyst
-generated: <ISO-8601>
-sources:
-  - .indexing-kb/05-streamlit/ui-patterns.md
-  - .indexing-kb/06-data-flow/file-io.md
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
-
-# Outputs catalog
-
-## Summary
-- Total outputs: <N>
-- Rendered to UI: <N>
-- File downloads: <N>
-- External system writes: <N>
-- Notifications: <N>
-
-## Output catalog
-
-### OUT-01 — <descriptive name>
-- **Type**: ui-render | file-download | external-write | notification
-- **Format**: text | dataframe | chart | csv | xlsx | pdf | json | image
-- **Where**: <screen S-NN> / <endpoint> / <channel>
-- **Produced by**: TR-01 (transformation)
-- **Consumed by**: A-01 (actor)
-- **Sources**:
-  - .indexing-kb/05-streamlit/ui-patterns.md
-  - .indexing-kb/04-modules/<pkg>.md
-- **Confidence**: high | medium | low
-- **Notes**: <e.g., "chart updates reactively when filter changes">
-
-### OUT-02 — ...
-
-## Open questions
-- <e.g., "OUT-05 is generated only conditionally; the condition is
-  unclear — see implicit-logic.md">
-```
-
-### File 3: `docs/analysis/01-functional/11-transformations.md`
-
-```markdown
----
-agent: io-catalog-analyst
-generated: <ISO-8601>
-sources:
-  - .indexing-kb/07-business-logic/business-rules.md
-  - .indexing-kb/04-modules/
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
-
-# Transformation matrix
-
-## Summary
-- Total transformations: <N>
-- Average inputs per transformation: <N>
-- Average outputs per transformation: <N>
-
-## Transformation catalog
-
-### TR-01 — <verb-led name, e.g., "Generate monthly sales report">
-- **Trigger**: button click S-03 "Generate" | scheduled daily 02:00 | webhook /events
-- **Inputs**: IN-01, IN-02, IN-04
-- **Outputs**: OUT-01, OUT-03
-- **Business rules applied** (high-level):
-  - validate that month is not in the future
-  - exclude rows where status = 'cancelled'
-  - aggregate by product family
-  (full detail in .indexing-kb/07-business-logic/business-rules.md)
-- **Side effects**: writes audit log entry; updates DB table `report_runs`
-- **Implicit logic referenced**: IL-03 (currency conversion fallback)
-- **Sources**: .indexing-kb/04-modules/reports.md
-- **Confidence**: high | medium | low
-
-### TR-02 — ...
-
-## Cross-cutting matrix
-
-| Input \ Output | OUT-01 | OUT-02 | OUT-03 | ... |
-|---|---|---|---|---|
-| IN-01 | TR-01 | — | TR-01 | ... |
-| IN-02 | TR-01 | — | — | ... |
-| IN-03 | — | TR-02 | — | ... |
-
-## Orphans
-- Inputs with no transformation: <list — likely dead code or doc gap>
-- Outputs with no transformation: <list — same>
-
-## Open questions
-- <e.g., "TR-04 has a documented business rule about partial refunds
-  but the implementation is unclear in the KB; flagged for implicit-logic-analyst">
-```
+Each file carries the standard agent frontmatter (`agent`, `generated`,
+`sources`, `confidence`, `status`).
 
 ---
 

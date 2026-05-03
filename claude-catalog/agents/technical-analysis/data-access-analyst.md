@@ -36,6 +36,20 @@ Do NOT use this agent for: integration with external APIs (use `integration-anal
 
 ---
 
+## Reference docs
+
+This agent's output schemas and the file-writing rule live in
+`claude-catalog/docs/technical-analysis/data-access-analyst/` and are
+read on demand. Read each doc only when its trigger fires — not
+preemptively.
+
+| Doc | Read when |
+|---|---|
+| `output-templates.md`  | about to write `data-flow-diagram.md` or `access-pattern-map.md` (full schema with frontmatter, Mermaid block, finding template) |
+| `file-writing-rule.md` | first time you go to write any output file in a session (rationale + allowed/forbidden Bash) |
+
+---
+
 ## Inputs (from supervisor)
 
 - Repo root path
@@ -136,141 +150,17 @@ each TR-NN to the data-access patterns that implement it. Add a column
 
 ## Outputs
 
-### File 1: `docs/analysis/02-technical/04-data-access/data-flow-diagram.md`
+Two files under `docs/analysis/02-technical/04-data-access/`:
 
-```markdown
----
-agent: data-access-analyst
-generated: <ISO-8601>
-sources:
-  - .indexing-kb/06-data-flow/database.md
-  - .indexing-kb/06-data-flow/file-io.md
-  - .indexing-kb/04-modules/*.md
-  - docs/analysis/01-functional/11-transformations.md  # if available
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
-
-# Data-flow diagram
-
-## Cluster: <name, e.g., "Reporting flow">
-
-```mermaid
-flowchart LR
-  U[User input: filters] --> V[Validate filters]
-  V --> Q[Query DB: orders, products]
-  Q --> T[Aggregate by month]
-  T --> C[Cache: st.cache_data]
-  C --> R[Render: st.dataframe]
-  T --> X[Export: CSV download]
-```
-
-### Notes
-- <observations: bottlenecks, missing validations, caching opportunities,
-  cache-invalidation gaps>
-
-## Cluster: <next>
-- ...
-
-## Cross-reference with Phase 1 transformations
-
-| TR-NN (Phase 1) | Implementing pattern (this doc) |
-|---|---|
-| TR-01 | DB query in `reports.py:42`, in-memory aggregation, st.cache_data |
-
-## Open questions
-- <e.g., "data origin for chart Y is unclear; the function uses both a
-  DB query AND a hard-coded fallback list">
-```
-
-### File 2: `docs/analysis/02-technical/04-data-access/access-pattern-map.md`
-
-```markdown
----
-agent: data-access-analyst
-generated: <ISO-8601>
-sources: [...]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
-
-# Access-pattern map
-
-## Database
-
-- **Engine**: PostgreSQL 14 (verified from `<repo-path>:<line>`)
-- **Library**: SQLAlchemy 2.x, classical mappers
-- **Connection management**: pooled, scoped session per request
-- **Schema migrations**: Alembic
-- **Tables touched** (from KB):
-  - `users` (read)
-  - `orders` (read, write)
-  - `audit_log` (write-only)
-
-### Query patterns
-
-| Pattern | Count (approx.) | Risk |
+| File | Content | Schema |
 |---|---|---|
-| Parameterized via SQLAlchemy ORM | ~60 | none |
-| Raw SQL with `text()` + params | 4 | none |
-| Raw SQL with f-string interpolation | 2 | **SQL injection — flag** |
+| `data-flow-diagram.md`   | one Mermaid `flowchart` per cluster; cross-ref table to Phase 1 TR-NN; open questions | see `output-templates.md` § File 1 |
+| `access-pattern-map.md`  | DB / file system / cache / serialization sections, each with findings (`RISK-DA-NN`) and severity | see `output-templates.md` § File 2 |
 
-### Findings
-
-#### RISK-DA-01 — Raw SQL with f-string interpolation
-- **Severity**: critical | high
-- **Locations**: `<repo-path>:<line>`
-- **Description**: <details>
-- **Sources**: [<repo-path>:<line>]
-
-## File system
-
-- **Read paths**:
-  - `<repo>/config/*.yaml` (config)
-  - `<external>/data/*.csv` (input data — path from env var)
-- **Write paths**:
-  - `/tmp/exports/*.xlsx` (user-triggered exports)
-  - `<repo>/logs/*.log` (operational logs — see resilience-analyst)
-- **Path construction**: mostly Path objects; 3 sites use `os.path.join`
-  + concatenation
-- **Formats**: CSV (read), Excel (write), JSON (config), pickle (1 site)
-
-### Findings
-
-#### RISK-DA-02 — Pickle deserialization of user-uploaded files
-- **Severity**: critical
-- **Location**: `<repo-path>:<line>`
-- **Description**: pickle.load() applied to st.file_uploader output
-  → arbitrary code execution
-- **Sources**: [...]
-
-## Cache
-
-- **Streamlit**:
-  - `st.cache_data` decorating <N> functions
-  - `st.cache_resource` decorating <N> functions
-- **Invalidation correctness**:
-  - <function>: keys cover all inputs ✓
-  - <function>: missing key for `current_user` — stale risk
-- **External cache**: <Redis 7 / none>
-
-### Findings
-
-#### RISK-DA-NN — Cache invalidation gap
-- ...
-
-## Serialization
-
-| Format | Read | Write | Trust source |
-|---|---|---|---|
-| JSON | yes | yes | trusted (config) |
-| YAML | yes | no | trusted |
-| Pickle | yes | yes | **untrusted (file upload) — flag** |
-
-## Open questions
-- <e.g., "DB engine inferred from connection string in env var; not
-  verified from schema files">
-```
+Both files carry a YAML frontmatter (`agent`, `generated`, `sources`,
+`confidence`, `status`). Findings carry a stable `RISK-DA-NN` ID,
+severity, location, sources. Read `output-templates.md` for the verbatim
+shape — copy and parametrise.
 
 ---
 
@@ -282,35 +172,6 @@ status: <complete|partial|needs-review|blocked>
   the top-15 by call-site count.
 - DB engine cannot be determined from KB or grep: ask supervisor; mark
   `confidence: low`.
-
----
-
-## File-writing rule (non-negotiable)
-
-All file content output (Markdown, JSON, CSV, YAML, source code) MUST be
-written through the `Write` tool. Never use `Bash` heredocs
-(`cat <<EOF > file`), echo redirects (`echo ... > file`), `printf > file`,
-`tee file`, or any other shell-based content generation.
-
-Reason: content with Mermaid syntax (`A[label]`, `B{cond?}`, `A --> B`),
-fenced code blocks, or YAML/JSON with special characters contains shell
-metacharacters (`[`, `{`, `}`, `>`, `<`, `*`, `;`, `&`, `|`) that the
-shell interprets as redirection, glob expansion, or word splitting — even
-inside quotes when the quoting is fragile (Git Bash / MSYS2 on Windows is
-especially prone). A malformed heredoc produced 48 garbage files in a
-repo root in the Phase 2 incident of 2026-04-28; one of them captured the
-output of an unrelated `store` command found on `$PATH`. The
-`data-flow-diagram.md` Mermaid output is the highest-risk artifact in
-this agent — write it via `Write`, never via `Bash`.
-
-Allowed Bash usage: read-only inspection (`grep`, `find`, `ls`, `wc`,
-small `cat` of known files, `git log`, `git status`), running existing
-scripts, creating empty directories (`mkdir -p`). Forbidden: any command
-that writes file content from a string, variable, template, heredoc, or
-piped input.
-
-If you need to produce a file, use `Write`. If a file already exists and
-needs a small change, use `Edit`. No third path.
 
 ---
 
@@ -326,4 +187,5 @@ needs a small change, use `Edit`. No third path.
   calls are not your responsibility — you reference them where they
   appear in a flow but the catalog lives in `05-integrations/`.
 - **All file output via `Write`**, never via `Bash` heredoc/redirect.
-  See § File-writing rule above.
+  See `claude-catalog/docs/technical-analysis/data-access-analyst/file-writing-rule.md`
+  for rationale and the allowed/forbidden Bash list.

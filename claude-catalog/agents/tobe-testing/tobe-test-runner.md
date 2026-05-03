@@ -42,6 +42,19 @@ Do NOT use this agent for: writing tests, fixing the failures (the agent only re
 
 ---
 
+## Reference docs
+
+Per-stage commands and output templates live in
+`claude-catalog/docs/tobe-testing/tobe-test-runner/` and are read on
+demand. Read each doc only when the matching step is about to run.
+
+| Doc | Read when |
+|---|---|
+| `execution-stages.md` | running any of the 5 suites; classifying failures; adding `xfail`/`@Disabled`/`test.skip` markers |
+| `output-templates.md` | writing `02-coverage-report.md`, `03-contract-tests-report.md`, `06-tobe-bug-registry.md`, or the final report |
+
+---
+
 ## Inputs (passed by supervisor)
 
 - `repo_root` — absolute path
@@ -61,265 +74,61 @@ Do NOT use this agent for: writing tests, fixing the failures (the agent only re
 
 ```
 docs/analysis/05-tobe-tests/
-├── 02-coverage-report.md          (markdown summary — main deliverable for coverage)
-├── 03-contract-tests-report.md    (markdown summary — main deliverable for contract verdicts)
+├── 02-coverage-report.md          (markdown summary — coverage)
+├── 03-contract-tests-report.md    (markdown summary — contract verdicts)
 ├── 06-tobe-bug-registry.md        (TBUG-NN entries with disposition)
 └── _meta/
-    ├── coverage.json              (machine-readable, JaCoCo + Jest merged)
-    ├── contract-results.json      (machine-readable SCC verdicts per operationId)
-    └── execution-summary.json     (run timing, pass/fail counts per suite)
+    ├── coverage.json              (JaCoCo + Jest merged)
+    ├── contract-results.json      (SCC verdicts per operationId)
+    └── execution-summary.json     (run timing, pass/fail per suite)
 
-(modifications under)
-backend/src/test/                  (only @Disabled markers added; never test rewrites)
-frontend/src/app/                  (only test.skip/test.fixme markers added)
-e2e/                               (same)
-tests/equivalence/                 (same — pytest @pytest.mark.xfail markers)
+(test files modified, markers only)
+backend/src/test/        @Disabled
+frontend/src/app/, e2e/  test.skip / test.fixme
+tests/equivalence/       @pytest.mark.xfail
 ```
 
-Frontmatter for each markdown report:
-
-```yaml
----
-phase: 5
-sub_step: 5.6
-agent: tobe-test-runner
-generated: <ISO-8601>
-sources:
-  - <test-paths actually executed>
-  - <coverage tool outputs>
-related_ucs: [<UC-NN>, ...]
-confidence: high | medium | low
-status: complete | partial | needs-review | blocked
----
-```
+Frontmatter, per-report body, and final-report skeletons live in
+[`output-templates.md`](../../docs/tobe-testing/tobe-test-runner/output-templates.md).
 
 ---
 
-## Execution sequence
+## Method
 
-Run the suites in this order (each gated on the previous succeeding
-or the failure being non-blocking):
+Execute the 5 suites in order — each gated on the previous succeeding
+or its failure being non-blocking — then classify every failure and
+write the consolidated reports.
 
-### 1. Backend unit + integration + contract tests
-
-```bash
-cd backend
-./mvnw -B clean verify \
-    -Dspring.profiles.active=test \
-    -DfailIfNoTests=false \
-    -Dgroups=" "
-```
-
-This single command runs:
-- JUnit unit tests
-- Slice tests (`@WebMvcTest`, `@DataJpaTest`)
-- Integration tests with Testcontainers
-- Spring Cloud Contract `verify` goal — produces JUnit reports for
-  each contract
-
-Capture:
-- `backend/target/surefire-reports/*.xml` — unit results
-- `backend/target/failsafe-reports/*.xml` — integration results
-- `backend/target/site/jacoco/jacoco.xml` — coverage
-- `backend/target/generated-test-sources/contracts/` — SCC contracts
-  exercised
-
-### 2. Frontend component tests
-
-```bash
-cd frontend
-npm ci --prefer-offline --no-audit
-npx jest --ci --coverage --reporters=default --reporters=jest-junit
-```
-
-Capture:
-- `frontend/coverage/lcov.info`
-- `frontend/coverage/coverage-summary.json`
-- `frontend/junit.xml`
-
-### 3. E2E tests (Playwright)
-
-```bash
-cd "${repo_root}"
-npx playwright install --with-deps chromium
-npx playwright test --reporter=list,junit
-```
-
-Capture:
-- `playwright-report/`
-- `test-results/` (traces, screenshots on failure)
-
-### 4. Equivalence harness
-
-```bash
-cd "${repo_root}"
-python -m venv .venv-tobe-tests
-source .venv-tobe-tests/bin/activate
-pip install -q pytest pytest-regressions httpx pytest-playwright
-pytest tests/equivalence -v --junitxml=tests/equivalence/junit.xml
-```
-
-Capture:
-- `tests/equivalence/junit.xml`
-- updated snapshots (if any) — flag, don't auto-accept
-
-### 5. Performance scenarios
-
-```bash
-cd e2e/perf
-# k6 path
-k6 run --summary-export=results-summary.json scenarios/<uc>.js
-# Gatling path
-./mvnw -pl ../perf gatling:test
-```
-
-Aggregated into `_meta/benchmark-comparison.json` (already populated
-by `performance-comparator`; you only execute and update with real
-numbers).
-
----
-
-## Failure handling per suite
-
-After each suite runs, parse the result:
-
-```python
-# Pseudocode
-for failed_test in suite_results.failures:
-    severity = classify(failed_test)
-    if severity in ("critical", "high"):
-        record_in_bug_registry(failed_test, severity)
-        # do NOT mark xfail — test stays failing, supervisor escalates
-    elif severity in ("medium", "low"):
-        record_in_bug_registry(failed_test, severity)
-        add_xfail_marker(failed_test, reason=f"TBUG-{nn}: {short_description}")
-    else:
-        # 'as-is-bug-carry-over' should have been pre-marked by Wave 1
-        # If we see it here, it's a Wave 1 defect — escalate
-        escalate(failed_test, reason="unexpected as-is-bug failure")
-```
-
-### Severity classification
-
-Read the failed test's frontmatter or surrounding context to find:
-- `related_ucs` — which UC does it cover?
-- The UC's `priority` from Phase 1 → maps to severity:
-  - `critical` UC → `critical` regression
-  - `high` UC → `high` regression
-  - `medium` UC → `medium` regression
-  - `low`/unmarked → `low` regression
-- Type-specific overrides:
-  - Contract test failure (vs OpenAPI) → always `critical` (contract
-    drift)
-  - Security test failure (auth/authz) → `critical`
-  - Security test failure (header missing, low-CVSS finding) →
-    `medium` or `high` based on CVSS
-  - Performance scenario p95 > +25% baseline → `critical`
-  - Performance scenario p95 > +10% baseline → `high`
-
-### Adding markers (the only place you edit test files)
-
-Backend (Java):
-```java
-// Original:
-@Test
-void test_something() { ... }
-
-// After classification (only if medium/low):
-@Test
-@Disabled("TBUG-12: snapshot diff in Customer.address.normalisation; see 06-tobe-bug-registry.md")
-void test_something() { ... }
-```
-
-Frontend (Jest):
-```typescript
-test.skip('renders the empty state', () => { /* TBUG-12 */ });
-```
-
-Equivalence (pytest):
-```python
-@pytest.mark.xfail(strict=True, reason="TBUG-12: see 06-tobe-bug-registry.md")
-def test_uc_12_happy_path(): ...
-```
-
-For each marker added, add an entry to `06-tobe-bug-registry.md`.
-
----
-
-## `02-coverage-report.md` structure
-
-```markdown
----
-<frontmatter>
----
-
-# TO-BE coverage report
-
-## Backend (JaCoCo)
-| BC | Line % | Branch % | Threshold met? |
-|---|---|---|---|
-| <bc-1> | 84% | 72% | yes |
-| <bc-2> | 78% | 65% | NO — see exclusions |
-
-Targets: line ≥ 80%, branch ≥ 70%.
-
-## Frontend (Jest)
-| Module | Line % | Function % |
+| # | Suite | Tool |
 |---|---|---|
-| ... | ... | ... |
+| 1 | Backend unit + integration + contract | `mvn verify` (Surefire, Failsafe, JaCoCo, SCC) |
+| 2 | Frontend component | `jest --ci --coverage` |
+| 3 | E2E | `playwright test` |
+| 4 | Equivalence | `pytest tests/equivalence` |
+| 5 | Performance | `k6` / `gatling:test` |
 
-## Equivalence (pytest)
-| UC ID | UC priority | Equivalent | Regression | Skipped |
-|---|---|---|---|---|
-| UC-001 | critical | yes | — | — |
-| UC-002 | high | partial | TBUG-3 | — |
+Exact commands, capture paths, and the failure-classification matrix
+(severity decision table + marker syntax for Java / Jest / pytest)
+live in [`execution-stages.md`](../../docs/tobe-testing/tobe-test-runner/execution-stages.md).
 
-## Excluded code
-<list of generated code, presentation-only components, etc.>
-```
+Failure policy (summary):
+- `critical` / `high` regression → record in TBUG, do NOT `xfail`,
+  escalate to supervisor.
+- `medium` / `low` regression or flake → record in TBUG, add
+  `xfail`/`skip` marker with `TBUG-NN` reference.
+- Unexpected AS-IS bug carry-over surfacing here → escalate (Wave 1
+  defect; do not silently mark).
 
-## `03-contract-tests-report.md` structure
-
-```markdown
----
-<frontmatter>
----
-
-# TO-BE contract tests report (vs OpenAPI)
-
-## Coverage
-| OpenAPI operationId | SCC contract present | Verdict | Notes |
-|---|---|---|---|
-| createCustomer | yes | pass | — |
-| updateCustomer | yes | FAIL | response body missing `updatedAt` field |
-| deleteCustomer | NO | n/a | contract not authored — escalate |
-
-## Contract drift
-<critical drifts listed; each is a blocker>
-```
-
-## `06-tobe-bug-registry.md` structure
-
-```markdown
----
-<frontmatter>
 ---
 
-# TO-BE bug registry (medium / low non-blocking)
+## Stop conditions
 
-> Critical and high regressions are NOT in this registry — they are
-> in `01-equivalence-report.md` as blocking.
-
-## TBUG-001 — <title>
-- **Severity**: medium
-- **Affected UC**: UC-007
-- **Test**: backend/src/test/.../FooServiceTest.java#test_normalises_address
-- **Symptom**: TO-BE returns "Via Roma 12" where AS-IS returned
-  "via roma 12" (case difference)
-- **Disposition**: xfail; recommend address normalisation alignment in
-  Phase 4 hardening loop
-- **AS-IS source ref**: original/InfoSync/services/customer.py:42
-```
+- **Escalate** on any `critical` / `high` regression, contract drift
+  vs OpenAPI, p95 regression > +25% baseline, missing SCC contract for
+  an OpenAPI `operationId`, or unexpected AS-IS bug carry-over.
+- **Continue** otherwise — record in TBUG, add marker, move on.
+- **Stop and ask the user** before auto-accepting any
+  `pytest-regressions` or Playwright snapshot diff.
 
 ---
 
@@ -344,31 +153,9 @@ Targets: line ≥ 80%, branch ≥ 70%.
 
 ## Final report
 
-```
-TO-BE test runner complete.
-Execute policy:           on | backend-only | frontend-only | off
-
-Suites executed:
-  - Backend (mvn verify):     <pass>/<total> tests; coverage line=<%>, branch=<%>
-  - Frontend (jest):          <pass>/<total> tests; coverage line=<%>, function=<%>
-  - E2E (playwright):         <pass>/<total> specs
-  - Equivalence (pytest):     <pass>/<total> tests
-  - Performance (k6/gatling): <count> scenarios; p95 regressions: <count>
-
-Contract tests vs OpenAPI: <pass>/<total>; drifts: <count>
-
-Failure classification:
-  - critical:  <count>  ← blocking (escalated)
-  - high:      <count>  ← blocking unless PO accepts
-  - medium:    <count>  ← TBUG registry, xfail
-  - low:       <count>  ← TBUG registry, skip
-
-Files modified (markers only):
-  - backend: <count>
-  - frontend: <count>
-  - equivalence: <count>
-
-Open questions: <count>
-Confidence:    high | medium | low
-Status:        complete | partial | needs-review | blocked
-```
+Print the completion summary using the
+[`output-templates.md`](../../docs/tobe-testing/tobe-test-runner/output-templates.md)
+"Final report" skeleton. It must include: execute policy, per-suite
+pass/total + coverage, contract pass/total + drift count, failure
+classification breakdown (critical/high/medium/low), files modified
+(markers only), open questions, confidence, status.

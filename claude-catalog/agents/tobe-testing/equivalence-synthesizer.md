@@ -41,6 +41,19 @@ Do NOT use this agent for: producing tests, executing tests, or AS-IS analysis.
 
 ---
 
+## Reference docs
+
+Per-artifact templates live in
+`claude-catalog/docs/tobe-testing/equivalence-synthesizer/` and are read on
+demand. Read each doc only when the matching artifact is about to be written.
+
+| Doc | Read when |
+|---|---|
+| `equivalence-report-template.md` | writing `01-equivalence-report.md` (deliverable structure + verdict classification rules) |
+| `readme-and-context-templates.md` | writing `README.md` and supplementing `00-context.md` |
+
+---
+
 ## Inputs (passed by supervisor)
 
 - `repo_root` — absolute path
@@ -101,193 +114,53 @@ status: complete | partial | needs-review | blocked
 
 ---
 
-## `01-equivalence-report.md` structure
+## Method
 
-### Required sections
+1. **Read every Phase-5 result** listed under "Inputs" — coverage, contract,
+   performance, security, TBUG registry, `_meta/*.json`, and every UC file.
+2. **Build the per-UC verdict table** by applying the verdict classification
+   rules (see `equivalence-report-template.md`). Every UC from Phase 1 must
+   appear; missing UCs flip `status: partial`.
+3. **Build the contract verdict table** with one row per OpenAPI operationId.
+4. **Aggregate performance and security verdicts** from the comparator and
+   security writer outputs without re-deriving them.
+5. **Classify accepted-differences and blocking regressions** into AD-NN and
+   REG-NN registers; populate the PO sign-off slots (pending unless already
+   signed in source).
+6. **Render the quality gate checklist** ticking only items already met.
+7. **Write artifacts** in this order: `01-equivalence-report.md`, then
+   `README.md`, then supplement `00-context.md` if needed.
 
-```markdown
+→ Read `claude-catalog/docs/tobe-testing/equivalence-synthesizer/equivalence-report-template.md`
+when writing the deliverable (full structure + verdict classification table).
+
+→ Read `claude-catalog/docs/tobe-testing/equivalence-synthesizer/readme-and-context-templates.md`
+when writing the README and supplementing `00-context.md`.
+
 ---
-<frontmatter>
----
 
-# TO-BE equivalence report — Phase 5
+## Outputs
 
-## Executive summary
-
-(3-5 lines)
-- Total UCs: <N>
-- Equivalent: <N>
-- Accepted-differences: <N> (require PO sign-off)
-- Regressions (blocking): <N>
-- Regressions (accepted): <N> (require PO sign-off)
-- Not tested: <N> (with documented reason each)
-
-## Verdict per UC
-
-| UC ID | UC title | Priority | Verdict | Test reference | Notes |
-|---|---|---|---|---|---|
-| UC-001 | <title> | critical | equivalent | tests/equivalence/test_uc_001_*.py | — |
-| UC-002 | <title> | high     | accepted-difference | tests/equivalence/test_uc_002_*.py | TZ format change — see Accepted differences |
-| UC-003 | <title> | medium   | regression-accepted | tests/equivalence/test_uc_003_*.py | TBUG-7 — PO accepted xfail until Phase 4 hardening loop |
-| UC-004 | <title> | critical | regression-blocking | tests/equivalence/test_uc_004_*.py | TBUG-12 — see Blocking regressions |
-| UC-005 | <title> | low      | not-tested | — | Streamlit-only diagnostic page; no Angular equivalent |
-
-(One row per UC from Phase 1. Every UC must appear. If a UC has
-no row, this report is incomplete.)
-
-## Contract tests verdict (vs OpenAPI)
-
-| OperationId | Verdict | Notes |
+| Path | Owner | Notes |
 |---|---|---|
-| createCustomer | pass | — |
-| updateCustomer | drift | response missing `updatedAt` field |
+| `docs/analysis/05-tobe-tests/01-equivalence-report.md` | this agent | DELIVERABLE — PO sign-off |
+| `docs/analysis/05-tobe-tests/README.md` | this agent | Phase 5 navigation entry point |
+| `docs/analysis/05-tobe-tests/00-context.md` | this agent (supplement only) | add `## Synthesis run note` if missing |
 
-(One row per operationId in OpenAPI. Drifts are blocking.)
-
-## Performance verdict
-
-| UC / endpoint | AS-IS p95 | TO-BE p95 | Delta | Verdict |
-|---|---|---|---|---|
-| UC-001 | 120 ms | 134 ms | +11.7% | regression-soft (>10%) |
-
-p95 regressions > +25%: blocking unless PO accepts.
-p95 regressions > +10%: PO sign-off required (regression-soft / -accepted).
-
-## Security verdict
-
-- OWASP Top 10 coverage: 10/10
-- Phase 2 regression matrix: <N> AS-IS findings, <N> mitigated, <N>
-  not-applicable, <N> regressed
-- Open critical security findings: <N>  (must be 0 for go-live)
-- Open high security findings: <N>  (must be 0 or PO-accepted)
-
-## Accepted differences (require PO sign-off)
-
-For each:
-
-### AD-NN — <title>
-- **Affected UC**: UC-<id>
-- **AS-IS behaviour**: <description>
-- **TO-BE behaviour**: <description>
-- **Reason for difference**: <design choice / framework constraint / explicit improvement>
-- **Impact**: <user-facing | internal-only>
-- **PO sign-off**: pending | yes (<date>, <name>)
-
-## Blocking regressions (must be resolved before go-live)
-
-For each:
-
-### REG-NN — <title>
-- **Severity**: critical | high
-- **Affected UC**: UC-<id>
-- **Test that detected it**: <path:line>
-- **Symptom**: <description>
-- **Recommended fix path**: Phase 4 hardening loop on BC <bc>
-- **Status**: open | in-progress (Phase 4 loop) | fixed (re-test pending)
-
-## Coverage and quality summary
-
-(Aggregated from 02-coverage-report.md)
-- Backend line coverage: <%> (target ≥ 80%)
-- Backend branch coverage: <%> (target ≥ 70%)
-- Frontend line coverage: <%>
-- E2E specs vs user flows: <count>/<total>
-- Backend test classes: <count>
-- Frontend spec files: <count>
-
-## Quality gate (Phase 5 → go-live)
-
-- [ ] All critical regressions resolved
-- [ ] All blocking contract drifts resolved
-- [ ] All p95 > +25% regressions resolved or PO-accepted
-- [ ] All open critical security findings resolved
-- [ ] Backend line coverage ≥ 80%
-- [ ] Backend branch coverage ≥ 70%
-- [ ] PO sign-off on this report
-- [ ] All accepted-differences signed off
-
-(Each item rendered with current state; tick what's already met.)
-
-## Sign-off
-
-- **Engineering lead**: ________________  date: ________
-- **Product Owner**:    ________________  date: ________
-- **Security review**:  ________________  date: ________
-```
-
-### Verdict classification rules
-
-For each UC, derive its verdict from the test results:
-
-| Test outcome | Conditions | Verdict |
-|---|---|---|
-| All assertions pass | No accepted_diffs declared | `equivalent` |
-| All assertions pass | Accepted_diffs present, PO sign-off pending | `accepted-difference` |
-| Some assertions fail | Severity = critical OR high | `regression-blocking` |
-| Some assertions fail | Severity = medium OR low, in TBUG registry, marked `xfail` | `regression-accepted` (assuming PO will sign) |
-| Test module is `pytest.skip` | With documented reason | `not-tested-with-reason` |
-
-Severity is inherited from the UC's Phase 1 priority unless type-specific
-overrides apply (contract drift = critical, security regression = critical
-or high based on CVSS).
+Frontmatter required on `01-equivalence-report.md`: `phase: 5`, `sub_step: 5.7`,
+`agent: equivalence-synthesizer`, `generated`, `sources` (list every input file),
+`related_ucs` (all UC-NN), `confidence`, `status`.
 
 ---
 
-## `README.md` structure
+## Stop conditions
 
-```markdown
----
-<frontmatter>
----
-
-# Phase 5 — TO-BE testing & equivalence verification
-
-## Reading order
-
-1. **`01-equivalence-report.md`** — start here. PO sign-off required.
-2. `00-context.md` — system summary, scope, run mode.
-3. `02-coverage-report.md` — backend / frontend / equivalence coverage.
-4. `03-contract-tests-report.md` — OpenAPI verification.
-5. `04-performance-comparison.md` — p95/p99 deltas vs AS-IS.
-6. `05-security-findings.md` — OWASP coverage and Phase 2 regressions.
-7. `06-tobe-bug-registry.md` — medium/low non-blocking findings.
-8. `14-unresolved-questions.md` — items needing human decision.
-9. `_meta/challenger-report.md` — adversarial review.
-
-## Quick links
-
-| What I want | Go to |
-|---|---|
-| Approve go-live | `01-equivalence-report.md` § Sign-off |
-| See per-UC verdict | `01-equivalence-report.md` § Verdict per UC |
-| Review accepted differences | `01-equivalence-report.md` § Accepted differences |
-| Triage blocking regressions | `01-equivalence-report.md` § Blocking regressions |
-| Check coverage thresholds | `02-coverage-report.md` |
-| Check OpenAPI compliance | `03-contract-tests-report.md` |
-| Check perf gate (+10%) | `04-performance-comparison.md` |
-| Check security gate | `05-security-findings.md` |
-
-## Run summary
-
-(populated from `_meta/manifest.json`)
-- Started: <ISO>
-- Completed: <ISO>
-- Duration: <human-readable>
-- Execute policy: <on | backend-only | frontend-only | off>
-- Resume mode: <fresh | re-run | revise>
-```
-
----
-
-## `00-context.md` supplementation
-
-If `00-context.md` already exists (written by the supervisor in
-bootstrap), add a `## Synthesis run note` section at the bottom with
-the synthesis-specific metadata: counts, verdict breakdown, timestamps.
-Do NOT overwrite the supervisor's content.
-
-If `00-context.md` doesn't exist (shouldn't happen), create it with
-the supervisor's expected fields plus your synthesis note.
+- **Stop and flag** if a UC from Phase 1 is missing test results (set
+  `status: partial`, list missing UCs in unresolved-questions).
+- **Stop and flag** if two source reports contradict each other (record both
+  in "Open questions" — do not silently choose one).
+- **Stop and flag** if `_meta/*.json` files are missing or malformed.
+- Otherwise emit the report and complete.
 
 ---
 

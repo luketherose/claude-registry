@@ -17,8 +17,16 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ### Changed
 - **`refactoring-supervisor.md`** gains a `## Deliberative decision integration` section, six new rows in the decision-rules table covering the trigger-detection paths and failure-handling, and a new entry in the `## Reference docs` table pointing to `claude-catalog/docs/deliberation/integration-replatforming.md`. Default supervisor behaviour stays single-agent — deliberation is invoked only when the user explicitly requests it (prose at confidence ≥ 0.7), the dispatch JSON sets `decisionMode: "deliberative"`, or the supervisor's own self-escalation rule fires (irreversible / production-impacting / compliance-sensitive Phase-4 decision). When deliberation returns `pending_human_approval` the supervisor halts forward progress at the existing HITL gate; when it returns `failed_insufficient_drafts` the supervisor surfaces the failure and asks the user how to proceed — never silently substitutes a single-agent answer.
+- **8 agents (~11 k chars) trimmed via the supervisor-extraction recipe** — fifth sweep, run as 8 parallel extractions. All 8 now under the 10 000-char rubric ceiling.
+  - `technical-analysis/security-analyst` 11 757 → 9 068 (−23%) — 1 ref doc: `output-templates.md`.
+  - `quality/registry-auditor` 11 682 → 8 922 (−23%) — 2 ref docs: `rubric-checklists.md`, `output-report-template.md`.
+  - `functional-analysis/io-catalog-analyst` 11 678 → 6 108 (−48%) — 2 ref docs: `output-templates.md`, `method-details.md`.
+  - `technical-analysis/risk-synthesizer` 11 626 → 7 586 (−35%) — 2 ref docs: `risk-register-schemas.md`, `output-templates.md`.
+  - `tobe-testing/equivalence-synthesizer` 11 584 → 7 885 (−32%) — 2 ref docs: `equivalence-report-template.md`, `readme-and-context-templates.md`.
+  - `baseline-testing/service-collection-builder` 11 423 → 7 707 (−33%) — 2 ref docs: `postman-template.md`, `output-templates.md`.
+  - `technical-analysis/data-access-analyst` 11 098 → 8 065 (−27%) — 2 ref docs: `output-templates.md`, `file-writing-rule.md`.
+  - `tobe-testing/tobe-test-runner` 11 073 → ~6 200 (−44%) — 2 ref docs: `execution-stages.md`, `output-templates.md`.
 
-### Changed
 - **8 agents (12–13 k chars) trimmed via the supervisor-extraction recipe** — fourth sweep, run as 8 parallel extractions. All 8 now under the 10 000-char rubric ceiling.
   - `indexing/codebase-mapper` 12 808 → 6 234 (−51%) — 3 ref docs under `docs/indexing/codebase-mapper/`: `classification-tables.md`, `stack-detection-markers.md`, `output-templates.md`.
   - `baseline-testing/baseline-testing-supervisor` 12 765 → 9 963 (−22%) — 2 new ref docs at `docs/baseline-testing/`: `manifest-schema.md`, `wave-overview.md` (alongside the 5 existing iter-7 docs).
