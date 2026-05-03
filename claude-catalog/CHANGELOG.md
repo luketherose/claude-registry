@@ -17,6 +17,15 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ### Changed
 - **`refactoring-supervisor.md`** gains a `## Deliberative decision integration` section, six new rows in the decision-rules table covering the trigger-detection paths and failure-handling, and a new entry in the `## Reference docs` table pointing to `claude-catalog/docs/deliberation/integration-replatforming.md`. Default supervisor behaviour stays single-agent — deliberation is invoked only when the user explicitly requests it (prose at confidence ≥ 0.7), the dispatch JSON sets `decisionMode: "deliberative"`, or the supervisor's own self-escalation rule fires (irreversible / production-impacting / compliance-sensitive Phase-4 decision). When deliberation returns `pending_human_approval` the supervisor halts forward progress at the existing HITL gate; when it returns `failed_insufficient_drafts` the supervisor surfaces the failure and asks the user how to proceed — never silently substitutes a single-agent answer.
+- **5 agents (~10 k chars) trimmed via the supervisor-extraction recipe** — seventh and final sweep, run as 5 parallel extractions. All 5 now under the 10 000-char rubric ceiling.
+  - `baseline-testing/benchmark-writer` 10 455 → 8 773 (−16%) — 1 ref doc: `benchmark-templates.md`.
+  - `functional-analysis/implicit-logic-analyst` 10 416 → 6 045 (−42%) — 1 ref doc: `detection-and-output.md`.
+  - `indexing/dependency-analyzer` 10 336 → 6 011 (−42%) — 1 ref doc: `detection-patterns.md`.
+  - `technical-analysis/technical-analysis-challenger` 10 251 → 7 180 (−30%) — 1 ref doc: `output-templates.md`.
+  - `technical-analysis/state-runtime-analyst` 10 087 → < 10 000 — 1 ref doc: `file-writing-rationale.md`.
+
+  **End state**: validator went from 45 warnings (iter 0) to 6 (post-iter 7). Of those 6: 2 are outside the scope of this cleanup (the deliberation extension landed during iter-1 / iter-3 — `refactoring-supervisor` regrew with deliberation integration; `deliberative-decision-engine` is new), and 4 are accepted soft warnings on agents whose decision-logic density forbids further extraction per the recipe (`refactoring-tobe-supervisor`, `tobe-testing-supervisor`, `decomposition-architect`, `logic-translator` — all under the ≤12k tolerance threshold).
+
 - **8 agents (10.5–11 k chars) trimmed via the supervisor-extraction recipe** — sixth sweep, run as 8 parallel extractions. All 8 now under the 10 000-char rubric ceiling.
   - `functional-analysis/functional-analysis-supervisor` 11 039 → 9 384 (−15%) — extended `docs/functional-analysis/output-layout.md` with manifest schema, new `docs/functional-analysis/sub-agents.md`.
   - `functional-analysis/ui-surface-analyst` 10 973 → 8 372 (−24%) — 1 ref doc: `output-templates.md`.

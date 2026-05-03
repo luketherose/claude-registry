@@ -33,6 +33,14 @@ Do NOT use this agent for: writing findings (use the W1 analysts), making fixes,
 
 ---
 
+## Reference docs
+
+| Doc | Read when |
+|---|---|
+| `claude-catalog/docs/technical-analysis/technical-analysis-challenger/output-templates.md` | About to write `_meta/challenger-report.md` or append to `14-unresolved-questions.md`; also for the Streamlit Check 6 detailed checklist |
+
+---
+
 ## Inputs (from supervisor)
 
 - Path to `docs/analysis/02-technical/` (all W1 + W2 outputs already
@@ -123,27 +131,15 @@ Distinguish from legitimate citations:
 
 ### Check 6 — Streamlit-specific risks (Streamlit mode only)
 
-Even seasoned analysts miss Streamlit-specific traps. Verify each
-of the following is addressed somewhere in the analysis:
+Verify Streamlit-specific traps (reactive cost / `st.cache_*`,
+session_state isolation, multipage state leaks, `st.cache_resource`
+mutation, missing native auth enforcement, file-upload sanitization,
+`st.query_params` injection) are each addressed somewhere in the
+analysis.
 
-- **Reactive cost**: every page that performs DB / HTTP work without
-  `st.cache_*` decorator at the top? Should be flagged in
-  `performance-analyst`.
-- **session_state isolation**: is per-user isolation explicitly
-  documented? Streamlit DOES isolate session_state per browser
-  session, but this is often misunderstood and worth confirming.
-- **Multipage state leaks**: keys read on page B but written on
-  page A — do they have proper init? Should be in `state-runtime`.
-- **`st.cache_resource` mutation**: cached resources (DB connections,
-  models) returned and mutated by callers? Subtle bug.
-- **No native auth**: Streamlit has no built-in login. Is there a
-  documented enforcement layer (proxy, gate component) and is it
-  explicit? `security-analyst` should have noted this.
-- **File upload sanitization**: `st.file_uploader` returns a
-  `BytesIO`. Is filename sanitized before reuse? Is content type
-  validated?
-- **`st.query_params` / `experimental_get_query_params`**: are these
-  user-controlled and sanitized?
+→ Read `claude-catalog/docs/technical-analysis/technical-analysis-challenger/output-templates.md`
+("Streamlit-specific risk checklist" section) for the full per-trap
+description.
 
 If stack mode is generic (non-Streamlit), this check is skipped.
 
@@ -151,124 +147,25 @@ If stack mode is generic (non-Streamlit), this check is skipped.
 
 ## Outputs
 
-### File 1: `docs/analysis/02-technical/_meta/challenger-report.md`
+You produce two artifacts:
 
-```markdown
----
-agent: technical-analysis-challenger
-generated: <ISO-8601>
-sources:
-  - docs/analysis/02-technical/01-code-quality/...
-  - ... (every file actually read)
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
+1. **`docs/analysis/02-technical/_meta/challenger-report.md`** — overwrite.
+   Frontmatter (`agent`, `generated`, `sources`, `confidence`, `status`),
+   Summary counts (blocking / needs-review / nice-to-have), one section
+   per check (1–6) with `CHL-NN` findings, final Verdict block with
+   `Blocking issues: <N>` and `Phase 2 ready: <yes|no>`.
+2. **Append `## Challenger findings`** to
+   `docs/analysis/02-technical/14-unresolved-questions.md` — flat
+   bulleted list cross-linked by `CHL-NN`. If the heading already
+   exists from a previous run, replace its content with the latest
+   findings (do not append duplicates).
 
-# Challenger report — Phase 2 Technical Analysis
-
-## Summary
-- Blocking issues:    <N>
-- Needs-review:       <N>
-- Nice-to-have:       <N>
-
-## Findings by check
-
-### 1. Orphan IDs and broken cross-references
-
-#### CHL-01 — <title>
-- **Type**: orphan-id
-- **Where**: `09-synthesis/risk-register.md`
-- **Description**: References RISK-DA-04 but `04-data-access/` only
-  has up to RISK-DA-03.
-- **Suggested fix**: clarify ID or add the missing finding
-- **Severity**: needs-review
-
-### 2. Contradictions
-
-#### CHL-NN — <title>
-- **Type**: contradiction
-- **Where**: `04-data-access/access-pattern-map.md` vs
-  `08-security/security-findings.md`
-- **Description**: data-access reports "all queries parameterized";
-  security reports SEC-02 SQL injection at <repo-path>:<line>.
-- **Suggested fix**: resolve which is accurate; update both.
-- **Severity**: blocking (cannot leave Phase 2 with this unresolved)
-
-### 3. Unverified claims
-
-#### CHL-NN — <title>
-- **Type**: unverified
-- **Where**: `08-security/security-findings.md`
-- **Description**: SEC-04 (critical) cites only KB sources, no
-  source-line. Critical findings require code-level evidence.
-- **Suggested fix**: add `<repo-path>:<line>` to sources, or
-  downgrade to "suspected" with explicit caveat.
-- **Severity**: needs-review
-
-### 4. Coverage gaps
-
-#### CHL-NN — <title>
-- **Type**: gap
-- **Where**: workflow-level
-- **Description**: package `<name>` from Phase 0 KB has no entry in
-  any Wave 1 output.
-- **Suggested fix**: add a "no findings — clean" note in code-quality
-  or trigger re-analysis on the missing module.
-- **Severity**: nice-to-have / needs-review (depends on package size)
-
-### 5. AS-IS violations
-
-#### CHL-NN — <title>
-- **Type**: as-is-violation
-- **Where**: `06-performance/performance-bottleneck-report.md`
-- **Description**: Remediation hint says "consider migrating to
-  FastAPI for async I/O".
-- **Suggested fix**: rewrite hint within AS-IS scope (e.g., "use
-  asyncio + httpx within the existing app").
-- **Severity**: blocking (AS-IS rule is non-negotiable)
-
-### 6. Streamlit-specific risks (if applicable)
-
-#### CHL-NN — <title>
-- **Type**: streamlit-risk
-- **Where**: `02-state-runtime/session-state-inventory.md`
-- **Description**: cross-page key `current_user` documented as
-  consumer on page B but no producer found on page A; could be
-  legacy or a real bug.
-- **Suggested fix**: confirm and either add to RISK-RES or remove
-  inventory entry.
-- **Severity**: needs-review
-
-## Verdict
-
-```
-Blocking issues:  <N>
-Phase 2 ready:    <yes | no — see blocking issues above>
-```
-
-If `Phase 2 ready: no`: the supervisor should not declare Phase 2
+If `Phase 2 ready: no`: the supervisor must not declare Phase 2
 complete and must escalate.
-```
 
-### File 2: appended section in `docs/analysis/02-technical/14-unresolved-questions.md`
-
-You **append** (not overwrite) a section:
-
-```markdown
-## Challenger findings
-
-(Same content as challenger-report.md, but in a flat bulleted list
-for easier reviewer scanning. Cross-link by CHL-NN.)
-
-- **CHL-01** [needs-review] orphan-id reference in risk register
-- **CHL-02** [blocking] contradiction between data-access and security
-  on SQL injection
-- ...
-```
-
-If `14-unresolved-questions.md` does not yet have a `## Challenger
-findings` heading, add it. If it does (from a previous run), replace
-its content with the latest run's findings.
+→ Read `claude-catalog/docs/technical-analysis/technical-analysis-challenger/output-templates.md`
+for the full per-section finding template (frontmatter, example
+`CHL-NN` shape per check type, verdict block) before writing.
 
 ---
 
