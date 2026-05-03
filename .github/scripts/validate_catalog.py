@@ -39,6 +39,26 @@ MIN_MODEL_JUSTIFICATION_LENGTH = 40
 # Tools that skill agents should not have (they are knowledge providers, not actors)
 SKILL_DISALLOWED_TOOLS = {"Edit", "Write", "Bash", "Agent"}
 
+# Subdirectories under a capability directory that hold attachments, not capability
+# `.md` files. Used by the progressive-disclosure layout (`references/`) and the
+# deterministic-script layout (`scripts/`). Files under these directories must not be
+# scanned as capability candidates.
+CAPABILITY_ATTACHMENT_DIRS = {"references", "scripts"}
+
+
+def iter_capability_files(root: Path):
+    """Yield every `.md` file under `root` that is a capability candidate.
+
+    Excludes files whose path contains any directory name in
+    `CAPABILITY_ATTACHMENT_DIRS` so that `references/*.md` and `scripts/*.md`
+    inside a skill or agent directory layout are not validated as capabilities.
+    """
+    for path in sorted(root.rglob("*.md")):
+        parts = set(path.relative_to(root).parts[:-1])
+        if parts & CAPABILITY_ATTACHMENT_DIRS:
+            continue
+        yield path
+
 
 @dataclass
 class Finding:
@@ -251,7 +271,7 @@ def check_supporting_files(catalog_root: Path, repo_root: Path) -> list[Finding]
             # If we can't read tier info, don't warn — fail open
             return findings
 
-    for agent_file in sorted(agents_dir.rglob("*.md")):
+    for agent_file in iter_capability_files(agents_dir):
         name = agent_file.stem
         tier = agent_tiers.get(name)
         # Only warn for stable agents — the warning text already states this rule
@@ -295,7 +315,7 @@ def check_marketplace_sync(repo_root: Path, catalog_root: Path) -> list[Finding]
     agents_dir = catalog_root / "agents"
     skills_dir = catalog_root / "skills"
 
-    for agent_file in sorted(agents_dir.rglob("*.md")):
+    for agent_file in iter_capability_files(agents_dir):
         name = agent_file.stem
         if name not in published:
             findings.append(Finding("error", str(agent_file.relative_to(repo_root)),
@@ -303,7 +323,7 @@ def check_marketplace_sync(repo_root: Path, catalog_root: Path) -> list[Finding]
                 "Run the publish script before merging."))
 
     if skills_dir.exists():
-        for skill_file in sorted(skills_dir.rglob("*.md")):
+        for skill_file in iter_capability_files(skills_dir):
             name = skill_file.stem
             if name not in published:
                 findings.append(Finding("error", str(skill_file.relative_to(repo_root)),
@@ -388,10 +408,10 @@ def check_model_conventions(
                 elif "skills" in filepath.parts:
                     _check_file(filepath, "skill")
     else:
-        for filepath in sorted(agents_dir.rglob("*.md")):
+        for filepath in iter_capability_files(agents_dir):
             _check_file(filepath, "agent")
         if skills_dir.exists():
-            for filepath in sorted(skills_dir.rglob("*.md")):
+            for filepath in iter_capability_files(skills_dir):
                 _check_file(filepath, "skill")
 
     return findings
@@ -423,7 +443,7 @@ def check_orchestrator_parallel_section(
                 _check_file(filepath)
     else:
         if skills_dir.exists():
-            for filepath in sorted(skills_dir.rglob("*.md")):
+            for filepath in iter_capability_files(skills_dir):
                 _check_file(filepath)
 
     return findings
@@ -510,11 +530,11 @@ def main():
                     all_findings.extend(validate_agent_file(filepath, file_type="skill"))
                     validated_files.append(path_str)
     else:
-        for filepath in sorted(agents_dir.rglob("*.md")):
+        for filepath in iter_capability_files(agents_dir):
             all_findings.extend(validate_agent_file(filepath, file_type="agent"))
             validated_files.append(str(filepath.relative_to(repo_root)))
         if skills_dir.exists():
-            for filepath in sorted(skills_dir.rglob("*.md")):
+            for filepath in iter_capability_files(skills_dir):
                 all_findings.extend(validate_agent_file(filepath, file_type="skill"))
                 validated_files.append(str(filepath.relative_to(repo_root)))
 

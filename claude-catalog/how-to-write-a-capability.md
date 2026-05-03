@@ -60,6 +60,63 @@ complete standards relevant to the task at hand.
 - No `## Skills` section — skills are leaf nodes
 - No `Agent` tool — skills cannot delegate further
 
+### Progressive disclosure — skill content layout
+
+The Anthropic skill specification defines three loading levels for skill content. The
+registry follows the same model so that skills stay cheap to load when only their
+abstract is needed and expand on demand when the full content is required.
+
+| Level | What it contains | When loaded |
+|---|---|---|
+| **1. Frontmatter** | `name`, `description`, `tools`, `model` | Always — at registry boot, with no body |
+| **2. SKILL body** | The `## Role` and `## Standards` sections — the rules an agent applies | When an agent invokes the skill via the `Agent` tool |
+| **3. `references/`** | Long-form details, full examples, exhaustive tables, code templates | Only when the skill body explicitly links to them |
+
+The frontmatter alone must be enough for Claude to decide whether to invoke the skill.
+The body alone must be enough to apply the skill in 90% of invocations. `references/`
+is for the remaining 10% — when the agent needs an exhaustive list, a long template, or
+a worked example.
+
+**Soft and hard caps on body length**
+
+| Cap | Word count | Action |
+|---|---|---|
+| Soft | 3 000 words | Body is large. Review whether dense reference material can move to `references/`. Not a blocker. |
+| Hard | 5 000 words | Aligned with the Anthropic limit. The body must be split: keep the rules in the body, move long examples / tables / templates to `references/`. |
+
+**`references/` directory layout**
+
+```
+claude-catalog/skills/<topic>/<skill-name>/
+├── <skill-name>.md            # the skill body (level 2)
+└── references/
+    ├── <topic>-examples.md    # long worked examples
+    ├── <topic>-templates.md   # full templates the skill body links to
+    └── <topic>-deep-dive.md   # rare-but-needed deep details
+```
+
+When a skill grows from a flat file (`<skill-name>.md`) to a directory layout, both forms
+remain supported by the validator. Move only when the body crosses the soft cap or when
+a referenced section is long enough to harm scan-readability of the body.
+
+**How the body links to references**
+
+Use plain markdown links from the body to the reference files. The agent does not
+auto-load `references/` — the body must point at the specific file when the agent needs
+it. Do not paste a `references/` listing in the body; link only the files relevant to
+the rule being stated.
+
+```markdown
+## Standards
+
+…rules of the skill go here…
+
+For full Java/Spring boilerplate templates, see
+[`references/spring-templates.md`](references/spring-templates.md).
+```
+
+The link is a signal to the agent: "if you need this level of detail, read this file".
+
 ### How agents invoke skills
 
 Add a `## Skills` section to the agent's system prompt:
