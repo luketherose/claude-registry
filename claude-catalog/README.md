@@ -25,6 +25,7 @@ prompt templates, policies, hooks, and MCP configuration patterns.
 | `NAMING-CONVENTIONS.md` | File and capability naming rules |
 | `CONTRIBUTING.md` | How to contribute to this catalog |
 | `CHANGELOG.md` | Record of all capability changes |
+| `ANTI-PATTERNS.md` | Negative-knowledge log: capabilities and approaches that failed, why, what replaced them |
 
 ## Key concepts
 

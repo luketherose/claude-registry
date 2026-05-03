@@ -51,9 +51,16 @@ bump the minor version (e.g. 1.1.0 → 1.2.0).
 breaking — it changes how Claude decides to invoke the subagent. These require a major
 version bump and a migration note in CHANGELOG.md.
 
-**Deprecating a capability**: Open a PR adding a deprecation notice to the subagent's
-description field and to the marketplace catalog.json entry. Keep the file for 90 days
-before removal to allow teams to migrate.
+**Deprecating a capability**: Open a PR that does three things together:
+1. Adds a deprecation notice to the subagent's `description` field and to the marketplace
+   `catalog.json` entry.
+2. Adds an entry to `ANTI-PATTERNS.md` recording **what was tried, why it failed, what
+   replaced it, and under which conditions a retry would be valid**. This entry is
+   permanent — it survives the 90-day removal window.
+3. Keeps the `.md` file in place for 90 days before removal to allow teams to migrate.
+
+Step 2 is mandatory. Without it, the rationale disappears with the file and the next
+contributor proposing a similar capability has no way to learn from the precedent.
 
 ## What lives in this catalog vs. a project
 

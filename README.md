@@ -59,6 +59,7 @@ claude-registry/
     CONTRIBUTING.md
     GOVERNANCE.md
     CHANGELOG.md
+    ANTI-PATTERNS.md         negative-knowledge log (deprecated approaches + reasons)
 
   claude-marketplace/      ← distribution (approved capabilities only)
     stable/<topic>/          production-ready capabilities, grouped by topic
@@ -195,4 +196,5 @@ Details in [`claude-catalog/GOVERNANCE.md`](claude-catalog/GOVERNANCE.md).
 | PR review checklist | [`claude-catalog/review-checklist.md`](claude-catalog/review-checklist.md) |
 | Release process | [`claude-catalog/release-process.md`](claude-catalog/release-process.md) |
 | Changelog | [`claude-catalog/CHANGELOG.md`](claude-catalog/CHANGELOG.md) |
+| Anti-patterns log | [`claude-catalog/ANTI-PATTERNS.md`](claude-catalog/ANTI-PATTERNS.md) |
 | Team pitch (PPTX) | [`pitch-claude-registry.pptx`](pitch-claude-registry.pptx) |

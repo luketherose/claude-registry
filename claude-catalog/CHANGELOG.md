@@ -5,6 +5,14 @@ All notable changes to catalog capabilities are documented here.
 Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending changes.
 
 ## [Unreleased]
+### Added
+- **`claude-catalog/ANTI-PATTERNS.md`** — negative-knowledge log for the registry. Every deprecation PR must now leave an entry here recording what was tried, why it failed, what replaced it, and the **Do not retry unless** preconditions. Survives the 90-day removal window so future contributors proposing a similar capability can see the precedent. The deprecation rule in `GOVERNANCE.md` and a new section 9 in `review-checklist.md` enforce the lookup at review time. Closes the gap where the rationale for a deprecated capability disappeared together with the file 90 days after the deprecation notice.
+
+### Changed
+- **`GOVERNANCE.md` deprecation rule** rewritten to require an `ANTI-PATTERNS.md` entry as part of the deprecation PR (not a follow-up).
+- **`review-checklist.md`** — new **§9 Anti-pattern check** added before the existing skill-specific section (renumbered to §10). Reviewers must search `ANTI-PATTERNS.md` for the proposed role's keywords and either confirm no precedent or explicitly satisfy the precedent's `Do not retry unless` clause.
+- **README files** (`README.md`, `claude-catalog/README.md`) updated to list `ANTI-PATTERNS.md` alongside `CHANGELOG.md`.
+
 ### Changed
 - **4 phase supervisors trimmed via the supervisor-extraction recipe.** All 4 medium supervisors (>27k chars) now under 16k:
   - `baseline-testing-supervisor`: 32 622 → **14 789 chars (−55%)**, 5 reference docs in `claude-catalog/docs/baseline-testing/` (output-layout, policies, phase-plan, recap-templates, dispatch-prompt-template)
