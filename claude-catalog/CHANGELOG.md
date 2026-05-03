@@ -5,6 +5,16 @@ All notable changes to catalog capabilities are documented here.
 Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending changes.
 
 ## [Unreleased]
+### Changed
+- **`refactoring-supervisor` body trimmed from 68 780 → 14 649 chars (−79%) via the supervisor-extraction recipe.** Largest extraction ever applied to this registry (the previous record holder was the 38k → 16k extraction of `refactoring-tobe-supervisor`). Closes the structural rubric warning ("missing `## When to invoke`") and reduces the body-length warning from "68k chars" — drastically over the 10k-char ceiling — to "14.6k". Six reference docs created under `claude-catalog/docs/refactoring-workflow/`:
+  - `bootstrap-protocol.md` — Phase 0 of the workflow's own bootstrap (per-phase detection table, HITL prompts, sub-state `complete-but-exports-missing` for Phase 1/2).
+  - `schematics.md` — verbatim pre-phase ASCII schematics for Phase 0–4 (paste into Step A of the per-phase protocol).
+  - `per-phase-protocol.md` — Steps A–F + the Phase 4 driving model + per-step recap shapes (gate steps, Step 2 per-feature, Step 3 sub-loop convergence, end-of-Phase-4).
+  - `workflow-manifest-spec.md` — JSON schema for `<repo>/docs/refactoring/workflow-manifest.json` + update rules.
+  - `phase-4-replatforming.md` — Phase 4 goal, driver, sub-agents, inputs, output roots, the 7-step structure, hard gates, and intentional non-goals.
+  - `activation-examples.md` — user phrasings that route to this supervisor.
+  The supervisor body now keeps only `## Role`, `## When to invoke` (newly added — closes the rubric warning), `## Reference docs` table, `## Workflow phases (summary)`, `## Decision rules`, `## Escalation triggers`, `## Constraints`, `## Output format`. Validates the extraction recipe end-to-end on the largest deferred supervisor in the registry.
+
 ### Added
 - **Optional `scripts/` directory pattern for skills, documented in `how-to-write-a-capability.md`** under § "Deterministic helpers". Codifies the "Claude orchestrates, the code executes" principle from the Anthropic skill specification: deterministic, repeatable, calculable logic (schema validation, naming-convention regex, counts, parsing) belongs in executable scripts, not in textual instructions the model interprets each time. Layout is `claude-catalog/skills/<topic>/<name>/scripts/{README.md, <script>.{py,sh,...}}`. The skill remains read-only (`tools: Read`); the consuming agent runs the script via its own `Bash` tool. The scripts/README.md is mandatory and must document invocation, inputs, outputs, and exit codes. The validator's `iter_capability_files()` already excludes `scripts/` (added in the progressive-disclosure PR). New `review-checklist.md` § skill-specific entries (under §11) check the README and the body's Bash recipe linkage. Closes the gap identified by the Anthropic auto-improving-agents review: "logic that is repeatable should not live in prose".
 
