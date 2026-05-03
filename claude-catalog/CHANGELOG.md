@@ -5,6 +5,9 @@ All notable changes to catalog capabilities are documented here.
 Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending changes.
 
 ## [Unreleased]
+### Changed
+- **Promotion `beta → stable` policy gains a fast path: convergence (Criterion B).** `release-process.md` § "Promotion: beta → stable" used to require ≥2 projects + ≥30 days uniformly (now Criterion A). Criterion B promotes immediately when ≥2 independent project specializations under different `.claude/agents/` introduce the same modification to a beta capability — convergence across projects is a stronger signal than calendar time and waiting out 30 days delays adopting a fix two teams have already identified. The PR must cite both specializations with paths and the shared diff hunk. `review-checklist.md` gains a new **§10 Promotion-specific checks** that enforces criterion declaration and evidence (existing skill-specific section renumbered to §11). Closes the gap identified by the Anthropic auto-improving-agents review: "convergence between users is a stronger maturity signal than time on shelf, and the registry did not capture it".
+
 ### Added
 - **`claude-catalog/ANTI-PATTERNS.md`** — negative-knowledge log for the registry. Every deprecation PR must now leave an entry here recording what was tried, why it failed, what replaced it, and the **Do not retry unless** preconditions. Survives the 90-day removal window so future contributors proposing a similar capability can see the precedent. The deprecation rule in `GOVERNANCE.md` and a new section 9 in `review-checklist.md` enforce the lookup at review time. Closes the gap where the rationale for a deprecated capability disappeared together with the file 90 days after the deprecation notice.
 

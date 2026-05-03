@@ -85,7 +85,25 @@ Use this checklist when reviewing a PR that adds or modifies a capability.
 - [ ] If this PR deprecates an existing capability, an entry has been added to
       `ANTI-PATTERNS.md` in the same PR (per `GOVERNANCE.md` deprecation rule)
 
-## 10. Skill-specific checks (only when the PR adds or modifies a skill)
+## 10. Promotion-specific checks (only for beta → stable promotion PRs)
+
+A promotion PR moves a capability's `"tier"` in `catalog.json` from `"beta"` to
+`"stable"`. The PR description must state explicitly which criterion from
+`release-process.md` § "Promotion: beta → stable" is being used.
+
+- [ ] The PR description names the criterion: **A (time + adoption)** or **B (convergence)**
+- [ ] If **Criterion A**: the capability has been in `beta` for ≥30 days since the last
+      beta release, and is in active use in ≥2 projects. The PR description names the
+      two projects.
+- [ ] If **Criterion B**: the PR description cites **two or more independent project
+      specializations** (under different projects' `.claude/agents/`) that have
+      introduced the same modification, with the path under each project and the diff
+      hunk that demonstrates the shared change.
+- [ ] `CHANGELOG.md` entry for the new stable version states which criterion was used
+      (and, for Criterion B, the convergence evidence)
+- [ ] No critical issues are open against the capability
+
+## 11. Skill-specific checks (only when the PR adds or modifies a skill)
 
 - [ ] Skill file is in `claude-catalog/skills/`, not `agents/`
 - [ ] `model: haiku` (knowledge retrieval; justify if higher model needed)
