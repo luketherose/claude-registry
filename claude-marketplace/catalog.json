@@ -1,7 +1,7 @@
 {
   "_comment": "Team convention \u2014 not an official Claude Code format. This manifest tracks published capabilities.",
   "version": "1.0",
-  "generated": "2026-05-01",
+  "generated": "2026-05-03",
   "repository": "claude-registry",
   "capabilities": [
     {
@@ -3127,6 +3127,200 @@
       ],
       "published": "2026-04-28",
       "changelog": "Initial release"
+    },
+    {
+      "name": "deliberative-decision-engine",
+      "version": "0.1.0",
+      "type": "agent",
+      "tier": "beta",
+      "status": "active",
+      "description": "Multi-agent deliberation orchestrator (opus) for complex / high-stakes / irreversible / replatforming-relevant decisions. Activated by an explicit user prose trigger (IT/EN lexicon) or programmatically via decisionMode=deliberative from refactoring-supervisor. Drives 7-step pipeline: trigger detect & classify -> decision framing -> independent drafts (3 or 5 personas, anti-anchoring) -> neutral evidence summary -> 1-2 challenge rounds -> rebuttals -> final-decision strategy (majority / confidence-weighted / consensus / judge / human arbitration) -> commit protocol (local_transactional default; raft/pbft as extension points) -> audit artefact at .deliberation-kb/<trace-id>/. Optimised for decision quality and auditability, never for cost or latency.",
+      "file": "beta/deliberation/deliberative-decision-engine.md",
+      "dependencies": [
+        "debate-proposer",
+        "debate-critic",
+        "debate-replatforming-specialist",
+        "debate-risk-reviewer",
+        "debate-operations-reviewer",
+        "debate-judge"
+      ],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Agent",
+        "Write"
+      ],
+      "model": "opus",
+      "tags": [
+        "deliberation",
+        "multi-agent-debate",
+        "decision-quality",
+        "replatforming",
+        "audit",
+        "supervisor"
+      ],
+      "published": "2026-05-03",
+      "changelog": "Initial release - 7-step deliberative pipeline with anti-anchoring, structured evidence summary, judge / human arbitration, full audit artefact, and refactoring-supervisor integration."
+    },
+    {
+      "name": "debate-proposer",
+      "version": "0.1.0",
+      "type": "agent",
+      "tier": "beta",
+      "status": "active",
+      "description": "Debate persona (opus): Primary Architect / Proposer in a multi-agent deliberation. Reads the decision brief and produces an independent anchoring-free draft optimised for correctness, technical soundness, long-term architectural fit. Step 4 produces challenges; Step 5 rebuts. Dispatched only by deliberative-decision-engine.",
+      "file": "beta/deliberation/debate-proposer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write"
+      ],
+      "model": "opus",
+      "tags": [
+        "deliberation",
+        "debate-persona",
+        "proposer",
+        "architecture"
+      ],
+      "published": "2026-05-03",
+      "changelog": "Initial release - Proposer persona for deliberative-decision-engine."
+    },
+    {
+      "name": "debate-critic",
+      "version": "0.1.0",
+      "type": "agent",
+      "tier": "beta",
+      "status": "active",
+      "description": "Debate persona (opus): Skeptical Critic in a multi-agent deliberation. Aggressively but constructively attacks the strongest plausible solution - hidden assumptions, weak evidence, contradictions, edge cases, failure modes. Owns the assumption-audit, failure-mode enumeration, edge-case sweep, second-order check, and evidence audit. Dispatched only by deliberative-decision-engine.",
+      "file": "beta/deliberation/debate-critic.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write"
+      ],
+      "model": "opus",
+      "tags": [
+        "deliberation",
+        "debate-persona",
+        "critic",
+        "red-team",
+        "adversarial"
+      ],
+      "published": "2026-05-03",
+      "changelog": "Initial release - Critic persona for deliberative-decision-engine."
+    },
+    {
+      "name": "debate-replatforming-specialist",
+      "version": "0.1.0",
+      "type": "agent",
+      "tier": "beta",
+      "status": "active",
+      "description": "Debate persona (opus): Migration / Replatforming Specialist in a multi-agent deliberation. Bridges architectural vision and operational reality of moving a running system - migration approach, sequencing, compatibility, cutover strategy, rollback strategy, data migration, integration risk, dependency risk, reversibility, operational burden, modernisation vs lift-and-shift. Dispatched only by deliberative-decision-engine.",
+      "file": "beta/deliberation/debate-replatforming-specialist.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write"
+      ],
+      "model": "opus",
+      "tags": [
+        "deliberation",
+        "debate-persona",
+        "replatforming",
+        "migration",
+        "cutover",
+        "rollback"
+      ],
+      "published": "2026-05-03",
+      "changelog": "Initial release - Replatforming-specialist persona for deliberative-decision-engine."
+    },
+    {
+      "name": "debate-risk-reviewer",
+      "version": "0.1.0",
+      "type": "agent",
+      "tier": "beta",
+      "status": "active",
+      "description": "Debate persona (opus): Security / Compliance / Risk Reviewer in a multi-agent deliberation. Owns the lens of governance, GDPR/HIPAA/PCI/SOX/contractual compliance, privacy, data exposure, permissions, auditability, operational and reputational risk. Has authority to demand judge or human arbitration via riskFlags in the draft. Dispatched only by deliberative-decision-engine.",
+      "file": "beta/deliberation/debate-risk-reviewer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write"
+      ],
+      "model": "opus",
+      "tags": [
+        "deliberation",
+        "debate-persona",
+        "risk",
+        "security",
+        "compliance",
+        "privacy"
+      ],
+      "published": "2026-05-03",
+      "changelog": "Initial release - Risk/compliance/security reviewer persona for deliberative-decision-engine."
+    },
+    {
+      "name": "debate-operations-reviewer",
+      "version": "0.1.0",
+      "type": "agent",
+      "tier": "beta",
+      "status": "active",
+      "description": "Debate persona (opus): Operations / Reliability Reviewer in a multi-agent deliberation. Acts as the SRE in the room - reasons about scalability, observability, SLOs, capacity, latency budgets, incident response, MTTD/MTTA/MTTR, RTO/RPO, resilience, partial-failure modes, cost-of-operation, and production readiness. Dispatched only by deliberative-decision-engine.",
+      "file": "beta/deliberation/debate-operations-reviewer.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write"
+      ],
+      "model": "opus",
+      "tags": [
+        "deliberation",
+        "debate-persona",
+        "operations",
+        "sre",
+        "reliability",
+        "observability"
+      ],
+      "published": "2026-05-03",
+      "changelog": "Initial release - Operations/reliability reviewer persona for deliberative-decision-engine."
+    },
+    {
+      "name": "debate-judge",
+      "version": "0.1.0",
+      "type": "agent",
+      "tier": "beta",
+      "status": "active",
+      "description": "Debate persona (opus) with two modes: SUMMARISER mode in Step 3 (organises drafts into structured evidence summary; never recommends) and ARBITRATOR mode in Step 6 (synthesises a final decision when finalDecisionStrategy resolves to judge_arbitration; must explicitly address every unresolved high-severity / critical objection in unresolvedObjectionsAddressed - cannot drop one). Dispatched only by deliberative-decision-engine.",
+      "file": "beta/deliberation/debate-judge.md",
+      "dependencies": [],
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Write"
+      ],
+      "model": "opus",
+      "tags": [
+        "deliberation",
+        "debate-persona",
+        "judge",
+        "arbitrator",
+        "synthesis"
+      ],
+      "published": "2026-05-03",
+      "changelog": "Initial release - Neutral judge / arbitrator persona for deliberative-decision-engine."
     }
   ]
 }

@@ -112,6 +112,7 @@ each doc only when the matching step is about to start — not preemptively.
 | `workflow-manifest-spec.md` | creating or updating `<repo>/docs/refactoring/workflow-manifest.json`. |
 | `phase-4-replatforming.md` | starting Phase 4 (any step), or describing Phase 4 in the pre-phase brief. |
 | `activation-examples.md` | the user's opening message is ambiguous about which phase to run. |
+| `claude-catalog/docs/deliberation/integration-replatforming.md` | a Phase-4 decision point is reached AND deliberative mode is requested (user prose trigger or `decisionMode: deliberative` in the dispatch JSON) OR the supervisor's own escalation rule fires (irreversible / production-impacting / compliance-sensitive). Drives the route to `deliberative-decision-engine`. |
 
 ---
 
@@ -179,6 +180,72 @@ monitoring, performance tuning loops, deprecation of AS-IS), respond:
 | Phase 4 Step 6 — pending TODOs in delivered code | Refuse to capture PO sign-off; either (a) resolve the TODOs by routing back to Step 4 / Step 5, or (b) escalate via ADR with explicit user acknowledgment |
 | Phase 4 PO sign-off requested while critical or high failures remain | Refuse — sign-off is BLOCKED; offer `iterate Step 6` or `stop` |
 | User asks to skip a Phase 4 step | Refuse — Phase 4 steps are sequential with hard gates; the only valid option is `resume from Step N` after a partial run, not skip-ahead |
+| User explicitly requests deliberation (IT/EN trigger lexicon match ≥ 0.7) for a Phase-4 decision | Build a decision brief and dispatch `deliberative-decision-engine`; do not decide directly. See § "Deliberative decision integration". |
+| Dispatch JSON contains `decisionMode: deliberative` (or `useDeliberativeDecision: true`) | Route every Phase-4 decision listed in `claude-catalog/docs/deliberation/integration-replatforming.md` § "Decision points (Phase 4)" to `deliberative-decision-engine` for the duration of the workflow. |
+| Phase-4 decision is irreversible / production-impacting / compliance-sensitive | Auto-escalate to `deliberative-decision-engine` with `requireHumanApprovalForHighRisk: true`, even without an explicit trigger. |
+| Deliberation returns `pending_human_approval` | Treat as a hard HITL gate; halt the affected step; surface the question + audit trail; never proceed without the user's decision. |
+| Deliberation returns `failed_insufficient_drafts` | Halt the affected step; surface the failure artefact; ask user how to proceed. **Never silently substitute a single-agent answer.** |
+
+---
+
+## Deliberative decision integration
+
+When a Phase-4 decision must be made through structured multi-agent
+debate instead of the supervisor's normal single-agent answer, route
+the decision to `deliberative-decision-engine`. Three activation paths:
+
+1. **Explicit user prose** matched by the trigger lexicon at confidence
+   ≥ 0.7. Triggers include (IT) `decidi con dibattito`, `usa modalità
+   dibattito`, `usa multi-agente`, `fai criticare la decisione`,
+   `fammi una decisione robusta`, `valuta pro e contro`; (EN) `debate
+   mode`, `multi-agent debate`, `deliberative decision`, `decision
+   review`, `red team this decision`, `robust decision`. Confidence
+   0.4–0.7 ⇒ ask one focused clarifying question. Full lexicon and
+   scoring rules in `claude-catalog/docs/deliberation/trigger-lexicon.md`.
+2. **Programmatic flag** in the dispatch JSON (`decisionMode:
+   "deliberative"` or `useDeliberativeDecision: true`, optionally with
+   a `deliberationPolicy` block). When present at supervisor entry,
+   deliberation applies for the whole workflow.
+3. **Self-escalation** by the supervisor when the inferred risk level
+   is `irreversible`, the decision is production-impacting, or it is
+   compliance-/security-sensitive — even without an explicit trigger.
+
+For each routed decision, build a self-contained decision brief per the
+schema at `claude-catalog/docs/deliberation/schemas.md` § "00-decision-
+brief.json" — including the migration-criteria block when relevant —
+and dispatch `deliberative-decision-engine` via the `Agent` tool. The
+engine writes its full audit trail under
+`<repo>/.deliberation-kb/<trace-id>/` and returns a final-decision
+artefact path. Read the artefact, render the user-facing report (the
+engine ships a Markdown render at `06-user-report.md`), and either
+proceed (when `requiredHumanApproval == false`) or halt at the HITL
+gate (when `true`). The Phase-4 final replatforming report
+(`docs/refactoring/01-replatforming-report.md`) MUST cross-reference
+every deliberation trace ID consumed during the phase.
+
+Default deliberation policy when none is provided by the caller:
+`agentCount: 5`, `debateRounds: 1` (2 if risk is `high`/`irreversible`
+or task is highly ambiguous), `requireIndependentDrafts: true`,
+`requireStructuredEvidenceSummary: true`, `requireDissentingOpinion:
+true`, `finalDecisionStrategy: "auto"`, `commitProtocol: "auto"`,
+`prioritizeQualityOverCost: true`, `preferredModelTier: "opus"`,
+`requireHumanApprovalForHighRisk: true`.
+
+**Hard rules**:
+
+- **Never silently fall back to a single-agent answer** when
+  deliberation was requested and could not complete. Surface the
+  failure artefact and ask the user how to proceed.
+- **Default behaviour stays single-agent.** Do NOT auto-deliberate on
+  routine answers. Routes 1–3 above are the only entry conditions.
+- **Decision points eligible for deliberation** are listed in
+  `claude-catalog/docs/deliberation/integration-replatforming.md` § "Decision points
+  (Phase 4)". The list covers target architecture, migration approach
+  (lift-and-shift vs refactor vs rearchitect vs rebuild vs replace),
+  target cloud / runtime / platform, sequencing of migration waves,
+  dependency conflicts, data-migration strategy, cutover, rollback,
+  conflicting modernization recommendations, risky automated changes,
+  and security/compliance-sensitive changes.
 
 ---
 

@@ -77,7 +77,7 @@ claude-registry/
 
 ## Available capabilities
 
-### Agents (66)
+### Agents (83)
 
 | Name | Tier | Description |
 |------|------|-------------|
@@ -157,6 +157,13 @@ claude-registry/
 | `wiki-writer` | beta | GitHub wikis organized around the Diataxis framework (Tutorials, How-to, Reference, Explanation); writes wiki/*.md for PR review, never auto-pushes |
 | `presentation-creator` | beta | Accenture-branded slides (.pptx) from project documents |
 | `document-creator` | beta | Accenture-branded documents (PDF/DOCX) from project documents |
+| `deliberative-decision-engine` | beta | **Multi-agent deliberation orchestrator (opus, v0.1.0)**: drives a 7-step debate pipeline (trigger detect → framing → independent drafts → evidence summary → challenge → rebuttal → strategy + commit) for complex / high-stakes / irreversible / replatforming-relevant decisions. Activated by IT/EN prose triggers (`decidi con dibattito`, `usa multi-agente`, `debate mode`, `multi-agent debate`, `decision review`, ...) or programmatically via `decisionMode: deliberative` from `refactoring-supervisor`. Default 5 personas, anti-anchoring, structured evidence summary, judge / human arbitration when needed, full audit artefact at `.deliberation-kb/<trace-id>/`. Optimised for decision quality and auditability — never for cost or latency. |
+| `debate-proposer` | beta | Deliberation persona (opus): Primary Architect / Proposer — produces the lead recommendation. |
+| `debate-critic` | beta | Deliberation persona (opus): Skeptical Critic — assumption audit, failure modes, edge cases, evidence audit. |
+| `debate-replatforming-specialist` | beta | Deliberation persona (opus): Migration / Replatforming Specialist — sequencing, cutover, rollback, data migration, dependency risk, reversibility. |
+| `debate-risk-reviewer` | beta | Deliberation persona (opus): Security / Compliance / Risk Reviewer — GDPR/HIPAA/PCI/SOX, privacy, auditability, blast radius; can demand judge/human arbitration. |
+| `debate-operations-reviewer` | beta | Deliberation persona (opus): Operations / Reliability Reviewer — SLOs, capacity, observability, RTO/RPO, partial-failure modes, cost-of-operation. |
+| `debate-judge` | beta | Deliberation persona (opus): neutral judge — Step 3 summariser (no recommendation) and Step 6 arbitrator (must address every unresolved high/critical objection). |
 
 ### Skills
 
