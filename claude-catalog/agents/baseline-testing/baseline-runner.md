@@ -43,6 +43,21 @@ Do NOT use this agent for: writing tests (use the W1 writers), running the TO-BE
 
 ---
 
+## Reference docs
+
+This worker's templates and policy matrices live in
+`claude-catalog/docs/baseline-testing/baseline-runner/` and are read on
+demand. Read each doc only when the matching step is about to start —
+not preemptively.
+
+| Doc | Read when |
+|---|---|
+| `execution-stages.md` | preparing the pytest run (write-only branch, Stages A/B/C, snapshot capture) |
+| `failure-policy.md`   | classifying a failing test (severity inference, xfail marker pattern, strictness rules) |
+| `output-schemas.md`   | writing `as-is-bugs-found.md`, `baseline-report.md`, the oracle JSON files, or the supervisor reporting block |
+
+---
+
 ## Inputs (from supervisor)
 
 - Repo root path
@@ -63,369 +78,93 @@ Do NOT use this agent for: writing tests (use the W1 writers), running the TO-BE
 
 ### 1. Branch on execution policy
 
-#### Policy = `off` (write-only mode)
+- **Policy = `off`** (write-only): do NOT invoke pytest; validate suite
+  structure only; synthesize empty oracle artifacts; mark status
+  `partial`. Read `execution-stages.md` for the validation checklist
+  and the empty-artifact shape.
+- **Policy = `on`** (write+execute): preflight deps, then run pytest in
+  the three staged invocations from `execution-stages.md` (Stage A
+  functional+integration+coverage, Stage B benchmarks, Stage C
+  Postman/newman if available). On dep install failure, fall back to
+  write-only and surface to supervisor.
 
-- Do NOT invoke pytest.
-- Validate suite structure:
-  - all expected files exist (compare against manifest from W1)
-  - Python files compile (Bash: `python3 -m py_compile <file>` for each
-    test file; collect errors but do not fail catastrophically)
-  - fixture references resolve (grep for fixture names used in tests
-    and verify they're defined in `conftest.py` / `factories.py`)
-  - Postman JSON validates as JSON (Bash: `python3 -c "import json;
-    json.load(open(<file>))"`)
-- Write `baseline-report.md` with the structure from §6, marking
-  the `Test execution` section as "deferred — execution policy = off".
-- Write empty `_meta/as-is-bugs-found.md` with note "deferred to
-  manual execution".
-- Write empty `_meta/benchmark-baseline.json` with `null` values and
-  note "to be populated by manual run".
-- Write `_meta/test-coverage.json` with `null` values and same note.
-- Status: `partial` (because the oracle is not captured yet).
+### 2. Run pytest in stages
 
-#### Policy = `on` (write+execute mode)
+Stages are independent so a failure in one does not block recording for
+the others. Read `execution-stages.md` for the exact command lines and
+the Postman env-vs-code-failure detection rule. Capture:
+- functional results → `/tmp/baseline-functional.json`
+- coverage → `_meta/test-coverage.json`
+- benchmarks → `_meta/benchmark-baseline.json`
+- snapshots → `tests/baseline/snapshot/` (auto-written by
+  `pytest-regressions`; verify the dir count after the run).
 
-- Verify deps installed (Bash: `python3 -m pytest --version` etc.). If
-  missing, attempt install (Bash: `pip install pytest pytest-benchmark
-  pytest-regressions pytest-cov responses respx freezegun`). On failure,
-  fall back to write-only and surface to supervisor.
-- Run pytest in stages (described below).
-- Capture oracle artifacts.
-- Apply failure policy to red tests.
-- Write the report.
+### 3. Classify each failing test and apply the failure policy
 
-### 2. Pytest invocation (policy = on)
+For every failed test, run severity inference, then apply the policy
+(critical/high → escalate; medium/low → mark xfail; flaky → mark skip).
 
-Run in stages so failures in one stage don't block recording for the
-others:
+The full severity rule list, the policy matrix, and the `xfail` marker
+pattern (with `strict=True`) live in `failure-policy.md`. Read it before
+editing any test file.
 
-#### Stage A — Functional + integration (no benchmark)
-```bash
-python3 -m pytest tests/baseline/ \
-  --ignore=tests/baseline/benchmark \
-  -v \
-  --tb=short \
-  --json-report --json-report-file=/tmp/baseline-functional.json \
-  --cov=<repo_pkg> \
-  --cov-report=json:docs/analysis/03-baseline/_meta/test-coverage.json
-```
+Hard rules — do not negotiate:
+- Severity must NEVER be downgraded to dodge escalation.
+- The runner is the ONLY worker that may modify test files (and only to
+  add `xfail` / `skip` markers).
+- If severity is unclear after all inference rules, default to `high`
+  and escalate.
 
-(If `pytest-json-report` is not installed, fall back to parsing pytest's
-text output line by line; less robust but works.)
+### 4. Write the AS-IS bugs registry
 
-#### Stage B — Benchmarks
-```bash
-python3 -m pytest tests/baseline/benchmark/ \
-  -v \
-  --benchmark-json=docs/analysis/03-baseline/_meta/benchmark-baseline.json \
-  --benchmark-only
-```
+Produce `docs/analysis/03-baseline/_meta/as-is-bugs-found.md` per the
+template in `output-schemas.md`. One `### BUG-NN` block per bug found,
+with severity, test path, disposition (escalated / xfail / skip),
+suspected AS-IS location, UC/RISK refs, symptom, hypothesis, fix scope.
 
-#### Stage C — Postman (if collection generated)
-If `tests/baseline/postman/` exists and `newman` is available:
-```bash
-newman run tests/baseline/postman/<service>.postman_collection.json \
-       -e tests/baseline/postman/<service>.postman_environment.json \
-       --reporters cli,json \
-       --reporter-json-export /tmp/baseline-newman-<service>.json
-```
+If no bugs were found (or write-only mode), write the frontmatter and a
+single note ("no bugs surfaced" or "deferred to manual execution").
 
-If `newman` is not available, skip Postman execution and document this
-in the report. The collection file remains valid; the user can run it
-manually.
+### 5. Write the baseline report
 
-NOTE on Postman execution: it requires the AS-IS service to be RUNNING
-at the env's `base_url`. If the user has not started the service,
-expect connection errors — these are env issues, not AS-IS bugs. The
-runner detects them by checking error category (connection refused vs.
-4xx/5xx response) and flags as env failure, not as code failure.
+Produce `docs/analysis/03-baseline/baseline-report.md` per the template
+in `output-schemas.md`. The report covers: execution mode; per-stage
+test results; coverage by use case; benchmark key numbers (mean / p95);
+AS-IS bug summary; per-stage timing; one-paragraph recommendation; open
+questions.
 
-### 3. Parse pytest output
+In write-only mode, replace the `Test execution` section with the
+deferred-run note (see `output-schemas.md`).
 
-For each failing test, classify:
+### 6. Verify snapshot capture
 
-```
-For each test in the report:
-  if status == "passed":           record_passed()
-  elif status == "skipped":        record_skipped(reason)
-  elif status == "xfailed":        record_xfail(reason)
-  elif status == "failed":
-      severity = infer_severity(test_path, test_name, assertion_message)
-      apply_failure_policy(test, severity)
-```
+After Stage A, verify `tests/baseline/snapshot/` exists with the
+expected file count (one per `data_regression` / `dataframe_regression`
+/ `image_regression` call). The supervisor's bootstrap has already
+resolved any pre-existing snapshot conflict; if you encounter one
+anyway, surface to the supervisor.
 
-#### Severity inference rules (used by `infer_severity`)
+### 7. Return the reporting block to the supervisor
 
-In order:
-1. If the test's docstring mentions a specific UC-NN, look up that UC's
-   severity in Phase 1 (use case priority) → mirror it.
-2. If the test's docstring mentions a RISK-NN from Phase 2, look up
-   that risk's severity → mirror it.
-3. If the assertion mentions security-relevant terms (auth, password,
-   secret, injection, leak): severity = `critical`.
-4. If the assertion mentions data-loss-relevant terms (delete, lost,
-   corrupt, overwrite): severity = `critical`.
-5. If the test name contains `happy_path`: severity = `high` (a primary
-   flow is broken).
-6. If the test name contains `alternative` or `alt`: severity = `medium`.
-7. If the test name contains `edge`: severity = `low` (default), but
-   override to `medium` if the assertion is about validation correctness.
-8. Default: `medium`.
-
-If unclear, default to `high` and escalate.
-
-### 4. Apply the failure policy
-
-```
-critical -> escalate (do NOT mark; supervisor decides)
-high     -> escalate (default proposal: xfail with bug note; supervisor confirms)
-medium   -> mark xfail in source test file
-low      -> mark xfail in source test file
-flaky    -> mark skip in source test file
-```
-
-To mark a test as xfail/skip, **edit the test file** (this is the only
-write authorization the runner has on test files):
-
-Replace:
-```python
-def test_uc_03_alt_partial_refund(...):
-    ...
-```
-With:
-```python
-@pytest.mark.xfail(
-    reason="AS-IS bug found: partial refund discount calc returns net "
-           "instead of gross. See _meta/as-is-bugs-found.md#BUG-04.",
-    strict=True,  # if it starts passing later, alert
-)
-def test_uc_03_alt_partial_refund(...):
-    ...
-```
-
-`strict=True` means the test reports XPASS (and fails the suite) if it
-unexpectedly passes — this catches AS-IS bugs that get fixed
-out-of-band so the test doesn't silently lie.
-
-### 5. Build the AS-IS bugs registry
-
-Produce `docs/analysis/03-baseline/_meta/as-is-bugs-found.md`:
-
-```markdown
----
-agent: baseline-runner
-generated: <ISO-8601>
-sources: [pytest output, Phase 1, Phase 2 risk register]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
-duration_seconds: <int>
----
-
-# AS-IS bugs surfaced during baseline construction
-
-This file records bugs in the AS-IS code discovered while building the
-regression suite. Per Phase 3 policy, the AS-IS source is NEVER
-modified; bugs are documented and tests are marked xfail / skip.
-
-## Summary
-- Critical (escalated): <N>
-- High (escalated): <N>
-- Medium (xfail): <N>
-- Low (xfail): <N>
-- Flaky (skip): <N>
-
-## Bugs
-
-### BUG-01 — <one-line>
-- **Severity**: critical | high | medium | low | flaky
-- **Test**: `tests/baseline/test_uc_NN_<slug>.py::test_uc_NN_alt_<X>`
-- **Disposition**: escalated | xfail | skip
-- **AS-IS location** (suspected): `<repo>/<path>:<line>` (function `<name>`)
-- **UC ref**: UC-NN
-- **Risk ref** (Phase 2): RISK-NN (if applicable)
-- **Symptom**: <what the assertion expected vs what was returned>
-- **Hypothesis**: <one-paragraph guess at root cause; "to be confirmed
-  by debugger / developer-python in fix cycle">
-- **Fix scope**: out of Phase 3 scope; for Phase 4 / fix-cycle attention
-
-### BUG-02 — ...
-```
-
-### 6. Build the baseline report
-
-Produce `docs/analysis/03-baseline/baseline-report.md`:
-
-```markdown
----
-agent: baseline-runner
-generated: <ISO-8601>
-sources:
-  - tests/baseline/  (entire suite)
-  - /tmp/baseline-functional.json
-  - docs/analysis/03-baseline/_meta/benchmark-baseline.json
-  - docs/analysis/03-baseline/_meta/test-coverage.json
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
-duration_seconds: <int>
----
-
-# Baseline report
-
-## Execution mode
-<write+execute | write-only>
-
-## Test execution
-
-| Stage | Result | Duration |
-|---|---|---|
-| Functional + integration | <N passed>, <N xfail>, <N skipped>, <N failed> | <duration> |
-| Benchmarks | <N passed>, <N skipped> | <duration> |
-| Postman (newman) | <N passed>, <N failed> (or "skipped — newman unavailable") | <duration> |
-| **Total** | <pass count>/<total>, <duration> |
-
-(If write-only: replace this section with: "Execution deferred to manual
-run. Suite structure validated only. Run command: `pytest tests/baseline -v`")
-
-## Coverage by use case
-
-| UC-NN | Test file | Tests | Pass | xfail | skip | fail |
-|---|---|---|---|---|---|---|
-| UC-01 | test_uc_01_*.py | 3 | 3 | 0 | 0 | 0 |
-| ... |
-
-## Benchmarks (key numbers)
-
-(Pull from `_meta/benchmark-baseline.json` — list mean / p95 for each
-named benchmark. This is the AS-IS oracle Phase 5 will gate against.)
-
-| Benchmark | Mean (s) | p95 (s) | StdDev |
-|---|---|---|---|
-| bench_uc_03_realistic | 0.234 | 0.289 | 0.012 |
-| ... |
-
-## AS-IS bugs surfaced
-- Critical (escalated): <N>
-- High (escalated): <N>
-- Medium (xfail): <N>
-- Low (xfail): <N>
-- Flaky (skip): <N>
-
-(See `_meta/as-is-bugs-found.md` for details.)
-
-## Per-stage timing
-
-| Stage | Started | Completed | Duration |
-|---|---|---|---|
-| Test execution Stage A | <ISO> | <ISO> | <duration> |
-| Test execution Stage B | <ISO> | <ISO> | <duration> |
-| Test execution Stage C | <ISO> | <ISO> | <duration> |
-| Snapshot capture | <ISO> | <ISO> | <duration> |
-| **Total** | <ISO> | <ISO> | <duration> |
-
-## Recommendation
-
-<one-paragraph: state of the baseline; whether it can serve as oracle
-for Phase 5; any blocking items requiring user attention>
-
-## Open questions
-
-- ...
-```
-
-### 7. Snapshot capture
-
-`pytest-regressions` writes snapshots automatically on first run if
-the reference file doesn't exist. The runner verifies:
-- a snapshot directory now exists at `tests/baseline/snapshot/` (or
-  the configured location)
-- it contains the expected number of snapshot files (one per
-  `data_regression` / `dataframe_regression` / `image_regression`
-  call)
-
-Before running pytest the first time, ensure the snapshot dir is empty
-or non-existent (otherwise pytest-regressions will compare against
-existing snapshots and may report failures that are actually fresh
-captures). The supervisor's bootstrap already prompted the user about
-this — by the time you run, the policy is set.
-
-### 8. Bug-found policy strictness
-
-The runner is the ONLY worker that modifies test files (to add xfail
-markers). It must NEVER:
-- modify AS-IS source code
-- modify fixture files (those are owned by `fixture-builder`)
-- modify `conftest.py` (same)
-- modify Postman collections (those are owned by
-  `service-collection-builder`)
-- silently downgrade severity to avoid escalation
-- pretend a critical/high failure is medium
-
-If the runner cannot determine severity confidently, escalate as
-`high` and let the user decide.
+Use the reporting template in `output-schemas.md`. Be explicit about
+every escalated critical/high bug — without that, the supervisor cannot
+declare Phase 3 complete.
 
 ---
 
 ## Outputs
 
-### File 1: `docs/analysis/03-baseline/baseline-report.md`
+| File | Content | Source-of-truth template |
+|---|---|---|
+| `docs/analysis/03-baseline/baseline-report.md` | human-readable report | `output-schemas.md` §File 2 |
+| `docs/analysis/03-baseline/_meta/as-is-bugs-found.md` | AS-IS bug registry | `output-schemas.md` §File 1 |
+| `docs/analysis/03-baseline/_meta/benchmark-baseline.json` | benchmark oracle | generated by `pytest-benchmark`; empty shape in `output-schemas.md` |
+| `docs/analysis/03-baseline/_meta/test-coverage.json` | coverage oracle | generated by `pytest-cov`; empty shape in `output-schemas.md` |
+| `tests/baseline/snapshot/` | snapshot dir | populated by `pytest-regressions` during Stage A |
+| `tests/baseline/test_uc_NN_*.py` | xfail/skip markers added per failure policy | `failure-policy.md` |
 
-(Per template in §6.)
-
-### File 2: `docs/analysis/03-baseline/_meta/as-is-bugs-found.md`
-
-(Per template in §5. Empty file with note if no bugs found or write-only
-mode.)
-
-### File 3: `docs/analysis/03-baseline/_meta/benchmark-baseline.json`
-
-(Generated by pytest-benchmark with the `--benchmark-json` flag, or
-synthesized empty in write-only mode.)
-
-### File 4: `docs/analysis/03-baseline/_meta/test-coverage.json`
-
-(Generated by pytest-cov, or synthesized empty in write-only mode.)
-
-### File 5: `tests/baseline/snapshot/` (directory, populated by pytest-regressions during run)
-
-### Reporting (text response to supervisor)
-
-```markdown
-## Execution mode
-<write+execute | write-only>
-
-## Files written / modified
-- docs/analysis/03-baseline/baseline-report.md
-- docs/analysis/03-baseline/_meta/as-is-bugs-found.md
-- docs/analysis/03-baseline/_meta/benchmark-baseline.json
-- docs/analysis/03-baseline/_meta/test-coverage.json
-- tests/baseline/snapshot/<files>  (if pytest ran)
-- tests/baseline/test_uc_NN_*.py  (xfail markers added on N tests)
-
-## Test results
-- Passed: <N>
-- xfail: <N>  (medium / low — auto-marked)
-- Skipped: <N>  (flaky / env)
-- Failed (unresolved): <N>  (critical / high — escalated)
-
-## AS-IS bugs surfaced
-- Critical: <N>  (escalated)
-- High: <N>  (escalated)
-- Medium: <N>  (xfail applied)
-- Low: <N>  (xfail applied)
-
-## Confidence
-high | medium | low
-
-## Duration (wall-clock)
-<seconds>
-
-## Open questions / escalations
-- <BUG-NN: critical, escalation context>
-- ...
-```
-
-If you escalated any critical/high bugs, the supervisor will not
-declare Phase 3 complete. Be explicit about each.
+The reporting block returned to the supervisor follows the template at
+the end of `output-schemas.md`.
 
 ---
 

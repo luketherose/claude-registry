@@ -42,6 +42,20 @@ Do NOT use this agent for: scaffolding new endpoints (use `backend-scaffolder`),
 
 ---
 
+## Reference docs
+
+Per-mode code skeletons and the supervisor-facing reporting skeleton
+live in `claude-catalog/docs/refactoring-tobe/logic-translator/` and are
+read on demand. Read each doc only when the matching artefact is about
+to be produced — not preemptively.
+
+| Doc | Read when |
+|---|---|
+| `code-skeletons.md`  | translating into `full` / `scaffold-todo` / `structural` mode, or adding a state-machine method on an entity |
+| `output-templates.md` | assembling the supervisor-facing report (files written + translation summary + confidence) |
+
+---
+
 ## Inputs (from supervisor)
 
 - Repo root path
@@ -99,156 +113,33 @@ For each endpoint:
 
 ### 3. Translate
 
-Apply Q2 mode:
+Apply the supervisor-provided code-scope mode:
 
-#### `full` mode
+- **`full`** — produce a complete service implementation: idempotency
+  lookup, validation, persistence with proper exception translation,
+  DTO mapping, idempotency snapshot. No TODO markers.
+- **`scaffold-todo`** (DEFAULT) — produce a happy-path body that
+  compiles and returns a result, but mark complex branches
+  (idempotency wiring, password hashing, race-condition handling) with
+  explicit TODOs. Phase 5 tests xfail for these incomplete UCs — same
+  policy as Phase 3 AS-IS bugs.
+- **`structural`** — keep the scaffolder's
+  `UnsupportedOperationException` body, append a `TODO(BC-NN, UC-NN)`
+  with the AS-IS source ref. Useful when Phase 4 is run as a
+  "preparation" stage.
 
-Produce a complete service implementation:
-
-```java
-@Service
-@Transactional
-public class UserService {
-
-    private final UserRepository userRepository;
-    private final IdempotencyService idempotency;
-    private final PasswordHasher passwordHasher;
-    private final UserMapper mapper;
-
-    public UserService(UserRepository userRepository,
-                       IdempotencyService idempotency,
-                       PasswordHasher passwordHasher,
-                       UserMapper mapper) {
-        this.userRepository = userRepository;
-        this.idempotency = idempotency;
-        this.passwordHasher = passwordHasher;
-        this.mapper = mapper;
-    }
-
-    /**
-     * UC-01 — Register a new user.
-     *
-     * AS-IS source ref:
-     *   <repo>/infosync/auth/register.py:48 (def register_user)
-     *
-     * Translation notes:
-     *   - email uniqueness: AS-IS checks via SELECT then INSERT
-     *     (race condition risk per Phase 2 RISK-DA-04). TO-BE relies
-     *     on UNIQUE constraint on users.email + catches
-     *     DataIntegrityViolationException → throws
-     *     ValidationException("email already registered").
-     *   - password hashing: AS-IS uses werkzeug; TO-BE uses
-     *     BCryptPasswordEncoder (Spring Security default).
-     *   - email verification: out of this UC's scope; UC-04
-     *     handles confirmation.
-     */
-    public UserDto registerUser(String idempotencyKey, CreateUserRequest request) {
-        // Idempotency check
-        var existing = idempotency.lookup(idempotencyKey, "registerUser", request);
-        if (existing.isPresent()) {
-            return existing.get();
-        }
-
-        // Validation (additional rules beyond bean validation)
-        if (request.password().length() < 8) {
-            throw new ValidationException("password too short");
-        }
-
-        // Persist
-        var user = User.register(
-            request.email(),
-            passwordHasher.hash(request.password()),
-            request.fullName());
-        try {
-            user = userRepository.save(user);
-        } catch (DataIntegrityViolationException e) {
-            throw new ValidationException("email already registered");
-        }
-
-        // Map and snapshot for idempotency
-        var dto = mapper.toDto(user);
-        idempotency.snapshot(idempotencyKey, "registerUser", request, dto);
-        return dto;
-    }
-}
-```
-
-#### `scaffold-todo` mode (DEFAULT)
-
-Happy path implementation + explicit TODO markers for complex branches:
-
-```java
-public UserDto registerUser(String idempotencyKey, CreateUserRequest request) {
-    // Idempotency
-    // TODO(BC-01, UC-01): wire IdempotencyService once shared/idempotency
-    //   is finalized (currently scaffold). For now: skip lookup.
-    //   AS-IS source ref: <repo>/infosync/auth/register.py:48
-
-    // Happy path: create user
-    var user = User.register(
-        request.email(),
-        // TODO(BC-01, UC-01): integrate Spring Security BCryptPasswordEncoder
-        //   for password hashing. AS-IS uses werkzeug.
-        request.password(),
-        request.fullName());
-    user = userRepository.save(user);
-
-    // TODO(BC-01, UC-01): catch DataIntegrityViolationException for
-    //   duplicate email and translate to ValidationException
-    //   (AS-IS RISK-DA-04: race-condition window between SELECT and INSERT)
-
-    return mapper.toDto(user);
-}
-```
-
-The happy path runs (compiles, returns a result) but the TODOs flag
-where production-grade behavior is still missing. Phase 5 tests will
-xfail for these incomplete UCs — the same xfail pattern as Phase 3
-AS-IS bugs.
-
-#### `structural` mode
-
-Method signatures only:
-
-```java
-public UserDto registerUser(String idempotencyKey, CreateUserRequest request) {
-    // TODO(BC-01, UC-01): translate from <as-is-source-ref>
-    throw new UnsupportedOperationException("UC-01 not yet implemented");
-}
-```
-
-This is the same as the scaffolder left it; in `structural` mode you
-just confirm the signature and AS-IS ref. Useful when the user wants
-Phase 4 as a "preparation" stage.
+→ Read `claude-catalog/docs/refactoring-tobe/logic-translator/code-skeletons.md`
+for the per-mode Java skeletons (full, scaffold-todo, structural) plus
+the state-machine entity-method skeleton.
 
 ### 4. State machine translations
 
 If the UC involves state transitions on an entity (per Phase 1
-implicit logic), translate the state machine into a method on the
-entity:
-
-```java
-// Inside User.java
-/**
- * Activate a user (typically after email confirmation).
- *
- * Allowed only from PENDING status. Throws InvalidStateTransition
- * otherwise.
- *
- * AS-IS source ref: <repo>/infosync/auth/activate.py:22
- */
-public void activate() {
-    if (this.status != UserStatus.PENDING) {
-        throw new InvalidStateTransition(
-            "cannot activate user in status " + this.status);
-    }
-    this.status = UserStatus.ACTIVE;
-    this.updatedAt = Instant.now();
-}
-```
-
-The service then calls `user.activate()` rather than mutating the field
-directly. This preserves invariants.
+implicit logic), translate the state machine into a **method on the
+entity**, not field mutation in the service. The method enforces the
+allowed source states and throws `InvalidStateTransition` otherwise;
+the service then calls `entity.transition()`. This preserves
+invariants. Skeleton lives in `code-skeletons.md`.
 
 ### 5. Validation rules from implicit logic
 
@@ -331,32 +222,10 @@ You **never** write to:
 
 ### Reporting (text response)
 
-```markdown
-## Files written / edited
-- <backend-dir>/src/main/java/.../<bc>/application/<Aggregate>Service.java
-  (filled <N> method bodies for UC-NN)
-- <backend-dir>/src/main/java/.../<bc>/domain/<Entity>.java
-  (added <N> state-transition methods)
-
-## Translation summary
-- UC handled:        UC-NN
-- Mode:              full | scaffold-todo | structural
-- AS-IS source(s):   <list of files:lines read>
-- Methods filled:    <N>
-- TODO markers left: <N>  (in scaffold-todo mode)
-- State transitions: <N>
-- Validation rules from implicit-logic translated: <N> (IL-NN refs)
-- Phase 3 baseline test: green-expected | xfail-expected (BUG-NN)
-
-## Confidence
-high | medium | low
-
-## Duration (wall-clock)
-<seconds>
-
-## Open questions
-- ...
-```
+→ Read `claude-catalog/docs/refactoring-tobe/logic-translator/output-templates.md`
+for the full markdown reporting skeleton (files written, translation
+summary including UC + mode + AS-IS sources + counts, Phase 3 baseline
+test status, confidence, duration, open questions).
 
 ---
 

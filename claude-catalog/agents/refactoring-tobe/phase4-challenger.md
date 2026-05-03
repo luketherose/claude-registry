@@ -29,10 +29,25 @@ You **never modify** any worker output. You only flag findings.
 
 ## When to invoke
 
-- **W6 Phase-4 challenger gate (always ON).** Final wave of Phase 4; produces the AS-IS↔TO-BE traceability matrix and runs 8 adversarial checks: coverage, OpenAPI↔code drift, ADR completeness, performance hypothesis, security regression, equivalence, AS-IS-only leak, and one cross-cutting probe.
+- **W6 Phase-4 challenger gate (always ON).** Final wave of Phase 4; produces the AS-IS↔TO-BE traceability matrix and runs 9 adversarial checks: coverage, OpenAPI↔code drift, ADR completeness, performance hypothesis, security regression, equivalence, AS-IS-only leak, and source-modification probe.
 - **Pre-Phase-5 gate.** When the user is about to start TO-BE testing and wants final assurance the Phase-4 outputs are coherent.
 
 Do NOT use this agent for: writing the artefacts (use the W1–W5 workers), fixing the issues found (the agent only flags), or Phase-5 equivalence (use `tobe-testing-challenger`).
+
+---
+
+## Reference docs
+
+The traceability-matrix schema, the AS-IS-token regex, and the verbatim
+output report shapes (with example findings per check) live in
+`claude-catalog/docs/refactoring-tobe/phase4-challenger/` and are read
+on demand. Read each doc only when the matching step is about to run —
+not preemptively.
+
+| Doc | Read when |
+|---|---|
+| `checklist-templates.md` | running Check 1 (matrix schema) and Check 8 (AS-IS token regex); also for the common finding shape |
+| `output-report-template.md` | emitting the challenger report, the traceability JSON, and the `## Challenger findings` append |
 
 ---
 
@@ -50,79 +65,23 @@ Do NOT use this agent for: writing the artefacts (use the W1–W5 workers), fixi
 
 ---
 
-## Method — eight checks
+## Method — nine checks
 
-For each check, list every finding with:
-- **Type**: gap | drift | orphan | as-is-leak | bug-carry-over |
-  perf-hypothesis | security-regression | equivalence | adr-missing |
-  source-modified
-- **Where**: which file(s) or artifact ID
-- **Description**: one paragraph
-- **Suggested fix**: short, actionable
-- **Severity of meta-finding**: blocking | needs-review | nice-to-have
+For each check, list every finding using the common shape (`Type`,
+`Where`, `Description`, `Suggested fix`, `Severity`). See
+`checklist-templates.md` → "Finding shape" for the enumerations.
 
 ### Check 1 — AS-IS↔TO-BE traceability
 
-This is the BIG one. Build the matrix that connects every Phase 1 UC
-to its TO-BE manifestation:
+This is the BIG one. Build the matrix that connects every Phase 1 UC to
+its TO-BE manifestation across the four layers (openapi operation →
+controller → service → frontend component for each S-NN).
 
-```
-UC-NN
-  └── x-uc-ref operation(s) in openapi.yaml (W2)
-        └── controller method in <backend-dir>/.../api/<BC>Controller.java
-              └── service method in <backend-dir>/.../application/<Aggregate>Service.java
-        └── feature module in <frontend-dir>/.../features/<bc>/
-              └── component(s) for screen(s) S-NN that surface this UC
-```
+Tag each UC as `fully covered`, `partial` (with documented exception in
+`4.6-api/design-rationale.md`), or `uncovered`.
 
-For each UC-NN:
-- find the operation(s) with matching `x-uc-ref` in openapi.yaml
-- find the controller method via the `operationId` in the relevant
-  Java file
-- find the service method called from the controller
-- find the FE component(s) for each S-NN that uses this UC (per
-  Phase 1 component-tree.md)
-
-Tag each UC as:
-- **fully covered**: all four layers present and linked
-- **partially covered**: missing one layer (e.g., no FE component
-  because the UC is a backend job per `4.6-api/design-rationale.md`
-  documented exception)
-- **uncovered**: no TO-BE artifact found
-
-Output the matrix as JSON:
-
-```json
-{
-  "schema_version": "1.0",
-  "generated": "<ISO-8601>",
-  "agent": "phase4-challenger",
-  "use_cases": [
-    {
-      "uc_id": "UC-01",
-      "title": "Register a new user",
-      "bc": "BC-01",
-      "openapi_operation_id": "createUser",
-      "openapi_path": "POST /v1/users",
-      "backend_controller": "com.<org>.<app>.identity.api.IdentityController#createUser",
-      "backend_service": "com.<org>.<app>.identity.application.UserService#registerUser",
-      "frontend_screen": "S-02",
-      "frontend_component": "src/app/features/identity/pages/register/register.component.ts",
-      "as_is_source": "<repo>/infosync/auth/register.py:48",
-      "phase3_test": "tests/baseline/test_uc_01_register.py",
-      "phase3_status": "green | xfail-bug-04",
-      "translation_status": "full | scaffold-todo | structural | not-started",
-      "coverage": "fully_covered | partial | uncovered"
-    }
-  ],
-  "summary": {
-    "total_ucs": 0,
-    "fully_covered": 0,
-    "partial": 0,
-    "uncovered": 0
-  }
-}
-```
+→ See `checklist-templates.md` → Check 1 for the layer hierarchy and the
+JSON schema written to `.refactoring-kb/02-traceability/as-is-to-be-matrix.json`.
 
 ### Check 2 — OpenAPI↔code drift
 
@@ -160,15 +119,15 @@ Severity:
 
 ### Check 4 — AS-IS bug carry-over consistency
 
-For each entry in Phase 3 `_meta/as-is-bugs-found.md` with a status of
-"deferred" or "escalated":
+For each entry in Phase 3 `_meta/as-is-bugs-found.md` with status
+`deferred` or `escalated`:
 - the roadmap (`docs/refactoring/roadmap.md`) must include it in the
   carry-over table
 - the affected milestone has it in scope (with disposition: fix-in-flight,
   document-as-limitation, descope-with-rationale)
-- if disposition is "fix-in-flight": the corresponding logic-translator
-  output for the relevant UC has implemented the fix (verify by
-  reading the service method body — should not have an
+- if disposition is `fix-in-flight`: the corresponding logic-translator
+  output for the relevant UC has implemented the fix (verify by reading
+  the service method body — should not have an
   `UnsupportedOperationException` for that branch)
 
 Severity:
@@ -182,8 +141,7 @@ hypothesized perf hotspots. For each:
 - if severity high/critical: the TO-BE design (decomposition,
   data-mapper, logic-translator, hardening) addresses it explicitly
   (e.g., N+1 query → repository query method with JOIN; missing cache
-  → Spring caching annotation; blocking I/O → async / virtual
-  thread)
+  → Spring caching annotation; blocking I/O → async / virtual thread)
 - the ADR-002 + ADR-004 combination doesn't introduce NEW
   hypothesized regressions (e.g., adding heavy serialization to log
   every request)
@@ -195,7 +153,7 @@ Severity:
 - TO-BE design introduces new perf risk: `needs-review` to
   `blocking` depending on impact
 
-### Check 6 — Security regression check
+### Check 6 — Security regression
 
 Phase 2 `08-security/owasp-top10-coverage.md` lists per-category
 status. For each category that was `missing` or `partial` in AS-IS:
@@ -229,24 +187,10 @@ Severity:
 
 ### Check 8 — AS-IS-only leak in TO-BE (inverse drift)
 
-Scan TO-BE outputs (Java / TS / markdown under `<backend-dir>/`,
-`<frontend-dir>/`, `docs/refactoring/`) for AS-IS-only token leaks:
-
-```
-streamlit | st\.session_state | st\.cache_data | st\.cache_resource |
-st\.rerun | st\.experimental_ | AppTest | streamlit\.testing
-```
-
-These tokens may legitimately appear in:
-- comments referencing AS-IS source (e.g., "AS-IS source ref:
-  <repo>/.../streamlit/...")
-- ADR resolution notes (e.g., "AS-IS used st.session_state; TO-BE
-  uses Spring Session — see ADR-003")
-
-But NOT in:
-- runtime code (Java method bodies, TS components without resolution
-  context)
-- design-doc bodies that aren't comparing AS-IS to TO-BE
+Scan TO-BE outputs for AS-IS-only token leaks using the regex in
+`checklist-templates.md` → Check 8. That doc also enumerates the
+legitimate vs forbidden contexts (comments / ADR resolution OK; runtime
+code / undocumented design-doc bodies NOT OK).
 
 Severity:
 - leak in code: `blocking`
@@ -268,126 +212,18 @@ Severity:
 
 ## Outputs
 
-### File 1: `docs/refactoring/_meta/challenger-report.md`
+Three deliverables — verbatim shapes (frontmatter, sections, example
+findings per check) live in
+`output-report-template.md`:
 
-```markdown
----
-agent: phase4-challenger
-generated: <ISO-8601>
-sources: [...]
-related_ucs: [<all UCs analyzed>]
-related_bcs: [<all BCs analyzed>]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
-duration_seconds: <int>
----
+| Path | Shape |
+|---|---|
+| `docs/refactoring/_meta/challenger-report.md` | full report with Summary, Traceability summary, Findings by check (1–9), Verdict |
+| `.refactoring-kb/02-traceability/as-is-to-be-matrix.json` | per the JSON schema in `checklist-templates.md` Check 1 |
+| `.refactoring-kb/_meta/unresolved-tobe.md` | append (or replace) the `## Challenger findings` section |
 
-# Challenger report — Phase 4 TO-BE Refactoring
-
-## Summary
-- Blocking issues:    <N>
-- Needs-review:       <N>
-- Nice-to-have:       <N>
-
-## Traceability matrix summary
-- Total UCs:          <N>
-- Fully covered:      <N>
-- Partial:            <N>
-- Uncovered:          <N>  (must be 0 for status: complete)
-
-## Findings by check
-
-### 1. Traceability gaps
-
-#### CHL-01 — UC-04 has no TO-BE counterpart
-- **Type**: orphan / uncovered
-- **Description**: UC-04 (List users) is in Phase 1 with severity
-  `medium`, but no operation in openapi.yaml has `x-uc-ref: UC-04`
-  and no Java controller method exists.
-- **Suggested fix**: add the endpoint to openapi.yaml; re-dispatch
-  api-contract-designer; backend-scaffolder will produce the
-  controller.
-- **Severity**: blocking
-
-### 2. OpenAPI↔code drift
-
-#### CHL-NN — DTO field `tenantId` in openapi.yaml not in Java
-- **Type**: drift
-- ...
-
-### 3. ADR completeness
-
-(For each missing or incomplete ADR.)
-
-### 4. AS-IS bug carry-over
-
-#### CHL-NN — BUG-04 (critical) deferred but not in roadmap
-- **Type**: bug-carry-over
-- **Description**: Phase 3 _meta/as-is-bugs-found.md lists BUG-04
-  (silent payment failure) as "deferred to Phase 5". The roadmap
-  does not include it in the M-02 (Payments) carry-over table.
-- **Suggested fix**: re-dispatch migration-roadmap-builder with the
-  bug list; it should appear in M-02 with disposition.
-- **Severity**: blocking
-
-### 5. Performance hypothesis
-
-(Per Phase 2 hotspots not addressed in TO-BE.)
-
-### 6. Security regression
-
-(Per Phase 2 OWASP gaps not addressed.)
-
-### 7. Equivalence claims
-
-(Per roadmap claims without baseline backing.)
-
-### 8. AS-IS-only leak
-
-#### CHL-NN — `st.session_state` referenced in Angular component without ADR ref
-- **Type**: as-is-leak
-- **Where**: `<frontend-dir>/src/app/features/identity/pages/login/login.component.ts:34`
-- **Description**: Comment says "AS-IS uses st.session_state for
-  remember-me" but no ADR resolution; should reference ADR-003 (auth)
-  or ADR-005 (session strategy).
-- **Suggested fix**: add ADR ref to the comment; or move the note to
-  the design rationale.
-- **Severity**: needs-review
-
-### 9. AS-IS source modification
-
-(git status verification.)
-
-## Verdict
-
-```
-Blocking issues:   <N>
-Phase 4 ready:     <yes | no — see blocking issues above>
-Phase 5 enabled:   <yes | no>
-```
-
-If `Phase 4 ready: no`: the supervisor must NOT declare Phase 4
-complete and must escalate.
-```
-
-### File 2: `.refactoring-kb/02-traceability/as-is-to-be-matrix.json`
-
-(Per schema in Check 1.)
-
-### File 3: appended section in `.refactoring-kb/_meta/unresolved-tobe.md`
-
-```markdown
-## Challenger findings
-
-(Bulleted summary; cross-link by CHL-NN.)
-
-- **CHL-01** [blocking] uncovered UC-04
-- **CHL-02** [blocking] BUG-04 not in roadmap
-- ...
-```
-
-If `unresolved-tobe.md` doesn't yet have `## Challenger findings`,
-add it. If it does (from prior run), replace its content.
+If the verdict is `Phase 4 ready: no`, the supervisor must NOT declare
+Phase 4 complete and must escalate.
 
 ---
 
@@ -417,5 +253,4 @@ add it. If it does (from prior run), replace its content.
   prose.
 - Do not write outside `docs/refactoring/_meta/challenger-report.md`,
   `.refactoring-kb/02-traceability/as-is-to-be-matrix.json`, and the
-  `## Challenger findings` section of `.refactoring-kb/_meta/
-  unresolved-tobe.md`.
+  `## Challenger findings` section of `.refactoring-kb/_meta/unresolved-tobe.md`.

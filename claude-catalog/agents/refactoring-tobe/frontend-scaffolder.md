@@ -37,6 +37,22 @@ Do NOT use this agent for: actual TS business logic per component (handled in im
 
 ---
 
+## Reference docs
+
+This agent's deliverable templates live in
+`claude-catalog/docs/refactoring-tobe/frontend-scaffolder/` and are read on
+demand. Read each doc only when the matching Method step is about to run —
+not preemptively.
+
+| Doc | Read when |
+|---|---|
+| `workspace-config.md`        | Method steps 1–2 — workspace skeleton + OpenAPI typed client |
+| `code-skeletons.md`          | Method steps 3–5 — core layer, shared layer, feature modules |
+| `streamlit-translations.md`  | Method step 7 — only when AS-IS is Streamlit-based |
+| `app-shell.md`               | Method steps 8–9 — main.ts + app.config.ts + README |
+
+---
+
 ## Inputs (from supervisor)
 
 - Repo root path
@@ -62,247 +78,45 @@ Do NOT use this agent for: actual TS business logic per component (handled in im
 
 ### 1. Workspace skeleton
 
-Produce a clean Angular 18+ workspace (or version per ADR-002) with
-standalone components by default.
-
-```
-<frontend-dir>/
-├── angular.json
-├── package.json
-├── tsconfig.json
-├── tsconfig.app.json
-├── tsconfig.spec.json
-├── .eslintrc.json
-├── README.md
-└── src/
-    ├── main.ts                              (bootstrapApplication)
-    ├── index.html
-    ├── styles.scss
-    ├── environments/
-    │   ├── environment.ts                   (dev: API base URL, etc.)
-    │   └── environment.prod.ts
-    └── app/
-        ├── app.config.ts                    (providers, router config)
-        ├── app.routes.ts                    (top-level routing — lazy)
-        ├── app.component.ts
-        ├── app.component.html
-        ├── app.component.scss
-        ├── core/
-        ├── shared/
-        └── features/
-```
-
-`package.json` honors ADR-002:
-- `@angular/core` etc. at the version in ADR-002 (default 18)
-- `rxjs` (latest matching Angular)
-- `@ngx-translate/core` if i18n hinted by Phase 1
-- `@auth0/angular-jwt` or similar per ADR-003 if Bearer JWT — or none if
-  using `@angular/common/http` interceptors directly
-- dev deps: `@angular/cli`, `karma`, `jest` (preferred; configure to
-  replace karma if ADR-002 specifies), `playwright` (for E2E in Phase 5),
-  `@openapitools/openapi-generator-cli` (if generating client typings
-  from openapi.yaml at build time)
+Read `workspace-config.md` (Workspace skeleton section). Produce a clean
+Angular 18+ workspace (or version per ADR-002) with standalone components
+by default. `package.json` honors ADR-002 for Angular version, `rxjs`,
+optional `@ngx-translate/core` if i18n hinted by Phase 1, JWT lib per
+ADR-003, and dev deps (`@angular/cli`, `karma`, `jest`, `playwright`,
+`@openapitools/openapi-generator-cli`).
 
 ### 2. OpenAPI typed client
 
-Two strategies:
-
-#### Strategy A — Generate at build time (default)
-
-Configure `@openapitools/openapi-generator-cli` in `package.json` to run
-on `prebuild`:
-
-```json
-"scripts": {
-  "openapi:generate": "openapi-generator-cli generate -i ../docs/refactoring/4.6-api/openapi.yaml -g typescript-angular -o src/app/api/generated --additional-properties=npmName=app-api,modelPropertyNaming=camelCase,fileNaming=kebab-case",
-  "prebuild": "npm run openapi:generate",
-  "build": "ng build"
-}
-```
-
-Generated typings live at `src/app/api/generated/` — gitignored if the
-team prefers regeneration; or committed for traceability (recommended
-for `infosync`-style enterprise migrations: commit, traceable diff).
-
-#### Strategy B — Hand-written models
-
-If the team rejects code generation: hand-write models under
-`src/app/shared/models/` matching the OpenAPI schemas. Less robust
-(drift risk).
-
-The scaffolder defaults to Strategy A. Document the choice in
-`<frontend-dir>/README.md`.
+Read `workspace-config.md` (OpenAPI typed client section). Default to
+**Strategy A** — generate at build time via
+`@openapitools/openapi-generator-cli` with `prebuild` hook. Use Strategy
+B (hand-written models) only if the team rejects code generation;
+document drift risk. Record the choice in `<frontend-dir>/README.md`.
 
 ### 3. Core layer
 
-`src/app/core/`:
-
-```
-core/
-├── interceptors/
-│   ├── auth.interceptor.ts                  (Bearer token from auth service)
-│   ├── error.interceptor.ts                 (RFC 7807 → app-level error event)
-│   └── correlation-id.interceptor.ts        (generates / propagates X-Request-Id)
-├── guards/
-│   ├── auth.guard.ts                        (CanActivate — checks token)
-│   └── role.guard.ts                        (CanActivate — checks role claim)
-├── services/
-│   ├── auth.service.ts                      (login, logout, token storage)
-│   ├── notification.service.ts              (toast / banner)
-│   └── error-handler.service.ts             (global ErrorHandler)
-└── core.module.ts                           (provider bundle if not standalone-only)
-```
-
-Each interceptor and service has a header comment with:
-- the ADR it implements (e.g., `auth.interceptor` → ADR-003)
-- the cross-cutting concern (security / observability / UX)
-- TODOs for environment-specific values (token storage strategy)
-
-#### auth.interceptor.ts (sketch)
-
-```typescript
-import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { AuthService } from '../services/auth.service';
-
-/**
- * Attaches Bearer JWT to outgoing requests.
- *
- * ADR-003: stateless JWT in Authorization header.
- * Token storage: per ADR-003 — sessionStorage by default.
- */
-export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
-  const token = authService.getAccessToken();
-  if (!token) {
-    return next(req);
-  }
-  const cloned = req.clone({
-    headers: req.headers.set('Authorization', `Bearer ${token}`),
-  });
-  return next(cloned);
-};
-```
-
-#### error.interceptor.ts (sketch)
-
-```typescript
-/**
- * Translates RFC 7807 ProblemDetail errors into structured app errors.
- *
- * ADR-002: backend uses RFC 7807 for errors. The interceptor parses
- * the response body, extracts type / title / status / detail /
- * correlationId, and emits via NotificationService for UX, or rethrows
- * a typed error for component-level handling.
- */
-```
+Read `code-skeletons.md` (Core layer section). Emit interceptors (auth,
+error, correlation-id), guards (auth, role), and core services (auth,
+notification, error-handler). Each interceptor/service header comment
+references the ADR it implements and the cross-cutting concern.
 
 ### 4. Shared layer
 
-`src/app/shared/`:
-
-```
-shared/
-├── components/
-│   ├── loader/
-│   ├── error-display/
-│   ├── data-table/
-│   └── form-error/
-├── pipes/
-│   ├── safe-html.pipe.ts
-│   └── currency-format.pipe.ts
-├── directives/
-└── models/                                  (hand-written if Strategy B)
-```
-
-Components are small reusable building blocks. Each has its own
-`*.component.ts`, `*.component.html`, `*.component.scss`,
-`*.component.spec.ts` (test scaffold for Phase 5).
+Read `code-skeletons.md` (Shared layer section). Emit shared components
+(loader, error-display, data-table, form-error), pipes, and the
+`models/` directory (hand-written under Strategy B).
 
 ### 5. Feature modules (one per BC)
 
-`src/app/features/`:
-
-```
-features/
-├── identity/                                (BC-01)
-│   ├── identity.routes.ts                   (lazy routes)
-│   ├── pages/
-│   │   ├── login/
-│   │   ├── user-list/
-│   │   └── user-detail/
-│   └── services/
-│       └── identity.service.ts              (calls UsersApi from generated client)
-├── payments/                                (BC-02)
-└── reporting/                               (BC-03)
-```
-
-Each feature module:
-- `<feature>.routes.ts` exports a `Routes` array — lazy entry
-- `pages/` contains screens identified by Phase 1 (one component per
-  screen S-NN); the screen → BC mapping is per the decomposition
-- `services/<feature>.service.ts` is the orchestration layer; it
-  consumes the OpenAPI-generated `*Api` services and exposes signal-
-  or RxJS-based state to components
-
-#### Screens to components
-
-For each screen S-NN in Phase 1 that maps to this BC:
-- one standalone Angular component
-- naming: `<screen-slug>.component.ts`
-- header comment: S-NN ref, UC-NN(s) it serves, AS-IS Streamlit source
-  ref (if applicable: which `pages/<page>.py` it replaces)
-
-In `scaffold-todo` mode (default):
-
-```typescript
-import { Component, inject, signal } from '@angular/core';
-import { IdentityService } from '../../services/identity.service';
-
-/**
- * S-04 — User list screen.
- *
- * UCs surfaced: UC-04 (list users), UC-07 (suspend user)
- * AS-IS Streamlit ref: <repo>/infosync/streamlit/pages/users.py
- *
- * Translation status: scaffold-todo. List/detail rendering present;
- * filtering and pagination wiring marked TODO.
- */
-@Component({
-  selector: 'app-user-list',
-  standalone: true,
-  templateUrl: './user-list.component.html',
-})
-export class UserListComponent {
-  private readonly service = inject(IdentityService);
-  readonly users = this.service.users;     // signal-based
-  readonly loading = this.service.loading;
-
-  ngOnInit(): void {
-    // TODO(BC-01, UC-04): wire pagination cursor handling
-    //   (AS-IS: st.session_state['cursor']; TO-BE: signal in service)
-    this.service.loadUsers();
-  }
-
-  onSuspend(userId: string): void {
-    // TODO(BC-01, UC-07): confirmation dialog before suspending
-    //   AS-IS source ref: <repo>/infosync/streamlit/pages/users.py:84
-    this.service.suspendUser(userId);
-  }
-}
-```
-
-The `.html` template renders the happy path (table, suspend button,
-loader, error banner) using the shared components. TODOs flag complex
-interactions.
-
-#### user-flows → routing
-
-From Phase 1 `07-user-flows.md`, derive:
-- top-level routing (which screen is the entry per UC)
-- guards (which routes require auth — most do; some are public per
-  ADR-003)
-- redirects (e.g., post-login → dashboard)
+Read `code-skeletons.md` (Feature modules + Screens to components +
+user-flows → routing sections). For each BC in
+`.refactoring-kb/00-decomposition/bounded-contexts.md`, scaffold a feature
+folder with `<feature>.routes.ts` (lazy entry), `pages/` (one component
+per Phase 1 screen S-NN), and `services/<feature>.service.ts`
+(orchestration over the generated `*Api`). Component header comments
+reference S-NN, UC-NN(s), and the AS-IS Streamlit source ref. In
+`scaffold-todo` mode (default), templates render the happy path; complex
+interactions carry `TODO(BC-NN, UC-NN)` markers.
 
 ### 6. State management
 
@@ -318,63 +132,28 @@ state in feature services with signals.
 
 ### 7. Streamlit-specific translations (if AS-IS is Streamlit)
 
-Phase 1 likely identified Streamlit-only patterns. In TO-BE Angular:
-
-| AS-IS Streamlit | TO-BE Angular |
-|---|---|
-| `st.session_state['x']` | service-level signal (or NgRx store slice) |
-| `st.cache_data` | RxJS `shareReplay(1)` or in-memory cache service |
-| `st.rerun()` | reactive change-detection (signals trigger automatically) |
-| `st.file_uploader` | `<input type="file">` + multipart POST to API |
-| `st.dataframe` | shared `DataTableComponent` |
-| `st.chart` / Plotly | Chart.js / D3 / ngx-charts (per ADR-002 if specified) |
-| widget callbacks | template events (`(click)`, `(change)`) |
-| top-level script execution | component lifecycle (`ngOnInit`) |
-
-These mappings are the canonical translation reference. Each component
-that replaces a Streamlit page documents the AS-IS source ref.
+If Phase 1 identifies Streamlit pages, read `streamlit-translations.md`
+and apply the canonical AS-IS↔TO-BE mapping (session_state → signals,
+`st.cache_data` → `shareReplay(1)`, `st.rerun()` → reactive CD,
+`st.file_uploader` → multipart, `st.dataframe` → `DataTableComponent`,
+charts → ADR-002 lib, widget callbacks → template events, top-level
+script → `ngOnInit`). Each component replacing a Streamlit page records
+the AS-IS source ref. Skip this step entirely when AS-IS is not
+Streamlit.
 
 ### 8. main.ts and app.config.ts
 
-```typescript
-// main.ts
-import { bootstrapApplication } from '@angular/platform-browser';
-import { AppComponent } from './app/app.component';
-import { appConfig } from './app/app.config';
-
-bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
-```
-
-```typescript
-// app.config.ts
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authInterceptor, errorInterceptor, correlationIdInterceptor } from './core/interceptors';
-import { routes } from './app.routes';
-
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-    provideHttpClient(withInterceptors([
-      authInterceptor,
-      correlationIdInterceptor,
-      errorInterceptor,
-    ])),
-  ],
-};
-```
+Read `app-shell.md` (main.ts + app.config.ts sections). Emit
+`bootstrapApplication(AppComponent, appConfig)` and the `appConfig`
+provider bundle (router, HttpClient with the three interceptors, zone
+change detection with `eventCoalescing: true`).
 
 ### 9. README.md
 
-`<frontend-dir>/README.md`:
-- build instructions: `npm install && npm run openapi:generate &&
-  npm start`
-- project layout overview
-- BC → feature module mapping
-- environment configuration (API base URL, auth issuer)
-- links to `docs/refactoring/4.6-api/openapi.yaml` and ADRs
+Read `app-shell.md` (README.md section). Emit
+`<frontend-dir>/README.md` with build instructions, project layout
+overview, BC → feature module mapping, environment configuration, and
+links to `docs/refactoring/4.6-api/openapi.yaml` and ADRs.
 
 ---
 
@@ -382,18 +161,12 @@ export const appConfig: ApplicationConfig = {
 
 ### Files
 
-- `<frontend-dir>/angular.json`
-- `<frontend-dir>/package.json`
-- `<frontend-dir>/tsconfig*.json`
-- `<frontend-dir>/.eslintrc.json`
-- `<frontend-dir>/README.md`
-- `<frontend-dir>/src/main.ts`
-- `<frontend-dir>/src/index.html`
-- `<frontend-dir>/src/styles.scss`
+- `<frontend-dir>/angular.json`, `package.json`, `tsconfig*.json`,
+  `.eslintrc.json`, `README.md`
+- `<frontend-dir>/src/main.ts`, `index.html`, `styles.scss`
 - `<frontend-dir>/src/environments/environment.ts`, `environment.prod.ts`
-- `<frontend-dir>/src/app/app.config.ts`
-- `<frontend-dir>/src/app/app.routes.ts`
-- `<frontend-dir>/src/app/app.component.ts/html/scss`
+- `<frontend-dir>/src/app/app.config.ts`, `app.routes.ts`,
+  `app.component.{ts,html,scss}`
 - `<frontend-dir>/src/app/core/**/*` (interceptors, guards, services)
 - `<frontend-dir>/src/app/shared/**/*` (common components, pipes)
 - `<frontend-dir>/src/app/features/<bc>/**/*` (one tree per BC)
@@ -457,7 +230,8 @@ high | medium | low
 - **AS-IS source READ-ONLY**.
 - **Header comments mandatory** on every TS/HTML file: BC-NN, UC-NN(s)
   surfaced, AS-IS source ref, translation status.
-- **Streamlit-specific translations** documented per the table in §7.
+- **Streamlit-specific translations** documented per
+  `streamlit-translations.md`.
 - **TODO markers** for unfilled logic with `(BC-NN, UC-NN)` and AS-IS
   source ref; no bare TODOs.
 - **No business logic** beyond glue: business rules belong to the

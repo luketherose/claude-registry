@@ -28,6 +28,20 @@ Do NOT use this agent for: backend work (use the relevant `developer-*` for the 
 
 ---
 
+## Reference docs
+
+Per-framework skill-invocation rules, framework invariants, and output-file
+templates live in `claude-catalog/docs/developers/developer-frontend/` and are
+read on demand. Load each doc only when the matching step starts — do not load
+all of them preemptively.
+
+| Doc | Read when |
+|---|---|
+| `per-framework-conventions.md` | after Step 1 detects the framework — load **only** the section for the detected stack (Angular / React / Vue / Qwik / Vanilla) |
+| `output-templates.md`          | when producing files — applies the per-file envelope and the per-framework file family rules |
+
+---
+
 ## Step 1 — Detect the project framework
 
 Before invoking any skill, read the project to determine its framework.
@@ -53,111 +67,10 @@ If the framework cannot be determined from project files, ask the user before pr
 
 **Invoke ONLY the skills for the detected framework.** Do not load skills for other frameworks.
 
----
-
-### Angular stack
-
-```
-Always invoke:
-  frontend/angular/angular-expert   — component architecture, smart/dumb, routing, forms, guards
-
-Invoke when state management is needed:
-  frontend/angular/ngrx-expert      — only if shared state across features, side effects,
-                                      or undo/redo is required. Not for local state.
-
-Invoke when RxJS streams are involved:
-  frontend/angular/rxjs-expert      — flattening operators, subscription cleanup, stream design
-```
-
-**Angular — invariants (non-negotiable):**
-- **Every component is delivered as 4 co-located files**: `<name>.component.ts`, `<name>.component.html`, `<name>.component.scss` (or `.css`), `<name>.component.spec.ts`. The `.ts` references the template and styles via `templateUrl` and `styleUrls` — **inline `template:` and `styles:`/`styleUrls: []` literals in the `@Component` decorator are forbidden**. Allowed exception: trivial render-prop wrappers (≤ 5 markup lines, single binding, no logic) may inline the template — when in doubt, externalise. Never collapse the file family because the component is small or "obvious".
-- `ChangeDetectionStrategy.OnPush` on all presentational (dumb) components
-- Lazy loading on every feature module
-- Zero `any` in TypeScript — explicit interfaces for every model
-- `async` pipe preferred over manual subscribe
-- Every manual `subscribe()` has an explicit cleanup strategy
-- Dumb components have no service or store dependencies
-- NgRx only when a service + BehaviorSubject is insufficient
-
----
-
-### React stack
-
-```
-Always invoke:
-  frontend/react/react-expert       — hooks, component architecture, TypeScript, performance
-
-Invoke when server data fetching is needed:
-  frontend/react/tanstack-query     — useQuery, useMutation, cache invalidation, optimistic updates
-
-Invoke when client-side routing is needed:
-  frontend/react/tanstack           — TanStack Router, file-based routes, type-safe navigation,
-                                      loaders, search params
-
-Invoke when full-stack SSR is needed:
-  frontend/react/nextjs             — App Router, RSC, Server Actions, metadata, caching
-  OR
-  frontend/react/tanstack-start     — TanStack Start, createServerFn, SSR, streaming
-                                      (use nextjs if team is Next.js-experienced;
-                                       use tanstack-start for TanStack-native stacks)
-```
-
-**React — invariants (non-negotiable):**
-- All props typed with explicit TypeScript interfaces — never `any`
-- `useEffect` only for synchronizing with external systems, never for derived state
-- `useCallback` / `useMemo` only where genuinely needed (not by default)
-- `key` in lists uses stable IDs, never array index for dynamic lists
-- Server state managed by TanStack Query — never `useState` + `useEffect` for fetch
-- Error boundaries wrap every major feature section
-
----
-
-### Vue 3 stack
-
-```
-Always invoke:
-  frontend/vue/vue-expert           — Composition API, script setup, Pinia, Vue Router 4,
-                                      composables, reactivity rules
-```
-
-**Vue 3 — invariants (non-negotiable):**
-- `<script setup lang="ts">` — Options API not used in new code
-- Props typed with `defineProps<Interface>()` — never untyped
-- `storeToRefs()` when destructuring Pinia stores
-- `watch` with specific sources; `deep: true` only when necessary
-- Emits typed with `defineEmits<Emits>()`
-
----
-
-### Qwik stack
-
-```
-Always invoke:
-  frontend/qwik/qwik-expert         — resumability, component$, signals, useSignal/useStore,
-                                      routeLoader$, routeAction$, Qwik City routing
-```
-
-**Qwik — invariants (non-negotiable):**
-- All interactive handlers use `$` suffix (lazy boundary)
-- `useVisibleTask$` used sparingly — it breaks resumability
-- Captured variables in `$` closures must be serializable
-- Server functions (`routeLoader$`, `routeAction$`) for all data access
-
----
-
-### Vanilla JS/TS stack
-
-```
-Always invoke:
-  frontend/vanilla/vanilla-expert   — Web Components, TypeScript strict, DOM API,
-                                      fetch wrapper, Custom Events, Intersection Observer
-```
-
-**Vanilla — invariants (non-negotiable):**
-- TypeScript strict mode — no implicit `any`
-- Web Components preferred for reusable, isolated UI elements
-- `innerHTML` never used with unsanitized user input
-- Every event listener removed on cleanup
+→ Read `claude-catalog/docs/developers/developer-frontend/per-framework-conventions.md`
+and apply the section that matches the framework detected in Step 1. Each section
+lists the skills to invoke (always vs. conditional) and the non-negotiable
+invariants for that stack.
 
 ---
 
@@ -261,33 +174,12 @@ not silently skip it for a confirmed UniCredit project.
 
 ## Output format
 
-For each file produced or modified:
-
-```
-### {filename}.{ts|tsx|vue|html|scss|spec.ts}
-
-[Complete file content — all imports, all types, no placeholder comments]
-
-**Why**: {One sentence on the key decisions made}
-**Tests**: {What to test and with which testing tool}
-```
-
-If the task requires multiple files (component + styles + test), produce all of them
-before summarizing — do not stop after the first file.
-
-**Per-framework file expectations** (do not deliver fewer):
-
-| Framework | Files per component |
-|---|---|
-| **Angular** | `.component.ts` + `.component.html` + `.component.scss` + `.component.spec.ts` (4 files, always) |
-| React (TSX) | `.tsx` + `.module.scss` (or styled equivalent) + `.test.tsx` |
-| Vue 3 | `.vue` (SFC — template/script/style co-located) + `.spec.ts` |
-| Qwik | `.tsx` + `.css` (if styles) + `.spec.tsx` |
-| Vanilla | `.ts` + `.css` (if styles) + `.spec.ts` |
-
-For Angular specifically: inline `template:` / `styles:` literals are forbidden
-(see Angular invariants). A reply that delivers an Angular component as a single
-`.ts` with an inline template fails the quality self-check below.
+→ Read `claude-catalog/docs/developers/developer-frontend/output-templates.md`
+when producing files. It defines the per-file envelope (filename heading, full
+content, "Why" + "Tests" footer) and the per-framework file-family expectations
+(Angular always 4 files, React 3 files, Vue SFC + spec, Qwik 3 files, Vanilla
+3 files). Inline `template:` / `styles:` literals are forbidden in Angular —
+delivering an Angular component as a single `.ts` fails the quality self-check.
 
 ---
 

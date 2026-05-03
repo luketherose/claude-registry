@@ -56,9 +56,10 @@ only when the matching wave is about to start — not preemptively.
 
 | Doc | Read when |
 |---|---|
-| [`output-layout.md`](../../docs/tobe-testing/output-layout.md) | planning where workers write, and what frontmatter every report must carry (incl. finding-ID schema) |
+| [`output-layout.md`](../../docs/tobe-testing/output-layout.md) | planning where workers write, what frontmatter every report must carry (incl. finding-ID schema), or updating the `_meta/manifest.json` schema after a wave |
 | [`policies.md`](../../docs/tobe-testing/policies.md) | answering the execution policy (auto/on/off), applying the failure-severity matrix, or deciding the W1 dispatch mode |
 | [`phase-plan.md`](../../docs/tobe-testing/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W5 / final report |
+| [`sub-agents.md`](../../docs/tobe-testing/sub-agents.md) | confirming which sub-agent owns which wave/output target before dispatching |
 | [`dispatch-prompt-template.md`](../../docs/tobe-testing/dispatch-prompt-template.md) | assembling the prompt for any sub-agent invocation |
 
 The decision logic (escalation triggers, decision rules, AS-IS source
@@ -97,22 +98,9 @@ Never invent baselines. Sub-agents read from disk; you pass paths.
 
 ## Sub-agents available (Sonnet)
 
-| Sub-agent | Wave | Output target |
-|---|---|---|
-| `equivalence-test-writer` | W1 (fan-out per UC) | `tests/equivalence/test_uc_<id>.py` (or .ts/.java per stack) |
-| `backend-test-writer` | W1 | `backend/src/test/java/...` (unit + integration + Spring Cloud Contract) |
-| `frontend-test-writer` | W1 | `frontend/src/app/**/*.spec.ts`, `e2e/` (Playwright) |
-| `security-test-writer` | W1 | `backend/src/test/.../security/`, `e2e/security/`, `05-security-findings.md` |
-| `performance-comparator` | W2 | `e2e/perf/` (Gatling or k6), `04-performance-comparison.md`, `_meta/benchmark-comparison.json` |
-| `tobe-test-runner` | W3 | execution results, `02-coverage-report.md`, `03-contract-tests-report.md`, `06-tobe-bug-registry.md`, `_meta/coverage.json` |
-| `equivalence-synthesizer` | W4 | `01-equivalence-report.md`, `README.md`, `00-context.md` |
-| `tobe-testing-challenger` | W5 (always ON) | `_meta/challenger-report.md`, appends to `14-unresolved-questions.md` |
+Eight Sonnet sub-agents distributed across W1–W5: `equivalence-test-writer`, `backend-test-writer`, `frontend-test-writer`, `security-test-writer` (W1); `performance-comparator` (W2); `tobe-test-runner` (W3); `equivalence-synthesizer` (W4); `tobe-testing-challenger` (W5, always ON).
 
-External agents that may be referenced for follow-up (not dispatched
-inline by this supervisor):
-- `code-reviewer` — invoked separately on PRs touching TO-BE test code
-- `debugger` — invoked separately when an equivalence failure has unclear
-  root cause (e.g., snapshot diff that doesn't match any known bug)
+→ Read [`sub-agents.md`](../../docs/tobe-testing/sub-agents.md) for the full wave-↔-output-target mapping and the list of external agents (`code-reviewer`, `debugger`) referenced for follow-up only.
 
 ---
 
@@ -207,62 +195,9 @@ write-allowed; production code is not.
 
 ## Manifest update
 
-After every wave, update `docs/analysis/05-tobe-tests/_meta/manifest.json`:
+After every wave, update `docs/analysis/05-tobe-tests/_meta/manifest.json`. If the file does not exist, create it; append to `runs` for resumed sessions. Per-agent timing is mandatory — the workflow supervisor surfaces it in its post-phase recap.
 
-```json
-{
-  "schema_version": "1.0",
-  "supervisor_version": "0.1.0",
-  "repo_root": "<abs-path>",
-  "phase3_oracle": "<abs-path>/tests/baseline/",
-  "phase4_codebase": {
-    "backend": "<abs-path>/backend/",
-    "frontend": "<abs-path>/frontend/",
-    "openapi": "<abs-path>/docs/refactoring/api/openapi.yaml"
-  },
-  "execute_policy": "on | backend-only | frontend-only | off",
-  "dispatch_mode": "parallel | batched | sequential",
-  "challenger_enabled": true,
-  "resume_mode": "fresh | resume-incomplete | full-rerun | revise",
-  "scope_filter": null,
-  "as_is_bugs_inherited": ["BUG-NN", "..."],
-  "runs": [
-    {
-      "run_id": "<ISO-8601>",
-      "started_at": "<ISO-8601>",
-      "completed_at": "<ISO-8601>",
-      "duration_seconds": <int>,
-      "waves": [
-        {
-          "wave": 1,
-          "agents": [
-            {
-              "name": "equivalence-test-writer",
-              "fanout_count": <int>,
-              "started_at": "<ISO-8601>",
-              "completed_at": "<ISO-8601>",
-              "duration_seconds": <int>,
-              "outputs": ["<paths>"],
-              "status": "complete | partial | failed"
-            }
-          ],
-          "status": "complete | partial | failed",
-          "findings_count": {
-            "regressions_critical": 0,
-            "regressions_high": 0,
-            "tobe_bugs_medium": 0,
-            "tobe_bugs_low": 0
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-If the file does not exist, create it. Append to `runs` for resumed
-sessions. Per-agent timing is mandatory — the workflow supervisor
-surfaces it in its post-phase recap.
+→ Read [`output-layout.md`](../../docs/tobe-testing/output-layout.md) "Manifest schema" section for the full JSON schema.
 
 ---
 

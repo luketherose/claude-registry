@@ -58,125 +58,69 @@ Do NOT use this agent for: TO-BE testing / equivalence (use `tobe-testing-superv
 
 ## Reference docs
 
-Per-wave templates, prompt boilerplate, and recap schemas live in
-`claude-catalog/docs/refactoring-tobe/` and are read on demand. Read each
-doc only when the matching wave is about to start — not preemptively.
+Per-wave templates, prompt boilerplate, recap schemas, the sub-agent
+roster, the manifest schema, and the bootstrap-input contract live in
+`claude-catalog/docs/refactoring-tobe/` and are read on demand. Read
+each doc only when the matching wave or step is about to start — not
+preemptively.
 
 | Doc | Read when |
 |---|---|
+| [`inputs-and-flags.md`](../../docs/refactoring-tobe/inputs-and-flags.md) | Phase 0 bootstrap — validating Phase 0–3 inputs and parsing optional flags |
 | [`output-layout.md`](../../docs/refactoring-tobe/output-layout.md) | planning where workers write, and what frontmatter / header comments every artefact must carry |
-| [`iteration-and-scope-modes.md`](../../docs/refactoring-tobe/iteration-and-scope-modes.md) | answering Q1 (iteration model A/B), Q2 (code-generation scope full / scaffold-todo / structural), Q3 (verification policy), Q4 (code-review policy) |
+| [`iteration-and-scope-modes.md`](../../docs/refactoring-tobe/iteration-and-scope-modes.md) | answering Q1 (iteration model A/B), Q2 (code-generation scope), Q3 (verification policy), Q4 (code-review policy) |
+| [`sub-agents-roster.md`](../../docs/refactoring-tobe/sub-agents-roster.md) | deciding which sub-agent to dispatch in a wave or wiring a worker prompt to its declared output target |
 | [`phase-plan.md`](../../docs/refactoring-tobe/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W6 / Export Wave |
 | [`dispatch-prompt-template.md`](../../docs/refactoring-tobe/dispatch-prompt-template.md) | assembling the prompt for any worker invocation |
+| [`manifest-schema.md`](../../docs/refactoring-tobe/manifest-schema.md) | updating `.refactoring-kb/_meta/manifest.json` and `docs/refactoring/_meta/manifest.json` after each wave |
 | [`final-recap-template.md`](../../docs/refactoring-tobe/final-recap-template.md) | producing the closing report after Wave 6 / Export Wave |
 
 The decision logic (escalation triggers, decision rules, inverse drift
-check, manifest update, hard constraints) stays in this body — it is
-consulted on every supervision step, not on demand.
+check, hard constraints) stays in this body — it is consulted on every
+supervision step, not on demand.
 
 ---
 
-## Inputs
+## Inputs and sub-agents
 
-- **Required**:
-  - `<repo>/.indexing-kb/` (Phase 0)
-  - `<repo>/docs/analysis/01-functional/` (Phase 1)
-  - `<repo>/docs/analysis/02-technical/` (Phase 2)
-  - `<repo>/tests/baseline/` and `<repo>/docs/analysis/03-baseline/`
-    (Phase 3) — needed for traceability and equivalence reference
-- Optional: prior partial outputs in `.refactoring-kb/`,
-  `docs/refactoring/`, `backend/`, `frontend/` (resume support)
-- Optional flags:
-  - `--mode A | B` (iteration model — A = one-shot full app,
-    B = per-bounded-context milestone); default `A`
-  - `--code-scope full | scaffold-todo | structural` (default
-    `scaffold-todo`)
-  - `--verify auto | on | off` (default `auto`)
-  - `--review-mode background | sync | off` (default `background`)
-  - `--with-exports` (default OFF — opt-in for PDF + PPTX of roadmap)
-  - `--target-backend-dir <path>` (default `<repo>/backend/`)
-  - `--target-frontend-dir <path>` (default `<repo>/frontend/`)
+- **Inputs and bootstrap flags** → Read
+  [`inputs-and-flags.md`](../../docs/refactoring-tobe/inputs-and-flags.md)
+  during Phase 0 bootstrap. It enumerates the four required Phase 0–3
+  paths, the optional resume paths, and the seven optional CLI flags
+  (`--mode`, `--code-scope`, `--verify`, `--review-mode`,
+  `--with-exports`, `--target-backend-dir`, `--target-frontend-dir`).
+- **Mode flags Q1–Q4** → For the full description of each mode, the
+  bootstrap recommendation heuristics, and the decision logic, see
+  [`iteration-and-scope-modes.md`](../../docs/refactoring-tobe/iteration-and-scope-modes.md).
+- **Sub-agent roster (9 in-house workers + external agents)** → Read
+  [`sub-agents-roster.md`](../../docs/refactoring-tobe/sub-agents-roster.md)
+  when picking which worker to dispatch in a wave.
+- **Output layout & frontmatter contract** → Read
+  [`output-layout.md`](../../docs/refactoring-tobe/output-layout.md)
+  before any worker writes to disk.
 
-If any required Phase 0–3 input is missing or `status: failed`, **stop
-and ask the user**: offer to run the missing phase first or abort.
-
-If Phase 3 reports unresolved `critical` AS-IS bugs, **stop and ask**:
-the user must decide whether to defer those bugs to Phase 5 (document
-in TO-BE as known limitations) or pause Phase 4 for fix-cycle.
-
-For the full output directory tree and frontmatter contract every worker
-must respect, see [`output-layout.md`](../../docs/refactoring-tobe/output-layout.md).
-
----
-
-## Sub-agents available
-
-| Sub-agent | Wave | Output target |
-|---|---|---|
-| `decomposition-architect` | W1 | `.refactoring-kb/00-decomposition/`, `docs/refactoring/4.1-decomposition/`, `docs/adr/ADR-001`, `ADR-002` |
-| `api-contract-designer` | W2 | `docs/refactoring/4.6-api/`, `docs/adr/ADR-003` |
-| `backend-scaffolder` | W3 (BE track) | `backend/` (Maven scaffold + structure) |
-| `data-mapper` | W3 (BE track) | `backend/src/main/java/.../<bc>/domain/`, `backend/src/main/resources/db/migration/` |
-| `logic-translator` | W3 (BE track, fan-out per UC) | `backend/src/main/java/.../<bc>/application/`, `backend/src/main/java/.../<bc>/api/` |
-| `frontend-scaffolder` | W3 (FE track) | `frontend/` (Angular workspace) |
-| `hardening-architect` | W4 | `docs/refactoring/4.7-hardening/`, `docs/adr/ADR-004`, `ADR-005`, `backend/src/main/resources/application.yml` updates |
-| `migration-roadmap-builder` | W5 | `docs/refactoring/roadmap.md` |
-| `phase4-challenger` | W6 (always ON) | `docs/refactoring/_meta/challenger-report.md`, `.refactoring-kb/02-traceability/as-is-to-be-matrix.json` |
-
-External agents called when needed:
-- `code-reviewer` — background after each scaffold/translation (W4 review-mode)
-- `debugger` — on equivalence discrepancies vs. Phase 3 baseline
-- `documentation-writer` — polish of ADRs (background)
-- `document-creator`, `presentation-creator` — opt-in export wave
-
----
-
-## Mode flags (Q1–Q4)
-
-Four mode flags drive Phase-4 behaviour. Default values are tuned for the
-common case; switch to non-defaults only with explicit user request.
-
-| Flag | Default | Alternatives | What it controls |
-|---|---|---|---|
-| `--mode` (Q1) | `A` (one-shot) | `B` (per-BC milestone) | Whether Phase 4 runs the entire TO-BE in a single supervisor pass or iterates per bounded context |
-| `--code-scope` (Q2) | `scaffold-todo` | `full`, `structural` | How much of the business logic is translated vs. left as TODO markers |
-| `--verify` (Q3) | `auto` | `on`, `off` | Whether to run `mvn compile` + `ng build` after W3 |
-| `--review-mode` (Q4) | `background` | `sync`, `off` | How `code-reviewer` is dispatched after each major output |
-
-For the full description of each mode, the bootstrap recommendation
-heuristics, and the decision logic, see
-[`iteration-and-scope-modes.md`](../../docs/refactoring-tobe/iteration-and-scope-modes.md).
+The required Phase 0–3 paths and the bug-deferral escalation rule
+remain enforced — see "Escalation triggers" below.
 
 ---
 
 ## Phase plan (overview)
 
-| Step | Wave | Mode | Dispatched agents | Blocks |
-|---|---|---|---|---|
-| Phase 0 | Bootstrap | supervisor only | — | all waves until confirmed |
-| W1 | Decomposition | sequential, single | `decomposition-architect` | W2 |
-| HITL #1 | Checkpoint | user confirm | — | W2 |
-| W2 | API Contract | sequential, single | `api-contract-designer` | W3 |
-| HITL #2 | Checkpoint | user confirm | — | W3 |
-| W3 | Implementation | parallel BE ‖ FE | `backend-scaffolder` → `data-mapper` → `logic-translator` (fan-out per UC); `frontend-scaffolder` | W4 |
-| Verify | Adaptive | per Q3 | `mvn compile` + `ng build` | W4 |
-| Code review | Background | per Q4 | `code-reviewer` | does not block |
-| HITL #3 | Checkpoint | user confirm | — | W4 |
-| W4 | Hardening | sequential, single | `hardening-architect` | W5 |
-| W5 | Roadmap | sequential, single | `migration-roadmap-builder` | W6 |
-| W6 | Challenger | always ON | `phase4-challenger` | export wave / completion |
-| Export | Opt-in | parallel | `document-creator` + `presentation-creator` | — |
-| Recap | — | supervisor only | — | end |
+The wave grid is: **Phase 0 (bootstrap) → W1 (decomp) → HITL#1 → W2
+(API) → HITL#2 → W3 (BE ‖ FE) → Verify → Review → HITL#3 → W4
+(hardening) → W5 (roadmap) → W6 (challenger, always ON) → Export
+(opt-in) → Recap.** Strict dependency chain: 4.1 → 4.6 → 4.2/4.3
+(parallel) → 4.7 → 4.8.
 
-For the full per-wave dispatch template (worker outputs, HITL checkpoint
-prompts, escalation conditions per wave), see
-[`phase-plan.md`](../../docs/refactoring-tobe/phase-plan.md).
+→ Read [`phase-plan.md`](../../docs/refactoring-tobe/phase-plan.md)
+for the full per-wave dispatch template (worker outputs, HITL prompts,
+escalation conditions per wave).
 
-For the closing-report schema, see
-[`final-recap-template.md`](../../docs/refactoring-tobe/final-recap-template.md).
+→ Read [`dispatch-prompt-template.md`](../../docs/refactoring-tobe/dispatch-prompt-template.md)
+when assembling any worker prompt.
 
-For the worker prompt boilerplate, see
-[`dispatch-prompt-template.md`](../../docs/refactoring-tobe/dispatch-prompt-template.md).
+→ Read [`final-recap-template.md`](../../docs/refactoring-tobe/final-recap-template.md)
+when producing the closing report.
 
 ---
 
@@ -256,20 +200,15 @@ required to fill.
 
 ## Manifest update
 
-After every wave, update both manifests:
-- `.refactoring-kb/_meta/manifest.json` (TO-BE KB run history with
-  per-worker timing)
-- `docs/refactoring/_meta/manifest.json` (workflow-level summary)
+After every wave, update **both** manifests
+(`.refactoring-kb/_meta/manifest.json` and
+`docs/refactoring/_meta/manifest.json`) — never half-update, never
+delete prior entries. Write the entry even on `failed` status.
 
-Schema mirrors prior phases (started_at, completed_at, duration_seconds,
-status, outputs, findings_count). Add Phase-4-specific fields:
-- `resume_mode`: fresh | resume-incomplete | full-rerun | revise
-- `iteration_model`: A | B
-- `code_scope`: full | scaffold-todo | structural
-- `verify_policy`: on | off
-- `verify_results`: { mvn_compile: pass|fail|skipped, ng_build: ... }
-- `traceability_coverage`: { ucs_total: N, ucs_covered: M, orphans: K }
-- `as_is_bugs_deferred`: [list of BUG-NN deferred to Phase 5]
+→ Read [`manifest-schema.md`](../../docs/refactoring-tobe/manifest-schema.md)
+for the full schema (common fields + Phase-4-specific:
+`resume_mode`, `iteration_model`, `code_scope`, `verify_policy`,
+`verify_results`, `traceability_coverage`, `as_is_bugs_deferred`).
 
 ---
 

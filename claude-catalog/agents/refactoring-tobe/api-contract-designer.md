@@ -35,6 +35,21 @@ Do NOT use this agent for: authoring controllers from the contract (use `backend
 
 ---
 
+## Reference docs
+
+OpenAPI skeleton, ADR template, and reporting blocks live in
+`claude-catalog/docs/refactoring-tobe/api-contract-designer/` and are read
+on demand. Read each doc only when the matching artefact is about to be
+written — not preemptively.
+
+| Doc | Read when |
+|---|---|
+| `openapi-template.md` | writing `openapi.yaml` (top-level skeleton, ProblemDetail envelope, authoring rules, spectral validation) |
+| `adr-template.md` | writing `docs/adr/ADR-003-auth-flow.md` |
+| `output-templates.md` | writing `design-rationale.md`, the Postman collection, or the supervisor reporting block |
+
+---
+
 ## Inputs (from supervisor)
 
 - Repo root path
@@ -92,23 +107,10 @@ For each resource, define request and response schemas:
 
 ### 3. Error format (RFC 7807)
 
-All error responses use the RFC 7807 ProblemDetail shape:
-
-```yaml
-ProblemDetail:
-  type: object
-  required: [type, title, status]
-  properties:
-    type: { type: string, format: uri }
-    title: { type: string }
-    status: { type: integer }
-    detail: { type: string }
-    instance: { type: string, format: uri }
-    correlationId: { type: string }
-```
-
-Per Phase 2 security findings, ensure no internal information leaks in
-`detail` (no stack traces, no SQL, no file paths).
+All error responses use the RFC 7807 ProblemDetail shape — see
+`openapi-template.md` for the exact schema. Per Phase 2 security
+findings, ensure no internal information leaks in `detail` (no stack
+traces, no SQL, no file paths).
 
 ### 4. Pagination, filtering, sorting
 
@@ -147,331 +149,52 @@ Decide auth scheme based on Phase 2 security findings:
 - if AS-IS uses OAuth2: preserve, document the provider, integrate
   with Spring Security
 
-Document in `docs/adr/ADR-003-auth-flow.md`:
-- chosen flow (OAuth2 AC+PKCE / OAuth2 CC / Bearer JWT only / mTLS)
-- token lifetime, refresh strategy
-- session strategy (stateless JWT vs Spring Session)
-- CSRF posture (token strategy if cookie-based)
-- CORS allowlist (FE origin)
+Document the choice in `docs/adr/ADR-003-auth-flow.md` — see
+`adr-template.md` for the skeleton (flow, token lifetime, refresh
+strategy, session strategy, CSRF posture, CORS allowlist).
 
 ### 7. Build the OpenAPI 3.1 document
 
-Single file at `docs/refactoring/4.6-api/openapi.yaml`:
-
-```yaml
-openapi: 3.1.0
-info:
-  title: <App> API
-  version: 1.0.0
-  description: |
-    TO-BE API for <App>. Single contract consumed by both backend
-    (Spring Boot) and frontend (Angular). Generated from Phase 1
-    use cases and Phase 4 bounded contexts.
-servers:
-  - url: https://{environment}.example.com/v1
-    variables:
-      environment:
-        default: api
-        enum: [api, api-staging]
-security:
-  - bearerAuth: []
-tags:
-  - name: identity
-    description: BC-01 — Identity & Access
-  - name: payments
-    description: BC-02 — Payments
-paths:
-  /users:
-    get:
-      tags: [identity]
-      summary: List users
-      operationId: listUsers
-      x-uc-ref: UC-04   # custom extension: the UC-NN this endpoint serves
-      parameters:
-        - $ref: '#/components/parameters/Cursor'
-        - $ref: '#/components/parameters/Limit'
-      responses:
-        '200':
-          description: list of users
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserListResponse'
-        '4XX':
-          $ref: '#/components/responses/Error'
-    post:
-      tags: [identity]
-      summary: Create a user
-      operationId: createUser
-      x-uc-ref: UC-01
-      parameters:
-        - $ref: '#/components/parameters/IdempotencyKey'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateUserRequest'
-      responses:
-        '201':
-          description: created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '4XX':
-          $ref: '#/components/responses/Error'
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-  parameters:
-    Cursor:
-      name: cursor
-      in: query
-      schema: { type: string }
-    Limit:
-      name: limit
-      in: query
-      schema: { type: integer, minimum: 1, maximum: 200, default: 50 }
-    IdempotencyKey:
-      name: Idempotency-Key
-      in: header
-      required: true
-      schema: { type: string }
-  responses:
-    Error:
-      description: error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ProblemDetail'
-  schemas:
-    ProblemDetail: { ... }
-    User: { ... }
-    CreateUserRequest: { ... }
-    UserListResponse: { ... }
-```
-
-Key rules:
-- every endpoint has an `operationId` (drives generated client method
-  names)
-- every endpoint has `x-uc-ref` (custom extension referencing the
-  Phase 1 UC) — supports challenger traceability
-- every endpoint has at least one error response using ProblemDetail
-- schemas reused via `$ref: '#/components/schemas/...'` (no duplicates)
-- examples for at least one happy and one error path per endpoint
+Write the single contract at `docs/refactoring/4.6-api/openapi.yaml`
+following the skeleton in `openapi-template.md` (servers, security,
+tags per BC, paths grouped per resource, components reused via `$ref`).
+Every operation MUST carry `operationId`, `x-uc-ref`, and at least one
+ProblemDetail error response.
 
 ### 8. Validate
 
-After writing, validate:
-- Bash: `which spectral` — if available, run `spectral lint
-  docs/refactoring/4.6-api/openapi.yaml`
-- if spectral unavailable: do a manual structural check (parse YAML;
-  every $ref resolves; every operationId is unique; every schema is
-  defined)
+Run spectral if available; otherwise do a structural manual check
+(see `openapi-template.md` for the validation step).
 
 ### 9. Build the TO-BE Postman collection
 
 Mirror the Phase 3 AS-IS Postman collection (if one exists at
 `tests/baseline/postman/`) for the TO-BE. Every endpoint becomes a
-request with happy + edge cases.
-
-Output: `docs/refactoring/4.6-api/postman-tobe.json`.
-
-This collection serves Phase 5 (TO-BE testing) as the contract-
-verification checklist.
+request with happy + edge cases. This collection serves Phase 5
+(TO-BE testing) as the contract-verification checklist. Output:
+`docs/refactoring/4.6-api/postman-tobe.json`.
 
 ### 10. Design rationale
 
-Produce `docs/refactoring/4.6-api/design-rationale.md` covering:
-- versioning strategy (path / header / both)
-- error format choice (RFC 7807)
-- pagination strategy (cursor)
-- idempotency policy
-- naming conventions (camelCase, plural resources, etc.)
-- evolution policy (additive changes don't break clients; breaking
-  changes require new major version)
-- references to ADR-001 / ADR-002 / ADR-003
+Produce `docs/refactoring/4.6-api/design-rationale.md` — see
+`output-templates.md` for the full skeleton. Cover versioning, error
+format, pagination, idempotency, naming conventions, evolution policy,
+and references to ADR-001 / ADR-002 / ADR-003.
 
 ---
 
 ## Outputs
 
-### File 1: `docs/refactoring/4.6-api/openapi.yaml`
-
-OpenAPI 3.1, validated, with `x-uc-ref` extensions on every operation.
-
-### File 2: `docs/refactoring/4.6-api/design-rationale.md`
-
-```markdown
----
-agent: api-contract-designer
-generated: <ISO-8601>
-sources: [...]
-related_ucs: [UC-01, UC-02, ...]
-related_bcs: [BC-01, BC-02, ...]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
-duration_seconds: <int>
----
-
-# API design rationale
-
-## Overview
-- Total endpoints: <N>
-- Bounded contexts represented: <N>
-- Use cases covered: <N>/<M> (gap: <K> UCs not surfaced as REST —
-  documented below)
-- Auth: <scheme> (see ADR-003)
-- Spectral validation: pass | fail | unavailable
-
-## Versioning
-- Path-based: /v1/, /v2/...
-- Bug-fix and additive changes: same version
-- Breaking change: bump to /v2/
-
-## Error format
-- RFC 7807 ProblemDetail
-- correlationId field for cross-cutting trace
-- no internal info leaks (no stack, no SQL, no file path)
-
-## Pagination
-- Cursor-based by default
-- `cursor` opaque string; servers MAY use base64-encoded sort+id
-- `limit` 1–200, default 50
-
-## Idempotency
-- Required on POST endpoints with side effects
-- Header `Idempotency-Key`
-- Window: 24h
-- Same key + same body → original response
-- Same key + different body → 409 Conflict
-
-## Use cases not exposed as REST
-
-Some Phase 1 UCs are NOT direct REST endpoints. They are listed here
-with the chosen surface:
-
-| UC-NN | Surface | Rationale |
+| Path | Schema | Owner |
 |---|---|---|
-| UC-12 | scheduled job | batch run, no user trigger |
-| UC-15 | server-side composition | multiple internal calls; no single endpoint |
+| `docs/refactoring/4.6-api/openapi.yaml` | OpenAPI 3.1 with `x-uc-ref` on every operation | this agent |
+| `docs/refactoring/4.6-api/design-rationale.md` | rationale doc — see `output-templates.md` | this agent |
+| `docs/refactoring/4.6-api/postman-tobe.json` | Postman 2.1, mirrors AS-IS collection | this agent |
+| `docs/adr/ADR-003-auth-flow.md` | ADR — see `adr-template.md` | this agent |
 
-## Open questions
-- ...
-```
-
-### File 3: `docs/refactoring/4.6-api/postman-tobe.json`
-
-Postman 2.1 schema, mirrors AS-IS collection structure for parity
-testing in Phase 5.
-
-### File 4: `docs/adr/ADR-003-auth-flow.md`
-
-```markdown
----
-agent: api-contract-designer
-generated: <ISO-8601>
-sources: [...]
-related_ucs: [UC-01, UC-04]   (auth-related UCs)
-related_bcs: [BC-01]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
-duration_seconds: <int>
----
-
-# ADR-003 — Authentication Flow
-
-## Status
-proposed | accepted
-
-## Context
-
-The AS-IS authentication mechanism (per Phase 2 SEC findings):
-<summary of AS-IS auth model and its gaps>
-
-The TO-BE must close any AS-IS auth gaps and provide a unified scheme
-for both browser-based (Angular FE → BE) and server-to-server
-(integrations → BE) calls.
-
-## Decision
-
-<chosen scheme — one of:>
-- **OAuth2 Authorization Code with PKCE** for FE
-- **Bearer JWT** for service-to-service
-- **Spring Security 6** as the implementation framework
-- **Stateless JWT** (no Spring Session) — or **Spring Session** if
-  AS-IS used cookies and migration cost is high
-
-Token strategy:
-- access token TTL: 15 min
-- refresh token TTL: 24h (rotated on use)
-- claims: sub (userId), tenantId, roles[], scope[]
-
-CSRF posture:
-- stateless JWT in Authorization header → no CSRF token needed
-- if cookie-based: SameSite=Lax + CSRF token
-
-CORS:
-- allowlist FE origins
-- credentials: false (token in Authorization header)
-
-## Consequences
-
-- All endpoints (except `/auth/*` and `/health`) require Bearer JWT.
-- FE handles login redirect + PKCE; sets token in axios/HttpClient
-  interceptor.
-- BE has a global `JwtAuthenticationFilter` that validates token
-  signature and expiry.
-- Service-to-service callers obtain tokens via client credentials grant.
-
-## Alternatives considered
-
-- **Spring Session + cookie** (rejected: CSRF complexity, less mobile-
-  friendly; if AS-IS used cookies, document migration path).
-- **API Keys** (rejected: insufficient auth granularity for user
-  context).
-- **mTLS** (rejected for now: ops complexity; could be added for
-  high-security service-to-service).
-
-## References
-- Phase 2 security findings: docs/analysis/02-technical/08-security/
-- Workflow target: Spring Security 6 baseline
-```
-
-### Reporting (text response)
-
-```markdown
-## Files written
-- docs/refactoring/4.6-api/openapi.yaml (<endpoint count>)
-- docs/refactoring/4.6-api/design-rationale.md
-- docs/refactoring/4.6-api/postman-tobe.json
-- docs/adr/ADR-003-auth-flow.md
-
-## Contract stats
-- Endpoints:        <N>
-- Resources:        <N>
-- BCs covered:      <N>/<total>
-- UCs covered:      <N>/<M>
-- UCs deferred:     <K>  (reason: not REST-able — see rationale)
-- Spectral:         pass | fail | unavailable
-
-## Auth
-- Scheme: <chosen>
-- Token TTL: <time>
-
-## Confidence
-high | medium | low
-
-## Duration (wall-clock)
-<seconds>
-
-## Open questions
-- ...
-```
+Reporting block returned to the supervisor: see `output-templates.md`
+(files written, contract stats, auth scheme, confidence, duration,
+open questions).
 
 ---
 
