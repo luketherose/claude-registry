@@ -106,14 +106,51 @@ For major releases or breaking changes: send a notice with:
 
 ## Promotion: beta → stable
 
-When a `beta` capability has been used in at least two projects without critical issues
-for at least 30 days:
+A `beta` capability is eligible for promotion to `stable` when **either** of the
+following two conditions is satisfied. The criteria are alternatives, not cumulative —
+the second was added because the first is too slow when independent teams converge on
+the same need.
+
+### Criterion A — Time + adoption (default path)
+
+The capability has been used in **at least two projects** without critical issues for
+**at least 30 days** since the last beta release.
+
+This is the conservative path. Use it when adoption is proceeding as expected and there
+is no specific signal that the capability is more mature than the calendar implies.
+
+### Criterion B — Convergence (fast path)
+
+**Two or more independent project specializations** (under different projects'
+`.claude/agents/`) have introduced the **same modification** to a beta capability —
+typically the same added rule, the same removed constraint, or the same renamed output
+section.
+
+When this happens, the modification is no longer project-specific: it is part of the
+capability's true behavior, and the original beta version is incomplete. Convergence
+across projects is a stronger signal than time-on-shelf, and waiting out the 30-day
+window only delays adopting a fix that two teams have already independently identified.
+
+**How to verify convergence**:
+1. Diff each project specialization against the beta capability and extract the changed
+   lines.
+2. Confirm that at least two specializations share the same change (textual or
+   semantically equivalent — paraphrased rules count).
+3. Cite both specializations in the promotion PR description, with the path under each
+   project's `.claude/agents/` and the diff hunk that demonstrates the convergence.
+
+A single project specialization is not sufficient — that is just a project override.
+Convergence requires **two independent observations** of the same need.
+
+### Promotion command (both criteria)
 
 ```bash
 ./claude-marketplace/scripts/publish.sh capability-name 1.0.0 stable
 ```
 
-Update `catalog.json` to change `"tier": "beta"` to `"tier": "stable"`.
+Update `catalog.json` to change `"tier": "beta"` to `"tier": "stable"`. Add a
+`CHANGELOG.md` entry stating which criterion was used (A or B) — for Criterion B,
+include the convergence evidence (the two project paths and the shared change).
 
 ---
 
