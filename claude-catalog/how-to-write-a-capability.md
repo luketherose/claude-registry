@@ -117,6 +117,81 @@ For full Java/Spring boilerplate templates, see
 
 The link is a signal to the agent: "if you need this level of detail, read this file".
 
+### Deterministic helpers — optional `scripts/` directory
+
+> Claude orchestrates, the code executes.
+
+Anything that is **deterministic, repeatable, or calculable** belongs in an executable
+script — not in textual instructions that the model must interpret each time. Putting
+deterministic logic in scripts produces results that are cheaper (fewer tokens),
+faster, and reproducible across invocations.
+
+A skill may ship a `scripts/` directory alongside its body. The agent that invokes the
+skill runs the scripts via the `Bash` tool — the skill itself remains read-only
+(`tools: Read`), it just declares the scripts as part of its standards.
+
+| Goes in `scripts/` (deterministic) | Stays in the skill body (judgment) |
+|---|---|
+| Validating a JSON / YAML / OpenAPI document parses | Deciding whether an API contract is well-modelled |
+| Counting cyclomatic complexity, words, sections | Deciding what an excessive complexity means in context |
+| Checking naming-convention regex matches | Deciding when a naming convention should be relaxed |
+| Generating a Mermaid / PlantUML diagram from a structured input | Deciding which entities deserve a diagram |
+| Extracting a frontmatter field from a `.md` file | Deciding what the frontmatter should contain |
+
+If the rule reads "given X, the answer is always Y", it belongs in a script. If the
+rule reads "given X, consider Y while balancing Z", it stays in prose.
+
+**Layout**
+
+```
+claude-catalog/skills/<topic>/<skill-name>/
+├── <skill-name>.md            # the skill body
+├── references/                # progressive-disclosure attachments (see previous section)
+└── scripts/
+    ├── README.md              # script index — one line per script
+    ├── validate-something.py  # one script, one job, deterministic
+    └── count-something.py
+```
+
+The `scripts/README.md` is mandatory when the directory exists — it documents each
+script's **invocation, inputs, outputs, and exit codes**, so the consuming agent can
+call the script correctly without reading the source.
+
+**How a skill declares its scripts**
+
+In the skill body, name the script explicitly and give the agent a Bash recipe.
+
+```markdown
+## Standards
+
+For OpenAPI documents, validate that the spec parses with the canonical schema
+checker before reviewing semantics. The deterministic check is shipped with this
+skill:
+
+    python3 claude-catalog/skills/api/openapi-standards/scripts/validate-openapi.py <path>
+
+Exit code 0 means the spec is well-formed. Non-zero means a parse error — fix the
+parse error before applying the rest of the standards.
+```
+
+The agent (which has `Bash` in its tools) executes the script when the skill body
+points at it.
+
+**When to introduce a `scripts/` directory**
+
+Add scripts only when **at least one** of the following holds:
+
+- The same deterministic check is described in two or more skills (the script
+  becomes a single source of truth).
+- The textual rule is a regex, a count, or a parse — the prose form is more verbose
+  and less reliable than the executable form.
+- A consumer agent has been observed reasoning incorrectly about the rule and the
+  rule is mechanically verifiable.
+
+Do not add a script just because something *could* be automated. The cost of
+maintaining the script (tests, language runtime, documentation) must be lower than
+the cost of the rule expressed in prose.
+
 ### How agents invoke skills
 
 Add a `## Skills` section to the agent's system prompt:

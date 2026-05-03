@@ -114,6 +114,25 @@ A promotion PR moves a capability's `"tier"` in `catalog.json` from `"beta"` to
 - [ ] Each dependent agent has this skill listed in its `"dependencies"` in `catalog.json`
 - [ ] Each dependent agent's system prompt has a `## Skills` section invoking this skill
 
+### If the skill ships a `scripts/` directory
+
+- [ ] `scripts/README.md` exists and documents each script's **invocation, inputs,
+      outputs, and exit codes** (so a consuming agent can call the script without
+      reading the source)
+- [ ] Each script's logic is genuinely deterministic — `if X then Y` rules, parsing,
+      counting, regex checks. Judgment-bearing rules stay in the skill body
+- [ ] The skill body names each script explicitly with a Bash recipe — the agent
+      that invokes the skill must know exactly when and how to run it
+- [ ] No script duplicates logic that already lives in another skill's `scripts/` —
+      if the same check appears twice, factor it into a single source of truth
+
+### If the skill ships a `references/` directory
+
+- [ ] The skill body crosses (or is approaching) the 3 000-word soft cap, justifying
+      the move to a directory layout
+- [ ] Each reference file is linked from the skill body with a plain markdown link —
+      the body must point the agent to the file when it needs that level of detail
+
 ## Approval criteria
 
 A PR can be approved when:
