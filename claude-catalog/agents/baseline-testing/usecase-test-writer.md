@@ -32,6 +32,19 @@ Do NOT use this agent for: integration boundaries (use `integration-test-writer`
 
 ---
 
+## Reference docs
+
+Per-UC test templates and the AS-IS bug-handling procedure live in
+`claude-catalog/docs/baseline-testing/usecase-test-writer/` and are read on
+demand. Do not preload them.
+
+| Doc | Read when |
+|---|---|
+| `test-module-template.md` | writing the per-UC pytest module (Method §4) and applying Streamlit-specific patterns (Method §6) |
+| `bug-found-policy.md`     | the AS-IS behaviour diverges from the UC spec and a marker comment + Open-questions entry must be produced (Method §7) |
+
+---
+
 ## Inputs (from supervisor)
 
 - Repo root path
@@ -107,70 +120,11 @@ For each test case, decide the assertion strategy:
 
 ### 4. Write the test module
 
-Produce `tests/baseline/test_uc_<NN>_<slug>.py`:
+Produce `tests/baseline/test_uc_<NN>_<slug>.py`.
 
-```python
-"""
-Baseline test for UC-NN — <human title>.
-
-Covers:
-- UC-NN: <human title>
-- Screens involved: S-NN (<name>), S-NN (<name>)
-- I/O: IN-NN, IN-NN -> OUT-NN, OUT-NN (transformations: TR-NN)
-
-Sources:
-- docs/analysis/01-functional/06-use-cases/UC-NN-<slug>.md
-- docs/analysis/01-functional/07-user-flows.md
-- docs/analysis/02-technical/<relevant>.md
-
-Determinism (inherited from conftest.py): seed=42, time frozen,
-network blocked. See conftest module docstring for opt-out markers.
-
-AS-IS contract: this test exercises the AS-IS codebase as-is. If the
-test fails, the AS-IS code may have a latent bug. Report via the
-baseline-runner; never modify the AS-IS source.
-"""
-
-import pytest
-
-# import the AS-IS modules under test (read-only)
-# from <repo_pkg>.<module> import <function>
-
-
-@pytest.mark.streamlit  # only if Streamlit-driven
-def test_uc_NN_happy_path(app_test, minimal_orders):
-    """Happy path of UC-NN: <one-line>.
-
-    Steps:
-    1. <interaction 1>
-    2. <interaction 2>
-    3. <assertion>
-    """
-    # Streamlit example:
-    # app_test.text_input("query").set_value("foo").run()
-    # assert app_test.dataframe[0].value.shape == (3, 4)
-    # assert app_test.session_state["status"] == "ok"
-    pass
-
-
-def test_uc_NN_alternative_<flow>(realistic_orders):
-    """Alternative flow: <one-line description>."""
-    pass
-
-
-def test_uc_NN_edge_<case>(edge_orders):
-    """Edge: <one-line description>.
-
-    Risk reference: RISK-NN (severity=<sev>) from Phase 2.
-    """
-    pass
-
-
-# Use snapshot assertions for richer outputs:
-def test_uc_NN_snapshot_dataframe(realistic_orders, dataframe_regression):
-    result = ... # invoke AS-IS
-    dataframe_regression.check(result)
-```
+→ Read `claude-catalog/docs/baseline-testing/usecase-test-writer/test-module-template.md`
+for the canonical module skeleton (docstring, imports, happy / alternative /
+edge / snapshot test signatures).
 
 ### 5. Test quality rules
 
@@ -196,45 +150,20 @@ def test_uc_NN_snapshot_dataframe(realistic_orders, dataframe_regression):
 
 ### 6. Streamlit-specific patterns (if applicable)
 
-```python
-from streamlit.testing.v1 import AppTest
-
-def test_uc_NN_via_apptest():
-    at = AppTest.from_file("path/to/page.py").run()
-
-    # Set widget values
-    at.text_input(key="search").set_value("foo").run()
-
-    # Click a button
-    at.button(key="submit").click().run()
-
-    # Assert output
-    assert at.dataframe[0].value.shape[0] > 0
-    assert "Success" in at.success[0].value
-```
-
-If `AppTest` cannot reach a particular interaction (custom component,
-file_uploader with binary content, drag-drop), document the gap in
-`## Open questions` and write a `pytest.skip` with the reason. Do NOT
-silently leave the case untested.
+→ Read `claude-catalog/docs/baseline-testing/usecase-test-writer/test-module-template.md`
+("Streamlit-specific patterns") when stack mode is `streamlit`. If `AppTest`
+cannot reach an interaction, document the gap in `## Open questions` and
+emit a `pytest.skip` with reason — never leave it silently untested.
 
 ### 7. Bug-found policy
 
-If, while writing a test, you discover that the AS-IS behavior diverges
-from what `UC-NN-<slug>.md` says, you MUST NOT change the test to match
-the broken behavior. Instead:
-1. Write the test against the SPEC (what UC says)
-2. Add a comment block above the test:
-   ```python
-   # AS-IS-BUG: this test currently fails because <function> returns X
-   # instead of Y per UC-NN spec. See docs/analysis/03-baseline/_meta/
-   # as-is-bugs-found.md (BUG-NN to be assigned by baseline-runner).
-   # Severity inferred: <critical|high|medium|low>.
-   ```
-3. Add the case to your `## Open questions` section so the supervisor
-   surfaces it for the failure-policy decision.
+If AS-IS behaviour diverges from `UC-NN-<slug>.md`, do NOT bend the test to
+match the broken behaviour. Write the test against the SPEC, add an
+`AS-IS-BUG:` marker comment above it, and surface the case in `## Open
+questions`. NEVER fix the AS-IS source. NEVER lower the test bar to pass.
 
-NEVER fix the AS-IS source. NEVER lower the test bar to pass.
+→ Read `claude-catalog/docs/baseline-testing/usecase-test-writer/bug-found-policy.md`
+for the marker-comment format and the severity heuristic.
 
 ---
 

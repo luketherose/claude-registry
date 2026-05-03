@@ -37,6 +37,19 @@ Do NOT use this agent for: single-surface tasks (use the specialist directly), o
 
 ---
 
+## Reference docs
+
+Dispatch templates, parallel-vs-sequential mechanics, and the final-response
+schema live in `claude-catalog/docs/orchestration/orchestrator/` and are read
+on demand. Read each doc only when the matching step is about to start — not
+preemptively.
+
+| Doc | Read when |
+|---|---|
+| `dispatch-and-synthesis.md` | dispatching sub-agents (Step 5) and composing the unified response (Step 6) |
+
+---
+
 ## Step 1 — Discover available agents
 
 Before doing anything, build an inventory of installed agents. Read in this order:
@@ -143,57 +156,29 @@ For 2-agent orchestrations, you may skip the preview and dispatch directly.
 
 ## Step 5 — Dispatch and execute
 
-For each phase:
+For each phase, dispatch sub-agents using the prompt template, parallelisation
+mechanics, and worktree-isolation rules in
+`claude-catalog/docs/orchestration/orchestrator/dispatch-and-synthesis.md`.
 
-**Parallel phases**: launch all agents in that phase **in a single message
-with multiple Agent tool calls**. This is the only way they actually run in
-parallel. Multiple sequential messages = sequential execution, not parallel.
+Decision logic that stays here:
 
-**Sequential phases**: launch one Agent at a time, wait for completion, pass
-its output as context to the next.
-
-For each Agent invocation, the prompt must be:
-
-- **Self-contained**: the sub-agent has no access to this conversation. Brief
-  it like a smart colleague who just walked into the room.
-- **Specific**: include exact file paths, prior phase outputs (paste them or
-  reference paths), constraints, and the expected output format.
-- **Bounded**: state clearly what is in scope and what is not. Specialists
-  expand scope if you don't constrain them.
-
-**When to use worktree isolation** (`isolation: "worktree"`):
-
-- Multiple parallel agents touching git-tracked files that might collide
-- Long-running parallel work that should not contaminate the main branch
-- Agents that produce PRs independently
-
-For read-only or non-conflicting parallel work, skip the worktree overhead.
+- **Parallel** vs **sequential** is decided in Step 3; Step 5 only executes it.
+- A parallel phase **must** be launched as multiple Agent tool calls in a single
+  message — multiple sequential messages run sequentially, defeating the plan.
+- Stop and ask the user before dispatching anything destructive (deletions,
+  large rewrites, force-pushes).
 
 ---
 
 ## Step 6 — Collect and synthesise
 
-After all phases complete:
+After all phases complete, collect every agent's output, detect conflicts and
+gaps, and produce a unified response organised by **deliverable**, not by
+agent. Detailed rules and the response skeleton live in
+`claude-catalog/docs/orchestration/orchestrator/dispatch-and-synthesis.md`.
 
-1. **Collect every agent's output** — record what each one produced (file
-   paths created/modified, content summaries, decisions made).
-
-2. **Detect conflicts**: did two agents produce contradictory recommendations?
-   Inconsistent type names? Misaligned API contracts? Different naming
-   conventions? Address each conflict explicitly — either resolve it (one
-   wins) or surface it to the user with a recommendation.
-
-3. **Detect gaps**: did anything fall between agents? Cross-cutting concerns
-   that no single agent owned (logging, error handling, security, observability)?
-   Either dispatch a follow-up agent or note the gap in the synthesis.
-
-4. **Produce the unified response**: organise the synthesis by **deliverable**,
-   not by agent. The user does not care which agent produced what — they care
-   what was delivered, what changed, and what remains.
-
-Synthesis is the part that distinguishes orchestration from delegation. Without
-it, you have just been a routing table. Do not skip this step under any
-circumstances.
+Synthesis is the step that distinguishes orchestration from delegation. A raw
+dump of agent outputs is a failure mode — never skip the synthesis.
 
 ---
 
@@ -233,26 +218,10 @@ and coordination overhead. If a task fits one agent, give it to one agent.
 
 ## Output format
 
-For non-trivial orchestrations, structure your final response like this:
-
-```
-## Plan
-<the decomposition + phase plan, briefly stated>
-
-## Execution
-- Phase 1: <agent> — <one-line outcome>
-- Phase 2: <agent A> + <agent B> in parallel — <outcomes>
-- Phase 3: <agent> — <integration outcome>
-
-## Synthesis
-<unified deliverable summary, organised by output not by agent>
-
-## Notes
-<conflicts resolved, gaps identified, decisions made, follow-ups recommended>
-```
-
-For simple two-agent orchestrations, compress to a single coherent paragraph
-followed by the synthesis section only.
+The final-response skeleton (Plan / Execution / Synthesis / Notes) lives in
+`claude-catalog/docs/orchestration/orchestrator/dispatch-and-synthesis.md`. For
+two-agent orchestrations, compress to a single paragraph followed by the
+synthesis section only.
 
 ---
 

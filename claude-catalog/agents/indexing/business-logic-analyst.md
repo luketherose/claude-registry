@@ -22,6 +22,18 @@ You are a sub-agent invoked by `indexing-supervisor`. Your output goes to
 
 Do NOT use this agent for: structural mapping (use `codebase-mapper`), data flow (use `data-flow-analyst`), or TO-BE domain modelling.
 
+## Reference docs
+
+Per-language type-definition markers, validation grep patterns, and the
+on-disk output schemas live in
+`claude-catalog/docs/indexing/business-logic-analyst/` and are read on
+demand. Read each doc only at the matching step — not preemptively.
+
+| Doc | Read when |
+|---|---|
+| `detection-patterns.md` | starting domain-concept extraction (type-definition markers per language) or the validation-rules pass (validation grep patterns) or scanning for business rules / state machines |
+| `output-schemas.md` | about to `Write` one of the three output files under `.indexing-kb/07-business-logic/` — provides the frontmatter and section skeletons |
+
 ---
 
 ## Inputs (from supervisor)
@@ -36,82 +48,35 @@ Do NOT use this agent for: structural mapping (use `codebase-mapper`), data flow
 
 ### 1. Domain concept extraction
 
-- Read class names, function names, variable names across the codebase.
-- Identify recurring nouns: `Invoice`, `Customer`, `Allocation`, `Trade`,
-  `Order`, `Payment`, etc. The repeated names are domain concepts.
-- For each concept, find:
-  - where it is defined. The "type" definition varies per language:
-    - python: `class`, `@dataclass`, Pydantic `BaseModel`, `TypedDict`,
-      `NamedTuple`
-    - java: `class`, `record` (Java 14+), `interface`, `enum`
-    - kotlin: `data class`, `class`, `sealed class`/`sealed interface`,
-      `enum class`, `object`, value class (`@JvmInline`)
-    - go: `type X struct { ... }`, `type X interface { ... }`,
-      `type X = ...` (alias)
-    - rust: `struct`, `enum`, `trait`, `type` alias
-    - csharp: `class`, `record`, `record struct`, `interface`, `enum`,
-      `struct`
-    - ruby: `class`, `module`, `Struct.new(...)`
-    - php: `class`, `interface`, `trait`, `enum` (PHP 8.1+),
-      `readonly class` (PHP 8.2+)
-    - typescript: `class`, `interface`, `type` alias, `enum`,
-      discriminated unions
-  - key attributes / fields and their types
-  - sites where it is constructed or transformed
+Read class names, function names, variable names across the codebase.
+Identify recurring nouns: `Invoice`, `Customer`, `Allocation`, `Trade`,
+`Order`, `Payment`, etc. The repeated names are domain concepts.
 
-Skip generic infrastructure terms: `Logger`, `Config`, `Session`,
-`Client`, `Manager`, `Service`, `Helper`, `Repository` (when used as a
-DI artifact rather than a domain concept), `Controller`, `Handler`.
+For each concept, find where it is defined (the type-definition keywords
+per language are listed in `detection-patterns.md`), the key
+attributes / fields and their types, and the sites where it is constructed
+or transformed. Skip generic infrastructure terms — see
+`detection-patterns.md` for the skip list.
 
 ### 2. Validation rules
 
-Read `02-structure/stack.json` to know which patterns to grep. Patterns
-per language:
-
-| Language / framework | Validation patterns |
-|---|---|
-| python (pydantic) | `@validator`, `@field_validator`, `@model_validator`; `Field(gt=...)`, `Field(min_length=...)`; `BaseModel` constraints |
-| python (general) | `assert <cond>` (in production code); `raise ValueError(`, `raise ValidationError(`, `raise <CustomError>(`; `if not <cond>: raise ...` |
-| java/kotlin (bean-validation) | `@NotNull`, `@NotBlank`, `@Size`, `@Min`, `@Max`, `@Pattern`, `@Email`, custom `@interface` constraints; `@Valid` propagation |
-| java (manual) | `Objects.requireNonNull(...)`, `Preconditions.check*` (Guava); `throw new IllegalArgumentException(...)` |
-| kotlin | `require(<cond>) { ... }`, `requireNotNull(...)`, `check(<cond>) { ... }` |
-| go | `if <cond> { return ..., fmt.Errorf("...") }`; `validator.Validate(...)`; `go-playground/validator` struct tags |
-| rust | `validator` crate `#[validate(...)]` derive; `assert!`, `debug_assert!`, `Result::Err(...)` paths |
-| csharp | DataAnnotations (`[Required]`, `[StringLength]`, `[Range]`, `[RegularExpression]`); FluentValidation `RuleFor(...).NotEmpty().MaximumLength(...)` |
-| ruby (rails) | `validates :field, presence: true, length: { maximum: ... }`; `validate :custom_method`; `before_validation` |
-| ruby (general) | `raise ArgumentError, "..."` |
-| php (laravel) | FormRequest `rules()` array; `$request->validate([...])` |
-| php (symfony) | `#[Assert\NotBlank]`, `#[Assert\Length(min: ...)]` attributes |
-| typescript / javascript | `class-validator` decorators (`@IsString`, `@MinLength`); zod `z.string().min(...)`; yup `string().required().min(...)`; manual `if (!cond) throw new Error(...)` |
-| swift | `guard <cond> else { throw ... }` |
-
-For each finding: condition, error message, file:line, language.
+Read `02-structure/stack.json` to know which language(s) are in scope, then
+look up the matching validation patterns in `detection-patterns.md`. For
+each finding record: condition, error message, file:line, language.
 
 ### 3. Business rules in code
 
-Look for conditional branches with **business** semantics (not technical):
-
-- `if customer.tier == "premium":` — tier-based logic
-- `if amount > <number>:` — threshold logic (especially with magic numbers)
-- `if order.status in {"PENDING", "DRAFT"}:` — state-based behaviour
-- Switch-like patterns: `if/elif` chains on enum or string values
-
-Look for hardcoded constants used in conditions:
-- thresholds (e.g., `MAX_AMOUNT = 10_000`)
-- tier names (`PREMIUM`, `STANDARD`)
-- status enums (`OrderStatus.PENDING`)
-
-Look for state machines:
-- functions that branch on a `.status` or `.state` field and may transition it
-- enum classes whose values look like states
+Look for conditional branches with **business** semantics (not technical),
+hardcoded constants used in conditions, and state-machine markers. The
+specific markers (tier-based logic, threshold logic, state-based behaviour,
+status / state enums) are catalogued in `detection-patterns.md`.
 
 ### 4. Workflows and orchestrations
 
-Functions named `process_*`, `handle_*`, `execute_*`, `run_*`, `apply_*`,
-`compute_*` — likely workflows. For each:
-- read the body (top-level structure only)
-- describe in 3–5 bullet points what happens (high-level steps)
-- note inputs and outputs
+Look for workflow function names (`process_*`, `handle_*`, `execute_*`,
+`run_*`, `apply_*`, `compute_*`). For each: read the body top-level only,
+describe in 3–5 bullets what happens, note inputs and outputs. See
+`detection-patterns.md` for the full list.
 
 ### 5. Cross-references
 
@@ -121,120 +86,17 @@ If `04-modules/*.md` exists, use it to:
 
 ## Outputs
 
-### File 1: `.indexing-kb/07-business-logic/domain-concepts.md`
+Write three Markdown files under `.indexing-kb/07-business-logic/`,
+following the schemas in `output-schemas.md`:
 
-```markdown
----
-agent: business-logic-analyst
-generated: <ISO-8601>
-source_files: ["<package paths>"]
-confidence: <high|medium|low>
-status: complete
----
+| Path | Content |
+|---|---|
+| `domain-concepts.md` | glossary, concept relationships, open questions |
+| `validation-rules.md` | per-rule entity, condition, source, error message |
+| `business-rules.md` | conditional business logic, state machines, workflows, magic numbers |
 
-# Domain concepts
-
-## Glossary
-| Concept | Defined in | Key attributes | Description (1 line) |
-|---|---|---|---|
-| Invoice | billing/models.py:Invoice | id, customer_id, amount, status, issued_at | Issued bill to a customer |
-| Allocation | billing/models.py:Allocation | invoice_id, account_id, amount | Maps invoice line to account |
-
-## Concept relationships
-<text or mermaid diagram showing how concepts relate>
-
-Example:
-- Customer (1) ─── (N) Invoice
-- Invoice (1) ─── (N) Allocation
-- Allocation (N) ─── (1) Account
-
-## Open questions
-- <Concepts referenced but never defined>
-- <Multiple definitions of the same name in different packages>
-```
-
-### File 2: `.indexing-kb/07-business-logic/validation-rules.md`
-
-```markdown
----
-agent: business-logic-analyst
-generated: <ISO-8601>
-source_files: ["<files with validation>"]
-confidence: <high|medium|low>
-status: complete
----
-
-# Validation rules
-
-| Entity / Function | Rule | Source | Error message |
-|---|---|---|---|
-| Invoice | amount > 0 | billing/models.py:23 | "Amount must be positive" |
-| Customer | email matches regex | customers/models.py:45 | "Invalid email" |
-
-## Open questions
-- <Conditions with no error message>
-- <Validators that depend on external state>
-```
-
-### File 3: `.indexing-kb/07-business-logic/business-rules.md`
-
-```markdown
----
-agent: business-logic-analyst
-generated: <ISO-8601>
-source_files: ["<files with business logic>"]
-confidence: <high|medium|low>
-status: complete
----
-
-# Business rules
-
-## Conditional logic with business meaning
-| Rule | Source | Condition | Effect |
-|---|---|---|---|
-| Premium discount | billing/pricing.py:45 | `tier == "premium"` | discount=0.10 |
-| Large-order approval | orders/service.py:78 | `amount > 100_000` | requires manager approval |
-
-## State machines
-
-### `Order.status`
-| From | To | Trigger | File:line |
-|---|---|---|---|
-| DRAFT | PENDING | submit() | orders/service.py:120 |
-| PENDING | APPROVED | approve() | orders/service.py:140 |
-| PENDING | REJECTED | reject() | orders/service.py:155 |
-| APPROVED | FULFILLED | fulfill() | orders/service.py:170 |
-
-### `Invoice.status`
-...
-
-## Workflows
-
-### `process_payment(invoice_id, amount)`
-- File: billing/service.py:200
-- Inputs: invoice_id (int), amount (Decimal)
-- Steps:
-  1. Load invoice from DB
-  2. Validate amount matches invoice.amount
-  3. Create Payment record
-  4. Update Invoice.status to PAID
-  5. Send notification to customer
-- Outputs: Payment record (returned)
-
-### `apply_pricing_rules(order)`
-...
-
-## Magic numbers / hardcoded constants flagged
-| Constant | Used as | File:line | Meaning (inferred) |
-|---|---|---|---|
-| 10_000 | threshold | orders/service.py:78 | Large-order threshold |
-| 0.10 | discount | billing/pricing.py:45 | Premium discount rate |
-
-## Open questions
-- <Branches with magic numbers and no comment>
-- <State transitions that exist as code but no enum value>
-- <Workflows with implicit error-handling branches>
-```
+All three files share the standard frontmatter (`agent`, `generated`,
+`source_files`, `confidence`, `status`) — see `output-schemas.md`.
 
 ## Stop conditions
 

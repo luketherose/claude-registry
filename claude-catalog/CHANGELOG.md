@@ -17,6 +17,16 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ### Changed
 - **`refactoring-supervisor.md`** gains a `## Deliberative decision integration` section, six new rows in the decision-rules table covering the trigger-detection paths and failure-handling, and a new entry in the `## Reference docs` table pointing to `claude-catalog/docs/deliberation/integration-replatforming.md`. Default supervisor behaviour stays single-agent — deliberation is invoked only when the user explicitly requests it (prose at confidence ≥ 0.7), the dispatch JSON sets `decisionMode: "deliberative"`, or the supervisor's own self-escalation rule fires (irreversible / production-impacting / compliance-sensitive Phase-4 decision). When deliberation returns `pending_human_approval` the supervisor halts forward progress at the existing HITL gate; when it returns `failed_insufficient_drafts` the supervisor surfaces the failure and asks the user how to proceed — never silently substitutes a single-agent answer.
+- **8 agents (10.5–11 k chars) trimmed via the supervisor-extraction recipe** — sixth sweep, run as 8 parallel extractions. All 8 now under the 10 000-char rubric ceiling.
+  - `functional-analysis/functional-analysis-supervisor` 11 039 → 9 384 (−15%) — extended `docs/functional-analysis/output-layout.md` with manifest schema, new `docs/functional-analysis/sub-agents.md`.
+  - `functional-analysis/ui-surface-analyst` 10 973 → 8 372 (−24%) — 1 ref doc: `output-templates.md`.
+  - `baseline-testing/integration-test-writer` 10 962 → < 10 000 — 1 ref doc: `test-module-template.md`.
+  - `tobe-testing/backend-test-writer` 10 923 → 7 756 (−29%) — 1 ref doc: `test-patterns.md`.
+  - `orchestration/orchestrator` 10 665 → 9 573 (−10%) — 1 ref doc: `dispatch-and-synthesis.md`.
+  - `tobe-testing/frontend-test-writer` 10 630 → 6 680 (−37%) — 2 ref docs: `component-test-patterns.md`, `e2e-playwright-patterns.md`.
+  - `baseline-testing/usecase-test-writer` 10 615 → 9 020 (−15%) — 2 ref docs: `test-module-template.md`, `bug-found-policy.md`.
+  - `indexing/business-logic-analyst` 10 550 → 6 725 (−36%) — 2 ref docs: `detection-patterns.md`, `output-schemas.md`.
+
 - **8 agents (~11 k chars) trimmed via the supervisor-extraction recipe** — fifth sweep, run as 8 parallel extractions. All 8 now under the 10 000-char rubric ceiling.
   - `technical-analysis/security-analyst` 11 757 → 9 068 (−23%) — 1 ref doc: `output-templates.md`.
   - `quality/registry-auditor` 11 682 → 8 922 (−23%) — 2 ref docs: `rubric-checklists.md`, `output-report-template.md`.
