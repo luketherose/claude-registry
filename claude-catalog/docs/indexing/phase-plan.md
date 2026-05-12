@@ -115,7 +115,7 @@ Dispatch in parallel:
   - (future framework-specific analyzers slot in here following the
     same gate-by-detection pattern)
 
-After dispatch, **read `02-structure/stack.json` first** — it is the
+After dispatch, **read `bronze/stack.json` first** — it is the
 canonical AS-IS stack and supersedes the Phase-0 pre-detection. Cross-
 check that the analyzers dispatched (e.g., streamlit-analyzer) match
 `stack.frameworks` from the authoritative output. If there is a
@@ -162,3 +162,48 @@ After synthesis, post a final report to the user with:
 - Path to `.indexing-kb/00-index.md` (entrypoint)
 - Open questions list (from `_meta/unresolved.md`)
 - Any low-confidence sections flagged for human review
+
+---
+
+### Wave 4a — indexing-auditor (always ON)
+
+Dispatch `indexing-auditor` after `synthesizer` completes.
+
+- Input: `.indexing-kb/bronze/`, `.indexing-kb/silver/`, `.indexing-kb/gold/`, `.indexing-kb/evidence-ledger.jsonl`
+- Output: `.indexing-kb/gold/indexing-audit.md`, `.indexing-kb/gold/indexing-audit.json`
+- Verdict: PASS | PASS_WITH_GAPS | FAIL
+
+If verdict is FAIL, do NOT proceed to HITL. Run the gap closure loop:
+1. Read `gold/indexing-audit.json` for blocking findings
+2. For each auto-resolvable gap (missing status field, missing classification): attempt targeted re-dispatch of the responsible sub-agent with the specific gap description
+3. After re-dispatch: re-run `indexing-auditor`
+4. Surface all residual (non-auto-resolvable) gaps to the user in HITL
+
+---
+
+## HITL gate — user confirmation
+
+After Phase 4a completes (PASS or PASS_WITH_GAPS), present the final summary to the user:
+
+```
+Phase 0 completed.
+
+Summary:
+- X source files classified, Y large files chunked, Z evidence IDs registered
+- Bronze outputs: manifest.json, file-inventory.jsonl, stack.json, symbol-index.jsonl, large-files.jsonl, large-file-chunks.jsonl, [others]
+- Silver outputs: module-summaries.jsonl, business-rules.jsonl, data-flows.jsonl, [others]
+- Gold outputs: system-overview.md, bounded-context-hypothesis.md, complexity-hotspots.md, coverage-report.md
+- Graph outputs: nodes.jsonl, edges.jsonl
+- Evidence ledger: Z entries
+- Indexing auditor verdict: PASS / PASS_WITH_GAPS / FAIL
+- Graph quality verdict: PASS / PASS_WITH_GAPS / N/A
+
+Unresolved gaps:
+1. [GAP-001] ...
+
+Available decisions:
+1. Proceed to Phase 1 with gaps documented
+2. Re-run targeted analysis on specific gaps
+3. Answer open questions now
+4. Mark specific gaps as intentionally out of scope
+```
