@@ -36,6 +36,7 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 - `docs/indexing/grounding-policy.md` — No Evidence, No Claim contract for Phase 0 agents
 - `docs/indexing/evidence-ledger-schema.md` — central evidence ledger schema and citation rules
 - `docs/indexing/large-file-policy.md` — large file outline/chunk/evidence strategy and thresholds
+- Bronze KB builder scripts in `claude-catalog/scripts/indexing/`: `build_index_manifest.py`, `build_file_inventory.py`, `build_symbol_index.py`, `build_import_graph.py`, `build_config_env_index.py`, `build_io_boundaries.py`, `build_test_inventory.py`, `build_large_file_index.py` — deterministic scripts that produce `bronze/` KB artifacts with no external dependencies
 - `technical-evidence-auditor` sub-agent: always-ON Wave 3b auditor for Phase 2; validates evidence grounding (every finding must have evidence_ids, high/critical must be verified), AS-IS purity, separation of concerns; produces PASS/PASS_WITH_GAPS/FAIL verdict
 - `functional-traceability-auditor` sub-agent: always-ON Wave 3b auditor for Phase 1; validates evidence traceability (all confirmed UCs must have evidence_ids), negative space (UI surfaces → UC mapping), and AS-IS purity; produces PASS/PASS_WITH_GAPS/FAIL verdict
 - `indexing-auditor` sub-agent: reads Bronze/Silver/Gold KB and evidence-ledger.jsonl to find coverage gaps, orphan files, large files without chunk coverage, AS-IS purity violations; produces PASS/PASS_WITH_GAPS/FAIL verdict before Phase 0 HITL
