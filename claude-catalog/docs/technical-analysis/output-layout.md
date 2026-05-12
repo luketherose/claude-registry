@@ -41,16 +41,22 @@ docs/analysis/02-technical/
 │   ├── severity-matrix.md
 │   └── remediation-priority.md
 ├── 14-unresolved-questions.md             (you — aggregated)
+├── normalized/                            (new — JSONL machine-readable artifacts)
+├── raw/                                   (new — per-agent raw JSONL before normalization)
+├── final/                                 (new — analysis-quality-summary.md after auditor)
 ├── _meta/
 │   ├── manifest.json                      (you — run history)
 │   ├── risk-register.json                 (risk-synthesizer)
 │   ├── risk-register.csv                  (risk-synthesizer)
 │   ├── dependencies.json                  (dependency-security-analyst — SBOM-lite)
-│   └── challenger-report.md               (technical-analysis-challenger)
+│   ├── challenger-report.md               (technical-analysis-challenger)
+│   └── technical-evidence-report.md       (new — technical-evidence-auditor)
 └── _exports/
     ├── 02-technical-report.pdf            (document-creator)
     └── 02-technical-deck.pptx             (presentation-creator)
 ```
+
+Reference `docs/technical-analysis/normalized-output-schema.md` for JSONL schemas.
 
 Sub-agents must not write outside `docs/analysis/02-technical/`. Verify after each dispatch by listing modified files.
 

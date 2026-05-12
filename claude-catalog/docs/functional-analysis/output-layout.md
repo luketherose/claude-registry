@@ -28,13 +28,19 @@ docs/analysis/01-functional/
 ├── 12-implicit-logic.md         (implicit-logic-analyst)
 ├── 13-traceability.md           (you — generated mechanically from IDs)
 ├── 14-unresolved-questions.md   (you — aggregated, single file)
+├── normalized/                  (new — JSONL machine-readable artifacts)
+├── raw/                         (new — per-agent raw JSONL before normalization)
+├── final/                       (new — analysis-quality-summary.md after auditor)
 ├── _meta/
 │   ├── manifest.json            (run history, status per phase)
-│   └── challenger-report.md     (challenger — opt-in, only if invoked)
+│   ├── challenger-report.md     (challenger — opt-in, only if invoked)
+│   └── functional-traceability-report.md  (new — functional-traceability-auditor)
 └── _exports/
     ├── 01-functional-report.pdf  (document-creator — Accenture-branded)
     └── 01-functional-deck.pptx   (presentation-creator — Accenture-branded)
 ```
+
+Reference `docs/functional-analysis/normalized-output-schema.md` for JSONL schemas.
 
 Sub-agents must not write outside `docs/analysis/01-functional/`. Verify after each dispatch by listing modified files.
 
