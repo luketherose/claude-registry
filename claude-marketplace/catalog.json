@@ -1504,7 +1504,7 @@
     },
     {
       "name": "business-logic-analyst",
-      "version": "0.2.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1524,7 +1524,7 @@
         "business-logic",
         "domain"
       ],
-      "published": "2026-04-29",
+      "published": "2026-05-12",
       "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
