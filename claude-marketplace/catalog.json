@@ -1750,7 +1750,7 @@
     {
       "name": "refactoring-supervisor",
       "display_name": "Application Replatforming",
-      "version": "3.0.0",
+      "version": "3.1.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1784,7 +1784,7 @@
         "orchestrator",
         "human-in-the-loop"
       ],
-      "published": "2026-05-01",
+      "published": "2026-05-12",
       "changelog": "Wave 3 BE step 2 diagram updated: data-mapper now emits Liquibase YAML changelogs (Flyway removed everywhere in the registry)."
     },
     {
