@@ -1,12 +1,12 @@
-# Phase 1 — Normalized Output Schema (JSONL Artifacts)
+# Phase 1 — Normalized output schemas
 
 > Reference doc for `functional-analysis-supervisor` and Phase 1 sub-agents. Read at runtime when writing JSONL artifacts to `docs/analysis/01-functional/normalized/` or `raw/`.
 
 ## Purpose
 
-Alongside the existing numbered markdown files, Phase 1 now produces structured JSONL artifacts in `docs/analysis/01-functional/normalized/` that are machine-readable, citeable, and validated by `validate_functional_analysis.py`. These artifacts are the authoritative source for downstream phases: Phase 3 (baseline testing) consumes `use-case-candidates.jsonl` to derive test targets; Phase 4 (refactoring) consumes `feature-candidates.jsonl` and `business-rules.jsonl`. Final markdown reports must be generated FROM normalized JSONL, not independently.
+---
 
-## Directory layout
+## `normalized/use-case-candidates.jsonl`
 
 ```
 docs/analysis/01-functional/
@@ -62,7 +62,9 @@ Only `confirmed` UCs can be consumed by Phase 3 as test targets; `candidate_not_
 
 ## `normalized/feature-candidates.jsonl`
 
-One JSON object per line. Each object represents a single feature candidate.
+## `normalized/feature-candidates.jsonl`
+
+One record per feature.
 
 ```json
 {
@@ -83,7 +85,9 @@ One JSON object per line. Each object represents a single feature candidate.
 
 ## `normalized/actor-candidates.jsonl`
 
-One JSON object per line. Each object represents a single actor candidate.
+## `normalized/actor-candidates.jsonl`
+
+One record per actor.
 
 ```json
 {
@@ -103,7 +107,9 @@ One JSON object per line. Each object represents a single actor candidate.
 
 ## `normalized/business-rules.jsonl`
 
-One JSON object per line. Each object represents a single business rule extracted from the AS-IS system.
+## `normalized/business-rules.jsonl`
+
+One record per business rule.
 
 ```json
 {
@@ -158,19 +164,32 @@ Each raw file: one record per finding, same fields as the normalized equivalent 
 
 ## `normalized/uc-evidence-matrix.csv`
 
-CSV with the following columns:
+## `raw/` files
 
-```
-uc_id,title,status,evidence_count,evidence_ids,confidence
-```
+One JSONL per sub-agent (pre-normalization):
 
-One row per use case. `evidence_ids` is a semicolon-separated list within the CSV cell.
+- `raw/ui-surface-findings.jsonl` — ui-surface-analyst raw output
+- `raw/io-catalog-findings.jsonl` — io-catalog-analyst raw output
+- `raw/user-flow-findings.jsonl` — user-flow-analyst raw output
+- `raw/implicit-logic-findings.jsonl` — implicit-logic-analyst raw output
 
 ---
 
 ## `normalized/functional-traceability-audit.json`
 
-Single JSON object (not JSONL) representing the output of the functional-traceability-auditor.
+---
+
+## `normalized/uc-evidence-matrix.csv`
+
+Columns: `uc_id, title, evidence_count, has_evidence (true/false), inference_level, status`
+
+One row per use case. Produced by functional-traceability-auditor.
+
+---
+
+## `normalized/functional-traceability-audit.json`
+
+Schema (see `functional-traceability-auditor` for the full spec — this is the output it produces):
 
 ```json
 {
@@ -190,7 +209,7 @@ Single JSON object (not JSONL) representing the output of the functional-traceab
 }
 ```
 
-`negative_space_findings`: areas of the UI or codebase with no corresponding UC — potential missing coverage. `as_is_purity_violations`: uses of TO-BE terminology detected in AS-IS artifacts.
+---
 
 ---
 

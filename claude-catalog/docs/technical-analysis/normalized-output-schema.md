@@ -1,12 +1,12 @@
-# Phase 2 — Normalized Output Schema (JSONL Artifacts)
+# Phase 2 — Normalized output schemas
 
 > Reference doc for `technical-analysis-supervisor` and Phase 2 sub-agents. Read at runtime when writing JSONL artifacts to `docs/analysis/02-technical/normalized/` or `raw/`.
 
 ## Purpose
 
-Alongside the existing numbered markdown files, Phase 2 now produces structured JSONL artifacts in `docs/analysis/02-technical/normalized/` that are machine-readable, citeable, and validated by `validate_technical_analysis.py`. These artifacts are the authoritative source for downstream phases: Phase 4 (refactoring) consumes `technical-findings.jsonl` and `risk-register.jsonl` to drive remediation prioritisation. Final markdown reports must be generated FROM normalized JSONL, not independently.
+---
 
-## Directory layout
+## `normalized/technical-findings.jsonl`
 
 ```
 docs/analysis/02-technical/
@@ -125,19 +125,36 @@ Each raw file uses the same schema as `technical-findings.jsonl` but with `statu
 
 ## `normalized/risk-evidence-matrix.csv`
 
-CSV with the following columns:
+## `raw/` files
 
-```
-risk_id,title,severity,evidence_count,evidence_ids,affected_uc_ids
-```
+One JSONL per W1 sub-agent:
 
-One row per risk. `evidence_ids` and `affected_uc_ids` are semicolon-separated lists within their CSV cells.
+- `raw/code-quality-findings.jsonl`
+- `raw/state-runtime-findings.jsonl`
+- `raw/dependency-security-findings.jsonl`
+- `raw/data-access-findings.jsonl`
+- `raw/integration-findings.jsonl`
+- `raw/performance-findings.jsonl`
+- `raw/resilience-findings.jsonl`
+- `raw/security-findings.jsonl`
 
 ---
 
 ## `normalized/technical-evidence-audit.json`
 
-Single JSON object (not JSONL) representing the output of the technical-evidence-auditor.
+---
+
+## `normalized/risk-evidence-matrix.csv`
+
+Columns: `risk_id, title, severity, finding_count, evidence_count, has_verified_evidence (true/false)`
+
+One row per risk. Produced by technical-evidence-auditor.
+
+---
+
+## `normalized/technical-evidence-audit.json`
+
+Schema (produced by `technical-evidence-auditor`):
 
 ```json
 {
@@ -155,13 +172,15 @@ Single JSON object (not JSONL) representing the output of the technical-evidence
 }
 ```
 
-`as_is_purity_violations`: uses of TO-BE terminology detected in AS-IS finding statements.
+---
 
 ---
 
-## Analysis quality summary
+```markdown
+# Analysis Quality Summary — Phase 2
 
-Phase 2 must produce a `docs/analysis/02-technical/final/analysis-quality-summary.md` file after the auditor completes. Required metrics:
+Generated: <ISO-8601>
+Verdict: PASS | PASS_WITH_GAPS | FAIL
 
 | Metric | Description |
 |---|---|
