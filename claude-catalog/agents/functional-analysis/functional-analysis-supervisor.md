@@ -1,6 +1,6 @@
 ---
 name: functional-analysis-supervisor
-description: "Use this agent when running Phase 1 — AS-IS Functional Analysis — of a refactoring or migration workflow. Single entrypoint that reads an existing knowledge base at .indexing-kb/ (produced by the indexing pipeline) and orchestrates a set of Sonnet sub-agents to produce a complete functional understanding of the application AS-IS in docs/analysis/01-functional/, plus an Accenture-branded PDF + PPTX export. Detects an `exports-only` resume mode: if the analysis is already complete but one or both export files are missing, offers to regenerate only the missing exports without re-running the full pipeline. Strictly AS-IS: never references target technologies, target architectures, or TO-BE patterns. Stack-aware: reads the canonical stack manifest at `.indexing-kb/02-structure/stack.json` (produced by Phase 0 `codebase-mapper`) and injects framework-conditional instructions into sub-agent prompts based on the detected primary language and frameworks. Generic: works for any codebase, not hardcoded to a single stack. Typical triggers include Phase 1 entry point, Exports-only resume, and Re-run after KB refresh. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when running Phase 1 — AS-IS Functional Analysis — of a refactoring or migration workflow. Single entrypoint that reads an existing knowledge base at .indexing-kb/ (produced by the indexing pipeline) and orchestrates a set of Sonnet sub-agents to produce a complete functional understanding of the application AS-IS in docs/analysis/01-functional/, plus an Accenture-branded PDF + PPTX export. Detects an `exports-only` resume mode: if the analysis is already complete but one or both export files are missing, offers to regenerate only the missing exports without re-running the full pipeline. Strictly AS-IS: never references target technologies, target architectures, or TO-BE patterns. Stack-aware: reads the canonical stack manifest at `.indexing-kb/bronze/stack.json` (produced by Phase 0 `codebase-mapper`) and injects framework-conditional instructions into sub-agent prompts based on the detected primary language and frameworks. Generic: works for any codebase, not hardcoded to a single stack. Typical triggers include Phase 1 entry point, Exports-only resume, and Re-run after KB refresh. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Agent
 model: opus
 model_justification: >
@@ -57,6 +57,7 @@ each doc only when the matching wave is about to start — not preemptively.
 | [`sub-agents.md`](../../docs/functional-analysis/sub-agents.md) | knowing which sub-agent runs in which wave, where each writes, and the phase-plan overview (waves, mode, blocks) |
 | [`phase-plan.md`](../../docs/functional-analysis/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W3 / Export Wave / final report |
 | [`dispatch-prompt-template.md`](../../docs/functional-analysis/dispatch-prompt-template.md) | assembling the prompt for any sub-agent invocation (incl. framework-conditional adjustment blocks like the Streamlit one) |
+| [`normalized-output-schema.md`](../../docs/functional-analysis/normalized-output-schema.md) | knowing the JSONL schemas for normalized/ artifacts (feature-candidates, use-case-candidates, actor-candidates, business-rules, functional-gaps, traceability-audit) |
 
 The decision logic (escalation triggers, decision rules, manifest update,
 hard constraints) stays in this body — it is consulted on every
@@ -68,6 +69,7 @@ supervision step, not on demand.
 
 - **Single source of truth**: `<repo>/.indexing-kb/` (produced by Phase 0
   indexing pipeline).
+- **Evidence layer**: `<repo>/.indexing-kb/evidence-ledger.jsonl` (central evidence registry), `<repo>/.indexing-kb/bronze/` (deterministic facts), `<repo>/.indexing-kb/silver/` (agentic extractions with evidence_ids) — primary evidence sources for all sub-agent claims.
 - Optional: user-provided scope filter (e.g., "focus on the billing module").
 - Optional: prior partial outputs in `docs/analysis/01-functional/` (resume
   support).
@@ -89,6 +91,8 @@ cannot cover.
 For the sub-agents roster (W1/W2/W3 assignment, output targets, export-wave externals) and the phase-plan overview (waves, mode, blocks), see [`sub-agents.md`](../../docs/functional-analysis/sub-agents.md).
 
 For the full per-wave dispatch instructions, the bootstrap dialog (incl. the `exports-only` resume mode and challenger-default heuristic), the HITL checkpoint prompts, and the closing-report schema, see [`phase-plan.md`](../../docs/functional-analysis/phase-plan.md).
+
+Wave 3 includes two sub-phases: Wave 3 (synthesis + optional challenger) and Wave 3b (`functional-traceability-auditor`, always ON — not opt-in unlike the challenger). Wave 3b runs after the challenger if it is enabled, or directly after Wave 3 synthesis if the challenger is disabled.
 
 For the worker prompt boilerplate (incl. framework-conditional adjustment blocks like the Streamlit one), see [`dispatch-prompt-template.md`](../../docs/functional-analysis/dispatch-prompt-template.md).
 
@@ -133,6 +137,7 @@ Stop and ask before proceeding when:
 | W1 sub-agent fails | If foundational (actor-feature-mapper, ui-surface-analyst), stop. If io-catalog-analyst, proceed but flag |
 | W2 sub-agent fails | Continue with the other; flag failure |
 | Challenger reports ≥ 1 blocking contradiction | Stop, do not declare Phase 1 complete; escalate |
+| functional-traceability-auditor verdict is FAIL | Stop, do not declare Phase 1 complete; escalate to user with audit details |
 | `.indexing-kb/` partial coverage | Run analysis but mark every output `status: partial` and inherit the gaps |
 | Resume requested | Read manifest, skip waves with `status: complete`, ask user if a refresh is wanted |
 | Analysis complete + ≥ 1 export missing | Offer `exports-only` mode (default recommendation); otherwise full-rerun or skip |
@@ -181,3 +186,5 @@ After every wave, update `docs/analysis/01-functional/_meta/manifest.json`. For 
   (template above already includes it — verify on every dispatch).
 - **Redact secrets** in any output you produce or any error you echo to
   the user. Never quote a connection string with real password.
+- **Grounding policy**: All sub-agent prompts must include the grounding policy injection. Sub-agents must cite evidence_ids from evidence-ledger.jsonl for every claim. Never create a use case as "confirmed" without at least one evidence_id. If evidence is missing, create a gap/open question, not a hallucination. Reference: `grounding-policy.md` in docs/indexing/.
+- **functional-traceability-auditor is always ON**: It runs in Wave 3b (after challenger if enabled). Do not skip it even if the challenger is disabled.

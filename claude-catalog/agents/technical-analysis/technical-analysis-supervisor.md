@@ -60,6 +60,7 @@ each doc only when the matching wave is about to start — not preemptively.
 | [`dispatch-mode.md`](../../docs/technical-analysis/dispatch-mode.md) | deciding the W1 dispatch mode (parallel / batched / sequential) and the batching plan |
 | [`phase-plan.md`](../../docs/technical-analysis/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W3 / Export Wave / final report |
 | [`dispatch-prompt-template.md`](../../docs/technical-analysis/dispatch-prompt-template.md) | assembling the prompt for any sub-agent invocation (incl. Streamlit-aware adjustments block) |
+| [`normalized-output-schema.md`](../../docs/technical-analysis/normalized-output-schema.md) | knowing the JSONL schemas for normalized/ artifacts (technical-findings, risk-register, risk-evidence-matrix, technical-gaps, technical-evidence-audit) |
 
 The decision logic (escalation triggers, decision rules, drift check,
 manifest update, hard constraints) stays in this body — it is consulted
@@ -73,6 +74,7 @@ on every supervision step, not on demand.
 - **Recommended cross-reference**: `<repo>/docs/analysis/01-functional/`
   (Phase 1 output) — used by `risk-synthesizer` to map technical risks
   back to features and use cases.
+- **Evidence layer**: `<repo>/.indexing-kb/evidence-ledger.jsonl` (central evidence registry), `<repo>/.indexing-kb/bronze/` (deterministic facts), `<repo>/.indexing-kb/silver/` (agentic extractions with evidence_ids) — primary evidence sources for all technical findings.
 - Optional: user-provided scope filter (e.g., "skip the migrations folder").
 - Optional: prior partial outputs in `docs/analysis/02-technical/` (resume
   support).
@@ -95,7 +97,7 @@ per-agent) from source code for narrow patterns.
 
 ## Sub-agents and phase plan
 
-11 sub-agents in 3 waves (8 W1 analysts → 1 W2 synthesizer → 1 W3 challenger), plus an export wave (`document-creator` + `presentation-creator`). For the full roster, output targets, and the phase-plan overview table, read [`sub-agents.md`](../../docs/technical-analysis/sub-agents.md). For the per-wave dispatch instructions, the bootstrap dialog (incl. the `exports-only` resume mode), the HITL checkpoint, and the closing-report schema, read [`phase-plan.md`](../../docs/technical-analysis/phase-plan.md).
+12 sub-agents in 3+ waves (8 W1 analysts → 1 W2 synthesizer → 1 W3 challenger → 1 W3b technical-evidence-auditor, always ON), plus an export wave (`document-creator` + `presentation-creator`). Wave 3b (`technical-evidence-auditor`) always runs after Wave 3 (challenger), or after Wave 2 if the challenger is disabled. For the full roster, output targets, and the phase-plan overview table, read [`sub-agents.md`](../../docs/technical-analysis/sub-agents.md). For the per-wave dispatch instructions, the bootstrap dialog (incl. the `exports-only` resume mode), the HITL checkpoint, and the closing-report schema, read [`phase-plan.md`](../../docs/technical-analysis/phase-plan.md).
 
 ---
 
@@ -135,6 +137,7 @@ Stop and ask before proceeding when:
 | W1 worker fails (other) | Continue with the rest; flag failure |
 | Synthesizer reports orphan findings | Include in unresolved questions, do not auto-resolve |
 | Challenger reports ≥ 1 blocking contradiction | Stop, do not declare Phase 2 complete; escalate |
+| technical-evidence-auditor verdict is FAIL | Stop, do not declare Phase 2 complete; escalate to user with audit details |
 | `.indexing-kb/` partial coverage | Run analysis but mark every output `status: partial` and inherit gaps |
 | Resume requested | Read manifest, skip waves with `status: complete`, ask if refresh wanted |
 | Analysis complete + ≥ 1 export missing | Offer `exports-only` mode (default recommendation); otherwise full-rerun or skip |
@@ -203,3 +206,32 @@ After every wave, update `docs/analysis/02-technical/_meta/manifest.json` per th
   (48 accidental files, executed `store` command via redirect).
   This rule MUST be propagated to every sub-agent dispatch prompt
   (template above already includes it — verify on every dispatch).
+- **Grounding policy**: All sub-agent prompts must include the grounding policy injection. Every technical finding must cite at least one evidence_id from evidence-ledger.jsonl. High/critical findings must have evidence_ids AND validation.status of verified or requires_validation (never empty). Reference: `grounding-policy.md` in docs/indexing/.
+- **technical-evidence-auditor is always ON**: Runs in Wave 3b after challenger (or after Wave 2 if challenger is disabled).
+
+---
+
+## HITL gate — Phase 2 completion
+
+After Wave 3b completes and all gap closure steps have been attempted, post this checkpoint to the user before declaring Phase 2 complete:
+
+```
+Phase 2 completed.
+
+Summary:
+- X findings confirmed (N critical, M high, P medium, Q low)
+- Y candidates, Z require validation
+- Large file chunks cited in findings: A / B relevant chunks
+- AS-IS purity violations: 0
+- Evidence auditor verdict: PASS / PASS_WITH_GAPS / FAIL
+- Challenger verdict: PASS / PASS_WITH_GAPS / N/A
+
+Unresolved gaps:
+1. [GAP-001] ...
+
+Available decisions:
+1. Proceed with gaps documented
+2. Re-run targeted analysis on specific gaps
+3. Answer open questions now
+4. Mark specific gaps as intentionally out of scope
+```

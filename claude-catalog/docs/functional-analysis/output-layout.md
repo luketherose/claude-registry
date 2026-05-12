@@ -28,15 +28,37 @@ docs/analysis/01-functional/
 ├── 12-implicit-logic.md         (implicit-logic-analyst)
 ├── 13-traceability.md           (you — generated mechanically from IDs)
 ├── 14-unresolved-questions.md   (you — aggregated, single file)
+├── normalized/                  (new — JSONL machine-readable artifacts)
+├── raw/                         (new — per-agent raw JSONL before normalization)
+├── final/                       (new — analysis-quality-summary.md after auditor)
 ├── _meta/
 │   ├── manifest.json            (run history, status per phase)
-│   └── challenger-report.md     (challenger — opt-in, only if invoked)
+│   ├── challenger-report.md     (challenger — opt-in, only if invoked)
+│   └── functional-traceability-report.md  (new — functional-traceability-auditor)
 └── _exports/
     ├── 01-functional-report.pdf  (document-creator — Accenture-branded)
     └── 01-functional-deck.pptx   (presentation-creator — Accenture-branded)
 ```
 
+Reference `docs/functional-analysis/normalized-output-schema.md` for JSONL schemas.
+
 Sub-agents must not write outside `docs/analysis/01-functional/`. Verify after each dispatch by listing modified files.
+
+## Normalized JSONL artifacts
+
+For full schemas of the JSONL files in `normalized/` and `raw/`, see [`normalized-output-schema.md`](../../docs/functional-analysis/normalized-output-schema.md).
+
+Key schemas in brief:
+
+**use-case-candidates.jsonl** — one record per use case:
+- `uc_id`, `title`, `status` (confirmed | candidate_not_confirmed | requires_human_confirmation)
+- `actors`, `trigger`, `main_flow`, `alternative_flows`, `business_rules`
+- `evidence_ids` (required — must cite EV-NNNNNN from evidence-ledger.jsonl)
+- `source_confidence` (high | medium | low), `inference_level` (direct | derived | speculative)
+- `unknowns` (open questions)
+
+**functional-gaps.jsonl** — one record per gap:
+- `gap_id`, `category`, `description`, `blocking` (bool), `source_agent`
 
 ## Frontmatter contract (every output)
 

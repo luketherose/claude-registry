@@ -41,18 +41,51 @@ docs/analysis/02-technical/
 │   ├── severity-matrix.md
 │   └── remediation-priority.md
 ├── 14-unresolved-questions.md             (you — aggregated)
+├── normalized/                            (JSONL machine-readable artifacts)
+│   ├── technical-findings.jsonl           (risk-synthesizer, merged from W1)
+│   ├── risk-register.jsonl                (risk-synthesizer)
+│   ├── risk-evidence-matrix.csv           (risk-synthesizer)
+│   ├── technical-gaps.jsonl               (all sub-agents)
+│   └── technical-evidence-audit.json      (technical-evidence-auditor)
+├── raw/                                   (per-agent raw JSONL before normalization)
+│   ├── code-quality-findings.jsonl
+│   ├── state-runtime-findings.jsonl
+│   ├── dependency-security-findings.jsonl
+│   ├── data-access-findings.jsonl
+│   ├── integration-findings.jsonl
+│   ├── performance-findings.jsonl
+│   ├── resilience-findings.jsonl
+│   └── security-findings.jsonl
+├── final/                                 (analysis-quality-summary.md after auditor)
 ├── _meta/
 │   ├── manifest.json                      (you — run history)
 │   ├── risk-register.json                 (risk-synthesizer)
 │   ├── risk-register.csv                  (risk-synthesizer)
 │   ├── dependencies.json                  (dependency-security-analyst — SBOM-lite)
-│   └── challenger-report.md               (technical-analysis-challenger)
+│   ├── challenger-report.md               (technical-analysis-challenger)
+│   └── technical-evidence-report.md       (technical-evidence-auditor)
 └── _exports/
     ├── 02-technical-report.pdf            (document-creator)
     └── 02-technical-deck.pptx             (presentation-creator)
 ```
 
+Reference `docs/technical-analysis/normalized-output-schema.md` for JSONL schemas.
+
 Sub-agents must not write outside `docs/analysis/02-technical/`. Verify after each dispatch by listing modified files.
+
+## Normalized JSONL artifacts
+
+For full schemas, see [`normalized-output-schema.md`](../../docs/technical-analysis/normalized-output-schema.md).
+
+**technical-findings.jsonl** (merged by risk-synthesizer from all W1 raw JSONL):
+- `finding_id` (TECH-CATEG-NNN), `category`, `severity`, `confidence`
+- `evidence_ids` (required — must cite EV-NNNNNN from evidence-ledger.jsonl)
+- `validation.type`, `validation.status` (verified | not_verified | requires_validation)
+- `status` (confirmed | candidate | requires_validation | rejected)
+- `affected_components`, `affected_use_cases` (from Phase 1 if available)
+- `recommended_remediation_phase`
+
+High/critical findings: `evidence_ids` MUST be non-empty AND `validation.status` must not be empty.
 
 ## Frontmatter contract (every output)
 

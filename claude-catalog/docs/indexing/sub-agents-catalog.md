@@ -89,4 +89,20 @@ by listing modified files.
 | `data-flow-analyst` | `silver/data-flows.jsonl`, `silver/integration-points.jsonl`, `bronze/config-env-index.jsonl`, `bronze/io-boundaries.jsonl` |
 | `business-logic-analyst` | `silver/business-rules.jsonl`, `silver/validation-rules.jsonl`, `silver/state-machines.jsonl` |
 | `synthesizer` | `gold/system-overview.md`, `gold/bounded-context-hypothesis.md`, `gold/complexity-hotspots.md`, `gold/unresolved-gaps.md` |
-| `indexing-auditor` | `gold/coverage-report.md`, `gold/indexing-audit.md`, `gold/indexing-audit.json`, `gold/analysis-quality-summary.md` |
+| `indexing-auditor` | `gold/indexing-audit.md`, `gold/indexing-audit.json` (read-only quality gate) |
+
+---
+
+## Phase 0 workflow steps
+
+Sub-agents run in waves. The supervisor dispatches them in the order below and
+waits for each wave to complete before advancing.
+
+| Wave | Sub-agent(s) | Notes |
+|---|---|---|
+| 1 | `codebase-mapper` | Always first — produces bronze/stack.json used by all later agents |
+| 2 | `dependency-analyzer`, `streamlit-analyzer` (conditional) | Run in parallel |
+| 3 | `module-documenter` (one per package), `data-flow-analyst`, `business-logic-analyst` | Run in parallel |
+| 4 | `synthesizer` | Requires Waves 1–3 complete |
+| 4a | `indexing-auditor` | Run after synthesizer completes. Read-only audit pass — produces gold/indexing-audit.md and gold/indexing-audit.json. Must complete before HITL checkpoint. |
+| HITL | — | Supervisor presents summary to user; user confirms or requests gap closure |

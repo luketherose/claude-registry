@@ -1,7 +1,7 @@
 {
   "_comment": "Team convention \u2014 not an official Claude Code format. This manifest tracks published capabilities.",
   "version": "1.0",
-  "generated": "2026-05-03",
+  "generated": "2026-05-12",
   "repository": "claude-registry",
   "capabilities": [
     {
@@ -1346,7 +1346,7 @@
     },
     {
       "name": "indexing-supervisor",
-      "version": "0.3.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1376,12 +1376,12 @@
         "knowledge-base",
         "legacy"
       ],
-      "published": "2026-04-29",
+      "published": "2026-05-12",
       "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
       "name": "codebase-mapper",
-      "version": "0.2.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1400,12 +1400,12 @@
         "sub-agent",
         "structural"
       ],
-      "published": "2026-04-29",
+      "published": "2026-05-12",
       "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
       "name": "dependency-analyzer",
-      "version": "0.2.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1424,7 +1424,7 @@
         "sub-agent",
         "dependencies"
       ],
-      "published": "2026-04-29",
+      "published": "2026-05-12",
       "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
@@ -1529,7 +1529,7 @@
     },
     {
       "name": "synthesizer",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1548,12 +1548,12 @@
         "sub-agent",
         "synthesis"
       ],
-      "published": "2026-04-26",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
       "name": "functional-analysis-supervisor",
-      "version": "0.3.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1585,7 +1585,7 @@
         "refactoring",
         "streamlit"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "0.3.0: bootstrap detects `exports-only-eligible` state (analysis complete but \u2265 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.2.0: add Export Wave (always ON) \u2014 produces Accenture-branded PDF (`_exports/01-functional-report.pdf`) via document-creator and PPTX (`_exports/01-functional-deck.pptx`) via presentation-creator after Wave 3 synthesis. Adds explicit overwrite confirmation when exports already exist. 0.1.0: initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/"
     },
     {
@@ -1722,7 +1722,7 @@
     },
     {
       "name": "functional-analysis-challenger",
-      "version": "0.1.0",
+      "version": "1.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1744,7 +1744,7 @@
         "adversarial",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
@@ -1789,7 +1789,7 @@
     },
     {
       "name": "technical-analysis-supervisor",
-      "version": "0.2.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1827,7 +1827,7 @@
         "performance",
         "streamlit"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "0.2.0: bootstrap detects `exports-only-eligible` state (analysis complete but \u2265 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.1.0: initial beta release: Phase 2 supervisor with 3 waves (8 W1 workers + W2 synthesizer + W3 challenger) and parallel export wave (PDF + PPTX). Adaptive dispatch mode based on repo size."
     },
     {
@@ -2079,7 +2079,7 @@
     },
     {
       "name": "technical-analysis-challenger",
-      "version": "0.1.0",
+      "version": "1.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2101,7 +2101,7 @@
         "adversarial",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
@@ -3321,6 +3321,79 @@
       ],
       "published": "2026-05-03",
       "changelog": "Initial release - Neutral judge / arbitrator persona for deliberative-decision-engine."
+    },
+    {
+      "name": "technical-evidence-auditor",
+      "version": "1.0.0",
+      "tier": "beta",
+      "status": "active",
+      "description": "Always-ON Wave 3b auditor for Phase 2 Technical Analysis. Validates evidence grounding (every finding must have evidence_ids, high/critical must be verified), AS-IS purity, separation of concerns, and normalized JSONL completeness. Produces PASS/PASS_WITH_GAPS/FAIL verdict.",
+      "file": "beta/technical-analysis/technical-evidence-auditor.md",
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "technical-analysis",
+        "phase2",
+        "quality-gate",
+        "evidence",
+        "auditor"
+      ],
+      "published": "2026-05-12",
+      "changelog": "Published 1.0.0"
+    },
+    {
+      "name": "functional-traceability-auditor",
+      "version": "1.0.0",
+      "tier": "beta",
+      "status": "active",
+      "description": "Always-ON Wave 3b auditor for Phase 1 functional analysis. Validates evidence traceability (confirmed UCs must have evidence_ids), negative space (UI surfaces mapped to UCs), and AS-IS purity (no TO-BE tech references). Produces PASS/PASS_WITH_GAPS/FAIL verdict.",
+      "file": "beta/functional-analysis/functional-traceability-auditor.md",
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "tags": [
+        "functional-analysis",
+        "quality-gate",
+        "traceability",
+        "phase1"
+      ],
+      "published": "2026-05-12",
+      "changelog": "Published 1.0.0"
+    },
+    {
+      "name": "indexing-auditor",
+      "version": "1.0.0",
+      "type": "agent",
+      "tier": "beta",
+      "status": "active",
+      "description": "Read-only quality-gate agent for Phase 0 indexing output. Reads bronze/, silver/, gold/, graph/, and evidence-ledger.jsonl to find coverage gaps, orphan files, large files without chunk coverage, and AS-IS purity violations. Produces gold/indexing-audit.md and gold/indexing-audit.json with a PASS | PASS_WITH_GAPS | FAIL verdict before the Phase 0 HITL checkpoint.",
+      "file": "beta/indexing/indexing-auditor.md",
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
+      "model": "sonnet",
+      "color": "magenta",
+      "tags": [
+        "indexing",
+        "quality-gate",
+        "phase-0",
+        "audit"
+      ],
+      "topic": "indexing",
+      "published": "2026-05-12",
+      "changelog": "Initial release \u2014 Phase 0 coverage and evidence quality gate"
     }
   ]
 }

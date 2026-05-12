@@ -2,13 +2,44 @@
 
 > Reference doc for `functional-analysis-supervisor`. Read at runtime when assembling the prompt for any sub-agent invocation. Includes the framework-conditional adjustment blocks (inject only the blocks whose framework appears in `stack.frameworks`).
 
+## Grounding policy injection
+
+The following block MUST be prepended to every sub-agent dispatch prompt:
+
+```
+## Grounding policy — no evidence, no claim
+
+Every claim you produce must be traceable to an evidence_id from `.indexing-kb/evidence-ledger.jsonl`:
+- Direct code evidence, verified: `confidence: high`, `inference_level: direct`
+- Inferred from multiple indirect signals: `confidence: medium`, `inference_level: derived`
+- Plausible but unverified: `confidence: low`, `inference_level: speculative` — or create a gap
+- No evidence: do NOT make the claim — create a gap/open question in `normalized/functional-gaps.jsonl`
+
+When citing evidence:
+- Write `evidence_ids: ["EV-NNNNNN"]` (from evidence-ledger.jsonl)
+- Cite specific file path + line range, not the file name alone
+- For large files: check `bronze/large-files.jsonl` first; cite `chunk_id` (from `bronze/large-file-chunks.jsonl`), not the whole file
+- NEVER write "from the code it emerges that…" — write the evidence_id instead
+
+You MUST NOT:
+- Use framework knowledge to promote a claim to fact without code evidence
+- Use naming plausibility as proof of business behavior
+- Skip reading a chunk and still claim knowledge of its content
+
+## File output rule
+
+All file content MUST be written via the `Write` tool, NEVER via Bash heredoc/echo/tee/printf>file.
+```
+
+---
+
 ```
 You are the <name> sub-agent in the Phase 1 Functional Analysis pipeline.
 
 Repo root:        <abs-path>
 Knowledge base:   <abs-path>/.indexing-kb/
 Output root:      <abs-path>/docs/analysis/01-functional/
-Stack info (verbatim from .indexing-kb/02-structure/stack.json):
+Stack info (verbatim from .indexing-kb/bronze/stack.json):
   primary_language: <python | java | kotlin | go | rust | csharp | ruby | php | typescript | javascript | …>
   languages:        [<list>]
   frameworks:       [<list — e.g. streamlit, django, fastapi, spring-boot, rails, laravel, angular, nextjs, …>]

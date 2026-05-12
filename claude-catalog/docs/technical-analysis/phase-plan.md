@@ -113,6 +113,29 @@ Dispatch `technical-analysis-challenger`. It performs adversarial review of all 
 
 If the challenger reports ≥ 1 blocking contradiction or AS-IS violation: **stop, do not declare Phase 2 complete; escalate**.
 
+## Wave 3b — technical-evidence-auditor (always ON)
+
+Dispatch after Wave 3 (challenger) completes. If the challenger is disabled, dispatch after Wave 2.
+
+The auditor validates:
+- every finding has `evidence_ids`
+- high/critical findings have `validation.status` of `verified` or `requires_validation`
+- no AS-IS purity violations
+- no unrequested TO-BE architectural recommendations
+
+Read outputs from disk: `normalized/technical-evidence-audit.json` and `_meta/technical-evidence-report.md`.
+
+If verdict is FAIL, do NOT declare Phase 2 complete — escalate to user with the audit details.
+
+## Gap closure loop (before HITL)
+
+Run before the HITL checkpoint and before the Export Wave:
+
+1. Check if `validate_technical_analysis.py` exists in `.github/scripts/`; if so, run it.
+2. Read `normalized/technical-evidence-audit.json` for verdict.
+3. If FAIL: identify auto-resolvable gaps (e.g., findings without severity can be set to `requires_validation`); attempt targeted re-dispatch.
+4. Surface all residual gaps in the HITL summary.
+
 ## Export Wave — Always ON (parallel, single message)
 
 Dispatch in parallel:
