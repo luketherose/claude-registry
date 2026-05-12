@@ -32,6 +32,15 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 - `technical-evidence-auditor` sub-agent: always-ON Wave 3b auditor for Phase 2; validates evidence grounding (every finding must have evidence_ids, high/critical must be verified), AS-IS purity, separation of concerns; produces PASS/PASS_WITH_GAPS/FAIL verdict
 - `functional-traceability-auditor` sub-agent: always-ON Wave 3b auditor for Phase 1; validates evidence traceability (all confirmed UCs must have evidence_ids), negative space (UI surfaces → UC mapping), and AS-IS purity; produces PASS/PASS_WITH_GAPS/FAIL verdict
 - `indexing-auditor` sub-agent: reads Bronze/Silver/Gold KB and evidence-ledger.jsonl to find coverage gaps, orphan files, large files without chunk coverage, AS-IS purity violations; produces PASS/PASS_WITH_GAPS/FAIL verdict before Phase 0 HITL
+- Evidence-first analysis contract: no evidence, no claim across Phases 0–2
+- Bronze/Silver/Gold indexing KB structure replacing numbered directories
+- Central evidence ledger (`evidence-ledger.jsonl`) for cross-phase citation
+- Large file handling: outline→chunk→evidence strategy; large/huge/giant thresholds
+- Bronze KB deterministic scripts (8 scripts in `claude-catalog/scripts/indexing/`)
+- Context graph + context bundle retrieval scripts
+- Normalized JSONL artifact layer for Phases 1 and 2
+- HITL gate now shows validator/auditor/graph verdicts and unresolved gaps
+- Eval scenarios for hallucination, omission, large-file, and graph-orphan traps (`evals/indexing-pipeline-eval.md`)
 - **`guida-operativa.tex`** — sorgente LaTeX della guida operativa completa (v2.0, italiano). Riscrittura integrale del precedente PDF: struttura a 4 parti (Visione d'insieme, Contribuire, Capability, Strumenti di contorno), documenta tutte le 83 capability per area funzionale partendo dalle più complesse (refactoring-supervisor, deliberative-decision-engine, pipeline Phase 0–4), copre hooks, MCP, script operativi, template, governance e anti-pattern. Compilabile con `pdflatex guida-operativa.tex` o `pandoc guida-operativa.tex -o guida-operativa.pdf --pdf-engine=pdflatex`.
 
 ### Changed
@@ -45,6 +54,12 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 - `docs/indexing/phase-plan.md` — adds Phase 4a (indexing-auditor) and gap closure loop
 - `docs/indexing/manifest-spec.md` — updates stack.json canonical path to bronze/stack.json
 - `docs/indexing/sub-agents-catalog.md` — KB layout migrated to Bronze/Silver/Gold/Graph structure; stack.json canonical path updated to bronze/stack.json
+- Phase 0–2 supervisors now require evidence-backed claims; grounding policy injected in all dispatches
+- `stack.json` canonical path: `.indexing-kb/02-structure/stack.json` → `.indexing-kb/bronze/stack.json`
+- Phase 1 functional analysis outputs now include `normalized/` JSONL alongside existing markdown
+- Phase 2 technical analysis outputs now include `normalized/` JSONL alongside existing markdown
+- HITL gates on Phases 0–2 now surface validator/auditor/graph verdicts before advancing
+- `refactoring-supervisor` updated: pre-phase-advancement gate reads auditor/validator verdicts; Phase 4 must consume normalized JSONL artifacts
 - **`deliberative-decision-engine@0.1.0` (beta) — multi-agent debate / deliberative-decision mode.** Top-level orchestrator (opus) that drives a 7-step deliberation pipeline (Step 0 trigger detection + task classification → Step 1 decision framing → Step 2 independent drafts in parallel, anti-anchoring → Step 3 neutral structured evidence summary → Step 4 challenge round (1 or 2) → Step 5 rebuttal round → Step 6 final-decision strategy selection + commit) for complex / high-stakes / irreversible / replatforming-relevant decisions. Two activation paths: explicit user prose trigger via the IT/EN lexicon (`decidi con dibattito`, `usa modalità dibattito`, `usa multi-agente`, `fai criticare la decisione`, `valuta pro e contro`, `fammi una decisione robusta`, `debate mode`, `multi-agent debate`, `deliberative decision`, `red team this decision`, `decision review`, ...) at confidence ≥ 0.7, OR programmatic flag `decisionMode: deliberative` (or `useDeliberativeDecision: true`) in the dispatch JSON. Default policy: 5 personas, 1 challenge round (2 for high/irreversible), Opus tier for every persona, structured evidence summary, mandatory dissent preservation, `auto` strategy selection, `local_transactional` commit by default. Supports five final-decision strategies (`majority_vote`, `confidence_weighted_vote`, `consensus`, `judge_arbitration`, `human_arbitration`) selected per task type, risk level, and unresolved-objection count. Supports four commit protocols (`none`, `local_transactional`, `raft`, `pbft`); `raft` and `pbft` are clean extension points and **must not be faked** — when no adapter is registered, the engine falls back to `local_transactional` and records the gap. Full audit artefact tree at `<repo>/.deliberation-kb/<trace-id>/` (decision brief, drafts, evidence summary, challenge rounds, rebuttals, final decision, manifest, triggers record). Sensitive-content redaction baked in. Hard rule: **never silently fall back to a single-agent answer** when deliberation was requested but cannot complete — fail with a clear failure artefact instead.
 - **`debate-proposer@0.1.0` (beta)** — Primary Architect / Proposer persona (opus) for `deliberative-decision-engine`.
 - **`debate-critic@0.1.0` (beta)** — Skeptical Critic persona (opus); owns assumption-audit, failure-mode enumeration, edge-case sweep, second-order check, evidence audit.

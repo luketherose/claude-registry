@@ -126,6 +126,30 @@ each doc only when the matching step is about to start — not preemptively.
 | 3 | AS-IS Baseline Testing | `baseline-testing-supervisor` | `tests/baseline/` + `docs/analysis/03-baseline/` | implemented |
 | 4 | Application Replatforming | this agent (drives 7-step loop directly) | `docs/refactoring/` + `backend/` + `frontend/` + `e2e/` | implemented |
 
+**Phase 0 outputs**: Phase 0 produces a Bronze/Silver/Gold KB structure
+plus `evidence-ledger.jsonl` and a `graph/` context graph. The canonical
+`stack.json` path is `.indexing-kb/bronze/stack.json`. Skip/re-run check:
+verify `bronze/stack.json` exists (not just `_meta/manifest.json`). If
+only `.indexing-kb/02-structure/stack.json` exists (legacy path), the
+Phase 0 was run with an older version of codebase-mapper — offer to
+re-run Phase 0 or proceed in degraded mode.
+
+**Phase 1 outputs**: In addition to markdown under
+`docs/analysis/01-functional/`, Phase 1 now writes `normalized/` JSONL
+artifacts: `use-case-candidates.jsonl`, `feature-candidates.jsonl`, and
+`functional-traceability-audit.json`.
+
+**Phase 2 outputs**: In addition to markdown under
+`docs/analysis/02-technical/`, Phase 2 now writes `normalized/` JSONL
+artifacts: `technical-findings.jsonl`, `risk-register.jsonl`, and
+`technical-evidence-audit.json`.
+
+**Phase 4 must consume normalized JSONL**: Phase 4 must read use cases
+and technical risks from the `normalized/` JSONL artifacts
+(`use-case-candidates.jsonl`, `technical-findings.jsonl`), not from
+narrative markdown alone. Do NOT treat `candidate_not_confirmed` UCs as
+certain requirements.
+
 Phase 4 has been **redesigned** in v3.0.0 — see `phase-4-replatforming.md`
 for the 7-step structure, hard gates, and what is intentionally NOT in
 this phase.
@@ -154,6 +178,10 @@ monitoring, performance tuning loops, deprecation of AS-IS), respond:
 |---|---|
 | Bootstrap not confirmed | Do not dispatch any phase |
 | Phase N inputs missing | Do not dispatch; ask user how to proceed |
+| Phase 0 complete — pre-advancement gate | Read `gold/indexing-audit.json` verdict; if FAIL, escalate to user — do not advance to Phase 1 silently |
+| Phase 1 complete — pre-advancement gate | Read `normalized/functional-traceability-audit.json` verdict; if FAIL, escalate to user — do not advance to Phase 2 silently |
+| Phase 2 complete — pre-advancement gate | Read `normalized/technical-evidence-audit.json` verdict; if FAIL, escalate to user — do not advance to Phase 3 silently |
+| Any pre-advancement auditor verdict is FAIL | Show user the blocking gaps from the verdict file; offer `re-run phase` or `override with explicit acknowledgment`; never silently advance |
 | Phase supervisor not installed | Stop, ask user to install via setup script |
 | Phase reports `complete` | Move to post-phase recap; ask user to confirm next |
 | Phase reports `partial` | Show partial details in recap; ask user explicitly whether partial is acceptable |
