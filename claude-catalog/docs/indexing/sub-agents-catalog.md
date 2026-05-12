@@ -89,7 +89,7 @@ by listing modified files.
 | `data-flow-analyst` | `silver/data-flows.jsonl`, `silver/integration-points.jsonl`, `bronze/config-env-index.jsonl`, `bronze/io-boundaries.jsonl` |
 | `business-logic-analyst` | `silver/business-rules.jsonl`, `silver/validation-rules.jsonl`, `silver/state-machines.jsonl` |
 | `synthesizer` | `gold/system-overview.md`, `gold/bounded-context-hypothesis.md`, `gold/complexity-hotspots.md`, `gold/unresolved-gaps.md` |
-| `indexing-auditor` | `gold/indexing-audit.md`, `gold/indexing-audit.json` (read-only quality gate) |
+| `indexing-auditor` | `gold/coverage-report.md`, `gold/indexing-audit.md`, `gold/indexing-audit.json`, `gold/analysis-quality-summary.md` |
 
 ---
 
@@ -100,7 +100,7 @@ waits for each wave to complete before advancing.
 
 | Wave | Sub-agent(s) | Notes |
 |---|---|---|
-| 1 | `codebase-mapper` | Always first — produces bronze/stack.json used by all later agents |
+| 1 | `codebase-mapper` | Always first — produces stack.json used by all later agents |
 | 2 | `dependency-analyzer`, `streamlit-analyzer` (conditional) | Run in parallel |
 | 3 | `module-documenter` (one per package), `data-flow-analyst`, `business-logic-analyst` | Run in parallel |
 | 4 | `synthesizer` | Requires Waves 1–3 complete |
