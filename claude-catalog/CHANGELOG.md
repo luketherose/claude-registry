@@ -13,8 +13,8 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ### Added
 - `docs/indexing/context-graph-schema.md` — Evidence-backed Context Graph node/edge schema and context bundle format
-- `docs/functional-analysis/normalized-output-schema.md` — JSONL artifact schemas for Phase 1 normalized outputs
-- `docs/technical-analysis/normalized-output-schema.md` — JSONL artifact schemas for Phase 2 normalized outputs
+- `docs/functional-analysis/normalized-output-schema.md` — JSONL schemas for Phase 1 normalized artifacts (use-case-candidates, feature-candidates, actor-candidates, business-rules, functional-gaps, uc-evidence-matrix, functional-traceability-audit)
+- `docs/technical-analysis/normalized-output-schema.md` — JSONL schemas for Phase 2 normalized artifacts (technical-findings, risk-register, technical-gaps, risk-evidence-matrix, technical-evidence-audit)
 - `docs/indexing/grounding-policy.md` — No Evidence, No Claim contract for Phase 0 agents
 - `docs/indexing/evidence-ledger-schema.md` — central evidence ledger schema and citation rules
 - `docs/indexing/large-file-policy.md` — large file outline/chunk/evidence strategy and thresholds
