@@ -101,7 +101,33 @@ Flag these explicitly because they make migration harder:
 - Use of deprecated `st.experimental_*` APIs
 - Use of `st.rerun()` to force reactivity (signals tight coupling to rerun model)
 
-## Outputs
+## Output targets
+
+| Artifact | Path | Tier |
+|---|---|---|
+| Framework findings (JSONL) | `.indexing-kb/silver/framework-findings.jsonl` | Silver |
+| UI surfaces (JSON) | `.indexing-kb/bronze/ui-surfaces.json` | Bronze — deterministic |
+| Human-readable docs | `.indexing-kb/05-streamlit/` | Human |
+
+## Evidence and grounding
+
+For every Streamlit widget, `session_state` key, cached function, and UI surface:
+- Emit to `bronze/ui-surfaces.json` with exact source file + line
+- Emit evidence records to `evidence-ledger.jsonl` with `kind: ui_surface`
+- For `session_state`: note every read and write location across all pages
+- `silver/framework-findings.jsonl` records must include `evidence_ids`
+
+For every Streamlit page detected:
+- Append an evidence record with `kind: ui_surface` pointing to the page
+  file
+- Write the page entry to `bronze/ui-surfaces.json`
+
+For every `session_state` key, caching decorator, or widget detected:
+- Cite the specific line range in evidence records
+- Do not summarize "the app uses session_state" without citing which keys
+  and which files
+
+## Markdown outputs
 
 ### File 1: `.indexing-kb/05-streamlit/pages.md`
 
@@ -227,7 +253,8 @@ allowed only for read-only inspection. No third path.
 
 - Do not propose Angular equivalents in detail. Indexing only.
 - Do not modify any source file.
-- Do not write outside `.indexing-kb/05-streamlit/`.
+- Do not write outside `.indexing-kb/` (allowed paths:
+  `05-streamlit/`, `silver/`, `bronze/`, and `evidence-ledger.jsonl`).
 - Truncate inline HTML/JS snippets to 80 chars in the KB — full content stays
   in source.
 - **All file output via `Write`**, never via `Bash` heredoc/redirect.
