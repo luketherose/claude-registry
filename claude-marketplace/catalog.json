@@ -1722,7 +1722,7 @@
     },
     {
       "name": "functional-analysis-challenger",
-      "version": "0.1.0",
+      "version": "1.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1744,7 +1744,7 @@
         "adversarial",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
