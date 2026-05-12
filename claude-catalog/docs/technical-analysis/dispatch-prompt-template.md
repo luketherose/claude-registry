@@ -2,6 +2,28 @@
 
 > Reference doc for `technical-analysis-supervisor`. Read at runtime when assembling the prompt for any sub-agent invocation. Includes the Streamlit-aware adjustments block (inject only when stack mode = streamlit).
 
+## Grounding policy — no evidence, no claim
+
+Prepend this block to every W1 sub-agent dispatch prompt:
+
+```
+Every technical finding you produce must cite at least one evidence_id from `.indexing-kb/evidence-ledger.jsonl`:
+- Direct code observation: `confidence: high`, `inference_level: direct`
+- Inferred from multiple signals: `confidence: medium`, `inference_level: derived`
+- Plausible but unverified: `confidence: low`, `inference_level: speculative`
+
+High/critical severity findings MUST have:
+- `evidence_ids` non-empty
+- `validation.status: verified` or `requires_validation` (never empty/null)
+- `validation.type` specifying how it was verified (static_code_review | tool_output | runtime_observation | benchmark)
+
+For large files: check `bronze/large-files.jsonl` first; cite `chunk_id` from `bronze/large-file-chunks.jsonl` instead of the whole file.
+
+Write raw findings to `docs/analysis/02-technical/raw/<analyst-name>-findings.jsonl` BEFORE producing markdown.
+
+File output rule (non-negotiable): all file content MUST be written via the `Write` tool, NEVER via Bash heredoc/echo/tee/printf>file.
+```
+
 ```
 You are the <name> sub-agent in the Phase 2 Technical Analysis pipeline.
 
