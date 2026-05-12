@@ -1553,7 +1553,7 @@
     },
     {
       "name": "functional-analysis-supervisor",
-      "version": "0.3.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1585,7 +1585,7 @@
         "refactoring",
         "streamlit"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "0.3.0: bootstrap detects `exports-only-eligible` state (analysis complete but \u2265 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.2.0: add Export Wave (always ON) \u2014 produces Accenture-branded PDF (`_exports/01-functional-report.pdf`) via document-creator and PPTX (`_exports/01-functional-deck.pptx`) via presentation-creator after Wave 3 synthesis. Adds explicit overwrite confirmation when exports already exist. 0.1.0: initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/"
     },
     {
@@ -3329,9 +3329,20 @@
       "status": "active",
       "description": "Always-ON Wave 3b auditor for Phase 2 Technical Analysis. Validates evidence grounding (every finding must have evidence_ids, high/critical must be verified), AS-IS purity, separation of concerns, and normalized JSONL completeness. Produces PASS/PASS_WITH_GAPS/FAIL verdict.",
       "file": "beta/technical-analysis/technical-evidence-auditor.md",
-      "tools": ["Read", "Glob", "Bash", "Write"],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
       "model": "sonnet",
-      "tags": ["technical-analysis", "phase2", "quality-gate", "evidence", "auditor"],
+      "tags": [
+        "technical-analysis",
+        "phase2",
+        "quality-gate",
+        "evidence",
+        "auditor"
+      ],
       "published": "2026-05-12",
       "changelog": "Published 1.0.0"
     },
@@ -3366,13 +3377,23 @@
       "status": "active",
       "description": "Read-only quality-gate agent for Phase 0 indexing output. Reads bronze/, silver/, gold/, graph/, and evidence-ledger.jsonl to find coverage gaps, orphan files, large files without chunk coverage, and AS-IS purity violations. Produces gold/indexing-audit.md and gold/indexing-audit.json with a PASS | PASS_WITH_GAPS | FAIL verdict before the Phase 0 HITL checkpoint.",
       "file": "beta/indexing/indexing-auditor.md",
-      "tools": ["Read", "Glob", "Bash", "Write"],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
       "model": "sonnet",
       "color": "magenta",
-      "tags": ["indexing", "quality-gate", "phase-0", "audit"],
+      "tags": [
+        "indexing",
+        "quality-gate",
+        "phase-0",
+        "audit"
+      ],
       "topic": "indexing",
       "published": "2026-05-12",
-      "changelog": "Initial release — Phase 0 coverage and evidence quality gate"
+      "changelog": "Initial release \u2014 Phase 0 coverage and evidence quality gate"
     }
   ]
 }

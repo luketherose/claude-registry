@@ -51,7 +51,7 @@ Do NOT use this agent for: writing findings (use the W1 analysts), making fixes,
 
 ---
 
-## Method — six checks
+## Method — seven checks
 
 For each check, list every finding with:
 - **Type**: gap | contradiction | unverified | as-is-violation |
@@ -142,6 +142,12 @@ analysis.
 description.
 
 If stack mode is generic (non-Streamlit), this check is skipped.
+
+### Check 7 — Normalized output audit
+- Verify `normalized/technical-findings.jsonl` exists in `docs/analysis/02-technical/`
+- For all entries: verify `evidence_ids` field exists and is non-empty
+- Verify no finding in the narrative markdown reports (09-synthesis/risk-register.md) is missing a corresponding entry in `normalized/technical-findings.jsonl`
+- Report: count of findings without evidence_ids, count of narrative findings without normalized entry
 
 ---
 
