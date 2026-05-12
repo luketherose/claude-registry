@@ -1915,7 +1915,7 @@
     },
     {
       "name": "data-access-analyst",
-      "version": "0.2.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1937,7 +1937,7 @@
         "data-access",
         "as-is"
       ],
-      "published": "2026-04-30",
+      "published": "2026-05-12",
       "changelog": "Schema-migrations detection list extended (Liquibase / Django / Rails) with explicit note: detection is informational; Phase 4 always rebuilds with Liquibase."
     },
     {
