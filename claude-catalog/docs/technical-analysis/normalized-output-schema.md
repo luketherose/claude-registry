@@ -1,12 +1,39 @@
-# Phase 2 — Normalized output schemas
+# Phase 2 — Normalized Output Schema (JSONL Artifacts)
 
 > Reference doc for `technical-analysis-supervisor` and Phase 2 sub-agents. Read at runtime when writing JSONL artifacts to `docs/analysis/02-technical/normalized/` or `raw/`.
 
----
+## Purpose
+
+Alongside the existing numbered markdown files, Phase 2 now produces structured JSONL artifacts in `docs/analysis/02-technical/normalized/` that are machine-readable, citeable, and validated by `validate_technical_analysis.py`. These artifacts are the authoritative source for downstream phases: Phase 4 (refactoring) consumes `technical-findings.jsonl` and `risk-register.jsonl` to drive remediation prioritisation. Final markdown reports must be generated FROM normalized JSONL, not independently.
+
+## Directory layout
+
+```
+docs/analysis/02-technical/
+  raw/
+    code-quality-findings.jsonl
+    performance-findings.jsonl
+    resilience-findings.jsonl
+    dependency-security-findings.jsonl
+    integration-findings.jsonl
+    data-access-findings.jsonl
+    security-findings.jsonl
+    state-runtime-findings.jsonl
+  normalized/
+    technical-findings.jsonl
+    risk-register.jsonl
+    risk-evidence-matrix.csv
+    technical-gaps.jsonl
+    technical-evidence-audit.json
+  _meta/
+    technical-evidence-report.md  (technical-evidence-auditor)
+```
 
 ## `normalized/technical-findings.jsonl`
 
 Merged by risk-synthesizer from all W1 raw JSONL. One record per finding.
+
+`finding_id` convention: `TECH-<CATEGORY_ABBREV>-<NNN>` where category abbreviations are `PERF`, `SEC`, `RES`, `CQ`, `DA`, `INT`, `STATE`, `DEP`.
 
 ```json
 {
@@ -38,7 +65,7 @@ Merged by risk-synthesizer from all W1 raw JSONL. One record per finding.
 
 ## `normalized/risk-register.jsonl`
 
-One record per risk (derived from findings).
+One JSON object per line aggregating one or more technical findings into a risk entry.
 
 ```json
 {
@@ -52,7 +79,7 @@ One record per risk (derived from findings).
   "affected_components": ["module/path.py"],
   "affected_use_cases": ["UC-004"],
   "evidence_ids": ["EV-000123"],
-  "remediation_priority": 1,
+  "remediation_priority": "P1 | P2 | P3 | backlog",
   "status": "open | acknowledged | mitigated"
 }
 ```
@@ -61,15 +88,17 @@ One record per risk (derived from findings).
 
 ## `normalized/technical-gaps.jsonl`
 
-One record per gap.
+One JSON object per line representing an unresolved gap in the technical analysis.
 
 ```json
 {
   "gap_id": "TGAP-001",
   "category": "missing_evidence | unanalyzed_component | tool_failure | large_file_uncovered | unknown_integration",
-  "blocking": true,
-  "description": "What is unknown",
+  "description": "What is unknown or unverifiable",
+  "affected_area": "performance | security | resilience | code-quality | data-access | integration | state | dependency",
   "affected_components": ["path/to/file.py"],
+  "blocking": true,
+  "open_question": "Specific question to resolve this gap",
   "source_agent": "security-analyst",
   "auto_resolvable": false
 }
@@ -79,7 +108,7 @@ One record per gap.
 
 ## `raw/` files
 
-One JSONL per W1 sub-agent:
+One JSONL per W1 sub-agent (pre-normalization):
 
 - `raw/code-quality-findings.jsonl`
 - `raw/state-runtime-findings.jsonl`
@@ -90,64 +119,65 @@ One JSONL per W1 sub-agent:
 - `raw/resilience-findings.jsonl`
 - `raw/security-findings.jsonl`
 
-Each raw file uses the same schema as `technical-findings.jsonl` but with `status: candidate` (not yet merged/confirmed by synthesizer).
+Each raw file uses the same schema as `technical-findings.jsonl` but with `status: candidate` (not yet merged/confirmed by risk-synthesizer).
 
 ---
 
 ## `normalized/risk-evidence-matrix.csv`
 
-Columns: `risk_id, title, severity, finding_count, evidence_count, has_verified_evidence (true/false)`
+CSV with the following columns:
 
-One row per risk. Produced by technical-evidence-auditor.
+```
+risk_id,title,severity,evidence_count,evidence_ids,affected_uc_ids
+```
+
+One row per risk. `evidence_ids` and `affected_uc_ids` are semicolon-separated lists within their CSV cells.
 
 ---
 
 ## `normalized/technical-evidence-audit.json`
 
-Schema (produced by `technical-evidence-auditor`):
+Single JSON object (not JSONL) representing the output of the technical-evidence-auditor.
 
 ```json
 {
-  "run_id": "<ISO-8601>",
+  "audit_id": "TEA-001",
+  "run_at": "ISO-8601",
   "agent": "technical-evidence-auditor",
   "verdict": "PASS | PASS_WITH_GAPS | FAIL",
-  "evidence_completeness": {
-    "findings_with_evidence": 0,
-    "findings_without_evidence": 0,
-    "high_critical_verified": 0,
-    "high_critical_unverified": 0
+  "evidence_checks": {
+    "findings_with_evidence": {"total": 0, "with_evidence": 0, "missing": []},
+    "high_critical_verified": {"total": 0, "verified": 0, "unverified": []},
+    "security_with_tool_evidence": {"total": 0, "with_tool": 0, "missing_tool": []}
   },
-  "purity_violations": [],
+  "as_is_purity_violations": [],
   "findings": []
 }
 ```
 
+`as_is_purity_violations`: uses of TO-BE terminology detected in AS-IS finding statements.
+
 ---
 
-## `final/analysis-quality-summary.md` template
+## Analysis quality summary
 
-Goes in `final/` after the auditor completes.
+Phase 2 must produce a `docs/analysis/02-technical/final/analysis-quality-summary.md` file after the auditor completes. Required metrics:
 
-```markdown
-# Analysis Quality Summary — Phase 2
+| Metric | Description |
+|---|---|
+| `claims_with_evidence_pct` | % of findings that cite at least one evidence_id |
+| `high_critical_with_evidence_pct` | % of high/critical findings with `validation.status: verified` |
+| `confirmed_findings_count` | Count of findings with `status: confirmed` |
+| `candidate_findings_count` | Count of findings with `status: candidate` |
+| `open_gaps` | Count of entries in `technical-gaps.jsonl` with `blocking: true` |
+| `validator_verdict` | Output of `validate_technical_analysis.py` (PASS / PASS_WITH_GAPS / FAIL) |
+| `auditor_verdict` | `technical-evidence-audit.json` verdict field |
 
-Generated: <ISO-8601>
-Verdict: PASS | PASS_WITH_GAPS | FAIL
+---
 
-## Coverage
-- Total findings confirmed: X (N critical, M high, P medium, Q low)
-- Findings with evidence: X / total
-- High/critical findings verified: X / total high/critical
-- Technical gaps: X (N blocking)
+## Rules
 
-## Confidence distribution
-- High confidence: X%
-- Medium confidence: X%
-- Low/speculative: X%
-
-## AS-IS purity
-- Violations: 0
-
-## Unresolved gaps
-[List from technical-gaps.jsonl where blocking=true]
-```
+- No finding without an `evidence_id`. Findings with `severity: high` or `severity: critical` must additionally have `validation.status: verified`.
+- Security findings must cite scanner or lockfile evidence (e.g., `pip-audit` output, `requirements.txt` with CVE reference). No CVE claim is valid without tool evidence.
+- No TO-BE recommendations in `statement`. Forbidden terms: `Spring Boot`, `Angular`, `migrate to`, `replatform`, `target architecture`, `TO-BE`.
+- `requires_validation` status is valid only when the gap is recorded in `technical-gaps.jsonl` with `blocking: true`.
