@@ -5,6 +5,13 @@ All notable changes to catalog capabilities are documented here.
 Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending changes.
 
 ## [Unreleased]
+### Added
+- `build_context_graph.py`: builds evidence-backed context graph (nodes.jsonl, edges.jsonl) from bronze/silver KB; produces graph-quality-report.md
+- `retrieve_context_bundle.py`: BFS traversal to build targeted context bundles for Phase 1/2 agents
+- `validate_indexing_kb.py`: Phase 0 output validator; checks manifest, stack.json, evidence-ledger, large files, AS-IS purity; exit 0=PASS / 1=FAIL / 2=PASS_WITH_GAPS
+- `validate_functional_analysis.py`: Phase 1 validator; checks confirmed UCs have evidence_ids, no TO-BE tokens; exit 0/1/2
+- `validate_technical_analysis.py`: Phase 2 validator; checks findings have evidence_ids, high/critical findings have validation status, no prescriptive language; exit 0/1/2
+
 ### Changed
 - Phase 2 W1 sub-agents (code-quality-analyst, state-runtime-analyst, dependency-security-analyst, data-access-analyst, integration-analyst, performance-analyst, resilience-analyst, security-analyst): grounding policy added; raw JSONL findings written before markdown; every finding requires evidence_ids; high/critical require verified/requires_validation status
 - `risk-synthesizer` updated: merges raw JSONL into normalized/technical-findings.jsonl + risk-register.jsonl + risk-evidence-matrix.csv; Gold synthesis rule enforced (no new findings)
