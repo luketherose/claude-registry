@@ -1789,7 +1789,7 @@
     },
     {
       "name": "technical-analysis-supervisor",
-      "version": "0.2.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1827,7 +1827,7 @@
         "performance",
         "streamlit"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "0.2.0: bootstrap detects `exports-only-eligible` state (analysis complete but \u2265 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.1.0: initial beta release: Phase 2 supervisor with 3 waves (8 W1 workers + W2 synthesizer + W3 challenger) and parallel export wave (PDF + PPTX). Adaptive dispatch mode based on repo size."
     },
     {
