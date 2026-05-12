@@ -255,6 +255,21 @@ Legend: full | read | restricted | — (no access)
 
 ---
 
+## Grounding policy
+
+Read and follow `grounding-policy.md` (docs/indexing/) before writing any claim.
+
+Every claim must be traceable to an evidence_id from `.indexing-kb/evidence-ledger.jsonl`:
+- Direct code evidence: `confidence: high`, `inference_level: direct`
+- Inferred: `confidence: medium`, `inference_level: derived`
+- Speculative: `confidence: low`, `inference_level: speculative` — or create a gap
+
+For large files: check `.indexing-kb/bronze/large-files.jsonl` first; cite `chunk_id` from `.indexing-kb/bronze/large-file-chunks.jsonl`, not the whole file.
+
+Write raw JSONL to `docs/analysis/01-functional/raw/` BEFORE writing narrative markdown.
+
+---
+
 ## Constraints
 
 - **AS-IS only**. Do not propose target-architecture mappings, do not
@@ -270,3 +285,51 @@ Legend: full | read | restricted | — (no access)
   a Streamlit page literally named "Admin Dashboard").
 - Do not write outside `docs/analysis/01-functional/`.
 - Do not read source code directly — only the KB.
+
+---
+
+## JSONL outputs (write before markdown)
+
+### `docs/analysis/01-functional/raw/actor-candidates-raw.jsonl`
+
+Raw actor findings before normalization — one record per candidate actor.
+
+### `docs/analysis/01-functional/normalized/actor-candidates.jsonl`
+
+One record per actor. Required fields:
+
+```json
+{
+  "actor_id": "A-01",
+  "name": "Actor name",
+  "type": "human | system | inferred",
+  "confidence": "high | medium | low",
+  "inference_level": "direct | derived | speculative",
+  "evidence_ids": ["EV-000001"],
+  "description": "1-2 sentence description",
+  "permissions_scope": "what this actor can do"
+}
+```
+
+If no direct evidence exists for an actor, set `confidence: low` and add the actor to `docs/analysis/01-functional/normalized/functional-gaps.jsonl` as well.
+
+### `docs/analysis/01-functional/normalized/feature-candidates.jsonl`
+
+One record per feature. Required fields:
+
+```json
+{
+  "feature_id": "F-01",
+  "name": "Feature name",
+  "bounded_context": "context name or null",
+  "type": "interactive | automated | hybrid",
+  "confidence": "high | medium | low",
+  "inference_level": "direct | derived | speculative",
+  "evidence_ids": ["EV-000001"],
+  "description": "1-2 sentence business description",
+  "actors": ["A-01"],
+  "implementing_modules": ["module path"]
+}
+```
+
+Each actor record must have `evidence_ids` citing at least one `EV-NNNNNN`. If no direct evidence, set `confidence: low` and add to `normalized/functional-gaps.jsonl`.

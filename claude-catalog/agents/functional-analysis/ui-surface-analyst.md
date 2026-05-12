@@ -189,6 +189,46 @@ files, `Edit` to modify. Bash is allowed only for read-only inspection
 
 ---
 
+## Grounding policy
+
+Read and follow `grounding-policy.md` (docs/indexing/) before writing any claim.
+
+Every claim must be traceable to an evidence_id from `.indexing-kb/evidence-ledger.jsonl`:
+- Direct code evidence: `confidence: high`, `inference_level: direct`
+- Inferred: `confidence: medium`, `inference_level: derived`
+- Speculative: `confidence: low`, `inference_level: speculative` — or create a gap
+
+For large files: check `.indexing-kb/bronze/large-files.jsonl` first; cite `chunk_id` from `.indexing-kb/bronze/large-file-chunks.jsonl`, not the whole file.
+
+Write raw JSONL to `docs/analysis/01-functional/raw/` BEFORE writing narrative markdown.
+
+---
+
+## JSONL outputs (write before markdown)
+
+### `docs/analysis/01-functional/raw/ui-surface-findings.jsonl`
+
+One record per screen/surface. Required fields:
+
+```json
+{
+  "screen_id": "S-01",
+  "title": "Screen title",
+  "file": "path/to/screen.py",
+  "type": "page | sub-screen | command | route",
+  "confidence": "high | medium | low",
+  "inference_level": "direct | derived | speculative",
+  "evidence_ids": ["EV-000001"],
+  "source_lines": "10-45",
+  "actors": ["A-01"],
+  "nav_edges": [{"to": "S-02", "type": "switch_page | reactive | link"}]
+}
+```
+
+Every screen entry must have `evidence_ids` pointing to the source file and lines where the screen was detected. Screens detected only from markdown docs without code backing must have `confidence: low`.
+
+---
+
 ## Constraints
 
 - **AS-IS only**. Describe the UI as it is. No "could be implemented as

@@ -6,6 +6,7 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 ### Changed
+- Phase 1 sub-agents (actor-feature-mapper, ui-surface-analyst, io-catalog-analyst, user-flow-analyst, implicit-logic-analyst): all updated with grounding policy; write raw JSONL to raw/ before markdown; normalized JSONL outputs with evidence_ids; confirmed UCs require evidence_ids
 - `module-documenter` updated: primary output `silver/module-summaries.jsonl` with `evidence_ids`; large file awareness via `bronze/large-file-chunks.jsonl`; grounding instruction added (check large-files.jsonl before reading, cite chunks for large files, write gaps to silver/gaps.jsonl); JSONL schema updated with `is_large_file` and `chunk_ids_used` fields; `silver/assumptions.jsonl` added to output targets
 - `business-logic-analyst` updated: primary outputs `silver/business-rules.jsonl` + `silver/validation-rules.jsonl` + `silver/state-machines.jsonl` with `evidence_ids`; grounding instruction added (cite chunk_id for large files, speculative inference → low confidence, missing evidence → gaps.jsonl); inline `business-rules.jsonl` JSONL schema added
 - `data-flow-analyst` updated: primary outputs `silver/data-flows.jsonl` + `silver/integration-points.jsonl`; bronze outputs for `config-env-index.jsonl` + `io-boundaries.jsonl`; grounding instruction added with direction field (`inbound|outbound|bidirectional`) and large-file chunk citation
