@@ -1,11 +1,80 @@
 # Business-logic analyst — output schemas
 
 > Reference doc for `business-logic-analyst`. Read at runtime when about to
-> emit one of the three output files under `.indexing-kb/07-business-logic/`.
+> emit output files under `.indexing-kb/07-business-logic/` or
+> `.indexing-kb/silver/`.
 
 The agent body owns when to write each file and what content qualifies.
-This doc is the on-disk shape only — frontmatter and section skeletons to
-copy into the `Write` call.
+This doc is the on-disk shape only — frontmatter, JSONL record schemas, and
+section skeletons to copy into the `Write` call.
+
+---
+
+## Silver JSONL schemas
+
+### `silver/business-rules.jsonl` — one record per rule, append-only
+
+```json
+{
+  "rule_id": "BR-001",
+  "claim": "Description of business rule",
+  "evidence_ids": ["EV-000010"],
+  "source_files": ["path/to/file.py"],
+  "confidence": "high | medium | low",
+  "inference_level": "direct | derived | speculative",
+  "open_questions": []
+}
+```
+
+### `silver/validation-rules.jsonl` — one record per validation rule
+
+```json
+{
+  "rule_id": "VR-001",
+  "entity": "Invoice",
+  "condition": "amount > 0",
+  "error_message": "Amount must be positive",
+  "evidence_ids": ["EV-000011"],
+  "source_files": ["billing/models.py"],
+  "confidence": "high | medium | low",
+  "inference_level": "direct | derived | speculative",
+  "open_questions": []
+}
+```
+
+### `silver/state-machines.jsonl` — one record per state machine
+
+```json
+{
+  "sm_id": "SM-001",
+  "entity": "Order",
+  "field": "status",
+  "states": ["DRAFT", "PENDING", "APPROVED", "REJECTED", "FULFILLED"],
+  "transitions": [
+    {"from": "DRAFT", "to": "PENDING", "trigger": "submit()", "file_line": "orders/service.py:120"}
+  ],
+  "evidence_ids": ["EV-000020", "EV-000021"],
+  "source_files": ["orders/service.py"],
+  "confidence": "high | medium | low",
+  "inference_level": "direct | derived | speculative",
+  "open_questions": []
+}
+```
+
+### `silver/assumptions.jsonl` — rules that could not be code-grounded
+
+```json
+{
+  "assumption_id": "AS-001",
+  "claim": "Approval is required above a certain threshold",
+  "reason_no_evidence": "Function name suggests rule but body was inaccessible",
+  "suggested_follow_up": "Read orders/approval.py body to confirm",
+  "confidence": "low",
+  "open_questions": []
+}
+```
+
+---
 
 All three files share the frontmatter convention:
 

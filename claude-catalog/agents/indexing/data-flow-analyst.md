@@ -81,7 +81,42 @@ the file:line where it is read.
 Locate config files using the configuration-source markers. For each:
 format, what loads it, where the loaded values are used.
 
-## Outputs
+## Output targets
+
+| Artifact | Path | Tier |
+|---|---|---|
+| I/O boundaries (JSONL) | `.indexing-kb/bronze/io-boundaries.jsonl` | Bronze — deterministic |
+| Config/env index (JSONL) | `.indexing-kb/bronze/config-env-index.jsonl` | Bronze — deterministic |
+| Data flows (JSONL) | `.indexing-kb/silver/data-flows.jsonl` | Silver — agentic |
+| Integration points (JSONL) | `.indexing-kb/silver/integration-points.jsonl` | Silver — agentic |
+| Human-readable docs | `.indexing-kb/06-data-flow/` | Human |
+
+JSONL schemas with `evidence_ids` are in `output-schemas.md` — read that
+doc before writing any bronze or silver file.
+
+## Evidence and grounding
+
+For every data flow and integration point:
+- Include `evidence_ids` citing specific file + line where the data crossing is detected
+- For env var reads: emit to `bronze/config-env-index.jsonl` with exact line reference
+- For I/O boundaries: emit to `bronze/io-boundaries.jsonl` with direction (`inbound|outbound|bidirectional`) and call site
+- For large files: cite `chunk_id` instead of whole file
+
+For each I/O boundary (HTTP call, DB access, file read/write):
+- Append an evidence record to `evidence-ledger.jsonl` with
+  `kind: source_symbol` pointing to the call site
+- Record the call site file + line range
+- Write the corresponding record to `bronze/io-boundaries.jsonl` citing
+  the `evidence_id`
+
+For each env var or config key detected:
+- Append to `evidence-ledger.jsonl` with `kind: config`
+- Write to `bronze/config-env-index.jsonl` with `evidence_id`
+
+Never claim a system integration exists based on import statements alone;
+you must find the actual call sites.
+
+## Markdown outputs
 
 Write one Markdown file per category under `.indexing-kb/06-data-flow/`,
 following the schemas in `output-schemas.md`:
@@ -129,7 +164,8 @@ variable, template, heredoc, or piped input.
   `business-logic-analyst`).
 - **Do not classify operations as "should migrate to X"** — that is a
   later phase.
-- **Do not write outside `.indexing-kb/06-data-flow/`.**
+- **Do not write outside `.indexing-kb/`** (allowed paths:
+  `06-data-flow/`, `bronze/`, `silver/`, and `evidence-ledger.jsonl`).
 - **Do not modify any source file.**
 - **All file output via `Write`**, never via `Bash` heredoc/redirect.
   See § File-writing rule above.

@@ -1,6 +1,6 @@
 ---
 name: codebase-mapper
-description: "Use this agent to produce a structural inventory of any codebase: directory tree, file counts, language statistics, top-level package map, entrypoints, and a machine-readable stack detection block (primary language, languages, frameworks, build tools, package managers, test frameworks) consumed by all downstream phases of the refactoring pipeline. Polyglot codebases supported (multiple languages reported with confidence and evidence). No semantic analysis. Not for standalone use — invoked only as part of the indexing pipeline. Typical triggers include Phase 0 entry — stack detection + structural map and Polyglot disambiguation. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to produce a structural inventory of any codebase: directory tree, file counts, language statistics, top-level package map, entrypoints, and a machine-readable stack detection block (primary language, languages, frameworks, build tools, package managers, test frameworks) consumed by all downstream phases of the refactoring pipeline. Polyglot codebases supported (multiple languages reported with confidence and evidence). No semantic analysis. Not for standalone use — invoked only as part of the indexing pipeline. Outputs to bronze/ KB structure with evidence emission. Typical triggers include Phase 0 entry — stack detection + structural map and Polyglot disambiguation. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -16,8 +16,10 @@ in csproj). You emit one machine-readable artifact (`stack.json`) that
 becomes the **single source of truth** for the AS-IS stack and is
 consumed by every supervisor at Phases 1-5.
 
-You are a sub-agent invoked by `indexing-supervisor`. Your output is
-markdown + JSON files under `.indexing-kb/02-structure/`.
+You are a sub-agent invoked by `indexing-supervisor`. Your primary
+outputs go to `.indexing-kb/bronze/`. Legacy outputs under
+`.indexing-kb/02-structure/` are retained for backward compatibility
+when an existing KB already contains them.
 
 ## When to invoke
 
@@ -77,15 +79,45 @@ read on demand. Read each doc only at the matching step — not preemptively.
 
 ## Outputs
 
-Three files under `.indexing-kb/02-structure/`, all mandatory on every run.
+Primary outputs go to `.indexing-kb/bronze/`, all mandatory on every run.
 For exact file shapes (frontmatter, sections, JSON schema), read
 `output-templates.md`.
 
 | Path | Content |
 |---|---|
-| `codebase-map.md` | repo statistics, stack summary, top-level packages, entrypoints, directory tree (depth 3), skipped directories |
-| `language-stats.md` | per-language file count / LOC / % of codebase |
-| `stack.json` | machine-readable stack block (primary language, languages, frameworks, build tools, package managers, runtime, test frameworks, confidence, evidence) — **single source of truth for Phases 1-5** |
+| `bronze/manifest.json` | run ID, timestamp, git commit, file counts per category |
+| `bronze/file-inventory.jsonl` | one record per file: path, size_bytes, line_count, language, category, hash |
+| `bronze/file-hashes.json` | path→sha256 map |
+| `bronze/stack.json` | machine-readable stack block — **single source of truth for Phases 1-5** |
+| `bronze/symbol-index.jsonl` | one record per public symbol |
+| `bronze/entrypoints.json` | entrypoints per language |
+| `bronze/routes.json` | HTTP/UI routes detected |
+| `bronze/test-inventory.jsonl` | test files and detected frameworks |
+| `bronze/large-files.jsonl` | files exceeding the large-file threshold |
+| `bronze/large-file-chunks.jsonl` | chunks with evidence_ids for large files |
+| `bronze/parse-errors.jsonl` | files that could not be fully parsed |
+| `evidence-ledger.jsonl` | one record per symbol/chunk observed (root of `.indexing-kb/`) |
+
+Backward-compat note: also write `02-structure/codebase-map.md`,
+`02-structure/language-stats.md`, and `02-structure/stack.json` when an
+existing KB already contains `02-structure/`. Do not create this
+directory on a fresh run.
+
+## Large file handling
+
+Before analyzing any file, check its size. For files that exceed the
+large threshold (>800 lines or >150 KB), apply the strategy from
+`docs/indexing/large-file-policy.md`: outline → chunk → evidence →
+summary. For each chunk, append an evidence record to
+`evidence-ledger.jsonl` with `kind: source_chunk`. Do NOT attempt to
+read a giant file as a single block.
+
+## Evidence emission
+
+For every top-level symbol extracted, append a record to
+`evidence-ledger.jsonl` with `kind: source_symbol`. For every
+large-file chunk, append with `kind: source_chunk`. The `detected_by`
+field must be `codebase-mapper`.
 
 ## Stop conditions
 
@@ -122,8 +154,8 @@ or piped input.
 - **Do not analyze imports.** That is `dependency-analyzer`'s job.
 - **Do not document module behaviour.** That is `module-documenter`'s
   job.
-- **Do not write outside `.indexing-kb/02-structure/`.**
-- **`stack.json` is mandatory** for every run, even when stack
+- **Do not write outside `.indexing-kb/`.**
+- **`bronze/stack.json` is mandatory** for every run, even when stack
   detection is `low` confidence — downstream phases need at least an
   empty stack block to reason about absence.
 - **Use `Bash` for `find`, `wc`, `du`, `grep` only** — never for code

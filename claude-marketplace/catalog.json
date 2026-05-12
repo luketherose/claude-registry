@@ -1429,7 +1429,7 @@
     },
     {
       "name": "streamlit-analyzer",
-      "version": "0.1.1",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1449,12 +1449,12 @@
         "streamlit",
         "frontend"
       ],
-      "published": "2026-04-29",
+      "published": "2026-05-12",
       "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
       "name": "module-documenter",
-      "version": "0.2.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1474,12 +1474,12 @@
         "documentation",
         "modules"
       ],
-      "published": "2026-04-29",
+      "published": "2026-05-12",
       "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
       "name": "data-flow-analyst",
-      "version": "0.2.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1499,12 +1499,12 @@
         "data-flow",
         "integrations"
       ],
-      "published": "2026-04-29",
+      "published": "2026-05-12",
       "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
       "name": "business-logic-analyst",
-      "version": "0.2.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1524,7 +1524,7 @@
         "business-logic",
         "domain"
       ],
-      "published": "2026-04-29",
+      "published": "2026-05-12",
       "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
     },
     {
@@ -1590,7 +1590,7 @@
     },
     {
       "name": "actor-feature-mapper",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1611,12 +1611,12 @@
         "features",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
       "name": "ui-surface-analyst",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1638,12 +1638,12 @@
         "streamlit",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
       "name": "io-catalog-analyst",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1664,12 +1664,12 @@
         "transformations",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
       "name": "user-flow-analyst",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1691,12 +1691,12 @@
         "sequence-diagrams",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
       "name": "implicit-logic-analyst",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1717,7 +1717,7 @@
         "streamlit",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
@@ -1750,7 +1750,7 @@
     {
       "name": "refactoring-supervisor",
       "display_name": "Application Replatforming",
-      "version": "3.0.0",
+      "version": "3.1.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1784,7 +1784,7 @@
         "orchestrator",
         "human-in-the-loop"
       ],
-      "published": "2026-05-01",
+      "published": "2026-05-12",
       "changelog": "Wave 3 BE step 2 diagram updated: data-mapper now emits Liquibase YAML changelogs (Flyway removed everywhere in the registry)."
     },
     {
@@ -1832,7 +1832,7 @@
     },
     {
       "name": "code-quality-analyst",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1853,12 +1853,12 @@
         "code-quality",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
       "name": "state-runtime-analyst",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1881,12 +1881,12 @@
         "streamlit",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
       "name": "dependency-security-analyst",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1910,12 +1910,12 @@
         "sbom",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
       "name": "data-access-analyst",
-      "version": "0.2.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1937,12 +1937,12 @@
         "data-access",
         "as-is"
       ],
-      "published": "2026-04-30",
+      "published": "2026-05-12",
       "changelog": "Schema-migrations detection list extended (Liquibase / Django / Rails) with explicit note: detection is informational; Phase 4 always rebuilds with Liquibase."
     },
     {
       "name": "integration-analyst",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1964,12 +1964,12 @@
         "api",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
       "name": "performance-analyst",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1992,12 +1992,12 @@
         "streamlit",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
       "name": "resilience-analyst",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2020,12 +2020,12 @@
         "logging",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
       "name": "security-analyst",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2048,12 +2048,12 @@
         "threat-model",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
       "name": "risk-synthesizer",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2074,7 +2074,7 @@
         "risk-register",
         "as-is"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {

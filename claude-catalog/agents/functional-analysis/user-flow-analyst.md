@@ -204,6 +204,54 @@ for the full rationale and incident reference.
 
 ---
 
+## Grounding policy
+
+Read and follow `grounding-policy.md` (docs/indexing/) before writing any claim.
+
+Every claim must be traceable to an evidence_id from `.indexing-kb/evidence-ledger.jsonl`:
+- Direct code evidence: `confidence: high`, `inference_level: direct`
+- Inferred: `confidence: medium`, `inference_level: derived`
+- Speculative: `confidence: low`, `inference_level: speculative` — or create a gap
+
+For large files: check `.indexing-kb/bronze/large-files.jsonl` first; cite `chunk_id` from `.indexing-kb/bronze/large-file-chunks.jsonl`, not the whole file.
+
+Write raw JSONL to `docs/analysis/01-functional/raw/` BEFORE writing narrative markdown.
+
+---
+
+## JSONL outputs (write before markdown)
+
+### `docs/analysis/01-functional/raw/user-flow-findings.jsonl`
+
+Raw UC findings before normalization — one record per candidate UC, as derived from the cross-product of Wave 1 outputs.
+
+### `docs/analysis/01-functional/normalized/use-case-candidates.jsonl`
+
+Authoritative UC list. One record per use case. Required schema:
+
+```json
+{
+  "uc_id": "UC-001",
+  "title": "Use case title",
+  "status": "confirmed | candidate_not_confirmed | requires_human_confirmation",
+  "actors": ["A-01"],
+  "evidence_ids": ["EV-000001"],
+  "source_confidence": "high | medium | low",
+  "inference_level": "direct | derived | speculative",
+  "unknowns": [],
+  "related_features": ["F-01"],
+  "related_screens": ["S-01"],
+  "related_transformations": ["TR-01"]
+}
+```
+
+Rules:
+- Never mark a UC `status: confirmed` without at least one `evidence_id` from `.indexing-kb/evidence-ledger.jsonl`.
+- UCs with no confirming evidence → `status: candidate_not_confirmed`; populate `unknowns`.
+- UCs with conflicting signals across Wave 1 outputs → `status: requires_human_confirmation`.
+
+---
+
 ## Constraints
 
 - **AS-IS only**. The flow is what happens today, not what could be.

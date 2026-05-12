@@ -34,7 +34,8 @@ overwrite previous run entries.
           "completed": "<ISO-8601>",
           "outputs": ["<paths>"],
           "status": "complete | partial | failed",
-          "open_questions_count": 0
+          "open_questions_count": 0,
+          "evidence_ledger_entries": 0
         }
       ]
     }
@@ -44,9 +45,13 @@ overwrite previous run entries.
 
 ## Cross-references
 
-- The `stack` block from `02-structure/stack.json` (written by
+- The `stack` block from `bronze/stack.json` (written by
   `codebase-mapper` in Phase 1) must be copied into the current run entry
   so downstream phases have a single canonical reference location.
+- The Bronze/Silver/Gold layout replaces the previous numbered directories.
+  The manifest still tracks the same phase information; update `output_paths`
+  for sub-agents to reflect new locations (e.g. `bronze/`, `silver/`, `gold/`
+  instead of `02-structure/`, `04-modules/`, etc.).
 - `resume_mode` values match the Phase-0 detection table: `fresh`,
   `resume-incomplete`, `full-rerun` (after a `re-run` user choice on
   `complete-eligible`), `revise`.

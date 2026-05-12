@@ -1,0 +1,1678 @@
+% =============================================================================
+%  Guida Operativa — Claude Registry
+%  Versione: 2026-05-03
+%  Lingua: Italiano
+%  Compilazione: pdflatex guida-operativa.tex (due passaggi per i riferimenti)
+%  oppure: pandoc guida-operativa.tex -o guida-operativa.pdf --pdf-engine=pdflatex
+% =============================================================================
+
+\documentclass[12pt,a4paper,twoside]{book}
+
+% ---------------------------------------------------------------------------
+% Pacchetti
+% ---------------------------------------------------------------------------
+\usepackage{fontspec}
+\setmainfont{Palatino}
+\setsansfont[Scale=MatchLowercase]{Helvetica}
+\setmonofont[Scale=MatchLowercase]{Menlo}
+\usepackage[italian]{babel}
+\usepackage{microtype}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{parskip}
+\usepackage{setspace}
+\usepackage{emptypage}
+
+% ---------------------------------------------------------------------------
+% Geometria pagina
+% ---------------------------------------------------------------------------
+\geometry{
+  a4paper,
+  top=3cm,
+  bottom=3cm,
+  inner=3cm,
+  outer=2.5cm,
+  headheight=15pt
+}
+
+% ---------------------------------------------------------------------------
+% Colori
+% ---------------------------------------------------------------------------
+\definecolor{AccentureBlue}{HTML}{0041A0}
+\definecolor{AccenturePurple}{HTML}{7B00A0}
+\definecolor{AccentureGray}{HTML}{CCCCCC}
+\definecolor{CodeBg}{HTML}{F5F5F5}
+\definecolor{WarningBg}{HTML}{FFF8E1}
+\definecolor{WarningBorder}{HTML}{F9A825}
+\definecolor{TipBg}{HTML}{E8F5E9}
+\definecolor{TipBorder}{HTML}{388E3C}
+\definecolor{InfoBg}{HTML}{E3F2FD}
+\definecolor{InfoBorder}{HTML}{1565C0}
+\definecolor{DarkGray}{HTML}{333333}
+\definecolor{MidGray}{HTML}{666666}
+
+% ---------------------------------------------------------------------------
+% Hyperref
+% ---------------------------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=AccentureBlue,
+  urlcolor=AccenturePurple,
+  citecolor=AccentureBlue,
+  pdftitle={Guida Operativa — Claude Registry},
+  pdfauthor={Luca La Rosa},
+  pdfsubject={Infrastruttura di governance per capability condivise di Claude Code},
+  bookmarksnumbered=true,
+  bookmarksopen=true
+}
+
+% ---------------------------------------------------------------------------
+% Listings (blocchi di codice)
+% ---------------------------------------------------------------------------
+\lstset{
+  backgroundcolor=\color{CodeBg},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=none,
+  showspaces=false,
+  showstringspaces=false,
+  frame=single,
+  frameround=tttt,
+  rulecolor=\color{AccentureGray},
+  xleftmargin=1em,
+  xrightmargin=1em,
+  aboveskip=0.8em,
+  belowskip=0.8em
+}
+
+\lstdefinelanguage{YAML}{
+  keywords={name, description, tools, model, color, model_justification, tier, status, type},
+  sensitive=false,
+  morecomment=[l]{\#},
+  morestring=[b]",
+  morestring=[b]'
+}
+
+% ---------------------------------------------------------------------------
+% Box informativi
+% ---------------------------------------------------------------------------
+\tcbuselibrary{breakable, skins}
+
+\newtcolorbox{notabox}[1][]{
+  colback=InfoBg,
+  colframe=InfoBorder,
+  fonttitle=\bfseries,
+  title=Nota,
+  #1
+}
+
+\newtcolorbox{attenzione}[1][]{
+  colback=WarningBg,
+  colframe=WarningBorder,
+  fonttitle=\bfseries,
+  title=Attenzione,
+  #1
+}
+
+\newtcolorbox{buonapratica}[1][]{
+  colback=TipBg,
+  colframe=TipBorder,
+  fonttitle=\bfseries,
+  title=Buona pratica,
+  #1
+}
+
+% ---------------------------------------------------------------------------
+% Intestazioni e piè di pagina
+% ---------------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\textit{Claude Registry — Guida Operativa}}
+\fancyhead[RO]{\small\textit{\leftmark}}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ---------------------------------------------------------------------------
+% Titoli di sezione
+% ---------------------------------------------------------------------------
+\titleformat{\chapter}[display]
+  {\normalfont\LARGE\bfseries\color{AccentureBlue}}
+  {\chaptertitlename\ \thechapter}{16pt}{\Huge}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{AccentureBlue}}
+  {\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{DarkGray}}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{MidGray}}
+  {\thesubsubsection}{1em}{}
+
+% ---------------------------------------------------------------------------
+% Spaziatura
+% ---------------------------------------------------------------------------
+\setlength{\parskip}{0.6em}
+\setlength{\parindent}{0pt}
+
+% =============================================================================
+%  DOCUMENTO
+% =============================================================================
+\begin{document}
+
+% ---------------------------------------------------------------------------
+% Frontespizio
+% ---------------------------------------------------------------------------
+\begin{titlepage}
+  \centering
+  \vspace*{3cm}
+  {\color{AccentureBlue}\rule{\linewidth}{3pt}}\\[0.6cm]
+  {\Huge\bfseries\color{AccentureBlue} Claude Registry}\\[0.4cm]
+  {\LARGE\color{DarkGray} Guida Operativa}\\[0.2cm]
+  {\large\color{MidGray} Infrastruttura di governance per capability condivise di Claude Code}\\[0.6cm]
+  {\color{AccentureBlue}\rule{\linewidth}{1.5pt}}\\[1.5cm]
+  {\large Versione 2.0 \quad—\quad Maggio 2026}\\[0.5cm]
+  {\normalsize Luca La Rosa}\\[0.3cm]
+  {\small\color{MidGray} \texttt{luca.la.rosa@accenture.com}}
+  \vfill
+  {\small\color{MidGray} Documento riservato — uso interno Accenture}
+\end{titlepage}
+
+% ---------------------------------------------------------------------------
+% Indice
+% ---------------------------------------------------------------------------
+\frontmatter
+\tableofcontents
+\clearpage
+
+% ---------------------------------------------------------------------------
+% Prefazione
+% ---------------------------------------------------------------------------
+\chapter*{Prefazione}
+\addcontentsline{toc}{chapter}{Prefazione}
+
+Questo documento è la guida operativa completa del \textbf{Claude Registry}: un'infrastruttura di governance per distribuire, versionare e condividere capability specializzate di Claude Code all'interno del team.
+
+La guida è organizzata in quattro parti progressive. La prima parte risponde alla domanda ``perché esiste il registro e come funziona''. La seconda spiega come contribuire. La terza documenta nel dettaglio tutte le capability disponibili, partendo dalle più architetturalmente complesse. La quarta copre gli strumenti di contorno: hooks, MCP, script e template.
+
+Il tono è tecnico e diretto. Non è un tutorial introduttivo a Claude Code: si presuppone che il lettore sappia già usare Claude Code in un progetto. È invece la documentazione di riferimento per chi vuole capire il registro dall'interno — sia per usarlo al meglio, sia per estenderlo.
+
+\mainmatter
+
+% =============================================================================
+%  PARTE I — VISIONE D'INSIEME
+% =============================================================================
+\part{Visione d'insieme}
+
+% ---------------------------------------------------------------------------
+\chapter{Il problema che risolve il registro}
+% ---------------------------------------------------------------------------
+
+\section{Il problema della conoscenza dispersa}
+
+Claude Code permette di definire sottoagenti personalizzati tramite file \texttt{.md} nella directory \texttt{.claude/agents/}. Ogni sottoagente ha un system prompt, un set di strumenti e un modello di linguaggio. Nella pratica del team, questo meccanismo produce un problema ricorrente: ogni progetto riscrive da zero le stesse capability — lo stesso agente Java con le stesse convenzioni, lo stesso agente per il code review, lo stesso skill sugli standard Spring Boot.
+
+Il risultato è triplice: le versioni divergono silenziosamente tra un progetto e l'altro, le correzioni scoperte su un progetto non fluiscono agli altri, e ogni nuovo collaboratore deve capire da capo quale agente usare per quale task.
+
+\section{La soluzione: un registro condiviso}
+
+Il Claude Registry è la risposta a questo problema. Funziona esattamente come una libreria di codice condivisa, ma per il comportamento di Claude:
+
+\begin{itemize}
+  \item \textbf{Fonte unica di verità}: le capability vivono in un repository Git versionato (\texttt{claude-catalog/}), non disperse nei singoli progetti.
+  \item \textbf{Distribuzione controllata}: le capability approvate vengono pubblicate in \texttt{claude-marketplace/} e installate nei progetti tramite uno script. I progetti consumano dal marketplace, non direttamente dal catalogo.
+  \item \textbf{Governance esplicita}: ogni modifica passa per una Pull Request con checklist di revisione. Ogni capability ha esempi verificabili ed eval scenarios.
+  \item \textbf{Conoscenza negativa preservata}: gli anti-pattern (approcci tentati che non hanno funzionato) sono documentati esplicitamente in \texttt{ANTI-PATTERNS.md}, in modo che il prossimo contributore non ripeta gli stessi errori.
+\end{itemize}
+
+\section{Cosa non è il registro}
+
+Il registro non è:
+\begin{itemize}
+  \item Un framework di prompting generico — contiene capability con opinioni forti su standard specifici (Spring Boot 3, Angular 17, OpenAPI 3.1).
+  \item Un sostituto di Claude Code — è un layer di governance sopra le feature native di Claude Code.
+  \item Un sistema di deployment autonomo — le capability vengono installate localmente nei progetti; non esiste un endpoint remoto condiviso.
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\chapter{Filosofia di progettazione}
+% ---------------------------------------------------------------------------
+
+\section{Due tipi di capability: agenti e skill}
+
+Il registro distingue nettamente due tipi di capability, con ruoli e vincoli molto diversi.
+
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+\textbf{Tipo} & \textbf{Scopo} & \textbf{Modello} & \textbf{Strumenti} & \textbf{Posizione} \\
+\midrule
+\textbf{Agente} & Svolge un ruolo & \texttt{sonnet} & Set specifico al ruolo & \texttt{agents/} \\
+\textbf{Skill} & Fornisce conoscenza & \texttt{haiku} & Solo \texttt{Read} & \texttt{skills/} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Agenti}
+
+Un agente è un sottoagente Claude Code che \textit{fa} qualcosa: analizza, scrive codice, progetta architetture, esegue revisioni. Ha un system prompt con logica comportamentale, strumenti appropriati al ruolo, e una descrizione precisa che guida Claude nella delega automatica.
+
+Gli agenti hanno opinioni forti: definiscono formati di output espliciti, seguono framework nominati (C4 per i diagrammi, RFC~7807 per gli errori HTTP, ADR per le decisioni architetturali), e specificano cosa delegano a loro volta ad altri agenti.
+
+\subsection{Skill}
+
+Una skill è un \textit{fornitore di conoscenza}: standard di codifica, convenzioni di un framework, regole di branding, template riutilizzabili. È un nodo foglia — non delega ad altri agenti, non modifica file, non esegue comandi. Restituisce solo contenuto.
+
+Il modello \texttt{haiku} è sufficiente perché non serve ragionamento profondo: serve recupero affidabile di informazioni già strutturate.
+
+\begin{buonapratica}
+Crea una skill ogni volta che la stessa conoscenza di dominio (standard di codifica, regole di design, costanti di brand) appare in due o più system prompt di agenti. Una skill è più economica da aggiornare di due copie separate.
+\end{buonapratica}
+
+\section{Il principio di separazione catalogo/marketplace}
+
+Il repository ha due aree con responsabilità distinte:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Area} & \textbf{Scopo} & \textbf{Chi la modifica} \\
+\midrule
+\texttt{claude-catalog/} & Sviluppo — scrittura, revisione, versionamento & Sviluppatori, PR \\
+\texttt{claude-marketplace/} & Distribuzione — solo capability approvate & Script di publish \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Una capability non è ``disponibile'' finché non viene pubblicata nel marketplace. Modificare solo il catalogo non è sufficiente. Questo è il confine più importante da rispettare: \textbf{non modificare mai \texttt{claude-marketplace/} a mano}.
+
+\section{La filosofia della conoscenza negativa}
+
+Ogni sistema di governance accumula saggezza sia in positivo (cosa funziona) che in negativo (cosa non funziona). Il registro esternalizza entrambe.
+
+Il \texttt{CHANGELOG.md} registra cosa funziona e viene rilasciato. Il \texttt{ANTI-PATTERNS.md} registra cosa non ha funzionato e perché — con una clausola obbligatoria ``\textit{Do not retry unless}''. Questa clausola è la parte più importante: senza di essa, un futuro contributore potrebbe riproporre lo stesso approccio sotto un nome diverso, credendo di portare qualcosa di nuovo.
+
+\begin{attenzione}
+Aggiungere una entry in \texttt{ANTI-PATTERNS.md} è parte obbligatoria di ogni PR di deprecazione. Senza la entry, la deprecazione è incompleta.
+\end{attenzione}
+
+\section{Human-in-the-loop by design}
+
+I flussi più complessi del registro (refactoring end-to-end, analisi funzionale, analisi tecnica, baseline testing) sono progettati con un principio esplicito: Claude propone, l'utente decide.
+
+Ogni fase mostra prima uno schematico di cosa sta per fare, poi aspetta conferma esplicita dell'utente prima di procedere. Al termine di ogni fase, produce un riepilogo con i tempi di esecuzione per fase e per step. Nessuna fase avanza silenziosamente senza consenso umano.
+
+Questo non è un limite tecnico ma una scelta di design: i flussi di replatforming toccano codice di produzione e decisioni architetturali ad alto impatto. Il registro considera la supervisione umana un requisito non negoziabile per questi casi d'uso.
+
+% ---------------------------------------------------------------------------
+\chapter{Struttura del repository}
+% ---------------------------------------------------------------------------
+
+\section{Mappa delle directory}
+
+\begin{lstlisting}
+claude-registry/
+  claude-catalog/              fonte di sviluppo
+    agents/                    file .md degli agenti
+      analysis/                analisi funzionale e tecnica standalone
+      api/                     progettazione API
+      architecture/            software architect
+      baseline-testing/        Phase 3 — pipeline di testing AS-IS (8 agenti)
+      deliberation/            motore di decisione deliberativa (7 agenti)
+      developers/              agenti developer per linguaggio (9 agenti)
+      documentation/           creazione documenti e presentazioni
+      functional-analysis/     Phase 1 — analisi funzionale AS-IS (7 agenti)
+      indexing/                Phase 0 — indicizzazione codebase (8 agenti)
+      orchestration/           orchestratore e refactoring-supervisor
+      quality/                 code-reviewer, debugger, test-writer
+      refactoring-tobe/        Phase 4 — refactoring TO-BE (10 agenti)
+      technical-analysis/      Phase 2 — analisi tecnica AS-IS (11 agenti)
+      tobe-testing/            Phase 5 — testing equivalenza TO-BE (9 agenti)
+    skills/                    fornitori di conoscenza condivisa
+      analysis/                analisi funzionale e tecnica
+      api/                     standard REST
+      backend/                 Java/Spring, standard tecnici backend
+      branding/                Accenture branding (colori, font, template)
+      database/                PostgreSQL
+      documentation/           generatori di documentazione
+      frontend/                Angular, React, Vue, Qwik, Vanilla, CSS
+      orchestrators/           orchestratori backend e frontend
+      python/                  Python e Streamlit
+      refactoring/             principi di refactoring
+      testing/                 standard di testing
+      utils/                   utility (caveman, caveman-review, ecc.)
+    docs/                      documentazione interna per contributori
+    examples/                  invocazioni di esempio per capability
+    evals/                     scenari di valutazione
+    hooks/                     script per hooks di Claude Code
+    mcp/                       esempi di configurazione MCP
+    policies/                  convenzioni di codifica (Python)
+    scripts/
+      setup-capabilities.sh   installa capability in un progetto
+      new-capability.sh        scaffolda una nuova capability
+    templates/                 template di output (ADR, report, contratto API)
+    how-to-write-a-capability.md
+    CONTRIBUTING.md
+    GOVERNANCE.md
+    CHANGELOG.md
+    ANTI-PATTERNS.md
+    NAMING-CONVENTIONS.md
+
+  claude-marketplace/          distribuzione
+    stable/<topic>/            capability production-ready
+    beta/<topic>/              capability nuove o sperimentali
+    skills/<topic>/            skill condivise
+    catalog.json               manifesto — fonte di verita' dei path su disco
+
+  guida-operativa.tex          questo documento (sorgente LaTeX)
+  guida-operativa.pdf          versione compilata
+  pitch-claude-registry.pptx  presentazione Accenture-branded
+\end{lstlisting}
+
+\section{Il file \texttt{catalog.json}}
+
+Il file \texttt{claude-marketplace/catalog.json} è il manifesto del marketplace. Ogni capability pubblicata ha una entry con i campi:
+
+\begin{itemize}
+  \item \textbf{\texttt{name}} — identificatore unico, deve corrispondere al frontmatter del file \texttt{.md}
+  \item \textbf{\texttt{version}} — versione SemVer (\texttt{MAJOR.MINOR.PATCH})
+  \item \textbf{\texttt{tier}} — \texttt{stable}, \texttt{beta}, o \texttt{skill}
+  \item \textbf{\texttt{file}} — percorso relativo del file su disco — fonte di verità per lo script di setup
+  \item \textbf{\texttt{status}} — \texttt{active} o \texttt{deprecated}
+  \item \textbf{\texttt{dependencies}} — lista di skill che l'agente usa (installate automaticamente dallo script)
+\end{itemize}
+
+\begin{attenzione}
+Il campo \texttt{file} in \texttt{catalog.json} è l'unica fonte di verità per il percorso su disco. Lo script \texttt{setup-capabilities.sh} lo legge direttamente. Non modificare mai i path a mano al di fuori del publish script.
+\end{attenzione}
+
+% ---------------------------------------------------------------------------
+\chapter{Installazione e primo avvio}
+% ---------------------------------------------------------------------------
+
+\section{Prerequisiti}
+
+\begin{itemize}
+  \item Claude Code CLI installato e configurato
+  \item Git con accesso al repository del registro
+  \item Python 3.8+ (per gli script di validazione)
+  \item Bash 4+ (per gli script di setup)
+\end{itemize}
+
+\section{Installazione globale}
+
+Per installare tutte le capability globalmente (disponibili in tutti i progetti senza configurazione aggiuntiva):
+
+\begin{lstlisting}[language=bash]
+cd ~/dev/claude-registry
+git pull origin main
+./claude-catalog/scripts/setup-capabilities.sh --global
+\end{lstlisting}
+
+Lo script copia i file degli agenti in \texttt{\textasciitilde/.claude/agents/} e le skill nelle rispettive directory. Le dipendenze (skill richieste da un agente) vengono installate automaticamente leggendo il campo \texttt{dependencies} in \texttt{catalog.json}.
+
+\section{Installazione per progetto}
+
+Per installare le capability solo in un progetto specifico:
+
+\begin{lstlisting}[language=bash]
+./claude-catalog/scripts/setup-capabilities.sh /percorso/al/progetto
+\end{lstlisting}
+
+I file vengono copiati in \texttt{/percorso/al/progetto/.claude/agents/}.
+
+\section{Verifica dell'installazione}
+
+Dopo l'installazione, verifica che gli agenti siano disponibili aprendo Claude Code nel progetto e digitando \texttt{/agents}. Dovresti vedere l'elenco degli agenti installati.
+
+Per verificare che la versione installata corrisponda a quella pubblicata nel marketplace:
+
+\begin{lstlisting}[language=bash]
+# Versione pubblicata nel marketplace
+cat claude-marketplace/catalog.json | \
+  python3 -c "import json,sys; \
+  [print(c['name'], c['version']) \
+   for c in json.load(sys.stdin)['capabilities']]"
+\end{lstlisting}
+
+\section{Aggiornamento}
+
+\begin{lstlisting}[language=bash]
+cd ~/dev/claude-registry
+git pull origin main
+./claude-catalog/scripts/setup-capabilities.sh --global
+\end{lstlisting}
+
+L'aggiornamento sovrascrive i file esistenti con le versioni più recenti. Non cancella capability rimosse — rimuovile manualmente se necessario.
+
+% =============================================================================
+%  PARTE II — CONTRIBUIRE
+% =============================================================================
+\part{Contribuire}
+
+% ---------------------------------------------------------------------------
+\chapter{Il flusso di contribuzione}
+% ---------------------------------------------------------------------------
+
+\section{Ruoli nel registro}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Ruolo} & \textbf{Responsabilità} \\
+\midrule
+\textbf{Capability Author} & Scrive nuovi agenti o skill; fornisce esempi ed eval \\
+\textbf{Capability Reviewer} & Revisiona le PR usando \texttt{review-checklist.md} \\
+\textbf{Catalog Maintainer} & Merge delle PR approvate, gestione tag Git, publish \\
+\textbf{Consumer} & Usa le capability dal marketplace; apre issue per bug o gap \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Un membro del team può ricoprire più ruoli. Non serve un team dedicato.
+
+\section{Workflow per un nuovo agente}
+
+\begin{lstlisting}[language=bash]
+# 1. Scaffolda la nuova capability
+./claude-catalog/scripts/new-capability.sh --type agent nome-agente
+
+# 2. Modifica il file generato
+vim claude-catalog/agents/<topic>/nome-agente.md
+
+# 3. Aggiungi esempi ed eval
+vim claude-catalog/examples/nome-agente-example.md
+vim claude-catalog/evals/nome-agente-eval.md
+
+# 4. Aggiungi entry in CHANGELOG.md sotto [Unreleased]
+vim claude-catalog/CHANGELOG.md
+
+# 5. Valida localmente
+python3 .github/scripts/validate_catalog.py
+
+# 6. Pubblica nel marketplace (necessario per superare il gate CI)
+./claude-marketplace/scripts/publish.sh nome-agente 0.1.0 beta
+
+# 7. Valida il marketplace
+python3 .github/scripts/validate_marketplace.py
+
+# 8. Apri PR
+git push origin add/nome-agente
+\end{lstlisting}
+
+\begin{attenzione}
+La CI ha due gate sequenziali: prima valida il catalogo, poi — solo se il primo è verde — valida il marketplace. Se aggiungi una capability al catalogo senza pubblicarla nel marketplace, il gate 1 blocca la PR prima ancora che il gate 2 parta. Pubblica sempre prima di aprire la PR.
+\end{attenzione}
+
+\section{Ciclo di vita di una capability}
+
+\begin{lstlisting}
+draft -> review -> approved -> released -> published -> deprecated
+\end{lstlisting}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Stato} & \textbf{Significato} & \textbf{Dove vive} \\
+\midrule
+\texttt{draft} & Lavoro in corso su feature branch & \texttt{claude-catalog/} (branch) \\
+\texttt{review} & PR aperta, revisione in corso & PR \\
+\texttt{approved} & PR mergiata su main & \texttt{claude-catalog/} (main) \\
+\texttt{released} & Tag Git applicato & Git tag \\
+\texttt{published} & Copiato nel marketplace & \texttt{claude-marketplace/} \\
+\texttt{deprecated} & Non più raccomandato & Marketplace con notice \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Promozione da beta a stable}
+
+Una capability beta è promovibile a stable quando soddisfa almeno uno dei seguenti criteri (alternativi, non cumulativi):
+
+\begin{itemize}
+  \item \textbf{Criterio A — Tempo + adozione}: usata in almeno due progetti distinti senza problemi critici per almeno 30 giorni dall'ultimo rilascio beta.
+  \item \textbf{Criterio B — Convergenza}: due o più specializzazioni di progetto indipendenti hanno introdotto la \textit{stessa modifica} alla capability beta. La convergenza è un segnale più forte del tempo: se due team hanno indipendentemente aggiunto la stessa regola, quella regola appartiene alla capability globale, non ai progetti.
+\end{itemize}
+
+Per la promozione via Criterio B, la PR deve citare entrambe le specializzazioni con i percorsi dei file e il diff che dimostra la convergenza.
+
+\section{Versionamento SemVer}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Tipo di cambiamento} & \textbf{Bump} \\
+\midrule
+Correzione di bug nel comportamento & PATCH (\texttt{x.y.Z}) \\
+Nuovi comportamenti, nuovi formati di output & MINOR (\texttt{x.Y.0}) \\
+Modifica a \texttt{name} o \texttt{description} nel frontmatter & MAJOR (\texttt{X.0.0}) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{attenzione}
+Cambiare il campo \texttt{name} o \texttt{description} nel frontmatter è un \textbf{breaking change}: modifica il modo in cui Claude decide di delegare a quell'agente. Richiede bump MAJOR e una nota di migrazione in \texttt{CHANGELOG.md}.
+\end{attenzione}
+
+% ---------------------------------------------------------------------------
+\chapter{Come scrivere un agente}
+% ---------------------------------------------------------------------------
+
+\section{Il formato del file}
+
+Un agente è un file \texttt{.md} con frontmatter YAML seguito dal system prompt:
+
+\begin{lstlisting}[language=YAML]
+---
+name: nome-agente
+description: >
+  Use when <trigger condition>. <cosa fa>. <cosa NON fa>.
+  Typical triggers include "<trigger 1>", "<trigger 2>".
+  See "When to invoke" in the agent body for worked scenarios.
+tools: Read, Grep, Glob, Write, Edit, Bash
+model: sonnet
+color: blue
+---
+
+## Role
+
+Un paragrafo che definisce chi e' questo agente e per cosa
+e' autorevole.
+
+## When to invoke
+
+- **Scenario 1.** Descrizione del trigger e del comportamento atteso.
+- **Scenario 2.** Altro trigger tipico.
+
+Do NOT use this agent for: <casi esclusi>.
+
+## What you always do
+
+Lista di comportamenti obbligatori in ogni interazione.
+
+## What you never do
+
+Divieti espliciti con motivazione quando non ovvia.
+
+## Output format
+
+Definizione esatta del formato prodotto.
+
+## Quality criteria
+
+Come l'agente valuta il proprio output prima di rispondere.
+\end{lstlisting}
+
+\section{Il campo \texttt{description} — il più importante}
+
+La \texttt{description} controlla \textit{quando} Claude delega a questo agente. Deve:
+
+\begin{itemize}
+  \item Iniziare con ``Use when'' o ``Use for'' (o la variante aggressiva ``ALWAYS use when'' per agenti sottoutilizzati)
+  \item Specificare la condizione di trigger, non solo il dominio
+  \item Includere 2--3 frasi verbatim di trigger tra virgolette doppie
+  \item Contenere una clausola ``Do not use for'' esplicita per disambiguare rispetto ad agenti simili
+  \item Terminare con il pointer: \texttt{See "When to invoke" in the agent body for worked scenarios.}
+\end{itemize}
+
+\section{Scelta del modello}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Modello} & \textbf{Quando usarlo} \\
+\midrule
+\texttt{sonnet} & Default — analisi, scrittura codice, documentazione \\
+\texttt{opus} & Solo quando la profondità di ragionamento è critica \\
+\texttt{haiku} & Skill e task ad alto volume e bassa complessità \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Gli agenti con \texttt{model: opus} devono avere un campo \texttt{model\_justification} nel frontmatter con almeno 40 caratteri che spiegano la necessità di reasoning depth superiore. Senza questo campo, il validatore emette un warning.
+
+\section{Profili strumenti standard}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Profilo} & \textbf{Strumenti} & \textbf{Uso tipico} \\
+\midrule
+Analista read-only & \texttt{Read, Grep, Glob} & Analisi senza output scritto \\
+Analista con report & \texttt{Read, Grep, Glob, Write} & Analisi con deliverable \\
+Developer completo & \texttt{Read, Edit, Write, Bash, Grep, Glob} & Scrittura ed esecuzione \\
+Ricercatore & \texttt{Read, Grep, Glob, WebFetch} & Design con consultazione web \\
+Orchestratore & \texttt{Read, Glob, Agent} & Solo delega ad altri agenti \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Checklist pre-PR per un agente}
+
+\begin{itemize}[label=$\square$]
+  \item Il campo \texttt{name} corrisponde al nome del file (senza \texttt{.md})
+  \item \texttt{description} inizia con ``Use when'' o ``Use for''
+  \item Il system prompt definisce un ruolo chiaro, non un helper generico
+  \item I formati di output sono definiti esplicitamente
+  \item La lista degli strumenti è minimale (non \texttt{*} senza giustificazione)
+  \item Nessuna credenziale o segreto nel file
+  \item Almeno un esempio in \texttt{examples/}
+  \item Almeno due scenari eval in \texttt{evals/}
+  \item Il file è stato testato localmente almeno una volta
+  \item \texttt{CHANGELOG.md} ha una entry sotto \texttt{[Unreleased]}
+  \item \texttt{catalog.json} è aggiornato (dopo publish)
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\chapter{Come scrivere una skill}
+% ---------------------------------------------------------------------------
+
+\section{Quando creare una skill}
+
+Crea una skill quando:
+\begin{itemize}
+  \item La stessa conoscenza di dominio appare in due o più system prompt di agenti
+  \item La conoscenza è dichiarativa: descrive \textit{come} fare le cose, non \textit{cosa fare}
+  \item La conoscenza cambia indipendentemente dal comportamento di ogni singolo agente
+\end{itemize}
+
+Non creare una skill per:
+\begin{itemize}
+  \item Logica specifica di un singolo agente
+  \item Comportamenti che richiedono strumenti oltre \texttt{Read}
+  \item Contenuto già abbastanza corto da essere inlineato senza duplicazione
+\end{itemize}
+
+\section{Il formato di una skill}
+
+\begin{lstlisting}[language=YAML]
+---
+name: nome-skill
+description: >
+  Use to retrieve [dominio] standards: [lista topic].
+  Called by [agente-1] and [agente-2] before [task].
+  Returns structured reference material, not code.
+tools: Read
+model: haiku
+color: cyan
+---
+
+## Role
+
+Sei un knowledge provider per gli standard di [dominio].
+Quando invocato, restituisci gli standard completi
+rilevanti per il task.
+
+## Standards
+
+[Il contenuto — organizzato per topic, con regole ed esempi]
+\end{lstlisting}
+
+\section{Disclosure progressiva — limiti di lunghezza}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Livello} & \textbf{Contenuto} & \textbf{Quando caricato} \\
+\midrule
+Frontmatter & \texttt{name}, \texttt{description}, \texttt{tools}, \texttt{model} & Sempre \\
+Body skill & Sezioni \texttt{\#\# Role} e \texttt{\#\# Standards} & Quando l'agente invoca la skill \\
+\texttt{references/} & Dettagli lunghi, template completi, esempi esaustivi & Solo quando il body li linka esplicitamente \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Limite} & \textbf{Parole} & \textbf{Azione} \\
+\midrule
+Soft cap & 3\,000 & Review se materiale denso può spostarsi in \texttt{references/} \\
+Hard cap & 5\,000 & Obbligatorio: regole nel body, template/esempi in \texttt{references/} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Script deterministici opzionali}
+
+Una skill può includere una directory \texttt{scripts/} con script per logica deterministica. La regola è: se la regola suona come ``dato X, la risposta è \textit{sempre} Y'', appartiene a uno script. Se suona come ``dato X, considera Y bilanciando Z'', rimane in prosa.
+
+\begin{lstlisting}
+claude-catalog/skills/<topic>/<skill-name>/
+  <skill-name>.md         body della skill
+  references/             contenuto a disclosure progressiva
+  scripts/
+    README.md             indice degli script (obbligatorio)
+    validate-something.py uno script, un compito, deterministico
+\end{lstlisting}
+
+% ---------------------------------------------------------------------------
+\chapter{Governance e anti-pattern}
+% ---------------------------------------------------------------------------
+
+\section{Processo decisionale}
+
+\subsection{Aggiungere una nuova capability}
+
+L'autore apre una PR con: il file dell'agente/skill, almeno un esempio, almeno due scenari eval. Serve un'approvazione di un reviewer per il merge. Prima dell'apertura PR, il contributore deve cercare in \texttt{ANTI-PATTERNS.md} le parole chiave del ruolo proposto per verificare che non esista un precedente di fallimento.
+
+\subsection{Modificare una capability esistente}
+
+PR con diff, entry nel changelog, verifica degli eval. Una approvazione. Se il cambiamento modifica sensibilmente il comportamento del modello, bump MINOR.
+
+\subsection{Deprecare una capability}
+
+La PR di deprecazione deve fare tre cose \textit{insieme}:
+\begin{enumerate}
+  \item Aggiungere notice di deprecazione nel campo \texttt{description} del frontmatter e in \texttt{catalog.json}.
+  \item Aggiungere entry in \texttt{ANTI-PATTERNS.md} con: cosa è stato tentato, perché ha fallito, cosa lo ha sostituito, condizioni per un retry valido.
+  \item Tenere il file \texttt{.md} in posizione per 90 giorni prima della rimozione.
+\end{enumerate}
+
+Il passo 2 è obbligatorio. Senza di esso, la rationale sparisce con il file e il prossimo contributore non ha modo di imparare dal precedente.
+
+\section{Catalogo vs. progetto}
+
+\begin{center}
+\begin{tabular}{lp{5.5cm}p{5.5cm}}
+\toprule
+ & \textbf{Catalogo globale} & \textbf{Override di progetto} \\
+\midrule
+\textbf{Dove} & \texttt{claude-catalog/} $\rightarrow$ marketplace & \texttt{<progetto>/.claude/agents/} \\
+\textbf{Contenuto} & Orizzontale, riutilizzabile, technology-aware ma non domain-aware & Copia specializzata del catalog agent con regole di dominio specifiche \\
+\textbf{Business rules} & Nessuna regola di business specifica & Aggiunge contesto di dominio (e.g., ``questo servizio usa CQRS con Axon Framework'') \\
+\textbf{Promozione} & — & Se l'override cresce molto, promuovere al catalogo \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{SLA del registro}
+
+\begin{itemize}
+  \item Revisione PR: entro 2 giorni lavorativi
+  \item Triage di bug report su capability pubblicate: entro 5 giorni lavorativi
+  \item Rimozione capability deprecate: 90 giorni dal notice di deprecazione
+\end{itemize}
+
+% =============================================================================
+%  PARTE III — CAPABILITY
+% =============================================================================
+\part{Le capability del catalogo}
+
+% ---------------------------------------------------------------------------
+\chapter{Orchestrazione}
+% ---------------------------------------------------------------------------
+
+\section{\texttt{orchestrator} — Meta-orchestratore}
+
+L'\texttt{orchestrator} è il punto di ingresso per task che attraversano più domini simultaneamente o hanno scope ambiguo. Non scrive codice, non produce contenuto direttamente. Il suo valore sta in tre operazioni:
+
+\begin{enumerate}
+  \item Capire la forma completa di una richiesta complessa prima che il lavoro inizi
+  \item Delegare gli agenti specialisti nel giusto ordine, in parallelo dove possibile
+  \item Sintetizzare i loro output in un'unica risposta coerente
+\end{enumerate}
+
+\textbf{Modello}: \texttt{opus} — la profondità di ragionamento serve per riconciliare trade-off cross-domain e recuperare da fallimenti parziali di sub-agent.
+
+\textbf{Quando usarlo}:
+\begin{itemize}
+  \item Task multi-dominio: backend + frontend + database + documentazione simultaneamente
+  \item Scope ambiguo: ``migliora questa app'', ``ottimizza le performance in tutto il progetto''
+  \item Refactor cross-stack dove un cambio (rinomina DTO, forma endpoint, colonna DB) si propaga su più superfici
+  \item Deliverable eterogeneo che nessun singolo agente può produrre da solo
+\end{itemize}
+
+\textbf{Non usare per}: task su un singolo dominio (usa lo specialista direttamente) o flussi di migrazione/refactoring end-to-end (usa \texttt{refactoring-supervisor}).
+
+\section{\texttt{refactoring-supervisor} — Supervisore del replatforming end-to-end}
+
+Il \texttt{refactoring-supervisor} è l'agente più complesso del registro: coordina un flusso di lavoro end-to-end di \textit{application replatforming} su 5 fasi, ciascuna delegata a un supervisore di fase dedicato.
+
+\begin{notabox}
+Il nome tecnico \texttt{refactoring-supervisor} è mantenuto per compatibilità backward, ma il capability name corretto è \textbf{Application Replatforming Workflow Supervisor}. La denominazione ``refactoring'' è obsoleta dalla v2.0.0.
+\end{notabox}
+
+\subsection{Le 5 fasi del workflow}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Fase} & \textbf{Supervisore} & \textbf{Output} \\
+\midrule
+Phase 0 — Indicizzazione & \texttt{indexing-supervisor} & \texttt{.indexing-kb/} \\
+Phase 1 — Analisi funzionale & \texttt{functional-analysis-supervisor} & \texttt{docs/analysis/01-functional/} \\
+Phase 2 — Analisi tecnica & \texttt{technical-analysis-supervisor} & \texttt{docs/analysis/02-technical/} \\
+Phase 3 — Baseline testing & \texttt{baseline-testing-supervisor} & \texttt{tests/baseline/} \\
+Phase 4 — Replatforming & (guidato direttamente) & Applicazione TO-BE funzionante \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Le Fasi 0--3 sono \textbf{strictly AS-IS}: non referenziano mai tecnologie target né architetture TO-BE. La Fase 4 introduce il target tech (Spring Boot 3 + Angular per il default stack) e applica la regola di \textit{inverse drift} (nessuna referenza AS-IS-only nel design TO-BE senza ADR).
+
+\subsection{La Fase 4 — Replatforming progressivo}
+
+La Fase 4 è sostanzialmente diversa dalle precedenti: invece di delegare a un singolo supervisore, il \texttt{refactoring-supervisor} la gestisce direttamente attraverso un loop a 7 step:
+
+\begin{enumerate}
+  \item \textbf{Step 0 — Bootstrap} (HARD GATE): il progetto deve compilare \textit{e} l'applicazione deve avviarsi
+  \item \textbf{Step 1 — Skeleton minimale}: struttura base funzionante
+  \item \textbf{Step 2 — Feature loop incrementale}: una feature alla volta — implementa $\rightarrow$ test $\rightarrow$ build $\rightarrow$ run $\rightarrow$ valida
+  \item \textbf{Step 3 — Mandatory validation loop}: qualsiasi fallimento blocca l'avanzamento fino alla risoluzione della causa radice
+  \item \textbf{Step 4 — Costruzione progressiva del sistema}: slices verticali, sistema sempre buildabile/runnable/testabile
+  \item \textbf{Step 5 — Hardening}: sicurezza, configurazione, error handling, logging reintrodotti e ri-validati
+  \item \textbf{Step 6 — Final validation}: suite di test completa + validazione dei business flow
+\end{enumerate}
+
+\begin{buonapratica}
+L'applicazione è \textbf{sempre in uno stato funzionante} durante la Fase 4. Nessun big-bang rewrite, nessun fallimento in fase avanzata, nessuno stato intermedio non compilabile.
+\end{buonapratica}
+
+\subsection{Human-in-the-loop}
+
+Prima di ogni fase (e di ogni step della Fase 4), il supervisore mostra uno schematico di cosa sta per fare e attende conferma esplicita. Al termine di ogni fase produce un riepilogo con i tempi di esecuzione. Alla rilevazione di output esistenti chiede esplicitamente per-fase: skip / re-run / regenerate-exports / revise — mai auto-skip silenzioso.
+
+% ---------------------------------------------------------------------------
+\chapter{Deliberazione}
+% ---------------------------------------------------------------------------
+
+\section{\texttt{deliberative-decision-engine} — Motore deliberativo}
+
+Il \texttt{deliberative-decision-engine} è l'agente per decisioni complesse, ad alto rischio, irreversibili o rilevanti per il replatforming. Non produce direttamente la risposta di dominio: orchestra un dibattito strutturato multi-agente e sintetizza il suo esito in un artefatto di decisione difendibile.
+
+\subsection{Le priorità del motore}
+
+\begin{enumerate}
+  \item \textbf{Qualità della decisione} — non degrada mai silenziosamente a ragionamento single-agent
+  \item \textbf{Robustezza} — porta in superficie le obiezioni non risolte; non le nasconde
+  \item \textbf{Auditabilità} — ogni fase produce un artefatto ispezionabile
+  \item \textbf{Explicabilità} — la risposta finale dichiara: cosa, perché, alternative considerate, obiezioni, dissensi, rischi residui, piano di validazione, piano di rollback
+  \item \textbf{Sicurezza} — per decisioni compliance/security/privacy/irreversibili escalate a judge o arbitrazione umana
+\end{enumerate}
+
+\subsection{Il pipeline a 7 step}
+
+\begin{enumerate}
+  \item Trigger detection + classificazione del task
+  \item Decision framing
+  \item Draft indipendenti per 3 o 5 persona (anti-anchoring: nessuna persona vede le bozze altrui)
+  \item Summary strutturato delle evidenze (neutro — il judge non fa raccomandazioni)
+  \item 1--2 round di challenge
+  \item Rebuttal
+  \item Selezione della strategia finale (majority / confidence-weighted / consensus / judge / arbitrazione umana) + commit protocol + artefatto di audit
+\end{enumerate}
+
+\subsection{Trigger}
+
+Il motore si attiva per:
+\begin{itemize}
+  \item Richiesta esplicita dell'utente in italiano: ``decidi con dibattito'', ``usa multi-agente'', ``fai criticare la decisione'', ``valuta pro e contro''
+  \item Richiesta esplicita in inglese: ``debate mode'', ``multi-agent debate'', ``red team this decision''
+  \item Invocazione programmatica da \texttt{refactoring-supervisor} con \texttt{decisionMode: deliberative}
+\end{itemize}
+
+\subsection{Le persona del dibattito}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Agente} & \textbf{Ruolo} \\
+\midrule
+\texttt{debate-proposer} & Primary Architect — produce la raccomandazione principale \\
+\texttt{debate-critic} & Skeptical Critic — audit delle assunzioni, failure modes \\
+\texttt{debate-replatforming-specialist} & Migration Specialist — sequencing, cutover, rollback \\
+\texttt{debate-risk-reviewer} & Risk/Compliance Reviewer — GDPR, HIPAA, blast radius \\
+\texttt{debate-operations-reviewer} & Operations Reviewer — SLOs, RTO/RPO, costi operativi \\
+\texttt{debate-judge} & Neutral judge — summary in Step 3 + arbitrazione in Step 6 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Tutti i persona usano \texttt{opus} — la qualità della decisione è prioritaria rispetto al costo.
+
+\subsection{Artefatto di output}
+
+Il risultato del dibattito viene salvato in \texttt{.deliberation-kb/<trace-id>/} con la struttura completa del pipeline. Il report finale per l'utente include esplicitamente: decisione, rationale, alternative considerate, obiezioni, opinioni dissenzienti, rischi residui, piano di validazione, piano di rollback, e se è richiesta approvazione umana.
+
+% ---------------------------------------------------------------------------
+\chapter{Phase 0 — Indicizzazione}
+% ---------------------------------------------------------------------------
+
+\section{Il problema dell'indicizzazione}
+
+Prima di analizzare o replatformare una codebase legacy, Claude ha bisogno di una \textit{knowledge base strutturata} del codice: struttura delle directory, dipendenze, moduli, logica di business, flussi di dati. Leggere direttamente i file a runtime ad ogni query è costoso e inconsistente. L'\texttt{indexing-supervisor} risolve questo producendo una KB in markdown persistente su disco.
+
+\section{\texttt{indexing-supervisor} — Supervisore dell'indicizzazione}
+
+L'\texttt{indexing-supervisor} è l'entrypoint unico della Phase 0. Legge la codebase Python (con supporto opzionale Streamlit), dispatcha 7 sub-agent in 4 fasi, e produce la KB in \texttt{.indexing-kb/}.
+
+\subsection{I 7 sub-agent}
+
+\begin{center}
+\begin{longtable}{lp{8cm}}
+\toprule
+\textbf{Sub-agent} & \textbf{Cosa produce} \\
+\midrule
+\endhead
+\texttt{codebase-mapper} & Inventario strutturale: directory tree, LOC, package map, entrypoint \\
+\texttt{dependency-analyzer} & Dipendenze esterne + grafo delle importazioni interne + circolarità \\
+\texttt{streamlit-analyzer} & Pagine, session\_state, widget, caching, pattern di navigazione Streamlit \\
+\texttt{module-documenter} & Documentazione API per package (fan-out parallelo) \\
+\texttt{data-flow-analyst} & DB, API esterne, file I/O, env vars, configurazione \\
+\texttt{business-logic-analyst} & Regole di business, logica di validazione, glossario, state machines \\
+\texttt{synthesizer} & Sintesi finale: overview di sistema, bounded contexts, hotspot di complessità \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\begin{notabox}
+I sub-agent non sono invocati direttamente dall'utente. Il supervisore li dispatcha e li coordina. L'utente interagisce solo con l'\texttt{indexing-supervisor}.
+\end{notabox}
+
+\subsection{Stack awareness}
+
+L'\texttt{indexing-supervisor} rileva il linguaggio primario e i framework dalla codebase e inietta istruzioni condizionali nei prompt dei sub-agent. Per Streamlit in particolare, lo \texttt{streamlit-analyzer} analizza il modello reattivo script-as-page che non ha un equivalente diretto in altri framework.
+
+% ---------------------------------------------------------------------------
+\chapter{Phase 1 — Analisi funzionale}
+% ---------------------------------------------------------------------------
+
+\section{\texttt{functional-analysis-supervisor}}
+
+L'entrypoint unico della Phase 1. Legge \texttt{.indexing-kb/} (prodotto dalla Phase 0) e produce una comprensione funzionale completa dell'applicazione AS-IS in \texttt{docs/analysis/01-functional/}, più un export PDF e PPTX brandizzati Accenture.
+
+La Phase 1 è \textbf{strictly AS-IS}: l'agente rifiuta qualsiasi riferimento a tecnologie target o architetture TO-BE. Se l'utente chiede analisi orientata al target, il supervisore risponde educatamente che quella è competenza delle fasi successive.
+
+\subsection{I 3 wave di analisi}
+
+\begin{center}
+\begin{longtable}{llp{7cm}}
+\toprule
+\textbf{Wave} & \textbf{Sub-agent} & \textbf{Output} \\
+\midrule
+\endhead
+W1 & \texttt{actor-feature-mapper} & Attori, ruoli, persona, feature map, matrice Attore×Feature \\
+W1 & \texttt{ui-surface-analyst} & Schermate, grafo di navigazione, component tree \\
+W1 & \texttt{io-catalog-analyst} & Input/output, matrice di trasformazione \\
+W2 & \texttt{user-flow-analyst} & Use case, user flow, diagrammi Mermaid \\
+W2 & \texttt{implicit-logic-analyst} & Logica nascosta: validazione implicita, state machine, callback chain \\
+W3 & \texttt{functional-analysis-challenger} & Review avversariale (opt-in per stack non-Streamlit) \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+Dopo le 3 wave, il supervisore lancia in parallelo \texttt{document-creator} e \texttt{presentation-creator} per gli export Accenture-branded.
+
+\subsection{Resume mode exports-only}
+
+Se l'analisi funzionale è già completa su disco ma mancano i file PDF/PPTX, il supervisore rileva la situazione e offre di rigenerare solo gli export senza ri-eseguire l'analisi. Questo previene re-run costosi quando la KB non è cambiata.
+
+% ---------------------------------------------------------------------------
+\chapter{Phase 2 — Analisi tecnica}
+% ---------------------------------------------------------------------------
+
+\section{\texttt{technical-analysis-supervisor}}
+
+Supervisore della Phase 2. Legge \texttt{.indexing-kb/} e (opzionalmente) \texttt{docs/analysis/01-functional/} e produce una comprensione tecnica completa dell'applicazione AS-IS in \texttt{docs/analysis/02-technical/}, più export PDF e PPTX.
+
+\subsection{Gli 8 analisti (Wave 1)}
+
+\begin{center}
+\begin{longtable}{lp{9cm}}
+\toprule
+\textbf{Sub-agent} & \textbf{Analisi} \\
+\midrule
+\endhead
+\texttt{code-quality-analyst} & Struttura codebase, duplicazioni, hotspot di complessità, smell di monolite \\
+\texttt{state-runtime-analyst} & Session state, global state, side effect, diagramma state-flow \\
+\texttt{dependency-security-analyst} & Inventario dipendenze, CVE, deprecation watch, postura licenze, SBOM-lite \\
+\texttt{data-access-analyst} & Flusso dati, pattern DB/file/cache/serializzazione \\
+\texttt{integration-analyst} & Integrazioni esterne, auth/timeout/retry, mappa di integrazione \\
+\texttt{performance-analyst} & N+1, hot loop, blocking I/O, gap di caching (analisi statica) \\
+\texttt{resilience-analyst} & Error handling, logging, silent failure, fallback chain \\
+\texttt{security-analyst} & OWASP Top 10, validazione input, segreti nel codice, STRIDE threat model \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\subsection{Sintesi e challenger (Wave 2 e 3)}
+
+Il \texttt{risk-synthesizer} (W2) consolida gli output degli 8 analisti in un registro di rischio unificato MD/JSON/CSV con matrice di severity e priorità di remediation.
+
+Il \texttt{technical-analysis-challenger} (W3, sempre attivo) effettua una review avversariale per gap, contraddizioni e violazioni AS-IS.
+
+Un singolo difetto spesso attraversa più domini (sicurezza + osservabilità + runtime): il supervisore usa \texttt{opus} per sintetizzare pattern cross-cutting visibili solo ragionando su tutti gli 8 output di W1.
+
+% ---------------------------------------------------------------------------
+\chapter{Phase 3 — Baseline testing}
+% ---------------------------------------------------------------------------
+
+\section{\texttt{baseline-testing-supervisor}}
+
+Supervisore della Phase 3. Produce la baseline di regressione AS-IS: una suite pytest completa in \texttt{tests/baseline/}, snapshot oracle, benchmark baseline, e opzionalmente una Postman collection se l'app espone servizi HTTP.
+
+\subsection{L'oracle}
+
+L'oracle è il cuore della Phase 3. È l'insieme degli snapshot catturati dell'applicazione AS-IS (output per ogni use case, metriche di performance, contratti HTTP) che la Phase 5 userà come riferimento per verificare l'equivalenza funzionale del TO-BE.
+
+\begin{attenzione}
+Il \texttt{baseline-testing-supervisor} \textbf{non modifica mai il codice sorgente AS-IS}. Se un test fallisce per un bug latente nella codebase, lo gestisce secondo la failure policy — non corregge la fonte.
+\end{attenzione}
+
+\subsection{Failure policy}
+
+\begin{itemize}
+  \item Fallimenti \textbf{critical/high}: escalation all'utente
+  \item Fallimenti \textbf{medium/low}: \texttt{@pytest.mark.xfail} con nota AS-IS bug
+\end{itemize}
+
+\subsection{I sub-agent}
+
+\begin{center}
+\begin{longtable}{lp{9cm}}
+\toprule
+\textbf{Sub-agent} & \textbf{Ruolo} \\
+\midrule
+\endhead
+\texttt{fixture-builder} & \texttt{conftest.py} con seed/time/network determinism + fixture minimal/realistic/edge \\
+\texttt{usecase-test-writer} & Modulo pytest per use case (happy + alternative + edge), Streamlit AppTest dove applicabile \\
+\texttt{integration-test-writer} & Test DB / file system / API outbound (mocked) \\
+\texttt{benchmark-writer} & \texttt{pytest-benchmark} + profiling memoria — oracle performance AS-IS \\
+\texttt{service-collection-builder} & Postman 2.1 collection (condizionale — solo se servizi esposti) \\
+\texttt{baseline-runner} & Esegue la suite, cattura snapshot/benchmark JSON/coverage \\
+\texttt{baseline-challenger} & Review avversariale (coverage, integrità oracle, determinismo) \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+% ---------------------------------------------------------------------------
+\chapter{Phase 4 — Refactoring TO-BE (agenti dedicati)}
+% ---------------------------------------------------------------------------
+
+La Phase 4 è gestita direttamente dal \texttt{refactoring-supervisor} tramite il loop a 7 step descritto nel Cap.~10. Gli agenti documentati in questo capitolo supportano quei step e possono essere usati anche standalone.
+
+\section{Agenti di decomposizione e contratto}
+
+\subsection{\texttt{decomposition-architect}}
+Decomposizione bounded-context (DDD), aggregati, mappa AS-IS$\leftrightarrow$TO-BE dei moduli, ADR-001 (stile architetturale) + ADR-002 (stack target).
+
+\subsection{\texttt{api-contract-designer}}
+Contratto OpenAPI 3.1 (singola fonte di verità), Postman collection TO-BE, ADR-003 (auth flow).
+
+\section{Agenti di scaffolding}
+
+\subsection{\texttt{backend-scaffolder}}
+Spring Boot 3 Maven scaffold: controller da OpenAPI, DTO, service con TODO, error handler RFC 7807, security baseline.
+
+\subsection{\texttt{data-mapper}}
+Entità JPA, value object, enum, changelog Liquibase YAML, repository Spring Data JPA (DDD-compliant).
+
+\subsection{\texttt{logic-translator}}
+Fan-out per use case: traduce un singolo UC da Python AS-IS a Java/Spring. Non tocca mai il codice AS-IS.
+
+\subsection{\texttt{frontend-scaffolder}}
+Angular 17+ workspace: standalone component, lazy module per bounded context, client TypeScript generato da OpenAPI, traduzioni da Streamlit.
+
+\section{Agenti di hardening e roadmap}
+
+\subsection{\texttt{hardening-architect}}
+Osservabilità (JSON logging + correlation-id, Micrometer + Prometheus, OpenTelemetry) e sicurezza (Spring Security 6, OWASP headers, CSP). ADR-004 + ADR-005.
+
+\subsection{\texttt{migration-roadmap-builder}}
+Roadmap strangler-fig con milestone per bounded context, piani di rollback, criteri di go-live, carry-over dei bug AS-IS.
+
+\subsection{\texttt{phase4-challenger}}
+Matrice di traceability AS-IS$\leftrightarrow$TO-BE + 8 check avversariali (coverage, OpenAPI$\leftrightarrow$code drift, completezza ADR, regression di sicurezza, equivalenza, leak AS-IS-only).
+
+% ---------------------------------------------------------------------------
+\chapter{Analisi funzionale e tecnica standalone}
+% ---------------------------------------------------------------------------
+
+\section{\texttt{functional-analyst}}
+
+L'agente standalone per l'analisi funzionale su un progetto generico (non necessariamente parte di un flusso di replatforming). Estrae requisiti funzionali da specifiche, user story, o codice esistente; documenta use case e processi di business; produce criteri di accettazione; mappa attori e boundary di sistema. Genera anche CRUD matrix e traceability requirements$\rightarrow$codice.
+
+\section{\texttt{technical-analyst}}
+
+L'agente standalone per l'audit tecnico: debito tecnico, postura di sicurezza, dipendenze vulnerabili, gap di osservabilità, metriche di qualità del codice, valutazione CI/CD pipeline. Produce findings strutturati con severity rating e priorità di remediation. \textbf{Non} fa raccomandazioni architetturali — delega a \texttt{software-architect} per questo.
+
+\section{\texttt{software-architect}}
+
+Analisi e progettazione di architetture di sistema, valutazione di scelte tecnologiche, review di pattern di integrazione, scrittura di Architecture Decision Record (ADR), assessment di requisiti non funzionali (performance, sicurezza, scalabilità, reliability, costo, manutenibilità). Usa il modello C4 per i diagrammi. Non scrive codice di implementazione.
+
+% ---------------------------------------------------------------------------
+\chapter{Developer agents}
+% ---------------------------------------------------------------------------
+
+Il registro include agenti developer specializzati per linguaggio. Ogni agente carica le skill di standard rilevanti per il linguaggio e il framework, e produce codice production-ready con testing, logging strutturato e error handling appropriato.
+
+\begin{center}
+\begin{longtable}{lll}
+\toprule
+\textbf{Agente} & \textbf{Stack} & \textbf{Note} \\
+\midrule
+\endhead
+\texttt{developer-java} & Java 17+ / Spring Boot 3 & Standard enterprise completi; carica 6 skill backend \\
+\texttt{developer-python} & Python 3.11+ / FastAPI & PEP 8, type hints, Pydantic v2, pytest, structlog \\
+\texttt{developer-frontend} & Angular / React / Vue / Qwik / Vanilla & Auto-rileva il framework del progetto \\
+\texttt{developer-go} & Go (net/http, chi, gin, cobra) & Standard library first, log/slog, table-driven tests \\
+\texttt{developer-kotlin} & Kotlin / Spring Boot 3 o Ktor & Coroutine, sealed hierarchy, value class, no \texttt{!!} \\
+\texttt{developer-rust} & Rust stable (axum, actix-web, tokio) & thiserror/anyhow, structured concurrency, tracing \\
+\texttt{developer-csharp} & C\#/.NET 8+ / ASP.NET Core & Nullable ref types, records, IOptions, EF Core \\
+\texttt{developer-ruby} & Rails 7+ / Sidekiq & Service/form/query objects, RSpec + factory\_bot \\
+\texttt{developer-php} & PHP 8.2+ / Laravel 10+ o Symfony 6+ & strict\_types, readonly, enums, PHPStan level 8 \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\section{Skill backend caricati da \texttt{developer-java}}
+
+\begin{itemize}
+  \item \texttt{java-spring-standards} — package structure, layering, testing, error handling, logging, security, Micrometer
+  \item \texttt{spring-expert} — IoC/DI, auto-configuration, profiles, ConfigurationProperties, WebClient, Spring Security 6
+  \item \texttt{spring-architecture} — Controller/Service/Repository/Entity, DTO, Bean Validation, mapper pattern
+  \item \texttt{spring-data-jpa} — entity design, relazioni, fetch strategy, N+1, transazioni, JPQL, cache L2
+  \item \texttt{java-expert} — records, sealed class, Optional, Stream API, Lombok, concurrency, custom exception
+  \item \texttt{postgresql-expert} — data modelling, index, performance tuning, Flyway migrations, integrità referenziale
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\chapter{Qualità}
+% ---------------------------------------------------------------------------
+
+\section{\texttt{code-reviewer}}
+
+Code review strutturata su PR o set di file modificati. Analizza correttezza, vulnerabilità di sicurezza, test coverage, aderenza alle convenzioni di progetto, problemi di performance, manutenibilità. Produce una review con commenti a livello di riga e una raccomandazione overall: Approve, Request Changes, o Comment.
+
+\section{\texttt{debugger}}
+
+Diagnosi di bug, errori, o comportamento inatteso. Legge messaggi di errore, stack trace, log, e file sorgente rilevanti per identificare la causa radice e proporre una fix minimale e mirata. Non refactora oltre il necessario per correggere il bug. Spiega la causa radice chiaramente prima di proporre la fix.
+
+\section{\texttt{test-writer}}
+
+Scrittura di test per codice esistente: unit test, integration test, e2e test. Legge il codice di produzione, identifica scenari di test (happy path, edge case, error case), e produce test completi e runnable. Supporta JUnit 5 + Mockito (Java), pytest (Python), e Jest (JavaScript/TypeScript). Rileva e colma gap nelle suite di test esistenti.
+
+\section{\texttt{registry-auditor}}
+
+Audit del registro stesso contro le quattro rubric ufficiali di Anthropic (\texttt{agent-development}, \texttt{skill-development}, \texttt{skill-creator}, \texttt{claude-md-improver}). Produce: grade per area, pattern registry-wide, top-10 file da riscrivere, template di riferimento, outlier di word-count, quick win scriptabili.
+
+\begin{notabox}
+\texttt{registry-auditor} è read-only: analizza ma non modifica nulla. È lo strumento principale per il loop audit$\rightarrow$remediation: esegui l'auditor, leggi la top-10, correggi i file, ri-esegui il validatore, ri-esegui l'auditor per confermare che la metrica si sia mossa.
+\end{notabox}
+
+% ---------------------------------------------------------------------------
+\chapter{Documentazione}
+% ---------------------------------------------------------------------------
+
+\section{\texttt{documentation-writer}}
+
+Scrittura e miglioramento di documentazione tecnica: README, guide API, architecture overview, runbook, guide di onboarding, documentazione inline. Legge la codebase e la documentazione esistente per produrre documentazione accurata e adeguata all'audience.
+
+\textbf{Formati supportati}: negozia il formato di output con l'utente prima di generare — supporta Markdown, \LaTeX, HTML, PDF (via pandoc + pdflatex), DOCX. Rileva il toolchain locale e offre solo i formati effettivamente producibili.
+
+\section{\texttt{wiki-writer}}
+
+Scrittura di wiki GitHub organizzate secondo il framework Diataxis (Tutorials, How-to, Reference, Explanation). Produce file \texttt{wiki/*.md} per revisione via PR. Non fa auto-push alla wiki.
+
+\section{\texttt{document-creator}}
+
+Creazione di documenti tecnici Accenture-branded (PDF via HTML$\rightarrow$Chrome headless, o DOCX) da documenti di progetto, file di stima, o materiali sorgente. Carica la skill \texttt{accenture-branding} per palette, tipografia e template. Produce: executive summary, problem statement, solution design, architettura, inventario componenti, dipendenze, timeline, rischi.
+
+\section{\texttt{presentation-creator}}
+
+Creazione di presentazioni \texttt{.pptx} Accenture-branded da documenti di progetto. Carica \texttt{accenture-branding}. Gestisce sia deck business (executive summary, problema/soluzione, timeline) sia deck tecnici (architettura, pattern, dipendenze, topologia cloud). Read-only sui sorgenti.
+
+\section{Skill di documentazione}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Skill} & \textbf{Produce} \\
+\midrule
+\texttt{backend-documentation} & \texttt{backend-doc.tex} per Spring Boot (architettura, API, data model) \\
+\texttt{frontend-documentation} & \texttt{frontend-doc.tex} per Angular (moduli, NgRx, routing, design system) \\
+\texttt{documentation-orchestrator} & Coordina i due precedenti + consistenza cross-layer \\
+\texttt{doc-expert} & Docstring, flow description, glossario di dominio — salva in \texttt{docs/} \\
+\texttt{functional-document-generator} & Converte \texttt{docs/functional/} in \texttt{.tex} deliverable per stakeholder \\
+\texttt{uml-diagram-generator} & Genera diagrammi UML (component, sequence, class, ecc.) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ---------------------------------------------------------------------------
+\chapter{API design}
+% ---------------------------------------------------------------------------
+
+\section{\texttt{api-designer}}
+
+Design e review di contratti API REST: modellazione risorse, selezione metodi HTTP e status code, struttura URL, schema request/response, strategia di versioning, paginazione, formato degli errori, authoring specifiche OpenAPI. Carica la skill \texttt{rest-api-standards}.
+
+Produce specifiche OpenAPI 3.1 YAML e rationale di design. Fa anche review di API esistenti per REST maturity level, consistenza, e rischio di breaking change.
+
+% =============================================================================
+%  PARTE IV — STRUMENTI DI CONTORNO
+% =============================================================================
+\part{Strumenti di contorno}
+
+% ---------------------------------------------------------------------------
+\chapter{Hooks}
+% ---------------------------------------------------------------------------
+
+\section{Cosa sono gli hook}
+
+Gli hook sono comandi shell (o endpoint HTTP, o prompt) che Claude Code esegue automaticamente in risposta a eventi specifici durante una sessione. Girano \textit{fuori} dal contesto di Claude — sono script shell standard eseguiti dal processo Claude Code.
+
+\subsection{Proprietà chiave}
+
+\begin{itemize}
+  \item Gli hook \texttt{PreToolUse} sono \textbf{sincroni e bloccanti}: possono ritardare o bloccare la tool call
+  \item L'\textbf{exit code} controlla il comportamento:
+    \begin{itemize}
+      \item \texttt{exit 0} — consenti l'azione
+      \item \texttt{exit 2} — blocca l'azione (solo per hook \texttt{PreToolUse} bloccanti)
+      \item Qualsiasi altro exit code — fallimento hook, loggato ma l'azione prosegue
+    \end{itemize}
+  \item Gli hook possono produrre JSON su stdout per comunicare decisioni strutturate a Claude Code
+  \item Gli hook girano con lo stesso ambiente del processo Claude Code
+\end{itemize}
+
+\section{Hook inclusi nel catalogo}
+
+\subsection{\texttt{pre-tool-safety.sh}}
+
+Evento: \texttt{PreToolUse} su \texttt{Bash}. Scopo: warning prima di comandi shell distruttivi (\texttt{rm -rf}, \texttt{DROP TABLE}, ecc.). Comportamento: esce con 2 (blocca) se viene rilevato un pattern ad alto rischio, con una spiegazione.
+
+\subsection{\texttt{post-session-log.sh}}
+
+Evento: \texttt{Stop}. Scopo: aggiunge un timestamp di fine sessione a un audit log locale. Comportamento: esce sempre con 0 (non bloccante). Scrive in \texttt{.claude/session-log.txt}.
+
+\section{Come attivare gli hook}
+
+Aggiungi le voci rilevanti al \texttt{.claude/settings.json} del progetto. Gli hook \textbf{non} si attivano posizionando gli script nella directory \texttt{hooks/}: quella directory contiene solo esempi e template. Devono essere configurati esplicitamente in \texttt{settings.json}.
+
+\begin{lstlisting}[language=bash]
+# Esempio entry in .claude/settings.json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-tool-safety.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+\end{lstlisting}
+
+\section{Linee guida per lo sviluppo di hook}
+
+\begin{enumerate}
+  \item \textbf{Tienili veloci}: hook che impiegano più di qualche secondo degradano significativamente la developer experience. Pre-tool hook in particolare devono completare in \textless 500ms.
+  \item \textbf{Non bloccare per default}: blocca (\texttt{exit 2}) solo in presenza di una chiara preoccupazione di sicurezza. Hook bloccanti troppo aggressivi diventano rumore e vengono disattivati.
+  \item \textbf{Mai credenziali negli script hook}: usa variabili d'ambiente.
+  \item \textbf{Log su stderr, non stdout}: Claude Code può processare stdout per decisioni strutturate.
+  \item \textbf{Gestisci stdin vuoto o malformato}: gli script hook ricevono JSON su stdin; gestisci sempre il caso in cui stdin è vuoto.
+\end{enumerate}
+
+% ---------------------------------------------------------------------------
+\chapter{MCP (Model Context Protocol)}
+% ---------------------------------------------------------------------------
+
+\section{Cos'è MCP}
+
+MCP (Model Context Protocol) è uno standard ufficiale Claude Code che permette di esporre tool e sorgenti dati esterni a Claude come strumenti invocabili. I server MCP girano come processi separati e comunicano con Claude Code via protocollo definito.
+
+\section{Quando usare MCP — e quando no}
+
+\subsection{Usa MCP quando}
+
+\begin{itemize}
+  \item Hai bisogno che Claude acceda a una sorgente dati \textit{fuori dalla directory di progetto} e non raggiungibile con \texttt{Read}/\texttt{Grep}/\texttt{Glob} (e.g. un database, un'API esterna, un wiki, una JIRA instance)
+  \item L'integrazione viene riutilizzata su più sessioni — il costo di setup è giustificato
+  \item Il tool deve restituire dati strutturati che Claude altrimenti dovrebbe estrarre da testo non strutturato
+\end{itemize}
+
+\subsection{Non usare MCP quando}
+
+\begin{itemize}
+  \item I file sono nella directory di progetto — usa \texttt{Read}, \texttt{Grep}, \texttt{Glob}
+  \item Hai bisogno di eseguire un comando shell — usa \texttt{Bash}
+  \item Hai bisogno di una web lookup one-off — usa \texttt{WebFetch}
+  \item Il setup del server MCP è più complesso del beneficio che porta
+\end{itemize}
+
+\begin{buonapratica}
+La regola pratica: se puoi risolvere il problema con gli strumenti che Claude Code già ha (\texttt{Read}, \texttt{Bash}, \texttt{WebFetch}), non introdurre un server MCP. MCP aggiunge complessità operativa (un altro processo da avviare, manutenere, e proteggere).
+\end{buonapratica}
+
+\section{Formato del file \texttt{.mcp.json}}
+
+\texttt{.mcp.json} va alla \textbf{root del progetto} (non dentro \texttt{.claude/}). È sicuro committarlo su Git purché non contenga segreti.
+
+\begin{lstlisting}[language=bash]
+{
+  "mcpServers": {
+    "nome-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-name"],
+      "env": {
+        "API_KEY": "${API_KEY_ENV_VAR}"
+      }
+    }
+  }
+}
+\end{lstlisting}
+
+I riferimenti a variabili d'ambiente (\texttt{\$\{VAR\}}) vengono espansi dall'ambiente shell a runtime. Non inserire mai segreti direttamente nel file.
+
+\section{Server MCP comuni}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Server} & \textbf{Package} & \textbf{Fornisce} \\
+\midrule
+Filesystem & \texttt{@mcp/server-filesystem} & Read/write su directory specificate \\
+PostgreSQL & \texttt{@mcp/server-postgres} & Schema DB e accesso query \\
+GitHub & \texttt{@mcp/server-github} & Issue, PR, ricerca codice \\
+Brave Search & \texttt{@mcp/server-brave-search} & Web search \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ---------------------------------------------------------------------------
+\chapter{Script operativi}
+% ---------------------------------------------------------------------------
+
+\section{\texttt{setup-capabilities.sh}}
+
+Installa le capability dal marketplace nel progetto target (o globalmente con \texttt{--global}). Legge \texttt{catalog.json} per risolvere il path corretto di ogni capability e le relative dipendenze (skill). L'installazione è idempotente: chiamate successive sovrascrivono senza errori.
+
+\begin{lstlisting}[language=bash]
+# Installazione globale
+./claude-catalog/scripts/setup-capabilities.sh --global
+
+# Installazione per progetto
+./claude-catalog/scripts/setup-capabilities.sh /percorso/progetto
+\end{lstlisting}
+
+\section{\texttt{new-capability.sh}}
+
+Scaffolda una nuova capability (agente o skill) con tutti i file richiesti:
+
+\begin{lstlisting}[language=bash]
+# Scaffolda un nuovo agente
+./claude-catalog/scripts/new-capability.sh --type agent nome-agente
+
+# Scaffolda una nuova skill
+./claude-catalog/scripts/new-capability.sh --type skill nome-skill
+\end{lstlisting}
+
+Il template generato include: frontmatter YAML con i campi obbligatori, sezione \texttt{\#\# When to invoke} con placeholder per 2--4 scenari, sezione \texttt{Do NOT use this agent for}, struttura \texttt{\#\# Role}, e il pointer agli scenari worked.
+
+\section{\texttt{publish.sh}}
+
+Copia una capability approvata dal catalogo al marketplace e aggiorna \texttt{catalog.json}.
+
+\begin{lstlisting}[language=bash]
+# Pubblica in beta (topic auto-risolto dal path nel catalogo)
+./claude-marketplace/scripts/publish.sh nome-capability 0.1.0 beta
+
+# Pubblica in stable con topic esplicito
+./claude-marketplace/scripts/publish.sh software-architect 1.1.0 stable \
+  --topic architecture
+\end{lstlisting}
+
+Lo script:
+\begin{enumerate}
+  \item Risolve il topic da: flag \texttt{--topic}, entry esistente in \texttt{catalog.json}, path sorgente nel catalogo
+  \item Copia il file \texttt{.md} in \texttt{claude-marketplace/\{tier\}/\{topic\}/\{name\}.md}
+  \item Rimuove eventuali copie stantie della stessa capability sotto lo stesso tier
+  \item Aggiorna \texttt{version}, \texttt{tier}, \texttt{file}, e \texttt{published} in \texttt{catalog.json}
+\end{enumerate}
+
+\section{\texttt{validate\_catalog.py} e \texttt{validate\_marketplace.py}}
+
+Script di validazione eseguiti dalla CI — eseguibili anche localmente prima di aprire una PR:
+
+\begin{lstlisting}[language=bash]
+# Gate 1 — valida il catalogo
+python3 .github/scripts/validate_catalog.py
+
+# Gate 2 — valida il marketplace (esegui solo dopo Gate 1 verde)
+python3 .github/scripts/validate_marketplace.py
+\end{lstlisting}
+
+\subsection{Cosa valida Gate 1 (catalogo)}
+
+\begin{itemize}
+  \item Frontmatter YAML valido (\texttt{name}, \texttt{description}, \texttt{tools}, \texttt{model})
+  \item System prompt presente con sezione \texttt{\#\# Role}
+  \item Skill senza strumenti vietati (\texttt{Edit}, \texttt{Write}, \texttt{Bash}, \texttt{Agent})
+  \item \texttt{CHANGELOG.md} ha una entry \texttt{[Unreleased]}
+  \item \textbf{Check marketplace sync}: ogni agente/skill nel catalogo deve avere una entry in \texttt{catalog.json} — blocca la PR se manca
+\end{itemize}
+
+\subsection{Cosa valida Gate 2 (marketplace)}
+
+\begin{itemize}
+  \item \texttt{catalog.json} valido (semver, tier, status, campi obbligatori)
+  \item Ogni file referenziato esiste su disco
+  \item Il campo \texttt{name} nel frontmatter corrisponde alla entry in catalog
+  \item Convenzione dei path: \texttt{\{tier\}/\{topic\}/\{name\}.md} o \texttt{skills/\{topic\}/\{name\}.md}
+  \item Nessun file orfano in \texttt{stable/}, \texttt{beta/}, \texttt{skills/} (ricorsivo)
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\chapter{Template e policy}
+% ---------------------------------------------------------------------------
+
+\section{Template}
+
+Il catalogo include template riutilizzabili per output ricorrenti:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{File} & \textbf{Scopo} \\
+\midrule
+\texttt{templates/architecture-decision-record.md} & Template ADR standard (Contesto, Decisione, Conseguenze) \\
+\texttt{templates/analysis-report.md} & Template report di analisi (Executive Summary, Findings, Risks, Recommendations) \\
+\texttt{templates/api-contract.md} & Template contratto API con schema request/response \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Policy}
+
+\texttt{policies/python-conventions.md} contiene le convenzioni di codifica Python adottate dal team (non ancora migrate a skill). Viene referenziata dagli agenti Python per garantire consistenza.
+
+\section{Evals}
+
+Ogni capability dovrebbe avere almeno due scenari di valutazione in \texttt{evals/\{capability\}-eval.md}. Gli eval descrivono: scenario di input, comportamento atteso, criteri di successo. Sono usati sia per il testing manuale prima del merge sia per future valutazioni automatizzate.
+
+% ---------------------------------------------------------------------------
+% Appendici
+% ---------------------------------------------------------------------------
+\appendix
+
+\chapter{Riferimento rapido: comandi essenziali}
+
+\begin{lstlisting}[language=bash]
+# Aggiornare le capability globalmente
+cd ~/dev/claude-registry && git pull origin main
+./claude-catalog/scripts/setup-capabilities.sh --global
+
+# Validare prima di aprire una PR
+python3 .github/scripts/validate_catalog.py
+python3 .github/scripts/validate_marketplace.py
+
+# Scaffoldare una nuova capability
+./claude-catalog/scripts/new-capability.sh --type agent nome-agente
+./claude-catalog/scripts/new-capability.sh --type skill nome-skill
+
+# Pubblicare una capability approvata
+./claude-marketplace/scripts/publish.sh nome 0.1.0 beta
+
+# Versione pubblicata di una capability specifica
+cat claude-marketplace/catalog.json | \
+  python3 -c "import json,sys; \
+  [print(c['name'], c['version']) \
+   for c in json.load(sys.stdin)['capabilities'] \
+   if c['name']=='nome-capability']"
+\end{lstlisting}
+
+\chapter{Elenco completo delle capability}
+
+\section{Agenti per area}
+
+\begin{longtable}{llp{7cm}}
+\toprule
+\textbf{Area} & \textbf{Agente} & \textbf{Descrizione sintetica} \\
+\midrule
+\endhead
+\multicolumn{3}{l}{\textit{Orchestrazione}} \\
+ & \texttt{orchestrator} & Meta-orchestratore multi-dominio \\
+ & \texttt{refactoring-supervisor} & Workflow replatforming end-to-end (5 fasi) \\
+\midrule
+\multicolumn{3}{l}{\textit{Deliberazione}} \\
+ & \texttt{deliberative-decision-engine} & Motore di decisione deliberativa a 7 step \\
+ & \texttt{debate-proposer} & Persona: Primary Architect \\
+ & \texttt{debate-critic} & Persona: Skeptical Critic \\
+ & \texttt{debate-replatforming-specialist} & Persona: Migration Specialist \\
+ & \texttt{debate-risk-reviewer} & Persona: Risk/Compliance Reviewer \\
+ & \texttt{debate-operations-reviewer} & Persona: Operations Reviewer \\
+ & \texttt{debate-judge} & Giudice neutrale e arbitro \\
+\midrule
+\multicolumn{3}{l}{\textit{Phase 0 — Indicizzazione}} \\
+ & \texttt{indexing-supervisor} & Supervisore pipeline di indicizzazione \\
+ & \texttt{codebase-mapper} & Inventario strutturale \\
+ & \texttt{dependency-analyzer} & Dipendenze e grafo importazioni \\
+ & \texttt{streamlit-analyzer} & Analisi specifica Streamlit \\
+ & \texttt{module-documenter} & Documentazione API per package \\
+ & \texttt{data-flow-analyst} & Flussi dati e boundary esterni \\
+ & \texttt{business-logic-analyst} & Regole di business e domain concepts \\
+ & \texttt{synthesizer} & Sintesi finale KB \\
+\midrule
+\multicolumn{3}{l}{\textit{Phase 1 — Analisi funzionale}} \\
+ & \texttt{functional-analysis-supervisor} & Supervisore Phase 1 \\
+ & \texttt{actor-feature-mapper} & Attori e feature map \\
+ & \texttt{ui-surface-analyst} & Schermate e navigazione \\
+ & \texttt{io-catalog-analyst} & Input/output e trasformazioni \\
+ & \texttt{user-flow-analyst} & Use case e user flow \\
+ & \texttt{implicit-logic-analyst} & Logica implicita e state machine \\
+ & \texttt{functional-analysis-challenger} & Revisione avversariale \\
+\midrule
+\multicolumn{3}{l}{\textit{Phase 2 — Analisi tecnica}} \\
+ & \texttt{technical-analysis-supervisor} & Supervisore Phase 2 \\
+ & \texttt{code-quality-analyst} & Qualità codice e hotspot \\
+ & \texttt{state-runtime-analyst} & Session state e side effect \\
+ & \texttt{dependency-security-analyst} & Dipendenze, CVE, licenze \\
+ & \texttt{data-access-analyst} & Pattern accesso dati \\
+ & \texttt{integration-analyst} & Integrazioni esterne \\
+ & \texttt{performance-analyst} & Performance statica \\
+ & \texttt{resilience-analyst} & Error handling e silent failure \\
+ & \texttt{security-analyst} & OWASP Top 10 e STRIDE \\
+ & \texttt{risk-synthesizer} & Registro di rischio unificato \\
+ & \texttt{technical-analysis-challenger} & Revisione avversariale \\
+\midrule
+\multicolumn{3}{l}{\textit{Phase 3 — Baseline testing}} \\
+ & \texttt{baseline-testing-supervisor} & Supervisore Phase 3 \\
+ & \texttt{fixture-builder} & conftest.py e fixture \\
+ & \texttt{usecase-test-writer} & Test per use case \\
+ & \texttt{integration-test-writer} & Test di integrazione \\
+ & \texttt{benchmark-writer} & Oracle performance \\
+ & \texttt{service-collection-builder} & Postman collection \\
+ & \texttt{baseline-runner} & Esecuzione suite + oracle \\
+ & \texttt{baseline-challenger} & Revisione avversariale \\
+\midrule
+\multicolumn{3}{l}{\textit{Phase 4 — Refactoring TO-BE}} \\
+ & \texttt{decomposition-architect} & Bounded context + ADR-001/002 \\
+ & \texttt{api-contract-designer} & OpenAPI 3.1 + ADR-003 \\
+ & \texttt{backend-scaffolder} & Spring Boot 3 scaffold \\
+ & \texttt{data-mapper} & JPA entities + Liquibase \\
+ & \texttt{logic-translator} & Traduzione UC Python$\rightarrow$Java \\
+ & \texttt{frontend-scaffolder} & Angular 17+ workspace \\
+ & \texttt{hardening-architect} & Observability + security + ADR-004/005 \\
+ & \texttt{migration-roadmap-builder} & Strangler-fig roadmap \\
+ & \texttt{phase4-challenger} & Traceability matrix + 8 check \\
+\midrule
+\multicolumn{3}{l}{\textit{Developer}} \\
+ & \texttt{developer-java} & Java/Spring Boot 3 \\
+ & \texttt{developer-python} & Python/FastAPI \\
+ & \texttt{developer-frontend} & Angular/React/Vue/Qwik/Vanilla \\
+ & \texttt{developer-go} & Go \\
+ & \texttt{developer-kotlin} & Kotlin/Spring Boot o Ktor \\
+ & \texttt{developer-rust} & Rust/axum/tokio \\
+ & \texttt{developer-csharp} & C\#/.NET 8+ \\
+ & \texttt{developer-ruby} & Ruby/Rails 7+ \\
+ & \texttt{developer-php} & PHP 8.2+/Laravel o Symfony \\
+\midrule
+\multicolumn{3}{l}{\textit{Qualità}} \\
+ & \texttt{code-reviewer} & Code review strutturata \\
+ & \texttt{debugger} & Diagnosi bug e root cause \\
+ & \texttt{test-writer} & Scrittura test \\
+ & \texttt{registry-auditor} & Audit rubric Anthropic \\
+\midrule
+\multicolumn{3}{l}{\textit{Documentazione}} \\
+ & \texttt{documentation-writer} & README, runbook, guide API \\
+ & \texttt{wiki-writer} & GitHub wiki (Diataxis) \\
+ & \texttt{document-creator} & PDF/DOCX Accenture-branded \\
+ & \texttt{presentation-creator} & PPTX Accenture-branded \\
+\midrule
+\multicolumn{3}{l}{\textit{Analisi e design}} \\
+ & \texttt{functional-analyst} & Requisiti, use case, business process \\
+ & \texttt{technical-analyst} & Debito tecnico, sicurezza, CI/CD \\
+ & \texttt{software-architect} & Architettura, ADR, trade-off \\
+ & \texttt{api-designer} & REST API design, OpenAPI 3.1 \\
+\bottomrule
+\end{longtable}
+
+\chapter{Glossario}
+
+\begin{description}
+  \item[Agente (Agent)] Sottoagente Claude Code che svolge un ruolo attivo (analizza, scrive, progetta). Ha un system prompt con logica comportamentale, strumenti appropriati, e una description che guida la delega automatica.
+  \item[Skill] Fornitore di conoscenza dichiarativa (standard, convenzioni, regole). Nodo foglia — non delega ad altri agenti, non modifica file. Modello haiku, strumento solo Read.
+  \item[Capability] Il pacchetto completo: agente o skill + documentazione + esempi + eval.
+  \item[Catalogo] L'area di sviluppo e versionamento delle capability (\texttt{claude-catalog/}).
+  \item[Marketplace] L'area di distribuzione delle capability approvate (\texttt{claude-marketplace/}).
+  \item[Oracle] Insieme degli snapshot catturati dell'applicazione AS-IS (output per use case, performance) usati come riferimento di equivalenza in Phase 5.
+  \item[Strangler-fig] Pattern di migrazione progressiva: il sistema legacy viene gradualmente "strangolato" da componenti TO-BE che ne sostituiscono le funzionalità una alla volta.
+  \item[HITL (Human-in-the-loop)] Punto obbligatorio di conferma umana in un flusso automatizzato.
+  \item[AS-IS] Lo stato attuale dell'applicazione, senza modifiche o riferimenti al target.
+  \item[TO-BE] L'architettura e l'implementazione target della migrazione/refactoring.
+  \item[DDD (Domain-Driven Design)] Approccio di design basato su bounded context, aggregati, e linguaggio ubiquo.
+  \item[ADR (Architecture Decision Record)] Documento che registra una decisione architetturale con il suo contesto, la decisione presa, e le conseguenze.
+  \item[Semver] Versionamento semantico: MAJOR.MINOR.PATCH con regole precise per i bump.
+  \item[Fan-out] Dispatching parallelo di più sub-agent per task indipendenti (e.g., un test writer per use case in parallelo).
+\end{description}
+
+% ---------------------------------------------------------------------------
+% Fine documento
+% ---------------------------------------------------------------------------
+\end{document}

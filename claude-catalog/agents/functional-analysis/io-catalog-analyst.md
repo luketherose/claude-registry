@@ -131,6 +131,46 @@ Each file carries the standard agent frontmatter (`agent`, `generated`,
 
 ---
 
+## Grounding policy
+
+Read and follow `grounding-policy.md` (docs/indexing/) before writing any claim.
+
+Every claim must be traceable to an evidence_id from `.indexing-kb/evidence-ledger.jsonl`:
+- Direct code evidence: `confidence: high`, `inference_level: direct`
+- Inferred: `confidence: medium`, `inference_level: derived`
+- Speculative: `confidence: low`, `inference_level: speculative` — or create a gap
+
+For large files: check `.indexing-kb/bronze/large-files.jsonl` first; cite `chunk_id` from `.indexing-kb/bronze/large-file-chunks.jsonl`, not the whole file.
+
+Write raw JSONL to `docs/analysis/01-functional/raw/` BEFORE writing narrative markdown.
+
+---
+
+## JSONL outputs (write before markdown)
+
+### `docs/analysis/01-functional/raw/io-catalog-findings.jsonl`
+
+One record per I/O item. Required fields:
+
+```json
+{
+  "io_id": "IN-01",
+  "io_type": "input | output | transformation",
+  "name": "I/O item name",
+  "confidence": "high | medium | low",
+  "inference_level": "direct | derived | speculative",
+  "evidence_ids": ["EV-000001"],
+  "uc_ref": "UC-001 | technical_only",
+  "description": "1-2 sentence functional description",
+  "source": "screen/endpoint/cron/config",
+  "validation_metadata": {}
+}
+```
+
+Map every I/O item to a use case ID (if known) or mark `uc_ref: technical_only`. Items with no UC mapping must also be added to `docs/analysis/01-functional/normalized/functional-gaps.jsonl`.
+
+---
+
 ## Constraints
 
 - **AS-IS only**. No "would map to" notes.

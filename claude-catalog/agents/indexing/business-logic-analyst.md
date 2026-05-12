@@ -84,7 +84,58 @@ If `04-modules/*.md` exists, use it to:
 - check that domain concepts you find are documented at the module level
 - flag concepts that appear in module docs but you cannot place semantically
 
-## Outputs
+## Output targets
+
+| Artifact | Path | Tier |
+|---|---|---|
+| Business rules (JSONL) | `.indexing-kb/silver/business-rules.jsonl` | Silver |
+| Validation rules (JSONL) | `.indexing-kb/silver/validation-rules.jsonl` | Silver |
+| State machines (JSONL) | `.indexing-kb/silver/state-machines.jsonl` | Silver |
+| Assumptions (JSONL) | `.indexing-kb/silver/assumptions.jsonl` | Silver |
+| Human-readable docs | `.indexing-kb/07-business-logic/` | Human |
+
+JSONL schemas with `evidence_ids` are in `output-schemas.md` — read that
+doc before writing any silver file.
+
+## Evidence and grounding
+
+For every business rule, validation rule, or state machine entry:
+- Include `evidence_ids` citing the specific file and line range where the rule is implemented
+- For large files, cite `chunk_id` from `bronze/large-file-chunks.jsonl`
+- If the evidence is indirect (e.g., inferred from variable naming), set `confidence: low` and `inference_level: speculative`
+- If no evidence can be found, create an entry in `silver/gaps.jsonl` and `silver/assumptions.jsonl` instead
+
+Every rule or concept you extract MUST cite at least one `evidence_id`
+from `evidence-ledger.jsonl`:
+- For a business rule observed in a function: cite the evidence record for
+  that function's `source_symbol` or `source_chunk`
+- For a validation rule in a conditional: cite the chunk or line range
+  where the condition is defined
+- If you cannot find code evidence for a rule, it must go to
+  `silver/assumptions.jsonl` or `silver/gaps.jsonl`, not to
+  `silver/business-rules.jsonl`
+
+Do NOT use naming convention as evidence. A function named
+`validate_approval` does not prove an approval workflow exists — you must
+read the function body and cite the specific evidence.
+
+### Silver JSONL record schema (`silver/business-rules.jsonl`)
+
+```json
+{
+  "id": "BR-001",
+  "claim": "Stated fact or business rule",
+  "evidence_ids": ["EV-000001"],
+  "source_files": ["path/to/file.py"],
+  "confidence": "high | medium | low",
+  "inference_level": "direct | derived | speculative",
+  "open_questions": []
+}
+```
+
+Note: `output-schemas.md` in the reference docs must also include the `evidence_ids` field in all schemas — update it when regenerating that doc.
+
+## Markdown outputs
 
 Write three Markdown files under `.indexing-kb/07-business-logic/`,
 following the schemas in `output-schemas.md`:
@@ -130,7 +181,8 @@ No third path.
 - Cross-reference with `04-modules/*.md` if available — but the source
   code is the ultimate source of truth.
 - **Do not modify any source file.**
-- **Do not write outside `.indexing-kb/07-business-logic/`.**
+- **Do not write outside `.indexing-kb/`** (allowed paths:
+  `07-business-logic/`, `silver/`, and `evidence-ledger.jsonl`).
 - Domain concept names: keep the exact names used in code. Do not
   normalize ("Invoice" stays "Invoice", not "Bill"; "Customer" stays
   "Customer", not "Client"). This applies across languages — preserve

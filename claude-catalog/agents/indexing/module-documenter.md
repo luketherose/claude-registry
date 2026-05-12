@@ -111,7 +111,57 @@ interpret. Comment syntax varies by language; common ones:
 - Python: `# TODO`
 - Ruby: `# TODO`
 
-## Output
+## Output targets
+
+| Artifact | Path | Tier |
+|---|---|---|
+| Module summary (JSONL) | `.indexing-kb/silver/module-summaries.jsonl` | Silver — one record per package |
+| Large-file summary (JSONL) | `.indexing-kb/silver/large-file-summaries.jsonl` | Silver — for packages with large files |
+| Assumptions (JSONL) | `.indexing-kb/silver/assumptions.jsonl` | Silver — assumptions made during analysis |
+| Human-readable doc | `.indexing-kb/04-modules/<package-name>.md` | Human |
+
+### Silver JSONL record schema (`silver/module-summaries.jsonl`)
+
+One record per package, appended (do not overwrite the file):
+
+```json
+{
+  "module_id": "MOD-001",
+  "package": "app.services",
+  "file": "app/services/import_service.py",
+  "purpose": "Short factual description",
+  "public_api": ["function_name", "ClassName"],
+  "evidence_ids": ["EV-000001"],
+  "confidence": "high | medium | low",
+  "is_large_file": false,
+  "chunk_ids_used": []
+}
+```
+
+## Evidence and grounding
+
+Before documenting any module:
+1. Check `bronze/large-files.jsonl` — if the module file is listed as large/huge/giant, read chunks from `bronze/large-file-chunks.jsonl` instead of the raw file.
+2. For every claim in `silver/module-summaries.jsonl`, include `evidence_ids` citing the source file + line range.
+3. If a large file's purpose cannot be fully determined from available chunks, write to `silver/assumptions.jsonl` and `silver/gaps.jsonl`.
+
+For every public symbol you document, append a record to
+`evidence-ledger.jsonl` with:
+- `kind: source_symbol`
+- `file`: the source file containing the symbol
+- `lines`: start-end line range
+- `symbols`: [symbol_name]
+- `detected_by: module-documenter`
+
+Every record in `silver/module-summaries.jsonl` must include `evidence_ids`
+pointing to the evidence records for the module's public interface.
+
+If a module file is large (classified in `bronze/large-files.jsonl`):
+- Do NOT read the file as a single block
+- Read the relevant chunks from `bronze/large-file-chunks.jsonl`
+- Cite `chunk_id` in evidence records, not the file itself
+
+## Markdown output
 
 Single file: `.indexing-kb/04-modules/<package-name>.md`
 
@@ -207,8 +257,9 @@ from a string, variable, template, heredoc, or piped input.
 - **Do not extract business rules** — refer to "domain operations" but
   defer semantic interpretation to `business-logic-analyst`.
 - **Do not modify any source file.**
-- **Do not write outside `.indexing-kb/04-modules/`.**
-- Output **exactly one file**: `<package-name>.md`. Do not split
-  across multiple files for one package.
+- **Do not write outside `.indexing-kb/`** (allowed paths:
+  `04-modules/`, `silver/`, and `evidence-ledger.jsonl`).
+- Output **exactly one Markdown file**: `<package-name>.md`. Do not
+  split across multiple files for one package.
 - **All file output via `Write`**, never via `Bash` heredoc/redirect.
   See § File-writing rule above.

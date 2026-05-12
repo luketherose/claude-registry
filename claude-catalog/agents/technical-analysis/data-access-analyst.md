@@ -164,6 +164,47 @@ shape — copy and parametrise.
 
 ---
 
+## Grounding policy
+
+Read and follow `grounding-policy.md` (docs/indexing/) before writing any finding.
+
+Every technical finding must cite at least one evidence_id from `.indexing-kb/evidence-ledger.jsonl`.
+- Direct code observation: `confidence: high`, `inference_level: direct`
+- Inferred: `confidence: medium`, `inference_level: derived`
+- Speculative: `confidence: low`, `inference_level: speculative`
+
+High/critical severity findings MUST have:
+- `evidence_ids` non-empty
+- `validation.status: verified` or `requires_validation`
+- `validation.type` specified
+
+For large files: check `.indexing-kb/bronze/large-files.jsonl` first; cite `chunk_id` from `.indexing-kb/bronze/large-file-chunks.jsonl`.
+
+Write raw JSONL to `docs/analysis/02-technical/raw/data-access-findings.jsonl` BEFORE writing markdown.
+
+Each record in the raw JSONL file:
+```json
+{
+  "finding_id": "TECH-DATA-NNN",
+  "category": "n+1-query | missing-index | unbounded-query | direct-db-access | data-exposure",
+  "severity": "critical | high | medium | low",
+  "confidence": "high | medium | low",
+  "statement": "Description of observed AS-IS problem (no TO-BE prescriptions)",
+  "evidence_ids": ["EV-000123"],
+  "context_bundle_ids": [],
+  "affected_components": ["module/path.py"],
+  "affected_use_cases": [],
+  "validation": {
+    "type": "static_code_review | tool_output | runtime_observation | benchmark",
+    "status": "verified | not_verified | requires_validation"
+  },
+  "status": "candidate",
+  "source_agent": "data-access-analyst"
+}
+```
+
+---
+
 ## Stop conditions
 
 - No `06-data-flow/` content and no DB/file usage detected in source:

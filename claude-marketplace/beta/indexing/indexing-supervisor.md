@@ -52,10 +52,10 @@ read on demand. Read each doc only when the matching step is about to start
 | `dispatch-prompt-template.md` | each time a sub-agent is about to be dispatched |
 | `manifest-spec.md` | after every phase, before writing `_meta/manifest.json` |
 | `sub-agents-catalog.md` | confirming which sub-agent owns which output target, or recapping the KB layout — now also covers Bronze/Silver/Gold layout |
-| `grounding-policy.md` | before any sub-agent dispatch — inject into every dispatch prompt |
-| `evidence-ledger-schema.md` | before Phase 1 — explains evidence_id schema |
-| `large-file-policy.md` | before Phase 1 — large file handling thresholds and strategy |
-| `context-graph-schema.md` | before Phase 4 synthesis — context graph node/edge schemas |
+| `grounding-policy.md` | knowing the "no evidence, no claim" contract before dispatching any sub-agent |
+| `evidence-ledger-schema.md` | knowing how sub-agents emit evidence records to evidence-ledger.jsonl |
+| `large-file-policy.md` | knowing how to handle files >800 lines or >150 KB before dispatching codebase-mapper or module-documenter |
+| `context-graph-schema.md` | knowing the node/edge types for the evidence-backed context graph (graph/ output) |
 
 ---
 
@@ -102,6 +102,21 @@ Stop and ask the user before proceeding when:
 
 ---
 
+## Sub-agents
+
+| Wave | Agent | Role |
+|---|---|---|
+| 1 | `codebase-mapper` | Structural inventory — produces `bronze/` outputs: `manifest.json`, `file-inventory.jsonl`, `stack.json`, `symbol-index.jsonl`, `large-files.jsonl`, `large-file-chunks.jsonl` |
+| 1 | `dependency-analyzer` | Dependency graph — detects circular imports, external deps |
+| 1 | `streamlit-analyzer` | Streamlit-specific UI analysis (gated: runs only when `streamlit` ∈ stack.frameworks) |
+| 2 | `module-documenter` | Module-level documentation fan-out — one invocation per top-level package |
+| 3 | `data-flow-analyst` | Cross-cutting data flow mapping |
+| 3 | `business-logic-analyst` | Business rule extraction |
+| 4 | `synthesizer` | Final consolidated views — produces `gold/` and `graph/` outputs |
+| 4a | `indexing-auditor` | Read-only audit pass; reads `bronze/`, `silver/`, `gold/`, `evidence-ledger.jsonl` to find coverage gaps and evidence quality issues; produces `gold/indexing-audit.md` and `gold/indexing-audit.json` with PASS/PASS_WITH_GAPS/FAIL verdict. Runs after `synthesizer` and before the HITL checkpoint — always ON. |
+
+---
+
 ## Output format for user-facing messages
 
 After each phase, post a single concise update:
@@ -116,29 +131,25 @@ Next: <next phase or "awaiting confirmation">
 Final report after Phase 4a (HITL gate):
 
 ```
-Indexing complete (Phase 0).
+Phase 0 completed.
 
-Knowledge base: <repo>/.indexing-kb/
+Summary:
+- X source files classified, Y large files chunked, Z evidence IDs registered
+- Bronze outputs: manifest.json, file-inventory.jsonl, stack.json, symbol-index.jsonl, large-files.jsonl, large-file-chunks.jsonl, [others]
+- Silver outputs: module-summaries.jsonl, business-rules.jsonl, data-flows.jsonl, [others]
+- Gold outputs: system-overview.md, bounded-context-hypothesis.md, complexity-hotspots.md, coverage-report.md
+- Graph outputs: nodes.jsonl, edges.jsonl
+- Evidence ledger: Z entries
+- Indexing auditor verdict: PASS / PASS_WITH_GAPS / FAIL
+- Graph quality verdict: PASS / PASS_WITH_GAPS / N/A
 
-Coverage:
-- Source files inventoried:  <N>
-- Evidence IDs registered:   <N>
-- Large files classified:    <N> (<N> large, <N> huge, <N> giant)
-- Public symbols indexed:    <N>
-- Silver claims with evidence: <N>/<total> (<pct>%)
-- Open gaps: <N> blocking, <N> non-blocking
-
-Auditor verdict:   PASS | PASS_WITH_GAPS | FAIL
-Graph verdict:     PASS | PASS_WITH_GAPS | FAIL
-
-Unresolved blocking gaps:
+Unresolved gaps:
 1. [GAP-001] ...
-(none if PASS)
 
 Available decisions:
 1. Proceed to Phase 1 with gaps documented
 2. Re-run targeted analysis on specific gaps
-3. Answer open questions now (list gap IDs)
+3. Answer open questions now
 4. Mark specific gaps as intentionally out of scope
 ```
 
@@ -146,9 +157,11 @@ Available decisions:
 
 ## Constraints
 
-- **Read `grounding-policy.md` before any dispatch.** Inject the grounding policy into every sub-agent prompt. Sub-agents that produce claims without evidence_ids violate the evidence contract.
+- **Grounding policy enforced**: every sub-agent dispatch prompt MUST include the grounding policy block (from `grounding-policy.md`). Claims without evidence_ids must become gaps, not hallucinations.
+- **Evidence ledger**: sub-agents emit evidence records to `evidence-ledger.jsonl`. The ledger is append-only and monotonically growing per run.
+- **Large file policy**: before dispatching `codebase-mapper` or `module-documenter`, read `large-file-policy.md` thresholds. For files >800 lines or >150 KB, the outline→chunk→evidence strategy applies.
 - **Run `indexing-auditor` before HITL.** After the synthesizer completes, dispatch `indexing-auditor` to validate coverage. Only surface the auditor's verdict and unresolved blocking gaps to the user.
-- **Coverage gate**: Phase 0 must not declare PASS if: source files unclassified exist, large files exist without `bronze/large-files.jsonl` classification, evidence_id duplicates exist in `evidence-ledger.jsonl`, Silver claims without evidence_ids exist, `bronze/stack.json` is missing, `gold/coverage-report.md` is missing.
+- **Coverage gate**: Phase 0 cannot be declared PASS if: source files unclassified, large files without chunk coverage or exclusion reason, evidence_id duplicates in ledger, Silver claims without evidence_ids, `bronze/stack.json` missing, `_meta/manifest.json` missing, `gold/coverage-report.md` missing, `gold/graph-quality-report.md` missing, unresolved blocking gaps not shown to user.
 - **Never write code or refactor source files.**
 - **Never produce migration recommendations.** That is a separate later phase.
 - **Never invoke yourself recursively.**

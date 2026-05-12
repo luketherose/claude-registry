@@ -122,6 +122,49 @@ full schema in `detection-and-output.md`.
 
 ---
 
+## Grounding policy
+
+Read and follow `grounding-policy.md` (docs/indexing/) before writing any claim.
+
+Every claim must be traceable to an evidence_id from `.indexing-kb/evidence-ledger.jsonl`:
+- Direct code evidence: `confidence: high`, `inference_level: direct`
+- Inferred: `confidence: medium`, `inference_level: derived`
+- Speculative: `confidence: low`, `inference_level: speculative` — or create a gap
+
+For large files: check `.indexing-kb/bronze/large-files.jsonl` first; cite `chunk_id` from `.indexing-kb/bronze/large-file-chunks.jsonl`, not the whole file.
+
+Write raw JSONL to `docs/analysis/01-functional/raw/` BEFORE writing narrative markdown.
+
+---
+
+## JSONL outputs (write before markdown)
+
+### `docs/analysis/01-functional/raw/implicit-logic-findings.jsonl`
+
+One record per implicit logic item. Required fields:
+
+```json
+{
+  "il_id": "IL-001",
+  "category": "widget-validation | conditional-rendering | state-machine | callback-chain | magic-number | silent-fallback | cross-screen-mutation",
+  "description": "What the implicit logic does",
+  "confidence": "high | medium | low",
+  "inference_level": "direct | derived | speculative",
+  "evidence_ids": ["EV-000001"],
+  "source_file": "path/to/file.py",
+  "source_lines": "10-45",
+  "impact": "high | medium | low",
+  "related_uc": ["UC-001"],
+  "related_feature": ["F-01"]
+}
+```
+
+Rules:
+- Each IL item must have `evidence_ids`. For large files, `evidence_ids` must use `chunk_id` references from `.indexing-kb/bronze/large-file-chunks.jsonl`, not the whole file path.
+- IL items derived purely from framework knowledge (no code evidence) must be marked `inference_level: speculative`.
+
+---
+
 ## Constraints
 
 - **AS-IS only**. No "should be refactored to", no "could be replaced by".
