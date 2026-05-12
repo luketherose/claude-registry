@@ -1529,7 +1529,7 @@
     },
     {
       "name": "synthesizer",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1548,7 +1548,7 @@
         "sub-agent",
         "synthesis"
       ],
-      "published": "2026-04-26",
+      "published": "2026-05-12",
       "changelog": "Initial beta release"
     },
     {
