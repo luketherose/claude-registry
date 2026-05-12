@@ -157,6 +157,43 @@ Every file carries the standard frontmatter (`agent`, `generated`,
 
 ---
 
+## Grounding policy
+
+Read and follow `grounding-policy.md` (docs/indexing/) before writing any finding.
+
+Every technical finding must cite at least one evidence_id from `.indexing-kb/evidence-ledger.jsonl`.
+- Direct code observation: `confidence: high`, `inference_level: direct`
+- Inferred: `confidence: medium`, `inference_level: derived`
+- Speculative: `confidence: low`, `inference_level: speculative`
+
+High/critical severity findings MUST have:
+- `evidence_ids` non-empty
+- `validation.status: verified` or `requires_validation`
+- `validation.type` specified
+
+For large files: check `.indexing-kb/bronze/large-files.jsonl` first; cite `chunk_id` from `.indexing-kb/bronze/large-file-chunks.jsonl`.
+
+Write raw JSONL to `docs/analysis/02-technical/raw/<analyst-name>-findings.jsonl` BEFORE writing markdown.
+
+---
+
+## Synthesis rule
+
+The risk-synthesizer CANNOT introduce new findings. It:
+1. Reads all 8 raw JSONL files from `docs/analysis/02-technical/raw/`
+2. Merges into `normalized/technical-findings.jsonl` (changing status from candidate to confirmed/requires_validation)
+3. Groups findings into risks in `normalized/risk-register.jsonl`
+4. Produces `normalized/risk-evidence-matrix.csv`
+
+A finding without evidence_ids in the raw file must NOT be promoted to confirmed — it must be flagged as `status: requires_validation` in the merged output.
+
+Additional normalized outputs (beyond the existing five files in `09-synthesis/` and `_meta/`):
+- `docs/analysis/02-technical/normalized/technical-findings.jsonl` — merged from all 8 raw JSONL files (do NOT add new findings, only merge)
+- `docs/analysis/02-technical/normalized/risk-register.jsonl`
+- `docs/analysis/02-technical/normalized/risk-evidence-matrix.csv`
+
+---
+
 ## Stop conditions
 
 - Wave 1 outputs incomplete (one or more agent reported `failed`):
