@@ -12,9 +12,16 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 - `docs/indexing/grounding-policy.md` — No Evidence, No Claim contract for Phase 0 agents
 - `docs/indexing/evidence-ledger-schema.md` — central evidence ledger schema and citation rules
 - `docs/indexing/large-file-policy.md` — large file outline/chunk/evidence strategy and thresholds
+- `technical-evidence-auditor` sub-agent: always-ON Wave 3b auditor for Phase 2; validates evidence grounding (every finding must have evidence_ids, high/critical must be verified), AS-IS purity, separation of concerns; produces PASS/PASS_WITH_GAPS/FAIL verdict
+- `functional-traceability-auditor` sub-agent: always-ON Wave 3b auditor for Phase 1; validates evidence traceability (all confirmed UCs must have evidence_ids), negative space (UI surfaces → UC mapping), and AS-IS purity; produces PASS/PASS_WITH_GAPS/FAIL verdict
+- `indexing-auditor` sub-agent: reads Bronze/Silver/Gold KB and evidence-ledger.jsonl to find coverage gaps, orphan files, large files without chunk coverage, AS-IS purity violations; produces PASS/PASS_WITH_GAPS/FAIL verdict before Phase 0 HITL
 - **`guida-operativa.tex`** — sorgente LaTeX della guida operativa completa (v2.0, italiano). Riscrittura integrale del precedente PDF: struttura a 4 parti (Visione d'insieme, Contribuire, Capability, Strumenti di contorno), documenta tutte le 83 capability per area funzionale partendo dalle più complesse (refactoring-supervisor, deliberative-decision-engine, pipeline Phase 0–4), copre hooks, MCP, script operativi, template, governance e anti-pattern. Compilabile con `pdflatex guida-operativa.tex` o `pandoc guida-operativa.tex -o guida-operativa.pdf --pdf-engine=pdflatex`.
 
 ### Changed
+- `technical-analysis-challenger` enhanced with Check 7: normalized output audit — verifies technical-findings.jsonl exists and all entries have evidence_ids
+- `functional-analysis-challenger` enhanced with Check 7: evidence quality audit — scans use-case-candidates.jsonl for confirmed UCs without evidence_ids, and verifies large file chunks appear in Phase 1 claims
+- `docs/functional-analysis/normalized-output-schema.md` — JSONL artifact schemas for Phase 1 normalized outputs
+- `docs/technical-analysis/normalized-output-schema.md` — JSONL artifact schemas for Phase 2 normalized outputs
 - `docs/functional-analysis/output-layout.md` — added normalized/ and raw/ subdirectories
 - `docs/technical-analysis/output-layout.md` — added normalized/ and raw/ subdirectories
 - `indexing-supervisor@2.0.0` (beta) — adds Bronze/Silver/Gold KB layout, indexing-auditor dispatch, coverage gate, grounding policy injection, updated HITL gate format

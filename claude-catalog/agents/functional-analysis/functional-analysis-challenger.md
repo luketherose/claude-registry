@@ -135,6 +135,12 @@ Check:
   apps often encode actor distinctions implicitly; missing this is a
   high-risk gap.
 
+### Check 7 — Evidence quality audit
+- Scan `normalized/use-case-candidates.jsonl`: verify it exists; for every entry, verify `evidence_ids` is non-empty or `status` is `candidate_not_confirmed` / `requires_human_confirmation`
+- Count confirmed UCs with empty `evidence_ids` — flag each as `[UNVERIFIED CLAIM]`
+- If `bronze/large-files.jsonl` exists, check for `source` files classified as `huge` or `giant`: verify at least some `chunk_id` values from those files appear in Phase 1 claim `evidence_ids`
+- Report: number of unverified confirmed UCs, number of large source files with no Phase 1 chunk evidence
+
 ---
 
 ## Output

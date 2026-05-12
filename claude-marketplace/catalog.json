@@ -3327,11 +3327,11 @@
       "version": "1.0.0",
       "tier": "beta",
       "status": "active",
-      "description": "TODO: add description",
+      "description": "Always-ON Wave 3b auditor for Phase 2 Technical Analysis. Validates evidence grounding (every finding must have evidence_ids, high/critical must be verified), AS-IS purity, separation of concerns, and normalized JSONL completeness. Produces PASS/PASS_WITH_GAPS/FAIL verdict.",
       "file": "beta/technical-analysis/technical-evidence-auditor.md",
-      "tools": [],
+      "tools": ["Read", "Glob", "Bash", "Write"],
       "model": "sonnet",
-      "tags": [],
+      "tags": ["technical-analysis", "phase2", "quality-gate", "evidence", "auditor"],
       "published": "2026-05-12",
       "changelog": "Published 1.0.0"
     },
@@ -3340,26 +3340,39 @@
       "version": "1.0.0",
       "tier": "beta",
       "status": "active",
-      "description": "TODO: add description",
+      "description": "Always-ON Wave 3b auditor for Phase 1 functional analysis. Validates evidence traceability (confirmed UCs must have evidence_ids), negative space (UI surfaces mapped to UCs), and AS-IS purity (no TO-BE tech references). Produces PASS/PASS_WITH_GAPS/FAIL verdict.",
       "file": "beta/functional-analysis/functional-traceability-auditor.md",
-      "tools": [],
+      "tools": [
+        "Read",
+        "Glob",
+        "Bash",
+        "Write"
+      ],
       "model": "sonnet",
-      "tags": [],
+      "tags": [
+        "functional-analysis",
+        "quality-gate",
+        "traceability",
+        "phase1"
+      ],
       "published": "2026-05-12",
       "changelog": "Published 1.0.0"
     },
     {
       "name": "indexing-auditor",
       "version": "1.0.0",
+      "type": "agent",
       "tier": "beta",
       "status": "active",
-      "description": "TODO: add description",
+      "description": "Read-only quality-gate agent for Phase 0 indexing output. Reads bronze/, silver/, gold/, graph/, and evidence-ledger.jsonl to find coverage gaps, orphan files, large files without chunk coverage, and AS-IS purity violations. Produces gold/indexing-audit.md and gold/indexing-audit.json with a PASS | PASS_WITH_GAPS | FAIL verdict before the Phase 0 HITL checkpoint.",
       "file": "beta/indexing/indexing-auditor.md",
-      "tools": [],
+      "tools": ["Read", "Glob", "Bash", "Write"],
       "model": "sonnet",
-      "tags": [],
+      "color": "magenta",
+      "tags": ["indexing", "quality-gate", "phase-0", "audit"],
+      "topic": "indexing",
       "published": "2026-05-12",
-      "changelog": "Published 1.0.0"
+      "changelog": "Initial release — Phase 0 coverage and evidence quality gate"
     }
   ]
 }
