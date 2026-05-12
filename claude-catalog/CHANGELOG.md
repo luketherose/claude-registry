@@ -5,6 +5,12 @@ All notable changes to catalog capabilities are documented here.
 Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending changes.
 
 ## [Unreleased]
+### Changed
+- `functional-analysis-supervisor@2.0.0` (beta): evidence-grounded Phase 1 — stack.json canonical path updated from `02-structure/` to `bronze/`; evidence-ledger.jsonl and bronze/silver/ tiers added as primary evidence sources; `functional-traceability-auditor` registered as always-ON Wave 3b; grounding policy constraint added to all sub-agent dispatch prompts; traceability-auditor FAIL verdict added to decision rules; `normalized-output-schema.md` added to reference docs table.
+- `docs/functional-analysis/output-layout.md`: added Normalized JSONL artifacts section with use-case-candidates.jsonl and functional-gaps.jsonl key schemas.
+- `docs/functional-analysis/phase-plan.md`: Wave 3b (`functional-traceability-auditor`, always ON) added after Wave 3; gap closure loop added before HITL; Wave 3.5 final report updated to new HITL format with traceability/challenger verdict and gap counts; stack.json path updated to bronze/.
+- `docs/functional-analysis/dispatch-prompt-template.md`: grounding policy injection block added (must be prepended to every sub-agent dispatch prompt); stack.json path updated to bronze/.
+
 ### Added
 - `docs/indexing/context-graph-schema.md` — Evidence-backed Context Graph node/edge schema and context bundle format
 - `docs/functional-analysis/normalized-output-schema.md` — JSONL artifact schemas for Phase 1 normalized outputs

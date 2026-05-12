@@ -11,12 +11,12 @@
    - `07-business-logic/` (any of domain/validation/business-rules)
    If any of these is missing, stop and ask the user.
 2. Read `.indexing-kb/00-index.md`, `01-overview.md`, `08-synthesis/bounded-contexts.md` (if present) to build a mental map.
-3. **Detect stack mode** by reading the canonical AS-IS stack manifest at `.indexing-kb/02-structure/stack.json` (produced by Phase 0 `codebase-mapper`). The supervisor uses these fields:
+3. **Detect stack mode** by reading the canonical AS-IS stack manifest at `.indexing-kb/bronze/stack.json` (produced by Phase 0 `codebase-mapper`). The supervisor uses these fields:
    - `stack.primary_language` — drives language-specific guidance (Python/Java/Kotlin/Go/Rust/C#/Ruby/PHP/TypeScript/JavaScript/...)
    - `stack.frameworks` — drives framework-conditional adjustments (e.g. `streamlit` → page-as-screen + reactive-rerun guidance; `rails`/`laravel`/`django`/`spring-mvc` → request-per-screen + MVC conventions; `angular`/`react`/`vue`/`qwik`/`nextjs`/`tanstack-start` → SPA / file-based-routing screens)
    - `stack.confidence` — if `low`, surface to the user before proceeding
 
-   If `.indexing-kb/02-structure/stack.json` is missing (Phase 0 from a pre-PR-02 run): fall back to a quick check of `.indexing-kb/05-streamlit/` (legacy Streamlit detection) and `01-overview.md` hints (CLI? web service? batch? library?). If still unclear, ask the user. The framework-conditional block already handles "no framework" gracefully.
+   If `.indexing-kb/bronze/stack.json` is missing (Phase 0 from a pre-PR-02 run): fall back to a quick check of `.indexing-kb/05-streamlit/` (legacy Streamlit detection) and `01-overview.md` hints (CLI? web service? batch? library?). If still unclear, ask the user. The framework-conditional block already handles "no framework" gracefully.
 4. Read `docs/analysis/01-functional/_meta/manifest.json` if it exists (resume support).
 5. **Detect resume mode**. Inspect what is on disk and pick one of:
 
@@ -125,6 +125,18 @@ The supervisor produces three artifacts directly (no sub-agent):
 
 If `00-context.md` says challenger is ON → dispatch `functional-analysis-challenger` after the three artifacts above are written. The challenger reads the full set of outputs and produces `_meta/challenger-report.md` plus appends entries to `14-unresolved-questions.md` under a `## Challenger findings` section.
 
+**Wave 3b — functional-traceability-auditor (always ON)**
+Dispatch after Wave 3 (challenger) completes (or after Wave 2 if challenger is disabled).
+The auditor runs three passes: (1) traceability audit — every confirmed UC has evidence_ids; (2) negative space audit — UI files without UC, routes without feature; (3) AS-IS purity audit — no TO-BE references in outputs.
+Read outputs from disk: `normalized/functional-traceability-audit.json` and `_meta/functional-traceability-report.md`.
+If verdict is FAIL, do NOT declare Phase 1 complete — escalate to user.
+
+**Gap closure loop (before HITL)**
+1. Check if `validate_functional_analysis.py` exists in `.github/scripts/`; if so, run it.
+2. Read `normalized/functional-traceability-audit.json` for verdict.
+3. If FAIL: identify which gaps are auto-fixable (e.g., missing `status` field on a UC can be set to `requires_human_confirmation`); attempt fix via targeted sub-agent re-dispatch.
+4. Surface all residual gaps to the user in the HITL summary.
+
 ## Export Wave — Always ON (parallel, single message)
 
 After Wave 3 completes (and the challenger, if it ran), dispatch in parallel:
@@ -158,29 +170,23 @@ After the export wave, verify both files exist on disk under `_exports/`. Do not
 Post a final user-facing summary:
 
 ```
-Phase 1 Functional Analysis — complete.
+Phase 1 completed.
 
-Output: docs/analysis/01-functional/
-Entry:  docs/analysis/01-functional/README.md
+Summary:
+- X UCs confirmed, Y candidates not confirmed, Z require human confirmation
+- N UI surfaces, M without mapped UC
+- P business rules inferred, Q without evidence_ids
+- Large file chunks mapped: R / S relevant chunks
+- AS-IS purity violations: 0
+- Traceability auditor verdict: PASS / PASS_WITH_GAPS / FAIL
+- Challenger verdict: PASS / PASS_WITH_GAPS / N/A
 
-Exports:
-- PDF:  docs/analysis/01-functional/_exports/01-functional-report.pdf
-- PPTX: docs/analysis/01-functional/_exports/01-functional-deck.pptx
-  (or "skipped" / "failed" with reason)
+Unresolved gaps:
+1. [GAP-001] ...
 
-Coverage:
-- Actors:   <N>
-- Features: <N>
-- Screens:  <N>
-- UCs:      <N>
-- I/O:      <N inputs>, <N outputs>, <N transformations>
-- Implicit logic items: <N>
-
-Quality:
-- Open questions: <N> (see 14-unresolved-questions.md)
-- Low-confidence sections: <N>
-- Challenger findings: <N> (or "challenger not run")
-
-Recommended next: review 14-unresolved-questions.md before proceeding to
-later phases of the workflow.
+Available decisions:
+1. Proceed with gaps documented
+2. Re-run targeted analysis on specific gaps
+3. Answer open questions now
+4. Mark specific gaps as intentionally out of scope
 ```
