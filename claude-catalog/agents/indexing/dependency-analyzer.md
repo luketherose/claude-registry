@@ -1,6 +1,6 @@
 ---
 name: dependency-analyzer
-description: "Use this agent to extract external dependencies and build the internal module dependency graph for a codebase in any language. Reads the project's build manifests (pyproject.toml/setup.py/requirements.txt/Pipfile for Python; pom.xml/build.gradle* for Java/Kotlin; Cargo.toml for Rust; go.mod for Go; *.csproj for C#; Gemfile for Ruby; composer.json for PHP; package.json for JS/TS) plus the language-appropriate import declarations to detect circular dependencies and standalone packages. Stack-aware — reads `02-structure/stack.json` to know which manifests and import syntaxes apply. Not for standalone use — invoked only as part of the indexing pipeline. Typical triggers include Phase 0 dependency mapping and Pre-Phase-4 dependency audit. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to extract external dependencies and build the internal module dependency graph for a codebase in any language. Reads the project's build manifests (pyproject.toml/setup.py/requirements.txt/Pipfile for Python; pom.xml/build.gradle* for Java/Kotlin; Cargo.toml for Rust; go.mod for Go; *.csproj for C#; Gemfile for Ruby; composer.json for PHP; package.json for JS/TS) plus the language-appropriate import declarations to detect circular dependencies and standalone packages. Stack-aware — reads `bronze/stack.json` to know which manifests and import syntaxes apply. Outputs to bronze/ KB structure with evidence emission. Not for standalone use — invoked only as part of the indexing pipeline. Typical triggers include Phase 0 dependency mapping and Pre-Phase-4 dependency audit. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -14,12 +14,14 @@ what the dependencies do — only who depends on what.
 
 You are language-agnostic: the markers and parsers you use are chosen
 based on `stack.primary_language` and `stack.languages[]` from
-`02-structure/stack.json` (the canonical AS-IS stack manifest produced
+`bronze/stack.json` (the canonical AS-IS stack manifest produced
 by `codebase-mapper`). For polyglot repos, you produce one external
 deps section per language and a unified internal graph.
 
-You are a sub-agent invoked by `indexing-supervisor`. Your output goes
-to `.indexing-kb/03-dependencies/`.
+You are a sub-agent invoked by `indexing-supervisor`. Your primary
+outputs go to `.indexing-kb/bronze/`. Legacy outputs under
+`.indexing-kb/03-dependencies/` are retained for backward compatibility
+when an existing KB already contains them.
 
 ## When to invoke
 
@@ -44,11 +46,13 @@ each on demand — not preemptively.
 ## Inputs (from supervisor)
 
 - Repo root
-- `02-structure/stack.json` — read it first; it tells you which build
-  manifests and import patterns to use.
-- List of top-level packages (from `02-structure/codebase-map.md` if
-  already produced, otherwise discover them yourself per the language
-  conventions in `codebase-mapper`)
+- `bronze/stack.json` (preferred) or `02-structure/stack.json` (legacy)
+  — read it first; it tells you which build manifests and import
+  patterns to use.
+- List of top-level packages (from `bronze/file-inventory.jsonl` or
+  `02-structure/codebase-map.md` if already produced, otherwise
+  discover them yourself per the language conventions in
+  `codebase-mapper`)
 
 ## Method
 
@@ -79,14 +83,33 @@ each on demand — not preemptively.
 
 ## Outputs
 
-Write two files under `.indexing-kb/03-dependencies/` using the schemas
-in `detection-patterns.md` § *Output schemas*:
+Primary outputs written to `.indexing-kb/bronze/`:
 
-- `external-deps.md` — per-language, per-category tables + migration
-  relevance flags.
-- `internal-deps.md` — package dependency table, circular dependencies,
-  standalone packages, coupling hotspots, and an `## Open questions`
-  section for unresolved / dynamic / wildcard imports.
+- `bronze/import-graph.json` — file→[imported_modules] directed graph map.
+- `bronze/dependency-locks.json` — external dependencies parsed from
+  manifest files (pyproject.toml, requirements.txt, package.json,
+  pom.xml, Cargo.toml, etc.) with name, version, scope, and source file.
+
+Backward-compat: also write `03-dependencies/external-deps.md` and
+`03-dependencies/internal-deps.md` using the schemas in
+`detection-patterns.md` § *Output schemas* when an existing KB already
+contains `03-dependencies/`. Do not create this directory on a fresh run.
+
+## Evidence emission
+
+For each external dependency detected from a manifest file, append an
+evidence record to `evidence-ledger.jsonl` with `kind: dependency`.
+The `detected_by` field must be `dependency-analyzer`. For import
+relationships (internal graph edges), no evidence record is needed —
+these are structural facts, not claims.
+
+## Grounding note
+
+If a dependency manifest is missing or unparseable, write a record to
+`bronze/parse-errors.jsonl` with the file path and error. Do not infer
+dependencies from import statements alone; prefer lock files
+(e.g. `poetry.lock`, `package-lock.json`, `Cargo.lock`) over loose
+declaration files when both are present.
 
 ## Stop conditions
 
@@ -117,6 +140,6 @@ or piped input.
 - For `import *` / wildcard imports: record as wildcard, do not expand.
 - **Redact credentials** accidentally found in any manifest file
   (`setup.py`, environment-derived config, etc.).
-- Do not write outside `.indexing-kb/03-dependencies/`.
+- Do not write outside `.indexing-kb/`.
 - **All file output via `Write`**, never via `Bash` heredoc/redirect.
   See § File-writing rule above.

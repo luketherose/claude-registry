@@ -1,11 +1,83 @@
 # Data-flow analyst — output schemas
 
 > Reference doc for `data-flow-analyst`. Read at runtime when about to
-> emit one of the four output files under `.indexing-kb/06-data-flow/`.
+> emit output files under `.indexing-kb/06-data-flow/`, `.indexing-kb/bronze/`,
+> or `.indexing-kb/silver/`.
 
 The agent body owns when to write each file and what content qualifies.
-This doc is the on-disk shape only — frontmatter and section skeletons
-to copy into the `Write` call.
+This doc is the on-disk shape only — frontmatter, JSONL record schemas, and
+section skeletons to copy into the `Write` call.
+
+---
+
+## Bronze JSONL schemas
+
+### `bronze/io-boundaries.jsonl` — one record per I/O call site, append-only
+
+```json
+{
+  "boundary_id": "IO-001",
+  "kind": "http_client | db_read | db_write | file_read | file_write | subprocess | socket",
+  "direction": "inbound | outbound | bidirectional",
+  "call_site_file": "path/to/file.py",
+  "call_site_lines": "42-45",
+  "evidence_id": "EV-000050",
+  "target": "https://api.example.com or db_name or /path/to/file",
+  "confidence": "high | medium | low"
+}
+```
+
+### `bronze/config-env-index.jsonl` — one record per env var / config key, append-only
+
+```json
+{
+  "config_id": "CFG-001",
+  "kind": "env_var | config_key | secret",
+  "name": "DATABASE_URL",
+  "default_value": null,
+  "read_in_file": "app/settings.py",
+  "read_at_line": "15",
+  "evidence_id": "EV-000060",
+  "purpose": "Database connection string (inferred from name)",
+  "confidence": "high | medium | low"
+}
+```
+
+## Silver JSONL schemas
+
+### `silver/data-flows.jsonl` — agentic: described data flows with evidence
+
+```json
+{
+  "flow_id": "DF-001",
+  "description": "User upload is written to S3 then a DB record is created",
+  "source": "api/upload.py",
+  "sink": "S3 bucket + PostgreSQL table uploads",
+  "evidence_ids": ["EV-000050", "EV-000051"],
+  "source_files": ["api/upload.py"],
+  "confidence": "high | medium | low",
+  "inference_level": "direct | derived | speculative",
+  "open_questions": []
+}
+```
+
+### `silver/integration-points.jsonl` — agentic: third-party / service integrations
+
+```json
+{
+  "integration_id": "INT-001",
+  "system": "Stripe",
+  "kind": "http_client",
+  "description": "Charges are created via Stripe v1/charges endpoint",
+  "evidence_ids": ["EV-000055"],
+  "source_files": ["billing/api.py"],
+  "confidence": "high | medium | low",
+  "inference_level": "direct | derived | speculative",
+  "open_questions": []
+}
+```
+
+---
 
 All four files share the frontmatter convention:
 
