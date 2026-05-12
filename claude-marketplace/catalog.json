@@ -3321,6 +3321,19 @@
       ],
       "published": "2026-05-03",
       "changelog": "Initial release - Neutral judge / arbitrator persona for deliberative-decision-engine."
+    },
+    {
+      "name": "technical-evidence-auditor",
+      "version": "1.0.0",
+      "tier": "beta",
+      "status": "active",
+      "description": "TODO: add description",
+      "file": "beta/technical-analysis/technical-evidence-auditor.md",
+      "tools": [],
+      "model": "sonnet",
+      "tags": [],
+      "published": "2026-05-12",
+      "changelog": "Published 1.0.0"
     }
   ]
 }
