@@ -58,9 +58,12 @@ each doc only when the matching wave is about to start — not preemptively.
 | [`output-layout.md`](../../docs/technical-analysis/output-layout.md) | planning where workers write, the frontmatter / finding-ID schema, and the `_meta/manifest.json` schema updated after every wave |
 | [`sub-agents.md`](../../docs/technical-analysis/sub-agents.md) | looking up the W1–W3 roster, output targets, and the phase-plan overview table |
 | [`dispatch-mode.md`](../../docs/technical-analysis/dispatch-mode.md) | deciding the W1 dispatch mode (parallel / batched / sequential) and the batching plan |
-| [`phase-plan.md`](../../docs/technical-analysis/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W3 / Export Wave / final report |
-| [`dispatch-prompt-template.md`](../../docs/technical-analysis/dispatch-prompt-template.md) | assembling the prompt for any sub-agent invocation (incl. Streamlit-aware adjustments block) |
+| [`phase-plan.md`](../../docs/technical-analysis/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W3 / Wave 3c (verification report) / Export Wave / Wave 4 (iteration handling) |
+| [`dispatch-prompt-template.md`](../../docs/technical-analysis/dispatch-prompt-template.md) | assembling the prompt for any sub-agent invocation (incl. Streamlit-aware adjustments block and the "User feedback from prior iteration" block when in `Resume mode: iterate`) |
 | [`normalized-output-schema.md`](../../docs/technical-analysis/normalized-output-schema.md) | knowing the JSONL schemas for normalized/ artifacts (technical-findings, risk-register, risk-evidence-matrix, technical-gaps, technical-evidence-audit) |
+| [`../refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md) | running Wave 4 — every time this supervisor is re-dispatched with `Resume mode: iterate` |
+| [`../refactoring-workflow/phase-verification-report.md`](../refactoring-workflow/phase-verification-report.md) | running Wave 3c — every time `_meta/phase-verification-report.md` must be produced |
+| [`../deliberation/integration-replatforming.md`](../deliberation/integration-replatforming.md) | running Wave 4 with an adjustment that requires deliberation (debate trigger OR contested severity / cross-domain assignment) — see § "Decision points (Phases 1–3)" |
 
 The decision logic (escalation triggers, decision rules, drift check,
 manifest update, hard constraints) stays in this body — it is consulted
@@ -140,6 +143,9 @@ Stop and ask before proceeding when:
 | technical-evidence-auditor verdict is FAIL | Stop, do not declare Phase 2 complete; escalate to user with audit details |
 | `.indexing-kb/` partial coverage | Run analysis but mark every output `status: partial` and inherit gaps |
 | Resume requested | Read manifest, skip waves with `status: complete`, ask if refresh wanted |
+| `Resume mode: iterate` (re-dispatched by refactoring-supervisor with a delta) | Read `_meta/iteration-log.jsonl` latest entry; snapshot prior outputs to `_meta/snapshots/iter-<K>/`; re-dispatch only the workers impacted by the delta per § "Wave 4" mapping in `phase-plan.md`; always re-run Wave 2 (synthesizer) + Wave 3b (auditor) + Wave 3c (verification report) |
+| Iteration delta contains a debate trigger (lexicon match ≥ 0.7) OR a contested severity / cross-domain assignment | Route the contested adjustment through `deliberative-decision-engine` BEFORE re-dispatching the worker sub-agents; record trace ID in the iteration-log entry |
+| Verification report at `_meta/phase-verification-report.md` cannot be produced (missing manifest / audit file) | Do NOT proceed to Export Wave; surface to user as a blocking error |
 | Analysis complete + ≥ 1 export missing | Offer `exports-only` mode (default recommendation); otherwise full-rerun or skip |
 | > 100 vulnerabilities reported | Ask user for prioritization; default to top-N by CVSS |
 | Export already exists | Ask: overwrite / keep / rename (with timestamp) |
@@ -208,6 +214,10 @@ After every wave, update `docs/analysis/02-technical/_meta/manifest.json` per th
   (template above already includes it — verify on every dispatch).
 - **Grounding policy**: All sub-agent prompts must include the grounding policy injection. Every technical finding must cite at least one evidence_id from evidence-ledger.jsonl. High/critical findings must have evidence_ids AND validation.status of verified or requires_validation (never empty). Reference: `grounding-policy.md` in docs/indexing/.
 - **technical-evidence-auditor is always ON**: Runs in Wave 3b after challenger (or after Wave 2 if challenger is disabled).
+- **Wave 3c (verification report) is always ON**: The supervisor writes `_meta/phase-verification-report.md` directly per the canonical structure in `../refactoring-workflow/phase-verification-report.md`. This is the document the human reads before the iteration-loop prompt. Skipping it is a hard error.
+- **Iteration loop is owned by `refactoring-supervisor`.** This supervisor does NOT prompt the user with `approve / iterate / stop`. After Wave 3c it returns control to the workflow supervisor, which presents the prompt and re-dispatches this supervisor with `Resume mode: iterate` when needed.
+- **Snapshot before overwrite on iterate.** When re-dispatched in `Resume mode: iterate`, snapshot every file that will be regenerated to `_meta/snapshots/iter-<K>/` BEFORE the workers run. The snapshot is the source of the "What changed since iteration N-1" section of the verification report.
+- **Exports are gated on `approve`.** During iterations 1..N-1 the Export Wave does not run. It runs only on `approve` from the iteration loop, or on `Resume mode: exports-only` when an approved analysis has missing exports.
 
 ---
 
