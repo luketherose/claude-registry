@@ -1,5 +1,5 @@
 {
-  "_comment": "Team convention \u2014 not an official Claude Code format. This manifest tracks published capabilities.",
+  "_comment": "Team convention — not an official Claude Code format. This manifest tracks published capabilities.",
   "version": "1.0",
   "generated": "2026-05-16",
   "repository": "claude-registry",
@@ -76,7 +76,7 @@
         "skill"
       ],
       "published": "2026-04-22",
-      "changelog": "Initial release \u2014 skill variant extracted from catalog"
+      "changelog": "Initial release — skill variant extracted from catalog"
     },
     {
       "name": "developer-java",
@@ -218,7 +218,7 @@
         "governance"
       ],
       "published": "2026-05-01",
-      "changelog": "Initial beta release \u2014 audits agents/skills/CLAUDE.md against the four official Anthropic rubrics shipped in claude-plugins-official"
+      "changelog": "Initial beta release — audits agents/skills/CLAUDE.md against the four official Anthropic rubrics shipped in claude-plugins-official"
     },
     {
       "name": "test-writer",
@@ -306,7 +306,7 @@
       "type": "agent",
       "tier": "beta",
       "status": "active",
-      "description": "Writes technical documentation: READMEs, runbooks, API guides, architecture overviews, and onboarding guides. Reads code before writing \u2014 never documents what should be, only what is. **Always negotiates the output format with the user before generating** \u2014 supports Markdown, LaTeX, HTML, PDF (via pandoc + pdflatex), and DOCX. Detects local toolchain and offers only the formats that can actually be produced. Defaults to multi-format output (md + tex + html + pdf) when the toolchain is complete. Delegates UML diagrams (component, sequence, class, activity, state, use-case, ER) to the uml-diagram-generator skill \u2014 never inlines raw PlantUML/Mermaid.",
+      "description": "Writes technical documentation: READMEs, runbooks, API guides, architecture overviews, and onboarding guides. Reads code before writing — never documents what should be, only what is. **Always negotiates the output format with the user before generating** — supports Markdown, LaTeX, HTML, PDF (via pandoc + pdflatex), and DOCX. Detects local toolchain and offers only the formats that can actually be produced. Defaults to multi-format output (md + tex + html + pdf) when the toolchain is complete. Delegates UML diagrams (component, sequence, class, activity, state, use-case, ER) to the uml-diagram-generator skill — never inlines raw PlantUML/Mermaid.",
       "file": "beta/documentation/documentation-writer.md",
       "dependencies": [
         "doc-expert",
@@ -434,7 +434,7 @@
         "skill"
       ],
       "published": "2026-04-20",
-      "changelog": "Initial release \u2014 extracted from test-writer and developer-java-spring"
+      "changelog": "Initial release — extracted from test-writer and developer-java-spring"
     },
     {
       "name": "accenture-branding",
@@ -458,7 +458,7 @@
         "skill"
       ],
       "published": "2026-04-20",
-      "changelog": "Initial release \u2014 migrated from policies/accenture-branding.md"
+      "changelog": "Initial release — migrated from policies/accenture-branding.md"
     },
     {
       "name": "rest-api-standards",
@@ -481,7 +481,7 @@
         "skill"
       ],
       "published": "2026-04-20",
-      "changelog": "Initial release \u2014 extracted from api-designer"
+      "changelog": "Initial release — extracted from api-designer"
     },
     {
       "name": "developer-frontend",
@@ -529,7 +529,7 @@
         "developer"
       ],
       "published": "2026-04-30",
-      "changelog": "Angular 4-file family promoted to non-negotiable invariant: every component is .ts + .html + .scss + .spec.ts; inline template:/styles: literals forbidden (allowed exception: trivial render-prop wrappers \u2264 5 markup lines). Output format gains per-framework file-expectations table; quality self-check verifies the 4 files are present. The triplet+spec rule previously lived only in the angular-expert skill and was being lost when the skill content competed for attention with the higher-salience invariants list."
+      "changelog": "Angular 4-file family promoted to non-negotiable invariant: every component is .ts + .html + .scss + .spec.ts; inline template:/styles: literals forbidden (allowed exception: trivial render-prop wrappers ≤ 5 markup lines). Output format gains per-framework file-expectations table; quality self-check verifies the 4 files are present. The triplet+spec rule previously lived only in the angular-expert skill and was being lost when the skill content competed for attention with the higher-salience invariants list."
     },
     {
       "name": "tech-analyst",
@@ -649,7 +649,7 @@
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use to load PostgreSQL standards: relational design, data modelling, data types, indices, performance tuning, Liquibase migrations (the only supported tool \u2014 Flyway is forbidden), H2 local-dev profile with seed data, transaction management, data integrity, security, and monitoring. Works alongside spring-data-jpa; does not duplicate the ORM layer.",
+      "description": "Use to load PostgreSQL standards: relational design, data modelling, data types, indices, performance tuning, Liquibase migrations (the only supported tool — Flyway is forbidden), H2 local-dev profile with seed data, transaction management, data integrity, security, and monitoring. Works alongside spring-data-jpa; does not duplicate the ORM layer.",
       "file": "skills/database/postgresql-expert.md",
       "dependencies": [],
       "tools": [
@@ -691,7 +691,7 @@
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use when producing technical or functional documentation for Python/Streamlit, Java/Spring Boot, or Angular projects. Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented. Format-aware: produces Markdown that round-trips through pandoc to LaTeX/HTML/PDF/DOCX. Diagrams delegated to uml-diagram-generator \u2014 never inlines raw PlantUML/Mermaid. Saves output to docs/.",
+      "description": "Use when producing technical or functional documentation for Python/Streamlit, Java/Spring Boot, or Angular projects. Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented. Format-aware: produces Markdown that round-trips through pandoc to LaTeX/HTML/PDF/DOCX. Diagrams delegated to uml-diagram-generator — never inlines raw PlantUML/Mermaid. Saves output to docs/.",
       "file": "skills/documentation/doc-expert.md",
       "dependencies": [],
       "tools": [
@@ -728,7 +728,7 @@
         "skill"
       ],
       "published": "2026-05-01",
-      "changelog": "v1.0.0: initial release \u2014 routes UML diagram generation to the antoinebou12/uml-mcp MCP server (stdio via uvx); auto-selects diagram type by intent; saves rendered artefacts (SVG/PNG) and source (.puml) under docs/diagrams/"
+      "changelog": "v1.0.0: initial release — routes UML diagram generation to the antoinebou12/uml-mcp MCP server (stdio via uvx); auto-selects diagram type by intent; saves rendered artefacts (SVG/PNG) and source (.puml) under docs/diagrams/"
     },
     {
       "name": "browser-automation",
@@ -752,7 +752,7 @@
         "skill"
       ],
       "published": "2026-05-01",
-      "changelog": "v1.0.0: initial release \u2014 routes browser control to the @playwright/mcp MCP server (stdio via npx); navigation/observation/interaction/tabs/scripting/waiting/network tool groups documented"
+      "changelog": "v1.0.0: initial release — routes browser control to the @playwright/mcp MCP server (stdio via npx); navigation/observation/interaction/tabs/scripting/waiting/network tool groups documented"
     },
     {
       "name": "documentation-orchestrator",
@@ -949,7 +949,7 @@
         "skill"
       ],
       "published": "2026-04-29",
-      "changelog": "Initial release \u2014 reconstructs UniCredit's public brand and Bricks design system into ready-to-paste --uc-* tokens, component inventory, EN 301 549 / WCAG 2.1 AA accessibility targets, and tone-of-voice guidance for the developer-frontend agent."
+      "changelog": "Initial release — reconstructs UniCredit's public brand and Bricks design system into ready-to-paste --uc-* tokens, component inventory, EN 301 549 / WCAG 2.1 AA accessibility targets, and tone-of-voice guidance for the developer-frontend agent."
     },
     {
       "name": "qwik-expert",
@@ -1175,7 +1175,7 @@
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use to load Python production standards: mandatory type hints, project structure, Pydantic v2, pytest, structlog, and dependency management (uv/pip-tools). Covers FastAPI services, CLIs, data pipelines, and scripts. Does not cover Streamlit \u2014 use streamlit-expert for that.",
+      "description": "Use to load Python production standards: mandatory type hints, project structure, Pydantic v2, pytest, structlog, and dependency management (uv/pip-tools). Covers FastAPI services, CLIs, data pipelines, and scripts. Does not cover Streamlit — use streamlit-expert for that.",
       "file": "skills/python/python-expert.md",
       "dependencies": [],
       "tools": [
@@ -1217,7 +1217,7 @@
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use when a dependency conflict blocks another skill: incompatible library versions, breaking changes after an update, absent documentation, inconsistent behaviour, transitive conflicts, or deprecated APIs. Support skill only \u2014 do not activate for simple version updates without conflicts.",
+      "description": "Use when a dependency conflict blocks another skill: incompatible library versions, breaking changes after an update, absent documentation, inconsistent behaviour, transitive conflicts, or deprecated APIs. Support skill only — do not activate for simple version updates without conflicts.",
       "file": "skills/refactoring/dependency-resolver.md",
       "dependencies": [],
       "tools": [
@@ -1259,7 +1259,7 @@
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use when generating commit messages. Produces a terse, intent-focused Conventional Commits subject line (max 72 chars) with a body only when the reasoning is non-obvious. No emojis, no AI credits. Outputs message text in a code block only \u2014 does not run git.",
+      "description": "Use when generating commit messages. Produces a terse, intent-focused Conventional Commits subject line (max 72 chars) with a body only when the reasoning is non-obvious. No emojis, no AI credits. Outputs message text in a code block only — does not run git.",
       "file": "skills/utils/caveman-commit.md",
       "dependencies": [],
       "tools": [
@@ -1346,11 +1346,11 @@
     },
     {
       "name": "indexing-supervisor",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Single entrypoint for indexing any legacy codebase into a markdown KB at .indexing-kb/. Language-agnostic \u2014 autodetects the AS-IS stack via codebase-mapper and writes a canonical stack.json consumed by every downstream phase. Decomposes indexing into phases, dispatches Sonnet sub-agents in parallel, gates framework-specific analyzers (e.g. streamlit-analyzer runs only when streamlit \u2208 stack.frameworks). Detects existing .indexing-kb/ outputs and prompts skip / re-run / revise before proceeding.",
+      "description": "Single entrypoint for indexing any legacy codebase into a markdown KB at .indexing-kb/. Language-agnostic — autodetects the AS-IS stack via codebase-mapper and writes a canonical stack.json consumed by every downstream phase. Decomposes indexing into phases, dispatches Sonnet sub-agents in parallel, gates framework-specific analyzers (e.g. streamlit-analyzer runs only when streamlit ∈ stack.frameworks). Detects existing .indexing-kb/ outputs and prompts skip / re-run / revise before proceeding.",
       "file": "beta/indexing/indexing-supervisor.md",
       "dependencies": [
         "codebase-mapper",
@@ -1367,7 +1367,7 @@
         "Bash",
         "Agent"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "indexing",
         "python",
@@ -1458,7 +1458,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of indexing-supervisor. Documents one package or module of a codebase end-to-end at the API level. Language-agnostic \u2014 adapts to package conventions of the detected language (Python __init__.py, JVM src/main, Go internal/, Rust crates, .NET *.csproj, Ruby app/, PHP namespaces, JS/TS src/). One invocation per top-level package, parallelizable.",
+      "description": "Sub-agent of indexing-supervisor. Documents one package or module of a codebase end-to-end at the API level. Language-agnostic — adapts to package conventions of the detected language (Python __init__.py, JVM src/main, Go internal/, Rust crates, .NET *.csproj, Ruby app/, PHP namespaces, JS/TS src/). One invocation per top-level package, parallelizable.",
       "file": "beta/indexing/module-documenter.md",
       "dependencies": [],
       "tools": [
@@ -1483,7 +1483,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of indexing-supervisor. Identifies all data crossings between the application and the outside world: database access, external API calls, file I/O, environment variables, and configuration sources. Language-agnostic \u2014 reads stack.json to know which library patterns to grep for (SQLAlchemy/JPA/sqlx/EF Core/ActiveRecord/Eloquent/Prisma; requests/WebClient/reqwest/HttpClient/Guzzle/axios; etc.).",
+      "description": "Sub-agent of indexing-supervisor. Identifies all data crossings between the application and the outside world: database access, external API calls, file I/O, environment variables, and configuration sources. Language-agnostic — reads stack.json to know which library patterns to grep for (SQLAlchemy/JPA/sqlx/EF Core/ActiveRecord/Eloquent/Prisma; requests/WebClient/reqwest/HttpClient/Guzzle/axios; etc.).",
       "file": "beta/indexing/data-flow-analyst.md",
       "dependencies": [],
       "tools": [
@@ -1508,7 +1508,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of indexing-supervisor. Extracts business rules, validation logic, and domain concepts from a codebase in any language. Stack-aware \u2014 adapts validation/rule grep patterns to the language declared in stack.json (Pydantic for Python; Bean Validation / @Valid for JVM; class-validator / zod for TS; FluentValidation for C#; Rails validators; FormRequest for Laravel; etc.).",
+      "description": "Sub-agent of indexing-supervisor. Extracts business rules, validation logic, and domain concepts from a codebase in any language. Stack-aware — adapts validation/rule grep patterns to the language declared in stack.json (Pydantic for Python; Bean Validation / @Valid for JVM; class-validator / zod for TS; FluentValidation for C#; Rails validators; FormRequest for Laravel; etc.).",
       "file": "beta/indexing/business-logic-analyst.md",
       "dependencies": [],
       "tools": [
@@ -1553,7 +1553,7 @@
     },
     {
       "name": "functional-analysis-supervisor",
-      "version": "3.0.0",
+      "version": "3.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1575,7 +1575,7 @@
         "Bash",
         "Agent"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "functional-analysis",
         "as-is",
@@ -1586,7 +1586,7 @@
         "streamlit"
       ],
       "published": "2026-05-16",
-      "changelog": "0.3.0: bootstrap detects `exports-only-eligible` state (analysis complete but \u2265 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.2.0: add Export Wave (always ON) \u2014 produces Accenture-branded PDF (`_exports/01-functional-report.pdf`) via document-creator and PPTX (`_exports/01-functional-deck.pptx`) via presentation-creator after Wave 3 synthesis. Adds explicit overwrite confirmation when exports already exist. 0.1.0: initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/"
+      "changelog": "0.3.0: bootstrap detects `exports-only-eligible` state (analysis complete but ≥ 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.2.0: add Export Wave (always ON) — produces Accenture-branded PDF (`_exports/01-functional-report.pdf`) via document-creator and PPTX (`_exports/01-functional-deck.pptx`) via presentation-creator after Wave 3 synthesis. Adds explicit overwrite confirmation when exports already exist. 0.1.0: initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/"
     },
     {
       "name": "actor-feature-mapper",
@@ -1620,7 +1620,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of functional-analysis-supervisor (Wave 1). Inventories the UI surface AS-IS: screens, navigation map, component tree. Strong Streamlit awareness \u2014 treats each page-script as a screen and widgets as first-class components. Strictly AS-IS.",
+      "description": "Sub-agent of functional-analysis-supervisor (Wave 1). Inventories the UI surface AS-IS: screens, navigation map, component tree. Strong Streamlit awareness — treats each page-script as a screen and widgets as first-class components. Strictly AS-IS.",
       "file": "beta/functional-analysis/ui-surface-analyst.md",
       "dependencies": [],
       "tools": [
@@ -1673,7 +1673,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of functional-analysis-supervisor (Wave 2). Derives use cases, user flows, and Mermaid sequence diagrams from Wave 1 outputs. Streamlit-aware \u2014 handles reactive rerun-driven flows that have no explicit routing. Strictly AS-IS.",
+      "description": "Sub-agent of functional-analysis-supervisor (Wave 2). Derives use cases, user flows, and Mermaid sequence diagrams from Wave 1 outputs. Streamlit-aware — handles reactive rerun-driven flows that have no explicit routing. Strictly AS-IS.",
       "file": "beta/functional-analysis/user-flow-analyst.md",
       "dependencies": [],
       "tools": [
@@ -1726,7 +1726,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Optional adversarial sub-agent of functional-analysis-supervisor (Wave 3). Cross-validates the full set of Phase 1 outputs by looking for gaps, contradictions, unverified claims, and AS-IS violations. Does NOT rewrite \u2014 only flags findings. Default ON in Streamlit mode, opt-in otherwise.",
+      "description": "Optional adversarial sub-agent of functional-analysis-supervisor (Wave 3). Cross-validates the full set of Phase 1 outputs by looking for gaps, contradictions, unverified claims, and AS-IS violations. Does NOT rewrite — only flags findings. Default ON in Streamlit mode, opt-in otherwise.",
       "file": "beta/functional-analysis/functional-analysis-challenger.md",
       "dependencies": [],
       "tools": [
@@ -1750,11 +1750,11 @@
     {
       "name": "refactoring-supervisor",
       "display_name": "Application Replatforming",
-      "version": "3.2.0",
+      "version": "3.2.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Top-level workflow orchestrator (opus) for end-to-end APPLICATION REPLATFORMING on a codebase (capability formerly known as 'Application Refactoring'; technical agent ID `refactoring-supervisor` retained for backward compatibility). Coordinates five phases: Phase 0 (Codebase Indexing), Phase 1 (Functional Analysis with PDF+PPTX export), Phase 2 (Technical Analysis with PDF+PPTX export), Phase 3 (Source Application Testing \u2014 baseline), and Phase 4 (Application Replatforming \u2014 the rewriting phase, redesigned in v3.0.0 as a progressive, incremental, test-driven, continuously validated 7-step loop that REPLACES both the previous big-bang Phase 4 AND the previous separate Phase 5 \u2014 final validation is now Step 6 of Phase 4). Phases 0\u20133 are unchanged in logic, structure, and outputs. Phase 4 follows a strict 7-step structure with hard build+start+test gates between every step: Step 0 Bootstrap (project scaffold + build + startup must succeed), Step 1 Minimal Runnable Skeleton, Step 2 Incremental Feature Loop (one UC at a time: implement \u2192 tests \u2192 build \u2192 run \u2192 validate vs Phase 3 oracle), Step 3 Mandatory Validation Loop (sub-loop on any failure: root cause + minimal fix + re-validate; blocks forward progress until convergence), Step 4 Progressive System Construction (vertical slices, app always buildable/runnable/testable), Step 5 Hardening (security/config/error-handling/logging reintroduced and re-validated), Step 6 Final Validation (full test suite + business-flow validation + TODO sweep + deliverable `01-replatforming-report.md` with PO sign-off, blocked while critical/high failures or pending TODOs remain). The application is ALWAYS in a working state throughout Phase 4 \u2014 no big-bang rewrites, no late-stage failures, no non-runnable intermediate states. Strict human-in-the-loop with per-phase recap, per-step gate confirmations within Phase 4, and workflow-level go/no-go between phases. Bootstrap detects existing phase outputs (including Phase 4 step-level resume awareness) and asks the user explicitly per phase whether to skip, re-run, revise, or resume from a specific step \u2014 never auto-skip a complete phase silently. For Phases 1 and 2, when the analysis is complete but the Accenture-branded export is missing, offers `regenerate-exports` that runs only the export wave. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check.",
+      "description": "Top-level workflow orchestrator (opus) for end-to-end APPLICATION REPLATFORMING on a codebase (capability formerly known as 'Application Refactoring'; technical agent ID `refactoring-supervisor` retained for backward compatibility). Coordinates five phases: Phase 0 (Codebase Indexing), Phase 1 (Functional Analysis with PDF+PPTX export), Phase 2 (Technical Analysis with PDF+PPTX export), Phase 3 (Source Application Testing — baseline), and Phase 4 (Application Replatforming — the rewriting phase, redesigned in v3.0.0 as a progressive, incremental, test-driven, continuously validated 7-step loop that REPLACES both the previous big-bang Phase 4 AND the previous separate Phase 5 — final validation is now Step 6 of Phase 4). Phases 0–3 are unchanged in logic, structure, and outputs. Phase 4 follows a strict 7-step structure with hard build+start+test gates between every step: Step 0 Bootstrap (project scaffold + build + startup must succeed), Step 1 Minimal Runnable Skeleton, Step 2 Incremental Feature Loop (one UC at a time: implement → tests → build → run → validate vs Phase 3 oracle), Step 3 Mandatory Validation Loop (sub-loop on any failure: root cause + minimal fix + re-validate; blocks forward progress until convergence), Step 4 Progressive System Construction (vertical slices, app always buildable/runnable/testable), Step 5 Hardening (security/config/error-handling/logging reintroduced and re-validated), Step 6 Final Validation (full test suite + business-flow validation + TODO sweep + deliverable `01-replatforming-report.md` with PO sign-off, blocked while critical/high failures or pending TODOs remain). The application is ALWAYS in a working state throughout Phase 4 — no big-bang rewrites, no late-stage failures, no non-runnable intermediate states. Strict human-in-the-loop with per-phase recap, per-step gate confirmations within Phase 4, and workflow-level go/no-go between phases. Bootstrap detects existing phase outputs (including Phase 4 step-level resume awareness) and asks the user explicitly per phase whether to skip, re-run, revise, or resume from a specific step — never auto-skip a complete phase silently. For Phases 1 and 2, when the analysis is complete but the Accenture-branded export is missing, offers `regenerate-exports` that runs only the export wave. AS-IS through Phase 3; TO-BE allowed from Phase 4 with inverse drift check.",
       "file": "beta/orchestration/refactoring-supervisor.md",
       "dependencies": [
         "indexing-supervisor",
@@ -1775,7 +1775,7 @@
         "Bash",
         "Agent"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "refactoring",
         "migration",
@@ -1789,11 +1789,11 @@
     },
     {
       "name": "technical-analysis-supervisor",
-      "version": "2.1.0",
+      "version": "2.1.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Phase 2 supervisor (opus). Orchestrates 8 Sonnet workers in waves to produce AS-IS technical analysis at docs/analysis/02-technical/, plus Accenture-branded PDF and PPTX exports. Reads .indexing-kb/ (Phase 0) and optionally docs/analysis/01-functional/ (Phase 1). Decides dispatch mode (parallel | batched | sequential) based on KB size and user flag. Detects an `exports-only` resume mode: when the analysis is already complete but one or both exports are missing, offers to regenerate only the missing exports without re-running the W1/W2/W3 workers. Strict human-in-the-loop. Strictly AS-IS \u2014 never references target technologies.",
+      "description": "Phase 2 supervisor (opus). Orchestrates 8 Sonnet workers in waves to produce AS-IS technical analysis at docs/analysis/02-technical/, plus Accenture-branded PDF and PPTX exports. Reads .indexing-kb/ (Phase 0) and optionally docs/analysis/01-functional/ (Phase 1). Decides dispatch mode (parallel | batched | sequential) based on KB size and user flag. Detects an `exports-only` resume mode: when the analysis is already complete but one or both exports are missing, offers to regenerate only the missing exports without re-running the W1/W2/W3 workers. Strict human-in-the-loop. Strictly AS-IS — never references target technologies.",
       "file": "beta/technical-analysis/technical-analysis-supervisor.md",
       "dependencies": [
         "code-quality-analyst",
@@ -1815,7 +1815,7 @@
         "Bash",
         "Agent"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "technical-analysis",
         "supervisor",
@@ -1828,7 +1828,7 @@
         "streamlit"
       ],
       "published": "2026-05-16",
-      "changelog": "0.2.0: bootstrap detects `exports-only-eligible` state (analysis complete but \u2265 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.1.0: initial beta release: Phase 2 supervisor with 3 waves (8 W1 workers + W2 synthesizer + W3 challenger) and parallel export wave (PDF + PPTX). Adaptive dispatch mode based on repo size."
+      "changelog": "0.2.0: bootstrap detects `exports-only-eligible` state (analysis complete but ≥ 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.1.0: initial beta release: Phase 2 supervisor with 3 waves (8 W1 workers + W2 synthesizer + W3 challenger) and parallel export wave (PDF + PPTX). Adaptive dispatch mode based on repo size."
     },
     {
       "name": "code-quality-analyst",
@@ -1890,7 +1890,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze the external dependency posture of a codebase AS-IS: pinning, deprecations, known vulnerabilities (CVE/GHSA), license posture. Produces a dependency inventory plus an SBOM-lite JSON. Static analysis only \u2014 no network calls. Strictly AS-IS.",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze the external dependency posture of a codebase AS-IS: pinning, deprecations, known vulnerabilities (CVE/GHSA), license posture. Produces a dependency inventory plus an SBOM-lite JSON. Static analysis only — no network calls. Strictly AS-IS.",
       "file": "beta/technical-analysis/dependency-security-analyst.md",
       "dependencies": [],
       "tools": [
@@ -1919,7 +1919,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze data flow and data access patterns of a codebase AS-IS: origin \u2192 transformation \u2192 validation \u2192 sink, DB/file/cache/serialization patterns. Mermaid diagrams. Strictly AS-IS.",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze data flow and data access patterns of a codebase AS-IS: origin → transformation → validation → sink, DB/file/cache/serialization patterns. Mermaid diagrams. Strictly AS-IS.",
       "file": "beta/technical-analysis/data-access-analyst.md",
       "dependencies": [],
       "tools": [
@@ -2029,7 +2029,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze code-level security posture of a codebase AS-IS: OWASP Top 10 coverage, input validation, sanitization, secrets in code, threat-model surface (STRIDE). Complements dependency-security-analyst (library CVEs) \u2014 does not duplicate it. Strictly AS-IS.",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 1). Use to analyze code-level security posture of a codebase AS-IS: OWASP Top 10 coverage, input validation, sanitization, secrets in code, threat-model surface (STRIDE). Complements dependency-security-analyst (library CVEs) — does not duplicate it. Strictly AS-IS.",
       "file": "beta/technical-analysis/security-analyst.md",
       "dependencies": [],
       "tools": [
@@ -2057,7 +2057,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of technical-analysis-supervisor (Wave 2). Use to consolidate Wave 1 findings into a unified risk register (markdown + JSON + CSV), severity matrix (likelihood \u00d7 impact), and ordered remediation backlog. Cross-references with Phase 1 features and use cases when available. Discovers no new findings \u2014 only consolidates. Strictly AS-IS.",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 2). Use to consolidate Wave 1 findings into a unified risk register (markdown + JSON + CSV), severity matrix (likelihood × impact), and ordered remediation backlog. Cross-references with Phase 1 features and use cases when available. Discovers no new findings — only consolidates. Strictly AS-IS.",
       "file": "beta/technical-analysis/risk-synthesizer.md",
       "dependencies": [],
       "tools": [
@@ -2083,7 +2083,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of technical-analysis-supervisor (Wave 3, always ON). Use to perform an adversarial review of all Phase 2 outputs: orphan IDs, contradictions, unverified claims, coverage gaps, AS-IS violations, Streamlit-specific risks. Does NOT rewrite \u2014 only flags findings. Strictly AS-IS.",
+      "description": "Sub-agent of technical-analysis-supervisor (Wave 3, always ON). Use to perform an adversarial review of all Phase 2 outputs: orphan IDs, contradictions, unverified claims, coverage gaps, AS-IS violations, Streamlit-specific risks. Does NOT rewrite — only flags findings. Strictly AS-IS.",
       "file": "beta/technical-analysis/technical-analysis-challenger.md",
       "dependencies": [],
       "tools": [
@@ -2106,11 +2106,11 @@
     },
     {
       "name": "baseline-testing-supervisor",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Phase 3 supervisor (opus). Orchestrates 7 Sonnet workers in 4 waves to produce the AS-IS baseline regression suite at tests/baseline/ (pytest, fixtures, snapshots, benchmarks, optional Postman collection if services exposed) plus the report at docs/analysis/03-baseline/. Reads .indexing-kb/ + Phase 1 + Phase 2. Adaptive execution policy (auto-detects pytest readiness; falls back to write-only). Per-step recaps with execution timings. Failure policy: critical/high escalate; medium/low get xfail with AS-IS bug record. Never modifies AS-IS source code. On invocation, detects existing baseline outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding \u2014 never auto-overwrites a complete baseline silently. Strict human-in-the-loop. Strictly AS-IS.",
+      "description": "Phase 3 supervisor (opus). Orchestrates 7 Sonnet workers in 4 waves to produce the AS-IS baseline regression suite at tests/baseline/ (pytest, fixtures, snapshots, benchmarks, optional Postman collection if services exposed) plus the report at docs/analysis/03-baseline/. Reads .indexing-kb/ + Phase 1 + Phase 2. Adaptive execution policy (auto-detects pytest readiness; falls back to write-only). Per-step recaps with execution timings. Failure policy: critical/high escalate; medium/low get xfail with AS-IS bug record. Never modifies AS-IS source code. On invocation, detects existing baseline outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding — never auto-overwrites a complete baseline silently. Strict human-in-the-loop. Strictly AS-IS.",
       "file": "beta/baseline-testing/baseline-testing-supervisor.md",
       "dependencies": [
         "fixture-builder",
@@ -2127,7 +2127,7 @@
         "Bash",
         "Agent"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "baseline-testing",
         "supervisor",
@@ -2141,7 +2141,7 @@
         "streamlit"
       ],
       "published": "2026-05-16",
-      "changelog": "0.2.0: bootstrap detects existing baseline outputs (`tests/baseline/` + `docs/analysis/03-baseline/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` because the oracle (snapshots + benchmarks) is precious \u2014 re-running resets the equivalence reference for Phase 5; inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 3 supervisor with 4 waves (W0 fixtures + W1 authoring with per-UC fan-out + W2 execution & oracle capture + W3 challenger). Adaptive execution policy. Conditional Postman generation when services are exposed. Mandatory timing recap per step."
+      "changelog": "0.2.0: bootstrap detects existing baseline outputs (`tests/baseline/` + `docs/analysis/03-baseline/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` because the oracle (snapshots + benchmarks) is precious — re-running resets the equivalence reference for Phase 5; inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 3 supervisor with 4 waves (W0 fixtures + W1 authoring with per-UC fan-out + W2 execution & oracle capture + W3 challenger). Adaptive execution policy. Conditional Postman generation when services are exposed. Mandatory timing recap per step."
     },
     {
       "name": "fixture-builder",
@@ -2176,7 +2176,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of baseline-testing-supervisor (Wave 1, fan-out per UC). Use to write the baseline pytest module for ONE use case from Phase 1: happy + alternative + edge tests with streamlit.testing.v1.AppTest where applicable. Never modifies AS-IS source \u2014 bugs found are documented for the runner's failure policy. Strictly AS-IS.",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 1, fan-out per UC). Use to write the baseline pytest module for ONE use case from Phase 1: happy + alternative + edge tests with streamlit.testing.v1.AppTest where applicable. Never modifies AS-IS source — bugs found are documented for the runner's failure policy. Strictly AS-IS.",
       "file": "beta/baseline-testing/usecase-test-writer.md",
       "dependencies": [],
       "tools": [
@@ -2259,7 +2259,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of baseline-testing-supervisor (Wave 1, conditional \u2014 only if services exposed). Use to produce a Postman 2.1 collection of the services the AS-IS app exposes: per-endpoint happy + edge requests, auth setup, response assertions, environment file. Captures the AS-IS service-level contract for Phase 5 equivalence verification. Strictly AS-IS.",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 1, conditional — only if services exposed). Use to produce a Postman 2.1 collection of the services the AS-IS app exposes: per-endpoint happy + edge requests, auth setup, response assertions, environment file. Captures the AS-IS service-level contract for Phase 5 equivalence verification. Strictly AS-IS.",
       "file": "beta/baseline-testing/service-collection-builder.md",
       "dependencies": [],
       "tools": [
@@ -2316,7 +2316,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of baseline-testing-supervisor (Wave 3, always ON). Use to perform an adversarial review of Phase 3 outputs: coverage gaps, AS-IS source modifications (forbidden), determinism risks, oracle integrity, severity-mismatch in bug dispositions, Streamlit-specific risks, Postman collection integrity. Does NOT rewrite \u2014 only flags findings. Strictly AS-IS.",
+      "description": "Sub-agent of baseline-testing-supervisor (Wave 3, always ON). Use to perform an adversarial review of Phase 3 outputs: coverage gaps, AS-IS source modifications (forbidden), determinism risks, oracle integrity, severity-mismatch in bug dispositions, Streamlit-specific risks, Postman collection integrity. Does NOT rewrite — only flags findings. Strictly AS-IS.",
       "file": "beta/baseline-testing/baseline-challenger.md",
       "dependencies": [],
       "tools": [
@@ -2340,11 +2340,11 @@
     },
     {
       "name": "refactoring-tobe-supervisor",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Phase 4 supervisor (opus). FIRST phase with target tech (Spring Boot 3 + Angular). Reads .indexing-kb/ + Phase 1/2/3 outputs and orchestrates 9 Sonnet workers in 6 waves to produce: bounded-context decomposition + ADRs (W1), OpenAPI 3.1 contract (W2), Spring Boot scaffold + JPA + per-UC logic translation + Angular workspace (W3 parallel BE+FE), hardening + observability + security (W4), migration roadmap with strangler fig (W5), adversarial review with AS-IS\u2194TO-BE traceability (W6 always ON). Strict dependency chain (W1\u2192W2\u2192W3\u2192W4\u2192W5\u2192W6) with three HITL checkpoints. Adaptive verification (mvn compile + ng build best-effort). Code generation scope configurable: scaffold-todo (default) | full | structural. Per-step execution timings. Inverse drift rule: target tech allowed; AS-IS-only leaks forbidden without ADR. On invocation, detects existing TO-BE outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding \u2014 never auto-overwrites generated code silently.",
+      "description": "Phase 4 supervisor (opus). FIRST phase with target tech (Spring Boot 3 + Angular). Reads .indexing-kb/ + Phase 1/2/3 outputs and orchestrates 9 Sonnet workers in 6 waves to produce: bounded-context decomposition + ADRs (W1), OpenAPI 3.1 contract (W2), Spring Boot scaffold + JPA + per-UC logic translation + Angular workspace (W3 parallel BE+FE), hardening + observability + security (W4), migration roadmap with strangler fig (W5), adversarial review with AS-IS↔TO-BE traceability (W6 always ON). Strict dependency chain (W1→W2→W3→W4→W5→W6) with three HITL checkpoints. Adaptive verification (mvn compile + ng build best-effort). Code generation scope configurable: scaffold-todo (default) | full | structural. Per-step execution timings. Inverse drift rule: target tech allowed; AS-IS-only leaks forbidden without ADR. On invocation, detects existing TO-BE outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding — never auto-overwrites generated code silently.",
       "file": "beta/refactoring-tobe/refactoring-tobe-supervisor.md",
       "dependencies": [
         "decomposition-architect",
@@ -2368,7 +2368,7 @@
         "Bash",
         "Agent"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "refactoring-tobe",
         "supervisor",
@@ -2390,7 +2390,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 1). Use to produce the TO-BE bounded-context decomposition (DDD-style with context map), aggregate design, AS-IS\u2194TO-BE module mapping, ADR-001 (architecture style: modular monolith vs microservices), and ADR-002 (target stack: Spring Boot version, Java version, Angular version, target DB). Output BLOCKS all subsequent Phase 4 workers. TO-BE design with inverse drift rule.",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 1). Use to produce the TO-BE bounded-context decomposition (DDD-style with context map), aggregate design, AS-IS↔TO-BE module mapping, ADR-001 (architecture style: modular monolith vs microservices), and ADR-002 (target stack: Spring Boot version, Java version, Angular version, target DB). Output BLOCKS all subsequent Phase 4 workers. TO-BE design with inverse drift rule.",
       "file": "beta/refactoring-tobe/decomposition-architect.md",
       "dependencies": [],
       "tools": [
@@ -2476,7 +2476,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 2). Use to produce the JPA persistence layer: entities (one per aggregate / entity / value object), Liquibase YAML changelogs (db/changelog/<NN>__*.yaml + master changelog), Spring Data JPA repositories, enums (state machines), MapStruct/manual mappers, idempotency entity. Honors DDD aggregate boundaries (cross-aggregate refs by ID only). Schema strategy: greenfield (new) or existing-migration based on Phase 2 access-pattern detection. Flyway is forbidden \u2014 Liquibase is the only migration tool. TO-BE design.",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, backend track step 2). Use to produce the JPA persistence layer: entities (one per aggregate / entity / value object), Liquibase YAML changelogs (db/changelog/<NN>__*.yaml + master changelog), Spring Data JPA repositories, enums (state machines), MapStruct/manual mappers, idempotency entity. Honors DDD aggregate boundaries (cross-aggregate refs by ID only). Schema strategy: greenfield (new) or existing-migration based on Phase 2 access-pattern detection. Flyway is forbidden — Liquibase is the only migration tool. TO-BE design.",
       "file": "beta/refactoring-tobe/data-mapper.md",
       "dependencies": [],
       "tools": [
@@ -2534,7 +2534,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, frontend track). Use to produce the Angular 17+ workspace with standalone components: core layer (auth/error/correlation-id interceptors, auth/role guards, base services), shared layer (components, pipes, models), one lazy-loaded feature module per bounded context with screens-as-components, OpenAPI typed client (typescript-angular generator), routing, env config. Streamlit-specific translations documented (session_state\u2192signals, st.cache_data\u2192shareReplay, etc.). TO-BE design.",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 3, frontend track). Use to produce the Angular 17+ workspace with standalone components: core layer (auth/error/correlation-id interceptors, auth/role guards, base services), shared layer (components, pipes, models), one lazy-loaded feature module per bounded context with screens-as-components, OpenAPI typed client (typescript-angular generator), routing, env config. Streamlit-specific translations documented (session_state→signals, st.cache_data→shareReplay, etc.). TO-BE design.",
       "file": "beta/refactoring-tobe/frontend-scaffolder.md",
       "dependencies": [],
       "tools": [
@@ -2594,7 +2594,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 5). Use to produce the migration roadmap: strangler fig plan with per-bounded-context milestones, cutover topology (reverse proxy / API gateway / DNS), rollback plans, go-live criteria (equivalence vs Phase 3, p95 \u2264 110% baseline), AS-IS bug carry-over table, communication plan, Mermaid Gantt + topology diagrams. Stakeholder-facing (TL;DR \u2264 1 page). TO-BE design.",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 5). Use to produce the migration roadmap: strangler fig plan with per-bounded-context milestones, cutover topology (reverse proxy / API gateway / DNS), rollback plans, go-live criteria (equivalence vs Phase 3, p95 ≤ 110% baseline), AS-IS bug carry-over table, communication plan, Mermaid Gantt + topology diagrams. Stakeholder-facing (TL;DR ≤ 1 page). TO-BE design.",
       "file": "beta/refactoring-tobe/migration-roadmap-builder.md",
       "dependencies": [],
       "tools": [
@@ -2622,7 +2622,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 6, always ON). Use to produce the AS-IS\u2194TO-BE traceability matrix and perform 8 adversarial checks on Phase 4 outputs: coverage gaps (orphan UCs / orphan TO-BE files), OpenAPI\u2194code drift, ADR completeness, AS-IS bug carry-over consistency, performance hypothesis sanity, security regression, equivalence claims integrity, AS-IS-only leak in TO-BE (inverse drift), AS-IS source modification detection. Does NOT rewrite \u2014 only flags findings. TO-BE phase.",
+      "description": "Sub-agent of refactoring-tobe-supervisor (Wave 6, always ON). Use to produce the AS-IS↔TO-BE traceability matrix and perform 8 adversarial checks on Phase 4 outputs: coverage gaps (orphan UCs / orphan TO-BE files), OpenAPI↔code drift, ADR completeness, AS-IS bug carry-over consistency, performance hypothesis sanity, security regression, equivalence claims integrity, AS-IS-only leak in TO-BE (inverse drift), AS-IS source modification detection. Does NOT rewrite — only flags findings. TO-BE phase.",
       "file": "beta/refactoring-tobe/phase4-challenger.md",
       "dependencies": [],
       "tools": [
@@ -2647,11 +2647,11 @@
     },
     {
       "name": "tobe-testing-supervisor",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Phase 5 supervisor (opus). Validates the TO-BE codebase against the AS-IS baseline. Reads tests/baseline/ (Phase 3 oracle), docs/analysis/01-functional/ (Phase 1 UCs), docs/refactoring/api/openapi.yaml (Phase 4 contract), backend/ + frontend/ (Phase 4 codebase). Orchestrates 8 Sonnet workers in 5 waves: equivalence test authoring per UC, backend tests (JUnit 5 + Mockito + Testcontainers + Spring Cloud Contract), frontend tests (Jest + Angular Testing Library + Playwright E2E), security tests (OWASP Top 10), performance comparison (p95 \u2264 +10% gate), execution & oracle capture, equivalence synthesis, challenger. Adaptive execution policy. Failure policy: critical/high regressions escalate; medium/low go to TBUG registry with xfail. AS-IS and TO-BE source code remain read-only. On invocation, detects existing Phase 5 outputs and asks the user explicitly whether to skip, re-run, or revise. Final go-live gate \u2014 produces the deliverable equivalence report requiring PO sign-off.",
+      "description": "Phase 5 supervisor (opus). Validates the TO-BE codebase against the AS-IS baseline. Reads tests/baseline/ (Phase 3 oracle), docs/analysis/01-functional/ (Phase 1 UCs), docs/refactoring/api/openapi.yaml (Phase 4 contract), backend/ + frontend/ (Phase 4 codebase). Orchestrates 8 Sonnet workers in 5 waves: equivalence test authoring per UC, backend tests (JUnit 5 + Mockito + Testcontainers + Spring Cloud Contract), frontend tests (Jest + Angular Testing Library + Playwright E2E), security tests (OWASP Top 10), performance comparison (p95 ≤ +10% gate), execution & oracle capture, equivalence synthesis, challenger. Adaptive execution policy. Failure policy: critical/high regressions escalate; medium/low go to TBUG registry with xfail. AS-IS and TO-BE source code remain read-only. On invocation, detects existing Phase 5 outputs and asks the user explicitly whether to skip, re-run, or revise. Final go-live gate — produces the deliverable equivalence report requiring PO sign-off.",
       "file": "beta/tobe-testing/tobe-testing-supervisor.md",
       "dependencies": [
         "equivalence-test-writer",
@@ -2669,7 +2669,7 @@
         "Bash",
         "Agent"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "tobe-testing",
         "supervisor",
@@ -2718,7 +2718,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Produces the backend TO-BE test suite for a Spring Boot 3 codebase: unit tests (JUnit 5 + Mockito), integration tests (Testcontainers), and contract tests (Spring Cloud Contract \u2014 verifies vs OpenAPI 3.1). Organised per bounded context. Targets > 80% line coverage and > 70% branch coverage. Never modifies production code. Anchors expected behaviour to Phase 1 UCs and Phase 3 baseline oracle.",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Produces the backend TO-BE test suite for a Spring Boot 3 codebase: unit tests (JUnit 5 + Mockito), integration tests (Testcontainers), and contract tests (Spring Cloud Contract — verifies vs OpenAPI 3.1). Organised per bounded context. Targets > 80% line coverage and > 70% branch coverage. Never modifies production code. Anchors expected behaviour to Phase 1 UCs and Phase 3 baseline oracle.",
       "file": "beta/tobe-testing/backend-test-writer.md",
       "dependencies": [],
       "tools": [
@@ -2748,7 +2748,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Produces the frontend TO-BE test suite for an Angular 17+ codebase: component tests (Jest + Angular Testing Library) and E2E tests (Playwright). Component tests organised per feature module. E2E specs derived from Phase 1 user-flows. Targets > 80% line coverage. Never modifies production code. Equivalence is at the user-flow level, not pixel level (Streamlit\u2192Angular layouts naturally diverge).",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 1). Produces the frontend TO-BE test suite for an Angular 17+ codebase: component tests (Jest + Angular Testing Library) and E2E tests (Playwright). Component tests organised per feature module. E2E specs derived from Phase 1 user-flows. Targets > 80% line coverage. Never modifies production code. Equivalence is at the user-flow level, not pixel level (Streamlit→Angular layouts naturally diverge).",
       "file": "beta/tobe-testing/frontend-test-writer.md",
       "dependencies": [],
       "tools": [
@@ -2837,7 +2837,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of tobe-testing-supervisor (Wave 3, sequential). Executes the TO-BE test suites authored in Wave 1 and the load scenarios from Wave 2 (when execute_policy permits). Captures JaCoCo coverage, Spring Cloud Contract verifier results, Playwright traces, k6/Gatling JSON. Classifies failures: critical/high \u2192 escalate (test stays failing); medium/low \u2192 xfail with TBUG registry entry. The only Phase 5 worker permitted to add @Disabled / xfail / test.skip markers. Never modifies production code or re-authors tests.",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 3, sequential). Executes the TO-BE test suites authored in Wave 1 and the load scenarios from Wave 2 (when execute_policy permits). Captures JaCoCo coverage, Spring Cloud Contract verifier results, Playwright traces, k6/Gatling JSON. Classifies failures: critical/high → escalate (test stays failing); medium/low → xfail with TBUG registry entry. The only Phase 5 worker permitted to add @Disabled / xfail / test.skip markers. Never modifies production code or re-authors tests.",
       "file": "beta/tobe-testing/tobe-test-runner.md",
       "dependencies": [],
       "tools": [
@@ -2867,7 +2867,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of tobe-testing-supervisor (Wave 4, sequential). Reads all Phase 5 outputs (equivalence, backend, frontend, contract tests, performance comparison, security findings, TBUG registry) plus Phase 1 UC list and produces the consolidated 01-equivalence-report.md \u2014 the deliverable signed by the Product Owner. Per UC verdict: equivalent | accepted-difference | regression-blocking | regression-accepted | not-tested-with-reason. Quality gate with 8 items. Discovers no new findings; only consolidates and classifies. Also writes README.md (Phase 5 entry point). Never modifies test or production code.",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 4, sequential). Reads all Phase 5 outputs (equivalence, backend, frontend, contract tests, performance comparison, security findings, TBUG registry) plus Phase 1 UC list and produces the consolidated 01-equivalence-report.md — the deliverable signed by the Product Owner. Per UC verdict: equivalent | accepted-difference | regression-blocking | regression-accepted | not-tested-with-reason. Quality gate with 8 items. Discovers no new findings; only consolidates and classifies. Also writes README.md (Phase 5 entry point). Never modifies test or production code.",
       "file": "beta/tobe-testing/equivalence-synthesizer.md",
       "dependencies": [],
       "tools": [
@@ -2896,7 +2896,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Sub-agent of tobe-testing-supervisor (Wave 5, always ON). Adversarial reviewer: 8 cross-cutting checks \u2014 UC coverage gaps, OpenAPI\u2194TO-BE drift, AS-IS source modifications (forbidden), TO-BE source modifications in Phase 5 (forbidden), mocked-when-shouldn't, equivalence claim integrity, AS-IS-bug-carry-over consistency, PO sign-off completeness, performance gate compliance. Produces _meta/challenger-report.md with CHL-NN entries; appends to 14-unresolved-questions.md. Flags; does NOT rewrite tests or reports.",
+      "description": "Sub-agent of tobe-testing-supervisor (Wave 5, always ON). Adversarial reviewer: 8 cross-cutting checks — UC coverage gaps, OpenAPI↔TO-BE drift, AS-IS source modifications (forbidden), TO-BE source modifications in Phase 5 (forbidden), mocked-when-shouldn't, equivalence claim integrity, AS-IS-bug-carry-over consistency, PO sign-off completeness, performance gate compliance. Produces _meta/challenger-report.md with CHL-NN entries; appends to 14-unresolved-questions.md. Flags; does NOT rewrite tests or reports.",
       "file": "beta/tobe-testing/tobe-testing-challenger.md",
       "dependencies": [],
       "tools": [
@@ -2924,7 +2924,7 @@
       "tier": "beta",
       "type": "agent",
       "status": "active",
-      "description": "Authors GitHub wikis organized around the Diataxis framework (Tutorials, How-to, Reference, Explanation). Reads the codebase, README, CHANGELOG, ADRs, and existing docs to produce Home/_Sidebar/_Footer plus topic pages as Markdown files in a local wiki/ directory ready for review via PR before pushing to the wiki repository. Never auto-pushes \u2014 the wiki is a public-facing artifact and pushes require explicit user authorization. Adapts tone and depth to audience (end-user, contributor, operator, integrator).",
+      "description": "Authors GitHub wikis organized around the Diataxis framework (Tutorials, How-to, Reference, Explanation). Reads the codebase, README, CHANGELOG, ADRs, and existing docs to produce Home/_Sidebar/_Footer plus topic pages as Markdown files in a local wiki/ directory ready for review via PR before pushing to the wiki repository. Never auto-pushes — the wiki is a public-facing artifact and pushes require explicit user authorization. Adapts tone and depth to audience (end-user, contributor, operator, integrator).",
       "file": "beta/documentation/wiki-writer.md",
       "dependencies": [],
       "tools": [
@@ -3130,7 +3130,7 @@
     },
     {
       "name": "deliberative-decision-engine",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "type": "agent",
       "tier": "beta",
       "status": "active",
@@ -3152,7 +3152,7 @@
         "Agent",
         "Write"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "deliberation",
         "multi-agent-debate",
@@ -3166,7 +3166,7 @@
     },
     {
       "name": "debate-proposer",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "type": "agent",
       "tier": "beta",
       "status": "active",
@@ -3179,7 +3179,7 @@
         "Glob",
         "Write"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "deliberation",
         "debate-persona",
@@ -3191,7 +3191,7 @@
     },
     {
       "name": "debate-critic",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "type": "agent",
       "tier": "beta",
       "status": "active",
@@ -3204,7 +3204,7 @@
         "Glob",
         "Write"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "deliberation",
         "debate-persona",
@@ -3217,7 +3217,7 @@
     },
     {
       "name": "debate-replatforming-specialist",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "type": "agent",
       "tier": "beta",
       "status": "active",
@@ -3230,7 +3230,7 @@
         "Glob",
         "Write"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "deliberation",
         "debate-persona",
@@ -3244,7 +3244,7 @@
     },
     {
       "name": "debate-risk-reviewer",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "type": "agent",
       "tier": "beta",
       "status": "active",
@@ -3257,7 +3257,7 @@
         "Glob",
         "Write"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "deliberation",
         "debate-persona",
@@ -3271,7 +3271,7 @@
     },
     {
       "name": "debate-operations-reviewer",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "type": "agent",
       "tier": "beta",
       "status": "active",
@@ -3284,7 +3284,7 @@
         "Glob",
         "Write"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "deliberation",
         "debate-persona",
@@ -3298,7 +3298,7 @@
     },
     {
       "name": "debate-judge",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "type": "agent",
       "tier": "beta",
       "status": "active",
@@ -3311,7 +3311,7 @@
         "Glob",
         "Write"
       ],
-      "model": "opus",
+      "model": "sonnet",
       "tags": [
         "deliberation",
         "debate-persona",
@@ -3393,7 +3393,7 @@
       ],
       "topic": "indexing",
       "published": "2026-05-12",
-      "changelog": "Initial release \u2014 Phase 0 coverage and evidence quality gate"
+      "changelog": "Initial release — Phase 0 coverage and evidence quality gate"
     }
   ]
 }

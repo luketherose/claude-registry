@@ -2,13 +2,7 @@
 name: debate-critic
 description: "Use this agent when the `deliberative-decision-engine` dispatches the Skeptical Critic persona in Step 2 of a multi-agent debate. Reads the decision brief at `.deliberation-kb/<trace-id>/00-decision-brief.json` and produces an independent draft that aggressively but constructively attacks the strongest plausible solution — looking for hidden assumptions, weak evidence, contradictions, edge cases, and failure modes. Never reads other personas' drafts in Step 2 (anti-anchoring guarantee). In Step 4 it produces challenges to other personas' drafts; in Step 5 it produces rebuttals to challenges aimed at its own draft. Outputs follow the schemas in `claude-catalog/docs/deliberation/schemas.md`. Typical triggers include Step 2 dispatch by `deliberative-decision-engine`, Step 4 challenge dispatch, and Step 5 rebuttal dispatch. Do NOT use this agent standalone — it is a debate persona invoked only by `deliberative-decision-engine`. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Write
-model: opus
-model_justification: >
-  Adversarial debate persona. Must surface hidden assumptions, weak
-  evidence, edge cases, and second-order failure modes that the proposer
-  did not anticipate. The whole deliberation's robustness depends on
-  this persona being competent — a weak critic produces a weak final
-  decision. Sonnet critics fail to find the failure modes that matter.
+model: sonnet
 color: red
 ---
 

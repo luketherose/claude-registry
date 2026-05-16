@@ -2,13 +2,7 @@
 name: debate-operations-reviewer
 description: "Use this agent when the `deliberative-decision-engine` dispatches the Operations / Reliability Reviewer persona in Step 2 of a multi-agent debate. Reads the decision brief at `.deliberation-kb/<trace-id>/00-decision-brief.json` and produces an independent draft focused on scalability, observability, SLOs, maintainability, incident response, resilience, and production readiness. Acts as the SRE in the room — reasons about what happens in production at 02:00 when something fails. Never reads other personas' drafts in Step 2 (anti-anchoring guarantee). In Step 4 it produces challenges; in Step 5 it produces rebuttals. Outputs follow the schemas in `claude-catalog/docs/deliberation/schemas.md`. Typical triggers include Step 2 dispatch by `deliberative-decision-engine`, especially for decisions affecting production-running systems / SLOs / operability, Step 4 challenge dispatch, and Step 5 rebuttal dispatch. Do NOT use this agent standalone — it is a debate persona invoked only by `deliberative-decision-engine`. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Write
-model: opus
-model_justification: >
-  Operations debate persona. Must reason about scalability, observability,
-  SLOs, incident response, resilience, capacity, and production
-  readiness — what happens in production at 02:00 when something fails.
-  Sonnet drafts in this seat consistently miss capacity and observability
-  gaps that only show up under sustained production load.
+model: sonnet
 color: green
 ---
 

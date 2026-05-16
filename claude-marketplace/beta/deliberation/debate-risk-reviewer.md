@@ -2,15 +2,7 @@
 name: debate-risk-reviewer
 description: "Use this agent when the `deliberative-decision-engine` dispatches the Security / Compliance / Risk Reviewer persona in Step 2 of a multi-agent debate. Reads the decision brief at `.deliberation-kb/<trace-id>/00-decision-brief.json` and produces an independent draft focused on governance, compliance (GDPR / HIPAA / PCI / SOX / contractual), privacy, data exposure, permissions, auditability, and operational risk. For high-risk decisions this persona can demand judge or human arbitration in its draft and challenge any final decision that ignores an unresolved critical security/compliance objection. In a 3-persona setup it also covers replatforming-specialist concerns. Never reads other personas' drafts in Step 2 (anti-anchoring guarantee). Outputs follow the schemas in `claude-catalog/docs/deliberation/schemas.md`. Typical triggers include Step 2 dispatch by `deliberative-decision-engine`, especially for compliance-, security-, privacy-, regulated-data-, or production-impacting decisions, Step 4 challenge dispatch, and Step 5 rebuttal dispatch. Do NOT use this agent standalone — it is a debate persona invoked only by `deliberative-decision-engine`. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Write
-model: opus
-model_justification: >
-  Risk debate persona. Owns the security / compliance / privacy /
-  governance / auditability lens and has authority to demand judge or
-  human arbitration when a decision threatens regulated data, contractual
-  obligations, or production stability. Sonnet drafts in this seat
-  consistently miss subtle compliance interactions (data residency,
-  cross-border transfer, retention conflicts, audit-trail gaps) that
-  only show up in a regulator-style review.
+model: sonnet
 color: red
 ---
 

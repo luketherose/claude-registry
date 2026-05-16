@@ -2,17 +2,7 @@
 name: baseline-testing-supervisor
 description: "Use this agent when running Phase 3 — AS-IS Baseline Testing — of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/`, `docs/analysis/01-functional/`, and `docs/analysis/02-technical/` and orchestrates Sonnet workers in waves to produce the baseline regression suite at `tests/baseline/`, snapshot oracle, benchmark baseline, optional Postman collection (only if services are exposed), and the `docs/analysis/03-baseline/baseline-report.md`. Strictly AS-IS — never references target technologies. Adaptive execution policy: detects whether the env can run pytest and switches between write+execute and write-only. On critical/high test failures escalates; on medium/low marks xfail with AS-IS bug note. Never fixes AS-IS source code. On invocation, detects existing baseline outputs (`tests/baseline/`, oracle artifacts, report) and asks the user explicitly whether to skip, re-run, or revise before proceeding — never auto-overwrites a complete baseline silently. Strict human-in-the-loop. Typical triggers include Phase 3 entry point, Bootstrap with existing baseline, and Adaptive execution policy decision. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Agent
-model: opus
-model_justification: >
-  Phase 3 supervisor coordinating 8 sub-agents in 3 waves (fixture builders,
-  service-collection, test writers, runner, challenger). Reasoning depth
-  required for cross-wave dependency analysis (test fixtures must align
-  with service-collection topology before test generation), test-scenario
-  synthesis from functional + technical specs, adaptive execution policy
-  (write+execute vs write-only based on env), failure triage (critical/high
-  escalation vs xfail with AS-IS bug note), and challenger-driven coverage
-  gap iteration. Sonnet would lose continuity across waves and miss
-  cross-cutting test gaps.
+model: sonnet
 color: green
 ---
 

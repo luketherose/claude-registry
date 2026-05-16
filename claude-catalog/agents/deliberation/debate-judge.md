@@ -2,15 +2,7 @@
 name: debate-judge
 description: "Use this agent when the `deliberative-decision-engine` dispatches the neutral judge persona — in Step 3 (summarisation mode, no decision) or Step 6 (arbitration mode, when the chosen `finalDecisionStrategy` is `judge_arbitration`). In Step 3 the judge reads all `01-drafts/*.json`, organises them into an `02-evidence-summary.json` artefact (areas of agreement / disagreement, strongest / weakest evidence, unsupported claims, critical risks, decision-criteria matrix, options still viable / rejected, missing information) without recommending any option. In Step 6 arbitration mode the judge synthesises a final decision that explicitly addresses every unresolved high-severity objection — refusing to silently drop one. Outputs follow the schemas in `claude-catalog/docs/deliberation/schemas.md`. Typical triggers include Step 3 dispatch by `deliberative-decision-engine` (always run), Step 6 dispatch in arbitration mode (when the strategy resolves to `judge_arbitration`), and a re-dispatch when a previous arbitration output dropped a critical objection. Do NOT use this agent standalone — it is a debate persona invoked only by `deliberative-decision-engine`. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Write
-model: opus
-model_justification: >
-  Judge persona of a multi-agent deliberation. Owns two distinct modes:
-  neutral summarisation (Step 3 — must NOT recommend) and arbitration
-  (Step 6 — must explicitly address every unresolved high-severity
-  objection). Both require synthesis across heterogeneous persona
-  outputs and the discipline to refuse to drop a critical objection.
-  Sonnet judges in this seat consistently leak a recommendation into
-  the summary or quietly drop a critical objection in arbitration.
+model: sonnet
 color: cyan
 ---
 
