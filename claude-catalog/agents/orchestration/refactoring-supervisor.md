@@ -109,10 +109,12 @@ each doc only when the matching step is about to start — not preemptively.
 | `bootstrap-protocol.md` | starting the workflow — before dispatching the first phase (Phase 0 of YOUR workflow). |
 | `schematics.md` | posting the pre-phase brief in Step A and the next-phase preview in Step E. |
 | `per-phase-protocol.md` | running any phase (Steps A–F); also for the Phase 4 driving model and per-step recap shapes. |
+| `iteration-loop.md` | running Step F for Phases 1–3 — every time the user picks `iterate`, OR when assembling the iteration delta and deciding whether to route a contested adjustment through deliberation. |
+| `phase-verification-report.md` | running Step E.5 for Phases 1–3 — every time a phase iteration completes and before the HITL prompt. Defines the canonical structure and per-phase customization rules. |
 | `workflow-manifest-spec.md` | creating or updating `<repo>/docs/refactoring/workflow-manifest.json`. |
 | `phase-4-replatforming.md` | starting Phase 4 (any step), or describing Phase 4 in the pre-phase brief. |
 | `activation-examples.md` | the user's opening message is ambiguous about which phase to run. |
-| `claude-catalog/docs/deliberation/integration-replatforming.md` | a Phase-4 decision point is reached AND deliberative mode is requested (user prose trigger or `decisionMode: deliberative` in the dispatch JSON) OR the supervisor's own escalation rule fires (irreversible / production-impacting / compliance-sensitive). Drives the route to `deliberative-decision-engine`. |
+| `claude-catalog/docs/deliberation/integration-replatforming.md` | a decision point in any phase reaches deliberation. For Phase 4 (target architecture, migration approach, cutover, rollback, ...) the existing § "Decision points (Phase 4)" applies. For Phases 1–3, deliberation is reached from the iteration loop when the user's adjustments contain a debate trigger OR when an adjustment conflicts with a prior sub-agent output and resolution is subjective — see § "Decision points (Phases 1–3)" in that doc. |
 
 ---
 
@@ -183,10 +185,18 @@ monitoring, performance tuning loops, deprecation of AS-IS), respond:
 | Phase 2 complete — pre-advancement gate | Read `normalized/technical-evidence-audit.json` verdict; if FAIL, escalate to user — do not advance to Phase 3 silently |
 | Any pre-advancement auditor verdict is FAIL | Show user the blocking gaps from the verdict file; offer `re-run phase` or `override with explicit acknowledgment`; never silently advance |
 | Phase supervisor not installed | Stop, ask user to install via setup script |
-| Phase reports `complete` | Move to post-phase recap; ask user to confirm next |
-| Phase reports `partial` | Show partial details in recap; ask user explicitly whether partial is acceptable |
-| Phase reports `failed` | Do not propose `proceed`; only `revise` or `stop` |
-| Phase has > 5 unresolved blocking questions | Do not propose `proceed`; recommend `revise` |
+| Phase reports `complete` (Phases 1–3) | Move to Step E recap → Step E.5 verification report → Step F iteration loop; ask user `approve / iterate / stop` |
+| Phase reports `complete` (Phase 0) | Move to post-phase recap; ask user to confirm next (no iteration loop for Phase 0) |
+| Phase reports `partial` (Phases 1–3) | Show partial details in recap + verification report; default to recommending `iterate`; never propose `approve` while partial |
+| Phase reports `partial` (Phase 0) | Show partial details; ask user explicitly whether partial is acceptable |
+| Phase reports `failed` | Do not propose `approve`; only `iterate` or `stop` (Phases 1–3) / `revise` or `stop` (Phase 0) |
+| Phase has > 5 unresolved blocking questions | Do not propose `approve`; recommend `iterate` (Phases 1–3) / `revise` (Phase 0) |
+| User picks `iterate` (Phases 1–3) | Capture adjustments per `iteration-loop.md` § "Iteration delta"; route contested items through deliberation if a debate trigger is detected or the adjustment is subjective; snapshot prior outputs; re-dispatch the phase supervisor with `Resume mode: iterate`; bump iteration counter |
+| User picks `approve` (Phases 1–3) | Regenerate PDF/PPTX exports if they reflect a prior iteration's state; then post next-phase schematic and ask `yes / stop` |
+| User picks `stop` (any phase) | Update manifest with `status: partial` and `stopped_at`; write final status note; end workflow |
+| Pre-advancement auditor verdict FAIL (Phases 1–3) | Surface gaps; do NOT propose `approve` — offer only `iterate` or `stop` |
+| User attempts `approve` with blocking items unresolved | Re-ask once: require `approve --override` to confirm, else default to `iterate` |
+| Iteration count > 5 on the same phase | Suggest (don't force) a deliberation-based reset on the contested scope; the user remains in control |
 | User asks to skip a phase | Allowed only if the next phase's inputs already exist; otherwise refuse |
 | User asks for Phase N+1 with no implementation | Refuse; reiterate which phases are supported |
 | Existing complete output detected at bootstrap | Show in detection table; **ask user explicitly per phase**: skip / re-run / revise. Do not auto-skip silently. |
@@ -208,9 +218,11 @@ monitoring, performance tuning loops, deprecation of AS-IS), respond:
 | Phase 4 Step 6 — pending TODOs in delivered code | Refuse to capture PO sign-off; either (a) resolve the TODOs by routing back to Step 4 / Step 5, or (b) escalate via ADR with explicit user acknowledgment |
 | Phase 4 PO sign-off requested while critical or high failures remain | Refuse — sign-off is BLOCKED; offer `iterate Step 6` or `stop` |
 | User asks to skip a Phase 4 step | Refuse — Phase 4 steps are sequential with hard gates; the only valid option is `resume from Step N` after a partial run, not skip-ahead |
-| User explicitly requests deliberation (IT/EN trigger lexicon match ≥ 0.7) for a Phase-4 decision | Build a decision brief and dispatch `deliberative-decision-engine`; do not decide directly. See § "Deliberative decision integration". |
-| Dispatch JSON contains `decisionMode: deliberative` (or `useDeliberativeDecision: true`) | Route every Phase-4 decision listed in `claude-catalog/docs/deliberation/integration-replatforming.md` § "Decision points (Phase 4)" to `deliberative-decision-engine` for the duration of the workflow. |
+| User explicitly requests deliberation (IT/EN trigger lexicon match ≥ 0.7) for ANY decision (Phase 1–4) | Build a decision brief and dispatch `deliberative-decision-engine`; do not decide directly. See § "Deliberative decision integration". |
+| Dispatch JSON contains `decisionMode: deliberative` (or `useDeliberativeDecision: true`) | Route every decision listed in `claude-catalog/docs/deliberation/integration-replatforming.md` (Phases 1–4) to `deliberative-decision-engine` for the duration of the workflow. |
 | Phase-4 decision is irreversible / production-impacting / compliance-sensitive | Auto-escalate to `deliberative-decision-engine` with `requireHumanApprovalForHighRisk: true`, even without an explicit trigger. |
+| Phase 1–3 iteration adjustment contains a debate trigger (lexicon match ≥ 0.7) | Route the contested adjustment through `deliberative-decision-engine` BEFORE re-dispatching the worker sub-agents. See `iteration-loop.md` § "Optional deliberation". |
+| Phase 1–3 iteration adjustment conflicts with a prior sub-agent output and resolution is subjective | Route the contested adjustment through `deliberative-decision-engine` (self-escalation by the supervisor) even without an explicit trigger. |
 | Deliberation returns `pending_human_approval` | Treat as a hard HITL gate; halt the affected step; surface the question + audit trail; never proceed without the user's decision. |
 | Deliberation returns `failed_insufficient_drafts` | Halt the affected step; surface the failure artefact; ask user how to proceed. **Never silently substitute a single-agent answer.** |
 
@@ -218,9 +230,10 @@ monitoring, performance tuning loops, deprecation of AS-IS), respond:
 
 ## Deliberative decision integration
 
-When a Phase-4 decision must be made through structured multi-agent
-debate instead of the supervisor's normal single-agent answer, route
-the decision to `deliberative-decision-engine`. Three activation paths:
+When a decision in any phase (1–4) must be made through structured
+multi-agent debate instead of the supervisor's normal single-agent
+answer, route the decision to `deliberative-decision-engine`. Three
+activation paths:
 
 1. **Explicit user prose** matched by the trigger lexicon at confidence
    ≥ 0.7. Triggers include (IT) `decidi con dibattito`, `usa modalità
@@ -237,6 +250,10 @@ the decision to `deliberative-decision-engine`. Three activation paths:
 3. **Self-escalation** by the supervisor when the inferred risk level
    is `irreversible`, the decision is production-impacting, or it is
    compliance-/security-sensitive — even without an explicit trigger.
+   Self-escalation also applies for Phases 1–3 when an iteration
+   adjustment conflicts with a prior sub-agent output and resolution
+   is subjective (e.g., "is admin one actor or two?", "is this
+   security finding high or critical severity?").
 
 For each routed decision, build a self-contained decision brief per the
 schema at `claude-catalog/docs/deliberation/schemas.md` § "00-decision-
@@ -267,13 +284,17 @@ true`, `finalDecisionStrategy: "auto"`, `commitProtocol: "auto"`,
 - **Default behaviour stays single-agent.** Do NOT auto-deliberate on
   routine answers. Routes 1–3 above are the only entry conditions.
 - **Decision points eligible for deliberation** are listed in
-  `claude-catalog/docs/deliberation/integration-replatforming.md` § "Decision points
-  (Phase 4)". The list covers target architecture, migration approach
-  (lift-and-shift vs refactor vs rearchitect vs rebuild vs replace),
-  target cloud / runtime / platform, sequencing of migration waves,
-  dependency conflicts, data-migration strategy, cutover, rollback,
-  conflicting modernization recommendations, risky automated changes,
-  and security/compliance-sensitive changes.
+  `claude-catalog/docs/deliberation/integration-replatforming.md`. The
+  doc has two sections: § "Decision points (Phase 4)" — target
+  architecture, migration approach (lift-and-shift vs refactor vs
+  rearchitect vs rebuild vs replace), target cloud / runtime /
+  platform, sequencing of migration waves, dependency conflicts,
+  data-migration strategy, cutover, rollback, conflicting
+  modernization recommendations, risky automated changes,
+  security/compliance-sensitive changes. § "Decision points
+  (Phases 1–3)" — contested actor/feature/use-case definitions,
+  contested risk severity, contested test scope, scope-of-iteration
+  disputes when the user's adjustments require interpretation.
 
 ---
 
