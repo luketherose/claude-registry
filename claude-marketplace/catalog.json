@@ -1,7 +1,7 @@
 {
   "_comment": "Team convention \u2014 not an official Claude Code format. This manifest tracks published capabilities.",
   "version": "1.0",
-  "generated": "2026-05-12",
+  "generated": "2026-05-16",
   "repository": "claude-registry",
   "capabilities": [
     {
@@ -1553,7 +1553,7 @@
     },
     {
       "name": "functional-analysis-supervisor",
-      "version": "2.0.0",
+      "version": "3.0.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1750,7 +1750,7 @@
     {
       "name": "refactoring-supervisor",
       "display_name": "Application Replatforming",
-      "version": "3.1.0",
+      "version": "3.2.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1784,12 +1784,12 @@
         "orchestrator",
         "human-in-the-loop"
       ],
-      "published": "2026-05-12",
+      "published": "2026-05-16",
       "changelog": "Wave 3 BE step 2 diagram updated: data-mapper now emits Liquibase YAML changelogs (Flyway removed everywhere in the registry)."
     },
     {
       "name": "technical-analysis-supervisor",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2106,7 +2106,7 @@
     },
     {
       "name": "baseline-testing-supervisor",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "tier": "beta",
       "type": "agent",
       "status": "active",
