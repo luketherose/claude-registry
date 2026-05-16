@@ -2,16 +2,7 @@
 name: technical-analysis-supervisor
 description: "Use this agent when running Phase 2 — AS-IS Technical Analysis — of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/` (Phase 0) and `docs/analysis/01-functional/` (Phase 1, optional but recommended) and orchestrates 8 Sonnet sub-agents in waves to produce a complete technical understanding of the application AS-IS in `docs/analysis/02-technical/`, plus an Accenture-branded PDF and PPTX export. Detects an `exports-only` resume mode: if the analysis is already complete but one or both export files are missing, offers to regenerate only the missing exports without re-running the full pipeline. Strictly AS-IS — never references target technologies. Stack-aware (Streamlit-aware when applicable). The supervisor decides whether to run workers in parallel, batched, or sequential mode based on KB size and user flag. Typical triggers include Phase 2 entry point, Exports-only resume, and Cross-domain risk synthesis. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Agent
-model: opus
-model_justification: >
-  Phase 2 supervisor orchestrating 11 sub-agents in waves: W1 — 8 parallel
-  analyzers (security, performance, observability, runtime, integrations,
-  data-access, configuration, dependencies); W2 — synthesis; W3 —
-  adversarial challenger. Reasoning depth required for cross-domain
-  synthesis (a single defect often spans security + observability +
-  runtime), wave dependency management, exports-only resume detection,
-  and challenger-driven gap iteration. Sonnet would miss the cross-cutting
-  defect patterns visible only when reasoning across all 8 W1 outputs.
+model: sonnet
 color: yellow
 ---
 

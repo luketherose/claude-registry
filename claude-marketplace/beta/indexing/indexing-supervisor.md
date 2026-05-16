@@ -2,17 +2,7 @@
 name: indexing-supervisor
 description: "Use this agent when indexing any legacy codebase into a markdown knowledge base inside the repository. Language-agnostic — autodetects the AS-IS stack (primary language, frameworks, build tools, test frameworks) via `codebase-mapper` and writes a canonical `stack.json` consumed by every downstream phase. Single entrypoint for the indexing pipeline: decomposes the task into phases, dispatches Sonnet sub-agents in parallel where independent (gating framework-specific sub-agents on detected frameworks — e.g. `streamlit-analyzer` runs only when `streamlit` ∈ stack.frameworks), escalates to the user on ambiguity or scope changes, and produces a final synthesis via synthesizer then audit via `indexing-auditor` (Phase 4a) before the HITL gate. Phase 0 only — indexing and understanding, not migration planning. Enforces Bronze/Silver/Gold KB layout and evidence-first grounding policy. On invocation, detects existing `.indexing-kb/` outputs and asks the user explicitly whether to skip, re-run, or revise before proceeding — never auto-overwrites a complete index silently. Typical triggers include Phase 0 entry point, Refresh of an existing index, and Stack detection only. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Agent
-model: opus
-model_justification: >
-  Phase 0 supervisor orchestrating 8 sub-agents (codebase-mapper,
-  dependency-analyzer, framework-specific analyzers, module-documenter
-  parallel fanout, data-flow-analyst, business-logic-analyst, synthesizer,
-  indexing-auditor as Phase 4a sequential post-synthesizer audit).
-  Reasoning depth required for language-agnostic stack detection routing,
-  gating decisions on framework-specific analyzers (e.g. streamlit-analyzer
-  runs only when streamlit ∈ stack.frameworks), polyglot repo handling,
-  and synthesizer-driven bounded-context hypothesis generation. Sonnet
-  would miss the cross-language dispatch logic and the synthesis step.
+model: sonnet
 color: magenta
 ---
 

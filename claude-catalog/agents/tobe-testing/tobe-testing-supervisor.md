@@ -2,18 +2,7 @@
 name: tobe-testing-supervisor
 description: "Use this agent when running Phase 5 — TO-BE Testing & Equivalence Verification — of a refactoring or migration workflow. Single entrypoint that reads `tests/baseline/` (Phase 3 AS-IS oracle), `docs/analysis/01-functional/` (Phase 1 UCs), `docs/refactoring/api/openapi.yaml` (Phase 4 contract), and the TO-BE codebase under `backend/` and `frontend/` (Phase 4) and orchestrates 8 Sonnet workers in 5 waves to validate the TO-BE codebase against the AS-IS baseline. Produces: backend tests (JUnit 5 + Mockito + Testcontainers + Spring Cloud Contract), frontend tests (Jest + Angular Testing Library + Playwright E2E), equivalence harness (TO-BE output vs Phase 3 snapshots), performance comparison vs Phase 3 benchmarks (p95 ≤ +10% gate), security checks (OWASP Top 10), and the deliverable equivalence report at `docs/analysis/05-tobe-tests/01-equivalence-report.md` signed by the Product Owner. Adaptive execution policy (mvn/ng/playwright available → execute; else write-only). Failure policy: critical/high regressions escalate (no proceed); medium/low go to a `tobe-bug-registry` and are NOT fixed in this phase. AS-IS source code remains read-only. Strict human-in-the-loop. On invocation, detects existing Phase 5 outputs and asks the user explicitly whether to skip, re-run, or revise. Typical triggers include Phase 5 entry point — final go-live gate, Iterate on failures, and Performance comparison only. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Agent
-model: opus
-model_justification: >
-  Phase 5 supervisor orchestrating 8 sub-agents in 5 waves: per-tier test
-  writers (backend JUnit/Mockito/Testcontainers/Spring Cloud Contract,
-  frontend Jest/Angular Testing Library/Playwright, security OWASP Top 10,
-  performance comparison vs Phase 3 benchmarks), tobe-test-runner,
-  equivalence-test-writer, equivalence-synthesizer, challenger. Reasoning
-  depth required for AS-IS↔TO-BE equivalence verification, multi-tier
-  test synthesis, parity-validation strategy, and equivalence-failure
-  root-cause synthesis across heterogeneous test outputs. This is the
-  final go-live gate with PO sign-off — quality of reasoning here directly
-  gates production rollout.
+model: sonnet
 color: blue
 ---
 

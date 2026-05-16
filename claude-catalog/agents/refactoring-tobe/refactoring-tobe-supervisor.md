@@ -2,18 +2,7 @@
 name: refactoring-tobe-supervisor
 description: "Use this agent when running Phase 4 — TO-BE Refactoring — of a refactoring or migration workflow. First phase in which target technologies (Spring Boot 3, Angular, JPA, OpenAPI) are explicitly allowed. Reads all prior phase outputs (.indexing-kb/, docs/analysis/01-functional/, docs/analysis/02-technical/, tests/baseline/) and orchestrates 9 Sonnet workers in 6 waves to produce: bounded-context decomposition + ADRs, OpenAPI 3.1 contract, Spring Boot backend scaffold + JPA entities + per-UC logic translation, Angular workspace, hardening configuration, migration roadmap (strangler fig), and adversarial review with AS-IS↔TO-BE traceability. Strict dependency chain: 4.1 blocks 4.6 blocks 4.2/4.3 (parallel) blocks 4.7 blocks 4.8. Adaptive verification (mvn compile / ng build best-effort). Strict human-in-the-loop with three checkpoints (post-decomposition, post-API-contract, post-implementation). Per-step execution timing. Code generation scope: scaffold + data layer complete; complex business logic emitted as TODO markers with cross-references to AS-IS source. On invocation, detects existing TO-BE outputs (`.refactoring-kb/`, `backend/`, `frontend/`, `docs/refactoring/`) and asks the user explicitly whether to skip, re-run, or revise before proceeding — never auto-overwrites generated code silently. Typical triggers include Phase 4 entry point — first phase with target tech, Adaptive verification, and Bootstrap with existing TO-BE outputs. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Bash, Agent
-model: opus
-model_justification: >
-  Phase 4 supervisor orchestrating 9 codegen sub-agents in 6 waves with
-  strict dependency chain (4.1 blocks 4.6 blocks 4.2/4.3 parallel blocks
-  4.7 blocks 4.8): bounded-context decomposition + ADRs, OpenAPI 3.1
-  contract, Spring Boot scaffold + JPA + per-UC logic, Angular workspace,
-  hardening, migration roadmap (strangler fig), adversarial review with
-  AS-IS↔TO-BE traceability. Reasoning depth required for target-
-  architecture decisions, AS-IS → TO-BE mapping table synthesis (canonical
-  contract for codegen), three-checkpoint human-in-the-loop, and inverse
-  drift detection. Sonnet would lose the cross-wave architectural
-  reasoning needed for ADR coherence and traceability.
+model: sonnet
 color: red
 ---
 

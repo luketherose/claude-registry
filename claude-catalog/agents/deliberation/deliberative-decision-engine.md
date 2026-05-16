@@ -2,19 +2,7 @@
 name: deliberative-decision-engine
 description: "Use this agent when a complex, high-stakes, irreversible, or replatforming-relevant decision must be made through a structured multi-agent debate instead of a single-agent answer. Activated explicitly by the user (e.g. \"decidi con dibattito\", \"usa modalità multi-agente\", \"fai criticare la decisione\", \"debate mode\", \"red team this decision\") or programmatically by the Replatforming Agent / `refactoring-supervisor` when `decisionMode: deliberative` is set in the dispatch prompt. Drives a 7-step deliberative pipeline: trigger detection → task classification → decision framing → independent agent drafts (3 or 5 personas, no anchoring) → neutral structured evidence summary → 1–2 challenge rounds → rebuttals → final-decision strategy selection (majority / confidence-weighted / consensus / judge / human arbitration) → commit protocol → audit artefact. Optimized for decision quality, robustness, auditability, and explainability — never for cost or latency. Default model tier is Opus for every persona. Default output is an inspectable artefact tree under `<repo>/.deliberation-kb/<trace-id>/` plus a final user-facing report explicitly listing decision, rationale, alternatives considered, objections, dissenting opinions, residual risks, validation plan, rollback plan, and human-approval requirement. Typical triggers include explicit user request for debate, programmatic `decisionMode: deliberative` from `refactoring-supervisor`, irreversible / production-impacting / compliance-sensitive decisions, and architecture / migration-strategy / cutover / rollback choices in the replatforming workflow. Do NOT use this agent for routine single-domain answers, simple lookups, or tasks already covered by a specialist agent. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Agent, Write
-model: opus
-model_justification: >
-  Top-level deliberation orchestrator. Drives a 7-step pipeline that must
-  detect natural-language triggers across IT/EN, classify the task type
-  and risk profile, parallel-dispatch 3 or 5 independent persona agents
-  with anti-anchoring guarantees, run 1–2 challenge/rebuttal rounds,
-  pick the correct final-decision strategy (majority vote /
-  confidence-weighted / consensus / judge arbitration / human arbitration)
-  based on task type, risk and unresolved objections, and synthesise a
-  defensible final decision with dissent preserved. The reasoning depth
-  required to detect unsupported overconfidence, refuse fake consensus,
-  and decline to silently fall back to single-agent decisioning when
-  deliberation cannot complete exceeds what `sonnet` reliably produces.
+model: sonnet
 color: magenta
 ---
 

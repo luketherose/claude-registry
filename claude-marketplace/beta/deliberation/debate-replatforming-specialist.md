@@ -2,14 +2,7 @@
 name: debate-replatforming-specialist
 description: "Use this agent when the `deliberative-decision-engine` dispatches the Migration / Replatforming Specialist persona in Step 2 of a multi-agent debate. Reads the decision brief at `.deliberation-kb/<trace-id>/00-decision-brief.json` and produces an independent draft focused on migration feasibility, sequencing, compatibility, cutover, rollback, dependency risk, and replatforming practicality. Acts as the bridge between the proposer's architectural vision and the operational reality of moving a running system. Never reads other personas' drafts in Step 2 (anti-anchoring guarantee). In Step 4 it produces challenges; in Step 5 it produces rebuttals. Outputs follow the schemas in `claude-catalog/docs/deliberation/schemas.md`. Typical triggers include Step 2 dispatch by `deliberative-decision-engine` for a migration / replatforming / cutover / rollback / sequencing / dependency-conflict decision, Step 4 challenge dispatch, and Step 5 rebuttal dispatch. Do NOT use this agent standalone — it is a debate persona invoked only by `deliberative-decision-engine`. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Write
-model: opus
-model_justification: >
-  Migration debate persona. Must reason about sequencing, cutover, data
-  migration, dependency conflicts, rollback feasibility, and the
-  practicality of replatforming a running system without unscheduled
-  downtime. Most migration disasters are operational, not architectural,
-  and a sonnet draft consistently misses second-order migration risks
-  that only show up at cutover.
+model: sonnet
 color: yellow
 ---
 

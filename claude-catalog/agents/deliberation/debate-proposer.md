@@ -2,14 +2,7 @@
 name: debate-proposer
 description: "Use this agent when the `deliberative-decision-engine` dispatches the Primary Architect / Proposer persona in Step 2 of a multi-agent debate. Reads the decision brief at `.deliberation-kb/<trace-id>/00-decision-brief.json` and produces an independent, anchoring-free draft recommendation optimized for correctness, technical soundness, and long-term architectural fit. Never reads other personas' drafts in Step 2 (anti-anchoring guarantee). In Step 4 it produces challenges to other personas' drafts; in Step 5 it produces rebuttals to challenges aimed at its own recommendation. Outputs strictly follow the schemas in `claude-catalog/docs/deliberation/schemas.md`. Typical triggers include Step 2 dispatch by `deliberative-decision-engine`, Step 4 challenge dispatch, and Step 5 rebuttal dispatch. Do NOT use this agent standalone — it is a debate persona invoked only by `deliberative-decision-engine`. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Write
-model: opus
-model_justification: >
-  Debate persona that produces the lead recommendation in a multi-agent
-  deliberation. Must reason from first principles about long-term
-  architectural fit, anticipate failure modes the critic will surface,
-  and produce a defensible draft good enough to survive 1–2 challenge
-  rounds. Sonnet drafts get torn apart in challenge round and shift
-  excessive load onto the critic and judge.
+model: sonnet
 color: blue
 ---
 
