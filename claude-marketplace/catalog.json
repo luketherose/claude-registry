@@ -2140,7 +2140,7 @@
         "postman",
         "streamlit"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-16",
       "changelog": "0.2.0: bootstrap detects existing baseline outputs (`tests/baseline/` + `docs/analysis/03-baseline/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` because the oracle (snapshots + benchmarks) is precious \u2014 re-running resets the equivalence reference for Phase 5; inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 3 supervisor with 4 waves (W0 fixtures + W1 authoring with per-UC fan-out + W2 execution & oracle capture + W3 challenger). Adaptive execution policy. Conditional Postman generation when services are exposed. Mandatory timing recap per step."
     },
     {
