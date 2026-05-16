@@ -4,6 +4,17 @@
 > any phase (0..4). For Phases 0–3, follow steps A → B → C → D → E → F. For
 > Phase 4, replace Step C with the Phase 4 driving model and replace Step E
 > with the Phase 4 per-step recap shapes.
+>
+> **Iteration loop (Phases 1–3 only).** For analysis phases the protocol
+> includes an iteration loop: after Step E (recap) the supervisor produces
+> the **phase verification report** in Step E.5, then enters the
+> **iterate / approve / stop** loop in Step F. The user may request one or
+> more re-iterations with adjustments before approving. Phase 0 is one-shot
+> (re-run by adjusting scope and dispatching again). Phase 4 has its own
+> per-step HITL and never enters the analysis iteration loop.
+>
+> See `iteration-loop.md` and `phase-verification-report.md` for the
+> canonical specs of the new HITL pattern.
 
 For each phase N you are about to run, follow this protocol exactly.
 
@@ -213,9 +224,10 @@ Trust the manifest and the files on disk.
 Post a recap in this exact shape:
 
 ```
-=== Phase <N>: <Name> — completed ===
+=== Phase <N>: <Name> — iteration <K> completed ===
 
 Status:           <complete | partial | failed>
+Iteration:        <K>      (1 for the first run; bumps on every iterate)
 Output root:      <path>
 Entry point:      <path>
 Files produced:   <count>
@@ -238,19 +250,14 @@ Quality signals:
 - Low-confidence sections:  <N>
 - Blocking issues:          <N>  (if > 0, list them)
 
-Recommended review:
-1. <entry-point file> — start here
-2. <unresolved-questions file> — review before continuing
-3. <other notable files>
+Verification report:
+- <path-to-_meta/phase-verification-report.md>     (generated in Step E.5)
 
-Next phase:
-<if there is a next phase, paste its schematic here from schematics.md>
-
-OR
-
-<if no next phase implemented:>
-No further phases are implemented in this workflow. The refactoring
-workflow ends here for now.
+Recommended review order:
+1. Verification report (above) — start here
+2. <entry-point file>
+3. <unresolved-questions file>
+4. <other notable files>
 
 Cumulative workflow time so far:
 - Phase 0:   <duration>     [if completed in this workflow run]
@@ -258,19 +265,166 @@ Cumulative workflow time so far:
 - Phase 2:   <duration>     [if completed]
 - Phase N:   <duration>     [the one just completed]
 - Total:     <sum>
-
-Confirm: proceed to Phase <N+1>? [yes / revise N / stop]
 ```
-
-The schematic of the **next** phase (if any) MUST be shown in this
-recap. The user must see what's coming before deciding to proceed.
 
 The timing block is mandatory — added in v0.3.0 per user request to
 expose per-step execution times after every phase. Surface the finest
 granularity the phase manifest exposes.
 
+For Phases 1–3, the next decision is taken via the iteration loop
+(Step F). The schematic of the next phase is shown in Step F's
+`approve` branch — not in the recap — because the user may still
+choose to iterate before moving on.
+
+For Phase 0, the iteration loop does NOT apply. Re-running Phase 0 is
+handled by re-dispatching the indexing supervisor with adjusted
+scope. After Phase 0 the supervisor proceeds directly to Step F
+without Step E.5.
+
 If the phase reported `failed` or `≥ 1 blocking issue`: do NOT propose
-proceeding. Offer only `revise` or `stop`.
+`approve`. Offer only `iterate` or `stop` in Step F.
+
+## Step E.5 — Phase verification report (mandatory for Phases 1–3)
+
+After Step E and before Step F, write the **phase verification report**
+to:
+
+```
+<output-root>/_meta/phase-verification-report.md
+```
+
+The canonical structure and section-by-section guidance are in
+[`phase-verification-report.md`](./phase-verification-report.md). The
+supervisor produces this file directly (no sub-agent dispatch). It is
+generated from the phase manifest + the normalized JSONL artifacts +
+the audit verdict files + the iteration log. It is overwritten at
+every iteration, with the prior version snapshotted under
+`_meta/snapshots/iter-<K-1>-verification-report.md`.
+
+The verification report is the document the user reads to decide
+between `approve`, `iterate`, `stop`. The deliverable PDF / PPTX is
+NOT a substitute — it targets external stakeholders, not the human
+running the workflow.
+
+This step is skipped for Phase 0 (no iteration loop) and for Phase 4
+(per-step recaps replace the verification report).
+
+## Step F — Iteration loop (HITL) — Phases 1–3
+
+Default deny. Do not auto-proceed. After Step E.5, present the
+verification report path and ask the user to pick one of three
+options:
+
+```
+Phase <N>: <Name> — iteration <K> ready for review.
+
+Verification report:  <path>
+
+What would you like to do?
+
+  [approve]   Accept the analysis as-is. Workflow advances to Phase <N+1>
+              (or ends, if Phase <N> is the last analysis phase the user
+              wants to run). PDF/PPTX exports are regenerated to reflect
+              the approved state.
+  [iterate]   Run another iteration with adjustments. You will be asked
+              to describe the adjustments. You may include debate triggers
+              (e.g. "use multi-agent debate") to have a contested
+              adjustment resolved through deliberation before re-dispatch.
+  [stop]      End the workflow at this point. Current state is preserved
+              as `partial`.
+```
+
+The canonical spec of the loop (states, delta capture, re-dispatch
+policy, optional deliberation, convergence) is in
+[`iteration-loop.md`](./iteration-loop.md). The supervisor follows
+that spec.
+
+### Step F branches
+
+**If `approve`**
+
+1. Update the phase manifest: set the run's `status: approved`,
+   `approved_at: <ISO-8601>`.
+2. Regenerate the PDF / PPTX exports if they reflect a prior
+   iteration's state (compare timestamps with the iteration log).
+   For Phases 1 and 2 this means dispatching `document-creator` and
+   `presentation-creator` in `Resume mode: exports-only`. For
+   Phase 3 there is no PDF export — skip.
+3. Post the next-phase schematic (from `schematics.md`) and ask:
+   `Confirm: proceed to Phase <N+1>? [yes / stop]`. This is the
+   workflow-level confirmation between phases (existing behaviour).
+4. On `yes`: move to Step A for Phase N+1. On `stop`: end workflow.
+
+**If `iterate`**
+
+1. Ask the user for adjustments verbatim:
+   ```
+   Please describe the adjustments. Be as specific as you can:
+   the artifact(s) to revise, the IDs (UC-NN, F-NN, A-NN, ...),
+   what is wrong, and what should be true after the iteration.
+   You may include a debate trigger (e.g. "use multi-agent
+   debate") if you want a contested item resolved through
+   deliberation.
+   ```
+2. Capture the user's response. Normalize into the structured
+   delta schema documented in
+   [`iteration-loop.md`](./iteration-loop.md) § "Iteration delta".
+3. If a debate trigger is detected (lexicon match ≥ 0.7), or if
+   the delta contains an adjustment that conflicts with a prior
+   sub-agent output and resolution is subjective, route the
+   contested adjustment through `deliberative-decision-engine`
+   per `iteration-loop.md` § "Optional deliberation" BEFORE
+   re-dispatching the worker sub-agents.
+4. Snapshot the current outputs to
+   `_meta/snapshots/iter-<K>/...` (the phase plan documents the
+   per-phase snapshot policy; the supervisor enforces it).
+5. Append the delta to `_meta/iteration-log.jsonl` (one record per
+   iteration). Bump the iteration counter in the phase manifest.
+6. Re-dispatch the phase supervisor with `Resume mode: iterate`,
+   passing the delta path. The phase supervisor decides which
+   sub-agents to re-run based on the targeted artifacts (per its
+   own phase plan).
+7. After re-dispatch returns, re-enter the protocol at Step D
+   (Read outputs) → Step E (Recap) → Step E.5 (regenerate
+   verification report — section 3 "What changed" is populated
+   this time) → Step F (loop again).
+
+**If `stop`**
+
+1. Update the phase manifest: set `status: partial`,
+   `stopped_at: <ISO-8601>`.
+2. Write a final status note to `_meta/workflow-status.md`
+   summarising state at stop.
+3. End gracefully. No further phases run in this workflow.
+
+### Hard rules
+
+- `approve` is NEVER auto-selected. The supervisor must wait for
+  the user's explicit answer.
+- If any pre-advancement auditor verdict is FAIL (see
+  `refactoring-supervisor.md` § "Decision rules"), the supervisor
+  MUST NOT propose `approve` — offer only `iterate` or `stop`.
+- If the user picks `approve` while critical/high open questions
+  exist in the verification report's blocking list, the supervisor
+  re-asks once: "There are blocking items unresolved. Approve
+  anyway? Type `approve --override` to confirm, or `iterate` to
+  resolve them first."
+- There is NO fixed cap on iterations. The user decides when to
+  stop iterating.
+- The verification report is regenerated from scratch at every
+  iteration. Never edit it incrementally.
+- Exports are regenerated only on `approve` (so the deliverable
+  always reflects the approved state — never an intermediate
+  iteration).
+
+## Step F (Phase 0) — Simple confirm
+
+Phase 0 (indexing) does not use the iteration loop. After Step E
+post the next-phase schematic and ask:
+`Confirm: proceed to Phase 1? [yes / revise / stop]`. `revise` for
+Phase 0 means re-running with adjusted scope (not a structured
+delta) — the user describes a new scope and the supervisor
+re-dispatches `indexing-supervisor`.
 
 ## Step E.4 — Phase 4 per-step recap (Application Replatforming)
 
@@ -399,15 +553,15 @@ The application is fully built, fully runnable, fully tested.
 No further phases are implemented in this workflow.
 ```
 
-## Step F — Wait for user confirmation
+## Step F (Phase 4) — End-of-phase handling
 
-Default deny. Do not auto-proceed.
+After the End-of-Phase-4 recap is posted (Step 6 done + PO sign-off
+captured), the workflow ends. There is no `iterate` option at the
+Phase 4 boundary — Phase 4 has its own per-step iteration via the
+Step 3 sub-loop. If the user wants more work after Phase 4 ends, that
+is a NEW workflow invocation.
 
-If "revise": discuss with the user what to revise. Options include
-re-running the phase, re-running with narrower scope, or fixing
-specific outputs manually before continuing.
-
-If "stop": update manifest with `current_phase: null`, write a final
-status, end gracefully.
-
-If "yes": move to Step A for Phase N+1.
+If PO sign-off was declined (state `partial`): update manifest with
+`current_phase: 4, status: partial`, write a final status note, end
+gracefully. The user may re-enter Phase 4 in a future workflow run
+with `Resume Phase 4 from Step <N>`.

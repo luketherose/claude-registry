@@ -21,6 +21,54 @@ deliberation engine is invoked **only** when one of these is true:
 The supervisor never auto-deliberates routine answers. The default
 behaviour is single-agent.
 
+## Decision points (Phases 1–3)
+
+The analysis phases run inside the iteration loop documented in
+`claude-catalog/docs/refactoring-workflow/iteration-loop.md`. The
+iteration loop is single-agent by default. Deliberation is invoked
+ONLY when:
+
+- the user's iteration adjustments contain a debate trigger (lexicon
+  match ≥ 0.7), OR
+- an adjustment conflicts with a prior sub-agent output and a single-
+  agent resolution would be subjective.
+
+When that happens, the supervisor (workflow or phase) routes the
+contested adjustment(s) to the engine BEFORE re-dispatching the
+worker sub-agents in the iteration.
+
+The decision points eligible for deliberation in Phases 1–3:
+
+| Phase | Decision | Why deliberative |
+|---|---|---|
+| Phase 1 | Is X one actor or two (e.g., "user" vs "user" + "admin")? | Foundational; propagates to use-case fan-out and downstream traceability |
+| Phase 1 | Should feature F-NN be split / merged / renamed per the user's adjustment? | Touches taxonomy; risk of fragmenting or over-coupling features |
+| Phase 1 | Is use case UC-NN a confirmed UC, a candidate, or out of scope? | Drives Phase 4 build sequencing; misclassifying inflates or deflates scope |
+| Phase 1 | Does implicit-logic finding IL-NN reflect real business logic or just framework wiring? | Affects whether logic gets re-implemented in TO-BE |
+| Phase 2 | Is finding T-NN of severity high/critical or medium/low? | Drives prioritization, mitigation budget, and Phase 4 risk register |
+| Phase 2 | Is risk R-NN cross-domain or domain-local? | Affects synthesis matrix; cross-domain risks need broader mitigation |
+| Phase 2 | Is performance hotspot P-NN a real bottleneck or a benign hot path? | Affects whether Phase 4 must replace or simply rehost |
+| Phase 3 | Should test failure F-NN be marked xfail with AS-IS bug note, or escalated as a blocking baseline failure? | Affects Phase 4 equivalence reference; xfail can mask real bugs |
+| Phase 3 | Is integration I-NN in scope for the regression baseline? | Coverage decision; out-of-scope integrations skip oracle capture |
+| Phase 1–3 | Scope-of-iteration disputes — when the user's adjustments are broad ("redo the actor map") and may invalidate downstream work, the supervisor may route the scope question itself to the engine | Avoids cascading re-dispatch that overshoots user intent |
+
+For each routed Phase 1–3 decision, the supervisor builds a brief that
+includes:
+
+- the contested artifact (with stable IDs and the artifact path)
+- the original sub-agent output for that artifact (verbatim)
+- the user's adjustment text (verbatim)
+- the supervisor's framing of the disagreement
+- 2–4 candidate resolutions (the original, the user's, and 1–2
+  intermediate options if the supervisor can identify them)
+
+The engine runs at its default policy (5 personas, 1 round; 2 rounds
+if the supervisor flags the decision as high-risk). The engine's
+final-decision artefact is read from disk, surfaced to the user, and
+recorded in the iteration log of the phase. The contested adjustment
+in the delta is updated with the engine's resolution as `rationale`
+before re-dispatching the worker sub-agents.
+
 ## Decision points (Phase 4)
 
 When `decisionMode: deliberative` or an explicit trigger fires, the

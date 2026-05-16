@@ -1,6 +1,8 @@
-# Phase 1 — Phase plan (Phase 0 bootstrap + Wave 1–3 + Export Wave + final report)
+# Phase 1 — Phase plan (Phase 0 bootstrap + Wave 1–3 + Wave 3c narrative + Wave 3d verification + Export Wave)
 
-> Reference doc for `functional-analysis-supervisor`. Read at runtime to drive the bootstrap dialog, dispatch each wave, and produce the closing report.
+> Reference doc for `functional-analysis-supervisor`. Read at runtime to drive the bootstrap dialog, dispatch each wave, produce the human-readable feature narrative, write the phase verification report, and (on `approve`) regenerate the exports.
+>
+> **Iteration loop.** Phase 1 ends with the HITL iteration loop documented in [`refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md). The functional analysis is the most delicate part of the workflow — a misunderstanding here propagates everywhere downstream — so the loop allows unbounded iterations until the user picks `approve`. See § "Wave 4 — Iteration handling" below.
 
 ## Phase 0 — Bootstrap (supervisor only, no sub-agents)
 
@@ -165,28 +167,147 @@ If either generator fails: do not block Phase 1 completion; mark the export as f
 
 After the export wave, verify both files exist on disk under `_exports/`. Do not trust the Agent tool result text alone.
 
-## Wave 3.5 — Final report
+## Wave 3c — Feature narrative (supervisor only)
 
-Post a final user-facing summary:
+After Wave 3b and before the Export Wave, the supervisor writes the
+human-readable feature narrative at `00b-feature-narrative.md`. This
+is the entry-point document for human review. Canonical structure
+and hard rules in [`output-layout.md`](./output-layout.md#the-feature-narrative--00b-feature-narrativemd).
 
+Inputs the supervisor reads:
+
+- `00-context.md` — for the headline paragraph.
+- `02-features.md` — for the F-NN list and feature titles.
+- `06-use-cases/UC-NN-<slug>.md` — for the per-feature flows.
+- `03-ui-map.md` and `04-screens/` — for the "What the user sees"
+  subsection of each chapter.
+- `09-inputs.md`, `10-outputs.md`, `11-transformations.md` — for the
+  "Outputs and side effects" subsection.
+- `12-implicit-logic.md` — for unusual rules visible inside a
+  feature's flow.
+- `14-unresolved-questions.md` — to surface inline per-feature.
+
+Output: `00b-feature-narrative.md`, written by the supervisor in a
+single `Write` call. The supervisor must:
+
+- write one chapter per F-NN (or one chapter per group of thin F-NNs,
+  see hard rules in output-layout);
+- keep prose plain — no class names, no code, no Mermaid;
+- reference every UC, S, A, IN, OUT, TR by stable ID;
+- surface open questions inline in each affected feature chapter.
+
+This wave is mandatory. Skipping it produces a partial Phase 1 (and
+the verification report flags the omission).
+
+## Wave 3d — Phase verification report (supervisor only)
+
+After Wave 3c, the supervisor writes the verification report at
+`_meta/phase-verification-report.md` per the canonical structure in
+[`refactoring-workflow/phase-verification-report.md`](../refactoring-workflow/phase-verification-report.md).
+
+The Phase-1 customization of the canonical structure:
+
+| Section | Phase 1 source |
+|---|---|
+| 1. Executive summary | Manifest counts + `00-context.md` + the auditor verdicts. 2–3 paragraphs. |
+| 2. What was produced | `00b-feature-narrative.md` chapters (list features), `02-features.md`, `06-use-cases/` (count by status), `03-ui-map.md` + `04-screens/`, `09-inputs.md` + `10-outputs.md`, `12-implicit-logic.md`. |
+| 3. What changed since iteration N-1 | Read `_meta/iteration-log.jsonl` for the latest entry; list adjustments applied, sub-agents re-dispatched, deliberation traces consulted. Omit on iteration 1. |
+| 4. Open questions and gaps | `14-unresolved-questions.md` + `normalized/functional-gaps.jsonl`. Group by severity. |
+| 5. Audit verdicts | `_meta/functional-traceability-report.md` (always) + `_meta/challenger-report.md` (if ran). |
+| 6. AS-IS purity check | Drift scan across all newly written files for this iteration; tokens from the Phase 2 drift list. |
+| 7. What to verify | At minimum: read `00b-feature-narrative.md` end-to-end; review UCs marked `requires_human_confirmation` or `candidate_not_confirmed`; review blocking open questions. |
+| 8. Recommendation | `approve` only if all verdicts PASS and no blocking issues; `iterate` otherwise. |
+
+The verification report is the document presented to the user before
+the iteration-loop prompt (§ "Wave 4 — Iteration handling" below).
+
+## Export Wave — gated on `approve`
+
+The Export Wave (PDF + PPTX via `document-creator` + `presentation-creator`)
+no longer runs unconditionally at the end of every iteration. It runs:
+
+- on `approve` from the iteration loop (Step F branch `approve` in the
+  per-phase protocol), to produce the deliverable for stakeholders
+  reflecting the approved state, OR
+- on `Resume mode: exports-only` when an existing approved analysis
+  has missing exports (no change to existing behaviour).
+
+During iterations 1..N-1 (before approval) the exports are not
+regenerated. This avoids the cost and risk of producing a deliverable
+PDF that does not reflect the final user-approved state.
+
+The wave itself is unchanged — same dispatchers, same inputs, same
+Accenture branding. The only change is its trigger.
+
+## Wave 4 — Iteration handling (supervisor only)
+
+After Wave 3d the supervisor returns control to `refactoring-supervisor`
+for the HITL iteration prompt (per-phase protocol Step F). The
+workflow supervisor surfaces the verification-report path and asks
+`approve / iterate / stop`.
+
+If the user picks **`approve`**: the Phase 1 supervisor regenerates
+the exports (above) and the workflow advances.
+
+If the user picks **`iterate`**: the workflow supervisor captures the
+adjustment delta and re-dispatches the Phase 1 supervisor with
+`Resume mode: iterate` and the delta JSON path. The Phase 1
+supervisor:
+
+1. Reads the delta from `_meta/iteration-log.jsonl` (latest record).
+2. Snapshots the current outputs to `_meta/snapshots/iter-<K>/`
+   before any overwrite.
+3. Decides which sub-agents to re-dispatch based on the adjustment
+   `target_artifacts` and `target_ids`. The re-dispatch mapping:
+
+   | Adjustment target | Sub-agents to re-dispatch |
+   |---|---|
+   | actor scope / actor IDs (A-NN) | actor-feature-mapper → user-flow-analyst (downstream) |
+   | feature scope / feature IDs (F-NN) | actor-feature-mapper → user-flow-analyst, narrative wave |
+   | UI / screens (S-NN) | ui-surface-analyst → user-flow-analyst |
+   | UC flows (UC-NN) | user-flow-analyst (re-run) |
+   | I/O catalogue (IN-/OUT-/TR-NN) | io-catalog-analyst → narrative wave |
+   | implicit logic (IL-NN) | implicit-logic-analyst |
+   | scope-of-iteration dispute | route to deliberative-decision-engine first; then re-decide |
+
+4. Injects the user delta as a "User feedback from prior iteration"
+   block into the dispatch prompt of every re-dispatched sub-agent
+   (the template in `dispatch-prompt-template.md` accepts this block).
+5. Re-runs Wave 3 (synthesis + 14-traceability + 14-unresolved),
+   Wave 3b (auditor), Wave 3c (narrative), Wave 3d (verification
+   report). The challenger re-runs only if the user requested it OR
+   if `> 30%` of the artifacts changed in this iteration.
+6. Returns control to the workflow supervisor for the next HITL
+   prompt.
+
+If the user picks **`stop`**: the workflow supervisor updates the
+manifest with `status: partial` and ends the workflow. The Phase 1
+supervisor does no further work.
+
+### Manifest update for iterations
+
+Every iteration appends a new entry to `manifest.json` `runs[]`:
+
+```json
+{
+  "run_id": "<ISO-8601>",
+  "iteration": <K>,
+  "trigger": "fresh | iterate | exports-only | full-rerun",
+  "delta_ref": "_meta/iteration-log.jsonl#<line>",  // if iterate
+  "waves": [ ... ],
+  "deliberation_traces": ["<trace-id>", ...],         // if any
+  "status": "complete | partial | failed",
+  "approved_at": null | "<ISO-8601>"                  // set only on approve
+}
 ```
-Phase 1 completed.
 
-Summary:
-- X UCs confirmed, Y candidates not confirmed, Z require human confirmation
-- N UI surfaces, M without mapped UC
-- P business rules inferred, Q without evidence_ids
-- Large file chunks mapped: R / S relevant chunks
-- AS-IS purity violations: 0
-- Traceability auditor verdict: PASS / PASS_WITH_GAPS / FAIL
-- Challenger verdict: PASS / PASS_WITH_GAPS / N/A
+The `approved_at` field is set only when the user picks `approve` —
+not on individual iteration completion. This is the signal that the
+phase is locked from further iteration.
 
-Unresolved gaps:
-1. [GAP-001] ...
+## Closing summary (compatibility shim)
 
-Available decisions:
-1. Proceed with gaps documented
-2. Re-run targeted analysis on specific gaps
-3. Answer open questions now
-4. Mark specific gaps as intentionally out of scope
-```
+The closing summary block that older callers expect is now produced as
+part of the verification report's section 1 ("Executive summary"). The
+old free-text "Phase 1 completed" block is no longer emitted by the
+supervisor — the verification report supersedes it.

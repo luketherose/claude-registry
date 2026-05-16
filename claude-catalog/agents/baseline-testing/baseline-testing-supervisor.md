@@ -61,10 +61,13 @@ doc only when the matching wave is about to start — not preemptively.
 | [`output-layout.md`](../../docs/baseline-testing/output-layout.md) | planning where workers write, and what frontmatter / module-docstring every artefact must carry |
 | [`policies.md`](../../docs/baseline-testing/policies.md) | answering Q1 (execution policy), Q2 (failure policy), the service-detection gate, or the dispatch-mode decision |
 | [`wave-overview.md`](../../docs/baseline-testing/wave-overview.md) | looking up the sub-agents matrix, mode flags, or phase-plan overview |
-| [`phase-plan.md`](../../docs/baseline-testing/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W0–W3 |
-| [`dispatch-prompt-template.md`](../../docs/baseline-testing/dispatch-prompt-template.md) | assembling the prompt for any worker invocation |
-| [`recap-templates.md`](../../docs/baseline-testing/recap-templates.md) | posting per-wave mini-recap or final closing report |
+| [`phase-plan.md`](../../docs/baseline-testing/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W0–W3 / Wave 3b (verification report) / Wave 4 (iteration handling) |
+| [`dispatch-prompt-template.md`](../../docs/baseline-testing/dispatch-prompt-template.md) | assembling the prompt for any worker invocation (incl. the "User feedback from prior iteration" block when in `Resume mode: iterate`) |
+| [`recap-templates.md`](../../docs/baseline-testing/recap-templates.md) | posting per-wave mini-recap (legacy compatibility — primary HITL surface is the verification report) |
 | [`manifest-schema.md`](../../docs/baseline-testing/manifest-schema.md) | updating `_meta/manifest.json` after each wave (full schema, field rules, timing, update cadence) |
+| [`../refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md) | running Wave 4 — every time this supervisor is re-dispatched with `Resume mode: iterate` |
+| [`../refactoring-workflow/phase-verification-report.md`](../refactoring-workflow/phase-verification-report.md) | running Wave 3b — every time `_meta/phase-verification-report.md` must be produced |
+| [`../deliberation/integration-replatforming.md`](../deliberation/integration-replatforming.md) | running Wave 4 with an adjustment that requires deliberation (debate trigger OR contested test disposition / blocking-failure severity) — see § "Decision points (Phases 1–3)" |
 
 The decision logic (escalation triggers, decision rules, manifest update,
 hard constraints) stays in this body — it is consulted on every
@@ -153,6 +156,9 @@ For the per-wave dispatch instructions, see
 | Service detection: ambiguous | Ask user |
 | Worker fails twice | Do not retry; escalate |
 | > 50 UCs | Ask user for prioritization |
+| `Resume mode: iterate` (re-dispatched by refactoring-supervisor with a delta) | Read `_meta/iteration-log.jsonl` latest entry; snapshot prior outputs to `_meta/snapshots/iter-<K>/`; re-dispatch only the workers impacted by the delta per § "Wave 4" mapping in `phase-plan.md`; always re-run Wave 2 (baseline-runner) + Wave 3b (verification report) |
+| Iteration delta contains a debate trigger (lexicon match ≥ 0.7) OR a contested test disposition (xfail vs blocking) | Route the contested adjustment through `deliberative-decision-engine` BEFORE re-dispatching the workers; record trace ID in the iteration-log entry |
+| Verification report at `_meta/phase-verification-report.md` cannot be produced (missing manifest / bug register) | Do NOT exit to the HITL gate; surface as a blocking error |
 
 ---
 
@@ -207,3 +213,7 @@ Hard rules — applied on every update:
   `>`, `<`, `*` are unsafe through the shell. Ref: Phase 2 incident
   2026-04-28. This rule MUST be propagated to every sub-agent dispatch
   prompt (the template already includes it — verify on every dispatch).
+- **Wave 3b (verification report) is always ON**: The supervisor writes `_meta/phase-verification-report.md` directly per the canonical structure in `../refactoring-workflow/phase-verification-report.md`. This is the document the human reads before the iteration-loop prompt. Skipping it is a hard error.
+- **Iteration loop is owned by `refactoring-supervisor`.** This supervisor does NOT prompt the user with `approve / iterate / stop`. After Wave 3b it returns control to the workflow supervisor, which presents the prompt and re-dispatches this supervisor with `Resume mode: iterate` when needed.
+- **Snapshot before overwrite on iterate.** When re-dispatched in `Resume mode: iterate`, snapshot every file that will be regenerated to `_meta/snapshots/iter-<K>/` BEFORE the workers run. Particular care for the oracle (`oracle/snapshot/`): never overwrite without snapshotting first.
+- **Oracle is the precious artifact.** When the user iterates on Phase 3, the supervisor must explicitly warn if a re-dispatch will regenerate the oracle snapshot — the oracle is the Phase 4 equivalence reference and silently regenerating it changes the meaning of equivalence. Require explicit user confirmation in the iteration delta if the adjustment touches oracle scope.

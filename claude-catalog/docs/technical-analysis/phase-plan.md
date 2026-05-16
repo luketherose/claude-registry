@@ -1,6 +1,8 @@
-# Phase 2 — Phase plan (Phase 0 bootstrap + Wave 1–3 + Export Wave + final report)
+# Phase 2 — Phase plan (Phase 0 bootstrap + Wave 1–3 + Wave 3c verification + Export Wave + iteration handling)
 
-> Reference doc for `technical-analysis-supervisor`. Read at runtime to drive the bootstrap dialog, dispatch each wave, and produce the closing report.
+> Reference doc for `technical-analysis-supervisor`. Read at runtime to drive the bootstrap dialog, dispatch each wave, write the phase verification report, and (on `approve`) regenerate the exports.
+>
+> **Iteration loop.** Phase 2 ends with the HITL iteration loop documented in [`../refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md). After Wave 3c the supervisor returns control to `refactoring-supervisor`, which presents `approve / iterate / stop`. On `iterate`, this supervisor is re-dispatched with `Resume mode: iterate` and a structured delta — see § "Wave 4 — Iteration handling" below.
 
 ## Phase 0 — Bootstrap (supervisor only, no sub-agents)
 
@@ -150,35 +152,115 @@ If the export overwrite decision in bootstrap was `keep` → skip this wave and 
 
 If either generator fails: do not block Phase 2 completion; mark the export as failed in the manifest and surface in the recap. The markdown KB is the primary deliverable.
 
-## Final report
+## Wave 3c — Phase verification report (supervisor only)
 
-Post a final user-facing summary:
+After the Gap closure loop and BEFORE the Export Wave, the supervisor
+writes the verification report at `_meta/phase-verification-report.md`
+per the canonical structure in
+[`../refactoring-workflow/phase-verification-report.md`](../refactoring-workflow/phase-verification-report.md).
 
+Phase-2 customization of the canonical structure:
+
+| Section | Phase 2 source |
+|---|---|
+| 1. Executive summary | Manifest counts + risk-register top items + auditor verdicts. 2–3 paragraphs. |
+| 2. What was produced | Per-domain findings (`05-security/`, `06-performance/`, `07-observability/`, `08-data-access/`, `09-state-runtime/`, `10-integrations/`, `11-dependencies/`, `12-code-quality/`), `09-synthesis/risk-register.md`, cross-domain matrix. |
+| 3. What changed since iteration N-1 | Read `_meta/iteration-log.jsonl` latest entry. Omit on iteration 1. |
+| 4. Open questions and gaps | `14-unresolved-questions.md` + `normalized/technical-gaps.jsonl`. Group by severity. |
+| 5. Audit verdicts | `_meta/technical-evidence-report.md` (always) + `_meta/challenger-report.md` (if ran). |
+| 6. AS-IS purity check | Drift scan per § "Drift check" in the supervisor body. |
+| 7. What to verify | At minimum: review the top 10 risks in `09-synthesis/risk-register.md`; review findings marked `requires_validation`; review blocking open questions. |
+| 8. Recommendation | `approve` only if all verdicts PASS and no blocking issues; `iterate` otherwise. |
+
+The verification report is mandatory. The Export Wave runs only after
+this file is on disk.
+
+## Export Wave — gated on `approve`
+
+The Export Wave (PDF + PPTX via `document-creator` +
+`presentation-creator`) no longer runs unconditionally at the end of
+every iteration. It runs:
+
+- on `approve` from the iteration loop (per-phase protocol Step F
+  branch `approve`), to produce the deliverable for stakeholders
+  reflecting the approved state, OR
+- on `Resume mode: exports-only` when an existing approved analysis
+  has missing exports (no change to existing behaviour).
+
+During iterations 1..N-1 (before approval) the exports are not
+regenerated.
+
+Dispatch in parallel:
+- `document-creator` → `_exports/02-technical-report.pdf`
+- `presentation-creator` → `_exports/02-technical-deck.pptx`
+
+Both agents are passed paths to the entire `docs/analysis/02-technical/`
+tree as source. Audience: `document-creator` produces a technical PDF
+for senior architects; `presentation-creator` produces an executive
+deck for steering committee (top-10 risks, dependency health,
+performance hotspots, security findings).
+
+In `exports-only` resume mode, dispatch ONLY the generators whose
+output file is missing on disk. Existing export files are kept
+untouched.
+
+If either generator fails: do not block Phase 2 completion; mark the
+export as failed in the manifest and surface in the verification
+report. The markdown KB is the primary deliverable.
+
+## Wave 4 — Iteration handling (supervisor only)
+
+After Wave 3c (verification report) the supervisor returns control to
+`refactoring-supervisor` for the HITL prompt. On user choice:
+
+- **`approve`** → run the Export Wave; manifest entry's
+  `approved_at: <ISO-8601>`; workflow advances.
+- **`iterate`** → re-dispatched with `Resume mode: iterate` and a
+  delta path. The supervisor:
+  1. Reads the delta from `_meta/iteration-log.jsonl` (latest).
+  2. Snapshots prior outputs to `_meta/snapshots/iter-<K>/`.
+  3. Re-dispatches sub-agents per this mapping:
+
+     | Adjustment target | Sub-agents to re-dispatch |
+     |---|---|
+     | security findings (T-NN sec) | security-analyst → risk-synthesizer |
+     | performance hotspots | performance-analyst → risk-synthesizer |
+     | resilience / state-runtime | resilience-analyst / state-runtime-analyst → risk-synthesizer |
+     | data-access / persistence | data-access-analyst → risk-synthesizer |
+     | integrations | integration-analyst → risk-synthesizer |
+     | dependencies / CVEs | dependency-security-analyst → risk-synthesizer |
+     | code quality | code-quality-analyst → risk-synthesizer |
+     | risk severity dispute | route to deliberative-decision-engine first; re-decide; then re-run risk-synthesizer with the resolved severity |
+     | cross-domain synthesis only | risk-synthesizer (re-run) |
+
+  4. Always re-runs Wave 2 (risk-synthesizer), Wave 3b (auditor), and
+     Wave 3c (verification report). Wave 3 (challenger) re-runs if
+     requested or if > 30% of artifacts changed.
+- **`stop`** → manifest `status: partial`; end.
+
+### Manifest update for iterations
+
+Every iteration appends to `manifest.json` `runs[]`:
+
+```json
+{
+  "run_id": "<ISO-8601>",
+  "iteration": <K>,
+  "trigger": "fresh | iterate | exports-only | full-rerun",
+  "delta_ref": "_meta/iteration-log.jsonl#<line>",
+  "waves": [ ... ],
+  "deliberation_traces": ["<trace-id>", ...],
+  "status": "complete | partial | failed",
+  "approved_at": null | "<ISO-8601>"
+}
 ```
-Phase 2 Technical Analysis — complete.
 
-Output: docs/analysis/02-technical/
-Entry:  docs/analysis/02-technical/README.md
+`approved_at` is set only on `approve` — it is the lock signal that
+the phase is no longer iteratable.
 
-Exports:
-- PDF:  docs/analysis/02-technical/_exports/02-technical-report.pdf
-- PPTX: docs/analysis/02-technical/_exports/02-technical-deck.pptx
-  (or "skipped" / "failed" with reason)
+## Closing summary (compatibility shim)
 
-Findings summary:
-- Risks (total):    <N>
-- Critical:         <N>
-- High:             <N>
-- Medium:           <N>
-- Low:              <N>
-- Vulnerabilities:  <N> (CVE-tagged)
-- Performance hotspots: <N>
-
-Quality:
-- Open questions: <N> (see 14-unresolved-questions.md)
-- Low-confidence sections: <N>
-- Challenger findings: <N>
-
-Recommended next: review 09-synthesis/risk-register.md and
-14-unresolved-questions.md before proceeding to Phase 3 (test baseline).
-```
+The "Phase 2 Technical Analysis — complete" free-text block is now
+produced as part of the verification report's section 1 ("Executive
+summary"). The old free-text closing block is no longer emitted —
+the verification report supersedes it.

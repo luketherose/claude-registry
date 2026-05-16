@@ -1,4 +1,9 @@
-# Phase 3 — Phase plan (Phase 0 bootstrap + Wave 0–3)
+# Phase 3 — Phase plan
+
+> Reference doc for `baseline-testing-supervisor`. Read at runtime to drive the bootstrap dialog, dispatch each wave, write the phase verification report, and (on `iterate`) re-dispatch affected test writers.
+>
+> **Iteration loop.** Phase 3 ends with the HITL iteration loop documented in [`../refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md). After Wave 3b the supervisor returns control to `refactoring-supervisor`, which presents `approve / iterate / stop`. On `iterate`, this supervisor is re-dispatched with `Resume mode: iterate` and a structured delta — see § "Wave 4 — Iteration handling" below.
+ (Phase 0 bootstrap + Wave 0–3)
 
 > Reference doc for `baseline-testing-supervisor`. Read at runtime to drive the bootstrap dialog and dispatch each wave. The supervisor body keeps only the wave dependency chain and HITL checkpoints; the per-wave details live here.
 
@@ -124,6 +129,81 @@ If challenger reports `≥ 1 blocking` issue: do not declare Phase 3 complete; e
 
 **Mini-recap after Wave 3.**
 
-## Final report
+## Wave 3b — Phase verification report (supervisor only)
 
-Post a final user-facing summary with full timing breakdown and disposition. See `recap-templates.md`.
+After Wave 3 (challenger) and before the iteration loop, the
+supervisor writes `_meta/phase-verification-report.md` per the
+canonical structure in
+[`../refactoring-workflow/phase-verification-report.md`](../refactoring-workflow/phase-verification-report.md).
+
+Phase-3 customization of the canonical structure:
+
+| Section | Phase 3 source |
+|---|---|
+| 1. Executive summary | Manifest counts (UCs covered, tests written, pass/fail/xfail/skip) + bug register + challenger verdict. 2–3 paragraphs. |
+| 2. What was produced | `tests/baseline/` (count of tests by category), `oracle/snapshot/`, benchmark JSON, optional Postman collection, `as-is-bugs-found.md`, `baseline-report.md`. |
+| 3. What changed since iteration N-1 | `_meta/iteration-log.jsonl` latest entry. Omit on iteration 1. |
+| 4. Open questions and gaps | Open-questions register + outstanding items in `baseline-report.md` + AS-IS bugs left as xfail. |
+| 5. Audit verdicts | `_meta/baseline-challenger-report.md` (if ran) + per-UC test-outcome register (pass/xfail/skip with reasons). |
+| 6. AS-IS purity check | Verify no test references target-tech tokens; drift scan over `tests/baseline/`. |
+| 7. What to verify | At minimum: review every xfail with `severity: high` AS-IS bug note; review per-UC coverage gaps; confirm the oracle snapshot is the intended baseline. |
+| 8. Recommendation | `approve` only if all verdicts PASS and no blocking issues (e.g., critical baseline failures); `iterate` otherwise. |
+
+The verification report is mandatory. The iteration loop cannot start
+without this file on disk.
+
+## Wave 4 — Iteration handling (supervisor only)
+
+After Wave 3b the supervisor returns control to
+`refactoring-supervisor` for the HITL prompt. On user choice:
+
+- **`approve`** → manifest entry's `approved_at: <ISO-8601>`;
+  workflow advances. (Phase 3 has no PDF/PPTX exports to regenerate.)
+- **`iterate`** → re-dispatched with `Resume mode: iterate` and a
+  delta path. The supervisor:
+  1. Reads the delta from `_meta/iteration-log.jsonl` (latest).
+  2. Snapshots prior outputs to `_meta/snapshots/iter-<K>/`.
+  3. Re-dispatches sub-agents per this mapping:
+
+     | Adjustment target | Sub-agents to re-dispatch |
+     |---|---|
+     | UC test coverage (UC-NN) | usecase-test-writer for the affected UCs → baseline-runner |
+     | integration test scope (I-NN) | integration-test-writer → baseline-runner |
+     | fixtures / inputs | fixture-builder → all affected test writers → baseline-runner |
+     | service collection | service-collection-builder → integration-test-writer → baseline-runner |
+     | benchmark suite | benchmark-writer → baseline-runner |
+     | test disposition dispute (xfail / blocking?) | route to deliberative-decision-engine first; re-decide; then update `as-is-bugs-found.md` |
+     | oracle snapshot regeneration | baseline-runner only (re-capture oracle) |
+
+  4. Always re-runs Wave 2 (baseline-runner) and Wave 3b
+     (verification report). Wave 3 (challenger) re-runs if requested
+     or if > 30% of artifacts changed.
+- **`stop`** → manifest `status: partial`; end.
+
+### Manifest update for iterations
+
+Every iteration appends to `_meta/manifest.json` `runs[]`:
+
+```json
+{
+  "run_id": "<ISO-8601>",
+  "iteration": <K>,
+  "trigger": "fresh | iterate | full-rerun",
+  "delta_ref": "_meta/iteration-log.jsonl#<line>",
+  "waves": [ ... ],
+  "deliberation_traces": ["<trace-id>", ...],
+  "status": "complete | partial | failed",
+  "approved_at": null | "<ISO-8601>"
+}
+```
+
+`approved_at` is set only on `approve` — it is the lock signal that
+the baseline is final and ready to serve as the Phase 4 oracle.
+
+## Final report (legacy compatibility)
+
+The "Phase 3 — complete" free-text closing block is superseded by the
+verification report's section 1 ("Executive summary"). The
+recap-templates.md final-report block is retained only for backward
+compatibility with the older recap pipeline and is no longer the
+primary HITL surface.
