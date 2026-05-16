@@ -53,11 +53,14 @@ each doc only when the matching wave is about to start — not preemptively.
 
 | Doc | Read when |
 |---|---|
-| [`output-layout.md`](../../docs/functional-analysis/output-layout.md) | planning where workers write, what frontmatter / per-item ID schema (A-/F-/S-/UC-/IN-/OUT-/TR-/IL-) every artefact must carry, and the `_meta/manifest.json` schema to update after each wave |
+| [`output-layout.md`](../../docs/functional-analysis/output-layout.md) | planning where workers write, what frontmatter / per-item ID schema (A-/F-/S-/UC-/IN-/OUT-/TR-/IL-) every artefact must carry, the canonical structure of the `00b-feature-narrative.md` produced by the supervisor in Wave 3c, and the `_meta/manifest.json` / iteration-log schemas to update after each wave |
 | [`sub-agents.md`](../../docs/functional-analysis/sub-agents.md) | knowing which sub-agent runs in which wave, where each writes, and the phase-plan overview (waves, mode, blocks) |
-| [`phase-plan.md`](../../docs/functional-analysis/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W3 / Export Wave / final report |
-| [`dispatch-prompt-template.md`](../../docs/functional-analysis/dispatch-prompt-template.md) | assembling the prompt for any sub-agent invocation (incl. framework-conditional adjustment blocks like the Streamlit one) |
+| [`phase-plan.md`](../../docs/functional-analysis/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W3 / Wave 3c (narrative) / Wave 3d (verification report) / Export Wave / Wave 4 (iteration handling) |
+| [`dispatch-prompt-template.md`](../../docs/functional-analysis/dispatch-prompt-template.md) | assembling the prompt for any sub-agent invocation (incl. framework-conditional adjustment blocks like the Streamlit one, and the "User feedback from prior iteration" block when in `Resume mode: iterate`) |
 | [`normalized-output-schema.md`](../../docs/functional-analysis/normalized-output-schema.md) | knowing the JSONL schemas for normalized/ artifacts (feature-candidates, use-case-candidates, actor-candidates, business-rules, functional-gaps, traceability-audit) |
+| [`../refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md) | running Wave 4 (iteration handling) — every time the supervisor is re-dispatched with `Resume mode: iterate` |
+| [`../refactoring-workflow/phase-verification-report.md`](../refactoring-workflow/phase-verification-report.md) | running Wave 3d — every time the verification report at `_meta/phase-verification-report.md` must be produced |
+| [`../deliberation/integration-replatforming.md`](../deliberation/integration-replatforming.md) | running Wave 4 with an adjustment that requires deliberation (debate trigger in user input OR contested adjustment vs prior output) — see § "Decision points (Phases 1–3)" |
 
 The decision logic (escalation triggers, decision rules, manifest update,
 hard constraints) stays in this body — it is consulted on every
@@ -140,6 +143,10 @@ Stop and ask before proceeding when:
 | functional-traceability-auditor verdict is FAIL | Stop, do not declare Phase 1 complete; escalate to user with audit details |
 | `.indexing-kb/` partial coverage | Run analysis but mark every output `status: partial` and inherit the gaps |
 | Resume requested | Read manifest, skip waves with `status: complete`, ask user if a refresh is wanted |
+| `Resume mode: iterate` (re-dispatched by refactoring-supervisor with a delta) | Read `_meta/iteration-log.jsonl` latest entry; snapshot prior outputs to `_meta/snapshots/iter-<K>/`; re-dispatch only the sub-agents impacted by the delta per the mapping in `phase-plan.md` § "Wave 4"; always re-run Wave 3 synthesis + Wave 3b auditor + Wave 3c narrative + Wave 3d verification report |
+| Iteration delta contains a debate trigger (lexicon match ≥ 0.7) OR a contested adjustment vs prior sub-agent output | Route the contested adjustment through `deliberative-decision-engine` BEFORE re-dispatching the worker sub-agents; record the trace ID in the iteration-log entry |
+| Wave 3c (narrative) cannot be produced because the supervisor lacks inputs | Mark phase status `partial`; surface in the verification report's section 2 with a clear gap entry; do NOT silently skip |
+| Verification report `recommendation` is `iterate` and user picks `approve` | The supervisor still runs the Export Wave; the workflow supervisor handles the `--override` flow per the per-phase protocol |
 | Analysis complete + ≥ 1 export missing | Offer `exports-only` mode (default recommendation); otherwise full-rerun or skip |
 | > 50 screens or > 30 UCs detected | Ask user for prioritization; default to top-N by complexity |
 | Export already exists | Ask: overwrite / keep / rename (with timestamp) |
@@ -188,3 +195,8 @@ After every wave, update `docs/analysis/01-functional/_meta/manifest.json`. For 
   the user. Never quote a connection string with real password.
 - **Grounding policy**: All sub-agent prompts must include the grounding policy injection. Sub-agents must cite evidence_ids from evidence-ledger.jsonl for every claim. Never create a use case as "confirmed" without at least one evidence_id. If evidence is missing, create a gap/open question, not a hallucination. Reference: `grounding-policy.md` in docs/indexing/.
 - **functional-traceability-auditor is always ON**: It runs in Wave 3b (after challenger if enabled). Do not skip it even if the challenger is disabled.
+- **Wave 3c (feature narrative) is always ON**: The supervisor writes `00b-feature-narrative.md` directly (no sub-agent). Plain prose, feature-by-feature chapters, references to stable IDs. Audience is the human reviewer running the workflow. Hard rules in `output-layout.md` § "The feature narrative".
+- **Wave 3d (verification report) is always ON**: The supervisor writes `_meta/phase-verification-report.md` directly per the canonical structure in `../refactoring-workflow/phase-verification-report.md`. This is the document the human reads before the iteration-loop prompt. Skipping it is a hard error.
+- **Iteration loop is owned by `refactoring-supervisor`.** This supervisor does NOT prompt the user with `approve / iterate / stop`. After Wave 3d it returns control to the workflow supervisor, which presents the prompt and re-dispatches this supervisor with `Resume mode: iterate` when needed.
+- **Snapshot before overwrite on iterate.** When re-dispatched in `Resume mode: iterate`, snapshot every file that will be regenerated to `_meta/snapshots/iter-<K>/` BEFORE the sub-agents run. The snapshot is the source of the "What changed since iteration N-1" section of the verification report.
+- **Exports are gated on `approve`.** During iterations 1..N-1 the Export Wave does not run. It runs only on `approve` from the iteration loop, or on `Resume mode: exports-only` when an approved analysis has missing exports.
