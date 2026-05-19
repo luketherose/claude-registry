@@ -1,6 +1,6 @@
 ---
 name: phase4-challenger
-description: "Use this agent to perform an adversarial review of all Phase 4 outputs. Produces the AS-IS↔TO-BE traceability matrix and seven adversarial checks: coverage gaps (orphan UCs, orphan TO-BE files), OpenAPI↔code drift, ADR completeness, AS-IS bug carry-over consistency, performance hypothesis sanity, security regression, equivalence claims integrity, AS-IS-only leak in TO-BE design (inverse drift). Sub-agent of refactoring-tobe-supervisor (Wave 6, always ON); not for standalone use. Strictly review-only — never modifies any output. Typical triggers include W6 Phase-4 challenger gate (always ON) and Pre-Phase-5 gate. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to perform an adversarial review of all Phase 4 outputs. Produces the AS-IS↔TO-BE traceability matrix and ten adversarial checks: coverage gaps (orphan UCs, orphan TO-BE files), OpenAPI↔code drift, ADR completeness, AS-IS bug carry-over consistency, performance hypothesis sanity, security regression, equivalence claims integrity, AS-IS-only leak in TO-BE design (inverse drift), AS-IS source modification (forbidden), and frontend navigation reachability (no CLI placeholder, layout shell exists, every protected route reachable from the UI). Sub-agent of refactoring-tobe-supervisor (Wave 6, always ON); not for standalone use. Strictly review-only — never modifies any output. Typical triggers include W6 Phase-4 challenger gate (always ON) and Pre-Phase-5 gate. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: red
@@ -65,7 +65,7 @@ not preemptively.
 
 ---
 
-## Method — nine checks
+## Method — ten checks
 
 For each check, list every finding using the common shape (`Type`,
 `Where`, `Description`, `Suggested fix`, `Severity`). See
@@ -207,6 +207,54 @@ workers have Edit access for some scaffolds; mistakes can leak.
 
 Severity:
 - AS-IS source modified: `blocking` (revert immediately)
+
+### Check 10 — Frontend navigation reachability
+
+Verify the user can actually reach every protected route from the UI,
+not just by typing the URL. Source of truth: `<frontend-dir>/src/app/app.routes.ts`.
+
+For each `path: '...'` entry (excluding the literal `**`, `login`,
+public routes, and pure redirects like `{ path: '', redirectTo: ... }`):
+
+1. The path must appear in at least one `[routerLink]` / `routerLink="..."`
+   / `router.navigate(['/...'])` reachable from `app.component.html`
+   transitively (the app shell — usually a `LayoutComponent` under
+   `core/layout/`).
+2. `app.component.html` must NOT contain the Angular CLI default
+   placeholder strings (`Hello, {{ title }}`, `Congratulations! Your app
+   is running`, `Explore the Docs`, `Learn with Tutorials`). If it does,
+   record FINDING-NAV-PLACEHOLDER as `blocking` — the app is unusable
+   regardless of test counts.
+3. The shell must reference the user's permissions to gate admin-only
+   routes (grep `AuthService` or `hasPermission` in `layout.component.ts`).
+
+Concrete checks the challenger runs:
+
+```bash
+# 10.1 placeholder must not survive
+! grep -RnE "Hello, \{\{ title \}\}|Congratulations! Your app is running|Explore the Docs|Learn with Tutorials" \
+  <frontend-dir>/src/app/
+
+# 10.2 layout shell exists
+test -f <frontend-dir>/src/app/core/layout/layout.component.ts
+test -f <frontend-dir>/src/app/core/layout/layout.component.html
+
+# 10.3 every protected route is linked
+# parse paths from app.routes.ts -> grep each in layout.component.html
+```
+
+Severity:
+- placeholder strings present → `blocking` (FINDING-NAV-PLACEHOLDER)
+- shell file absent → `blocking` (FINDING-NAV-NO-SHELL)
+- route present in `app.routes.ts` but unreferenced anywhere in
+  the UI tree → `high` (FINDING-NAV-ORPHAN-ROUTE-<slug>) — one finding
+  per orphan route.
+
+> Rationale: the InfoSync 2026-05 retrospective found that Phase 4
+> declared green (177/177 + 200/200 + 204/204) while the FE was
+> unusable because the Angular CLI placeholder survived and there was
+> no nav. Component unit tests and HTTP equivalence tests both run
+> *below* the level at which this gap lives. Check 10 enforces it.
 
 ---
 
