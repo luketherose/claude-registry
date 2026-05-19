@@ -206,6 +206,41 @@ A perf delta > +25% without explicit blocking-regression listing:
 A perf delta > +10% without env caveats:
 → CHL severity `medium` (numbers might be unreliable).
 
+### Check 9 — Shell coverage in E2E
+
+Verify that the FE test suite includes an end-to-end smoke spec that
+actually drives the application as a user — not just isolated component
+tests. Read `<frontend-dir>/tests/e2e/smoke.spec.ts` (or equivalent).
+
+Required properties of the smoke spec:
+
+1. It iterates over **every protected route in `app.routes.ts`** (or has
+   a hard-coded list that the challenger can diff against the routes
+   file — any orphan route generates one CHL per orphan).
+2. It asserts the page does NOT contain Angular CLI placeholder strings
+   (`Hello, infosync-frontend`, `Congratulations! Your app is running`,
+   `Explore the Docs`, `Learn with Tutorials`).
+3. It asserts a feature `<h1>`/`<h2>` is visible on each route
+   (proves the lazy chunk rendered, not just the shell).
+4. It asserts a nav link to each route exists.
+5. The spec is part of the CI default pipeline (referenced from
+   `tobe-testing-supervisor`'s Final Validation gate).
+
+Severity:
+- smoke spec absent → `blocking` (CHL-SHELL-NOEXIST)
+- smoke spec exists but covers < 80% of protected routes → `high`
+  (CHL-SHELL-PARTIAL)
+- spec does not check for placeholder strings → `high`
+  (CHL-SHELL-NOPLACEHOLDER-GUARD)
+- spec runs only on the static build (no real backend) → `medium`
+  (CHL-SHELL-NOREALAPI)
+
+> Rationale: the InfoSync 2026-05 retrospective had 200/200 component
+> tests + 204/204 equivalence tests all passing while the FE was
+> unusable because every route showed the Angular CLI welcome card.
+> Component tests and HTTP equivalence tests both run *below* the level
+> at which this gap lives.
+
 ---
 
 ## Report structure

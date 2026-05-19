@@ -76,9 +76,69 @@ e2e/
 ├── fixtures/<flow>/                             (test data per flow)
 ├── flows/
 │   └── <flow-name>.spec.ts                     (one per user flow)
+├── smoke.spec.ts                                (MANDATORY — shell + reachability)
 └── pages/                                       (Page Object Model — shared across flows)
     └── <page>.page.ts
 ```
+
+### Mandatory: `smoke.spec.ts`
+
+This spec is independent from user flows and is required **before** any
+per-flow spec is authored. It is the only spec that exercises the
+application shell as an end user would.
+
+It must:
+
+1. Visit every `path:` in `src/app/app.routes.ts` (excluding `**`, public
+   routes, and pure redirect entries — derive the list at runtime by
+   reading the file).
+2. After login, on each route, assert:
+   - **no console errors** (`page.on('console', ...)` collects them);
+   - **no failed network responses** (status >= 400 on non-test URLs);
+   - **the page is not the Angular CLI placeholder** — the page body must
+     NOT contain `Hello, infosync-frontend`, `Congratulations! Your app
+     is running`, `Explore the Docs`, `Learn with Tutorials`;
+   - **at least one `<h1>`/`<h2>`** rendered by the route's feature
+     component (verifies the lazy-loaded chunk actually rendered, not
+     just the shell);
+   - **the nav links to the route** (find an `<a>` with `href` matching
+     the route in the layout shell).
+3. Authenticate once and reuse the storage state across navigations
+   (`use: { storageState }` in Playwright config).
+
+Pseudocode:
+
+```typescript
+import { test, expect } from '@playwright/test';
+import { readFileSync } from 'fs';
+
+const routes = parseRoutes(readFileSync('src/app/app.routes.ts', 'utf-8'));
+
+test.describe('shell smoke — every protected route', () => {
+  for (const r of routes) {
+    test(`route ${r.path}`, async ({ page }) => {
+      const consoleErrors: string[] = [];
+      const netErrors: string[] = [];
+      page.on('console', msg => msg.type() === 'error' && consoleErrors.push(msg.text()));
+      page.on('response', resp => resp.status() >= 400 && netErrors.push(`${resp.status()} ${resp.url()}`));
+
+      await page.goto(r.path);
+      await expect(page.locator('app-root')).not.toContainText('Hello, infosync-frontend');
+      await expect(page.locator('app-root')).not.toContainText('Congratulations! Your app is running');
+      await expect(page.locator('h1, h2').first()).toBeVisible();
+      await expect(page.locator(`nav a[href="${r.path}"]`)).toBeVisible();
+      expect(consoleErrors).toEqual([]);
+      expect(netErrors.filter(e => !e.includes('/expected-404-fixture'))).toEqual([]);
+    });
+  }
+});
+```
+
+If this spec cannot be authored because the user-flow source files are
+unavailable, **still write the smoke spec** — it does not need user
+flows, only `app.routes.ts`. This is the lowest-cost guard against the
+"build green, app unusable" failure mode (GAP-006 from the InfoSync
+2026-05 retrospective).
 
 Frontmatter (as a TS file leading comment):
 

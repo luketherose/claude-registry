@@ -204,6 +204,7 @@ monitoring, performance tuning loops, deprecation of AS-IS), respond:
 | Phase 4 Step 5 — hardening change introduces a regression | Trigger Step 3 sub-loop; revert+fix the hardening change at root cause; do NOT proceed to next hardening concern until green |
 | Phase 4 Step 6 — full test suite has failures | Do NOT capture PO sign-off; trigger Step 3 sub-loop; re-run Step 6 from the failing sub-step until 100% pass-rate (or user explicitly accepts residual delta with no critical/high failures) |
 | Phase 4 Step 6 — pending TODOs in delivered code | Refuse to capture PO sign-off; either (a) resolve the TODOs by routing back to Step 4 / Step 5, or (b) escalate via ADR with explicit user acknowledgment |
+| Phase 4 Step 6 — UI smoke gate fails | Run the **UI smoke gate** (see § "Phase 4 Step 6 — UI smoke gate") BEFORE asking for PO sign-off. If the gate fails (FE shows Angular CLI placeholder / no nav / blank shell / unreachable route), do NOT capture sign-off; route back to the offending wave (frontend-scaffolder for shell/nav, hardening-architect for CORS/auth, logic-translator for missing endpoints) and iterate until the gate passes. |
 | Phase 4 PO sign-off requested while critical or high failures remain | Refuse — sign-off is BLOCKED; offer `iterate Step 6` or `stop` |
 | User asks to skip a Phase 4 step | Refuse — Phase 4 steps are sequential with hard gates; the only valid option is `resume from Step N` after a partial run, not skip-ahead |
 | User explicitly requests deliberation (IT/EN trigger lexicon match ≥ 0.7) for ANY decision (Phase 1–4) | Build a decision brief and dispatch `deliberative-decision-engine`; do not decide directly. See § "Deliberative decision integration". |
@@ -352,9 +353,79 @@ true`, `finalDecisionStrategy: "auto"`, `commitProtocol: "auto"`,
   exist in delivered code without ADR resolution. The deliverable
   `01-replatforming-report.md` replaces the old separate
   `01-equivalence-report.md`.
+- **Phase 4 Step 6 — UI smoke gate is non-negotiable.** Before asking
+  for PO sign-off, see § "Phase 4 Step 6 — UI smoke gate" below.
 - **There is NO separate Phase 5.** The previous Phase 5 has been
   absorbed into Phase 4 Step 6 in v3.0.0. If a user references
   "Phase 5", clarify that the workflow now ends at Phase 4.
+
+---
+
+## Phase 4 Step 6 — UI smoke gate
+
+Component tests, contract tests, and HTTP equivalence harnesses **all
+run below the level at which the user perceives "the app is broken"**.
+The InfoSync 2026-05 retrospective (`INFOSYNC-REFACTORING-AGENT-GAP-REPORT.md`)
+showed that the entire pipeline can declare green (mvn 177/177 + ng test
+200/200 + equivalence 204/204) while the FE shows the Angular CLI
+welcome card on every route and has no navigation.
+
+The UI smoke gate forces the supervisor to validate the app **the way
+a human would** before sign-off.
+
+### Procedure
+
+1. Bring the backend up (`mvn spring-boot:run` or `java -jar target/*.jar`
+   with the test/integration profile) and wait for `/actuator/health`
+   to return `{"status":"UP"}`.
+2. Bring the frontend dev server up (`ng serve` or `npm start`) and
+   wait for the bundle-ready message.
+3. Run the Playwright `smoke.spec.ts` produced by `frontend-test-writer`
+   (mandatory spec — see `agents/tobe-testing/frontend-test-writer.md` →
+   "Mandatory: smoke.spec.ts"). The spec MUST cover every protected
+   route from `app.routes.ts` and assert:
+   - no Angular CLI placeholder strings on any page;
+   - a feature `<h1>`/`<h2>` is visible on each route;
+   - a nav link to each route exists in the layout shell;
+   - no console errors and no failed network responses (`status >= 400`)
+     on routes that should not produce them.
+4. If `smoke.spec.ts` is absent, dispatch `frontend-test-writer` to
+   create it first; do NOT declare Step 6 complete without it.
+5. Capture screenshots of `/home` and three sample routes (one per
+   bounded context). Embed the screenshots in
+   `docs/refactoring/06-final-validation.md` and surface them in the
+   pre-sign-off user message.
+
+### Pre-sign-off user message (mandatory wording)
+
+Do NOT replace the smoke-gate result with a numeric recap. Ask the user
+an **explicit visual question** before requesting PO sign-off:
+
+```
+Phase 4 Step 6 — UI smoke gate result
+
+✓ smoke.spec.ts: <N>/<N> routes pass
+✓ no CLI placeholder detected
+✓ <N> nav links wired
+
+Screenshots attached:
+  - /home
+  - /<bc-1-sample>
+  - /<bc-2-sample>
+  - /<bc-3-sample>
+
+Visually inspect the screenshots. Do you see a coherent layout with a
+working navigation menu, or do you see the Angular CLI welcome page or
+a blank shell?
+
+  [confirm-layout-ok] [reject — layout broken]
+
+Sign-off cannot proceed until you confirm.
+```
+
+If the user answers `reject`, route back to `frontend-scaffolder`
+(shell / nav / placeholder) or `hardening-architect` (CORS / auth) as
+appropriate; do NOT capture sign-off.
 
 ---
 

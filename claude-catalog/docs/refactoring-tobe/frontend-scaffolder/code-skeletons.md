@@ -17,6 +17,10 @@ core/
 ├── guards/
 │   ├── auth.guard.ts                        (CanActivate — checks token)
 │   └── role.guard.ts                        (CanActivate — checks role claim)
+├── layout/
+│   ├── layout.component.ts                  (app shell: header + sidenav + outlet)
+│   ├── layout.component.html
+│   └── layout.component.scss
 ├── services/
 │   ├── auth.service.ts                      (login, logout, token storage)
 │   ├── notification.service.ts              (toast / banner)
@@ -54,6 +58,90 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   });
   return next(cloned);
 };
+```
+
+### Layout (sidenav shell)
+
+The `<app-layout>` standalone component is **mandatory**. It is the only place where the navigation between bounded contexts lives. Without it the app is unusable for an end user (every route is reachable only by typing the URL).
+
+```typescript
+// core/layout/layout.component.ts
+import { Component, computed, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+
+interface NavEntry {
+  readonly label: string;
+  readonly path: string;
+  readonly permission?: string;       // undefined = always visible to authenticated users
+  readonly bcLabel: string;           // bounded context group
+}
+
+@Component({
+  selector: 'app-layout',
+  standalone: true,
+  imports: [CommonModule, RouterLink, RouterLinkActive],
+  templateUrl: './layout.component.html',
+  styleUrls: ['./layout.component.scss'],
+})
+export class LayoutComponent {
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+
+  // Derived from Phase 1 user flows + Phase 4 bounded-context decomposition.
+  // One entry per concrete route the user can reach. Group by `bcLabel` in HTML.
+  readonly nav: readonly NavEntry[] = [
+    // ... one entry per BC, e.g.:
+    // { bcLabel: 'M&A',    label: 'Pipeline',     path: '/ma/pipeline',  permission: 'ma' },
+    // { bcLabel: 'Admin',  label: 'Users',        path: '/admin',        permission: '__admin__' },
+  ];
+
+  readonly visible = computed(() =>
+    this.nav.filter(e => !e.permission || this.auth.hasPermission(e.permission))
+  );
+
+  readonly shouldShowShell = computed(() => this.auth.isLoggedIn());
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
+}
+```
+
+`layout.component.html` (essentials):
+
+```html
+<ng-container *ngIf="shouldShowShell(); else loginOnly">
+  <header class="app-header">
+    <span class="app-title">{{ appName }}</span>
+    <button type="button" (click)="logout()">Sign out</button>
+  </header>
+  <div class="app-body">
+    <nav class="app-sidenav" aria-label="Primary">
+      <ng-container *ngFor="let group of grouped()">
+        <h3>{{ group.bcLabel }}</h3>
+        <a *ngFor="let entry of group.entries"
+           [routerLink]="entry.path"
+           routerLinkActive="active">{{ entry.label }}</a>
+      </ng-container>
+    </nav>
+    <main class="app-content"><ng-content /></main>
+  </div>
+</ng-container>
+<ng-template #loginOnly>
+  <main class="app-content app-content--full"><ng-content /></main>
+</ng-template>
+```
+
+Self-check the agent MUST run after writing the layout:
+
+```bash
+# At least one routerLink must exist in the layout
+grep -q "routerLink" src/app/core/layout/layout.component.html
+# Every protected route in app.routes.ts must be referenced by the layout
+# (the agent diff-checks this — anything missing becomes a TODO comment).
 ```
 
 ### error.interceptor.ts (sketch)

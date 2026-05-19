@@ -116,18 +116,41 @@ the bodies; Phase 5 tests are xfailed for unfilled UCs.
 
 Read `error-and-security.md` (Error handler section). Emit
 `shared/error/ProblemDetailExceptionHandler.java` as a `@RestControllerAdvice`
-with handlers for `NotFoundException`, `ValidationException`,
-`IdempotencyConflictException`, `ConstraintViolationException`,
-`MethodArgumentNotValidException`, plus a generic `Exception` handler with
-status 500 and SAFE message (no stack trace leak). Match Phase 2 security
-findings: no internal info leaks in `detail`.
+that extends `ResponseEntityExceptionHandler`. Required handlers:
+- `@ExceptionHandler` for `NotFoundException`, `ValidationException`,
+  `IdempotencyConflictException`, `ConstraintViolationException`,
+  `NoResourceFoundException`, and a generic `Exception` handler with
+  status 500 and SAFE message (no stack trace leak);
+- **`@Override`** for `handleHttpRequestMethodNotSupported` (→ 405),
+  `handleHttpMediaTypeNotSupported` (→ 415),
+  `handleHttpMediaTypeNotAcceptable` (→ 406),
+  `handleMethodArgumentNotValid` (→ 400 with per-field details). These
+  exceptions are produced by `DispatcherServlet` before any
+  `@ExceptionHandler` can claim them — only the protected overrides on
+  `ResponseEntityExceptionHandler` integrate them into RFC 7807. Skipping
+  the 405 override is the canonical bug that turns `GET` on a `POST`-only
+  endpoint into HTTP 500.
+
+Match Phase 2 security findings: no internal info leaks in `detail`.
 
 ### 7. Security config baseline
 
 Read `error-and-security.md` (Security config section). Emit
 `shared/config/SecurityConfig.java` as a baseline (CSRF disabled because
-stateless, JWT resource server, CORS for FE origin). `hardening-architect`
+stateless, JWT resource server, CORS for FE origin via a `CorsConfigurationSource`
+bean fed by `app.cors.allowed-origin-patterns`). `hardening-architect`
 (W4) refines it with the final security headers, CSP, etc.
+
+**Hard rule on CORS**: the `CorsConfigurationSource` bean is the **only**
+place CORS is configured. The agent must NOT add `@CrossOrigin` on
+individual controllers — duplicating the origin list on every controller
+defeats the purpose of the centralised bean and was the cause of GAP-005
+(127.0.0.1 vs localhost) in the InfoSync 2026-05 retrospective. Required
+self-check at the end of step 7:
+
+```bash
+! grep -rln "@CrossOrigin" src/main/java   # must find nothing
+```
 
 ### 8. application.yml
 

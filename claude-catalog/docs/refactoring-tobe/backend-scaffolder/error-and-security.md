@@ -21,12 +21,69 @@ public class ProblemDetailExceptionHandler extends ResponseEntityExceptionHandle
         return pd;
     }
 
+    // 405 — wrong HTTP verb on an existing path.
+    // MUST be overridden explicitly: without this method, Spring routes
+    // HttpRequestMethodNotSupportedException through the generic
+    // Exception handler and the FE sees 500 instead of 405.
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
+            HttpRequestMethodNotSupportedException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest req) {
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.METHOD_NOT_ALLOWED);
+        pd.setTitle("Method not allowed");
+        pd.setDetail("Method " + ex.getMethod() + " is not supported on this resource");
+        pd.setProperty("supportedMethods", ex.getSupportedHttpMethods());
+        pd.setProperty("correlationId", MDC.get("correlationId"));
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(pd);
+    }
+
+    // 415 — request body in unsupported Content-Type.
+    @Override
+    protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
+            HttpMediaTypeNotSupportedException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest req) {
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        pd.setTitle("Unsupported media type");
+        pd.setDetail("Content-Type " + ex.getContentType() + " is not supported");
+        pd.setProperty("supportedMediaTypes", ex.getSupportedMediaTypes());
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(pd);
+    }
+
+    // 406 — Accept header cannot be satisfied.
+    @Override
+    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(
+            HttpMediaTypeNotAcceptableException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest req) {
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.NOT_ACCEPTABLE);
+        pd.setTitle("Not acceptable");
+        pd.setDetail("None of the requested media types can be produced");
+        pd.setProperty("supportedMediaTypes", ex.getSupportedMediaTypes());
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(pd);
+    }
+
+    // 404 — unmatched static resource / handler (Boot 3.2+).
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ProblemDetail handleNoResource(NoResourceFoundException ex) {
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        pd.setTitle("Not found");
+        pd.setDetail("No handler for: " + ex.getResourcePath());
+        return pd;
+    }
+
     // ... handlers for ValidationException, IdempotencyConflictException,
     //     ConstraintViolationException, MethodArgumentNotValidException,
     //     plus a generic Exception handler with status 500 and SAFE
     //     message (no stack trace leak).
 }
 ```
+
+> Why the 405 / 415 / 406 overrides are mandatory: in `Spring 6 /
+> Boot 3` these exceptions are produced by `DispatcherServlet` *before*
+> any `@ExceptionHandler`-annotated method on a `@RestControllerAdvice`
+> can claim them. The only correct integration is to override the
+> protected `handleXxx` methods from `ResponseEntityExceptionHandler`.
+> Forgetting them turns "wrong verb on existing path" into a generic
+> 500, leaking implementation detail and breaking RFC 7807 semantics.
 
 Match Phase 2 security findings: no internal info leaks in `detail`.
 
@@ -54,18 +111,35 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        // TODO(ADR-003): configure FE origin from properties
+    public CorsConfigurationSource corsConfigurationSource(
+            @Value("${app.cors.allowed-origin-patterns:http://localhost:*,http://127.0.0.1:*}") List<String> originPatterns) {
         var config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
+        // setAllowedOriginPatterns (not setAllowedOrigins) so localhost AND
+        // 127.0.0.1 on any port are accepted in dev. In prod, set
+        // app.cors.allowed-origin-patterns explicitly via application.yml /
+        // env vars to the real FE origin(s).
+        config.setAllowedOriginPatterns(originPatterns);
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("X-Correlation-Id"));
+        config.setAllowCredentials(true);
         var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
 }
 ```
+
+> CORS rule: **the `CorsConfigurationSource` bean is the single source
+> of truth**. Controllers MUST NOT carry `@CrossOrigin` annotations
+> (those bypass the centralised bean, duplicate origin lists on every
+> controller, and were the cause of GAP-005 in the InfoSync 2026-05
+> retrospective). The agent must grep its own output:
+> ```bash
+> ! grep -rln "@CrossOrigin" src/main/java
+> ```
+> If the grep finds matches, remove them — the centralised bean already
+> covers every endpoint via `/**`.
 
 This is a baseline — `hardening-architect` (W4) refines it with the final
 security headers, CSP, etc.
