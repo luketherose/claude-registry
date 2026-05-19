@@ -1,6 +1,6 @@
 ---
 name: tobe-testing-challenger
-description: "Use this agent to perform an adversarial review of Phase 5 outputs and surface gaps the test writers missed. Sub-agent of tobe-testing-supervisor (Wave 5, always ON). Reads every Phase 5 output and runs 8 cross-cutting checks to surface gaps the test writers missed: UC coverage gaps, OpenAPI↔TO-BE drift, AS-IS↔TO-BE traceability, mocked-when-shouldn't patterns, equivalence claim integrity (do the assertions actually prove what the report claims), AS-IS source modifications (forbidden), TO-BE source modifications in this phase (forbidden), and PO sign-off completeness in `01-equivalence-report.md`. Produces `_meta/challenger-report.md` plus appends entries to `14-unresolved-questions.md` under `## Challenger findings`. Flags; does NOT rewrite tests or reports. Typical triggers include W5 Phase-5 challenger gate and Pre-go-live gate. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to perform an adversarial review of Phase 5 outputs and surface gaps the test writers missed. Sub-agent of tobe-testing-supervisor (Wave 5, always ON). Reads every Phase 5 output and runs 10 cross-cutting checks: UC coverage gaps, OpenAPI↔TO-BE drift, AS-IS source modifications (forbidden), mocked-when-shouldn't patterns, equivalence claim integrity, AS-IS-bug carry-over consistency, PO sign-off completeness, performance gate compliance, shell coverage in E2E (Playwright smoke spec), and backend boots on default profile (`java -jar` without `-Dspring.profiles.active`). Produces `_meta/challenger-report.md` plus appends entries to `14-unresolved-questions.md` under `## Challenger findings`. Flags; does NOT rewrite tests or reports. Typical triggers include W5 Phase-5 challenger gate and Pre-go-live gate. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: blue
@@ -71,7 +71,7 @@ status: complete | partial | needs-review | blocked
 
 ---
 
-## The 8 checks
+## The 10 checks
 
 Run all checks. Each finding gets a stable ID `CHL-NN` and a severity:
 
@@ -84,162 +84,92 @@ Run all checks. Each finding gets a stable ID `CHL-NN` and a severity:
 
 ### Check 1 — UC coverage gap
 
-For each UC in `phase1_uc_root`:
-- Is there a corresponding equivalence test under
-  `tests/equivalence/test_uc_<id>_*.py`?
-- Is the UC referenced in `01-equivalence-report.md` § Verdict per UC?
-- If UC priority is `critical` or `high` AND there is no test:
-  → CHL with severity `blocking`.
-- If UC priority is `medium` or `low` AND there is no test:
-  → CHL with severity `high` (unless explicitly `not-tested-with-reason`
-  in the report).
+For each UC in `phase1_uc_root`: must have an equivalence test under
+`tests/equivalence/test_uc_<id>_*.py` AND be referenced in
+`01-equivalence-report.md` § Verdict per UC.
+Severity — critical/high UC without test: `blocking`; medium/low UC
+without test: `high` (unless explicitly `not-tested-with-reason`).
 
 ### Check 2 — OpenAPI ↔ TO-BE drift
 
-For each `operationId` in OpenAPI:
-- Is there a Spring Cloud Contract verifier test in
-  `backend/src/test/.../contract/`?
-- Is the operationId referenced in `03-contract-tests-report.md`?
-- Did the runner record `verdict: pass`?
-- If any operationId is missing a contract test:
-  → CHL with severity `blocking`.
-- If any operationId failed verification (drift):
-  → CHL with severity `blocking`.
-
-For each backend controller method:
-- Is its mapping covered by an OpenAPI operationId?
-- Methods with no OpenAPI counterpart are reverse-drift:
-  → CHL with severity `high` (unless explicitly internal-only in
-  Phase 4 hardening config).
+Every OpenAPI `operationId` must have a Spring Cloud Contract verifier
+test in `backend/src/test/.../contract/`, be referenced in
+`03-contract-tests-report.md`, and have `verdict: pass`. Every backend
+controller method must have an OpenAPI counterpart.
+Severity — missing contract / failed verifier: `blocking`; reverse
+drift (controller without operationId): `high`.
 
 ### Check 3 — AS-IS source modifications (forbidden)
 
-```bash
-git status --porcelain
-```
-
-Filter to anything outside the writable Phase 5 paths:
-- `tests/equivalence/`
-- `backend/src/test/`
-- `frontend/src/app/**/*.spec.ts`
-- `frontend/src/test/`
-- `e2e/`
-- `docs/analysis/05-tobe-tests/`
-- (markers added by the runner: `@Disabled`, `test.skip`, `xfail`
-  in test files only)
-
-Anything outside this list is a violation. The most serious case is
-modification of AS-IS source code (Python/Streamlit), which is
-**absolutely forbidden** in Phase 5.
-
-→ CHL severity:
-- AS-IS source modification: `blocking`
-- TO-BE production source modification: `blocking`
-- Other unexpected modification (e.g., docs outside Phase 5 root):
-  `high`
+`git status --porcelain` — anything outside writable Phase 5 paths
+(`tests/equivalence/`, `backend/src/test/`,
+`frontend/src/app/**/*.spec.ts`, `frontend/src/test/`, `e2e/`,
+`docs/analysis/05-tobe-tests/`, plus runner-only test markers) is a
+violation.
+Severity — AS-IS source modified: `blocking`; TO-BE production source
+modified: `blocking`; other unexpected modification: `high`.
 
 ### Check 4 — Mocked-when-shouldn't
 
-Grep through Phase 5 tests for prohibited mock patterns:
+Grep prohibited mock patterns:
 
 ```bash
-# Equivalence harness must NOT mock the TO-BE deployment
 grep -RE "(mock|stub|fake|MagicMock)" tests/equivalence/ | grep -vE "_helpers/|/conftest"
-
-# E2E must NOT mock the backend
 grep -RE "(MockBackend|nock\(|page\.route\()" e2e/ | grep -vE "test-utils/"
 ```
 
-For each match:
-- Equivalence harness using mocks: `blocking` (defeats the purpose).
-- E2E `page.route()` overriding production endpoints: `high` unless
-  scoped to a specific test that justifies it (e.g., webhook
-  callback simulation).
+Severity — equivalence harness using mocks: `blocking` (defeats the
+purpose); E2E `page.route()` on production endpoints: `high` (unless
+scoped to a justified test).
 
 ### Check 5 — Equivalence claim integrity
 
-For each UC marked `equivalent` in `01-equivalence-report.md`:
-- Read the corresponding pytest module under
-  `tests/equivalence/test_uc_<id>_*.py`.
-- Verify the test actually compares against the AS-IS snapshot (not
-  a hand-written expected value).
-- Verify the diff helper is invoked (`assert_equivalent`).
-
-A UC marked `equivalent` whose test does NOT compare to the snapshot
-is a false claim:
-→ CHL severity `blocking`.
+For each UC marked `equivalent` in `01-equivalence-report.md`: the
+matching pytest module under `tests/equivalence/test_uc_<id>_*.py` must
+compare against the AS-IS snapshot (not a hand-written expected value)
+and invoke the `assert_equivalent` helper.
+Severity — `equivalent` claim without snapshot comparison: `blocking`.
 
 ### Check 6 — AS-IS-bug-carry-over consistency
 
-For each BUG-NN in `as_is_bug_carry_over`:
-- Is there at least one test that explicitly references the BUG-NN?
-- Does the assertion document the inherited buggy expectation?
-
-A carry-over bug not exercised by any test means we have no proof
-the behaviour is preserved (which matters for users who rely on it):
-→ CHL severity `medium`.
+Each `BUG-NN` in `as_is_bug_carry_over` must be exercised by at least
+one test that explicitly references the bug ID and documents the
+inherited buggy expectation.
+Severity — carry-over bug not tested: `medium`.
 
 ### Check 7 — PO sign-off completeness
 
-In `01-equivalence-report.md`:
-- Are sign-off slots present (engineering lead, PO, security review)?
-- Are all `accepted-difference` items in the dedicated section?
-- Are all `regression-accepted` items in the dedicated section?
-- Are all `regression-blocking` items in the dedicated section?
-- Are all 8 quality-gate items rendered with current state?
-
-A report that ships to PO with missing sign-off slots:
-→ CHL severity `high` (UX of approval breaks).
+`01-equivalence-report.md` must have sign-off slots (engineering lead,
+PO, security review) and dedicated sections for `accepted-difference`,
+`regression-accepted`, `regression-blocking`, plus all 8 quality-gate
+items rendered with current state.
+Severity — missing sign-off slots: `high` (approval UX breaks).
 
 ### Check 8 — Performance gate compliance
 
-In `04-performance-comparison.md`:
-- For every UC marked `regression-soft` (>+10%): is there a PO sign-off
-  field?
-- For every UC marked `regression-hard` (>+25%): is it in
-  `01-equivalence-report.md` § Blocking regressions?
-- Are env caveats documented (CPU, RAM, JVM version)?
-
-A perf delta > +25% without explicit blocking-regression listing:
-→ CHL severity `blocking`.
-
-A perf delta > +10% without env caveats:
-→ CHL severity `medium` (numbers might be unreliable).
+In `04-performance-comparison.md`: each `regression-soft` (>+10%) UC
+needs a PO sign-off field; each `regression-hard` (>+25%) must appear
+in `01-equivalence-report.md` § Blocking regressions; env caveats
+(CPU/RAM/JVM) must be documented.
+Severity — perf delta > +25% without blocking-regression listing:
+`blocking`; perf delta > +10% without env caveats: `medium`.
 
 ### Check 9 — Shell coverage in E2E
 
-Verify that the FE test suite includes an end-to-end smoke spec that
-actually drives the application as a user — not just isolated component
-tests. Read `<frontend-dir>/tests/e2e/smoke.spec.ts` (or equivalent).
+Verify the FE test suite includes a Playwright smoke spec at
+`<frontend-dir>/tests/e2e/smoke.spec.ts` that drives the app as a real
+user. See `check-detail.md` § Check 9 for the 5 required properties
+(iterates every protected route, asserts no CLI placeholder, asserts
+feature `<h1>`/`<h2>` visible, asserts nav link present, runs in CI)
+and the CHL-SHELL-* severity taxonomy.
 
-Required properties of the smoke spec:
+### Check 10 — Backend boots on default profile
 
-1. It iterates over **every protected route in `app.routes.ts`** (or has
-   a hard-coded list that the challenger can diff against the routes
-   file — any orphan route generates one CHL per orphan).
-2. It asserts the page does NOT contain Angular CLI placeholder strings
-   (`Hello, infosync-frontend`, `Congratulations! Your app is running`,
-   `Explore the Docs`, `Learn with Tutorials`).
-3. It asserts a feature `<h1>`/`<h2>` is visible on each route
-   (proves the lazy chunk rendered, not just the shell).
-4. It asserts a nav link to each route exists.
-5. The spec is part of the CI default pipeline (referenced from
-   `tobe-testing-supervisor`'s Final Validation gate).
-
-Severity:
-- smoke spec absent → `blocking` (CHL-SHELL-NOEXIST)
-- smoke spec exists but covers < 80% of protected routes → `high`
-  (CHL-SHELL-PARTIAL)
-- spec does not check for placeholder strings → `high`
-  (CHL-SHELL-NOPLACEHOLDER-GUARD)
-- spec runs only on the static build (no real backend) → `medium`
-  (CHL-SHELL-NOREALAPI)
-
-> Rationale: the InfoSync 2026-05 retrospective had 200/200 component
-> tests + 204/204 equivalence tests all passing while the FE was
-> unusable because every route showed the Angular CLI welcome card.
-> Component tests and HTTP equivalence tests both run *below* the level
-> at which this gap lives.
+Verify the backend can start with plain `java -jar` (no
+`-Dspring.profiles.active=...`). See `check-detail.md` § Check 10 for
+the gate: `BootSmokeTest.java` must exist with `@SpringBootTest` and
+NO `@ActiveProfiles`, and `mvn -Dtest=BootSmokeTest` must pass.
+CHL-BOOT-* severity taxonomy in the same doc.
 
 ---
 

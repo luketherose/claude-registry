@@ -45,6 +45,22 @@ SKILL_DISALLOWED_TOOLS = {"Edit", "Write", "Bash", "Agent"}
 # scanned as capability candidates.
 CAPABILITY_ATTACHMENT_DIRS = {"references", "scripts"}
 
+# Pre-existing oversize agents grandfathered past the 12 000-char HARD body
+# ceiling. These were over the wall BEFORE the wall was introduced
+# (InfoSync 2026-05 audit). Every entry must be paired with a follow-up
+# extraction ticket; the goal is to drain the list, not extend it.
+#
+# Adding a new file to this set REQUIRES a PR-description rationale.
+# To shrink the list, extract per-phase content into
+# `claude-catalog/docs/<topic>/` (see
+# `claude-catalog/docs/supervisor-extraction-template.md`).
+HARD_CEILING_ALLOWLIST = {
+    "claude-catalog/agents/baseline-testing/baseline-testing-supervisor.md",
+    "claude-catalog/agents/deliberation/deliberative-decision-engine.md",
+    "claude-catalog/agents/functional-analysis/functional-analysis-supervisor.md",
+    "claude-catalog/agents/technical-analysis/technical-analysis-supervisor.md",
+}
+
 
 def iter_capability_files(root: Path):
     """Yield every `.md` file under `root` that is a capability candidate.
@@ -207,9 +223,12 @@ def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Findin
     # --- body ---
     # Body checks include rubric-driven heuristics:
     #   - agents: warn if `## When to invoke` is missing (Anthropic
-    #     agent-development rubric §7) and if body exceeds the 10 000 char
-    #     ceiling (rubric §9). Both are warnings, not errors, because the
-    #     registry may have legitimate exceptions (top-level supervisors).
+    #     agent-development rubric §7).
+    #   - agent body length: warn above 10 000 chars; ERROR above 12 000.
+    #     The 10k ceiling is the rubric soft target; the 12k hard wall
+    #     blocks PRs from regressing into the "agent prompt is now its own
+    #     wiki" failure mode (InfoSync 2026-05 audit). Use
+    #     `claude-catalog/docs/supervisor-extraction-template.md` to extract.
     stripped_body = body.strip()
     if not stripped_body:
         findings.append(Finding("error", str(filepath),
@@ -232,11 +251,26 @@ def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Findin
                     "Per the Anthropic agent-development rubric, the description "
                     "should name 2-4 trigger scenarios in prose and the body "
                     "should detail them under `## When to invoke`."))
-            if len(stripped_body) > 10_000:
+            body_len = len(stripped_body)
+            # Path relative to repo root for allowlist matching. The filepath
+            # arrives absolute; reduce it to the registry-relative form.
+            try:
+                rel_for_allowlist = str(filepath.relative_to(filepath.parents[3]))
+            except (ValueError, IndexError):
+                rel_for_allowlist = str(filepath)
+            is_allowlisted = rel_for_allowlist in HARD_CEILING_ALLOWLIST
+            if body_len > 12_000 and not is_allowlisted:
+                findings.append(Finding("error", str(filepath),
+                    f"Agent body is {body_len} chars — over the 12 000-char HARD "
+                    "ceiling. Extract per-phase / per-template content into "
+                    "`claude-catalog/docs/<topic>/` before merging. See "
+                    "`claude-catalog/docs/supervisor-extraction-template.md`."))
+            elif body_len > 10_000:
+                tag = " (grandfathered — pending extraction)" if is_allowlisted else ""
                 findings.append(Finding("warning", str(filepath),
-                    f"Agent body is {len(stripped_body)} chars — over the "
-                    "10 000-char rubric ceiling. Consider extracting per-phase or "
-                    "per-template content into `claude-catalog/docs/<topic>/`."))
+                    f"Agent body is {body_len} chars — over the 10 000-char rubric "
+                    f"ceiling (soft target){tag}. Extract per-phase or per-template "
+                    "content into `claude-catalog/docs/<topic>/`."))
 
     return findings
 

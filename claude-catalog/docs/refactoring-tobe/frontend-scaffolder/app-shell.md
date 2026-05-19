@@ -73,20 +73,42 @@ The `<app-layout>` component is responsible for:
 - emitting one nav entry per bounded context, gated on permissions from `AuthService`;
 - providing the main content area that the `<router-outlet />` projects into.
 
-### Self-check before closing the agent run
+### Self-check (HARD GATE) — run before reporting `status: ok`
 
-After writing `app.component.html`, the agent MUST verify:
+A scaffold that compiles is NOT necessarily a scaffold a user can use.
+The two most common failure modes are: (a) leaving the `ng new`
+placeholder template intact, (b) forgetting to emit any navigation.
+The app then builds green but is unusable. All 6 checks must pass:
 
 ```bash
-# Placeholder strings must NOT exist anywhere under src/app/
-! grep -RnE "Hello, \{\{ title \}\}|Congratulations! Your app is running|Explore the Docs|Learn with Tutorials" src/app/
-# app.component.html must reference the layout shell
+# 1. No CLI placeholder strings survive
+! grep -RlnE "Hello, \{\{ title \}\}|Congratulations! Your app is running|Explore the Docs|Learn with Tutorials" src/app/
+
+# 2. app.component.html delegates to layout + has router-outlet
 grep -q "app-layout" src/app/app.component.html
-# router-outlet must live inside the layout, not at the top of app.component.html
 grep -q "router-outlet" src/app/app.component.html
+
+# 3. Layout component exists with routerLinks
+test -f src/app/core/layout/layout.component.ts
+test -f src/app/core/layout/layout.component.html
+grep -q "routerLink" src/app/core/layout/layout.component.html
+
+# 4. Every protected route in app.routes.ts is referenced by the layout.
+#    Build a list of `path: '...'` literals (excluding `**`, `login`, pure
+#    redirects) and grep each in layout.component.html. Any unreferenced
+#    path becomes a TODO marker in layout.component.ts with a (BC-NN) tag.
+
+# 5. Interceptors exist (app.config.ts must not reference files the agent
+#    forgot to write).
+test "$(ls src/app/core/interceptors/*.interceptor.ts | wc -l)" -ge 1
+grep -q "withInterceptors" src/app/app.config.ts
+
+# 6. No per-service Authorization header — use the interceptor.
+! grep -rln 'Authorization.*Bearer' src/app --include='*.service.ts'
 ```
 
-If any of these checks fail the scaffold is incomplete — fix and re-emit.
+Report each check + outcome in the agent's `## Self-check` response
+section. Do NOT claim `status: ok` if any check failed.
 
 ## README.md
 

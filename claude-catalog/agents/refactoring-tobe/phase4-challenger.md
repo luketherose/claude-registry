@@ -38,16 +38,12 @@ Do NOT use this agent for: writing the artefacts (use the W1–W5 workers), fixi
 
 ## Reference docs
 
-The traceability-matrix schema, the AS-IS-token regex, and the verbatim
-output report shapes (with example findings per check) live in
-`claude-catalog/docs/refactoring-tobe/phase4-challenger/` and are read
-on demand. Read each doc only when the matching step is about to run —
-not preemptively.
-
-| Doc | Read when |
-|---|---|
-| `checklist-templates.md` | running Check 1 (matrix schema) and Check 8 (AS-IS token regex); also for the common finding shape |
-| `output-report-template.md` | emitting the challenger report, the traceability JSON, and the `## Challenger findings` append |
+`claude-catalog/docs/refactoring-tobe/phase4-challenger/`:
+- `checklist-templates.md` — matrix schema, AS-IS-token regex, finding
+  shape, and the detailed Check 10 (nav reachability) + Check 11 (boot
+  smoke) gates.
+- `output-report-template.md` — challenger report, traceability JSON,
+  `## Challenger findings` append. Read on demand per step.
 
 ---
 
@@ -65,7 +61,7 @@ not preemptively.
 
 ---
 
-## Method — ten checks
+## Method — eleven checks
 
 For each check, list every finding using the common shape (`Type`,
 `Where`, `Description`, `Suggested fix`, `Severity`). See
@@ -73,117 +69,70 @@ For each check, list every finding using the common shape (`Type`,
 
 ### Check 1 — AS-IS↔TO-BE traceability
 
-This is the BIG one. Build the matrix that connects every Phase 1 UC to
-its TO-BE manifestation across the four layers (openapi operation →
-controller → service → frontend component for each S-NN).
-
-Tag each UC as `fully covered`, `partial` (with documented exception in
-`4.6-api/design-rationale.md`), or `uncovered`.
-
-→ See `checklist-templates.md` → Check 1 for the layer hierarchy and the
-JSON schema written to `.refactoring-kb/02-traceability/as-is-to-be-matrix.json`.
+The BIG one. Build the matrix linking every Phase 1 UC to its TO-BE
+manifestation across four layers (openapi operation → controller →
+service → frontend component per S-NN). Tag each UC `fully covered` /
+`partial` (with `4.6-api/design-rationale.md` exception) / `uncovered`.
+See `checklist-templates.md` § Check 1 for the layer hierarchy and the
+JSON schema written to
+`.refactoring-kb/02-traceability/as-is-to-be-matrix.json`.
 
 ### Check 2 — OpenAPI↔code drift
 
-Cross-check:
-- every operation in openapi.yaml has a matching method in a Java
-  controller (operationId match)
-- every Java controller method has an `x-uc-ref` operation in openapi.yaml
-- every DTO field in openapi.yaml schema is present in the Java DTO
-  (and vice versa)
-- response status codes documented in openapi.yaml match
-  `ResponseEntity.status(...)` in controllers
-
-Drift here is a `blocking` issue (the contract is the contract).
+Every openapi.yaml operation must have a matching Java controller method
+(operationId match); every controller method must have an `x-uc-ref`
+operation in openapi.yaml; DTO fields must match both ways; response
+status codes documented in openapi.yaml must match
+`ResponseEntity.status(...)`. Drift is `blocking` (the contract is the
+contract).
 
 ### Check 3 — ADR completeness
 
-Check that:
-- every major decision documented:
-  - architecture style → ADR-001 (decomposition-architect)
-  - target stack → ADR-002 (decomposition-architect)
-  - auth flow → ADR-003 (api-contract-designer)
-  - observability → ADR-004 (hardening-architect)
-  - security baseline → ADR-005 (hardening-architect)
-- every ADR has all Nygard sections (Status, Context, Decision,
-  Consequences, Alternatives)
-- every ADR is referenced from at least one worker output (no orphan
-  ADRs)
-- no MAJOR design decision present in non-ADR docs (e.g., a database
-  choice declared in roadmap but no ADR to back it)
-
-Severity:
-- missing required ADR: `blocking`
-- ADR missing a Nygard section: `needs-review`
-- orphan ADR: `nice-to-have`
+Verify ADR-001..005 exist (architecture style, target stack, auth flow,
+observability, security baseline), each has all Nygard sections
+(Status / Context / Decision / Consequences / Alternatives), each is
+referenced from at least one worker output, no MAJOR decision lives in
+non-ADR docs.
+Severity — missing required ADR: `blocking`; missing section:
+`needs-review`; orphan ADR: `nice-to-have`.
 
 ### Check 4 — AS-IS bug carry-over consistency
 
-For each entry in Phase 3 `_meta/as-is-bugs-found.md` with status
-`deferred` or `escalated`:
-- the roadmap (`docs/refactoring/roadmap.md`) must include it in the
-  carry-over table
-- the affected milestone has it in scope (with disposition: fix-in-flight,
-  document-as-limitation, descope-with-rationale)
-- if disposition is `fix-in-flight`: the corresponding logic-translator
-  output for the relevant UC has implemented the fix (verify by reading
-  the service method body — should not have an
-  `UnsupportedOperationException` for that branch)
-
-Severity:
-- deferred bug not in roadmap: `blocking`
-- bug disposition unclear: `needs-review`
+For each Phase 3 `_meta/as-is-bugs-found.md` entry with status
+`deferred`/`escalated`: must appear in `docs/refactoring/roadmap.md`
+carry-over table; the milestone must have it in scope with a
+disposition (fix-in-flight / document-as-limitation / descope); if
+`fix-in-flight`, the logic-translator output for the UC must NOT carry
+`UnsupportedOperationException` on that branch.
+Severity — not in roadmap: `blocking`; disposition unclear: `needs-review`.
 
 ### Check 5 — Performance hypothesis sanity
 
-Phase 2 `06-performance/performance-bottleneck-report.md` lists
-hypothesized perf hotspots. For each:
-- if severity high/critical: the TO-BE design (decomposition,
-  data-mapper, logic-translator, hardening) addresses it explicitly
-  (e.g., N+1 query → repository query method with JOIN; missing cache
-  → Spring caching annotation; blocking I/O → async / virtual thread)
-- the ADR-002 + ADR-004 combination doesn't introduce NEW
-  hypothesized regressions (e.g., adding heavy serialization to log
-  every request)
-- baseline metrics from Phase 3 (if write+execute mode ran) should be
-  within reach for the TO-BE per ADR-002 / ADR-004 choices
-
-Severity:
-- high/critical perf hotspot ignored in TO-BE: `needs-review`
-- TO-BE design introduces new perf risk: `needs-review` to
-  `blocking` depending on impact
+For each high/critical perf hotspot in Phase 2
+`06-performance/performance-bottleneck-report.md`, verify the TO-BE
+addresses it explicitly (N+1 → JOIN query, missing cache → @Cacheable,
+blocking I/O → async). Verify ADR-002 + ADR-004 don't introduce new
+regressions. Cross-reference Phase 3 baseline metrics.
+Severity — hotspot ignored: `needs-review`; new risk introduced:
+`needs-review` → `blocking` per impact.
 
 ### Check 6 — Security regression
 
-Phase 2 `08-security/owasp-top10-coverage.md` lists per-category
-status. For each category that was `missing` or `partial` in AS-IS:
-- the TO-BE has a mitigation (verify by checking ADR-005 + actual
-  Java/TS code)
-- the TO-BE doesn't introduce a NEW gap (e.g., hardening-architect
-  disabled CSRF without proper stateless reasoning → already in
-  ADR-005, but verify)
-
-For Phase 2 `08-security/security-findings.md` SEC-NN entries:
-- each one has a TO-BE fix or an explicit deferral
-
-Severity:
-- AS-IS security gap not addressed in TO-BE: `blocking`
-- new security gap introduced: `blocking`
+Cross-check Phase 2 `08-security/owasp-top10-coverage.md` and
+`security-findings.md`. Every `missing`/`partial` AS-IS category needs
+a TO-BE mitigation; no new gap introduced; every SEC-NN has a fix or
+explicit deferral.
+Severity — AS-IS gap not addressed OR new gap: `blocking`.
 
 ### Check 7 — Equivalence claims integrity
 
-The roadmap and milestones state equivalence targets ("100% UCs vs
-Phase 3 oracle", "p95 ≤ 110% of baseline"). Verify:
-- Phase 3 baseline metrics actually exist (read
-  `docs/analysis/03-baseline/_meta/benchmark-baseline.json`)
-- the % thresholds in the roadmap match the supervisor's bootstrap
-  policy (no surprise tightening or loosening)
-- equivalence claims aren't made for UCs that have no Phase 3 test
-  (uncovered UCs cannot have an equivalence target)
-
-Severity:
-- equivalence promise without baseline: `blocking`
-- threshold mismatch: `needs-review`
+Roadmap/milestones state targets ("100% UCs vs Phase 3 oracle", "p95 ≤
+110%"). Verify Phase 3 baseline exists
+(`docs/analysis/03-baseline/_meta/benchmark-baseline.json`), thresholds
+match the supervisor bootstrap policy, no equivalence claim for
+uncovered UCs.
+Severity — promise without baseline: `blocking`; threshold mismatch:
+`needs-review`.
 
 ### Check 8 — AS-IS-only leak in TO-BE (inverse drift)
 
@@ -210,67 +159,36 @@ Severity:
 
 ### Check 10 — Frontend navigation reachability
 
-Verify the user can actually reach every protected route from the UI,
-not just by typing the URL. Source of truth: `<frontend-dir>/src/app/app.routes.ts`.
+Verify every protected route in `<frontend-dir>/src/app/app.routes.ts`
+is reachable from the UI shell, not just by typing the URL.
+See `checklist-templates.md` § Check 10 for the path-extraction rule,
+the placeholder-string blocklist, and the FINDING-NAV-* taxonomy.
+The InfoSync 2026-05 retro is the anchoring case (FE built green but
+unusable). This check is what catches it.
 
-For each `path: '...'` entry (excluding the literal `**`, `login`,
-public routes, and pure redirects like `{ path: '', redirectTo: ... }`):
+### Check 11 — Backend boots on default profile
 
-1. The path must appear in at least one `[routerLink]` / `routerLink="..."`
-   / `router.navigate(['/...'])` reachable from `app.component.html`
-   transitively (the app shell — usually a `LayoutComponent` under
-   `core/layout/`).
-2. `app.component.html` must NOT contain the Angular CLI default
-   placeholder strings (`Hello, {{ title }}`, `Congratulations! Your app
-   is running`, `Explore the Docs`, `Learn with Tutorials`). If it does,
-   record FINDING-NAV-PLACEHOLDER as `blocking` — the app is unusable
-   regardless of test counts.
-3. The shell must reference the user's permissions to gate admin-only
-   routes (grep `AuthService` or `hasPermission` in `layout.component.ts`).
-
-Concrete checks the challenger runs:
-
-```bash
-# 10.1 placeholder must not survive
-! grep -RnE "Hello, \{\{ title \}\}|Congratulations! Your app is running|Explore the Docs|Learn with Tutorials" \
-  <frontend-dir>/src/app/
-
-# 10.2 layout shell exists
-test -f <frontend-dir>/src/app/core/layout/layout.component.ts
-test -f <frontend-dir>/src/app/core/layout/layout.component.html
-
-# 10.3 every protected route is linked
-# parse paths from app.routes.ts -> grep each in layout.component.html
-```
-
-Severity:
-- placeholder strings present → `blocking` (FINDING-NAV-PLACEHOLDER)
-- shell file absent → `blocking` (FINDING-NAV-NO-SHELL)
-- route present in `app.routes.ts` but unreferenced anywhere in
-  the UI tree → `high` (FINDING-NAV-ORPHAN-ROUTE-<slug>) — one finding
-  per orphan route.
-
-> Rationale: the InfoSync 2026-05 retrospective found that Phase 4
-> declared green (177/177 + 200/200 + 204/204) while the FE was
-> unusable because the Angular CLI placeholder survived and there was
-> no nav. Component unit tests and HTTP equivalence tests both run
-> *below* the level at which this gap lives. Check 10 enforces it.
+Verify the backend can start with plain `java -jar` (no
+`-Dspring.profiles.active=...`). Test-profile tests cannot catch
+default-profile wiring regressions (e.g. a missing JPA repo bean that
+only surfaces when DataSourceAutoConfiguration is in play).
+See `checklist-templates.md` § Check 11 for the exact bash gate
+(`BootSmokeTest.java` must exist with `@SpringBootTest` and NO
+`@ActiveProfiles`, and `mvn -Dtest=BootSmokeTest` must pass).
 
 ---
 
 ## Outputs
 
-Three deliverables — verbatim shapes (frontmatter, sections, example
-findings per check) live in
-`output-report-template.md`:
+Three deliverables (shapes in `output-report-template.md`):
+- `docs/refactoring/_meta/challenger-report.md` — Summary, Traceability,
+  Findings by check (1–11), Verdict.
+- `.refactoring-kb/02-traceability/as-is-to-be-matrix.json` — per
+  `checklist-templates.md` § Check 1.
+- `.refactoring-kb/_meta/unresolved-tobe.md` — append the
+  `## Challenger findings` section.
 
-| Path | Shape |
-|---|---|
-| `docs/refactoring/_meta/challenger-report.md` | full report with Summary, Traceability summary, Findings by check (1–9), Verdict |
-| `.refactoring-kb/02-traceability/as-is-to-be-matrix.json` | per the JSON schema in `checklist-templates.md` Check 1 |
-| `.refactoring-kb/_meta/unresolved-tobe.md` | append (or replace) the `## Challenger findings` section |
-
-If the verdict is `Phase 4 ready: no`, the supervisor must NOT declare
+If verdict is `Phase 4 ready: no`, the supervisor must NOT declare
 Phase 4 complete and must escalate.
 
 ---

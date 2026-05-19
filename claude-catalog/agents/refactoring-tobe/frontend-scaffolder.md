@@ -155,46 +155,13 @@ Read `app-shell.md` (README.md section). Emit
 overview, BC → feature module mapping, environment configuration, and
 links to `docs/refactoring/4.6-api/openapi.yaml` and ADRs.
 
-### 10. Self-check gate (HARD GATE — must pass before reporting `status: ok`)
+### 10. Self-check gate (HARD)
 
-A scaffold that compiles is NOT necessarily a scaffold a user can use.
-The single most common failure mode of this agent is to leave the
-default `ng new` placeholder template intact and forget to write any
-navigation — the app then builds green but is unusable. The following
-checks MUST all pass; if any fails, fix and re-emit before reporting.
-
-```bash
-# 10.1 No CLI placeholder strings survive anywhere under src/app/
-test "$(grep -RlnE \
-  'Hello, \{\{ title \}\}|Congratulations! Your app is running|Explore the Docs|Learn with Tutorials' \
-  src/app/ | wc -l)" -eq 0
-
-# 10.2 app.component.html delegates to the layout shell
-grep -q "app-layout" src/app/app.component.html
-grep -q "router-outlet" src/app/app.component.html
-
-# 10.3 The layout component exists and has routerLinks
-test -f src/app/core/layout/layout.component.ts
-test -f src/app/core/layout/layout.component.html
-grep -q "routerLink" src/app/core/layout/layout.component.html
-
-# 10.4 Every protected route in app.routes.ts is referenced by the layout.
-# Build a list of paths from app.routes.ts (`path: '...'` literals, minus
-# `**`, `login`, redirect-only entries) and grep each in the layout html.
-# Any path not referenced becomes a TODO marker in layout.component.ts
-# with a `(BC-NN)` tag — never a silent omission.
-
-# 10.5 Interceptors actually exist (app.config.ts must not reference
-# files that the agent forgot to write).
-test "$(ls src/app/core/interceptors/*.interceptor.ts | wc -l)" -ge 1
-grep -q "withInterceptors" src/app/app.config.ts
-
-# 10.6 No per-service Authorization header (must use the interceptor)
-test "$(grep -rln 'Authorization.*Bearer' src/app --include='*.service.ts' | wc -l)" -eq 0
-```
-
-Report each check + outcome in the agent's `## Self-check` section of
-the response. Do NOT claim `status: ok` if any check failed.
+Before reporting `status: ok`, run the 6-check gate in `app-shell.md`
+§ Self-check — placeholder strings, app.component.html shell delegation,
+layout component existence with routerLinks, every protected route
+referenced, interceptors actually written, no per-service Authorization
+header. Report each result; do NOT claim `status: ok` if any failed.
 
 ---
 
@@ -214,37 +181,11 @@ the response. Do NOT claim `status: ok` if any check failed.
 
 ### Reporting (text response)
 
-```markdown
-## Files written
-<list (counts only — likely many files)>
-
-## Stats
-- Feature modules:           <N> (one per BC)
-- Pages / components:        <N>
-- Shared components:         <N>
-- Core interceptors:         3 (auth, error, correlation-id)
-- Core guards:               2 (auth, role)
-- Routes:                    <N>
-- OpenAPI client:            generated (typescript-angular) | hand-written
-
-## Streamlit translations applied
-- session_state → signals: <N> instances
-- st.cache_data → shareReplay: <N> instances
-- file_uploader → multipart: <N> instances
-
-## Build readiness
-- ng build expected to: pass | needs OpenAPI client generated first
-  (run `npm run openapi:generate` before first build)
-
-## Confidence
-high | medium | low
-
-## Duration (wall-clock)
-<seconds>
-
-## Open questions
-- ...
-```
+Use the report shape in `workspace-config.md` § Reporting: `## Files
+written`, `## Stats` (modules / pages / shared / interceptors / guards /
+routes / OpenAPI client strategy), `## Streamlit translations applied`
+when applicable, `## Build readiness`, `## Confidence`, `## Duration`,
+`## Open questions`.
 
 ---
 

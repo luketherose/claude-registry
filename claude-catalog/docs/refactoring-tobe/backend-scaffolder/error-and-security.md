@@ -143,3 +143,44 @@ public class SecurityConfig {
 
 This is a baseline — `hardening-architect` (W4) refines it with the final
 security headers, CSP, etc.
+
+## Boot smoke test (mandatory)
+
+Emit at `src/test/java/com/<org>/<app>/BootSmokeTest.java`:
+
+```java
+package com.<org>.<app>;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+/**
+ * Boot smoke — verifies that the Spring application can start with the
+ * DEFAULT profile (no @ActiveProfiles), the same way `java -jar` runs it.
+ *
+ * Every other test in this module typically uses @ActiveProfiles("test"),
+ * so they only exercise the test profile and would not catch a regression
+ * in the default-profile boot path (e.g. a missing JPA autoconfig
+ * exclude that makes Spring fail to resolve `XxxRepository` beans).
+ *
+ * If this test fails with NoSuchBeanDefinitionException /
+ * UnsatisfiedDependencyException, the bug is in the default profile
+ * wiring — most likely application.yml `spring.profiles.default` or
+ * the autoconfigure-exclude list. Do NOT add @ActiveProfiles here.
+ */
+@SpringBootTest
+class BootSmokeTest {
+
+    @Test
+    void contextLoadsOnDefaultProfile() {
+        // empty — framework asserts context startup
+    }
+}
+```
+
+The default profile in `application.yml` should either (a) define a
+working datasource (H2 for dev, real DB for prod profiles), or (b) set
+`spring.profiles.default: test` so `java -jar` boots on an in-memory
+profile. Excluding `DataSourceAutoConfiguration` alone does NOT make
+repositories optional — `@Service` constructors still require them and
+the context fails. This was GAP-009 in the InfoSync 2026-05 retro.

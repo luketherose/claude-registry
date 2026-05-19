@@ -39,18 +39,11 @@ Do NOT use this agent for: per-UC business-logic translation (use `logic-transla
 
 ## Reference docs
 
-This agent's deliverable templates live in
-`claude-catalog/docs/refactoring-tobe/backend-scaffolder/` and are read on
-demand. Read each doc only when the matching Method step is about to run —
-not preemptively.
-
-| Doc | Read when |
-|---|---|
-| `pom-template.md`             | Method step 1 — generating `pom.xml` |
-| `package-layout.md`           | Method step 2 — laying out the source tree |
-| `code-skeletons.md`           | Method steps 3–5 + 9 — controllers, DTOs, services, application class |
-| `error-and-security.md`       | Method steps 6–7 — RFC 7807 handler + Spring Security baseline |
-| `application-yml-template.md` | Method step 8 — generating `application.yml` |
+`claude-catalog/docs/refactoring-tobe/backend-scaffolder/`: `pom-template.md`
+(step 1), `package-layout.md` (step 2), `code-skeletons.md` (steps 3–5 +
+9), `error-and-security.md` (steps 6–7 + BootSmokeTest),
+`application-yml-template.md` (step 8). Read on demand per step, not
+preemptively.
 
 ---
 
@@ -114,43 +107,18 @@ the bodies; Phase 5 tests are xfailed for unfilled UCs.
 
 ### 6. Error handler (RFC 7807)
 
-Read `error-and-security.md` (Error handler section). Emit
-`shared/error/ProblemDetailExceptionHandler.java` as a `@RestControllerAdvice`
-that extends `ResponseEntityExceptionHandler`. Required handlers:
-- `@ExceptionHandler` for `NotFoundException`, `ValidationException`,
-  `IdempotencyConflictException`, `ConstraintViolationException`,
-  `NoResourceFoundException`, and a generic `Exception` handler with
-  status 500 and SAFE message (no stack trace leak);
-- **`@Override`** for `handleHttpRequestMethodNotSupported` (→ 405),
-  `handleHttpMediaTypeNotSupported` (→ 415),
-  `handleHttpMediaTypeNotAcceptable` (→ 406),
-  `handleMethodArgumentNotValid` (→ 400 with per-field details). These
-  exceptions are produced by `DispatcherServlet` before any
-  `@ExceptionHandler` can claim them — only the protected overrides on
-  `ResponseEntityExceptionHandler` integrate them into RFC 7807. Skipping
-  the 405 override is the canonical bug that turns `GET` on a `POST`-only
-  endpoint into HTTP 500.
-
-Match Phase 2 security findings: no internal info leaks in `detail`.
+Read `error-and-security.md` (Error handler section) for the full
+handler list and the rationale for the 405/415/406 overrides on
+`ResponseEntityExceptionHandler`. Emit
+`shared/error/ProblemDetailExceptionHandler.java`. Match Phase 2 security
+findings: no internal info leaks in `detail`.
 
 ### 7. Security config baseline
 
-Read `error-and-security.md` (Security config section). Emit
-`shared/config/SecurityConfig.java` as a baseline (CSRF disabled because
-stateless, JWT resource server, CORS for FE origin via a `CorsConfigurationSource`
-bean fed by `app.cors.allowed-origin-patterns`). `hardening-architect`
-(W4) refines it with the final security headers, CSP, etc.
-
-**Hard rule on CORS**: the `CorsConfigurationSource` bean is the **only**
-place CORS is configured. The agent must NOT add `@CrossOrigin` on
-individual controllers — duplicating the origin list on every controller
-defeats the purpose of the centralised bean and was the cause of GAP-005
-(127.0.0.1 vs localhost) in the InfoSync 2026-05 retrospective. Required
-self-check at the end of step 7:
-
-```bash
-! grep -rln "@CrossOrigin" src/main/java   # must find nothing
-```
+Read `error-and-security.md` (Security config section) for the
+`CorsConfigurationSource` template, the `setAllowedOriginPatterns` rule,
+and the `! grep @CrossOrigin` self-check (controllers must never carry
+the annotation; the bean is the single source of truth).
 
 ### 8. application.yml
 
@@ -158,10 +126,15 @@ Read `application-yml-template.md`. Emit
 `src/main/resources/application.yml`. `hardening-architect` adds tracing
 and logging-format on top of this.
 
-### 9. Application class
+### 9. Application class + boot smoke test
 
 Read `code-skeletons.md` (Application class section). Emit
-`src/main/java/com/<org>/<app>/Application.java`.
+`src/main/java/com/<org>/<app>/Application.java` AND
+`src/test/java/com/<org>/<app>/BootSmokeTest.java` — a `@SpringBootTest`
+with NO `@ActiveProfiles` annotation that just asserts the context
+loads. This catches default-profile wiring regressions that profile-
+scoped tests cannot see (the canonical example: a missing JPA repo
+bean only surfaces with the default profile).
 
 ### 10. README + ARCHITECTURE.md
 
@@ -171,6 +144,21 @@ links to ADRs.
 `<backend-dir>/ARCHITECTURE.md`: cross-references to
 `.refactoring-kb/00-decomposition/` and OpenAPI; pointer to
 `logic-translator`'s per-UC outputs.
+
+### 11. Self-check gate (HARD)
+
+Before reporting `status: ok`:
+
+```bash
+mvn -q -DskipTests package                     # compile clean
+mvn -q test -Dtest=BootSmokeTest               # context loads on default profile
+! grep -rln "@CrossOrigin" src/main/java       # CORS centralised, no per-controller drift
+```
+
+All three must pass. If `BootSmokeTest` fails because a repository bean
+is missing on the default profile, fix `application.yml` (typically
+`spring.profiles.default: test` or remove an over-aggressive
+autoconfigure-exclude) before re-emitting.
 
 ---
 
@@ -198,36 +186,11 @@ links to ADRs.
 
 ### Reporting (text response)
 
-```markdown
-## Files written
-<list with line counts>
-
-## Stats
-- BCs scaffolded:        <N>
-- Controllers:           <N>
-- DTOs:                  <N>
-- Services:              <N>
-- Endpoints from OpenAPI: <covered>/<total>
-- Test scaffold:         smoke test only (logic in Phase 5)
-
-## Compile readiness
-- mvn compile expected to: pass | needs data-mapper before passing
-
-## Confidence
-high | medium | low
-
-## Duration (wall-clock)
-<seconds>
-
-## Open questions
-- ...
-```
-
-A project with empty `domain/` packages and services referencing missing
-entity types will NOT compile until `data-mapper` runs. The supervisor
-knows the W3 backend track sequence (scaffolder → data-mapper →
-logic-translator) and runs `mvn compile` only at the END of the BE track —
-be honest about compile readiness.
+Use the report shape in `pom-template.md` § Reporting: a `## Files
+written` list, `## Stats` (BCs/controllers/DTOs/services/endpoints
+covered), `## Compile readiness` (`mvn compile` may not yet pass until
+`data-mapper` runs — be honest), `## Confidence`, `## Duration`, and
+`## Open questions`.
 
 ---
 
