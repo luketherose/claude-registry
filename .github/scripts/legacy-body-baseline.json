@@ -1,0 +1,21 @@
+{
+  "_comment": "Legacy body-length baseline for validate_catalog.py. Each entry caps the body length (chars, stripped) of an agent that was already over the 10 000-char rubric ceiling when the ratchet rule was introduced. A legacy agent that EXCEEDS its baseline is emitted as an ERROR (the body must shrink — never grow). Agents NOT listed must stay under 10 000 chars unconditionally. When a legacy agent is extracted below 10 000 chars, REMOVE its entry from this file (so a future regrowth is caught immediately). See claude-catalog/docs/supervisor-extraction-template.md for the extraction recipe.",
+  "actor-feature-mapper": 11652,
+  "baseline-testing-supervisor": 12858,
+  "code-quality-analyst": 10051,
+  "decomposition-architect": 11218,
+  "deliberative-decision-engine": 17472,
+  "dependency-security-analyst": 11199,
+  "functional-analysis-supervisor": 14324,
+  "indexing-supervisor": 10166,
+  "integration-analyst": 10388,
+  "logic-translator": 10493,
+  "module-documenter": 10998,
+  "refactoring-tobe-supervisor": 11251,
+  "resilience-analyst": 10674,
+  "state-runtime-analyst": 11004,
+  "synthesizer": 11229,
+  "technical-analysis-supervisor": 14651,
+  "tobe-testing-supervisor": 11222,
+  "user-flow-analyst": 10354
+}

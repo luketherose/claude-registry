@@ -14,8 +14,10 @@ Usage:
 
 import sys
 import re
+import json
 import yaml
 import argparse
+from functools import lru_cache
 from pathlib import Path
 from dataclasses import dataclass
 
@@ -65,6 +67,40 @@ class Finding:
     severity: str  # "error" | "warning"
     location: str
     message: str
+
+
+@lru_cache(maxsize=1)
+def _legacy_body_baseline() -> dict[str, int]:
+    """Read the legacy body-length baseline JSON.
+
+    The baseline lists agents that were already over the 10 000-char ceiling
+    when the ratchet rule was introduced. Each entry maps the agent's stem
+    name (e.g. `refactoring-supervisor`) to its maximum allowed body length.
+
+    A legacy agent that EXCEEDS its baseline is treated as a regression and
+    emitted as an ERROR — the rule is one-way: bodies may shrink but not
+    grow. Agents not listed must stay under 10 000 chars.
+
+    Returns an empty dict when the baseline file is missing — the validator
+    then treats every body-length excess as an error (the conservative
+    default).
+    """
+    baseline_path = (
+        Path(__file__).resolve().parent / "legacy-body-baseline.json"
+    )
+    if not baseline_path.exists():
+        return {}
+    try:
+        raw = json.loads(baseline_path.read_text(encoding="utf-8"))
+        # Skip metadata keys (anything starting with `_`) and any
+        # non-integer entries — keep only `<name>: <int>` pairs.
+        return {
+            str(k): int(v)
+            for k, v in raw.items()
+            if not str(k).startswith("_") and isinstance(v, int)
+        }
+    except (json.JSONDecodeError, ValueError, OSError):
+        return {}
 
 
 def parse_frontmatter(content: str):
@@ -207,9 +243,13 @@ def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Findin
     # --- body ---
     # Body checks include rubric-driven heuristics:
     #   - agents: warn if `## When to invoke` is missing (Anthropic
-    #     agent-development rubric §7) and if body exceeds the 10 000 char
-    #     ceiling (rubric §9). Both are warnings, not errors, because the
-    #     registry may have legitimate exceptions (top-level supervisors).
+    #     agent-development rubric §7) and ERROR if body exceeds the 10 000
+    #     char ceiling (rubric §9) and the agent is not in the legacy
+    #     baseline. The baseline (legacy-body-baseline.json) lists pre-
+    #     existing offenders so they ratchet (cannot grow further) instead
+    #     of blocking immediately. New agents AND agents not on the baseline
+    #     MUST stay under 10 000 chars — this prevents body-length
+    #     regressions from sneaking in past PR review.
     stripped_body = body.strip()
     if not stripped_body:
         findings.append(Finding("error", str(filepath),
@@ -232,11 +272,34 @@ def validate_agent_file(filepath: Path, file_type: str = "agent") -> list[Findin
                     "Per the Anthropic agent-development rubric, the description "
                     "should name 2-4 trigger scenarios in prose and the body "
                     "should detail them under `## When to invoke`."))
-            if len(stripped_body) > 10_000:
-                findings.append(Finding("warning", str(filepath),
-                    f"Agent body is {len(stripped_body)} chars — over the "
-                    "10 000-char rubric ceiling. Consider extracting per-phase or "
-                    "per-template content into `claude-catalog/docs/<topic>/`."))
+            body_len = len(stripped_body)
+            if body_len > 10_000:
+                baseline_size = _legacy_body_baseline().get(filepath.stem)
+                if baseline_size is None:
+                    # New file or non-legacy — ERROR
+                    findings.append(Finding("error", str(filepath),
+                        f"Agent body is {body_len} chars — over the "
+                        "10 000-char rubric ceiling and not in the legacy "
+                        "baseline at `.github/scripts/legacy-body-baseline.json`. "
+                        "Extract per-phase or per-template content into "
+                        "`claude-catalog/docs/<topic>/`. See "
+                        "`claude-catalog/docs/supervisor-extraction-template.md`."))
+                elif body_len > baseline_size:
+                    # Legacy file that grew past its baseline — ERROR (ratchet)
+                    findings.append(Finding("error", str(filepath),
+                        f"Agent body is {body_len} chars — over the legacy "
+                        f"baseline of {baseline_size} chars at "
+                        "`.github/scripts/legacy-body-baseline.json`. The "
+                        "ratchet rule forbids body growth on legacy files: "
+                        "extract content (do not add more) per "
+                        "`claude-catalog/docs/supervisor-extraction-template.md`."))
+                else:
+                    # Within baseline — keep as warning so it's visible
+                    findings.append(Finding("warning", str(filepath),
+                        f"Agent body is {body_len} chars — over the "
+                        f"10 000-char ceiling (legacy baseline allows up to "
+                        f"{baseline_size}). Consider extracting per-phase or "
+                        "per-template content into `claude-catalog/docs/<topic>/`."))
 
     return findings
 
