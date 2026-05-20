@@ -5,7 +5,24 @@ All notable changes to catalog capabilities are documented here.
 Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending changes.
 
 ## [Unreleased]
+### Added
+- **Body-length ratchet in `validate_catalog.py`.** The 10 000-char agent-body ceiling (Anthropic rubric §9) is now enforced as a HARD ERROR. Pre-existing offenders are listed in [`.github/scripts/legacy-body-baseline.json`](.github/scripts/legacy-body-baseline.json) with their current size as a per-file cap — they can shrink but not grow. New agents must stay below 10 000 chars unconditionally. The mechanism prevents future PRs from re-introducing body-length warnings on the agents we just extracted. See [`CLAUDE.md`](../CLAUDE.md) § "Agent rubric" for the rule.
+- `claude-catalog/docs/refactoring-workflow/decision-rules.md` — authoritative `refactoring-supervisor` decision table extracted from the supervisor body (grouped by bootstrap and pre-phase gates, phase status and the iteration loop, skip/resume/re-run, Phase 4 gating, deliberation routing).
+- `claude-catalog/docs/refactoring-workflow/deliberation-integration.md` — activation paths, dispatch protocol, default policy and hard rules for routing decisions to `deliberative-decision-engine`, extracted from the supervisor body.
+- `claude-catalog/docs/refactoring-workflow/constraints.md` — workflow-level invariants of `refactoring-supervisor` (orchestration boundaries, AS-IS/TO-BE rule, recap discipline, Phase-4 invariants), extracted from the supervisor body.
+- `claude-catalog/docs/refactoring-workflow/phase-4-step-6-ui-smoke-gate.md` — Phase 4 Step 6 visual smoke-gate procedure (Playwright `smoke.spec.ts`, mandatory pre-sign-off user prompt) extracted from `refactoring-supervisor.md`; preserved verbatim from PR #40.
+- `claude-catalog/docs/refactoring-tobe/backend-scaffolder-method.md` — backend-scaffolder's 8-step method extracted from the agent body to keep it under 10 000 chars after PR #40 added content.
+- `claude-catalog/docs/refactoring-tobe/frontend-scaffolder-method.md` — frontend-scaffolder's method (app shell, core/shared layers, OpenAPI client, Streamlit translation rules) extracted from the agent body.
+- `claude-catalog/docs/refactoring-tobe/phase4-challenger-checks.md` — phase4-challenger's ten adversarial checks extracted from the agent body.
+- `claude-catalog/docs/tobe-testing/tobe-testing-challenger-checks.md` — tobe-testing-challenger's eight adversarial checks extracted from the agent body.
+
 ### Changed
+- `refactoring-supervisor` body reduced from 24 384 chars to ~9 200 chars (62% cut) by extracting the Decision rules table, Deliberative decision integration prose, Constraints list, and (preserved from PR #40) the Phase 4 Step 6 UI smoke gate procedure into the new docs above. Marketplace bumped 3.2.1 → 3.2.2.
+- `backend-scaffolder` (0.2.0 → 0.2.1): Method section extracted; body 10 204 → 6 456 chars.
+- `frontend-scaffolder` (0.1.0 → 0.1.1): Method section extracted; body 10 993 → 6 100 chars.
+- `phase4-challenger` (0.1.0 → 0.1.1): "Method — ten checks" section extracted; body 12 012 → 4 812 chars.
+- `tobe-testing-challenger` (0.1.0 → 0.1.1): "The 8 checks" section extracted; body 10 547 → 4 718 chars.
+
 - **Cost optimisation: 14 agents switched from `model: opus` to `model: sonnet`.** Affected agents (all bumped by a patch version): `refactoring-supervisor` (3.2.0→3.2.1), `functional-analysis-supervisor` (3.0.0→3.0.1), `technical-analysis-supervisor` (2.1.0→2.1.1), `baseline-testing-supervisor` (0.3.0→0.3.1), `indexing-supervisor` (2.0.0→2.0.1), `refactoring-tobe-supervisor` (0.3.0→0.3.1), `tobe-testing-supervisor` (0.1.0→0.1.1), `deliberative-decision-engine` (0.1.0→0.1.1), and all 6 debate personas (`debate-proposer`, `debate-critic`, `debate-judge`, `debate-risk-reviewer`, `debate-operations-reviewer`, `debate-replatforming-specialist`). The meta-orchestrator `orchestrator` keeps `model: opus` because the catalog validator hard-requires it for deep task decomposition. The stale `model_justification:` frontmatter blocks (which argued for the opus tier) are removed from the converted agents — keeping them on a sonnet agent would have been misleading.
 
 ### Added
