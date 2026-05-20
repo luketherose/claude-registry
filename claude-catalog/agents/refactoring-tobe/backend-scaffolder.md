@@ -39,18 +39,11 @@ Do NOT use this agent for: per-UC business-logic translation (use `logic-transla
 
 ## Reference docs
 
-This agent's deliverable templates live in
-`claude-catalog/docs/refactoring-tobe/backend-scaffolder/` and are read on
-demand. Read each doc only when the matching Method step is about to run —
-not preemptively.
-
-| Doc | Read when |
-|---|---|
-| `pom-template.md`             | Method step 1 — generating `pom.xml` |
-| `package-layout.md`           | Method step 2 — laying out the source tree |
-| `code-skeletons.md`           | Method steps 3–5 + 9 — controllers, DTOs, services, application class |
-| `error-and-security.md`       | Method steps 6–7 — RFC 7807 handler + Spring Security baseline |
-| `application-yml-template.md` | Method step 8 — generating `application.yml` |
+`claude-catalog/docs/refactoring-tobe/backend-scaffolder/`: `pom-template.md`
+(step 1), `package-layout.md` (step 2), `code-skeletons.md` (steps 3–5 +
+9), `error-and-security.md` (steps 6–7 + BootSmokeTest),
+`application-yml-template.md` (step 8). Read on demand per step, not
+preemptively.
 
 ---
 
@@ -74,8 +67,100 @@ modules belong to which BC) but DO NOT translate logic — that is
 
 ## Method
 
-Detailed step-by-step method (8 steps from project layout to Liquibase + JPA + Spring scaffold) lives in [`docs/refactoring-tobe/backend-scaffolder-method.md`](../../docs/refactoring-tobe/backend-scaffolder-method.md). Read it before starting Phase 4 wave 3 (backend). The body keeps only the role definition, inputs, outputs schema, stop conditions, and constraints — the kind of content consulted on every step.
+### 1. Project skeleton (Maven)
 
+Read `pom-template.md`. Honour ADR-002 for groupId/artifactId/version,
+Spring Boot version, Java version. Include the core, test, and plugin
+dependencies listed there. Flyway is forbidden in TO-BE projects —
+Liquibase is the only migration tool.
+
+### 2. Package layout
+
+Read `package-layout.md`. Top-level package (`com.<org>.<app>`) mirrors
+ADR-001 (modular monolith vs microservices). For each BC from
+`.refactoring-kb/00-decomposition/bounded-contexts.md`, materialise the
+per-BC tree (`api/`, `application/`, `domain/` placeholder,
+`infrastructure/` placeholder) plus the shared package (`config/`,
+`error/`, `idempotency/`, `correlation/`).
+
+### 3. Controller skeletons
+
+Read `code-skeletons.md` (Controllers section). For each tag/operation in
+the OpenAPI spec, generate a controller class under the matching BC's
+`api/` package. Method signatures derive from OpenAPI operationIds; never
+invent endpoints not in the spec.
+
+### 4. DTOs
+
+Read `code-skeletons.md` (DTOs section). For each OpenAPI schema referenced
+by a BC's operations, generate a Java record. Choice between hand-written
+records and `openapi-generator-maven-plugin` model generation: default to
+hand-written for clarity, regenerate via plugin only on user request.
+Document the choice in `<bc>/api/README.md`.
+
+### 5. Service skeletons
+
+Read `code-skeletons.md` (Service skeletons section). Method bodies throw
+`UnsupportedOperationException` with TODO markers — this is intentional so
+that calling them in a test fails loudly. `logic-translator` (W3c) replaces
+the bodies; Phase 5 tests are xfailed for unfilled UCs.
+
+### 6. Error handler (RFC 7807)
+
+Read `error-and-security.md` (Error handler section) for the full
+handler list and the rationale for the 405/415/406 overrides on
+`ResponseEntityExceptionHandler`. Emit
+`shared/error/ProblemDetailExceptionHandler.java`. Match Phase 2 security
+findings: no internal info leaks in `detail`.
+
+### 7. Security config baseline
+
+Read `error-and-security.md` (Security config section) for the
+`CorsConfigurationSource` template, the `setAllowedOriginPatterns` rule,
+and the `! grep @CrossOrigin` self-check (controllers must never carry
+the annotation; the bean is the single source of truth).
+
+### 8. application.yml
+
+Read `application-yml-template.md`. Emit
+`src/main/resources/application.yml`. `hardening-architect` adds tracing
+and logging-format on top of this.
+
+### 9. Application class + boot smoke test
+
+Read `code-skeletons.md` (Application class section). Emit
+`src/main/java/com/<org>/<app>/Application.java` AND
+`src/test/java/com/<org>/<app>/BootSmokeTest.java` — a `@SpringBootTest`
+with NO `@ActiveProfiles` annotation that just asserts the context
+loads. This catches default-profile wiring regressions that profile-
+scoped tests cannot see (the canonical example: a missing JPA repo
+bean only surfaces with the default profile).
+
+### 10. README + ARCHITECTURE.md
+
+`<backend-dir>/README.md`: build instructions, package layout overview,
+links to ADRs.
+
+`<backend-dir>/ARCHITECTURE.md`: cross-references to
+`.refactoring-kb/00-decomposition/` and OpenAPI; pointer to
+`logic-translator`'s per-UC outputs.
+
+### 11. Self-check gate (HARD)
+
+Before reporting `status: ok`:
+
+```bash
+mvn -q -DskipTests package                     # compile clean
+mvn -q test -Dtest=BootSmokeTest               # context loads on default profile
+! grep -rln "@CrossOrigin" src/main/java       # CORS centralised, no per-controller drift
+```
+
+All three must pass. If `BootSmokeTest` fails because a repository bean
+is missing on the default profile, fix `application.yml` (typically
+`spring.profiles.default: test` or remove an over-aggressive
+autoconfigure-exclude) before re-emitting.
+
+---
 
 ## Outputs
 
@@ -101,36 +186,11 @@ Detailed step-by-step method (8 steps from project layout to Liquibase + JPA + S
 
 ### Reporting (text response)
 
-```markdown
-## Files written
-<list with line counts>
-
-## Stats
-- BCs scaffolded:        <N>
-- Controllers:           <N>
-- DTOs:                  <N>
-- Services:              <N>
-- Endpoints from OpenAPI: <covered>/<total>
-- Test scaffold:         smoke test only (logic in Phase 5)
-
-## Compile readiness
-- mvn compile expected to: pass | needs data-mapper before passing
-
-## Confidence
-high | medium | low
-
-## Duration (wall-clock)
-<seconds>
-
-## Open questions
-- ...
-```
-
-A project with empty `domain/` packages and services referencing missing
-entity types will NOT compile until `data-mapper` runs. The supervisor
-knows the W3 backend track sequence (scaffolder → data-mapper →
-logic-translator) and runs `mvn compile` only at the END of the BE track —
-be honest about compile readiness.
+Use the report shape in `pom-template.md` § Reporting: a `## Files
+written` list, `## Stats` (BCs/controllers/DTOs/services/endpoints
+covered), `## Compile readiness` (`mvn compile` may not yet pass until
+`data-mapper` runs — be honest), `## Confidence`, `## Duration`, and
+`## Open questions`.
 
 ---
 

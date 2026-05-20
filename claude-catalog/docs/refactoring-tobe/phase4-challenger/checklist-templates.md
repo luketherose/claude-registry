@@ -114,3 +114,77 @@ Each finding the challenger emits follows this shape:
 - **Severity of meta-finding**: blocking | needs-review | nice-to-have
 
 Stable IDs use the prefix `CHL-NN` for challenger meta-findings.
+
+---
+
+## Check 10 — Frontend navigation reachability
+
+Verify the user can actually reach every protected route from the UI,
+not just by typing the URL. Source of truth:
+`<frontend-dir>/src/app/app.routes.ts`.
+
+For each `path: '...'` entry (excluding the literal `**`, `login`, public
+routes, and pure redirects):
+
+1. The path must appear in at least one `[routerLink]` / `routerLink="..."`
+   / `router.navigate(['/...'])` reachable from `app.component.html`
+   transitively (the app shell — usually a `LayoutComponent` under
+   `core/layout/`).
+2. `app.component.html` must NOT contain the Angular CLI default
+   placeholder strings. If it does, record FINDING-NAV-PLACEHOLDER as
+   `blocking` — the app is unusable regardless of test counts.
+3. The shell must reference the user's permissions to gate admin-only
+   routes (grep `AuthService` or `hasPermission` in `layout.component.ts`).
+
+Bash checks:
+
+```bash
+# placeholder must not survive
+! grep -RnE "Hello, \{\{ title \}\}|Congratulations! Your app is running|Explore the Docs|Learn with Tutorials" \
+  <frontend-dir>/src/app/
+
+# layout shell exists
+test -f <frontend-dir>/src/app/core/layout/layout.component.ts
+test -f <frontend-dir>/src/app/core/layout/layout.component.html
+
+# every protected route is linked
+# parse paths from app.routes.ts -> grep each in layout.component.html
+```
+
+Severity:
+- placeholder strings present → `blocking` (FINDING-NAV-PLACEHOLDER)
+- shell file absent → `blocking` (FINDING-NAV-NO-SHELL)
+- route present in `app.routes.ts` but unreferenced anywhere in the UI
+  tree → `high` (FINDING-NAV-ORPHAN-ROUTE-<slug>), one finding per orphan.
+
+> Rationale: the InfoSync 2026-05 retrospective found that Phase 4
+> declared green (177/177 + 200/200 + 204/204) while the FE was unusable
+> because the Angular CLI placeholder survived and there was no nav.
+> Component unit tests and HTTP equivalence tests both run *below* the
+> level at which this gap lives. Check 10 enforces it.
+
+---
+
+## Check 11 — Backend boots on default profile
+
+Verify the backend can start with `java -jar` and no extra args (i.e.,
+the default profile). Test-profile-only smoke tests do not catch
+default-profile wiring regressions.
+
+```bash
+# Required file:
+test -f <backend-dir>/src/test/java/com/<org>/<app>/BootSmokeTest.java
+
+# It must use @SpringBootTest with NO @ActiveProfiles
+grep -q "@SpringBootTest" <backend-dir>/src/test/java/com/<org>/<app>/BootSmokeTest.java
+! grep -q "@ActiveProfiles" <backend-dir>/src/test/java/com/<org>/<app>/BootSmokeTest.java
+
+# And it must pass under mvn:
+mvn -q test -Dtest=BootSmokeTest
+```
+
+Severity:
+- BootSmokeTest missing → `blocking` (FINDING-BOOT-SMOKE-MISSING)
+- BootSmokeTest fails (NoSuchBeanDefinitionException /
+  UnsatisfiedDependencyException) → `blocking`
+  (FINDING-BOOT-SMOKE-FAILS) — the app cannot be run.
