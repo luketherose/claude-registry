@@ -84,7 +84,8 @@ All reference docs live in `claude-catalog/docs/refactoring-workflow/`
 | `constraints.md` | About to act — workflow invariants. |
 | `workflow-manifest-spec.md` | Updating `<repo>/docs/refactoring/workflow-manifest.json`. |
 | `phase-4-replatforming.md` | Starting Phase 4 (any step). |
-| `phase-4-step-6-ui-smoke-gate.md` | Before PO sign-off at end of Phase 4 Step 6 (non-negotiable visual gate). |
+| `phase-4-step-5-5-test-data-seeding.md` | Entering Phase 4 Step 5.5 — the post-testing seeding macro step that loads a coherent cross-module dataset before the UI smoke gate. |
+| `phase-4-step-6-ui-smoke-gate.md` | Before PO sign-off at end of Phase 4 Step 6 (non-negotiable visual gate; precondition: Step 5.5 complete). |
 | `activation-examples.md` | User's opening message is ambiguous. |
 | `../deliberation/integration-replatforming.md` | Eligible deliberation decision points (Phase 4 + Phases 1–3). |
 

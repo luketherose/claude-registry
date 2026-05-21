@@ -67,6 +67,16 @@
   exist in delivered code without ADR resolution. The deliverable
   `01-replatforming-report.md` replaces the old separate
   `01-equivalence-report.md`.
+- **Phase 4 Step 5.5 — Test Data Seeding is a non-skippable
+  precondition of Step 6.** A green test suite over an empty database
+  produces an empty UI, which is visually indistinguishable from a
+  broken UI. Before the Step 6 UI smoke gate runs, the supervisor
+  dispatches `test-data-seeder` to load a coherent cross-module
+  dataset and verify via API smoke calls that the data is queryable.
+  See [`phase-4-step-5-5-test-data-seeding.md`](./phase-4-step-5-5-test-data-seeding.md).
+  Step 5.5 may be deferred only with `execute_policy: off` — in that
+  case the seed files exist but the supervisor MUST apply them and
+  rerun the smoke verification before Step 6.
 - **Phase 4 Step 6 — UI smoke gate is non-negotiable.** Before asking
   for PO sign-off, the supervisor runs the Playwright `smoke.spec.ts`
   and the visual-confirmation user prompt documented in

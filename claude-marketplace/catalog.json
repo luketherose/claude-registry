@@ -3394,6 +3394,95 @@
       "topic": "indexing",
       "published": "2026-05-12",
       "changelog": "Initial release — Phase 0 coverage and evidence quality gate"
+    },
+    {
+      "name": "test-data-seeder",
+      "version": "1.0.0",
+      "type": "agent",
+      "tier": "beta",
+      "status": "active",
+      "description": "Phase 4 Step 5.5 sub-agent. Designs and loads a coherent cross-module test dataset into a freshly-built TO-BE application so the Step 6 UI smoke gate can judge the app visually. Auto-detects the project's migration tool (Liquibase, Flyway, Django fixtures, Rails seeds, EF Migrations, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic, raw SQL). Produces seed files gated to a non-production profile, restarts the backend, verifies via API smoke calls. Strictly generic — no project-specific values.",
+      "file": "beta/refactoring-tobe/test-data-seeder.md",
+      "dependencies": [
+        "test-data-design-standards",
+        "database-migration-patterns"
+      ],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write",
+        "Edit"
+      ],
+      "model": "sonnet",
+      "color": "green",
+      "tags": [
+        "refactoring",
+        "phase-4",
+        "step-5-5",
+        "post-testing",
+        "test-data",
+        "seed",
+        "migration",
+        "ui-smoke-precondition"
+      ],
+      "topic": "refactoring-tobe",
+      "published": "2026-05-21",
+      "changelog": "Initial release — Phase 4 Step 5.5 post-testing data seeding for the UI smoke gate"
+    },
+    {
+      "name": "test-data-design-standards",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to retrieve authoritative principles for designing a coherent demo-ready test dataset: pivot-entity model, lifecycle-state coverage rule, FK consistency rules, login-user permission spread, edge / boundary realism, dataset-plan template, and the column-length safety checklist that prevents the most common seed-failure class.",
+      "file": "skills/testing/test-data-design-standards.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "testing",
+        "test-data",
+        "fixtures",
+        "seed",
+        "design-standards",
+        "skill"
+      ],
+      "published": "2026-05-21",
+      "changelog": "Initial release — extracted from test-data-seeder for cross-agent reuse"
+    },
+    {
+      "name": "database-migration-patterns",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to retrieve per-stack migration / fixture / seed patterns: auto-detect signals for Liquibase, Flyway, Django, Rails, EF Core, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic, and raw SQL; native idempotent insert templates; non-production profile gating mechanisms; FK-lookup patterns for resolving auto-generated parent IDs at insertion time.",
+      "file": "skills/database/database-migration-patterns.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "tags": [
+        "database",
+        "migration",
+        "liquibase",
+        "flyway",
+        "django",
+        "rails",
+        "ef-core",
+        "knex",
+        "typeorm",
+        "prisma",
+        "skill"
+      ],
+      "published": "2026-05-21",
+      "changelog": "Initial release — extracted from test-data-seeder for cross-agent reuse"
     }
   ]
 }

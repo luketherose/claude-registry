@@ -12,6 +12,23 @@ run below the level at which the user perceives "the app is broken"**.
 The UI smoke gate forces the supervisor to validate the app **the way
 a human would** before sign-off.
 
+## Precondition: Step 5.5 — Test Data Seeding
+
+The UI smoke gate is a **human-visual** judgment, so an empty
+database produces a false negative (empty grid vs. broken grid look
+identical to a reviewer). Before this gate can run, the manifest at
+`docs/refactoring/_meta/manifest.json` MUST report
+`phase4.step_5_5.status = complete` with a non-empty
+`smoke_endpoints_verified` list and a populated `login_credentials`
+table.
+
+If Step 5.5 has not run (or was deferred with
+`execute_policy: off`), do NOT skip ahead — route back to
+`test-data-seeder` first. See
+[`phase-4-step-5-5-test-data-seeding.md`](phase-4-step-5-5-test-data-seeding.md)
+for the per-step protocol. The credentials captured by Step 5.5 are
+also the credentials this gate logs in with.
+
 ## Procedure
 
 1. Bring the backend up (`mvn spring-boot:run` or `java -jar target/*.jar`

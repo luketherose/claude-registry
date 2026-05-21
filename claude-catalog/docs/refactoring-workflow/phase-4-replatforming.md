@@ -37,6 +37,9 @@ compatibility but are NOT invoked in the canonical Phase 4 path.
 - `api-designer` — OpenAPI evolution as features are added
 - `software-architect` — ADRs when architecturally significant
   decisions arise during the feature loop
+- `test-data-seeder` — Step 5.5 only; loads a coherent cross-module
+  dataset into the running TO-BE app so the Step 6 UI smoke gate
+  can judge the application visually
 
 ## Inputs
 
@@ -151,6 +154,39 @@ Once core features are implemented, reintroduce and properly configure:
 Re-validate: build + startup + full test suite green after each
 hardening change. Any regression triggers the Step 3 sub-loop.
 
+### Step 5.5 — Test Data Seeding (POST-TESTING MACRO STEP)
+
+The automated test suite is green, but the runtime database after
+migrations is empty. An empty UI is visually indistinguishable from
+a broken UI, so the Step 6 UI smoke gate cannot do its job until a
+small, coherent, cross-module dataset is loaded into the running
+application.
+
+Drives one sub-agent: `test-data-seeder`. Single dispatch, single
+recap, single gate. See
+[`phase-4-step-5-5-test-data-seeding.md`](phase-4-step-5-5-test-data-seeding.md)
+for the full per-step protocol.
+
+The sub-agent:
+
+- detects the project's migration tool from the file system
+  (Liquibase / Flyway / Django fixtures / Rails seeds / EF Core
+  Data Seeding / Knex / TypeORM / Prisma / sqlx / Diesel / goose /
+  Alembic / raw SQL)
+- designs a 5-pivot dataset whose IDs flow consistently through
+  every bounded context, with one row per documented lifecycle
+  state and a varied login-user spread (admin / role-1 / role-2 /
+  edge)
+- writes the seed file(s) using the tool's native idempotent
+  insert pattern, gated to a non-production profile
+- where the app has an in-memory dev/test auth store, extends it
+  so the seeded users can log in
+- restarts the backend and verifies 3+ API smoke endpoints return
+  non-empty payloads
+
+Hard gate: backend restarts, smoke endpoints non-empty, credentials
+captured to the manifest. Without those, Step 6 cannot proceed.
+
 ### Step 6 — Final Validation (DELIVERABLE)
 
 - full test suite execution (backend + frontend + E2E)
@@ -173,7 +209,8 @@ hardening change. Any regression triggers the Step 3 sub-loop.
 | 1 | build green + app starts | Step 2 entry |
 | 2 (per feature) | all 7 sub-steps green | the next feature's start |
 | 3 | convergence (build + tests + startup all green) | resumes the calling step |
-| 5 | build + startup + full test suite green | Step 6 |
+| 5 | build + startup + full test suite green | Step 5.5 |
+| 5.5 | seed loaded, backend restarted, 3+ smoke endpoints non-empty, credentials captured | Step 6 |
 | 6 | full test suite + business-flow validation green AND PO sign-off captured | terminates Phase 4 |
 
 The Workflow Supervisor surfaces a per-feature pass/fail confirmation in
