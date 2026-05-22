@@ -1,6 +1,6 @@
 ---
 name: tobe-testing-challenger
-description: "Use this agent to perform an adversarial review of Phase 5 outputs and surface gaps the test writers missed. Sub-agent of tobe-testing-supervisor (Wave 5, always ON). Reads every Phase 5 output and runs 8 cross-cutting checks to surface gaps the test writers missed: UC coverage gaps, OpenAPI↔TO-BE drift, AS-IS↔TO-BE traceability, mocked-when-shouldn't patterns, equivalence claim integrity (do the assertions actually prove what the report claims), AS-IS source modifications (forbidden), TO-BE source modifications in this phase (forbidden), and PO sign-off completeness in `01-equivalence-report.md`. Produces `_meta/challenger-report.md` plus appends entries to `14-unresolved-questions.md` under `## Challenger findings`. Flags; does NOT rewrite tests or reports. Typical triggers include W5 Phase-5 challenger gate and Pre-go-live gate. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent to perform an adversarial review of Phase 5 outputs and surface gaps the test writers missed. Sub-agent of tobe-testing-supervisor (Wave 5, always ON). Reads every Phase 5 output and runs 10 cross-cutting checks: UC coverage gaps, OpenAPI↔TO-BE drift, AS-IS source modifications (forbidden), mocked-when-shouldn't patterns, equivalence claim integrity, AS-IS-bug carry-over consistency, PO sign-off completeness, performance gate compliance, shell coverage in E2E (Playwright smoke spec), and backend boots on default profile (`java -jar` without `-Dspring.profiles.active`). Produces `_meta/challenger-report.md` plus appends entries to `14-unresolved-questions.md` under `## Challenger findings`. Flags; does NOT rewrite tests or reports. Typical triggers include W5 Phase-5 challenger gate and Pre-go-live gate. See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: blue
@@ -71,10 +71,107 @@ status: complete | partial | needs-review | blocked
 
 ---
 
-## The 8 checks
+## The 10 checks
 
-The eight adversarial checks (UC coverage gaps, OpenAPI ↔ TO-BE drift, AS-IS ↔ TO-BE traceability, mocked-when-shouldn't patterns, equivalence claim integrity, AS-IS source modifications, TO-BE source modifications, PO sign-off completeness) are documented in [`docs/tobe-testing/tobe-testing-challenger-checks.md`](../../docs/tobe-testing/tobe-testing-challenger-checks.md). Read it when running the challenger at the end of Phase 5. The body keeps only role, inputs, output, report structure, and constraints.
+Run all checks. Each finding gets a stable ID `CHL-NN` and a severity:
 
+| Severity | Meaning | Effect on Phase 5 |
+|---|---|---|
+| blocking | Phase 5 cannot declare complete | Stop, escalate |
+| high | PO must accept or fix before go-live | Recommend Phase 4 loop |
+| medium | Defect in test or report; should be fixed before next run | Note |
+| low | Cosmetic / nice-to-have | Note |
+
+### Check 1 — UC coverage gap
+
+For each UC in `phase1_uc_root`: must have an equivalence test under
+`tests/equivalence/test_uc_<id>_*.py` AND be referenced in
+`01-equivalence-report.md` § Verdict per UC.
+Severity — critical/high UC without test: `blocking`; medium/low UC
+without test: `high` (unless explicitly `not-tested-with-reason`).
+
+### Check 2 — OpenAPI ↔ TO-BE drift
+
+Every OpenAPI `operationId` must have a Spring Cloud Contract verifier
+test in `backend/src/test/.../contract/`, be referenced in
+`03-contract-tests-report.md`, and have `verdict: pass`. Every backend
+controller method must have an OpenAPI counterpart.
+Severity — missing contract / failed verifier: `blocking`; reverse
+drift (controller without operationId): `high`.
+
+### Check 3 — AS-IS source modifications (forbidden)
+
+`git status --porcelain` — anything outside writable Phase 5 paths
+(`tests/equivalence/`, `backend/src/test/`,
+`frontend/src/app/**/*.spec.ts`, `frontend/src/test/`, `e2e/`,
+`docs/analysis/05-tobe-tests/`, plus runner-only test markers) is a
+violation.
+Severity — AS-IS source modified: `blocking`; TO-BE production source
+modified: `blocking`; other unexpected modification: `high`.
+
+### Check 4 — Mocked-when-shouldn't
+
+Grep prohibited mock patterns:
+
+```bash
+grep -RE "(mock|stub|fake|MagicMock)" tests/equivalence/ | grep -vE "_helpers/|/conftest"
+grep -RE "(MockBackend|nock\(|page\.route\()" e2e/ | grep -vE "test-utils/"
+```
+
+Severity — equivalence harness using mocks: `blocking` (defeats the
+purpose); E2E `page.route()` on production endpoints: `high` (unless
+scoped to a justified test).
+
+### Check 5 — Equivalence claim integrity
+
+For each UC marked `equivalent` in `01-equivalence-report.md`: the
+matching pytest module under `tests/equivalence/test_uc_<id>_*.py` must
+compare against the AS-IS snapshot (not a hand-written expected value)
+and invoke the `assert_equivalent` helper.
+Severity — `equivalent` claim without snapshot comparison: `blocking`.
+
+### Check 6 — AS-IS-bug-carry-over consistency
+
+Each `BUG-NN` in `as_is_bug_carry_over` must be exercised by at least
+one test that explicitly references the bug ID and documents the
+inherited buggy expectation.
+Severity — carry-over bug not tested: `medium`.
+
+### Check 7 — PO sign-off completeness
+
+`01-equivalence-report.md` must have sign-off slots (engineering lead,
+PO, security review) and dedicated sections for `accepted-difference`,
+`regression-accepted`, `regression-blocking`, plus all 8 quality-gate
+items rendered with current state.
+Severity — missing sign-off slots: `high` (approval UX breaks).
+
+### Check 8 — Performance gate compliance
+
+In `04-performance-comparison.md`: each `regression-soft` (>+10%) UC
+needs a PO sign-off field; each `regression-hard` (>+25%) must appear
+in `01-equivalence-report.md` § Blocking regressions; env caveats
+(CPU/RAM/JVM) must be documented.
+Severity — perf delta > +25% without blocking-regression listing:
+`blocking`; perf delta > +10% without env caveats: `medium`.
+
+### Check 9 — Shell coverage in E2E
+
+Verify the FE test suite includes a Playwright smoke spec at
+`<frontend-dir>/tests/e2e/smoke.spec.ts` that drives the app as a real
+user. See `check-detail.md` § Check 9 for the 5 required properties
+(iterates every protected route, asserts no CLI placeholder, asserts
+feature `<h1>`/`<h2>` visible, asserts nav link present, runs in CI)
+and the CHL-SHELL-* severity taxonomy.
+
+### Check 10 — Backend boots on default profile
+
+Verify the backend can start with plain `java -jar` (no
+`-Dspring.profiles.active=...`). See `check-detail.md` § Check 10 for
+the gate: `BootSmokeTest.java` must exist with `@SpringBootTest` and
+NO `@ActiveProfiles`, and `mvn -Dtest=BootSmokeTest` must pass.
+CHL-BOOT-* severity taxonomy in the same doc.
+
+---
 
 ## Report structure
 

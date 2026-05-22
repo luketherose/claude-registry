@@ -76,8 +76,94 @@ not preemptively.
 
 ## Method
 
-Detailed step-by-step method (10 steps including app shell, core/shared layers, OpenAPI client generation, feature-module scaffolds, Streamlit translation rules) lives in [`docs/refactoring-tobe/frontend-scaffolder-method.md`](../../docs/refactoring-tobe/frontend-scaffolder-method.md). Read it before starting Phase 4 wave 3 (frontend). The body keeps only the role definition, inputs, outputs schema, stop conditions, and constraints.
+### 1. Workspace skeleton
 
+Read `workspace-config.md` (Workspace skeleton section). Produce a clean
+Angular 18+ workspace (or version per ADR-002) with standalone components
+by default. `package.json` honors ADR-002 for Angular version, `rxjs`,
+optional `@ngx-translate/core` if i18n hinted by Phase 1, JWT lib per
+ADR-003, and dev deps (`@angular/cli`, `karma`, `jest`, `playwright`,
+`@openapitools/openapi-generator-cli`).
+
+### 2. OpenAPI typed client
+
+Read `workspace-config.md` (OpenAPI typed client section). Default to
+**Strategy A** — generate at build time via
+`@openapitools/openapi-generator-cli` with `prebuild` hook. Use Strategy
+B (hand-written models) only if the team rejects code generation;
+document drift risk. Record the choice in `<frontend-dir>/README.md`.
+
+### 3. Core layer
+
+Read `code-skeletons.md` (Core layer section). Emit interceptors (auth,
+error, correlation-id), guards (auth, role), and core services (auth,
+notification, error-handler). Each interceptor/service header comment
+references the ADR it implements and the cross-cutting concern.
+
+### 4. Shared layer
+
+Read `code-skeletons.md` (Shared layer section). Emit shared components
+(loader, error-display, data-table, form-error), pipes, and the
+`models/` directory (hand-written under Strategy B).
+
+### 5. Feature modules (one per BC)
+
+Read `code-skeletons.md` (Feature modules + Screens to components +
+user-flows → routing sections). For each BC in
+`.refactoring-kb/00-decomposition/bounded-contexts.md`, scaffold a feature
+folder with `<feature>.routes.ts` (lazy entry), `pages/` (one component
+per Phase 1 screen S-NN), and `services/<feature>.service.ts`
+(orchestration over the generated `*Api`). Component header comments
+reference S-NN, UC-NN(s), and the AS-IS Streamlit source ref. In
+`scaffold-todo` mode (default), templates render the happy path; complex
+interactions carry `TODO(BC-NN, UC-NN)` markers.
+
+### 6. State management
+
+ADR-002 should specify: signals (default Angular 17+) or NgRx.
+
+Default scaffolder choice: **signals + service-as-store**. Keep it
+simple. Migrate to NgRx only when complexity demands (rare for typical
+enterprise apps).
+
+If ADR-002 specifies NgRx: scaffold the store skeleton (one feature
+slice per BC: actions, reducer, selectors, effects). Otherwise: keep
+state in feature services with signals.
+
+### 7. Streamlit-specific translations (if AS-IS is Streamlit)
+
+If Phase 1 identifies Streamlit pages, read `streamlit-translations.md`
+and apply the canonical AS-IS↔TO-BE mapping (session_state → signals,
+`st.cache_data` → `shareReplay(1)`, `st.rerun()` → reactive CD,
+`st.file_uploader` → multipart, `st.dataframe` → `DataTableComponent`,
+charts → ADR-002 lib, widget callbacks → template events, top-level
+script → `ngOnInit`). Each component replacing a Streamlit page records
+the AS-IS source ref. Skip this step entirely when AS-IS is not
+Streamlit.
+
+### 8. main.ts and app.config.ts
+
+Read `app-shell.md` (main.ts + app.config.ts sections). Emit
+`bootstrapApplication(AppComponent, appConfig)` and the `appConfig`
+provider bundle (router, HttpClient with the three interceptors, zone
+change detection with `eventCoalescing: true`).
+
+### 9. README.md
+
+Read `app-shell.md` (README.md section). Emit
+`<frontend-dir>/README.md` with build instructions, project layout
+overview, BC → feature module mapping, environment configuration, and
+links to `docs/refactoring/4.6-api/openapi.yaml` and ADRs.
+
+### 10. Self-check gate (HARD)
+
+Before reporting `status: ok`, run the 6-check gate in `app-shell.md`
+§ Self-check — placeholder strings, app.component.html shell delegation,
+layout component existence with routerLinks, every protected route
+referenced, interceptors actually written, no per-service Authorization
+header. Report each result; do NOT claim `status: ok` if any failed.
+
+---
 
 ## Outputs
 
@@ -95,37 +181,11 @@ Detailed step-by-step method (10 steps including app shell, core/shared layers, 
 
 ### Reporting (text response)
 
-```markdown
-## Files written
-<list (counts only — likely many files)>
-
-## Stats
-- Feature modules:           <N> (one per BC)
-- Pages / components:        <N>
-- Shared components:         <N>
-- Core interceptors:         3 (auth, error, correlation-id)
-- Core guards:               2 (auth, role)
-- Routes:                    <N>
-- OpenAPI client:            generated (typescript-angular) | hand-written
-
-## Streamlit translations applied
-- session_state → signals: <N> instances
-- st.cache_data → shareReplay: <N> instances
-- file_uploader → multipart: <N> instances
-
-## Build readiness
-- ng build expected to: pass | needs OpenAPI client generated first
-  (run `npm run openapi:generate` before first build)
-
-## Confidence
-high | medium | low
-
-## Duration (wall-clock)
-<seconds>
-
-## Open questions
-- ...
-```
+Use the report shape in `workspace-config.md` § Reporting: `## Files
+written`, `## Stats` (modules / pages / shared / interceptors / guards /
+routes / OpenAPI client strategy), `## Streamlit translations applied`
+when applicable, `## Build readiness`, `## Confidence`, `## Duration`,
+`## Open questions`.
 
 ---
 
