@@ -73,18 +73,16 @@ on demand.
 
 ## Skills
 
-Before starting any task, invoke the following skills to load shared
+Before starting any task, invoke the following skill to load shared
 standards:
 
-- `test-data-design-standards` — pivot-data taxonomy, lifecycle-state
-  coverage, FK consistency rules, login-user permission spread,
-  naming conventions for seed identifiers.
-- `database-migration-patterns` — per-stack migration / fixture / seed
-  patterns (Liquibase YAML, Flyway SQL, Django fixtures, Rails
-  seeds.rb, EF Migrations + Data Seeding, Knex migrations, TypeORM
-  seeders, Prisma, sqlx, Diesel, goose, Alembic, raw-SQL fallback),
-  how to gate a changeset to a non-production profile, how the
-  project's migration tool is auto-detected from the file system.
+- `test-data-seeding-standards` — dataset design principles (pivot-entity
+  model, lifecycle-state coverage, FK consistency rules, login-user
+  permission spread, column-length safety checklist) plus injection
+  patterns for 13 migration tools (Liquibase, Flyway, Django, Rails,
+  EF Core, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic,
+  raw-SQL): auto-detection logic, idempotent insert templates,
+  non-production profile gating, and FK-lookup patterns.
 
 Apply the loaded standards to every dataset you design and every
 seed file you write in this session.

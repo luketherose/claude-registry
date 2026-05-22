@@ -3404,8 +3404,7 @@
       "description": "Phase 4 Step 5.5 sub-agent. Designs and loads a coherent cross-module test dataset into a freshly-built TO-BE application so the Step 6 UI smoke gate can judge the app visually. Auto-detects the project's migration tool (Liquibase, Flyway, Django fixtures, Rails seeds, EF Migrations, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic, raw SQL). Produces seed files gated to a non-production profile, restarts the backend, verifies via API smoke calls. Strictly generic — no project-specific values.",
       "file": "beta/refactoring-tobe/test-data-seeder.md",
       "dependencies": [
-        "test-data-design-standards",
-        "database-migration-patterns"
+        "test-data-seeding-standards"
       ],
       "tools": [
         "Read",
@@ -3432,57 +3431,33 @@
       "changelog": "Initial release — Phase 4 Step 5.5 post-testing data seeding for the UI smoke gate"
     },
     {
-      "name": "test-data-design-standards",
+      "name": "test-data-seeding-standards",
       "version": "1.0.0",
       "type": "skill",
       "tier": "skill",
       "status": "active",
-      "description": "Use to retrieve authoritative principles for designing a coherent demo-ready test dataset: pivot-entity model, lifecycle-state coverage rule, FK consistency rules, login-user permission spread, edge / boundary realism, dataset-plan template, and the column-length safety checklist that prevents the most common seed-failure class.",
-      "file": "skills/testing/test-data-design-standards.md",
+      "description": "Use to retrieve dataset design principles (pivot-entity model, lifecycle-state coverage rule, FK consistency rules, login-user permission spread, column-length safety checklist) AND the tool-specific injection patterns (auto-detect signals, idempotent insert templates, non-production profile gating, FK-lookup patterns) for 13 migration tools: Liquibase, Flyway, Django, Rails, EF Core, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic, and raw SQL.",
+      "file": "skills/testing/test-data-seeding-standards.md",
       "dependencies": [],
       "tools": [
         "Read"
       ],
       "model": "haiku",
+      "color": "cyan",
       "tags": [
         "testing",
         "test-data",
         "fixtures",
         "seed",
-        "design-standards",
-        "skill"
-      ],
-      "published": "2026-05-21",
-      "changelog": "Initial release — extracted from test-data-seeder for cross-agent reuse"
-    },
-    {
-      "name": "database-migration-patterns",
-      "version": "1.0.0",
-      "type": "skill",
-      "tier": "skill",
-      "status": "active",
-      "description": "Use to retrieve per-stack migration / fixture / seed patterns: auto-detect signals for Liquibase, Flyway, Django, Rails, EF Core, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic, and raw SQL; native idempotent insert templates; non-production profile gating mechanisms; FK-lookup patterns for resolving auto-generated parent IDs at insertion time.",
-      "file": "skills/database/database-migration-patterns.md",
-      "dependencies": [],
-      "tools": [
-        "Read"
-      ],
-      "model": "haiku",
-      "tags": [
-        "database",
         "migration",
         "liquibase",
         "flyway",
         "django",
         "rails",
-        "ef-core",
-        "knex",
-        "typeorm",
-        "prisma",
         "skill"
       ],
-      "published": "2026-05-21",
-      "changelog": "Initial release — extracted from test-data-seeder for cross-agent reuse"
+      "published": "2026-05-22",
+      "changelog": "Initial release — merges test-data-design-standards and database-migration-patterns into a single co-invocable skill"
     }
   ]
 }
