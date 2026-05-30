@@ -3249,7 +3249,7 @@
     },
     {
       "name": "tobe-testing-supervisor",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -3283,7 +3283,7 @@
         "angular",
         "playwright"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-30",
       "changelog": "Initial beta release: Phase 5 supervisor with 8 sub-agents in 5 waves; adaptive execute policy; failure policy with TBUG registry; final go-live gate with PO sign-off; HITL checkpoint after Wave 1; resume modes (skip/re-run/revise)."
     },
     {
