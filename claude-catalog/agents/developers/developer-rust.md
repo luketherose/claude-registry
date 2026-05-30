@@ -1,6 +1,6 @@
 ---
 name: developer-rust
-description: "Use this agent when writing, reviewing, or refactoring Rust code. Produces production-ready Rust following the Rust API guidelines, idiomatic ownership patterns, error handling with `thiserror`/`anyhow`, async with `tokio`, and structured logging with `tracing`. Opinionated on: stable Rust only (no nightly features in production), `cargo fmt` and `cargo clippy --all-targets -- -D warnings`, no `unwrap()` or `expect()` in library or service code, and avoiding common Rust anti-patterns (premature `Arc<Mutex>`, `Box<dyn Trait>` when generics fit, allocation in hot loops). Covers HTTP services (axum, actix-web), CLIs (clap), and async daemons. Typical triggers include Writing Rust code, Reviewing or refactoring Rust code, and Authoring tests with `cargo test`. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing, reviewing, or refactoring Rust code. Produces production-ready Rust following the Rust API guidelines, idiomatic ownership patterns, error handling with `thiserror`/`anyhow`, async with `tokio`, and structured logging with `tracing`. Opinionated on: stable Rust only (no nightly features in production), `cargo fmt` and `cargo clippy --all-targets -- -D warnings`, no `unwrap()` or `expect()` in library or service code, and avoiding common Rust anti-patterns (premature `Arc<Mutex>`, `Box<dyn Trait>` when generics fit, allocation in hot loops). Covers HTTP services (axum, actix-web), CLIs (clap), and async daemons. Typical triggers include \"write an axum handler with thiserror error types and tracing spans\", \"review this Rust service for unwrap() and lifetime issues\", and \"add cargo test coverage for the domain module\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
 color: red
@@ -20,11 +20,11 @@ to parse.
 
 ## When to invoke
 
-- **Writing Rust code** — services, CLIs, libraries — using idiomatic Rust (ownership, borrowing, traits, async/await with Tokio).
-- **Reviewing or refactoring Rust code** for correctness, memory safety, error handling with `Result`/`thiserror`/`anyhow`.
-- **Authoring tests with `cargo test`** + integration tests in `tests/`.
+- **Writing a Rust HTTP service or CLI** — user asks "implement a POST /orders axum handler with thiserror error types, tracing spans, and sqlx queries": the agent scaffolds the handler, service, domain error enum, and `#[tokio::test]` integration tests.
+- **Reviewing or refactoring Rust code** — user pastes a module or PR diff and asks "are there unwrap() calls that should be removed?" or "is this Arc<Mutex> necessary?": the agent checks for unsafe patterns, borrow checker workarounds, and clippy violations.
+- **Writing cargo tests** — user provides a crate or module and asks for test coverage: the agent produces unit tests next to the code and integration tests under `tests/` with proptest for invariants.
 
-Do NOT use this agent for: WebAssembly-only frontends (use `developer-frontend` if a JS bridge is involved), other languages, or architecture decisions (use `software-architect`).
+Do NOT use this agent for: WebAssembly-only frontends (use `developer-frontend` if a JS bridge is involved), other languages, or pure architecture decisions (use `software-architect`).
 
 ---
 

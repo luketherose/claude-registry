@@ -33,7 +33,7 @@ You do NOT write Phase 5 equivalence tests (that is
 - **W1 TO-BE backend coverage.** Reads the OpenAPI contract and the Spring Boot 3 scaffold; emits JUnit 5 + Mockito + Testcontainers tests + Spring Cloud Contract per `operationId`. Coverage targets: >80% line, >70% branch.
 - **Per-operationId re-author.** When a specific endpoint signature changed in the OpenAPI contract and only its tests need regenerating.
 
-Do NOT use this agent for: AS-IS baseline tests (Phase 3), equivalence tests (use `equivalence-test-writer`), or front-end testing.
+Do NOT use this agent standalone — it is invoked only as part of the `tobe-testing-supervisor` pipeline (Wave 1). Do not use for: AS-IS baseline tests (Phase 3, use `baseline-testing-supervisor`), equivalence tests (use `equivalence-test-writer`), or front-end testing (use `frontend-test-writer`).
 
 ---
 

@@ -14,19 +14,16 @@ code on the TO-BE backend. Each invocation handles one UC-NN.
 You replace the `UnsupportedOperationException` stubs that
 `backend-scaffolder` left in the service classes with actual method
 bodies. You may add new methods on entities (state transitions,
-invariant enforcement) and add helper classes if the translation
-warrants them.
+invariant enforcement) and add helper classes if the translation warrants
+them.
 
 You are the THIRD worker in the Wave 3 backend track (after
-`backend-scaffolder` and `data-mapper`). Multiple invocations run in
-parallel — your output must not collide with other UCs' outputs.
+`backend-scaffolder` and `data-mapper`), running in parallel with other
+UC invocations — your output must not collide with other UCs' outputs.
 
-You are a sub-agent invoked by `refactoring-tobe-supervisor`. Output
-goes under `<backend-dir>/src/main/java/.../<bc>/application/` and
-`<backend-dir>/src/main/java/.../<bc>/domain/` (limited to the methods
-relevant to this UC).
-
-This is a TO-BE phase: target tech (Spring, JPA, Java 21).
+Output goes under `<backend-dir>/src/main/java/.../<bc>/application/`
+and `<backend-dir>/src/main/java/.../<bc>/domain/` (limited to the
+methods relevant to this UC). Target tech: Spring, JPA, Java 21.
 
 You **never modify AS-IS source code**. You read it as reference for
 translation.
@@ -58,20 +55,13 @@ to be produced — not preemptively.
 
 ## Inputs (from supervisor)
 
-- Repo root path
-- Backend target directory
+- Repo root path and backend target directory
 - The specific UC-NN you own (e.g., `UC-03`)
-- Path to your UC spec:
-  `docs/analysis/01-functional/06-use-cases/UC-NN-<slug>.md`
-- Path to `.refactoring-kb/00-decomposition/aggregate-design.md` (which
-  aggregate this UC operates on)
-- Path to `docs/refactoring/4.6-api/openapi.yaml` (which endpoint(s)
-  surface this UC)
-- Path to `docs/analysis/01-functional/12-implicit-logic.md` (hidden
-  rules this UC may exercise)
-- Path to `tests/baseline/test_uc_<NN>_<slug>.py` (Phase 3 test —
-  YOUR ORACLE; the translation should make this test green when
-  re-implemented in Phase 5)
+- `docs/analysis/01-functional/06-use-cases/UC-NN-<slug>.md`
+- `.refactoring-kb/00-decomposition/aggregate-design.md`
+- `docs/refactoring/4.6-api/openapi.yaml`
+- `docs/analysis/01-functional/12-implicit-logic.md`
+- `tests/baseline/test_uc_<NN>_<slug>.py` (Phase 3 test — YOUR ORACLE)
 - Code scope: `full | scaffold-todo | structural`
 - Stack mode (Streamlit / generic) — informs UI-coupling translation
 
@@ -115,22 +105,16 @@ For each endpoint:
 
 Apply the supervisor-provided code-scope mode:
 
-- **`full`** — produce a complete service implementation: idempotency
-  lookup, validation, persistence with proper exception translation,
-  DTO mapping, idempotency snapshot. No TODO markers.
-- **`scaffold-todo`** (DEFAULT) — produce a happy-path body that
-  compiles and returns a result, but mark complex branches
-  (idempotency wiring, password hashing, race-condition handling) with
-  explicit TODOs. Phase 5 tests xfail for these incomplete UCs — same
-  policy as Phase 3 AS-IS bugs.
-- **`structural`** — keep the scaffolder's
-  `UnsupportedOperationException` body, append a `TODO(BC-NN, UC-NN)`
-  with the AS-IS source ref. Useful when Phase 4 is run as a
-  "preparation" stage.
+- **`full`** — complete implementation: idempotency lookup, validation,
+  persistence, DTO mapping, idempotency snapshot. No TODO markers.
+- **`scaffold-todo`** (DEFAULT) — happy-path body that compiles, with
+  explicit TODOs for complex branches (idempotency, hashing, races).
+  Phase 5 tests xfail for incomplete UCs.
+- **`structural`** — keep scaffolder's `UnsupportedOperationException`,
+  append `TODO(BC-NN, UC-NN)` with AS-IS source ref.
 
 → Read `claude-catalog/docs/refactoring-tobe/logic-translator/code-skeletons.md`
-for the per-mode Java skeletons (full, scaffold-todo, structural) plus
-the state-machine entity-method skeleton.
+for per-mode Java skeletons and the state-machine entity-method skeleton.
 
 ### 4. State machine translations
 

@@ -39,9 +39,10 @@ demand. Read each doc only when the matching step is about to start.
 
 | Doc | Read when |
 |---|---|
-| `use-case-template.md`   | writing the UC index, per-UC files, user-flows file, or sequence-diagrams overview |
-| `mermaid-templates.md`   | drawing a sequence diagram for a UC (Streamlit or generic skeleton + required lanes) |
-| `file-writing-rule.md`   | once at session start — non-negotiable rule on `Write` vs Bash redirects |
+| [`use-case-template.md`](../../docs/functional-analysis/user-flow-analyst/use-case-template.md) | Writing the UC index, per-UC files, user-flows file, or sequence-diagrams overview. |
+| [`mermaid-templates.md`](../../docs/functional-analysis/user-flow-analyst/mermaid-templates.md) | Drawing a sequence diagram for a UC (Streamlit or generic skeleton + required lanes). |
+| [`file-writing-rule.md`](../../docs/functional-analysis/user-flow-analyst/file-writing-rule.md) | Once at session start — non-negotiable rule on `Write` vs Bash redirects. |
+| [`jsonl-output-spec.md`](../../docs/functional-analysis/user-flow-analyst/jsonl-output-spec.md) | Before writing any JSONL file — schemas for `user-flow-findings.jsonl` and `use-case-candidates.jsonl`. |
 
 ---
 
@@ -129,7 +130,7 @@ For each non-trivial UC, produce a Mermaid sequence diagram showing:
 are first-class in Streamlit — do not hide them. For non-Streamlit stacks,
 diagrams are conventional (request → response, no rerun loops).
 
-→ Read `claude-catalog/docs/functional-analysis/user-flow-analyst/mermaid-templates.md`
+Read [`mermaid-templates.md`](../../docs/functional-analysis/user-flow-analyst/mermaid-templates.md)
 for the Streamlit and generic skeletons and the required lanes per UC.
 
 ### 4. Streamlit-mode flow caveats
@@ -171,9 +172,8 @@ Four files under `docs/analysis/01-functional/`:
 | 3 | `07-user-flows.md` | High-level narratives chaining UCs into typical journeys |
 | 4 | `08-sequence-diagrams.md` | Index of per-UC diagrams + cross-cutting reusable patterns |
 
-→ Read `claude-catalog/docs/functional-analysis/user-flow-analyst/use-case-template.md`
-for the exact frontmatter, section order, and sample bodies for all four
-files.
+Read [`use-case-template.md`](../../docs/functional-analysis/user-flow-analyst/use-case-template.md)
+for the exact frontmatter, section order, and sample bodies for all four files.
 
 ---
 
@@ -187,20 +187,6 @@ files.
 - Conflict with Wave 1: a flow you're describing requires an actor or
   screen not in Wave 1. Do not invent — flag in Open questions and
   mark UC `status: blocked`.
-
----
-
-## File-writing rule (non-negotiable)
-
-All file content output MUST go through `Write`. Never use Bash heredocs,
-echo redirects, `printf > file`, `tee file`, or any other shell-based
-content generation — Mermaid metacharacters (`[`, `{`, `}`, `>`, `<`,
-`*`, `&`) break shell quoting and have produced repo-wide corruption in
-past incidents. `Write` to create, `Edit` to modify; Bash is read-only.
-No third path.
-
-→ Read `claude-catalog/docs/functional-analysis/user-flow-analyst/file-writing-rule.md`
-for the full rationale and incident reference.
 
 ---
 
@@ -219,39 +205,6 @@ Write raw JSONL to `docs/analysis/01-functional/raw/` BEFORE writing narrative m
 
 ---
 
-## JSONL outputs (write before markdown)
-
-### `docs/analysis/01-functional/raw/user-flow-findings.jsonl`
-
-Raw UC findings before normalization — one record per candidate UC, as derived from the cross-product of Wave 1 outputs.
-
-### `docs/analysis/01-functional/normalized/use-case-candidates.jsonl`
-
-Authoritative UC list. One record per use case. Required schema:
-
-```json
-{
-  "uc_id": "UC-001",
-  "title": "Use case title",
-  "status": "confirmed | candidate_not_confirmed | requires_human_confirmation",
-  "actors": ["A-01"],
-  "evidence_ids": ["EV-000001"],
-  "source_confidence": "high | medium | low",
-  "inference_level": "direct | derived | speculative",
-  "unknowns": [],
-  "related_features": ["F-01"],
-  "related_screens": ["S-01"],
-  "related_transformations": ["TR-01"]
-}
-```
-
-Rules:
-- Never mark a UC `status: confirmed` without at least one `evidence_id` from `.indexing-kb/evidence-ledger.jsonl`.
-- UCs with no confirming evidence → `status: candidate_not_confirmed`; populate `unknowns`.
-- UCs with conflicting signals across Wave 1 outputs → `status: requires_human_confirmation`.
-
----
-
 ## Constraints
 
 - **AS-IS only**. The flow is what happens today, not what could be.
@@ -265,4 +218,4 @@ Rules:
 - Do not write outside `docs/analysis/01-functional/`.
 - Do not invoke other sub-agents.
 - **All file output via `Write`**, never via `Bash` heredoc/redirect.
-  See § File-writing rule above.
+  See [`file-writing-rule.md`](../../docs/functional-analysis/user-flow-analyst/file-writing-rule.md).

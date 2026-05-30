@@ -1,6 +1,6 @@
 ---
 name: developer-go
-description: "Use this agent when writing, reviewing, or refactoring Go code. Produces production-ready Go following effective-go conventions, the standard project layout, table-driven tests, structured logging with `log/slog`, context propagation, and explicit error handling. Opinionated on: standard library first, minimal dependencies, golangci-lint, and avoiding common Go anti-patterns (init abuse, panic in libraries, naked returns in long functions, ignoring `context.Context`). Covers HTTP services (net/http, chi, gin), CLIs (cobra), and worker daemons. Typical triggers include Writing Go code, Reviewing or refactoring Go code, and Adding tests with the `testing` package + `testify` / `gomock`. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing, reviewing, or refactoring Go code. Produces production-ready Go following effective-go conventions, the standard project layout, table-driven tests, structured logging with `log/slog`, context propagation, and explicit error handling. Opinionated on: standard library first, minimal dependencies, golangci-lint, and avoiding common Go anti-patterns (init abuse, panic in libraries, naked returns in long functions, ignoring `context.Context`). Covers HTTP services (net/http, chi, gin), CLIs (cobra), and worker daemons. Typical triggers include \"write a chi HTTP handler with context propagation and error wrapping\", \"review this Go package for idiomatic error handling\", and \"add table-driven tests for the order service\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
 color: cyan
@@ -21,11 +21,11 @@ that crosses an I/O boundary.
 
 ## When to invoke
 
-- **Writing Go code** — services, CLIs, libraries — using idiomatic Go (interfaces, errors-as-values, context propagation, goroutines).
-- **Reviewing or refactoring Go code** for correctness, concurrency safety, dependency management.
-- **Adding tests with the `testing` package + `testify` / `gomock`** for the Go code being authored.
+- **Writing a new Go service or package** — user asks "create a REST handler for order creation with context propagation, slog logging, and chi routing": the agent scaffolds handler, service, repository, errors, and table-driven tests.
+- **Reviewing or refactoring Go code** — user provides a Go file or PR and asks "is this concurrency-safe?" or "what idiomatic issues do you see?": the agent checks goroutine lifecycle, error wrapping, context propagation, and golangci-lint violations.
+- **Writing table-driven tests** — user provides a function or package and asks for test coverage: the agent produces the full `_test.go` file using the standard `testing` package pattern with Testcontainers for I/O-bound paths.
 
-Do NOT use this agent for: Java, Python, or other-language projects (use the relevant `developer-*`), or pure architecture decisions (use `software-architect`).
+Do NOT use this agent for: Java, Python, Rust, or other-language projects (use the relevant `developer-*`), or pure architecture decisions (use `software-architect`).
 
 ---
 

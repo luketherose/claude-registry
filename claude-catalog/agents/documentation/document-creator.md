@@ -1,6 +1,6 @@
 ---
 name: document-creator
-description: "Use this agent when you need to create an Accenture-branded technical document or PDF from project documents, estimation files, or source materials. Produces structured PDF documents (via HTML → Chrome headless) or Word documents (.docx) covering: executive summary, problem statement, solution design, architecture, component inventory, dependencies, timeline, risks. Handles both business documents (executive, concise) and technical documents (architecture patterns, ADRs, API contracts, detailed specs). Call with source files or a directory, output path, and optional --type pdf|docx. Does NOT modify source files — read-only access to inputs. Typical triggers include Creating an Accenture-branded PDF or DOCX deliverable, Converting estimation files or project documents, and Both business documents. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when you need to create an Accenture-branded technical document or PDF from project documents, estimation files, or source materials. Produces structured PDF documents (via HTML → Chrome headless) or Word documents (.docx) covering: executive summary, problem statement, solution design, architecture, component inventory, dependencies, timeline, risks. Handles both business documents (executive, concise) and technical documents (architecture patterns, ADRs, API contracts, detailed specs). Call with source files or a directory, output path, and optional --type pdf|docx. Does NOT modify source files — read-only access to inputs. Typical triggers include \"generate an Accenture PDF from these estimation files\", \"produce a branded Word document for the client\", and \"turn this architecture proposal into a deliverable\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -21,11 +21,11 @@ Your job is to read, synthesize, and write.
 
 ## When to invoke
 
-- **Creating an Accenture-branded PDF or DOCX deliverable** — executive summary, problem statement, solution design, architecture, component inventory, dependencies, timeline, risks. Output is read-only on inputs.
-- **Converting estimation files or project documents** into a polished branded document.
-- **Both business documents** (executive, concise) **and technical documents** (architecture patterns, ADRs, API contracts, detailed specs).
+- **Client or steering-committee deliverable** — the user says "generate a branded PDF for the client" or "produce a Word document from these estimation files". The output is a polished Accenture-branded PDF or DOCX ready for distribution.
+- **Architecture or proposal document** — given an architecture proposal, ADR set, or technical spec, produce a structured branded document (executive summary, solution design, component inventory, risks, timeline).
+- **Business vs technical audiences** — adapts depth automatically: business audience gets an executive-concise doc; technical audience gets full architecture patterns, API contracts, and ADR-style decision sections.
 
-Do NOT use this agent for: PowerPoint output (use `presentation-creator`), enterprise LaTeX deliverables (use the `functional-document-generator` skill), or in-place edits of source files (the agent is read-only on inputs).
+Do NOT use this agent for: PowerPoint decks (use `presentation-creator`), plain in-repo Markdown docs (use `documentation-writer`), enterprise LaTeX deliverables (use the `functional-document-generator` skill), or in-place edits of source files (the agent is read-only on inputs).
 
 ---
 

@@ -1,0 +1,25 @@
+[
+  {
+    "id": "eval-001",
+    "prompt": "Index the codebase in the current directory",
+    "expectations": [
+      "Reads large-file-policy.md before dispatching codebase-mapper",
+      "Dispatches codebase-mapper first (Wave 1) before any other sub-agent",
+      "Writes or updates .indexing-kb/_meta/manifest.json after each wave",
+      "Dispatches indexing-auditor after synthesizer (Wave 4a)",
+      "Asks user before overwriting an existing .indexing-kb/ with status: complete",
+      "Reports PASS/PASS_WITH_GAPS/FAIL verdict from indexing-auditor to user"
+    ],
+    "timeout": 600
+  },
+  {
+    "id": "eval-002",
+    "prompt": "Re-index the codebase — the source has changed since last time",
+    "expectations": [
+      "Detects existing .indexing-kb/ and asks user: skip / re-run / revise",
+      "Does not auto-overwrite without user confirmation",
+      "After user confirms re-run, dispatches full Wave 1–4a pipeline"
+    ],
+    "timeout": 300
+  }
+]

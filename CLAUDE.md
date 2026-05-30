@@ -22,6 +22,9 @@ python3 .github/scripts/validate_marketplace.py
 
 # Install all capabilities globally (updates ~/.claude/agents/)
 ./claude-catalog/scripts/setup-capabilities.sh --global
+
+# Backfill BMAD DAG fields into catalog.json (run after adding new workflow agents)
+python3 bmad/scripts/backfill-dag.py
 ```
 
 ---
@@ -39,6 +42,8 @@ In practice:
 | Changed agent behaviour | `CHANGELOG.md` ([Unreleased] with version bump), `catalog.json` (version) |
 | Changed script (`scripts/`) | Header comment in the script (usage), `guida-operativa.pdf` if UX changes |
 | Changed governance or process | Corresponding `.md` file in `claude-catalog/` |
+| New workflow use case | `bmad/workflows.json` (new entry), `catalog.json` (bmad DAG fields), `claude-catalog/evals/<supervisor>/triggers.json` (new eval), `CHANGELOG.md` |
+| Changed supervisor body (extraction) | `claude-catalog/docs/<phase>/supervisor-protocol.md`, `legacy-body-baseline.json` (remove entry once ≤ 10k) |
 | Any significant change | `guida-operativa.pdf` and `pitch-claude-registry.pptx` if content becomes stale |
 
 **Rule for `CHANGELOG.md`**: every PR must have an entry under `[Unreleased]` before it is opened. If the entry is missing, add it before pushing.
@@ -104,7 +109,17 @@ PRs go through two gates in sequence — the second only starts if the first is 
 ## Repository structure
 
 - `claude-catalog/` — development source (agents, skills, governance documents)
+  - `docs/<phase>/` — reference docs loaded on demand by supervisors (progressive disclosure)
+  - `docs/<phase>/supervisor-protocol.md` — decision rules, escalation triggers, constraints per phase
+  - `evals/<agent-name>/triggers.json` — BMAD trigger eval suite per agent
+  - `evals/<agent-name>/evals.json` — BMAD artifact eval suite per agent
+  - `templates/new-use-case/` — scaffold for adding a new workflow use case
 - `claude-marketplace/` — distribution (approved files only; do not modify directly)
+- `bmad/` — BMAD methodology layer
+  - `workflows.json` — machine-readable registry of available workflow use cases
+  - `design/mapping.md` — canonical BMAD→Anthropic pattern mapping decisions
+  - `design/workflow-dag-draft.json` — dependency graph for all pipeline agents
+  - `scripts/backfill-dag.py` — populates `bmad` fields in `catalog.json` from the DAG
 - `guida-operativa.pdf` — Accenture-branded operational guide (regenerate with `document-creator`)
 - `pitch-claude-registry.pptx` — Accenture-branded pitch deck (regenerate with `presentation-creator`)
 
@@ -112,7 +127,7 @@ PRs go through two gates in sequence — the second only starts if the first is 
 
 ## Capabilities available in this project
 
-The catalog currently holds **76 agents** and **41 skills**. The ones most useful while working on the registry itself:
+The catalog currently holds **87 agents** and **42 skills**. The ones most useful while working on the registry itself:
 
 - `registry-auditor` — audits agents/skills/CLAUDE.md against Anthropic's official rubrics; produces a structured report with grade, registry-wide patterns, top files to rewrite, and quick wins. Read-only.
 - `code-reviewer` — for PR review on the registry source itself
@@ -156,3 +171,65 @@ The audit ↔ remediation loop is: run `registry-auditor` → read the top-10 li
 - **Catalog directory layout**: agents and skills are grouped into thematic subdirectories (e.g., `agents/indexing/`, `agents/orchestration/`, `agents/quality/`, `skills/frontend/angular/`, `skills/orchestrators/`, `skills/documentation/`). Single-file root entries are tolerated for transitional states but should be moved into a topic folder when the topic gains a second sibling. Validation scans recursively (`rglob`).
 - **Marketplace directory layout**: mirrors the catalog grouping. Files live at `stable/<topic>/<name>.md`, `beta/<topic>/<name>.md`, or `skills/<topic>[/<sub>]/<name>.md`. The `file` field in `catalog.json` is the single source of truth — both the publish script and `setup-capabilities.sh` read it directly. Both flat paths (`<tier>/<name>.md`, `skills/<name>.md`) and nested paths are accepted by the validator, but new capabilities should always be published into a topic folder.
 - **Marketplace topics** (used as folder names): for agents — `analysis`, `api`, `architecture`, `baseline-testing`, `developers`, `documentation`, `functional-analysis`, `indexing`, `orchestration`, `quality`, `refactoring-tobe`, `technical-analysis`, `tobe-testing`. For skills — `analysis`, `api`, `backend`, `branding`, `database`, `documentation`, `frontend` (with framework subfolders `angular/`, `react/`, `qwik/`, `vue/`, `vanilla/`), `orchestrators`, `python`, `refactoring`, `testing`, `utils`. Add a new topic folder when a third capability of the same kind appears; until then place the capability in the closest existing folder rather than spawning a one-off topic.
+
+---
+
+## BMAD patterns
+
+The registry follows [BMAD methodology](https://bmad-builder-docs.bmad-method.org) patterns
+adapted to the Anthropic single-file capability format. Full mapping in
+`bmad/design/mapping.md`. Summary of key conventions:
+
+### Progressive disclosure (supervisor bodies ≤ 10k chars)
+
+Supervisor bodies must contain ONLY:
+- `## Role` — one paragraph
+- `## When to invoke` — 3–4 bullets + `Do NOT use` line
+- `## Reference docs` table with `Read when` conditions
+
+All operational content (decision rules, escalation triggers, constraints,
+sub-agent roster, output format) lives in reference docs under
+`claude-catalog/docs/<phase>/`:
+- `supervisor-protocol.md` — decision rules + escalation + constraints
+- `phase-plan.md` — bootstrap dialog + per-wave dispatch + HITL + closing report
+- `sub-agents.md` — sub-agent roster, wave assignments, output targets
+- `dispatch-prompt-template.md` — Agent tool dispatch boilerplate
+
+When reducing a supervisor body below 10k, **remove its entry from**
+`legacy-body-baseline.json` immediately.
+
+### Document-as-cache (pipeline state)
+
+Every phase writes `_meta/pipeline-state.yaml` in its output directory.
+Supervisors read this on bootstrap to detect resume state. Schema in
+`bmad/design/mapping.md` § "Document-as-cache".
+
+### Workflow registry
+
+`bmad/workflows.json` is the authoritative registry of available workflow use
+cases. When adding a new use case, add an entry here before writing any agents.
+
+### DAG fields in catalog.json
+
+Every pipeline agent entry in `catalog.json` carries a `bmad` block:
+```json
+"bmad": {
+  "workflow": "application-replatforming",
+  "role": "worker",
+  "phase": "phase-1",
+  "wave": "W2",
+  "preceded_by": ["actor-feature-mapper", "ui-surface-analyst"],
+  "followed_by": ["functional-analysis-challenger"]
+}
+```
+Run `python3 bmad/scripts/backfill-dag.py` after updating the DAG draft.
+
+### Evals
+
+Every supervisor and key standalone agent has:
+- `claude-catalog/evals/<name>/triggers.json` — 2+ positive + 2+ negative trigger tests
+- `claude-catalog/evals/<name>/evals.json` — end-to-end artifact expectations (for supervisors)
+
+### Adding a new use case
+
+Follow the 8-step guide in `claude-catalog/templates/new-use-case/README.md`.

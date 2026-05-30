@@ -1,0 +1,22 @@
+[
+  {
+    "query": "Review this pull request for correctness and security issues",
+    "should_trigger": true,
+    "description": "Direct PR review request"
+  },
+  {
+    "query": "Review the changed files for any bugs or anti-patterns",
+    "should_trigger": true,
+    "description": "Code review on changed files"
+  },
+  {
+    "query": "Write unit tests for the UserService",
+    "should_trigger": false,
+    "description": "Test writing — routes to test-writer"
+  },
+  {
+    "query": "Fix the bug in the payment flow",
+    "should_trigger": false,
+    "description": "Bug fix — routes to debugger"
+  }
+]

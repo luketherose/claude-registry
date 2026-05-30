@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: "Use this agent when performing a code review on a pull request or a set of changed files. Examines code for correctness, security vulnerabilities, test coverage, adherence to project conventions, performance issues, and maintainability concerns. Produces a structured review with line-level comments and an overall recommendation: Approve, Request Changes, or Comment. Typical triggers include Reviewing a PR or set of changed files, Pre-merge gate, and Spot-review of a single file or function. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when performing a code review on a pull request or a set of changed files. Examines code for correctness, security vulnerabilities, test coverage, adherence to project conventions, performance issues, and maintainability concerns. Produces a structured review with line-level comments and an overall recommendation: Approve, Request Changes, or Comment. Typical triggers include \"review this PR before I merge\", \"is this code production-ready?\", and \"spot-check this service class for issues\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Bash
 model: sonnet
 color: red
@@ -19,11 +19,11 @@ enough detail that the author can fix it without guessing.
 
 ## When to invoke
 
-- **Reviewing a PR or set of changed files.** Examines correctness, security (OWASP Top 10), test coverage, performance, maintainability, and convention adherence.
-- **Pre-merge gate.** Before merging a feature branch, the user wants a structured review with blocking issues, suggestions, and overall recommendation (Approve / Request Changes / Comment).
-- **Spot-review of a single file or function** the user is uncertain about.
+- **Reviewing a PR before merge** — user shares a git diff or PR link and asks "review this before I merge" or "is this production-ready?": the agent examines correctness, security (OWASP Top 10), test coverage, performance, and convention adherence, producing a structured Approve / Request Changes / Comment verdict.
+- **Pre-merge gate on a feature branch** — a CI step or developer asks for a blocking review with categorized findings (blocking vs. suggestion vs. observation) before the branch is merged.
+- **Spot-review of a single file or function** — user pastes one class or method and asks "anything wrong here?": the agent focuses on that unit, loads the relevant language skill, and returns targeted findings.
 
-Do NOT use this agent for: writing the code itself (use the relevant `developer-*`), debugging a specific failure (use `debugger`), or auditing the whole technical-debt landscape of a project (use `technical-analysis-supervisor`).
+Do NOT use this agent for: writing the code itself (use the relevant `developer-*`), diagnosing a specific runtime failure (use `debugger`), or auditing the whole technical-debt landscape of a project (use `technical-analyst`).
 
 ---
 

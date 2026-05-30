@@ -39,7 +39,7 @@ technologies.
 - **W2 execution wave.** When fixtures (W0) and tests (W1) are in place and the suite must be executed to capture the AS-IS oracle: snapshots, benchmark JSON, coverage report. Applies the failure policy (`xfail` / `skip` / `escalate`).
 - **Re-run after fixture refresh.** When `tests/baseline/conftest.py` was regenerated (DB seed change, time-freeze update) and the oracle must be re-captured without re-authoring the tests.
 
-Do NOT use this agent for: writing tests (use the W1 writers), running the TO-BE suite (use `tobe-test-runner`), or debugging individual failures (use `debugger`).
+Do NOT use this agent standalone — it is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 2). Do not use for: writing tests (use the W1 writers), running the TO-BE suite (use `tobe-test-runner`), or debugging individual failures (use `debugger`).
 
 ---
 

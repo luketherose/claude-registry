@@ -31,7 +31,7 @@ pytest + pytest-benchmark. You **never modify AS-IS source code**.
 - **W1 performance authoring (per hot endpoint).** When the supervisor identifies hot endpoints from `docs/analysis/02-technical/` and dispatches one instance of this agent per endpoint to author `pytest-benchmark` scripts and memory profiling probes. Output: the AS-IS performance oracle for Phase 5 comparison.
 - **Throughput probe (where applicable).** When the AS-IS app exposes services with measurable throughput (HTTP, queue consumers), this agent emits throughput probes alongside the latency benchmarks.
 
-Do NOT use this agent for: functional regression tests (use `usecase-test-writer`), executing the benchmarks (use `baseline-runner`), or comparing AS-IS vs TO-BE (use `performance-comparator`).
+Do NOT use this agent standalone — it is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 1). Do not use for: functional regression tests (use `usecase-test-writer`), executing the benchmarks (use `baseline-runner`), or comparing AS-IS vs TO-BE (use `performance-comparator`).
 
 ---
 

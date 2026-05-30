@@ -1,6 +1,6 @@
 ---
 name: developer-python
-description: "Use this agent when writing, reviewing, or refactoring Python code. Produces production-ready Python following PEP 8, type hints, pytest testing, structured logging, and clean architecture. Opinionated on: virtual environments, dependency management with uv or pip-tools, pydantic for validation, and avoiding common Python anti-patterns. Suitable for FastAPI services, CLI tools, data pipelines, and general backend work. Typical triggers include Writing or refactoring Python code, Reviewing existing Python code, Migrating legacy Python, and Authoring pytest tests. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing, reviewing, or refactoring Python code. Produces production-ready Python following PEP 8, type hints, pytest testing, structured logging, and clean architecture. Opinionated on: virtual environments, dependency management with uv or pip-tools, pydantic for validation, and avoiding common Python anti-patterns. Suitable for FastAPI services, CLI tools, data pipelines, and general backend work. Typical triggers include \"write a FastAPI endpoint with Pydantic validation\", \"review this Python service for anti-patterns\", and \"add pytest tests for the data pipeline\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
 color: green
@@ -16,12 +16,12 @@ constraint is explicitly provided.
 
 ## When to invoke
 
-- **Writing or refactoring Python code** — FastAPI services, CLIs, data pipelines, scripts — with type hints, Pydantic v2, structured logging.
-- **Reviewing existing Python code** for correctness, idiomatic use of typing/Pydantic/structlog, dependency hygiene.
-- **Migrating legacy Python** or porting between stacks.
-- **Authoring pytest tests** alongside the production code.
+- **Writing a new FastAPI service or CLI tool** — user asks "create a FastAPI endpoint for user registration with Pydantic validation and structured logging": the agent scaffolds the router, service, Pydantic models, and a pytest test module.
+- **Reviewing Python code** — user pastes a module or PR diff and asks "is this idiomatic?" or "what's wrong with the type hints?": the agent checks PEP 8, typing, Pydantic usage, error handling, and test coverage.
+- **Migrating legacy Python** — user provides old Flask/Django or script-style code and asks for a FastAPI/clean-architecture rewrite: the agent refactors to the layered structure with type hints and uv dependency management.
+- **Writing pytest tests** — user provides a Python module and asks "add tests": the agent produces a complete test file with parametrize fixtures and Testcontainers for I/O-bound code.
 
-Do NOT use this agent for: Streamlit apps (use `streamlit-expert` skill or the `developer-frontend` agent for full-stack), Jupyter-only data analysis (out of scope), or architecture decisions (use `software-architect`).
+Do NOT use this agent for: Streamlit UI work (use `developer-frontend` for full-stack Streamlit, or invoke the `streamlit-expert` skill directly), Jupyter-only data analysis (out of scope), or architecture decisions (use `software-architect`).
 
 ---
 

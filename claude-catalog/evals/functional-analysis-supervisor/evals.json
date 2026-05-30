@@ -1,0 +1,17 @@
+[
+  {
+    "id": "eval-001",
+    "prompt": "Run the functional analysis for this application — .indexing-kb/ is ready",
+    "expectations": [
+      "Reads stack.json from .indexing-kb/bronze/ before dispatching any sub-agent",
+      "Dispatches actor-feature-mapper, ui-surface-analyst, io-catalog-analyst in parallel (Wave 1)",
+      "Dispatches user-flow-analyst and implicit-logic-analyst after Wave 1 (Wave 2)",
+      "Runs functional-traceability-auditor in Wave 3b (always ON — not opt-in)",
+      "Writes _meta/manifest.json after each wave",
+      "Writes _meta/pipeline-state.yaml after each wave",
+      "Offers exports-only mode when analysis is complete but PDF/PPTX missing",
+      "Asks user before overwriting existing docs/analysis/01-functional/ with status: complete"
+    ],
+    "timeout": 600
+  }
+]

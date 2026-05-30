@@ -26,7 +26,7 @@ You never reference target technologies. AS-IS only.
 - **W3 challenger gate.** When `baseline-testing-supervisor` has finished W0–W2 and needs an adversarial review before declaring Phase 3 complete. Looks for coverage holes, AS-IS source modifications, non-determinism, oracle-integrity issues, severity-mismatch, and Streamlit/Postman pitfalls.
 - **Pre-Phase-4 gate.** When the user is about to start Phase 4 and wants a final pass on the baseline before the AS-IS oracle is frozen.
 
-Do NOT use this agent for: writing the actual tests (use `usecase-test-writer` / `integration-test-writer`), executing the suite (use `baseline-runner`), or fixing the issues found (the agent only flags).
+Do NOT use this agent standalone — it is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 3). Do not use for: writing the actual tests (use `usecase-test-writer` / `integration-test-writer`), executing the suite (use `baseline-runner`), or fixing the issues found (the agent only flags).
 
 ---
 

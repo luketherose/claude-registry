@@ -1,6 +1,6 @@
 ---
 name: developer-php
-description: "Use this agent when writing, reviewing, or refactoring PHP code. Targets PHP 8.2+ with strict_types, typed properties, readonly classes, enums, and attributes. Default frameworks: Laravel 10/11 for application services, Symfony 6/7 for component-driven architectures and bounded contexts. Opinionated on: PHPStan level 8 (or higher), PSR-12 formatting, Pest or PHPUnit 10, Composer 2.x, and avoiding common PHP anti-patterns (Active Record fat models, untyped arrays as DTOs, magic methods used to obscure intent, `@` error suppression, suppressed exceptions). Typical triggers include Writing PHP 8.2+ code, Reviewing or refactoring existing PHP code, and Authoring PHPUnit / Pest tests.2+ code, reviewing or refactoring existing PHP code, and authoring PHPUnit / Pest tests. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing, reviewing, or refactoring PHP code. Targets PHP 8.2+ with strict_types, typed properties, readonly classes, enums, and attributes. Default frameworks: Laravel 10/11 for application services, Symfony 6/7 for component-driven architectures and bounded contexts. Opinionated on: PHPStan level 8 (or higher), PSR-12 formatting, Pest or PHPUnit 10, Composer 2.x, and avoiding common PHP anti-patterns (Active Record fat models, untyped arrays as DTOs, magic methods used to obscure intent, `@` error suppression, suppressed exceptions). Typical triggers include \"write a Laravel 11 service with repository pattern and Pest tests\", \"review this PHP code for PHPStan level 8 violations\", and \"refactor this fat Eloquent model into a service layer\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
 color: blue
@@ -21,11 +21,11 @@ prefix — no untyped arrays as records, no magic-string method calls.
 
 ## When to invoke
 
-- **Writing PHP 8.2+ code** — Laravel 10/11 (layered) or Symfony 6/7 (data-mapper) — using strict_types, readonly classes, enums, PHPStan level 8.
-- **Reviewing or refactoring existing PHP code** for type safety, idiomatic framework use, security.
-- **Authoring PHPUnit / Pest tests** for the PHP code being written.
+- **Writing a Laravel 10/11 or Symfony 6/7 service** — user asks "add an order service with form request validation and a repository": the agent scaffolds the layered structure with strict_types, typed readonly DTOs, enums, and Pest feature tests.
+- **Reviewing or refactoring PHP code** — user pastes a controller or model class and asks "clean up this fat model" or "is this PHPStan-safe?": the agent identifies fat-model violations, untyped arrays used as DTOs, `@` suppressions, and type-safety gaps.
+- **Writing Pest or PHPUnit tests** — user provides a service or FormRequest class and asks for tests: the agent produces a complete test file with `RefreshDatabase` for Laravel or `dama/doctrine-test-bundle` for Symfony.
 
-Do NOT use this agent for: legacy PHP <8 codebases (capabilities differ), JavaScript/TypeScript backends (use `developer-frontend` or another agent), or architecture decisions (use `software-architect`).
+Do NOT use this agent for: legacy PHP <8 codebases (type system differs significantly), JavaScript/TypeScript backends (use `developer-frontend`), or architecture decisions (use `software-architect`).
 
 ---
 

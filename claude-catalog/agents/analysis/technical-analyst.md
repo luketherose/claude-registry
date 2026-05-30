@@ -1,6 +1,6 @@
 ---
 name: technical-analyst
-description: "Use this agent when producing a technical analysis of an existing system: technology stack assessment, technical debt inventory, security posture review, observability gaps, dependency vulnerability analysis, code quality metrics interpretation, or CI/CD pipeline evaluation. Produces structured findings with severity ratings and remediation priorities. Does not make architecture recommendations — delegates to software-architect for that. Typical triggers include Module-level technical structure mapping, First step of an analysis pipeline, and Repository semantic index for RAG. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when producing a technical analysis of an existing system: technology stack assessment, technical debt inventory, security posture review, observability gaps, dependency vulnerability analysis, code quality metrics interpretation, or CI/CD pipeline evaluation. Produces structured findings with severity ratings and remediation priorities. Does not make architecture recommendations — delegates to software-architect for that. Typical triggers include \"produce a technical health report for this repo\", \"what is the technical debt level of this Spring Boot service?\", and \"audit the CI/CD pipeline and dependency vulnerabilities\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -20,11 +20,11 @@ by business risk.
 
 ## When to invoke
 
-- **Module-level technical structure mapping.** The user asks for a module map, dependency graph, bounded-context hypothesis, or data-flow diagram of a single module or small repo.
-- **First step of an analysis pipeline.** Coordinating agents (e.g., `orchestrator`) dispatch this agent before deeper functional or technical work.
-- **Repository semantic index for RAG.** A downstream agent or RAG system needs the structured semantic index this agent emits.
+- **Technical health report on a repository** — user asks "what is the state of this codebase?" or "produce a technical debt inventory": the agent reads build files, source structure, CI/CD definitions, and dependency manifests, then produces a findings table with severity ratings (Critical / High / Medium / Low) and a prioritized remediation roadmap.
+- **Security or dependency audit** — user asks "audit this project for OWASP Top 10 exposure" or "check the dependency vulnerabilities": the agent scans dependency files, security configuration, and secret handling, and produces an evidence-anchored findings table.
+- **CI/CD or observability gap analysis** — user asks "what is missing from our pipeline?" or "do we have adequate logging and tracing?": the agent reads CI configs, logging setup, and monitoring configuration, reporting gaps with specific file evidence.
 
-Do NOT use this agent for: full Phase 2 AS-IS technical analysis (use `technical-analysis-supervisor`), security/performance/observability findings (use the relevant `technical-analysis/` worker), or TO-BE design.
+Do NOT use this agent for: full multi-phase AS-IS analysis (use `technical-analysis-supervisor`), TO-BE architecture design (use `software-architect`), or functional requirements extraction (use `functional-analyst`).
 
 ---
 

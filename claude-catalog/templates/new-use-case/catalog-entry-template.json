@@ -1,0 +1,24 @@
+{
+  "_comment": "Template for a catalog.json entry. Copy and fill in all REPLACE-ME values. Remove this _comment key.",
+  "name": "REPLACE-ME-supervisor",
+  "version": "1.0.0",
+  "type": "agent",
+  "tier": "beta",
+  "status": "active",
+  "description": "REPLACE-ME — one-sentence description matching the agent's description: frontmatter field.",
+  "file": "beta/orchestration/REPLACE-ME-supervisor.md",
+  "dependencies": [],
+  "tools": ["Read", "Glob", "Bash", "Agent"],
+  "model": "sonnet",
+  "tags": ["REPLACE-ME-TAG-1", "REPLACE-ME-TAG-2"],
+  "published": "YYYY-MM-DD",
+  "changelog": "Initial release",
+  "bmad": {
+    "workflow": "REPLACE-ME-workflow-id",
+    "role": "workflow-supervisor",
+    "phase": null,
+    "wave": null,
+    "preceded_by": [],
+    "followed_by": ["REPLACE-ME-worker-1", "REPLACE-ME-worker-2"]
+  }
+}

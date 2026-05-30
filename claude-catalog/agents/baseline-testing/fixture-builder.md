@@ -30,7 +30,7 @@ pytest.
 - **W0 deterministic foundation.** First wave of Phase 3; produces `tests/baseline/conftest.py` with seed/time/network determinism plus minimal/realistic/edge fixture sets that downstream W1 writers consume.
 - **Determinism refresh.** When a flaky test or environment drift is traced to non-deterministic seeds, time, or network — regenerate the fixtures alone without touching the test suite.
 
-Do NOT use this agent for: writing tests (use the W1 writers), executing (use `baseline-runner`), or producing TO-BE fixtures (Phase 5 has its own).
+Do NOT use this agent standalone — it is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 0). Do not use for: writing tests (use the W1 writers), executing (use `baseline-runner`), or producing TO-BE fixtures (Phase 5 has its own seeding flow).
 
 ---
 

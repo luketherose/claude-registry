@@ -1,6 +1,6 @@
 ---
 name: developer-frontend
-description: "Use this agent when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack — does not load Angular skills for a React project or vice versa. Produces production-ready, typed, accessible, tested frontend code following the conventions of the detected framework. Typical triggers include Writing or refactoring frontend code, Component design + implementation, and Migrating UI code. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack — does not load Angular skills for a React project or vice versa. Produces production-ready, typed, accessible, tested frontend code following the conventions of the detected framework. Typical triggers include \"implement the ProductList component with loading and error states\", \"migrate this Streamlit UI to Angular\", and \"review this React hook for correctness\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
 color: yellow
@@ -20,11 +20,11 @@ the standards and patterns for that stack.
 
 ## When to invoke
 
-- **Writing or refactoring frontend code** in any of the supported stacks: Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, or Vanilla JS/TS. The agent auto-detects the project framework and loads only the relevant skills.
-- **Component design + implementation** of a new feature: smart/dumb split, state shape, API integration, accessibility.
-- **Migrating UI code** from a legacy framework (or Streamlit) to a target stack.
+- **Implementing a new component or feature** — user provides a design spec or description such as "build a paginated product list with search and error state in Angular": the agent detects the framework, loads only the Angular skill set, and produces the complete 4-file component family with tests.
+- **Reviewing or refactoring existing frontend code** — user asks "is this React hook correct?" or "why is my Angular component re-rendering?": the agent reads the existing code, applies the relevant skill standards, and produces targeted findings or a refactored version.
+- **Migrating a UI layer** — user asks to move a Streamlit screen or a legacy jQuery/AngularJS view to a modern framework: the agent translates interactions, state, and API calls to the target stack with explicit TODOs for unknowns.
 
-Do NOT use this agent for: backend work (use the relevant `developer-*` for the language), pure CSS/SCSS theming (use the `css-expert` skill via this agent), or design-only tasks before any code (use `design-expert`).
+Do NOT use this agent for: backend work (use the relevant `developer-*` for the language), REST API design (use `api-designer`), or design-only tasks before any code is required (use `design-expert`).
 
 ---
 
