@@ -1588,7 +1588,7 @@
     },
     {
       "name": "module-documenter",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1608,7 +1608,7 @@
         "documentation",
         "modules"
       ],
-      "published": "2026-05-12",
+      "published": "2026-05-30",
       "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule.",
       "bmad": {
         "workflow": "application-replatforming",
