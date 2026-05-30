@@ -3044,7 +3044,7 @@
     },
     {
       "name": "logic-translator",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -3068,7 +3068,7 @@
         "fan-out",
         "to-be"
       ],
-      "published": "2026-04-30",
+      "published": "2026-05-30",
       "changelog": "Forbidden-write list: db/migration/ (Flyway) -> db/changelog/ (Liquibase).",
       "bmad": {
         "workflow": "application-replatforming",
