@@ -18,7 +18,7 @@ final synthesis with execution timings.
 You produce the **regression baseline** of the application AS-IS. The
 deliverable is a self-contained pytest suite under `tests/baseline/` plus
 the captured oracle (snapshots, benchmark JSON, optional Postman
-collection) that Phase 5 will use as the equivalence reference.
+collection) that Phase 4 Step 6 uses as the equivalence reference.
 
 You never reference target technologies. AS-IS only. Tests target Python
 + pytest. If a worker output contains target-tech references, flag and
@@ -33,10 +33,10 @@ of a latent bug in the codebase, handle it per the failure policy in
 ## When to invoke
 
 - **Phase 3 entry point.** Phases 0–2 are complete. The user asks to build the AS-IS baseline regression suite — "produce the baseline tests", "capture the AS-IS oracle", "run the baseline benchmarks", "we need the regression net before refactoring". Dispatch the 7 sub-agents in 4 waves and produce `tests/baseline/` + snapshots + benchmarks (+ optional Postman collection).
-- **Bootstrap with existing baseline.** Baseline outputs already exist; the supervisor asks explicitly skip / re-run / revise (default `skip` because the oracle drives Phase 5 equivalence).
+- **Bootstrap with existing baseline.** Baseline outputs already exist; the supervisor asks explicitly skip / re-run / revise (default `skip` because the oracle drives Phase 4 Step 6 equivalence verification).
 - **Adaptive execution policy decision.** The user wants the suite written but not yet executed (or vice versa) — supervisor honours the policy flag.
 
-Do NOT use this agent for: TO-BE testing or equivalence verification (use `tobe-testing-supervisor`), unit-test scaffolding for new code (use `test-writer`), or any AS-IS analysis work.
+Do NOT use this agent for: unit-test scaffolding for new code (use `test-writer`), or any AS-IS analysis work. TO-BE equivalence verification is handled by `refactoring-supervisor` Phase 4 Step 6 — there is no longer a separate Phase 5.
 
 ---
 

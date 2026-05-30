@@ -1,5 +1,9 @@
 # TO-BE Refactoring Supervisor — Protocol
 
+> **LEGACY — this supervisor is deprecated in v3 of the replatforming workflow.**
+> Use `refactoring-supervisor` instead, which drives Phase 4 directly via a 7-step incremental loop.
+> This document applies only when running the legacy big-bang Phase 4 flow.
+
 Read this document during supervision steps. It contains: escalation triggers,
 decision rules, inverse drift check, manifest update rules, and hard constraints.
 Do not preemptively load — read on demand when a supervision decision is needed.

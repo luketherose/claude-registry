@@ -73,6 +73,32 @@ waves:
 
 ---
 
+## Inputs
+
+- **Source**: the repository path provided by the user (or current working directory).
+- There are no prior-phase inputs — Phase 0 is the first phase.
+- Output root: `.indexing-kb/` (Bronze/Silver/Gold layout).
+- The manifest at `.indexing-kb/_meta/manifest.json` is the authoritative phase state; update it after every wave using the schema in `manifest-spec.md`.
+
+## Manifest update
+
+After every wave, write `.indexing-kb/_meta/manifest.json` per the schema in `manifest-spec.md`. Fields to update per wave: `status` (per-phase entry), `agents` (list with completion timestamp), `unresolved_gaps`, `evidence_count`. On the final HITL gate, set the top-level `status` to `complete`, `partial`, or `failed`.
+
+## Sub-agents
+
+See `sub-agents-catalog.md` for the full roster (wave assignment, output targets, conditional gates). Summary:
+
+| Wave | Agent | Conditional |
+|---|---|---|
+| W1 | `codebase-mapper`, `dependency-analyzer` | — |
+| W1 | `streamlit-analyzer` | only when `streamlit` ∈ stack.frameworks |
+| W2 | `module-documenter` × N | one per top-level package |
+| W3 | `data-flow-analyst`, `business-logic-analyst` | — |
+| W4 | `synthesizer` | — |
+| W4a | `indexing-auditor` | always ON |
+
+---
+
 ## Escalation triggers — always ask the user
 
 Stop and ask the user before proceeding when:
@@ -113,21 +139,6 @@ Stop and ask the user before proceeding when:
 | Large files exist without classification | Run large file index before dispatching semantic sub-agents |
 | evidence-ledger.jsonl has 0 entries after Phase 1 | Escalate — codebase-mapper may have failed silently |
 | indexing-auditor verdict is FAIL | Stop; surface unresolved gaps to user before proceeding |
-
----
-
-## Sub-agents
-
-| Wave | Agent | Role |
-|---|---|---|
-| 1 | `codebase-mapper` | Structural inventory — produces `bronze/` outputs: `manifest.json`, `file-inventory.jsonl`, `stack.json`, `symbol-index.jsonl`, `large-files.jsonl`, `large-file-chunks.jsonl` |
-| 1 | `dependency-analyzer` | Dependency graph — detects circular imports, external deps |
-| 1 | `streamlit-analyzer` | Streamlit-specific UI analysis (gated: runs only when `streamlit` ∈ stack.frameworks) |
-| 2 | `module-documenter` | Module-level documentation fan-out — one invocation per top-level package |
-| 3 | `data-flow-analyst` | Cross-cutting data flow mapping |
-| 3 | `business-logic-analyst` | Business rule extraction |
-| 4 | `synthesizer` | Final consolidated views — produces `gold/` and `graph/` outputs |
-| 4a | `indexing-auditor` | Read-only audit pass; reads `bronze/`, `silver/`, `gold/`, `evidence-ledger.jsonl` to find coverage gaps and evidence quality issues; produces `gold/indexing-audit.md` and `gold/indexing-audit.json` with PASS/PASS_WITH_GAPS/FAIL verdict. Runs after `synthesizer` and before the HITL checkpoint — always ON. |
 
 ---
 

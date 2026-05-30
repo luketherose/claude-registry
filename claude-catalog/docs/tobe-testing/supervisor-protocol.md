@@ -1,5 +1,9 @@
 # TO-BE Testing Supervisor — Protocol
 
+> **LEGACY — this supervisor is deprecated in v3 of the replatforming workflow.**
+> Equivalence verification is now absorbed into Phase 4 Step 6 of `refactoring-supervisor` v3.
+> This document applies only when running the legacy separate Phase 5 flow.
+
 Read this document during supervision steps. It contains: escalation triggers,
 decision rules, AS-IS source preservation check, manifest update rules, and
 hard constraints. Do not preemptively load — read on demand when a supervision

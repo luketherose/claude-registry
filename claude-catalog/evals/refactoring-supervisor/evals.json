@@ -17,7 +17,7 @@
     "id": "eval-002",
     "prompt": "Resume Phase 4 from Step 2",
     "expectations": [
-      "Reads .refactoring-kb/pipeline-state.yaml to detect current step",
+      "Reads docs/refactoring/workflow-manifest.json to detect current Phase 4 step and resume point",
       "Does NOT restart from Step 0",
       "Resumes the incremental feature loop at Step 2",
       "Maintains the always-buildable invariant: verifies the project builds before starting Step 2"

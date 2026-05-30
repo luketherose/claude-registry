@@ -148,7 +148,8 @@
       "role": "auditor",
       "phase": "phase-1",
       "wave": "W3b",
-      "preceded_by": ["functional-analysis-challenger"],
+      "preceded_by": ["functional-analysis-challenger", "user-flow-analyst", "implicit-logic-analyst"],
+      "_note": "functional-analysis-challenger is conditional; when skipped the auditor's real predecessors are the W2 workers",
       "followed_by": []
     },
 
@@ -304,7 +305,8 @@
       "role": "worker",
       "phase": "phase-3",
       "wave": "W2",
-      "preceded_by": ["usecase-test-writer", "integration-test-writer", "benchmark-writer"],
+      "preceded_by": ["usecase-test-writer", "integration-test-writer", "benchmark-writer", "service-collection-builder"],
+      "_note": "service-collection-builder is conditional; when it runs baseline-runner must wait for it",
       "followed_by": ["baseline-challenger"]
     },
     {

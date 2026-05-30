@@ -120,14 +120,17 @@ Add an entry to `bmad/workflows.json`:
 
 ---
 
-## Step 7 — Add catalog entries
+## Step 7 — Add catalog entries and sync DAG
 
-For each new agent (supervisor + workers), add an entry to
-`claude-marketplace/catalog.json` using `catalog-entry-template.json`.
+**Option A (recommended)**: Add the new agents to `bmad/design/workflow-dag-draft.json` with their `preceded_by` / `followed_by` arrays, then run:
+```bash
+python3 bmad/scripts/backfill-dag.py
+```
+This auto-populates the `bmad` block in `catalog.json` for all new agents.
 
-Include the `bmad` block with `preceded_by`/`followed_by` arrays from the DAG.
+**Option B (manual)**: For each new agent, add an entry to `claude-marketplace/catalog.json` using `catalog-entry-template.json` and fill in the `bmad` block by hand.
 
-Then publish:
+Either way, publish to the marketplace:
 ```bash
 ./claude-marketplace/scripts/publish.sh <agent-name> 1.0.0 beta
 ```
@@ -136,10 +139,19 @@ Then publish:
 
 ## Step 8 — Write evals
 
-Copy `evals/triggers.json` template to
-`claude-catalog/evals/<supervisor-name>/triggers.json` and fill in at least:
+Copy both eval templates to `claude-catalog/evals/<supervisor-name>/`:
+```bash
+cp claude-catalog/templates/new-use-case/evals/triggers.json claude-catalog/evals/<supervisor-name>/triggers.json
+cp claude-catalog/templates/new-use-case/evals/evals.json    claude-catalog/evals/<supervisor-name>/evals.json
+```
+
+Fill in `triggers.json` with at least:
 - 2 positive trigger queries (should fire the supervisor)
 - 2 negative trigger queries (should NOT fire it — common confusables)
+
+Fill in `evals.json` with at least:
+- `eval-001`: primary full-pipeline invocation with ≥5 verifiable expectations
+- `eval-002`: resume / partial-run scenario
 
 ---
 
@@ -153,6 +165,7 @@ Copy `evals/triggers.json` template to
 - [ ] `catalog.json` entries added for all new agents
 - [ ] `catalog.json` entries include `bmad` block with DAG fields
 - [ ] Agents published to marketplace
-- [ ] `claude-catalog/evals/<supervisor>/triggers.json` written
+- [ ] `claude-catalog/evals/<supervisor>/triggers.json` written (≥2 positive, ≥2 negative)
+- [ ] `claude-catalog/evals/<supervisor>/evals.json` written (≥2 scenarios including resume path)
 - [ ] `CHANGELOG.md` [Unreleased] updated
 - [ ] CI passes: `python3 .github/scripts/validate_catalog.py && python3 .github/scripts/validate_marketplace.py`

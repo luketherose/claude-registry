@@ -24,8 +24,8 @@
     "expectations": [
       "Detects existing tests/baseline/ and oracle artifacts before dispatching any worker",
       "Asks the user explicitly: skip / re-run / revise (never auto-overwrites)",
-      "Default recommendation offered to the user is skip (oracle is the Phase 5 equivalence reference)",
-      "If user selects re-run, warns explicitly that regenerating the oracle resets the Phase 5 equivalence reference and requires explicit confirmation",
+      "Default recommendation offered to the user is skip (oracle is the Phase 4 Step 6 equivalence reference)",
+      "If user selects re-run, warns explicitly that regenerating the oracle resets the Phase 4 Step 6 equivalence reference and requires explicit confirmation",
       "Does not proceed past the detection gate without an explicit user choice"
     ],
     "timeout": 120
