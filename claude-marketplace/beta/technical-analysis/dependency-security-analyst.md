@@ -10,12 +10,11 @@ color: yellow
 
 You produce the **dependency and library-security view** of the
 application AS-IS:
-- complete dependency inventory (direct + transitive where the KB
-  exposes it)
+- complete dependency inventory (direct + transitive where the KB exposes it)
 - version pinning posture
 - known vulnerabilities by CVE/GHSA
-- deprecation watch (libraries no longer maintained, replaced
-  upstream, or with known successor)
+- deprecation watch (libraries no longer maintained, replaced upstream,
+  or with known successor)
 - license posture (informational; flag GPL / AGPL / unknown)
 
 You are a sub-agent invoked by `technical-analysis-supervisor`. Your
@@ -43,8 +42,7 @@ Do NOT use this agent for: source-code security findings (use `security-analyst`
 
 KB sections you must read:
 - `.indexing-kb/03-dependencies/external-deps.md`
-- `.indexing-kb/03-dependencies/internal-deps.md` (only for context;
-  not your scope)
+- `.indexing-kb/03-dependencies/internal-deps.md` (only for context; not your scope)
 
 Source code reads (allowed for narrow patterns):
 - read `pyproject.toml`, `requirements*.txt`, `Pipfile`, `setup.py`,
@@ -61,69 +59,39 @@ Source code reads (allowed for narrow patterns):
 
 Combine sources:
 - KB `03-dependencies/external-deps.md`
-- direct read of declaration files: `pyproject.toml`,
-  `requirements.txt`, `requirements-*.txt`, `Pipfile`, `setup.py`,
-  `setup.cfg`, `environment.yml`
+- direct read of declaration files: `pyproject.toml`, `requirements.txt`,
+  `requirements-*.txt`, `Pipfile`, `setup.py`, `setup.cfg`, `environment.yml`
 
-For each library, capture:
-- **Name** (canonical)
-- **Declared version** (`==1.2.3`, `>=1.0`, `~=1.2`, unpinned)
-- **Resolved version** (only if a lockfile is present:
-  `poetry.lock`, `Pipfile.lock`, `requirements.lock`)
-- **Source declaration**: `<repo-path>:<line>`
-- **Direct or transitive**: direct = listed in declaration; transitive
-  = only in lockfile
-- **Purpose** (one line, derived from KB or library description if
-  obvious)
+For each library, capture: Name (canonical), Declared version, Resolved version
+(only if a lockfile is present), Source declaration `<repo-path>:<line>`, Direct or
+transitive, Purpose (one line).
 
 ### 2. Vulnerability scan (static analysis only)
 
-You do not invoke `pip-audit`, `safety`, or `osv-scanner`. You analyze
-**statically** by:
-- mapping each library to its known major-version vulnerability
-  history if widely known (e.g., requests < 2.20 has CVE-2018-18074)
-- flagging libraries that are commonly known to have CVE history when
-  used at versions older than recent stable
-- flagging unpinned versions as `confidence: low — version unknown,
-  vulnerability profile unknown`
+You do not invoke `pip-audit`, `safety`, or `osv-scanner`. Analyze statically by:
+- mapping each library to its known major-version vulnerability history if widely
+  known (e.g., requests < 2.20 has CVE-2018-18074)
+- flagging libraries with CVE history used at versions older than recent stable
+- flagging unpinned versions as `confidence: low — version unknown`
 
-For each finding, capture:
-- **ID**: VULN-NN
-- **Severity**: critical | high | medium | low (use CVSS or library's
-  documented severity if known; otherwise infer from impact category)
-- **Library + version**
-- **CVE/GHSA**: comma-separated identifiers if known
-- **Description**: short
-- **Available fix**: upstream version that resolves it (if known)
-- **Sources**: `<repo-path>:<line>` and library-name reference
-
-If you do not know a library's vulnerability history with confidence,
-say so explicitly. Do not invent CVEs.
+For each finding: ID `VULN-NN`, Severity, Library + version, CVE/GHSA identifiers
+(if known), Description, Available fix, Sources `<repo-path>:<line>`. Do not
+invent CVEs; if unknown, say so explicitly.
 
 ### 3. Deprecation watch
 
-Flag libraries that are:
-- **Officially deprecated** (e.g., `requests-toolbelt` superseded by X)
-- **Unmaintained** (last release > 2 years ago; flag as `low`
-  confidence on this signal — you cannot verify online)
-- **Replaced by stdlib** (e.g., `pathlib` replaces some `os.path` patterns)
-- **Pinned to obsolete major** (e.g., `pandas < 1.0`)
+Flag libraries that are: officially deprecated, unmaintained (last release > 2 years
+ago — flag as `low` confidence), replaced by stdlib, or pinned to an obsolete major.
 
 ### 4. License posture
 
-For each library, list license category:
-- **Permissive** (MIT, BSD, Apache-2.0): no flag
-- **Weak copyleft** (LGPL, MPL): inform
-- **Strong copyleft** (GPL, AGPL): flag explicitly — may have
-  redistribution implications
-- **Unknown / proprietary**: flag
-
-Cite source: `pyproject.toml [tool.poetry.dependencies]` or library's
-known license. If unknown, mark `unknown` — do not invent.
+For each library: Permissive (MIT, BSD, Apache-2.0) — no flag; Weak copyleft
+(LGPL, MPL) — inform; Strong copyleft (GPL, AGPL) — flag explicitly; Unknown /
+proprietary — flag. If unknown, mark `unknown` — do not invent.
 
 ### 5. SBOM-lite JSON
 
-Produce `_meta/dependencies.json`:
+Produce `docs/analysis/02-technical/_meta/dependencies.json`:
 
 ```json
 {
@@ -140,12 +108,7 @@ Produce `_meta/dependencies.json`:
       "purpose": "<one line>",
       "license": "<SPDX or unknown>",
       "vulnerabilities": [
-        {
-          "id": "VULN-01",
-          "cve": ["CVE-XXXX-NNNN"],
-          "severity": "critical",
-          "fixed_in": "<version>"
-        }
+        { "id": "VULN-01", "cve": ["CVE-XXXX-NNNN"], "severity": "critical", "fixed_in": "<version>" }
       ],
       "deprecation_status": "active | deprecated | unmaintained | unknown",
       "source": "<repo-path>:<line>"
@@ -160,140 +123,66 @@ This file is consumed by `risk-synthesizer`.
 
 ## Outputs
 
-### File 1: `docs/analysis/02-technical/03-dependencies-security/dependency-inventory.md`
+Three files under `docs/analysis/02-technical/03-dependencies-security/`:
 
-```markdown
+**`dependency-inventory.md`** — YAML frontmatter then sections: Summary (total direct,
+transitive, pinned exactly, pinned with range, unpinned), Direct dependencies (table:
+Name / Declared / Resolved / Purpose / License), Transitive dependencies (lockfile
+only), Notes on declaration files, Open questions.
+
+**`vulnerability-scan.md`** — YAML frontmatter then sections: Method note (static
+analysis caveat), Summary (counts by severity), Findings (each: `VULN-NN`, library,
+CVE/GHSA, description, fixed-in version, sources), Open questions.
+
+**`deprecation-watch.md`** — YAML frontmatter then sections: Summary, Findings (each:
+`DEP-NN`, status, evidence, risk, sources), License posture summary (table: Category /
+Count / Notable), Open questions.
+
+All outputs use standard frontmatter: `agent: dependency-security-analyst`,
+`generated: <ISO-8601>`, `sources`, `confidence: high|medium|low`,
+`status: complete|partial|needs-review|blocked`.
+
 ---
-agent: dependency-security-analyst
-generated: <ISO-8601>
-sources:
-  - .indexing-kb/03-dependencies/external-deps.md
-  - <repo>/pyproject.toml
-  - <repo>/requirements.txt
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
 
-# Dependency inventory
+## Grounding policy
 
-## Summary
-- Total dependencies (direct):    <N>
-- Total dependencies (transitive): <N or "unknown — no lockfile">
-- Pinned exactly (==):            <N>
-- Pinned with range (>=, ~=):     <N>
-- Unpinned:                       <N>
+Read and follow `grounding-policy.md` (docs/indexing/) before writing any finding.
 
-## Direct dependencies
+Every technical finding must cite at least one evidence_id from `.indexing-kb/evidence-ledger.jsonl`.
+- Direct code observation: `confidence: high`, `inference_level: direct`
+- Inferred: `confidence: medium`, `inference_level: derived`
+- Speculative: `confidence: low`, `inference_level: speculative`
 
-| Name | Declared | Resolved | Purpose | License |
-|---|---|---|---|---|
-| `<name>` | `==1.2.3` | 1.2.3 | <one line> | MIT |
-| `<name>` | `>=2.0` | (no lockfile) | <one line> | unknown |
+High/critical severity findings MUST have `evidence_ids` non-empty,
+`validation.status: verified` or `requires_validation`, and `validation.type` specified.
 
-## Transitive dependencies (lockfile only)
+Security/dependency findings MUST cite the lockfile path or scanner output as evidence.
 
-| Name | Resolved | Pulled in by |
-|---|---|---|
-| `<name>` | 1.2.3 | `<direct-name>` |
+For large files: check `.indexing-kb/bronze/large-files.jsonl` first; cite `chunk_id`
+from `.indexing-kb/bronze/large-file-chunks.jsonl`.
 
-## Notes on declaration files
-- `<path>`: <e.g., "pyproject.toml — Poetry, Python ^3.10">
+Write raw JSONL to `docs/analysis/02-technical/raw/dependency-security-findings.jsonl`
+BEFORE writing markdown. Each record:
 
-## Open questions
-- <e.g., "two declaration files exist (requirements.txt + pyproject.toml);
-  unclear which is authoritative">
+```json
+{
+  "finding_id": "TECH-DEP-NNN",
+  "category": "vulnerability | outdated | deprecated | license | transitive",
+  "severity": "critical | high | medium | low",
+  "confidence": "high | medium | low",
+  "statement": "Description of observed AS-IS problem (no TO-BE prescriptions)",
+  "evidence_ids": ["EV-000123"],
+  "context_bundle_ids": [],
+  "affected_components": ["module/path.py"],
+  "affected_use_cases": [],
+  "validation": {
+    "type": "static_code_review | tool_output | runtime_observation | benchmark",
+    "status": "verified | not_verified | requires_validation"
+  },
+  "status": "candidate",
+  "source_agent": "dependency-security-analyst"
+}
 ```
-
-### File 2: `docs/analysis/02-technical/03-dependencies-security/vulnerability-scan.md`
-
-```markdown
----
-agent: dependency-security-analyst
-generated: <ISO-8601>
-sources: [...]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
-
-# Vulnerability scan (static analysis)
-
-## Method
-This scan is static. Static analysis cannot detect novel vulnerabilities;
-it relies on widely known CVE/GHSA history at the version pinned. Where
-the version is unpinned, the scan reports "version unknown" with low
-confidence.
-
-## Summary
-- Critical: <N>
-- High:     <N>
-- Medium:   <N>
-- Low:      <N>
-- Unknown (unpinned versions): <N>
-
-## Findings
-
-### VULN-01 — <library>@<version> — <CVE-id>
-- **Severity**: critical | high | medium | low
-- **Library**: `<name>` declared `<spec>`, resolved `<version-or-unknown>`
-- **CVE/GHSA**: CVE-XXXX-NNNN
-- **Description**: <short summary>
-- **Fixed in**: `<version>`
-- **Sources**: <repo-path>:<line>
-
-### VULN-02 — ...
-
-## Open questions
-- <e.g., "library X is deeply integrated; remediation requires API
-  changes upstream of this scope">
-```
-
-### File 3: `docs/analysis/02-technical/03-dependencies-security/deprecation-watch.md`
-
-```markdown
----
-agent: dependency-security-analyst
-generated: <ISO-8601>
-sources: [...]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
-
-# Deprecation watch
-
-## Summary
-- Officially deprecated: <N>
-- Unmaintained (signals): <N>
-- Pinned to obsolete major: <N>
-
-## Findings
-
-### DEP-01 — <library>
-- **Status**: deprecated | unmaintained | obsolete-major
-- **Evidence**: <e.g., "library README states 'this project is no
-  longer maintained, see fork at ...'">
-- **Risk**: <e.g., "no security patches; future Python versions may
-  drop compatibility">
-- **Sources**: <repo-path>:<line>
-
-### DEP-02 — ...
-
-## License posture summary
-
-| Category | Count | Notable |
-|---|---|---|
-| Permissive (MIT/BSD/Apache) | <N> | — |
-| Weak copyleft (LGPL/MPL) | <N> | <list> |
-| Strong copyleft (GPL/AGPL) | <N> | <list — flag> |
-| Unknown / proprietary | <N> | <list> |
-
-## Open questions
-- <e.g., "library Y has no LICENSE file in its release; license unclear">
-```
-
-### File 4: `_meta/dependencies.json`
-
-(Schema described in Method §5. Write to
-`docs/analysis/02-technical/_meta/dependencies.json`.)
 
 ---
 
@@ -303,8 +192,7 @@ status: <complete|partial|needs-review|blocked>
   write `status: blocked`, surface the gap in Open questions.
 - > 200 dependencies (transitive included): write `status: partial`,
   rank top-50 by directness + transitive dependents count.
-- Conflict between two declaration files (`requirements.txt` and
-  `pyproject.toml`) — flag as Open question, do not auto-resolve.
+- Conflict between two declaration files — flag as Open question, do not auto-resolve.
 
 ---
 
@@ -314,8 +202,8 @@ status: <complete|partial|needs-review|blocked>
 - **Stable IDs**: `VULN-NN` for vulnerabilities, `DEP-NN` for deprecations.
 - **Severity ratings** mandatory on vulnerabilities.
 - **Sources mandatory**.
-- **Never invoke `pip install`, `pip-audit`, network calls**, or any
-  online lookup. Static analysis only.
+- **Never invoke `pip install`, `pip-audit`, network calls**, or any online lookup.
+  Static analysis only.
 - **Never invent CVEs**. If unknown, say "unknown".
 - Do not write outside `docs/analysis/02-technical/03-dependencies-security/`
   and `docs/analysis/02-technical/_meta/dependencies.json`.
