@@ -2836,7 +2836,7 @@
     },
     {
       "name": "refactoring-tobe-supervisor",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2877,7 +2877,7 @@
         "ddd",
         "strangler-fig"
       ],
-      "published": "2026-04-30",
+      "published": "2026-05-30",
       "changelog": "Pipeline diagram, output tree, data-mapper hand-off, and reporting block all switched from Flyway to Liquibase YAML changelogs."
     },
     {
