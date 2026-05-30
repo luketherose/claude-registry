@@ -3855,7 +3855,7 @@
     },
     {
       "name": "deliberative-decision-engine",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "type": "agent",
       "tier": "beta",
       "status": "active",
@@ -3886,7 +3886,7 @@
         "audit",
         "supervisor"
       ],
-      "published": "2026-05-03",
+      "published": "2026-05-30",
       "changelog": "Initial release - 7-step deliberative pipeline with anti-anchoring, structured evidence summary, judge / human arbitration, full audit artefact, and refactoring-supervisor integration.",
       "bmad": {
         "workflow": "application-replatforming",
