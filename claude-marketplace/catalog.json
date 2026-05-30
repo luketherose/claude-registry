@@ -2123,7 +2123,7 @@
     },
     {
       "name": "code-quality-analyst",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2144,7 +2144,7 @@
         "code-quality",
         "as-is"
       ],
-      "published": "2026-05-12",
+      "published": "2026-05-30",
       "changelog": "Initial beta release",
       "bmad": {
         "workflow": "application-replatforming",
