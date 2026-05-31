@@ -26,6 +26,18 @@ Phases 0–3 each maintain their own `_meta/pipeline-state.yaml` (see their resp
 
 ---
 
+## Phase 4 invariants (BootSmokeTest)
+
+Every Step 2 feature iteration MUST pass `BootSmokeTest` (`@SpringBootTest`, no `@ActiveProfiles`) before the supervisor advances to the next feature. This catches default-profile wiring regressions that profile-scoped tests mask — the canonical example is the InfoSync 2026-05 regression where `mvn test` reported 177/177 pass while `java -jar target/*.jar` crashed with a missing repository bean.
+
+- Gate applies at the END of each Step 2 iteration, before marking the feature complete.
+- Gate also applies at Step 0 (Bootstrap hard gate) and at every Step 3 Mandatory Validation sub-loop.
+- A failing BootSmokeTest stops forward progress immediately; enter Step 3 sub-loop; never defer.
+
+Full Phase 4 gate table in `decision-rules.md`.
+
+---
+
 ## Workflow phases
 
 | Phase | Name | Supervisor | Output root | Status |
