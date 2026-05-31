@@ -84,6 +84,8 @@ All templates, schematics, and per-step / per-rule protocols live in
 | `phase-4-step-5-5-test-data-seeding.md` | Entering Phase 4 Step 5.5 — post-testing seeding macro step before the UI smoke gate. |
 | `phase-4-step-6-ui-smoke-gate.md` | Before PO sign-off at end of Phase 4 Step 6. |
 | `ui-smoke-gate.md` | Phase 4 Step 6 — BootSmokeTest, smoke.spec.ts, screenshots, pre-sign-off visual confirmation. |
+| `retrospective.md` | After Phase 4 PO sign-off (Step G auto-entry); when presenting the close/iterate/defer-and-close choice. |
+| `cross-phase-iteration.md` | When the retrospective routes to `iterate`; computing re-entry phase, archive policy, delta propagation, Phase 4 re-run granularity. |
 | `activation-examples.md` | User's opening message is ambiguous. |
 | `../deliberation/integration-replatforming.md` | Eligible deliberation decision points (Phase 4 + Phases 1–3). |
 | `supervisor-protocol.md` | Bootstrap start; before any escalation or HITL prompt; workflow phase map, escalation rules, output format. |

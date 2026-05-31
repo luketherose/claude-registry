@@ -93,6 +93,24 @@ regression: `mvn test` reporting 177/177 pass while `java -jar
 target/*.jar` crashed with `Parameter 0 of constructor in AdminUserService
 required a bean of type 'UserRepository' that could not be found`.
 
+## Retrospective and cross-phase iteration
+
+| Situation | Decision |
+|---|---|
+| Phase 4 Step 6 PO sign-off captured | Automatically enter Step G (Workflow Retrospective). Do NOT end the workflow. |
+| Phase 4 Step 6 PO sign-off declined | Mark manifest `status: partial`; end gracefully. Skip Step G (retrospective requires a complete deliverable). |
+| Retrospective has ≥ 1 blocking issue, user picks `close` | Re-ask once: require `close --override` to confirm intentional acceptance of known failures. |
+| Retrospective has ≥ 1 blocking issue, user picks `close --override` | Mark all issues `accepted`; end workflow. |
+| Retrospective has ≥ 1 blocking or high open issue, user picks `iterate` | Build cross-phase delta per `cross-phase-iteration.md`; confirm re-run scope; execute cross-phase iteration. |
+| Retrospective has only medium/low issues, user picks `close` | Mark issues `accepted`; end workflow normally (no override required). |
+| User picks `defer-and-close` | Mark all open issues `deferred`; end workflow. Future runs may reference `docs/refactoring/retrospective.md`. |
+| Cross-phase re-entry would include Phase 0 | Escalate: "This requires re-indexing (Phase 0). Confirm?" Phase 0 re-run is a separate workflow invocation. |
+| Cross-phase iteration: Phase N supervisor reports `failed` | Stop cross-phase iteration; surface failure; offer `retry-phase` or `stop-and-restore` (restore from archive). |
+| Cross-phase iteration: delta is empty for all phases | Warn: "No actionable adjustments found. Re-running would produce identical outputs. Proceed anyway?" |
+| Phase 4 re-run scope after Phase 1/2 change | Full Phase 4 re-run from Step 0 (archive existing backend/ frontend/). |
+| Phase 4 re-run scope after Phase 3-only change | Phase 4 from Step 6 only (existing code preserved; re-validate against new baseline). |
+| Retrospective loop exceeds 3 cross-phase iterations | Surface: "3 iterations completed. Consider deliberation or scope reduction." User remains in control — no hard cap. |
+
 ## Deliberation routing
 
 | Situation | Decision |

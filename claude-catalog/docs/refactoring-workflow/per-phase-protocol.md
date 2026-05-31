@@ -555,13 +555,40 @@ No further phases are implemented in this workflow.
 
 ## Step F (Phase 4) — End-of-phase handling
 
-After the End-of-Phase-4 recap is posted (Step 6 done + PO sign-off
-captured), the workflow ends. There is no `iterate` option at the
-Phase 4 boundary — Phase 4 has its own per-step iteration via the
-Step 3 sub-loop. If the user wants more work after Phase 4 ends, that
-is a NEW workflow invocation.
+**If PO sign-off captured (state `complete`)**: do NOT end the workflow.
+Enter Step G (Workflow Retrospective) automatically.
 
-If PO sign-off was declined (state `partial`): update manifest with
+**If PO sign-off was declined (state `partial`)**: update manifest with
 `current_phase: 4, status: partial`, write a final status note, end
 gracefully. The user may re-enter Phase 4 in a future workflow run
-with `Resume Phase 4 from Step <N>`.
+with `Resume Phase 4 from Step <N>`. The retrospective is skipped when
+Phase 4 is partial — it requires a complete deliverable to assess.
+
+## Step G — Workflow Retrospective
+
+Step G runs automatically after Step F captures PO sign-off. Read
+[`retrospective.md`](./retrospective.md) for the full protocol. Summary:
+
+1. Announce: "Phase 4 is complete — entering Workflow Retrospective."
+2. Read the five per-phase artifacts listed in `retrospective.md` § "Review
+   dimensions" (do not dispatch sub-agents).
+3. Write `docs/refactoring/retrospective.md` with the structured findings.
+4. Present the post-retrospective HITL:
+   - `[close]` — workflow complete; all issues accepted/deferred.
+   - `[iterate]` — re-run from the earliest affected phase with adjustments.
+     Read `cross-phase-iteration.md` and execute the cross-phase iteration
+     protocol. After all phases re-run, re-enter Step G on the new outputs.
+   - `[defer-and-close]` — mark open issues as deferred; close workflow.
+
+`close` is NEVER auto-selected. The supervisor waits for the user's explicit
+choice.
+
+When the user picks `iterate`:
+- Build the cross-phase delta per `cross-phase-iteration.md` § "Delta schema".
+- Confirm re-run scope with the user before archiving or dispatching.
+- On confirmation, execute cross-phase iteration (N phases re-run in sequence).
+- After Phase 4 re-completes and PO signs off, re-enter Step G.
+
+The retrospective loop has no cap — it terminates when the user picks `close`
+or `defer-and-close`. Each iteration produces a new retrospective file at
+`docs/refactoring/retrospective-iter<N>.md` appended to the original report.

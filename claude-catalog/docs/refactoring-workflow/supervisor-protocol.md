@@ -47,12 +47,17 @@ Full Phase 4 gate table in `decision-rules.md`.
 | 2 | AS-IS Technical Analysis | `technical-analysis-supervisor` | `docs/analysis/02-technical/` | implemented |
 | 3 | AS-IS Baseline Testing | `baseline-testing-supervisor` | `tests/baseline/` + `docs/analysis/03-baseline/` | implemented |
 | 4 | Application Replatforming | this agent (drives 7-step loop directly) | `docs/refactoring/` + `backend/` + `frontend/` + `e2e/` | implemented |
+| G | Workflow Retrospective | this agent (Step G, auto after Phase 4 sign-off) | `docs/refactoring/retrospective.md` | implemented |
 
 **Phase outputs (highlights).** Phase 0 produces a Bronze/Silver/Gold KB plus `evidence-ledger.jsonl` and a `graph/` context graph (canonical stack path: `.indexing-kb/bronze/stack.json`). Phase 1 and Phase 2 produce `normalized/` JSONL alongside the markdown (`use-case-candidates.jsonl`, `feature-candidates.jsonl`, `technical-findings.jsonl`, `risk-register.jsonl`, plus audit verdicts). **Phase 4 must consume normalized JSONL**, not narrative markdown alone, and must NOT treat `candidate_not_confirmed` UCs as certain requirements.
 
-**No Phase 5.** The previous Phase 5 (TO-BE Testing & Equivalence Verification) has been absorbed into Phase 4 Step 6 in v3.0.0. If the user references "Phase 5", clarify that the workflow now ends at Phase 4 and final validation is Step 6.
+**Workflow Retrospective (Step G).** After Phase 4 PO sign-off, the supervisor automatically enters a structured retrospective (Step G). It synthesizes findings across all five phases without dispatching sub-agents and offers three choices: `close` (accept findings, end workflow), `iterate` (re-run from the earliest affected phase via cross-phase iteration), or `defer-and-close`. The retrospective is the BMAD quality gate that closes the iteration loop at the workflow level — mirroring what the per-phase iteration loop does within a single phase. See `retrospective.md` and `cross-phase-iteration.md` for the canonical protocols.
 
-**Unimplemented phases** (go-live automation, post-launch monitoring, performance tuning loops, deprecation of AS-IS). Respond: "Phase N is not yet implemented. Currently supported: Phase 0–4." Do not invent content for unsupported phases. Do not silently extend scope.
+**No Phase 5.** The previous Phase 5 (TO-BE Testing & Equivalence Verification) has been absorbed into Phase 4 Step 6 in v3.0.0. If the user references "Phase 5", clarify that the workflow ends at Phase 4 Step 6, followed by the Workflow Retrospective (Step G).
+
+**Cross-phase iteration.** If the retrospective identifies issues at Phase N, the supervisor re-runs all phases from N through 4 in a single orchestrated pass, carrying the retrospective delta forward to each phase supervisor. Existing outputs are archived before overwriting. After re-completion, Step G runs again on the new outputs. See `cross-phase-iteration.md`.
+
+**Unimplemented phases** (go-live automation, post-launch monitoring, performance tuning loops, deprecation of AS-IS). Respond: "Phase N is not yet implemented. Currently supported: Phase 0–4 + Workflow Retrospective (Step G)." Do not invent content for unsupported phases. Do not silently extend scope.
 
 ---
 
