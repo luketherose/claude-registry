@@ -1,7 +1,7 @@
 {
   "_comment": "Team convention — not an official Claude Code format. This manifest tracks published capabilities.",
   "version": "1.0",
-  "generated": "2026-05-16",
+  "generated": "2026-05-30",
   "repository": "claude-registry",
   "capabilities": [
     {
@@ -29,7 +29,12 @@
         "design"
       ],
       "published": "2026-04-19",
-      "changelog": "Initial release"
+      "changelog": "Initial release",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "functional-analyst",
@@ -54,7 +59,12 @@
         "bdd"
       ],
       "published": "2026-04-19",
-      "changelog": "Initial release"
+      "changelog": "Initial release",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "functional-reconstruction",
@@ -109,7 +119,12 @@
         "developer"
       ],
       "published": "2026-04-30",
-      "changelog": "Strengthen 'never do': introducing Flyway in any project is forbidden; TO-BE migrations are always Liquibase. postgresql-expert reference line updated."
+      "changelog": "Strengthen 'never do': introducing Flyway in any project is forbidden; TO-BE migrations are always Liquibase. postgresql-expert reference line updated.",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "technical-analyst",
@@ -135,7 +150,12 @@
         "quality"
       ],
       "published": "2026-04-19",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "developer-python",
@@ -164,7 +184,12 @@
         "developer"
       ],
       "published": "2026-04-19",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "code-reviewer",
@@ -192,7 +217,12 @@
         "security"
       ],
       "published": "2026-04-20",
-      "changelog": "v0.2.0: Added skill-based language-specific review (fulfills v1.0 TODO)"
+      "changelog": "v0.2.0: Added skill-based language-specific review (fulfills v1.0 TODO)",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "registry-auditor",
@@ -218,7 +248,12 @@
         "governance"
       ],
       "published": "2026-05-01",
-      "changelog": "Initial beta release — audits agents/skills/CLAUDE.md against the four official Anthropic rubrics shipped in claude-plugins-official"
+      "changelog": "Initial beta release — audits agents/skills/CLAUDE.md against the four official Anthropic rubrics shipped in claude-plugins-official",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "test-writer",
@@ -247,7 +282,12 @@
         "quality"
       ],
       "published": "2026-04-20",
-      "changelog": "v0.2.0: Delegates to testing-standards and java-spring-standards skills"
+      "changelog": "v0.2.0: Delegates to testing-standards and java-spring-standards skills",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "debugger",
@@ -271,7 +311,12 @@
         "diagnostics"
       ],
       "published": "2026-04-19",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "api-designer",
@@ -298,7 +343,12 @@
         "design"
       ],
       "published": "2026-04-20",
-      "changelog": "v0.2.0: Delegates to rest-api-standards skill"
+      "changelog": "v0.2.0: Delegates to rest-api-standards skill",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "documentation-writer",
@@ -329,7 +379,12 @@
         "uml"
       ],
       "published": "2026-05-01",
-      "changelog": "v0.5.0: Step 0 mandatory output-format negotiation (md/tex/html/pdf/docx) with toolchain detection; uml-diagram-generator skill delegation; Bash tool added for pandoc/pdflatex probing"
+      "changelog": "v0.5.0: Step 0 mandatory output-format negotiation (md/tex/html/pdf/docx) with toolchain detection; uml-diagram-generator skill delegation; Bash tool added for pandoc/pdflatex probing",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "presentation-creator",
@@ -358,7 +413,18 @@
         "estimation"
       ],
       "published": "2026-04-20",
-      "changelog": "v0.2.0: Delegates brand constants to accenture-branding skill"
+      "changelog": "v0.2.0: Delegates brand constants to accenture-branding skill",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "export-worker",
+        "phase": "phase-1-or-2-export",
+        "wave": "export",
+        "preceded_by": [
+          "functional-traceability-auditor",
+          "technical-evidence-auditor"
+        ],
+        "followed_by": []
+      }
     },
     {
       "name": "document-creator",
@@ -388,7 +454,18 @@
         "estimation"
       ],
       "published": "2026-04-20",
-      "changelog": "v0.2.0: Delegates brand constants to accenture-branding skill"
+      "changelog": "v0.2.0: Delegates brand constants to accenture-branding skill",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "export-worker",
+        "phase": "phase-1-or-2-export",
+        "wave": "export",
+        "preceded_by": [
+          "functional-traceability-auditor",
+          "technical-evidence-auditor"
+        ],
+        "followed_by": []
+      }
     },
     {
       "name": "java-spring-standards",
@@ -529,7 +606,12 @@
         "developer"
       ],
       "published": "2026-04-30",
-      "changelog": "Angular 4-file family promoted to non-negotiable invariant: every component is .ts + .html + .scss + .spec.ts; inline template:/styles: literals forbidden (allowed exception: trivial render-prop wrappers ≤ 5 markup lines). Output format gains per-framework file-expectations table; quality self-check verifies the 4 files are present. The triplet+spec rule previously lived only in the angular-expert skill and was being lost when the skill content competed for attention with the higher-salience invariants list."
+      "changelog": "Angular 4-file family promoted to non-negotiable invariant: every component is .ts + .html + .scss + .spec.ts; inline template:/styles: literals forbidden (allowed exception: trivial render-prop wrappers ≤ 5 markup lines). Output format gains per-framework file-expectations table; quality self-check verifies the 4 files are present. The triplet+spec rule previously lived only in the angular-expert skill and was being lost when the skill content competed for attention with the higher-salience invariants list.",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "tech-analyst",
@@ -1342,11 +1424,16 @@
         "multi-domain"
       ],
       "published": "2026-04-26",
-      "changelog": "Promoted from skill to agent: dynamic discovery, real Agent dispatch, synthesis"
+      "changelog": "Promoted from skill to agent: dynamic discovery, real Agent dispatch, synthesis",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "indexing-supervisor",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1376,8 +1463,17 @@
         "knowledge-base",
         "legacy"
       ],
-      "published": "2026-05-12",
-      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
+      "published": "2026-05-30",
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "phase-supervisor",
+        "phase": "phase-0",
+        "preceded_by": [],
+        "followed_by": [
+          "functional-analysis-supervisor"
+        ]
+      }
     },
     {
       "name": "codebase-mapper",
@@ -1401,7 +1497,21 @@
         "structural"
       ],
       "published": "2026-05-12",
-      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-0",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "dependency-analyzer",
+          "streamlit-analyzer",
+          "module-documenter",
+          "data-flow-analyst",
+          "business-logic-analyst"
+        ]
+      }
     },
     {
       "name": "dependency-analyzer",
@@ -1425,7 +1535,19 @@
         "dependencies"
       ],
       "published": "2026-05-12",
-      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-0",
+        "wave": "W1",
+        "preceded_by": [
+          "codebase-mapper"
+        ],
+        "followed_by": [
+          "module-documenter"
+        ]
+      }
     },
     {
       "name": "streamlit-analyzer",
@@ -1450,11 +1572,23 @@
         "frontend"
       ],
       "published": "2026-05-12",
-      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-0",
+        "wave": "W1",
+        "preceded_by": [
+          "codebase-mapper"
+        ],
+        "followed_by": [
+          "module-documenter"
+        ]
+      }
     },
     {
       "name": "module-documenter",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1474,8 +1608,22 @@
         "documentation",
         "modules"
       ],
-      "published": "2026-05-12",
-      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
+      "published": "2026-05-30",
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-0",
+        "wave": "W2",
+        "preceded_by": [
+          "codebase-mapper",
+          "dependency-analyzer"
+        ],
+        "followed_by": [
+          "data-flow-analyst",
+          "business-logic-analyst"
+        ]
+      }
     },
     {
       "name": "data-flow-analyst",
@@ -1500,7 +1648,19 @@
         "integrations"
       ],
       "published": "2026-05-12",
-      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-0",
+        "wave": "W3",
+        "preceded_by": [
+          "module-documenter"
+        ],
+        "followed_by": [
+          "synthesizer"
+        ]
+      }
     },
     {
       "name": "business-logic-analyst",
@@ -1525,11 +1685,23 @@
         "domain"
       ],
       "published": "2026-05-12",
-      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule."
+      "changelog": "PR-02: language-agnostic refactor of Phase 0 (stack-detection-first); all Python-only assumptions moved to per-language tables in Method sections; canonical stack.json is now the single source of truth for AS-IS stack; carries File-writing rule.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-0",
+        "wave": "W3",
+        "preceded_by": [
+          "module-documenter"
+        ],
+        "followed_by": [
+          "synthesizer"
+        ]
+      }
     },
     {
       "name": "synthesizer",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1548,12 +1720,25 @@
         "sub-agent",
         "synthesis"
       ],
-      "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "published": "2026-05-30",
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-0",
+        "wave": "W4",
+        "preceded_by": [
+          "data-flow-analyst",
+          "business-logic-analyst"
+        ],
+        "followed_by": [
+          "indexing-auditor"
+        ]
+      }
     },
     {
       "name": "functional-analysis-supervisor",
-      "version": "3.0.1",
+      "version": "3.0.2",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1585,12 +1770,23 @@
         "refactoring",
         "streamlit"
       ],
-      "published": "2026-05-16",
-      "changelog": "0.3.0: bootstrap detects `exports-only-eligible` state (analysis complete but ≥ 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.2.0: add Export Wave (always ON) — produces Accenture-branded PDF (`_exports/01-functional-report.pdf`) via document-creator and PPTX (`_exports/01-functional-deck.pptx`) via presentation-creator after Wave 3 synthesis. Adds explicit overwrite confirmation when exports already exist. 0.1.0: initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/"
+      "published": "2026-05-30",
+      "changelog": "0.3.0: bootstrap detects `exports-only-eligible` state (analysis complete but ≥ 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.2.0: add Export Wave (always ON) — produces Accenture-branded PDF (`_exports/01-functional-report.pdf`) via document-creator and PPTX (`_exports/01-functional-deck.pptx`) via presentation-creator after Wave 3 synthesis. Adds explicit overwrite confirmation when exports already exist. 0.1.0: initial beta release: opus supervisor + 5 sonnet sub-agents + opt-in challenger, output at docs/analysis/01-functional/",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "phase-supervisor",
+        "phase": "phase-1",
+        "preceded_by": [
+          "indexing-supervisor"
+        ],
+        "followed_by": [
+          "technical-analysis-supervisor"
+        ]
+      }
     },
     {
       "name": "actor-feature-mapper",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1611,8 +1807,19 @@
         "features",
         "as-is"
       ],
-      "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "published": "2026-05-30",
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-1",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "user-flow-analyst",
+          "implicit-logic-analyst"
+        ]
+      }
     },
     {
       "name": "ui-surface-analyst",
@@ -1639,7 +1846,18 @@
         "as-is"
       ],
       "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-1",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "user-flow-analyst",
+          "implicit-logic-analyst"
+        ]
+      }
     },
     {
       "name": "io-catalog-analyst",
@@ -1665,11 +1883,21 @@
         "as-is"
       ],
       "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-1",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "user-flow-analyst"
+        ]
+      }
     },
     {
       "name": "user-flow-analyst",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1691,8 +1919,23 @@
         "sequence-diagrams",
         "as-is"
       ],
-      "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "published": "2026-05-30",
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-1",
+        "wave": "W2",
+        "preceded_by": [
+          "actor-feature-mapper",
+          "ui-surface-analyst",
+          "io-catalog-analyst"
+        ],
+        "followed_by": [
+          "functional-analysis-challenger",
+          "functional-traceability-auditor"
+        ]
+      }
     },
     {
       "name": "implicit-logic-analyst",
@@ -1718,7 +1961,21 @@
         "as-is"
       ],
       "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-1",
+        "wave": "W2",
+        "preceded_by": [
+          "actor-feature-mapper",
+          "ui-surface-analyst"
+        ],
+        "followed_by": [
+          "functional-analysis-challenger",
+          "functional-traceability-auditor"
+        ]
+      }
     },
     {
       "name": "functional-analysis-challenger",
@@ -1745,7 +2002,20 @@
         "as-is"
       ],
       "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "challenger",
+        "phase": "phase-1",
+        "wave": "W3",
+        "preceded_by": [
+          "user-flow-analyst",
+          "implicit-logic-analyst"
+        ],
+        "followed_by": [
+          "functional-traceability-auditor"
+        ]
+      }
     },
     {
       "name": "refactoring-supervisor",
@@ -1785,11 +2055,21 @@
         "human-in-the-loop"
       ],
       "published": "2026-05-16",
-      "changelog": "Wave 3 BE step 2 diagram updated: data-mapper now emits Liquibase YAML changelogs (Flyway removed everywhere in the registry)."
+      "changelog": "Wave 3 BE step 2 diagram updated: data-mapper now emits Liquibase YAML changelogs (Flyway removed everywhere in the registry).",
+      "bmad": {
+        "role": "workflow-supervisor",
+        "preceded_by": [],
+        "followed_by": [
+          "indexing-supervisor",
+          "functional-analysis-supervisor",
+          "technical-analysis-supervisor",
+          "baseline-testing-supervisor"
+        ]
+      }
     },
     {
       "name": "technical-analysis-supervisor",
-      "version": "2.1.1",
+      "version": "2.1.2",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1827,12 +2107,23 @@
         "performance",
         "streamlit"
       ],
-      "published": "2026-05-16",
-      "changelog": "0.2.0: bootstrap detects `exports-only-eligible` state (analysis complete but ≥ 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.1.0: initial beta release: Phase 2 supervisor with 3 waves (8 W1 workers + W2 synthesizer + W3 challenger) and parallel export wave (PDF + PPTX). Adaptive dispatch mode based on repo size."
+      "published": "2026-05-30",
+      "changelog": "0.2.0: bootstrap detects `exports-only-eligible` state (analysis complete but ≥ 1 export file missing) and offers `exports-only` resume mode that skips W1/W2/W3 and regenerates only the missing export(s); existing analysis is preserved untouched; manifest tracks resume_mode field; default recommendation when offered. 0.1.0: initial beta release: Phase 2 supervisor with 3 waves (8 W1 workers + W2 synthesizer + W3 challenger) and parallel export wave (PDF + PPTX). Adaptive dispatch mode based on repo size.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "phase-supervisor",
+        "phase": "phase-2",
+        "preceded_by": [
+          "functional-analysis-supervisor"
+        ],
+        "followed_by": [
+          "baseline-testing-supervisor"
+        ]
+      }
     },
     {
       "name": "code-quality-analyst",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1853,12 +2144,22 @@
         "code-quality",
         "as-is"
       ],
-      "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "published": "2026-05-30",
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-2",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "risk-synthesizer"
+        ]
+      }
     },
     {
       "name": "state-runtime-analyst",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1881,12 +2182,22 @@
         "streamlit",
         "as-is"
       ],
-      "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "published": "2026-05-30",
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-2",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "risk-synthesizer"
+        ]
+      }
     },
     {
       "name": "dependency-security-analyst",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1910,8 +2221,18 @@
         "sbom",
         "as-is"
       ],
-      "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "published": "2026-05-30",
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-2",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "risk-synthesizer"
+        ]
+      }
     },
     {
       "name": "data-access-analyst",
@@ -1938,11 +2259,21 @@
         "as-is"
       ],
       "published": "2026-05-12",
-      "changelog": "Schema-migrations detection list extended (Liquibase / Django / Rails) with explicit note: detection is informational; Phase 4 always rebuilds with Liquibase."
+      "changelog": "Schema-migrations detection list extended (Liquibase / Django / Rails) with explicit note: detection is informational; Phase 4 always rebuilds with Liquibase.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-2",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "risk-synthesizer"
+        ]
+      }
     },
     {
       "name": "integration-analyst",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -1964,8 +2295,18 @@
         "api",
         "as-is"
       ],
-      "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "published": "2026-05-30",
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-2",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "risk-synthesizer"
+        ]
+      }
     },
     {
       "name": "performance-analyst",
@@ -1993,11 +2334,21 @@
         "as-is"
       ],
       "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-2",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "risk-synthesizer"
+        ]
+      }
     },
     {
       "name": "resilience-analyst",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2020,8 +2371,18 @@
         "logging",
         "as-is"
       ],
-      "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "published": "2026-05-30",
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-2",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "risk-synthesizer"
+        ]
+      }
     },
     {
       "name": "security-analyst",
@@ -2049,7 +2410,17 @@
         "as-is"
       ],
       "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-2",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "risk-synthesizer"
+        ]
+      }
     },
     {
       "name": "risk-synthesizer",
@@ -2075,7 +2446,26 @@
         "as-is"
       ],
       "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-2",
+        "wave": "W2",
+        "preceded_by": [
+          "code-quality-analyst",
+          "state-runtime-analyst",
+          "dependency-security-analyst",
+          "data-access-analyst",
+          "integration-analyst",
+          "performance-analyst",
+          "resilience-analyst",
+          "security-analyst"
+        ],
+        "followed_by": [
+          "technical-analysis-challenger"
+        ]
+      }
     },
     {
       "name": "technical-analysis-challenger",
@@ -2102,11 +2492,23 @@
         "as-is"
       ],
       "published": "2026-05-12",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "challenger",
+        "phase": "phase-2",
+        "wave": "W3",
+        "preceded_by": [
+          "risk-synthesizer"
+        ],
+        "followed_by": [
+          "technical-evidence-auditor"
+        ]
+      }
     },
     {
       "name": "baseline-testing-supervisor",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2140,8 +2542,17 @@
         "postman",
         "streamlit"
       ],
-      "published": "2026-05-16",
-      "changelog": "0.2.0: bootstrap detects existing baseline outputs (`tests/baseline/` + `docs/analysis/03-baseline/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` because the oracle (snapshots + benchmarks) is precious — re-running resets the equivalence reference for Phase 5; inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 3 supervisor with 4 waves (W0 fixtures + W1 authoring with per-UC fan-out + W2 execution & oracle capture + W3 challenger). Adaptive execution policy. Conditional Postman generation when services are exposed. Mandatory timing recap per step."
+      "published": "2026-05-30",
+      "changelog": "0.2.0: bootstrap detects existing baseline outputs (`tests/baseline/` + `docs/analysis/03-baseline/`) and asks the user explicitly skip / re-run / revise before doing anything; default recommendation is `skip` because the oracle (snapshots + benchmarks) is precious — re-running resets the equivalence reference for Phase 5; inconsistent state classified separately with re-run recommendation; manifest tracks resume_mode field. 0.1.0: initial beta release: Phase 3 supervisor with 4 waves (W0 fixtures + W1 authoring with per-UC fan-out + W2 execution & oracle capture + W3 challenger). Adaptive execution policy. Conditional Postman generation when services are exposed. Mandatory timing recap per step.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "phase-supervisor",
+        "phase": "phase-3",
+        "preceded_by": [
+          "technical-analysis-supervisor"
+        ],
+        "followed_by": []
+      }
     },
     {
       "name": "fixture-builder",
@@ -2168,7 +2579,20 @@
         "as-is"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-3",
+        "wave": "W0",
+        "preceded_by": [],
+        "followed_by": [
+          "usecase-test-writer",
+          "integration-test-writer",
+          "benchmark-writer",
+          "service-collection-builder"
+        ]
+      }
     },
     {
       "name": "usecase-test-writer",
@@ -2196,7 +2620,19 @@
         "as-is"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-3",
+        "wave": "W1",
+        "preceded_by": [
+          "fixture-builder"
+        ],
+        "followed_by": [
+          "baseline-runner"
+        ]
+      }
     },
     {
       "name": "integration-test-writer",
@@ -2223,7 +2659,19 @@
         "as-is"
       ],
       "published": "2026-04-30",
-      "changelog": "Schema-setup line clarified as detection-only; replicate the AS-IS toolchain for the baseline; TO-BE rebuild always uses Liquibase."
+      "changelog": "Schema-setup line clarified as detection-only; replicate the AS-IS toolchain for the baseline; TO-BE rebuild always uses Liquibase.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-3",
+        "wave": "W1",
+        "preceded_by": [
+          "fixture-builder"
+        ],
+        "followed_by": [
+          "baseline-runner"
+        ]
+      }
     },
     {
       "name": "benchmark-writer",
@@ -2251,7 +2699,19 @@
         "as-is"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-3",
+        "wave": "W1",
+        "preceded_by": [
+          "fixture-builder"
+        ],
+        "followed_by": [
+          "baseline-runner"
+        ]
+      }
     },
     {
       "name": "service-collection-builder",
@@ -2279,7 +2739,19 @@
         "as-is"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-3",
+        "wave": "W1",
+        "preceded_by": [
+          "fixture-builder"
+        ],
+        "followed_by": [
+          "baseline-runner"
+        ]
+      }
     },
     {
       "name": "baseline-runner",
@@ -2308,7 +2780,22 @@
         "as-is"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-3",
+        "wave": "W2",
+        "preceded_by": [
+          "usecase-test-writer",
+          "integration-test-writer",
+          "benchmark-writer",
+          "service-collection-builder"
+        ],
+        "followed_by": [
+          "baseline-challenger"
+        ]
+      }
     },
     {
       "name": "baseline-challenger",
@@ -2336,11 +2823,21 @@
         "as-is"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "challenger",
+        "phase": "phase-3",
+        "wave": "W3",
+        "preceded_by": [
+          "baseline-runner"
+        ],
+        "followed_by": []
+      }
     },
     {
       "name": "refactoring-tobe-supervisor",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2381,12 +2878,12 @@
         "ddd",
         "strangler-fig"
       ],
-      "published": "2026-04-30",
+      "published": "2026-05-30",
       "changelog": "Pipeline diagram, output tree, data-mapper hand-off, and reporting block all switched from Flyway to Liquibase YAML changelogs."
     },
     {
       "name": "decomposition-architect",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2410,8 +2907,18 @@
         "adr",
         "to-be"
       ],
-      "published": "2026-04-30",
-      "changelog": "ADR-002 mandates Liquibase YAML changelogs; technology table updated (Migrations | Liquibase 4.x)."
+      "published": "2026-05-30",
+      "changelog": "ADR-002 mandates Liquibase YAML changelogs; technology table updated (Migrations | Liquibase 4.x).",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-legacy",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "api-contract-designer"
+        ]
+      }
     },
     {
       "name": "api-contract-designer",
@@ -2440,7 +2947,20 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-legacy",
+        "wave": "W2",
+        "preceded_by": [
+          "decomposition-architect"
+        ],
+        "followed_by": [
+          "backend-scaffolder",
+          "frontend-scaffolder"
+        ]
+      }
     },
     {
       "name": "backend-scaffolder",
@@ -2468,7 +2988,19 @@
         "to-be"
       ],
       "published": "2026-04-30",
-      "changelog": "Replace Flyway Maven deps + spring.flyway config with Liquibase + spring.liquibase / db.changelog-master.yaml. Add H2 to test/local profile."
+      "changelog": "Replace Flyway Maven deps + spring.flyway config with Liquibase + spring.liquibase / db.changelog-master.yaml. Add H2 to test/local profile.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-legacy",
+        "wave": "W3",
+        "preceded_by": [
+          "api-contract-designer"
+        ],
+        "followed_by": [
+          "data-mapper"
+        ]
+      }
     },
     {
       "name": "data-mapper",
@@ -2497,11 +3029,23 @@
         "to-be"
       ],
       "published": "2026-04-30",
-      "changelog": "Switch from Flyway to Liquibase YAML changelogs (master + per-change files); rewrite Section 6 with full YAML examples; constraints section forbids Flyway even when AS-IS uses it."
+      "changelog": "Switch from Flyway to Liquibase YAML changelogs (master + per-change files); rewrite Section 6 with full YAML examples; constraints section forbids Flyway even when AS-IS uses it.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-legacy",
+        "wave": "W3",
+        "preceded_by": [
+          "backend-scaffolder"
+        ],
+        "followed_by": [
+          "logic-translator"
+        ]
+      }
     },
     {
       "name": "logic-translator",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2525,8 +3069,20 @@
         "fan-out",
         "to-be"
       ],
-      "published": "2026-04-30",
-      "changelog": "Forbidden-write list: db/migration/ (Flyway) -> db/changelog/ (Liquibase)."
+      "published": "2026-05-30",
+      "changelog": "Forbidden-write list: db/migration/ (Flyway) -> db/changelog/ (Liquibase).",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-legacy",
+        "wave": "W3",
+        "preceded_by": [
+          "data-mapper"
+        ],
+        "followed_by": [
+          "hardening-architect"
+        ]
+      }
     },
     {
       "name": "frontend-scaffolder",
@@ -2555,7 +3111,19 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-legacy",
+        "wave": "W3",
+        "preceded_by": [
+          "api-contract-designer"
+        ],
+        "followed_by": [
+          "hardening-architect"
+        ]
+      }
     },
     {
       "name": "hardening-architect",
@@ -2586,7 +3154,20 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-legacy",
+        "wave": "W4",
+        "preceded_by": [
+          "logic-translator",
+          "frontend-scaffolder"
+        ],
+        "followed_by": [
+          "migration-roadmap-builder"
+        ]
+      }
     },
     {
       "name": "migration-roadmap-builder",
@@ -2614,7 +3195,19 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-legacy",
+        "wave": "W5",
+        "preceded_by": [
+          "hardening-architect"
+        ],
+        "followed_by": [
+          "phase4-challenger"
+        ]
+      }
     },
     {
       "name": "phase4-challenger",
@@ -2643,11 +3236,21 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "challenger",
+        "phase": "phase-4-legacy",
+        "wave": "W6",
+        "preceded_by": [
+          "migration-roadmap-builder"
+        ],
+        "followed_by": []
+      }
     },
     {
       "name": "tobe-testing-supervisor",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "tier": "beta",
       "type": "agent",
       "status": "active",
@@ -2681,7 +3284,7 @@
         "angular",
         "playwright"
       ],
-      "published": "2026-04-28",
+      "published": "2026-05-30",
       "changelog": "Initial beta release: Phase 5 supervisor with 8 sub-agents in 5 waves; adaptive execute policy; failure policy with TBUG registry; final go-live gate with PO sign-off; HITL checkpoint after Wave 1; resume modes (skip/re-run/revise)."
     },
     {
@@ -2710,7 +3313,17 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-tobe-testing-legacy",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "tobe-test-runner"
+        ]
+      }
     },
     {
       "name": "backend-test-writer",
@@ -2740,7 +3353,17 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-tobe-testing-legacy",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "tobe-test-runner"
+        ]
+      }
     },
     {
       "name": "frontend-test-writer",
@@ -2770,7 +3393,17 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-tobe-testing-legacy",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "tobe-test-runner"
+        ]
+      }
     },
     {
       "name": "security-test-writer",
@@ -2799,7 +3432,17 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-tobe-testing-legacy",
+        "wave": "W1",
+        "preceded_by": [],
+        "followed_by": [
+          "tobe-test-runner"
+        ]
+      }
     },
     {
       "name": "performance-comparator",
@@ -2829,7 +3472,17 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-tobe-testing-legacy",
+        "wave": "W2",
+        "preceded_by": [],
+        "followed_by": [
+          "tobe-test-runner"
+        ]
+      }
     },
     {
       "name": "tobe-test-runner",
@@ -2859,7 +3512,23 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-tobe-testing-legacy",
+        "wave": "W3",
+        "preceded_by": [
+          "equivalence-test-writer",
+          "backend-test-writer",
+          "frontend-test-writer",
+          "security-test-writer",
+          "performance-comparator"
+        ],
+        "followed_by": [
+          "equivalence-synthesizer"
+        ]
+      }
     },
     {
       "name": "equivalence-synthesizer",
@@ -2888,7 +3557,19 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4-tobe-testing-legacy",
+        "wave": "W4",
+        "preceded_by": [
+          "tobe-test-runner"
+        ],
+        "followed_by": [
+          "tobe-testing-challenger"
+        ]
+      }
     },
     {
       "name": "tobe-testing-challenger",
@@ -2916,7 +3597,17 @@
         "to-be"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial beta release"
+      "changelog": "Initial beta release",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "challenger",
+        "phase": "phase-4-tobe-testing-legacy",
+        "wave": "W5",
+        "preceded_by": [
+          "equivalence-synthesizer"
+        ],
+        "followed_by": []
+      }
     },
     {
       "name": "wiki-writer",
@@ -2945,7 +3636,12 @@
         "technical-writing"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial release"
+      "changelog": "Initial release",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "developer-go",
@@ -2972,7 +3668,12 @@
         "developer"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial release"
+      "changelog": "Initial release",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "developer-rust",
@@ -2999,7 +3700,12 @@
         "async"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial release"
+      "changelog": "Initial release",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "developer-kotlin",
@@ -3033,7 +3739,12 @@
         "developer"
       ],
       "published": "2026-04-30",
-      "changelog": "Project scaffold: db/migration/ (Flyway) -> db/changelog/ (Liquibase YAML changelogs)."
+      "changelog": "Project scaffold: db/migration/ (Flyway) -> db/changelog/ (Liquibase YAML changelogs).",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "developer-csharp",
@@ -3064,7 +3775,12 @@
         "developer"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial release"
+      "changelog": "Initial release",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "developer-ruby",
@@ -3095,7 +3811,12 @@
         "developer"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial release"
+      "changelog": "Initial release",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "developer-php",
@@ -3126,11 +3847,16 @@
         "developer"
       ],
       "published": "2026-04-28",
-      "changelog": "Initial release"
+      "changelog": "Initial release",
+      "bmad": {
+        "role": "standalone",
+        "preceded_by": [],
+        "followed_by": []
+      }
     },
     {
       "name": "deliberative-decision-engine",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "type": "agent",
       "tier": "beta",
       "status": "active",
@@ -3161,8 +3887,22 @@
         "audit",
         "supervisor"
       ],
-      "published": "2026-05-03",
-      "changelog": "Initial release - 7-step deliberative pipeline with anti-anchoring, structured evidence summary, judge / human arbitration, full audit artefact, and refactoring-supervisor integration."
+      "published": "2026-05-30",
+      "changelog": "Initial release - 7-step deliberative pipeline with anti-anchoring, structured evidence summary, judge / human arbitration, full audit artefact, and refactoring-supervisor integration.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "deliberation-supervisor",
+        "phase": "cross-cutting",
+        "preceded_by": [],
+        "followed_by": [
+          "debate-proposer",
+          "debate-critic",
+          "debate-risk-reviewer",
+          "debate-replatforming-specialist",
+          "debate-operations-reviewer",
+          "debate-judge"
+        ]
+      }
     },
     {
       "name": "debate-proposer",
@@ -3187,7 +3927,17 @@
         "architecture"
       ],
       "published": "2026-05-03",
-      "changelog": "Initial release - Proposer persona for deliberative-decision-engine."
+      "changelog": "Initial release - Proposer persona for deliberative-decision-engine.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "debate-persona",
+        "phase": "deliberation",
+        "wave": "step-2",
+        "preceded_by": [],
+        "followed_by": [
+          "debate-judge"
+        ]
+      }
     },
     {
       "name": "debate-critic",
@@ -3213,7 +3963,17 @@
         "adversarial"
       ],
       "published": "2026-05-03",
-      "changelog": "Initial release - Critic persona for deliberative-decision-engine."
+      "changelog": "Initial release - Critic persona for deliberative-decision-engine.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "debate-persona",
+        "phase": "deliberation",
+        "wave": "step-2",
+        "preceded_by": [],
+        "followed_by": [
+          "debate-judge"
+        ]
+      }
     },
     {
       "name": "debate-replatforming-specialist",
@@ -3240,7 +4000,17 @@
         "rollback"
       ],
       "published": "2026-05-03",
-      "changelog": "Initial release - Replatforming-specialist persona for deliberative-decision-engine."
+      "changelog": "Initial release - Replatforming-specialist persona for deliberative-decision-engine.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "debate-persona",
+        "phase": "deliberation",
+        "wave": "step-2",
+        "preceded_by": [],
+        "followed_by": [
+          "debate-judge"
+        ]
+      }
     },
     {
       "name": "debate-risk-reviewer",
@@ -3267,7 +4037,17 @@
         "privacy"
       ],
       "published": "2026-05-03",
-      "changelog": "Initial release - Risk/compliance/security reviewer persona for deliberative-decision-engine."
+      "changelog": "Initial release - Risk/compliance/security reviewer persona for deliberative-decision-engine.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "debate-persona",
+        "phase": "deliberation",
+        "wave": "step-2",
+        "preceded_by": [],
+        "followed_by": [
+          "debate-judge"
+        ]
+      }
     },
     {
       "name": "debate-operations-reviewer",
@@ -3294,7 +4074,17 @@
         "observability"
       ],
       "published": "2026-05-03",
-      "changelog": "Initial release - Operations/reliability reviewer persona for deliberative-decision-engine."
+      "changelog": "Initial release - Operations/reliability reviewer persona for deliberative-decision-engine.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "debate-persona",
+        "phase": "deliberation",
+        "wave": "step-2",
+        "preceded_by": [],
+        "followed_by": [
+          "debate-judge"
+        ]
+      }
     },
     {
       "name": "debate-judge",
@@ -3320,7 +4110,19 @@
         "synthesis"
       ],
       "published": "2026-05-03",
-      "changelog": "Initial release - Neutral judge / arbitrator persona for deliberative-decision-engine."
+      "changelog": "Initial release - Neutral judge / arbitrator persona for deliberative-decision-engine.",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "debate-judge",
+        "phase": "deliberation",
+        "wave": "step-3-and-6",
+        "preceded_by": [
+          "debate-proposer",
+          "debate-critic",
+          "debate-risk-reviewer"
+        ],
+        "followed_by": []
+      }
     },
     {
       "name": "technical-evidence-auditor",
@@ -3344,7 +4146,17 @@
         "auditor"
       ],
       "published": "2026-05-12",
-      "changelog": "Published 1.0.0"
+      "changelog": "Published 1.0.0",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "auditor",
+        "phase": "phase-2",
+        "wave": "W3b",
+        "preceded_by": [
+          "technical-analysis-challenger"
+        ],
+        "followed_by": []
+      }
     },
     {
       "name": "functional-traceability-auditor",
@@ -3367,7 +4179,19 @@
         "phase1"
       ],
       "published": "2026-05-12",
-      "changelog": "Published 1.0.0"
+      "changelog": "Published 1.0.0",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "auditor",
+        "phase": "phase-1",
+        "wave": "W3b",
+        "preceded_by": [
+          "functional-analysis-challenger",
+          "user-flow-analyst",
+          "implicit-logic-analyst"
+        ],
+        "followed_by": []
+      }
     },
     {
       "name": "indexing-auditor",
@@ -3393,7 +4217,92 @@
       ],
       "topic": "indexing",
       "published": "2026-05-12",
-      "changelog": "Initial release — Phase 0 coverage and evidence quality gate"
+      "changelog": "Initial release — Phase 0 coverage and evidence quality gate",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "challenger",
+        "phase": "phase-0",
+        "wave": "W4a",
+        "preceded_by": [
+          "synthesizer"
+        ],
+        "followed_by": []
+      }
+    },
+    {
+      "name": "test-data-seeder",
+      "version": "1.0.0",
+      "type": "agent",
+      "tier": "beta",
+      "status": "active",
+      "description": "Phase 4 Step 5.5 sub-agent. Designs and loads a coherent cross-module test dataset into a freshly-built TO-BE application so the Step 6 UI smoke gate can judge the app visually. Auto-detects the project's migration tool (Liquibase, Flyway, Django fixtures, Rails seeds, EF Migrations, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic, raw SQL). Produces seed files gated to a non-production profile, restarts the backend, verifies via API smoke calls. Strictly generic — no project-specific values.",
+      "file": "beta/refactoring-tobe/test-data-seeder.md",
+      "dependencies": [
+        "test-data-seeding-standards"
+      ],
+      "tools": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Bash",
+        "Write",
+        "Edit"
+      ],
+      "model": "sonnet",
+      "color": "green",
+      "tags": [
+        "refactoring",
+        "phase-4",
+        "step-5-5",
+        "post-testing",
+        "test-data",
+        "seed",
+        "migration",
+        "ui-smoke-precondition"
+      ],
+      "topic": "refactoring-tobe",
+      "published": "2026-05-21",
+      "changelog": "Initial release — Phase 4 Step 5.5 post-testing data seeding for the UI smoke gate",
+      "bmad": {
+        "workflow": "application-replatforming",
+        "role": "worker",
+        "phase": "phase-4",
+        "wave": "step-5.5",
+        "preceded_by": [
+          "developer-java",
+          "developer-frontend"
+        ],
+        "followed_by": []
+      }
+    },
+    {
+      "name": "test-data-seeding-standards",
+      "version": "1.0.0",
+      "type": "skill",
+      "tier": "skill",
+      "status": "active",
+      "description": "Use to retrieve dataset design principles (pivot-entity model, lifecycle-state coverage rule, FK consistency rules, login-user permission spread, column-length safety checklist) AND the tool-specific injection patterns (auto-detect signals, idempotent insert templates, non-production profile gating, FK-lookup patterns) for 13 migration tools: Liquibase, Flyway, Django, Rails, EF Core, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic, and raw SQL.",
+      "file": "skills/testing/test-data-seeding-standards.md",
+      "dependencies": [],
+      "tools": [
+        "Read"
+      ],
+      "model": "haiku",
+      "color": "cyan",
+      "tags": [
+        "testing",
+        "test-data",
+        "fixtures",
+        "seed",
+        "migration",
+        "liquibase",
+        "flyway",
+        "django",
+        "rails",
+        "skill"
+      ],
+      "published": "2026-05-22",
+      "changelog": "Initial release — merges test-data-design-standards and database-migration-patterns into a single co-invocable skill"
     }
   ]
 }

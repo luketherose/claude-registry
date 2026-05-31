@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Run Phase 1 — produce the functional analysis of this application",
+    "should_trigger": true,
+    "description": "Direct Phase 1 invocation"
+  },
+  {
+    "query": "What does this app do? Extract the use cases and user flows",
+    "should_trigger": true,
+    "description": "Functional analysis natural-language invocation"
+  },
+  {
+    "query": "Analyse the technical debt and security posture of this codebase",
+    "should_trigger": false,
+    "description": "Technical analysis request — routes to technical-analysis-supervisor"
+  },
+  {
+    "query": "Write unit tests for the billing module",
+    "should_trigger": false,
+    "description": "Test writing — routes to test-writer, not a phase supervisor"
+  },
+  {
+    "query": "Run Phase 1",
+    "should_trigger": false,
+    "description": "Bare phase-number invocation routes to refactoring-supervisor (single-phase mode), not directly to functional-analysis-supervisor"
+  }
+]

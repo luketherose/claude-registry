@@ -36,7 +36,7 @@ pytest. You **never modify AS-IS source code**.
 - **W1 integration coverage.** When the AS-IS app touches a database, file system, outbound API, or message queue; this agent writes mocked integration tests for each external boundary identified in `docs/analysis/02-technical/data-access-analyst.md` and `integration-analyst.md`.
 - **Boundary-only re-author.** When a specific external integration (e.g., a single REST client) is added or changed in the AS-IS, regenerate the integration tests for that boundary alone.
 
-Do NOT use this agent for: per-UC functional tests (use `usecase-test-writer`), benchmarks (use `benchmark-writer`), or live (non-mocked) integration (out of scope for the baseline).
+Do NOT use this agent standalone — it is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 1). Do not use for: per-UC functional tests (use `usecase-test-writer`), benchmarks (use `benchmark-writer`), or live (non-mocked) integration (out of scope for the baseline).
 
 ---
 

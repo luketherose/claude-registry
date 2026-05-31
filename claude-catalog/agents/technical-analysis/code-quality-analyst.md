@@ -69,8 +69,7 @@ condensed map at `01-code-quality/codebase-map.md`:
 - top-level packages and their purpose (one line each)
 - naming conventions (snake_case / camelCase / mixed; flag inconsistency)
 - config files inventory (`.env`, `config.yaml`, `settings.py`, ...)
-- folder layout style (flat / src-layout / domain-grouped /
-  layer-grouped)
+- folder layout style (flat / src-layout / domain-grouped / layer-grouped)
 
 ### 2. Logical-component map
 
@@ -126,125 +125,25 @@ function fan-out, branching depth).
 
 ## Outputs
 
-### File 1: `docs/analysis/02-technical/01-code-quality/codebase-map.md`
+Three files under `docs/analysis/02-technical/01-code-quality/`:
 
-```markdown
----
-agent: code-quality-analyst
-generated: <ISO-8601>
-sources:
-  - .indexing-kb/02-structure/codebase-map.md
-  - .indexing-kb/02-structure/entrypoints.md
-  - .indexing-kb/04-modules/*.md
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
+**`codebase-map.md`** — YAML frontmatter (`agent`, `generated`, `sources`, `confidence`,
+`status`) then sections: Entrypoints, Top-level packages (table: Package / Purpose /
+Module count / Role), Naming conventions, Configuration files, Folder layout, Open
+questions.
 
-# Codebase map
+**`duplication-report.md`** — YAML frontmatter then sections: Summary (count +
+estimated affected LOC), Findings (each finding: ID `RISK-CQ-NN`, Severity, Type,
+Locations, Description, Sources), Open questions.
 
-## Entrypoints
-- <name>: <description, e.g., "streamlit run app.py">
+**`complexity-hotspots.md`** — YAML frontmatter then sections: Summary (files ≥ 500
+LOC, functions ≥ 50 LOC, modules with ≥ 3 mixed roles), Hotspot inventory (each entry:
+ID `RISK-CQ-NN`, Severity, LOC, Roles mixed, Top function, Description, Sources),
+Logical-component classification (table: Module / Role / Notes), Open questions.
 
-## Top-level packages
-| Package | Purpose | Module count | Role |
-|---|---|---|---|
-| `<name>` | <one line> | <N> | UI / business / adapter / mixed |
-
-## Naming conventions
-- Files: <snake_case / mixed — examples>
-- Functions: <snake_case / mixed>
-- Classes: <PascalCase / mixed>
-- Inconsistencies flagged: <count>
-
-## Configuration files
-- `<path>`: <purpose>
-
-## Folder layout
-- Style: <flat / src-layout / domain-grouped / layer-grouped>
-- Notes: <e.g., "tests live next to code, not in tests/">
-
-## Open questions
-- <e.g., "two entrypoints with overlapping concerns: app.py and main.py">
-```
-
-### File 2: `docs/analysis/02-technical/01-code-quality/duplication-report.md`
-
-```markdown
----
-agent: code-quality-analyst
-generated: <ISO-8601>
-sources: [...]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
-
-# Duplication report
-
-## Summary
-- Substantive duplications: <N>
-- Estimated affected LOC: <N>
-
-## Findings
-
-### RISK-CQ-01 — <short title>
-- **Severity**: high | medium | low
-- **Type**: copy-paste-block | parallel-validation | repeated-business-rule
-- **Locations**:
-  - `<repo-path>:<lines>`
-  - `<repo-path>:<lines>`
-- **Description**: <what is duplicated, why it's a risk>
-- **Sources**: [<repo-path:line>, .indexing-kb/04-modules/<name>.md]
-
-### RISK-CQ-02 — ...
-
-## Open questions
-- <e.g., "module foo and bar both compute discount; cannot tell from KB
-  whether the rule is intentionally duplicated or drifted">
-```
-
-### File 3: `docs/analysis/02-technical/01-code-quality/complexity-hotspots.md`
-
-```markdown
----
-agent: code-quality-analyst
-generated: <ISO-8601>
-sources: [...]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
-
-# Complexity hotspots
-
-## Summary
-- Files ≥ 500 LOC: <N>
-- Functions ≥ 50 LOC: <N>
-- Modules with ≥ 3 mixed roles: <N>
-
-## Hotspot inventory
-
-### RISK-CQ-NN — `<file>` (god-module)
-- **Severity**: high | medium | low
-- **LOC**: <N>
-- **Roles mixed**: UI + business logic + DB access
-- **Top function**: `<name>()` — <N> LOC, branching depth <N>
-- **Description**: <why it's a hotspot>
-- **Sources**: [<repo-path>:<line>]
-
-### RISK-CQ-NN — function `<name>()` (oversized)
-- ...
-
-## Logical-component classification
-
-| Module | Role | Notes |
-|---|---|---|
-| `<path>` | UI | clean |
-| `<path>` | UI + business | mixed: god-page risk |
-| `<path>` | utility | shared by 6 callers |
-
-## Open questions
-- <e.g., "module X looks like business logic but is invoked only from
-  scripts; unclear if it is a one-off batch or a reusable module">
-```
+All outputs share the standard frontmatter fields: `agent: code-quality-analyst`,
+`generated: <ISO-8601>`, `sources`, `confidence: high|medium|low`,
+`status: complete|partial|needs-review|blocked`.
 
 ---
 
@@ -262,11 +161,12 @@ High/critical severity findings MUST have:
 - `validation.status: verified` or `requires_validation`
 - `validation.type` specified
 
-For large files: check `.indexing-kb/bronze/large-files.jsonl` first; cite `chunk_id` from `.indexing-kb/bronze/large-file-chunks.jsonl`.
+For large files: check `.indexing-kb/bronze/large-files.jsonl` first; cite `chunk_id`
+from `.indexing-kb/bronze/large-file-chunks.jsonl`.
 
-Write raw JSONL to `docs/analysis/02-technical/raw/code-quality-findings.jsonl` BEFORE writing markdown.
+Write raw JSONL to `docs/analysis/02-technical/raw/code-quality-findings.jsonl` BEFORE
+writing markdown. Each record:
 
-Each record in the raw JSONL file:
 ```json
 {
   "finding_id": "TECH-QUAL-NNN",
@@ -308,6 +208,5 @@ Each record in the raw JSONL file:
 - **Severity ratings** mandatory on every finding.
 - **Sources mandatory** per finding (KB section AND/OR source-code line).
 - Do not write outside `docs/analysis/02-technical/01-code-quality/`.
-- Do not run linters, type-checkers, or formatters. KB + targeted reads
-  only.
+- Do not run linters, type-checkers, or formatters. KB + targeted reads only.
 - Streamlit-aware (god-page detection) only when stack mode = streamlit.

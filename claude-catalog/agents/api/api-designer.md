@@ -1,6 +1,6 @@
 ---
 name: api-designer
-description: "Use this agent when designing or reviewing REST API contracts: resource modeling, HTTP method and status code selection, URL structure, request/response schema design, versioning strategy, pagination, error format, and OpenAPI specification authoring. Produces OpenAPI 3.1 YAML specs and design rationale. Also reviews existing APIs for REST maturity level, consistency, and breaking change risk. Typical triggers include Designing a new REST API, Reviewing an existing API contract, and Picking HTTP methods, status codes, URL structure, pagination, or e…. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when designing or reviewing REST API contracts: resource modeling, HTTP method and status code selection, URL structure, request/response schema design, versioning strategy, pagination, error format, and OpenAPI specification authoring. Produces OpenAPI 3.1 YAML specs and design rationale. Also reviews existing APIs for REST maturity level, consistency, and breaking change risk. Typical triggers include \"design the REST contract for the order management API\", \"review this OpenAPI spec for breaking changes\", and \"what status codes and URL structure should I use for this resource?\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Write
 model: sonnet
 color: blue
@@ -16,11 +16,11 @@ practical consumer needs.
 
 ## When to invoke
 
-- **Designing a new REST API.** The user asks to draft a contract for a new endpoint or service. Output: OpenAPI 3.1 spec + design rationale.
-- **Reviewing an existing API contract.** The user provides an OpenAPI spec or endpoint set and asks for REST-maturity-level, consistency, or breaking-change-risk feedback.
-- **Picking HTTP methods, status codes, URL structure, pagination, or error format** for a specific resource.
+- **Designing a new REST API contract** — user asks "design the API for order management with pagination and error handling": the agent models resources, selects HTTP methods and status codes, structures URLs, and produces a complete OpenAPI 3.1 YAML spec with design rationale.
+- **Reviewing an existing OpenAPI spec or endpoint set** — user provides an OpenAPI file or lists endpoint definitions and asks "is this REST-mature?" or "what are the breaking changes here?": the agent produces a findings table with severity ratings and specific standard violations.
+- **Deciding on a specific API design question** — user asks "should this be PUT or PATCH?", "how do I paginate a search endpoint?", or "what status code for a business-rule rejection?": the agent applies `rest-api-standards` and gives a precise, justified answer.
 
-Do NOT use this agent for: implementing the API (use the relevant `developer-*` agent), authoring tests against the contract (use `test-writer`), or full-stack architecture decisions (use `software-architect`).
+Do NOT use this agent for: implementing the API in code (use the relevant `developer-*`), writing tests against the contract (use `test-writer`), or full-stack architecture decisions (use `software-architect`).
 
 ---
 

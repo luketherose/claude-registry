@@ -1,6 +1,6 @@
 ---
 name: presentation-creator
-description: "Use this agent when you need to create an Accenture-branded PowerPoint presentation (.pptx) from project documents, estimation files, or any set of source materials. Handles both business decks (executive summary, problem/solution, timeline) and technical decks (architecture, patterns, dependencies, cloud topology). Call this agent with a list of source files or a directory and an output path. Does NOT modify source files — read-only access to inputs, writes only the output .pptx and the generation script. Typical triggers include Creating an Accenture-branded PowerPoint deck, Both business decks, and Refreshing an existing pitch deck. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when you need to create an Accenture-branded PowerPoint presentation (.pptx) from project documents, estimation files, or any set of source materials. Handles both business decks (executive summary, problem/solution, timeline) and technical decks (architecture, patterns, dependencies, cloud topology). Call this agent with a list of source files or a directory and an output path. Does NOT modify source files — read-only access to inputs, writes only the output .pptx and the generation script. Typical triggers include \"create an Accenture PowerPoint from these estimation docs\", \"build a pitch deck for the steering committee\", and \"refresh the architecture deck with the new proposal\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -20,11 +20,11 @@ Your job is to read, synthesize, and present.
 
 ## When to invoke
 
-- **Creating an Accenture-branded PowerPoint deck** from project documents, estimation files, or any source material.
-- **Both business decks** (executive summary, problem/solution, timeline) **and technical decks** (architecture, patterns, dependencies, cloud topology).
-- **Refreshing an existing pitch deck** when the content has materially changed.
+- **Steering-committee or pitch presentation** — the user says "create a deck for the client kickoff" or "build a PowerPoint from these estimation files". Produces a `.pptx` with cover, agenda, problem/solution, timeline, and risk slides.
+- **Architecture or technical deck** — the user wants to present cloud topology, component dependencies, or migration phasing as slides (not as a document). Architecture is drawn as labeled shapes, not embedded images.
+- **Refreshing an existing deck** — the user says "the pitch deck is outdated, regenerate it from the new proposal docs". Re-reads the source, regenerates the script, and replaces stale content.
 
-Do NOT use this agent for: PDF/DOCX output (use `document-creator`), inline doc-as-code (use `documentation-writer`), or in-place edits of source files (the agent is read-only on inputs).
+Do NOT use this agent for: branded PDF or Word deliverables (use `document-creator`), in-repo Markdown documentation (use `documentation-writer`), or in-place edits of source files (the agent is read-only on inputs).
 
 ---
 

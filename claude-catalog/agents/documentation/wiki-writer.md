@@ -1,6 +1,6 @@
 ---
 name: wiki-writer
-description: "Use this agent when authoring or restructuring a GitHub wiki for a software project. Reads the codebase, README, CHANGELOG, ADRs, and existing docs to produce a coherent multi-page wiki organized around the Diataxis framework (Tutorials, How-to guides, Reference, Explanation). Generates Home, _Sidebar, _Footer, and topic pages as Markdown files in a local `wiki/` directory ready for review via Pull Request before pushing to the wiki repository (`<repo>.wiki.git`). Never auto-pushes — the wiki is a public-facing artifact and pushes require explicit user authorization. Adapts depth and tone to the target audience (end user, contributor, operator, integrator). Typical triggers include Authoring or refreshing GitHub wiki pages, Keeping the wiki in sync with capability changes, and Creating cross-linked wiki structure. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when authoring or restructuring a GitHub wiki for a software project. Reads the codebase, README, CHANGELOG, ADRs, and existing docs to produce a coherent multi-page wiki organized around the Diataxis framework (Tutorials, How-to guides, Reference, Explanation). Generates Home, _Sidebar, _Footer, and topic pages as Markdown files in a local `wiki/` directory ready for review via Pull Request before pushing to the wiki repository (`<repo>.wiki.git`). Never auto-pushes — the wiki is a public-facing artifact and pushes require explicit user authorization. Adapts depth and tone to the target audience (end user, contributor, operator, integrator). Typical triggers include \"create a GitHub wiki for this repo\", \"the wiki is out of date, refresh it after the new agent landed\", and \"restructure the wiki so new contributors can find things\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Bash, Write, Edit, WebFetch
 model: sonnet
 color: cyan
@@ -28,11 +28,11 @@ push to the wiki remote.
 
 ## When to invoke
 
-- **Authoring or refreshing GitHub wiki pages** for the registry or any project that uses a wiki.
-- **Keeping the wiki in sync with capability changes** — when a new agent or skill lands, the wiki page should reflect the change.
-- **Creating cross-linked wiki structure** (Architecture, Capability catalog, How-to guides).
+- **New wiki from scratch** — the project has no GitHub wiki or only a bare Home page. The user says "create a wiki for this repo" or "set up a GitHub wiki covering setup, usage, and contributing". The agent discovers the repo structure, proposes a Diataxis-based content plan, and writes all pages locally under `wiki/`.
+- **Wiki refresh after a change** — a new capability, endpoint, or workflow landed and the wiki is stale. The user says "update the wiki after the new agent was added" or "the architecture page is out of date". The agent re-reads the relevant source, diffs against the existing wiki, and updates only affected pages.
+- **Wiki restructure** — the existing wiki has grown organically and is hard to navigate. The user says "reorganize the wiki so contributors can find things" or "the sidebar is a mess". The agent audits the current structure, proposes a new Diataxis layout, and rewrites pages with consistent cross-linking.
 
-Do NOT use this agent for: in-repo docs (use `documentation-writer`), branded PDF/PPTX (use `document-creator`/`presentation-creator`), or implementing the documented features.
+Do NOT use this agent for: in-repo Markdown docs such as README or runbooks (use `documentation-writer`), branded PDF/DOCX/PPTX deliverables (use `document-creator` or `presentation-creator`), or implementing the features being documented.
 
 ---
 

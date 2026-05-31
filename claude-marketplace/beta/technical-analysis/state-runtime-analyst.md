@@ -45,8 +45,7 @@ Do NOT use this agent for: business-logic semantics (use `business-logic-analyst
 KB sections you must read:
 - `.indexing-kb/04-modules/*.md`
 - `.indexing-kb/05-streamlit/session-state.md` (if Streamlit)
-- `.indexing-kb/05-streamlit/widgets.md` (if Streamlit, for on_change /
-  on_click handlers)
+- `.indexing-kb/05-streamlit/widgets.md` (if Streamlit, for on_change / on_click handlers)
 - `.indexing-kb/06-data-flow/configuration.md`
 - `.indexing-kb/07-business-logic/state-machines.md` (if exists)
 
@@ -62,60 +61,40 @@ Source code reads (allowed for narrow patterns):
 
 ### 1. Session-state inventory (Streamlit)
 
-If stack mode = streamlit, build a complete inventory of
-`st.session_state` keys:
-
-For each key, capture:
-- **Key name** (literal string)
-- **Type** (inferred: int, str, dict, DataFrame, custom)
-- **Producers**: which page/widget WRITES the key
-- **Consumers**: which page/widget READS the key
-- **Lifetime**: per-rerun / per-session / persisted (in DB or file)
-- **Initialization**: explicit (`if "k" not in st.session_state:`)
-  vs implicit (set on first widget interaction)
-- **Cross-page**: yes if read on one page, written on another
-- **Risks**: stale-after-page-change, race condition on rerun, missing
-  init, type drift across reruns
+If stack mode = streamlit, build a complete inventory of `st.session_state` keys.
+For each key, capture: key name, type (inferred), producers (which page/widget WRITES),
+consumers (which page/widget READS), lifetime (per-rerun / per-session / persisted),
+initialization (explicit guard vs implicit), cross-page (yes if read on one page,
+written on another), risks (stale-after-page-change, race condition on rerun, missing
+init, type drift).
 
 Output: `02-state-runtime/session-state-inventory.md`
 
 ### 2. Globals and side effects
 
-Across all modules:
-- module-level mutable assignments (lists, dicts, custom objects with
-  state)
-- `global ` declarations
-- functions with side effects (mutate args, write env vars, modify
-  globals, write files outside docs/output paths)
-- `st.cache_data` and `st.cache_resource` (Streamlit): correctness of
-  invalidation (do the cache keys cover all inputs?)
-- decorators applying side effects at import time (`@register`, etc.)
+Across all modules, identify: module-level mutable assignments (lists, dicts, custom
+objects), `global ` declarations, functions with side effects (mutate args, write env
+vars, modify globals, write files), `st.cache_data` and `st.cache_resource` correctness
+(Streamlit), decorators applying side effects at import time.
 
-For each finding, capture:
-- **ID**: ST-NN
-- **Severity**: critical | high | medium | low
-- **Location**: `<repo-path>:<line>`
-- **Description**: what state is mutated, who mutates it, who depends
-  on it
-- **Risk**: hidden coupling, test difficulty, race condition
+For each finding: ID `ST-NN`, severity, location `<repo-path>:<line>`, description
+(what is mutated, who mutates it, who depends on it), risk (hidden coupling / test
+difficulty / race condition).
 
 Output: `02-state-runtime/globals-and-side-effects.md`
 
 ### 3. Execution-order analysis
 
 Identify code that runs at:
-- **Import time**: module-level statements with side effects (network
-  calls, file reads, DB connections, expensive computations)
-- **First request / first rerun** (Streamlit): top-of-script
-  initialization
-- **Every rerun** (Streamlit): widget value reads, cached function
-  re-evaluation
+- **Import time**: module-level statements with side effects (network calls, file
+  reads, DB connections, expensive computations)
+- **First request / first rerun** (Streamlit): top-of-script initialization
+- **Every rerun** (Streamlit): widget value reads, cached function re-evaluation
 - **Shutdown**: `atexit`, signal handlers (rare)
 
 Flag risky patterns:
 - Heavy work at import time (slows cold start, hard to mock in tests)
-- Streamlit pages that perform DB writes on EVERY rerun (no idempotency
-  guard) — common bug class
+- Streamlit pages that perform DB writes on EVERY rerun without idempotency guard
 - Race conditions in lazy initialization
 
 ### 4. State-flow diagram (Mermaid)
@@ -123,172 +102,93 @@ Flag risky patterns:
 Produce a Mermaid graph at `02-state-runtime/state-flow-diagram.md`:
 - nodes: state items (session-state keys, globals, file-backed state)
 - edges: read (dashed) / write (solid)
-- color/group by lifetime: per-rerun, per-session, persistent
+- group by lifetime: per-rerun, per-session, persistent
 
-Keep the diagram readable: if there are > 25 state items, group by
-domain (e.g., "filters cluster", "auth cluster") and produce one
-diagram per cluster.
+Keep readable: if > 25 state items, group by domain and produce one diagram per
+cluster. Write via `Write` tool — never via Bash.
 
 ---
 
 ## Outputs
 
-### File 1: `docs/analysis/02-technical/02-state-runtime/session-state-inventory.md`
+Three files under `docs/analysis/02-technical/02-state-runtime/`:
 
-```markdown
----
-agent: state-runtime-analyst
-generated: <ISO-8601>
-sources:
-  - .indexing-kb/05-streamlit/session-state.md
-  - .indexing-kb/05-streamlit/widgets.md
-  - <repo-path>:<line>
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
+**`session-state-inventory.md`** — YAML frontmatter then sections: Summary (total keys,
+cross-page keys, persisted keys, risky patterns flagged), one `### <key-name>` entry
+per key (type, lifetime, producers, consumers, initialization, cross-page, risks,
+sources), Open questions. Write a stub with `status: complete` if stack != streamlit.
 
-# Session-state inventory
+**`globals-and-side-effects.md`** — YAML frontmatter then sections: Summary (counts of
+mutable globals, hidden side effects, import-time side effects, cache invalidation
+issues), Findings (each `ST-NN` with severity, location, what is mutated, who mutates,
+who reads, risk, description, sources), Open questions.
 
-## Summary
-- Total keys: <N>
-- Cross-page keys: <N>
-- Persisted keys (file/DB): <N>
-- Risky patterns flagged: <N>
+**`state-flow-diagram.md`** — YAML frontmatter then Mermaid `flowchart LR` diagram
+(one per cluster if > 25 items), Notes, Open questions.
 
-(Skip this file entirely if stack mode != streamlit; in that case
-write a stub with status: complete, content: "Not applicable —
-non-Streamlit stack".)
+All outputs use standard frontmatter: `agent: state-runtime-analyst`, `generated`,
+`sources`, `confidence: high|medium|low`, `status: complete|partial|needs-review|blocked`.
 
-## Keys
-
-### `<key-name>`
-- **Type**: <inferred>
-- **Lifetime**: per-rerun | per-session | persistent
-- **Producers**:
-  - <page S-NN, widget W-NN, function F()> — <repo-path>:<line>
-- **Consumers**:
-  - <page S-NN, widget W-NN, function F()> — <repo-path>:<line>
-- **Initialization**: explicit | implicit
-- **Cross-page**: yes | no
-- **Risks**: <list, e.g., "stale after switch_page; consumer expects
-  dict but producer writes None on first interaction">
-- **Sources**: [...]
-
-### `<next key>` ...
-
-## Open questions
-- <e.g., "key 'cart' is referenced in 3 pages but no producer found in
-  KB or grep; might be set by a removed component">
-```
-
-### File 2: `docs/analysis/02-technical/02-state-runtime/globals-and-side-effects.md`
-
-```markdown
----
-agent: state-runtime-analyst
-generated: <ISO-8601>
-sources: [...]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
 ---
 
-# Globals and side effects
+## Grounding policy
 
-## Summary
-- Module-level mutable globals: <N>
-- Functions with hidden side effects: <N>
-- Import-time side effects: <N>
-- st.cache invalidation issues: <N> (Streamlit only)
+Read and follow `grounding-policy.md` (docs/indexing/) before writing any finding.
 
-## Findings
+Every technical finding must cite at least one evidence_id from `.indexing-kb/evidence-ledger.jsonl`.
+- Direct code observation: `confidence: high`, `inference_level: direct`
+- Inferred: `confidence: medium`, `inference_level: derived`
+- Speculative: `confidence: low`, `inference_level: speculative`
 
-### ST-01 — <title>
-- **Severity**: critical | high | medium | low
-- **Location**: `<repo-path>:<line>`
-- **What is mutated**: <e.g., "module-level dict `_REGISTRY` mutated by
-  multiple decorators at import time">
-- **Who mutates**: <list>
-- **Who reads**: <list>
-- **Risk**: <hidden coupling | test difficulty | race condition |
-  cache invalidation gap | other>
-- **Description**: <details>
-- **Sources**: [<repo-path>:<line>, .indexing-kb/04-modules/<name>.md]
+High/critical severity findings MUST have `evidence_ids` non-empty,
+`validation.status: verified` or `requires_validation`, and `validation.type` specified.
 
-### ST-02 — ...
+For large files: check `.indexing-kb/bronze/large-files.jsonl` first; cite `chunk_id`
+from `.indexing-kb/bronze/large-file-chunks.jsonl`.
 
-## Open questions
-- <e.g., "function `bootstrap()` called at top of app.py performs DB
-  schema check; unclear if idempotent on rerun">
-```
+Write raw JSONL to `docs/analysis/02-technical/raw/state-runtime-findings.jsonl` BEFORE
+writing markdown. Each record:
 
-### File 3: `docs/analysis/02-technical/02-state-runtime/state-flow-diagram.md`
-
-```markdown
----
-agent: state-runtime-analyst
-generated: <ISO-8601>
-sources: [...]
-confidence: <high|medium|low>
-status: <complete|partial|needs-review|blocked>
----
-
-# State-flow diagram
-
-## Cluster: <name>
-
-```mermaid
-flowchart LR
-  S1[session_state.user_id]
-  S2[session_state.cart]
-  S3[module global _CONFIG]
-  P1[Page: home]
-  P2[Page: checkout]
-  F1[func: load_user]
-
-  P1 -->|read| S1
-  F1 -->|write| S1
-  P2 -->|read+write| S2
-  S3 -.->|read| F1
-```
-
-(One diagram per cluster if > 25 items.)
-
-## Notes
-- <observations about the diagram, hot spots, asymmetries>
-
-## Open questions
-- <e.g., "S2 is read by P2 but no clear producer; might be set by a
-  third-party component">
+```json
+{
+  "finding_id": "TECH-STATE-NNN",
+  "category": "global-state | session-state | side-effects | mutable-shared | race-condition",
+  "severity": "critical | high | medium | low",
+  "confidence": "high | medium | low",
+  "statement": "Description of observed AS-IS problem (no TO-BE prescriptions)",
+  "evidence_ids": ["EV-000123"],
+  "context_bundle_ids": [],
+  "affected_components": ["module/path.py"],
+  "affected_use_cases": [],
+  "validation": {
+    "type": "static_code_review | tool_output | runtime_observation | benchmark",
+    "status": "verified | not_verified | requires_validation"
+  },
+  "status": "candidate",
+  "source_agent": "state-runtime-analyst"
+}
 ```
 
 ---
 
 ## Stop conditions
 
-- Stack mode = streamlit but `.indexing-kb/05-streamlit/session-state.md`
-  is missing: write `status: partial`, derive what you can from grep,
-  flag the gap in Open questions.
-- > 100 session-state keys: write `status: partial`, document the top-50
-  by reference count.
+- Stack mode = streamlit but `.indexing-kb/05-streamlit/session-state.md` is missing:
+  write `status: partial`, derive from grep, flag the gap in Open questions.
+- > 100 session-state keys: write `status: partial`, document top-50 by reference count.
 - > 50 module globals: same approach — top-25.
 
 ---
 
 ## File-writing rule (non-negotiable)
 
-All file content output (Markdown, JSON, CSV, YAML, source code) MUST be
-written through the `Write` tool. Never use `Bash` heredocs
-(`cat <<EOF > file`), echo redirects (`echo ... > file`), `printf > file`,
-`tee file`, or any other shell-based content generation.
+All file content output MUST be written through the `Write` tool. Never use `Bash`
+heredocs, echo redirects, `printf > file`, or `tee`. The state-flow Mermaid diagram
+contains shell metacharacters that the shell misinterprets.
 
-Bash is allowed only for read-only inspection (`grep`, `find`, `ls`, `wc`,
-small `cat`, `git log`/`status`), running existing scripts, and creating
-empty directories (`mkdir -p`). If you need to produce a file, use `Write`;
-to amend an existing one, use `Edit`. No third path.
-
-For background on why this rule exists (Mermaid metacharacters, the
-2026-04-28 incident, and the full allowed/forbidden list), see
-`claude-catalog/docs/technical-analysis/state-runtime-analyst/file-writing-rationale.md`.
+Allowed Bash: read-only inspection (`grep`, `find`, `ls`, `wc`, `cat` of known files,
+`git log`/`status`), running existing scripts, `mkdir -p`. For background on why this
+rule exists see `claude-catalog/docs/technical-analysis/state-runtime-analyst/file-writing-rationale.md`.
 
 ---
 
@@ -299,8 +199,6 @@ For background on why this rule exists (Mermaid metacharacters, the
 - **Severity ratings** mandatory.
 - **Sources mandatory**.
 - Do not write outside `docs/analysis/02-technical/02-state-runtime/`.
-- Streamlit-specific output (`session-state-inventory.md`) becomes a
-  stub when stack is not Streamlit; do not skip the file entirely
-  (downstream readers expect it).
+- `session-state-inventory.md` becomes a stub when stack is not Streamlit — do not
+  skip the file entirely (downstream readers expect it).
 - **All file output via `Write`**, never via `Bash` heredoc/redirect.
-  See § File-writing rule above.

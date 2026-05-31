@@ -1,0 +1,22 @@
+[
+  {
+    "query": "REPLACE: a direct invocation phrase that SHOULD trigger this supervisor",
+    "should_trigger": true,
+    "description": "Direct primary invocation"
+  },
+  {
+    "query": "REPLACE: another trigger phrase with different wording",
+    "should_trigger": true,
+    "description": "Alternate phrasing"
+  },
+  {
+    "query": "REPLACE: a query that should NOT trigger this supervisor (confusable with a sibling agent)",
+    "should_trigger": false,
+    "description": "Confusable query — should route to SIBLING-AGENT instead"
+  },
+  {
+    "query": "What does this code do?",
+    "should_trigger": false,
+    "description": "Generic code question — should not activate any supervisor"
+  }
+]

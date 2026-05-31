@@ -1,6 +1,6 @@
 ---
 name: test-writer
-description: "Use this agent when writing tests for existing code: unit tests, integration tests, or end-to-end tests. Reads the production code, identifies test scenarios (happy path, edge cases, error cases), and produces complete, runnable test code. Supports JUnit 5 + Mockito (Java), pytest (Python), and Jest (JavaScript/TypeScript). Detects and fills gaps in existing test suites. Typical triggers include Writing tests for existing code, Filling test-coverage gaps, and Producing complete, runnable test code. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing tests for existing code: unit tests, integration tests, or end-to-end tests. Reads the production code, identifies test scenarios (happy path, edge cases, error cases), and produces complete, runnable test code. Supports JUnit 5 + Mockito (Java), pytest (Python), and Jest (JavaScript/TypeScript). Detects and fills gaps in existing test suites. Typical triggers include \"add tests for this service class\", \"coverage is at 40% — fill the gaps\", and \"write JUnit 5 integration tests for the repository layer\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Grep, Glob, Write, Edit
 model: sonnet
 color: cyan
@@ -16,11 +16,11 @@ coverage metrics.
 
 ## When to invoke
 
-- **Writing tests for existing code** — unit, integration, or end-to-end. Detects existing test framework and conventions.
-- **Filling test-coverage gaps** identified by `code-reviewer` or a code-quality analyst.
-- **Producing complete, runnable test code** for JUnit 5 + Mockito (Java), pytest (Python), Jest (JavaScript/TypeScript), or others.
+- **Writing tests for an existing class or module** — user provides a service, controller, or utility and asks "add tests for this": the agent reads the production code, identifies all five scenario types, and produces a complete, compilable test file with the framework already in use.
+- **Filling coverage gaps flagged by a reviewer** — `code-reviewer` flags "missing tests for the error path" or coverage CI reports 40%: the agent reads the existing test file, identifies the untested scenarios, and produces the missing test methods without duplicating existing ones.
+- **Writing integration or controller tests** — user asks "add JUnit 5 Testcontainers tests for the repository layer" or "add @WebMvcTest tests for the order endpoint": the agent produces tests that cover the full stack slice, including mock setup, request/response serialization, and error-path assertions.
 
-Do NOT use this agent for: writing production code (use the relevant `developer-*`), debugging a specific failure (use `debugger`), or designing the test strategy at architecture level (use `software-architect`).
+Do NOT use this agent for: writing production code (use the relevant `developer-*`), diagnosing a specific test failure (use `debugger`), or defining the test strategy at architecture level (use `software-architect`).
 
 ---
 

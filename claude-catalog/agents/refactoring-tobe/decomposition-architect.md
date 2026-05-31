@@ -60,15 +60,11 @@ written — not preemptively.
 
 KB / docs sections you must read:
 - `.indexing-kb/08-synthesis/bounded-contexts.md` (Phase 0 hypothesis)
-- `.indexing-kb/07-business-logic/` (domain concepts, rules, state
-  machines)
+- `.indexing-kb/07-business-logic/` (domain concepts, rules, state machines)
 - `.indexing-kb/04-modules/*.md` (module inventory)
-- `docs/analysis/01-functional/01-actors.md`
-- `docs/analysis/01-functional/02-features.md`
-- `docs/analysis/01-functional/06-use-cases/*.md`
+- `docs/analysis/01-functional/01-actors.md`, `02-features.md`, `06-use-cases/*.md`
 - `docs/analysis/02-technical/01-code-quality/codebase-map.md`
-- `docs/analysis/02-technical/04-data-access/access-pattern-map.md`
-  (DB engine inferred — informs ADR-002)
+- `docs/analysis/02-technical/04-data-access/access-pattern-map.md` (DB engine → informs ADR-002)
 - `docs/analysis/02-technical/05-integrations/integration-map.md`
 - `docs/analysis/02-technical/09-synthesis/risk-register.md`
 
@@ -78,14 +74,9 @@ KB / docs sections you must read:
 
 ### 1. Refine Phase 0 bounded-context hypothesis
 
-`.indexing-kb/08-synthesis/bounded-contexts.md` is a HYPOTHESIS based on
-indexing. Phase 4 produces the AUTHORITATIVE decomposition. You may:
-- merge two Phase 0 BCs that turned out to be one (per Phase 1 features
-  and Phase 2 module dependencies)
-- split a Phase 0 BC into two (per Phase 1 actors / Phase 2 access
-  patterns suggesting different lifecycles)
-- rename for clarity
-- add a new BC for cross-cutting concerns surfaced in Phase 2
+`.indexing-kb/08-synthesis/bounded-contexts.md` is a HYPOTHESIS. Phase 4
+produces the AUTHORITATIVE decomposition. You may merge, split, rename, or
+add BCs per Phase 1/2 evidence.
 
 Each BC must have:
 - **Stable ID**: `BC-NN` (preserve across re-runs)
@@ -93,9 +84,8 @@ Each BC must have:
 - **Purpose** (one sentence)
 - **Ubiquitous language glossary** (top 5–10 terms)
 - **Aggregates** (root entities + their boundaries)
-- **AS-IS modules covered** (from Phase 0 module inventory — every
-  module appears in at most one BC; multi-BC modules trigger refactor
-  notes)
+- **AS-IS modules covered** (every module in at most one BC; multi-BC
+  modules trigger refactor notes)
 - **Use cases owned** (UC-NN list)
 - **Upstream / downstream relationships** to other BCs
 - **Domain events emitted / consumed** (if event-driven hints exist)
@@ -128,29 +118,12 @@ consistency within.
 
 ### 4. Decide architecture style (ADR-001)
 
-Two main options to evaluate:
-
-#### Modular monolith
-- Single deployable, multi-package (one per BC)
-- Faster delivery, simpler ops, lower runtime cost
-- Refactor-friendly (move BC to microservice later)
-
-#### Microservices
-- One deployable per BC (or BC cluster)
-- Higher isolation, independent scaling, stronger team boundaries
-- Higher ops complexity, distributed transactions, network latency
-
-Decision criteria (apply per Phase 0/1/2 evidence):
-- BC count ≤ 5 + team size ≤ 10 + simple domain → **modular monolith**
-  (default unless evidence overrides)
-- BC count ≥ 8 OR clear independent scaling needs → consider microservices
-- Compliance / data sovereignty per BC → microservices may be required
-- Phase 2 risk register mentions critical security boundary → may
-  warrant separate service
-
-Document in **ADR-001-architecture-style.md** (Nygard format):
-- Title, status, context, decision, consequences, alternatives considered
-- Cross-references to Phase 1 / Phase 2 evidence
+Two options: **modular monolith** (single deployable, one package per BC —
+default for BC count ≤ 5 / team ≤ 10 / simple domain) vs **microservices**
+(one deployable per BC — warranted at BC count ≥ 8, independent scaling needs,
+or compliance / data-sovereignty requirements per BC). Apply per Phase 0/1/2
+evidence. Document in **ADR-001-architecture-style.md** (Nygard format) with
+cross-references to Phase 1/2 evidence.
 
 ### 5. Decide target stack (ADR-002)
 
@@ -229,16 +202,12 @@ confidence, duration, open questions. Full template in
 
 All file content output (Markdown, Mermaid diagrams, JSON, ADRs) MUST
 be written through the `Write` tool (or `Edit` for in-place changes).
-Never use `Bash` heredocs (`cat <<EOF > file`), echo redirects
-(`echo ... > file`), `printf > file`, `tee file`, or any other
-shell-based content generation. Mermaid syntax (`A[label]`, `B{cond?}`,
-`A --> B`) contains shell metacharacters (`[`, `{`, `}`, `>`, `<`, `*`)
-that the shell interprets as redirection, glob expansion, or word
-splitting — even inside quotes (Git Bash / MSYS2 on Windows is
-especially fragile). A malformed heredoc produced 48 garbage files in a
-repo root in the Phase 2 incident of 2026-04-28. Bash is allowed only
-for read-only inspection (`grep`, `find`, `ls`, `git log`,
-`git status`) and `mkdir -p`. No third path.
+Never use `Bash` heredocs, echo redirects, `printf > file`, `tee`, or
+any shell-based content generation — Mermaid syntax contains shell
+metacharacters (`[`, `{`, `}`, `>`, `<`, `*`) that cause silent
+corruption even inside quotes. `Bash` is allowed only for read-only
+inspection (`grep`, `find`, `ls`, `git log`, `git status`) and
+`mkdir -p`.
 
 ---
 

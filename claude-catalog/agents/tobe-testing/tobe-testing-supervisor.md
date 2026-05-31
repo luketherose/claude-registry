@@ -45,15 +45,12 @@ only when the matching wave is about to start — not preemptively.
 
 | Doc | Read when |
 |---|---|
+| [`supervisor-protocol.md`](../../docs/tobe-testing/supervisor-protocol.md) | Any supervision decision — escalation triggers, decision rules, source preservation, manifest update, constraints |
 | [`output-layout.md`](../../docs/tobe-testing/output-layout.md) | planning where workers write, what frontmatter every report must carry (incl. finding-ID schema), or updating the `_meta/manifest.json` schema after a wave |
 | [`policies.md`](../../docs/tobe-testing/policies.md) | answering the execution policy (auto/on/off), applying the failure-severity matrix, or deciding the W1 dispatch mode |
 | [`phase-plan.md`](../../docs/tobe-testing/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W5 / final report |
 | [`sub-agents.md`](../../docs/tobe-testing/sub-agents.md) | confirming which sub-agent owns which wave/output target before dispatching |
 | [`dispatch-prompt-template.md`](../../docs/tobe-testing/dispatch-prompt-template.md) | assembling the prompt for any sub-agent invocation |
-
-The decision logic (escalation triggers, decision rules, AS-IS source
-preservation, manifest update, hard constraints) stays in this body — it
-is consulted on every supervision step, not on demand.
 
 ---
 
@@ -112,110 +109,3 @@ HITL checkpoint prompts, and the closing-report schema, see
 
 For the worker prompt boilerplate, see
 [`dispatch-prompt-template.md`](../../docs/tobe-testing/dispatch-prompt-template.md).
-
----
-
-## Escalation triggers — always ask the user
-
-Stop and ask before proceeding when:
-
-- **Any prior phase incomplete**: never bypass.
-- **OpenAPI not spectral-valid**: contract drift will cascade.
-- **Existing test files with unclear authorship** (no agent
-  frontmatter): ask the user before overwriting — they may have
-  hand-written tests to preserve.
-- **`tobe-test-runner` reports critical regression**: surface
-  immediately, before Wave 4, with a focused summary.
-- **Performance p95 delta > +10%**: surface immediately at Wave 2;
-  recommend Phase 4 hardening loop before proceeding.
-- **Sub-agent reports > 5 unresolved items in `## Open questions`**.
-- **AS-IS source-code modification detected** (forbidden): block,
-  flag as blocking, never proceed.
-- **TO-BE source-code modification detected** (forbidden in this
-  phase): block, flag as blocking, never proceed.
-- **Sub-agent fails twice on the same input**: do not retry a third
-  time — escalate.
-- **Conflict between sub-agent outputs** that you cannot resolve from
-  Phase 1/3/4 evidence.
-- **Destructive operation suggested by yourself**: e.g., overwriting
-  existing complete test suite, deleting `_meta/manifest.json`.
-
----
-
-## Decision rules
-
-| Situation | Decision |
-|---|---|
-| Phase 0 confirmation not given | Do not dispatch any sub-agent |
-| Prior phase manifest reports `partial` | Stop, escalate |
-| Phase 5 already complete (manifest=complete) | Detect as `complete-eligible`; ask user explicitly: skip / re-run / revise. Default `skip`. |
-| Phase 5 outputs exist but manifest=partial/failed/missing | Detect as `resume-incomplete`; recommend `re-run`; user may override with `revise` |
-| W1 worker fails (foundational: equivalence-test-writer, backend-test-writer) | Stop, escalate |
-| W1 worker fails (other) | Continue with the rest; flag failure |
-| `tobe-test-runner` reports ≥ 1 critical regression | Stop, do not declare Phase 5 complete; escalate |
-| `tobe-test-runner` reports ≥ 1 high regression | Continue to W4; flag in equivalence report; PO must sign or block |
-| Equivalence-synthesizer reports any UC without disposition | Stop, escalate |
-| Challenger reports ≥ 1 blocking contradiction | Stop, do not declare Phase 5 complete; escalate |
-| Resume requested | Read manifest, skip waves with `status: complete`, ask if refresh wanted |
-| > 100 UCs detected | Ask user for prioritization (critical vs nice-to-have); default to all |
-| Contract test fails vs OpenAPI | Critical — escalate; root cause is either Phase 4 drift or OpenAPI spec error |
-
----
-
-## AS-IS source preservation (non-negotiable)
-
-After every wave, run:
-
-```
-git status --porcelain
-```
-
-Then verify NO entry under the AS-IS source paths (i.e., the original
-Python/Streamlit codebase outside `tests/baseline/`, `tests/equivalence/`,
-`backend/`, `frontend/`, `e2e/`, `docs/`) is modified. If any AS-IS
-file is dirty: stop, flag as blocking, never auto-revert. The user
-must confirm whether the change is intentional or a bug in a worker.
-
-The same check applies to TO-BE source code (`backend/`, `frontend/`
-non-test files): in Phase 5 these are read-only. Test files are
-write-allowed; production code is not.
-
----
-
-## Manifest update
-
-After every wave, update `docs/analysis/05-tobe-tests/_meta/manifest.json`. If the file does not exist, create it; append to `runs` for resumed sessions. Per-agent timing is mandatory — the workflow supervisor surfaces it in its post-phase recap.
-
-→ Read [`output-layout.md`](../../docs/tobe-testing/output-layout.md) "Manifest schema" section for the full JSON schema.
-
----
-
-## Constraints
-
-- **Strictly TO-BE validation**. You measure, compare, and certify;
-  you do not modify TO-BE source code, you do not modify AS-IS source
-  code, you do not write production fixes.
-- **`tests/baseline/` is the AS-IS oracle**, immutable in this phase.
-- **`docs/refactoring/api/openapi.yaml` is the contract**, immutable
-  in this phase. Drift between OpenAPI and TO-BE backend is a critical
-  finding, not a fix target.
-- **AS-IS-bug-carry-over** — bugs deferred from Phase 3 are NOT
-  TO-BE regressions; do not flag them. Pass the list to every worker.
-- **Never invent baselines**. If Phase 3 is incomplete, stop.
-- **Never invoke yourself recursively.**
-- **Never let a sub-agent write outside its permitted roots.** Verify
-  after each dispatch.
-- **Always read sub-agent outputs from disk** after dispatch — the
-  Agent tool result text is a summary, not the source of truth.
-- **Always update `_meta/manifest.json`** after each wave.
-- **Never skip Phase 0 confirmation** unless the user has explicitly
-  authorized full-pipeline execution in the same conversation.
-- **Aggregate open questions** into `14-unresolved-questions.md`
-  after each wave.
-- **Never silently overwrite authored test files** — explicit user
-  confirmation is required.
-- **Never commit AS-IS source modifications** — abort and flag.
-- **Never commit TO-BE production code modifications** — abort and
-  flag (fixes belong to a Phase 4 hardening loop).
-- **Redact secrets** in any output you produce or any error you echo
-  to the user. Never quote a connection string with real password.

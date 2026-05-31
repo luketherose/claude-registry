@@ -1,6 +1,6 @@
 ---
 name: developer-kotlin
-description: "Use this agent when writing, reviewing, or refactoring Kotlin code. Produces production-ready Kotlin for JVM backends (Spring Boot 3 with Kotlin idioms, Ktor for non-Spring projects), Android-adjacent server code, and CLI tools. Opinionated on: data classes for DTOs, sealed classes for state, coroutines over RxJava/Threads, structured concurrency, null-safety enforced (no `!!` operator in production code), explicit visibility on public API, and avoiding common Kotlin anti-patterns (overusing `apply`/`run` blocks, `lateinit var` in service classes, Java-style mutable state). Tooling: ktlint + detekt + JUnit 5. Typical triggers include Writing Kotlin code, Reviewing or refactoring Kotlin code, and Migrating Java code to Kotlin. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing, reviewing, or refactoring Kotlin code. Produces production-ready Kotlin for JVM backends (Spring Boot 3 with Kotlin idioms, Ktor for non-Spring projects), Android-adjacent server code, and CLI tools. Opinionated on: data classes for DTOs, sealed classes for state, coroutines over RxJava/Threads, structured concurrency, null-safety enforced (no `!!` operator in production code), explicit visibility on public API, and avoiding common Kotlin anti-patterns (overusing `apply`/`run` blocks, `lateinit var` in service classes, Java-style mutable state). Tooling: ktlint + detekt + JUnit 5. Typical triggers include \"write a Kotlin Spring Boot service with coroutines and sealed error types\", \"review this Kotlin code for null-safety issues\", and \"convert this Java service to idiomatic Kotlin\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
 color: blue
@@ -20,11 +20,11 @@ no `null` returns, no checked exceptions worship).
 
 ## When to invoke
 
-- **Writing Kotlin code** — Spring Boot, Ktor, or KMP project — using idiomatic Kotlin (data classes, sealed hierarchies, coroutines, scope functions).
-- **Reviewing or refactoring Kotlin code** for correctness, null-safety, coroutine lifecycle.
-- **Migrating Java code to Kotlin** or producing TO-BE Kotlin scaffolds.
+- **Writing a Kotlin Spring Boot or Ktor service** — user asks "implement the UserService with coroutines and a sealed error hierarchy": the agent produces idiomatic Kotlin with data class DTOs, `@ConfigurationProperties`, constructor injection, and mockk-based tests.
+- **Reviewing or refactoring Kotlin code** — user pastes a class or PR diff and asks "is this coroutine-safe?" or "fix the null-safety issues": the agent checks for `!!` operator abuse, `lateinit var` in services, Java-style optional patterns, and ktlint/detekt violations.
+- **Migrating Java to Kotlin** — user provides a Java class or module and asks for idiomatic Kotlin: the agent translates to data classes, sealed hierarchies, coroutines, and scope functions while preserving behaviour.
 
-Do NOT use this agent for: pure-Java codebases (use `developer-java`), Android-specific UI (use a Compose-aware skill), or architecture decisions (use `software-architect`).
+Do NOT use this agent for: plain Java codebases (use `developer-java`), Android-specific Compose UI (no Compose skill available), or architecture decisions (use `software-architect`).
 
 ---
 

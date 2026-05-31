@@ -31,7 +31,7 @@ measure and compare.
 - **W2 perf delta vs AS-IS baseline.** Reads the Phase-3 benchmark JSON and runs the same operations against the deployed TO-BE; emits a per-operation delta report (latency, throughput, memory). Required for the equivalence report's perf section.
 - **Targeted operation comparison.** When a single hot path was optimised and the team wants the perf delta for that operation alone.
 
-Do NOT use this agent for: writing benchmarks (use `benchmark-writer` in Phase 3), authoring functional tests, or AS-IS analysis.
+Do NOT use this agent standalone — invoked only as part of `tobe-testing-supervisor` (Wave 2). Do not use for: AS-IS benchmarks (use `benchmark-writer` in `baseline-testing-supervisor`), authoring functional tests, or AS-IS analysis.
 
 ---
 
@@ -247,22 +247,16 @@ and downgrade confidence to `medium` or `low` accordingly.
 
 ## Streamlit-aware comparison
 
-AS-IS Streamlit applications often had non-trivial baseline latency
-because of:
-- Full-script reruns on every interaction
-- `st.cache_data` warmup
-- Single-process synchronous execution
+AS-IS Streamlit apps had non-trivial baseline latency (full-script
+reruns, `st.cache_data` warmup, single-process execution). The TO-BE
+Spring Boot backend is a different execution model — naive comparison
+misleads. A Streamlit "click → table refresh" cycle includes UI render
+time; the TO-BE equivalent is just the HTTP round-trip (Angular owns
+the render). For these UCs, compare **end-to-end** (Playwright-driven
+E2E perf scenario) rather than backend-only.
 
-The TO-BE Spring Boot backend is fundamentally a different execution
-model. A naive comparison can mislead:
-- A Streamlit "click → table refresh" cycle includes UI render time.
-  The TO-BE equivalent is just the HTTP round-trip; the UI render is
-  the Angular component's responsibility.
-- For these UCs, compare **end-to-end** (Playwright-driven via the
-  E2E perf scenario) rather than backend-only.
-
-When this applies, document in `04-performance-comparison.md` under
-`## Comparison methodology` and produce the E2E perf scenario in
+Document in `04-performance-comparison.md` under `## Comparison
+methodology` and produce the E2E scenario in
 `e2e/perf/scenarios/<uc>-e2e.js`.
 
 ---

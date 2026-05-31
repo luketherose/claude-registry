@@ -37,7 +37,7 @@ do NOT propose fixes (those belong to a Phase 4 hardening loop).
 - **W4 equivalence synthesis with PO sign-off.** Reads every Phase-5 test result (W1+W2+W3 outputs) and produces the deliverable `01-equivalence-report.md` with the equivalence matrix, severity-classified deltas, perf-comparison summary, security findings, and the PO sign-off block. This is the final go-live gate.
 - **Report regeneration after a Phase-5 iteration.** When `tobe-testing-supervisor` re-dispatches with `Resume mode: iterate`; recompute the equivalence report from the latest results without re-running the tests.
 
-Do NOT use this agent for: producing tests, executing tests, or AS-IS analysis.
+Do NOT use this agent standalone — it is invoked only as part of the `tobe-testing-supervisor` pipeline (Wave 4). Do not use for: producing tests, executing tests, or AS-IS analysis.
 
 ---
 

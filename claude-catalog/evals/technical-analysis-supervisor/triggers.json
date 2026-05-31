@@ -1,0 +1,22 @@
+[
+  {
+    "query": "Run the technical analysis — identify risks, security issues, and code quality problems",
+    "should_trigger": true,
+    "description": "Direct Phase 2 invocation"
+  },
+  {
+    "query": "Analyse the dependency vulnerabilities and performance hotspots of this codebase",
+    "should_trigger": true,
+    "description": "Technical analysis natural-language invocation"
+  },
+  {
+    "query": "Extract the use cases and user flows from this application",
+    "should_trigger": false,
+    "description": "Functional analysis — routes to functional-analysis-supervisor"
+  },
+  {
+    "query": "Review this pull request",
+    "should_trigger": false,
+    "description": "PR review — routes to code-reviewer"
+  }
+]

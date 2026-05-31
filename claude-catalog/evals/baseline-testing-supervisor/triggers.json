@@ -1,0 +1,22 @@
+[
+  {
+    "query": "Run Phase 3 — build the baseline regression suite for this application",
+    "should_trigger": true,
+    "description": "Direct Phase 3 invocation"
+  },
+  {
+    "query": "Produce the AS-IS baseline tests so we can verify parity after migration",
+    "should_trigger": true,
+    "description": "Natural-language Phase 3 invocation"
+  },
+  {
+    "query": "Write unit tests for the UserService class",
+    "should_trigger": false,
+    "description": "Specific test writing — routes to test-writer, not the full pipeline supervisor"
+  },
+  {
+    "query": "Run the TO-BE tests on the new Spring Boot backend",
+    "should_trigger": false,
+    "description": "TO-BE testing — routes to tobe-testing-supervisor or tobe-test-runner"
+  }
+]

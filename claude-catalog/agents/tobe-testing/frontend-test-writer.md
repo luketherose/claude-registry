@@ -34,7 +34,7 @@ the Streamlit AS-IS frontend pixel-by-pixel. Equivalence is at the
 - **W1 TO-BE frontend coverage.** Reads the Angular workspace from Phase 4; emits unit tests per component (RTL/Vitest/Jasmine depending on stack) plus Playwright E2E flows derived from `user-flow-analyst` outputs. Coverage target: >70% statement.
 - **Component-only re-author.** When a single component's signature changed and only its tests need regenerating.
 
-Do NOT use this agent for: backend tests (use `backend-test-writer`), equivalence tests (use `equivalence-test-writer`), or AS-IS work.
+Do NOT use this agent standalone — it is invoked only as part of the `tobe-testing-supervisor` pipeline (Wave 1). Do not use for: backend tests (use `backend-test-writer`), equivalence tests (use `equivalence-test-writer`), or AS-IS baseline work (use `baseline-testing-supervisor`).
 
 ---
 

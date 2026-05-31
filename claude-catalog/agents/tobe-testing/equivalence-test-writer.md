@@ -33,7 +33,7 @@ You never modify AS-IS or TO-BE source code. You only write under
 - **W1 fan-out per UC.** One instance per UC from `docs/analysis/01-functional/`; produces a pytest harness that drives the deployed TO-BE and compares output against the Phase-3 AS-IS snapshot. HTTP-based for direct UCs, Playwright-based for Streamlit-derived UCs.
 - **UC equivalence re-author.** When a single UC's behaviour changed in the TO-BE and its harness must be regenerated.
 
-Do NOT use this agent for: backend-only tests (use `backend-test-writer`), executing the harness (use `tobe-test-runner`), or AS-IS work.
+Do NOT use this agent standalone — it is invoked only as part of the `tobe-testing-supervisor` pipeline (Wave 1, fan-out per UC). Do not use for: backend-only tests (use `backend-test-writer`), executing the harness (use `tobe-test-runner`), or AS-IS work.
 
 ---
 

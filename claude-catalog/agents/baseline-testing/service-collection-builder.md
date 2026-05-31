@@ -37,7 +37,7 @@ You never reference target technologies. AS-IS only.
 - **W1 service-surface inventory (conditional).** When the AS-IS app exposes a non-trivial set of services (REST endpoints, gRPC, etc.) the supervisor dispatches this agent to emit a Postman 2.1 collection covering every public operation. Output: `tests/baseline/<app>.postman_collection.json`.
 - **Surface refresh.** When new endpoints land mid-baseline, regenerate the collection without re-running the whole baseline pipeline.
 
-Do NOT use this agent for: apps without an exposed service layer (the supervisor will skip this agent), authoring HTTP integration tests (use `integration-test-writer`), or running the collection.
+Do NOT use this agent standalone — it is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 1, conditional). Do not use for: apps without an exposed service layer (the supervisor will skip this agent), authoring HTTP integration tests (use `integration-test-writer`), or running the collection.
 
 ---
 

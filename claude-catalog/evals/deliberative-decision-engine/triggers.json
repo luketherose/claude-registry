@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Use debate mode to decide whether to use PostgreSQL or MongoDB for this project",
+    "should_trigger": true,
+    "description": "Explicit debate mode request"
+  },
+  {
+    "query": "Decide this with a multi-agent debate",
+    "should_trigger": true,
+    "description": "Explicit multi-agent debate request"
+  },
+  {
+    "query": "Decidi con dibattito quale architettura usare",
+    "should_trigger": true,
+    "description": "Italian debate trigger"
+  },
+  {
+    "query": "Which database should I use for this project?",
+    "should_trigger": false,
+    "description": "Simple architecture question — should be answered directly, not via a full deliberation pipeline"
+  },
+  {
+    "query": "Review this pull request",
+    "should_trigger": false,
+    "description": "PR review — routes to code-reviewer"
+  }
+]

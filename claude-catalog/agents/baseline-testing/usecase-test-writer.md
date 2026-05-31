@@ -28,7 +28,7 @@ pytest. You **never modify AS-IS source code** — the source is read-only.
 - **W1 fan-out per UC.** The supervisor dispatches one instance per use case from `docs/analysis/01-functional/`; this agent produces a single pytest module covering the happy path, alternative paths, and 1–2 representative edge cases for that UC alone.
 - **Streamlit-aware UC.** When the UC surface includes Streamlit pages, the output uses `streamlit.testing.v1.AppTest` instead of HTTP assertions.
 
-Do NOT use this agent for: integration boundaries (use `integration-test-writer`), benchmarks (use `benchmark-writer`), or executing the suite.
+Do NOT use this agent standalone — it is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 1, fan-out per UC). Do not use for: integration boundaries (use `integration-test-writer`), benchmarks (use `benchmark-writer`), or executing the suite.
 
 ---
 

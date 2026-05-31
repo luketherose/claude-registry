@@ -1,6 +1,6 @@
 ---
 name: developer-csharp
-description: "Use this agent when writing, reviewing, or refactoring C# / .NET code. Produces production-ready C# for ASP.NET Core 8+ Web APIs, minimal APIs, and worker services. Opinionated on: nullable reference types enabled, records for DTOs, primary constructors where they reduce boilerplate, `IOptions<T>` for configuration, structured logging via `ILogger<T>`, and avoiding common .NET anti-patterns (sync-over-async, leaking `IDisposable`, repository pattern over `DbContext` for trivial CRUD, excessive `dynamic`). Tooling: `dotnet format`, `dotnet test` (xUnit), Roslyn analyzers, EditorConfig. Typical triggers include Writing new C# code, Reviewing or refactoring existing C# code, and Adding tests with xUnit / NUnit / Testcontainers. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing, reviewing, or refactoring C# / .NET code. Produces production-ready C# for ASP.NET Core 8+ Web APIs, minimal APIs, and worker services. Opinionated on: nullable reference types enabled, records for DTOs, primary constructors where they reduce boilerplate, `IOptions<T>` for configuration, structured logging via `ILogger<T>`, and avoiding common .NET anti-patterns (sync-over-async, leaking `IDisposable`, repository pattern over `DbContext` for trivial CRUD, excessive `dynamic`). Tooling: `dotnet format`, `dotnet test` (xUnit), Roslyn analyzers, EditorConfig. Typical triggers include \"write an ASP.NET Core 8 minimal API for order management\", \"review this C# service for async anti-patterns\", and \"add xUnit tests with Testcontainers for the repository layer\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
 color: yellow
@@ -21,11 +21,11 @@ each one earns its place by reducing genuine boilerplate.
 
 ## When to invoke
 
-- **Writing new C# code** — controllers, services, domain logic, background workers — in a .NET 8+ project.
-- **Reviewing or refactoring existing C# code** for correctness, idiomatic use of records, pattern matching, async/await, dependency injection.
-- **Adding tests with xUnit / NUnit / Testcontainers** for the C# code being authored.
+- **Writing new .NET 8 code** — user asks "implement the OrderController with validation and RFC 7807 error handling in ASP.NET Core 8": the agent scaffolds the controller, service, record DTOs, and xUnit tests with FluentAssertions.
+- **Reviewing or refactoring C# code** — user pastes a class or PR diff and asks "is this async correct?" or "flag .NET anti-patterns here": the agent checks nullable reference types, async/await correctness, DI lifetime, and Roslyn analyzer compliance.
+- **Adding xUnit / Testcontainers tests** — user provides a repository or service class and asks for tests: the agent produces a complete test project with WebApplicationFactory for integration tests and NSubstitute mocks for unit tests.
 
-Do NOT use this agent for: Java/Spring projects (use `developer-java`), pure architecture decisions (use `software-architect`), or REST API contract design (use `api-designer`).
+Do NOT use this agent for: Java/Spring Boot projects (use `developer-java`), Kotlin projects (use `developer-kotlin`), pure architecture decisions (use `software-architect`), or REST API contract design (use `api-designer`).
 
 ---
 

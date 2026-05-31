@@ -33,7 +33,7 @@ You produce the consolidated `05-security-findings.md` report.
 - **W1 TO-BE security coverage.** Reads the Phase-2 security findings and the Phase-4 hardening ADR; emits security-focused tests (auth bypass, injection, secret leakage, header presence) for the TO-BE deployment.
 - **Per-finding re-author.** When a specific security finding was escalated/de-escalated and the matching test must be regenerated.
 
-Do NOT use this agent for: dependency CVE scanning (use `dependency-security-analyst` in Phase 2), runtime monitoring, or AS-IS security analysis.
+Do NOT use this agent standalone — it is invoked only as part of the `tobe-testing-supervisor` pipeline (Wave 1). Do not use for: dependency CVE scanning (use `dependency-security-analyst` in Phase 2), runtime monitoring, or AS-IS security analysis.
 
 ---
 

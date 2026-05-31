@@ -1,0 +1,45 @@
+[
+  {
+    "id": "eval-001",
+    "prompt": "Run the technical analysis — .indexing-kb/ is ready and Phase 1 functional outputs are at docs/analysis/01-functional/",
+    "expectations": [
+      "Reads supervisor-protocol.md before dispatching any sub-agent",
+      "Reads sub-agents.md to resolve the W1 roster before dispatch",
+      "Dispatches all 8 W1 analysts in a single parallel batch (not sequentially)",
+      "risk-synthesizer (W2) runs only after all 8 W1 agents have completed and their outputs are on disk",
+      "technical-analysis-challenger runs in W3 (always ON — never opt-in)",
+      "technical-evidence-auditor runs in W3b after the challenger (always ON)",
+      "Writes _meta/phase-verification-report.md (Wave 3c) before triggering the Export Wave",
+      "Produces docs/analysis/02-technical/ output tree including 14-unresolved-questions.md",
+      "Updates _meta/manifest.json after every wave with timing fields populated",
+      "Triggers PDF and PPTX export only after Phase 2 is marked complete",
+      "Never references a target technology, migration target, or TO-BE architecture anywhere in its output",
+      "All file content written via Write tool — never via Bash heredoc, echo redirect, tee, or printf > file"
+    ],
+    "timeout": 600
+  },
+  {
+    "id": "eval-002",
+    "prompt": "The technical analysis at docs/analysis/02-technical/ is already complete but the PDF export is missing — regenerate only the missing export",
+    "expectations": [
+      "Detects that docs/analysis/02-technical/ has status: complete and exports are partially missing",
+      "Offers exports-only resume mode as default recommendation without re-running the full pipeline",
+      "Does NOT re-dispatch any W1 or W2 sub-agents",
+      "Asks for explicit confirmation before overwriting any export that already exists",
+      "Dispatches document-creator (and/or presentation-creator) for the missing export only",
+      "Does not declare Phase 2 complete again — it was already complete before"
+    ],
+    "timeout": 300
+  },
+  {
+    "id": "eval-003",
+    "prompt": "Run the technical analysis — .indexing-kb/ is missing",
+    "expectations": [
+      "Stops immediately and does not dispatch any sub-agent",
+      "Asks the user whether to run the indexing pipeline first (Phase 0), proceed in degraded mode, or abort",
+      "Never auto-invokes the indexing supervisor without user permission",
+      "Does not fabricate or invent KB content"
+    ],
+    "timeout": 60
+  }
+]

@@ -29,9 +29,9 @@ Common capabilities and when to use them:
 | `functional-analysis-supervisor` | Phase 1: AS-IS functional analysis from `.indexing-kb/` to `docs/analysis/01-functional/` (+ Accenture-branded PDF/PPTX exports; supports `exports-only` resume mode) |
 | `technical-analysis-supervisor` | Phase 2: AS-IS technical analysis to `docs/analysis/02-technical/` (+ PDF/PPTX exports; supports `exports-only` resume mode) |
 | `baseline-testing-supervisor` | Phase 3: AS-IS baseline regression suite at `tests/baseline/` (+ snapshots, benchmarks, optional Postman collection) |
-| `refactoring-tobe-supervisor` | Phase 4: TO-BE refactoring (FIRST phase with target tech — Spring Boot 3 + Angular) — produces `backend/`, `frontend/`, OpenAPI contract, ADRs, migration roadmap |
-| `tobe-testing-supervisor` | Phase 5: TO-BE testing & equivalence verification — final go-live gate. Produces backend/frontend/E2E tests, equivalence harness vs Phase 3 baseline, performance comparison, security findings, and the deliverable `01-equivalence-report.md` requiring PO sign-off |
-| `refactoring-supervisor` | End-to-end refactoring workflow (Phases 0–5, with HITL + per-step execution timings between phases) |
+| `refactoring-tobe-supervisor` | **LEGACY (v2 only)** — big-bang Phase 4 approach; superseded by the incremental Phase 4 loop in `refactoring-supervisor` v3. Retained for backward compatibility. |
+| `tobe-testing-supervisor` | **LEGACY (v2 only)** — separate Phase 5 equivalence testing; absorbed into Phase 4 Step 6 of `refactoring-supervisor` v3. Retained for backward compatibility. |
+| `refactoring-supervisor` | End-to-end application replatforming workflow (Phases 0–4, with HITL between every phase and every Phase 4 step; Phase 4 absorbs the previous Phase 5 equivalence testing into Step 6) |
 
 ---
 

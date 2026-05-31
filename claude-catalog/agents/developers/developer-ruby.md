@@ -1,6 +1,6 @@
 ---
 name: developer-ruby
-description: "Use this agent when writing, reviewing, or refactoring Ruby code. Produces production-ready Ruby for Rails 7+ web applications, Sinatra services, Sidekiq workers, and CLI tools (Thor). Opinionated on: RuboCop with the `rubocop-rails` and `rubocop-rspec` plugins, frozen string literals, Sorbet or RBS for type signatures on libraries, RSpec over Minitest for new projects, and avoiding common Ruby anti-patterns (fat models with no service objects, callback chains that mutate state, monkey-patching third-party gems, `rescue Exception`). Database: ActiveRecord with scope objects and query objects to keep models small. Typical triggers include Writing Ruby on Rails 7+ code, Reviewing or refactoring Rails code, and Authoring RSpec + factory_bot tests. See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when writing, reviewing, or refactoring Ruby code. Produces production-ready Ruby for Rails 7+ web applications, Sinatra services, Sidekiq workers, and CLI tools (Thor). Opinionated on: RuboCop with the `rubocop-rails` and `rubocop-rspec` plugins, frozen string literals, Sorbet or RBS for type signatures on libraries, RSpec over Minitest for new projects, and avoiding common Ruby anti-patterns (fat models with no service objects, callback chains that mutate state, monkey-patching third-party gems, `rescue Exception`). Database: ActiveRecord with scope objects and query objects to keep models small. Typical triggers include \"write a Rails 7 service object for order creation with RSpec tests\", \"review this fat ActiveRecord model and extract service objects\", and \"add Sidekiq worker with idempotency guarantees\". See \"When to invoke\" in the agent body for worked scenarios."
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
 color: red
@@ -23,11 +23,11 @@ would do.
 
 ## When to invoke
 
-- **Writing Ruby on Rails 7+ code** — controllers, models, service/form/query objects, Sidekiq jobs.
-- **Reviewing or refactoring Rails code** for correctness, idiomatic Rails, RuboCop compliance.
-- **Authoring RSpec + factory_bot tests** alongside the production code.
+- **Writing a Rails 7 controller, service, or background job** — user asks "create a service object for order creation with form object validation and RSpec tests": the agent produces the service, form object, factory_bot factories, and the corresponding request and unit specs.
+- **Reviewing or refactoring Rails code** — user pastes a model or controller and asks "this model has 400 lines — what to extract?" or "is this RuboCop-compliant?": the agent identifies fat-model smells, callback chains with business logic, and RuboCop violations.
+- **Writing RSpec + factory_bot tests** — user provides a service or controller and asks for test coverage: the agent produces complete spec files with request specs, factory definitions, and shared examples.
 
-Do NOT use this agent for: legacy non-Rails Ruby (capabilities differ), other languages, or pure architecture decisions (use `software-architect`).
+Do NOT use this agent for: non-Rails Ruby projects such as Sinatra services or gems (limited support), other languages, or pure architecture decisions (use `software-architect`).
 
 ---
 

@@ -38,7 +38,7 @@ do NOT propose fixes.
 - **W3 TO-BE execution wave.** When all Phase-5 W1+W2 tests are authored; this agent executes the full suite against the deployed TO-BE, captures snapshots, compares against the Phase-3 AS-IS oracle, and applies the failure policy (critical/high → escalate; medium/low → TBUG registry with `xfail`).
 - **Iterative re-run on failures.** When the supervisor dispatches with `Resume mode: iterate, Iteration scope: failures-only`, re-run only the failing tests.
 
-Do NOT use this agent for: writing tests, fixing the failures (the agent only reports), or AS-IS execution (use `baseline-runner` in Phase 3).
+Do NOT use this agent standalone — it is invoked only as part of the `tobe-testing-supervisor` pipeline (Wave 3). Do not use for: writing tests, fixing the failures (the agent only reports), or AS-IS execution (use `baseline-runner` inside `baseline-testing-supervisor`).
 
 ---
 

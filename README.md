@@ -31,43 +31,41 @@ If you just want to install capabilities in your project without reading everyth
 
 ```
 claude-registry/
+  bmad/                    ← BMAD methodology layer
+    workflows.json           machine-readable registry of available workflow use cases
+    design/
+      mapping.md             canonical BMAD→Anthropic pattern decisions
+      workflow-dag-draft.json  dependency graph for all 87 pipeline agents
+    scripts/
+      backfill-dag.py        syncs DAG into catalog.json bmad blocks
+
   claude-catalog/          ← source (development and review)
     agents/                  subagent .md files with YAML frontmatter
       indexing/                pipeline for indexing a legacy codebase (8 agents)
-      functional-analysis/     pipeline for AS-IS functional analysis Phase 1 (6 agents)
-      technical-analysis/      pipeline for AS-IS technical analysis Phase 2 (11 agents)
+      functional-analysis/     pipeline for AS-IS functional analysis Phase 1 (7 agents)
+      technical-analysis/      pipeline for AS-IS technical analysis Phase 2 (12 agents)
       baseline-testing/        pipeline for AS-IS baseline testing Phase 3 (8 agents)
-      refactoring-tobe/        pipeline for TO-BE refactoring Phase 4 (10 agents)
-      tobe-testing/            pipeline for TO-BE testing & equivalence verification Phase 5 (9 agents)
+      refactoring-tobe/        LEGACY Phase 4 big-bang approach — v2 only (11 agents)
+      tobe-testing/            LEGACY Phase 5 equivalence testing — v2 only (9 agents)
       developers/              language-specific developer agents (9: Java/Spring, Python, Frontend, Go, Rust, Kotlin, C#, Ruby, PHP)
-      (other agents at root level — orchestrator, role-based agents, etc.)
-    skills/                  reusable knowledge providers (shared across agents)
-      orchestrators/           backend, frontend, documentation orchestrator skills
-      (other skills grouped by topic)
-    examples/                example invocations for capabilities
-    evals/                   validation scenarios
-    hooks/                   scripts and configurations for Claude Code hooks
-    settings/                reference settings.json for projects
-    mcp/                     MCP server configuration examples
-    policies/                remaining conventions (not yet migrated to skills)
-    templates/               output templates (ADR, report, API contract)
-    docs/                    internal documentation for contributors
+      deliberation/            multi-agent deliberation pipeline (7 agents)
+      (other agents grouped by topic — orchestration, quality, architecture, api, documentation)
+    skills/                  reusable knowledge providers (42 skills, all haiku + Read only)
+    docs/<phase>/            reference docs loaded on demand by supervisors (progressive disclosure)
+      <phase>/supervisor-protocol.md  decision rules, escalation triggers, constraints per phase
+    evals/<agent-name>/      BMAD eval suites — triggers.json + evals.json per agent
+    templates/
+      new-use-case/          scaffold for adding a new workflow use case (8-step README + templates)
     scripts/
       setup-capabilities.sh  installs capabilities into a project (resolves dependencies)
       new-capability.sh      scaffolds a new capability or skill
-    how-to-write-a-capability.md
-    CONTRIBUTING.md
-    GOVERNANCE.md
-    CHANGELOG.md
-    ANTI-PATTERNS.md         negative-knowledge log (deprecated approaches + reasons)
 
   claude-marketplace/      ← distribution (approved capabilities only)
     stable/<topic>/          production-ready capabilities, grouped by topic
     beta/<topic>/            new or experimental capabilities, grouped by topic
     skills/<topic>/          shared skills, grouped by topic
-                              (skills/frontend/<framework>/ for Angular/React/Qwik/Vue/Vanilla)
-    catalog.json             manifest — `file` field is the source of truth
-                              for the on-disk path of every capability
+    catalog.json             manifest — `file` field is the source of truth;
+                              pipeline agents carry a `bmad` block with DAG metadata
 
   guida-operativa.pdf      ← read this first
   pitch-claude-registry.pptx
@@ -75,9 +73,26 @@ claude-registry/
 
 ---
 
+## BMAD methodology layer
+
+The registry is structured around [BMAD methodology](https://bmad-builder-docs.bmad-method.org) patterns adapted to the Anthropic-compliant capability format:
+
+| Pattern | Implementation |
+|---|---|
+| **Progressive disclosure** | Supervisor bodies ≤ 10k chars; operational content in `docs/<phase>/supervisor-protocol.md` loaded on demand |
+| **Document-as-cache** | Every pipeline phase writes `_meta/pipeline-state.yaml` for reliable resume after context resets |
+| **Workflow DAG** | `bmad/design/workflow-dag-draft.json` + `bmad` blocks in `catalog.json` (`preceded_by`, `followed_by`, `phase`, `wave`) |
+| **Workflow registry** | `bmad/workflows.json` — machine-readable index of available use-case workflows |
+| **Eval suites** | `claude-catalog/evals/<agent>/triggers.json` + `evals.json` per supervisor |
+| **New use case scaffold** | `claude-catalog/templates/new-use-case/` — 8-step guide to add a new workflow |
+
+Currently one workflow is registered: **Application Replatforming** (Phases 0–4, entry point: `refactoring-supervisor`).
+
+---
+
 ## Available capabilities
 
-### Agents (83)
+### Agents (87)
 
 | Name | Tier | Description |
 |------|------|-------------|
@@ -85,7 +100,7 @@ claude-registry/
 | `functional-analyst` | stable | Requirements, use cases, business processes |
 | `developer-java` | stable | Java/Spring Boot enterprise development |
 | `orchestrator` | beta | Meta-orchestrator (opus): discovers installed agents dynamically, decomposes multi-domain tasks, dispatches specialists in parallel, synthesises results |
-| `refactoring-supervisor` | beta | **Refactoring workflow supervisor (opus, v2.0.0)**: top-level workflow for end-to-end refactoring/migration. Delegates phases sequentially to dedicated supervisors (Phase 0 indexing, Phase 1 functional analysis, Phase 2 technical analysis, Phase 3 baseline testing, Phase 4 TO-BE refactoring, Phase 5 TO-BE testing & equivalence verification). Strict human-in-the-loop with schematic preview before each phase and execution-timing recap after. **v2.0.0**: MAJOR milestone — workflow now covers the full AS-IS→TO-BE→validation journey (Phases 0–5); Phase 5 is the final go-live gate with PO sign-off on the equivalence report. v1.2.0: when Phase 1 or 2 analysis is complete but the PDF/PPTX export is missing, offers a `regenerate-exports` choice that runs only the export wave. v1.1.0: bootstrap asks the user explicitly per phase to skip / re-run / revise (no more silent auto-skip). |
+| `refactoring-supervisor` | beta | **Application Replatforming supervisor (v3.x)**: top-level entry point for end-to-end AS-IS→TO-BE migration across Phases 0–4. Delegates Phases 0–3 to dedicated phase supervisors; drives Phase 4 directly via a 7-step incremental loop (Bootstrap → Skeleton → Feature Loop → Validation → Progressive Build → Hardening → Final Validation). Phase 4 absorbs the previous Phase 5 equivalence testing into Step 6. Strict HITL between every phase and every Phase 4 step. BMAD-compliant: reads `docs/refactoring/workflow-manifest.json` for resume state, loads reference docs on demand. |
 | `indexing-supervisor` | beta | **Indexing pipeline supervisor (opus, v0.2.0)**: indexes legacy Python codebases (with optional Streamlit) into a markdown KB at `.indexing-kb/`. Dispatches 7 sub-agents in 4 phases. v0.2.0: bootstrap detects existing `.indexing-kb/` and asks the user explicitly skip / re-run / revise before proceeding. |
 | `codebase-mapper` | beta | Indexing sub-agent: structural inventory (tree, LOC, packages, entrypoints) |
 | `dependency-analyzer` | beta | Indexing sub-agent: external deps + internal import graph + circular deps |
@@ -112,7 +127,7 @@ claude-registry/
 | `security-analyst` | beta | Technical-analysis sub-agent (W1): OWASP Top 10, input validation, secrets in code, STRIDE threat model |
 | `risk-synthesizer` | beta | Technical-analysis sub-agent (W2): unified risk register MD/JSON/CSV, severity matrix, remediation priority |
 | `technical-analysis-challenger` | beta | Technical-analysis sub-agent (W3, always ON): adversarial review for gaps, contradictions, AS-IS violations |
-| `baseline-testing-supervisor` | beta | **Baseline Testing supervisor (opus, v0.2.0)**: Phase 3 AS-IS baseline regression suite. Reads `.indexing-kb/` + Phase 1 + Phase 2, dispatches 7 sub-agents in 4 waves (W0 fixtures + W1 fan-out per UC + W2 execution and oracle capture + W3 challenger). Adaptive execution policy (write+execute or write-only). Per-step timing recap. v0.2.0: bootstrap detects existing baseline outputs and asks the user explicitly skip / re-run / revise (default `skip` because the oracle drives Phase 5 equivalence). Streamlit-aware. Strictly AS-IS. |
+| `baseline-testing-supervisor` | beta | **Baseline Testing supervisor (v0.3.x)**: Phase 3 AS-IS baseline regression suite. Reads `.indexing-kb/` + Phase 1 + Phase 2, dispatches 7 sub-agents in 4 waves (W0 fixtures + W1 fan-out per UC + W2 execution and oracle capture + W3 challenger). Adaptive execution policy (write+execute or write-only). The oracle produced here is consumed by Phase 4 Step 6 equivalence verification. Streamlit-aware. Strictly AS-IS. |
 | `fixture-builder` | beta | Baseline-testing sub-agent (W0): conftest.py with seed/time/network determinism + minimal/realistic/edge fixtures |
 | `usecase-test-writer` | beta | Baseline-testing sub-agent (W1, fan-out per UC): pytest module per use case (happy + alternative + edge), Streamlit AppTest where applicable |
 | `integration-test-writer` | beta | Baseline-testing sub-agent (W1): DB / file system / outbound API tests (mocked) |
@@ -120,7 +135,7 @@ claude-registry/
 | `service-collection-builder` | beta | Baseline-testing sub-agent (W1, conditional): Postman 2.1 collection for services exposed by the AS-IS app |
 | `baseline-runner` | beta | Baseline-testing sub-agent (W2): executes the suite, captures snapshots/benchmark JSON/coverage; applies failure policy (xfail/skip/escalate) |
 | `baseline-challenger` | beta | Baseline-testing sub-agent (W3, always ON): adversarial review (coverage, AS-IS source modifications, determinism, oracle integrity, severity-mismatch, Streamlit/Postman) |
-| `refactoring-tobe-supervisor` | beta | **Refactoring TO-BE supervisor (opus, v0.2.0)**: Phase 4 — first phase with target tech (Spring Boot 3 + Angular). Reads Phases 0–3, dispatches 9 sub-agents in 6 waves (decomposition + ADRs → OpenAPI → BE+FE parallel scaffolds + per-UC translation → hardening → roadmap → challenger). Strict dependency chain with 3 HITL checkpoints. Adaptive verification (mvn compile + ng build). v0.2.0: bootstrap detects existing TO-BE outputs and asks the user explicitly skip / re-run / revise (default `skip` to protect hand-edited generated code). |
+| `refactoring-tobe-supervisor` | beta | **LEGACY (v2 only)** — big-bang Phase 4 approach superseded by the incremental Phase 4 loop in `refactoring-supervisor` v3. Retained for projects running the v2 workflow. Dispatches 9 sub-agents in 6 waves producing Spring Boot 3 backend + Angular frontend from the Phase 0–3 analysis. |
 | `decomposition-architect` | beta | Refactoring-tobe sub-agent (W1): bounded-context decomposition (DDD), aggregates, AS-IS↔TO-BE module map, ADR-001 (architecture style) + ADR-002 (target stack) |
 | `api-contract-designer` | beta | Refactoring-tobe sub-agent (W2): OpenAPI 3.1 contract (single source of truth), Postman TO-BE collection, ADR-003 (auth flow) |
 | `backend-scaffolder` | beta | Refactoring-tobe sub-agent (W3 BE step 1): Spring Boot 3 Maven scaffold (controllers from OpenAPI, DTOs, services with TODOs, error handler RFC 7807, security baseline) |
@@ -130,7 +145,7 @@ claude-registry/
 | `hardening-architect` | beta | Refactoring-tobe sub-agent (W4): observability (JSON logging + correlation-id, Micrometer + Prometheus, OpenTelemetry) and security (Spring Security 6 baseline, OWASP headers, CSP), ADR-004 + ADR-005 |
 | `migration-roadmap-builder` | beta | Refactoring-tobe sub-agent (W5): strangler-fig roadmap with per-BC milestones, rollback plans, go-live criteria, AS-IS bug carry-over |
 | `phase4-challenger` | beta | Refactoring-tobe sub-agent (W6, always ON): AS-IS↔TO-BE traceability matrix + 8 adversarial checks (coverage, OpenAPI↔code drift, ADR completeness, perf hypothesis, security regression, equivalence, AS-IS-only leak) |
-| `tobe-testing-supervisor` | beta | **TO-BE Testing supervisor (opus, v0.1.0)**: Phase 5 — final go-live gate. Validates the TO-BE codebase against the AS-IS baseline (Phase 3). Dispatches 8 sonnet workers in 5 waves: equivalence/backend/frontend/security tests authoring (W1) → performance comparison vs Phase 3 baseline (W2) → execution & oracle capture (W3) → equivalence synthesis with PO sign-off (W4) → adversarial challenger (W5). Adaptive execution policy (mvn/ng/playwright). Failure policy: critical/high escalate; medium/low → TBUG registry with xfail. AS-IS and TO-BE source code stay read-only. Produces the deliverable `01-equivalence-report.md`. |
+| `tobe-testing-supervisor` | beta | **LEGACY (v2 only)** — separate Phase 5 equivalence testing superseded by Phase 4 Step 6 of `refactoring-supervisor` v3. Retained for projects running the v2 workflow. Dispatches 8 workers in 5 waves producing equivalence tests, performance comparison, and the deliverable `01-equivalence-report.md` with PO sign-off. |
 | `equivalence-test-writer` | beta | TO-BE-testing sub-agent (W1, fan-out per UC): pytest harness driving the TO-BE deployment and comparing output against the Phase 3 AS-IS snapshot (HTTP for direct UCs, Playwright for Streamlit-derived UCs) |
 | `backend-test-writer` | beta | TO-BE-testing sub-agent (W1): JUnit 5 + Mockito + Testcontainers + Spring Cloud Contract per OpenAPI operationId; > 80% line, > 70% branch coverage targets |
 | `frontend-test-writer` | beta | TO-BE-testing sub-agent (W1): Jest + Angular Testing Library component tests + Playwright E2E specs derived from Phase 1 user-flows |
@@ -165,7 +180,7 @@ claude-registry/
 | `debate-operations-reviewer` | beta | Deliberation persona (opus): Operations / Reliability Reviewer — SLOs, capacity, observability, RTO/RPO, partial-failure modes, cost-of-operation. |
 | `debate-judge` | beta | Deliberation persona (opus): neutral judge — Step 3 summariser (no recommendation) and Step 6 arbitrator (must address every unresolved high/critical objection). |
 
-### Skills
+### Skills (42)
 
 Skills are atomic knowledge providers shared across multiple agents. They are not
 autonomous agents: they are invoked by agents to retrieve standards and conventions.
@@ -175,11 +190,12 @@ The `setup-capabilities.sh` script installs them automatically as dependencies.
 |------|---------|----------|
 | `java-spring-standards` | developer-java, code-reviewer, test-writer | Package structure, layering, testing, error handling, logging, security, Micrometer |
 | `testing-standards` | developer-java, test-writer, code-reviewer, developer-python | Principles, scenario taxonomy, naming, JUnit 5 / pytest / Jest templates |
+| `test-data-seeding-standards` | test-data-seeder | Pivot-entity model, lifecycle-state coverage, FK rules, 13 migration tools (Liquibase, Flyway, Django, Rails, EF Core, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic, raw SQL) |
 | `rest-api-standards` | developer-java, api-designer, code-reviewer | Resource modelling, HTTP methods, status codes, RFC 7807, OpenAPI 3.1 |
 | `accenture-branding` | presentation-creator, document-creator | Colour palette, python-pptx constants, CSS PDF template, typography |
-| `unicredit-design-system` | developer-frontend (auto-loaded when the client is UniCredit) | UniCredit brand & Bricks DS — logo rules, palette (`#E30613` red + neutrals + states), typography fallback stack, 8 px spacing grid, ready-to-paste `--uc-*` CSS tokens, ~70 Bricks components, EN 301 549 / WCAG 2.1 AA accessibility targets, tone of voice |
+| `unicredit-design-system` | developer-frontend (auto-loaded when the client is UniCredit) | UniCredit brand & Bricks DS — logo rules, palette, typography, 8 px grid, ~70 Bricks components, WCAG 2.1 AA targets |
 | `functional-reconstruction` | developer-frontend, functional-analyst (agent) | Functional behaviour reconstruction, feature lists, user flows, business rules |
-| + 36 frontend and backend skills | developer-frontend | Angular, React, Vue, Qwik, Vanilla, Python, Java, database, refactoring, orchestrators |
+| + 35 frontend and backend skills | developer-frontend | Angular, React, Vue, Qwik, Vanilla, Python, Java, database, refactoring, orchestrators |
 
 ---
 
