@@ -98,10 +98,9 @@
       "file": "skills/analysis/graphify-code-graph.md",
       "dependencies": [],
       "tools": [
-        "Read",
-        "Bash"
+        "Read"
       ],
-      "model": "sonnet",
+      "model": "haiku",
       "tags": [
         "analysis",
         "code-graph",
