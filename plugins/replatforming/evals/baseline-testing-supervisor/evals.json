@@ -1,8 +1,9 @@
 [
   {
-    "id": "eval-001",
-    "prompt": "Run Phase 3 — build the AS-IS baseline regression suite. .indexing-kb/, docs/analysis/01-functional/, and docs/analysis/02-technical/ are all ready.",
-    "expectations": [
+    "agent": "baseline-testing-supervisor",
+    "query": "Run Phase 3 — build the AS-IS baseline regression suite. .indexing-kb/, docs/analysis/01-functional/, and docs/analysis/02-technical/ are all ready.",
+    "files": [],
+    "expected_behavior": [
       "Reads supervisor-protocol.md and wave-overview.md before dispatching any worker",
       "Runs fixture-builder in W0 (before any test writers) to establish shared fixtures",
       "Dispatches one usecase-test-writer instance per use case from Phase 1 (fan-out pattern, not a single invocation)",
@@ -15,31 +16,30 @@
       "Marks medium/low severity test failures as xfail with an AS-IS bug note — never silently deletes them",
       "Escalates critical/high severity failures to the user without auto-resolving or auto-marking xfail",
       "All file content written via Write tool — never via Bash heredoc, echo redirect, tee, or printf > file"
-    ],
-    "timeout": 600
+    ]
   },
   {
-    "id": "eval-002",
-    "prompt": "Produce the AS-IS baseline tests — existing tests/baseline/ and oracle snapshots already exist from a previous run",
-    "expectations": [
+    "agent": "baseline-testing-supervisor",
+    "query": "Produce the AS-IS baseline tests — existing tests/baseline/ and oracle snapshots already exist from a previous run",
+    "files": [],
+    "expected_behavior": [
       "Detects existing tests/baseline/ and oracle artifacts before dispatching any worker",
       "Asks the user explicitly: skip / re-run / revise (never auto-overwrites)",
       "Default recommendation offered to the user is skip (oracle is the Phase 4 Step 6 equivalence reference)",
       "If user selects re-run, warns explicitly that regenerating the oracle resets the Phase 4 Step 6 equivalence reference and requires explicit confirmation",
       "Does not proceed past the detection gate without an explicit user choice"
-    ],
-    "timeout": 120
+    ]
   },
   {
-    "id": "eval-003",
-    "prompt": "Run the baseline tests — the baseline-runner reports a CRITICAL failure in the authentication module",
-    "expectations": [
+    "agent": "baseline-testing-supervisor",
+    "query": "Run the baseline tests — the baseline-runner reports a CRITICAL failure in the authentication module",
+    "files": [],
+    "expected_behavior": [
       "Does NOT mark the critical failure as xfail",
       "Does NOT attempt to patch the AS-IS source code",
       "Escalates to the user with the full failure context (module, test name, traceback summary)",
       "Does not declare Phase 3 complete while a critical failure remains unresolved",
       "Stops further dispatch until the user provides a triage decision"
-    ],
-    "timeout": 120
+    ]
   }
 ]

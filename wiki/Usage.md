@@ -22,13 +22,13 @@ explicitly.
 > "Review this PR for security issues"
 
 Claude reads the descriptions of installed agents, sees that
-`code-reviewer` matches "review … PR" and `security-analyst` matches
+`pr-review-toolkit:code-reviewer` matches "review … PR" and `security-analyst` matches
 "security issues", and dispatches both (in parallel where independent).
 
 **Explicit invocation:**
 
 ```
-@developer-java-spring add a controller for the /orders endpoint
+@developer-java add a controller for the /orders endpoint
 ```
 
 The `@<name>` form invokes a specific agent regardless of what
@@ -120,7 +120,7 @@ internal logging library, an in-house naming convention, a domain glossary.
 Put a thin overlay in your project:
 
 ```
-your-project/.claude/agents/developer-java-spring-payments.md
+your-project/.claude/agents/developer-java-payments.md
 ```
 
 Patterns:
@@ -128,7 +128,7 @@ Patterns:
 - **Rename**, don't shadow. Use a distinct `name` so both files coexist
   in the directory.
 - **Add, don't rewrite.** Reference the catalog capability by behaviour:
-  "Follow `developer-java-spring` conventions but additionally use our
+  "Follow `developer-java` conventions but additionally use our
   internal `com.acme.logging` library and never persist a `User` record
   without the `tenantId` field."
 - **Promote when stable.** When your overlay proves widely useful, open
@@ -155,7 +155,7 @@ If you want to know what skills an agent depends on, look at its entry
 in `claude-marketplace/catalog.json`:
 
 ```bash
-jq '.capabilities[] | select(.name == "developer-java-spring") | .dependencies' \
+jq '.capabilities[] | select(.name == "developer-java") | .dependencies' \
   claude-marketplace/catalog.json
 ```
 

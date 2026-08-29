@@ -215,6 +215,33 @@ def validate_frontmatter_yaml():
             err("%s: frontmatter does not parse to a mapping" % path)
 
 
+
+def validate_mcp_pins():
+    """MCP server specs must name a version, not a moving target.
+
+    `npx @playwright/mcp@latest` and `uvx --from git+https://...` with no ref
+    both execute whatever the upstream publishes at launch. The plugin-level
+    configs were pinned; the root one was not, so the same server ran pinned or
+    unpinned depending on which config won.
+    """
+    for path in ['.mcp.json'] + sorted(glob.glob('plugins/*/.mcp.json')):
+        if not os.path.exists(path):
+            continue
+        try:
+            config = json.load(open(path, encoding='utf-8'))
+        except Exception as exc:
+            err("%s: not valid JSON (%s)" % (path, exc))
+            continue
+        for name, spec in (config.get('mcpServers') or {}).items():
+            for arg in spec.get('args', []):
+                if arg.endswith('@latest') or arg in ('latest',):
+                    err("%s: server '%s' pulls %s at launch; pin a version"
+                        % (path, name, arg))
+                if arg.startswith('git+') and '@' not in arg.split('github.com', 1)[-1]:
+                    err("%s: server '%s' runs the default branch of %s; pin a "
+                        "commit SHA or tag" % (path, name, arg))
+
+
 def validate_skills():
     seen = {}
     for path in sorted(glob.glob("plugins/*/skills/*/SKILL.md")):
@@ -294,9 +321,21 @@ def validate_agent_references():
     one regression class that matters, a capability removed or renamed while
     references to it were left behind.
     """
+    # Scanning only plugins/ let retired names survive in exactly the files the
+    # team reads first: the wiki pages and docs/ still listed capabilities that
+    # no longer exist. The changelog and archive are exempt because recording a
+    # removal necessarily names the thing removed.
+    scanned = (glob.glob("plugins/**/*.md", recursive=True)
+               + glob.glob("wiki/*.md")
+               + glob.glob("docs/**/*.md", recursive=True)
+               + ["README.md", "CLAUDE.md"])
+    exempt = ("docs/registry/CHANGELOG.md", "docs/language-agnostic-design.md",
+              "docs/modernization/")
+    scanned = [p for p in scanned
+               if os.path.exists(p) and not any(x in p for x in exempt)]
     for name, guidance in RETIRED.items():
         pattern = re.compile(r"`%s`" % re.escape(name))
-        for path in sorted(glob.glob("plugins/**/*.md", recursive=True)):
+        for path in sorted(scanned):
             text = open(path, encoding="utf-8").read()
             for i, line in enumerate(text.splitlines(), 1):
                 if pattern.search(line):
@@ -361,6 +400,7 @@ if __name__ == "__main__":
     budget = {}
     if args.only in (None, "manifests"):
         validate_manifests()
+        validate_mcp_pins()
     if args.only in (None, "capabilities"):
         validate_frontmatter_yaml()
         budget = validate_agents()

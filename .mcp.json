@@ -5,7 +5,7 @@
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/antoinebou12/uml-mcp",
+        "git+https://github.com/antoinebou12/uml-mcp@78137bd66bfeb9754d0d5de0be1016f4dc053cc6",
         "uml-mcp"
       ],
       "env": {
@@ -17,7 +17,7 @@
       "type": "stdio",
       "command": "npx",
       "args": [
-        "@playwright/mcp@latest"
+        "@playwright/mcp@0.0.79"
       ]
     }
   }

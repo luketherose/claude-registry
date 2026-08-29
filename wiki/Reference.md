@@ -93,13 +93,13 @@ validated by the marketplace CI gate.
 
 ```json
 {
-  "name": "developer-java-spring",
+  "name": "developer-java",
   "version": "1.0.0",
   "tier": "stable",
   "type": "agent",
   "status": "active",
   "description": "...",
-  "file": "stable/developer-java-spring.md",
+  "file": "stable/developer-java.md",
   "dependencies": ["java-spring-standards", "testing-standards"],
   "tools": ["Read", "Edit", "Write", "Bash", "Grep", "Glob"],
   "model": "sonnet",
@@ -216,8 +216,8 @@ Checks:
 
 ## Naming conventions
 
-- **Capability name**: `kebab-case`, no version (`developer-java-spring`,
-  not `developer-java-spring-v1`).
+- **Capability name**: `kebab-case`, no version (`developer-java`,
+  not `developer-java-v1`).
 - **Filename**: matches `name` exactly, with `.md` extension.
 - **Branch name** (when contributing): `add/<name>` for new
   capabilities, `update/<name>` for changes, `fix/<topic>` for bug

@@ -180,7 +180,7 @@ the estimated saving is in the order of **2–4 hours/week per person**.
 | `technical-analyst` | Beta | Technical analysis, debt, security |
 | `developer-python` | Beta | Python/FastAPI development |
 | `developer-frontend` | Beta | Multi-framework frontend development |
-| `code-reviewer` | Beta | Structured code review |
+| `pr-review-toolkit:code-reviewer` | Beta | Structured code review |
 | `test-writer` | Beta | JUnit/pytest test writing |
 | `debugger` | Beta | Bug diagnosis |
 | `api-designer` | Beta | REST/OpenAPI API design and review |

@@ -137,7 +137,7 @@ across projects — generic enough to be useful without modification.
 
 **A project's `.claude/agents/`** holds project-specific subagents or
 local specialisations. A project may copy a catalog subagent and rename
-it (e.g. `developer-java-spring-payments.md`) to add domain-specific
+it (e.g. `developer-java-payments.md`) to add domain-specific
 constraints.
 
 When a project-level specialisation proves widely useful, it should be

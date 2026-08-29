@@ -22,7 +22,7 @@ prerequisites, modes, options, and troubleshooting in detail.
 
 No Python, no Node, no other package managers required by the registry
 itself. Individual agents may require their own runtimes (e.g.
-`developer-java-spring` only helps if your project actually has Maven and
+`developer-java` only helps if your project actually has Maven and
 JDK 21 installed) but the registry itself is build-tool-free.
 
 ## Modes
@@ -94,7 +94,7 @@ ls /path/to/your-project/.claude/agents/ | head -20
 ```
 
 You should see a mix of agent names (e.g. `software-architect.md`,
-`code-reviewer.md`, `developer-java-spring.md`) and skill names
+`code-reviewer.md`, `developer-java.md`) and skill names
 (e.g. `java-spring-standards.md`, `testing-standards.md`).
 
 In Claude Code, run:
@@ -143,7 +143,7 @@ Pick specific capabilities when you don't want the whole catalog:
 # Interactive — choose 'select' and provide a comma-separated list
 ./claude-catalog/scripts/setup-capabilities.sh /path/to/your-project
 # When prompted, enter:
-#   software-architect,developer-java-spring,code-reviewer
+#   software-architect,developer-java,code-reviewer
 ```
 
 The dependency resolver still kicks in: if you select an agent that
@@ -169,7 +169,7 @@ overlays. To remove only the catalog files, delete the ones whose
 | `catalog.json not found` | Run the script with its full path from inside the registry checkout. |
 | `permission denied` on the script | `chmod +x ./claude-catalog/scripts/setup-capabilities.sh` |
 | Agent not appearing in `/agents` | Restart the Claude Code session. The directory is read at session start. |
-| Two agents with the same `name` | Only one wins. Rename your project-specific overlay (e.g. `developer-java-spring-payments.md`). |
+| Two agents with the same `name` | Only one wins. Rename your project-specific overlay (e.g. `developer-java-payments.md`). |
 | Setup hangs on Windows Git Bash | Make sure paths don't have spaces; if they do, quote them. |
 | Capability changed but you still see the old behaviour | Pull the registry, re-run setup, restart Claude Code. |
 

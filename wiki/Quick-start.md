@@ -94,7 +94,7 @@ Ask Claude something that matches an agent's `description`. For example:
 
 > "Review the authentication flow in `src/auth/` for security issues."
 
-Claude will delegate to `security-analyst` (or `code-reviewer` plus the
+Claude will delegate to `security-analyst` (or `pr-review-toolkit:code-reviewer` plus the
 `security-analyst` if you ask broadly). You can also invoke an agent
 directly:
 

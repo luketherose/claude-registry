@@ -102,7 +102,7 @@ Java/Spring + Angular (output)?
 
 The refactoring pipelines today are AS-IS Python (with optional
 Streamlit) and TO-BE Spring Boot 3 + Angular 17+. The top-level role
-agents (`developer-java-spring`, `developer-python`,
+agents (`developer-java`, `developer-python`,
 `developer-frontend` covering Angular/React/Vue/Qwik/Vanilla) work
 across general projects. Additional `developer-*` agents for more
 languages are tracked under "Roadmap" — see open issues on the repo.
@@ -150,9 +150,9 @@ name** (so it doesn't shadow a catalog file):
 
 ```markdown
 ---
-name: developer-java-spring-payments
+name: developer-java-payments
 description: Use when working on the payments service. Follows
-  developer-java-spring conventions, additionally requires every
+  developer-java conventions, additionally requires every
   payment write to flow through the IdempotencyKey filter.
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet

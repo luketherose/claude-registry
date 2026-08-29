@@ -20,8 +20,8 @@
     "description": "Should not activate this capability"
   },
   {
-    "query": "What are the security risks in this codebase?",
+    "query": "Produce a CVE inventory for our third-party dependencies",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Dependency vulnerability audit, should route to `technical-analyst`"
   }
 ]

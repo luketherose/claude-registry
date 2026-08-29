@@ -1,8 +1,9 @@
 [
   {
-    "id": "eval-001",
-    "prompt": "Debate mode — should we lift-and-shift the application to AWS ECS or refactor it to Spring Boot microservices before migration?",
-    "expectations": [
+    "agent": "deliberative-decision-engine",
+    "query": "Debate mode — should we lift-and-shift the application to AWS ECS or refactor it to Spring Boot microservices before migration?",
+    "files": [],
+    "expected_behavior": [
       "Runs trigger detection (Step 0) and classifies the decision type as 'migration' with riskLevel 'high'",
       "Produces a structured decision brief at .deliberation-kb/<trace-id>/00-decision-brief.json before dispatching any persona",
       "Dispatches all 5 personas (debate-proposer, debate-critic, debate-replatforming-specialist, debate-risk-reviewer, debate-operations-reviewer) in a single parallel batch — never sequentially",
@@ -15,13 +16,13 @@
       "User-facing Markdown report includes all 11 mandatory sections: Decision, Why, Alternatives, Objections raised, Objections that changed the decision, Dissenting opinions, Residual risks, Validation plan, Rollback plan, Human approval, Audit trail",
       "requiredHumanApproval is set to true given the high-risk / irreversible classification",
       "Trace ID follows the format del-YYYYMMDD-HHMMSS-<6hex>"
-    ],
-    "timeout": 600
+    ]
   },
   {
-    "id": "eval-002",
-    "prompt": "Decidi con dibattito quale strategia di migrazione adottare per il modulo di autenticazione: OAuth 2.0 con Keycloak o Spring Security nativo",
-    "expectations": [
+    "agent": "deliberative-decision-engine",
+    "query": "Decidi con dibattito quale strategia di migrazione adottare per il modulo di autenticazione: OAuth 2.0 con Keycloak o Spring Security nativo",
+    "files": [],
+    "expected_behavior": [
       "Italian trigger is detected with confidence ≥ 0.7 — deliberative mode confirmed without asking for clarification",
       "Decision type classified as 'architecture' or 'security' — riskLevel at minimum 'high' given authentication scope",
       "Uses 5-persona roster (high-risk default) or 3-persona roster only if policy explicitly sets agentCount: 3",
@@ -31,18 +32,17 @@
       "If consensus is not reached, escalates to human_arbitration rather than forcing a decision",
       "Artefact tree written under .deliberation-kb/<trace-id>/ with manifest entry appended after Step 6",
       "User-facing report is in Italian or matches the language of the user prompt"
-    ],
-    "timeout": 600
+    ]
   },
   {
-    "id": "eval-003",
-    "prompt": "Which database should I use — Postgres or MySQL?",
-    "expectations": [
+    "agent": "deliberative-decision-engine",
+    "query": "Which database should I use — Postgres or MySQL?",
+    "files": [],
+    "expected_behavior": [
       "Trigger detector returns confidence < 0.7 — no deliberative mode auto-triggered",
       "Does not dispatch any persona or run the 7-step pipeline",
       "Answers the question directly as a specialist would, without invoking the full deliberation machinery",
       "Does not produce a .deliberation-kb/ artefact tree"
-    ],
-    "timeout": 60
+    ]
   }
 ]

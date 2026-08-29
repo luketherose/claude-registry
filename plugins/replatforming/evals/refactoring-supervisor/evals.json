@@ -1,8 +1,9 @@
 [
   {
-    "id": "eval-001",
-    "prompt": "Start the application replatforming workflow on the current repository",
-    "expectations": [
+    "agent": "refactoring-supervisor",
+    "query": "Start the application replatforming workflow on the current repository",
+    "files": [],
+    "expected_behavior": [
       "Reads bootstrap-protocol.md before starting",
       "Detects existing phase outputs and asks user per-phase: skip / re-run / revise — never auto-skips silently",
       "Dispatches indexing-supervisor for Phase 0 (not codebase-mapper directly)",
@@ -10,18 +11,17 @@
       "Posts a per-phase recap with execution timing after each phase",
       "Waits for user confirmation between every phase and every Phase 4 step",
       "Phase 4 is driven directly (not via refactoring-tobe-supervisor)"
-    ],
-    "timeout": 3600
+    ]
   },
   {
-    "id": "eval-002",
-    "prompt": "Resume Phase 4 from Step 2",
-    "expectations": [
+    "agent": "refactoring-supervisor",
+    "query": "Resume Phase 4 from Step 2",
+    "files": [],
+    "expected_behavior": [
       "Reads docs/refactoring/workflow-manifest.json to detect current Phase 4 step and resume point",
       "Does NOT restart from Step 0",
       "Resumes the incremental feature loop at Step 2",
       "Maintains the always-buildable invariant: verifies the project builds before starting Step 2"
-    ],
-    "timeout": 1800
+    ]
   }
 ]

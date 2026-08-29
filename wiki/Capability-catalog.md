@@ -20,10 +20,10 @@ the manifest at the date in the page footer.
 |---|---|---|
 | `software-architect` | stable | Architectural analysis, ADRs, trade-off evaluation across security, performance, scalability, cost, maintainability |
 | `functional-analyst` | stable | Requirements, use cases, business processes, acceptance criteria |
-| `developer-java-spring` | stable | Java 21 + Spring Boot 3 enterprise development |
+| `developer-java` | stable | Java 21 + Spring Boot 3 enterprise development |
 | `developer-python` | beta | Python / FastAPI development |
 | `developer-frontend` | beta | Multi-framework frontend (Angular, React + Next.js / TanStack, Vue 3, Qwik, Vanilla JS/TS) |
-| `code-reviewer` | beta | Structured code review on PRs or changed files |
+| `pr-review-toolkit:code-reviewer` | official | Structured code review on PRs or changed files. Ships in Anthropic's `pr-review-toolkit` plugin, not in this registry. |
 | `test-writer` | beta | JUnit 5 + Mockito + Testcontainers (Java), pytest (Python), Jest (TS) |
 | `debugger` | beta | Bug diagnosis from stack traces, logs, code |
 | `api-designer` | beta | REST API design and review, OpenAPI 3.1 |
@@ -132,9 +132,9 @@ use them.
 
 | Domain | Skills | Used by |
 |---|---|---|
-| **Backend Java/Spring** | `java-spring-standards`, `spring-expert`, `spring-architecture`, `spring-data-jpa`, `java-expert` | `developer-java-spring`, `code-reviewer`, `test-writer`, `backend-orchestrator` |
+| **Backend Java/Spring** | `java-spring-standards`, `spring-expert`, `spring-architecture`, `spring-data-jpa`, `java-expert` | `developer-java`, `pr-review-toolkit:code-reviewer`, `test-writer`, `backend-orchestrator` |
 | **Backend Python** | `python-expert`, `streamlit-expert` | `developer-python`, `business-logic-analyst` |
-| **Database** | `postgresql-expert` | `developer-java-spring`, `data-mapper` |
+| **Database** | `postgresql-expert` | `developer-java`, `data-mapper` |
 | **Frontend Angular** | `angular-expert`, `ngrx-expert`, `rxjs-expert` | `developer-frontend`, `frontend-scaffolder` |
 | **Frontend React** | `react-expert`, `tanstack`, `tanstack-query`, `tanstack-start`, `nextjs` | `developer-frontend` |
 | **Frontend other** | `vue-expert`, `qwik-expert`, `vanilla-expert` | `developer-frontend` |
