@@ -1,22 +1,22 @@
 [
   {
-    "query": "REPLACE: a direct invocation phrase that SHOULD trigger this supervisor",
+    "query": "REPLACE: a direct invocation phrase a user would actually type",
     "should_trigger": true,
-    "description": "Direct primary invocation"
+    "description": "REPLACE: what the query is about, in neutral terms"
   },
   {
-    "query": "REPLACE: another trigger phrase with different wording",
+    "query": "REPLACE: the same need, phrased differently",
     "should_trigger": true,
-    "description": "Alternate phrasing"
+    "description": "REPLACE: what the query is about, in neutral terms"
   },
   {
-    "query": "REPLACE: a query that should NOT trigger this supervisor, confusable with a sibling",
+    "query": "REPLACE: a near miss that belongs to a neighbouring capability",
     "should_trigger": false,
-    "description": "Confusable query, should route to `SIBLING-AGENT` instead"
+    "description": "REPLACE: what the query is about. Never name the capability that should win, and never say whether it triggers: the description is not allowed to carry the answer"
   },
   {
     "query": "What does this code do?",
     "should_trigger": false,
-    "description": "Generic code question, should not activate any supervisor"
+    "description": "Open-ended question about unspecified code"
   }
 ]

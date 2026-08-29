@@ -315,7 +315,10 @@ def validate_evals():
             if re.search(pat, text, re.I) and not re.search(pat, query, re.I):
                 return other
         return None
-    for path in sorted(glob.glob("plugins/*/evals/*/triggers.json")):
+    # templates/ is included: the scaffold shipped three descriptions that this
+    # very gate rejects, so anyone copying it started with a red build.
+    for path in sorted(glob.glob("plugins/*/evals/*/triggers.json")
+                       + glob.glob("templates/**/triggers.json", recursive=True)):
         try:
             cases = json.load(open(path, encoding="utf-8"))
         except Exception as exc:
