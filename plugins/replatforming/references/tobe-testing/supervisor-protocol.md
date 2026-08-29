@@ -11,6 +11,15 @@ decision is needed.
 
 ---
 
+## Contents
+
+- [Pipeline state](#pipeline-state): the `pipeline-state.yaml` file, its bootstrap and update protocol, and its schema.
+- [Escalation triggers: always ask the user](#escalation-triggers-always-ask-the-user): the conditions that stop the supervisor, including an OpenAPI spec that fails spectral.
+- [Decision rules](#decision-rules): the situation by decision table applied without asking.
+- [AS-IS source preservation (non-negotiable)](#as-is-source-preservation-non-negotiable): the per-wave command that proves no AS-IS file was touched.
+- [Manifest update](#manifest-update): what to update after every wave, and how resumed sessions append.
+- [Constraints](#constraints): the non-negotiables: measure, compare and certify, never modify source.
+
 ## Pipeline state
 
 **File**: `docs/analysis/05-tobe-tests/_meta/pipeline-state.yaml`

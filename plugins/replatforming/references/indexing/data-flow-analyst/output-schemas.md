@@ -10,6 +10,19 @@ section skeletons to copy into the `Write` call.
 
 ---
 
+## Contents
+
+- [Bronze JSONL schemas](#bronze-jsonl-schemas): the two append-only Bronze artefacts.
+  - [`bronze/io-boundaries.jsonl`: one record per I/O call site, append-only](#bronzeio-boundariesjsonl-one-record-per-io-call-site-append-only): one record per I/O call site.
+  - [`bronze/config-env-index.jsonl`: one record per env var / config key, append-only](#bronzeconfig-env-indexjsonl-one-record-per-env-var--config-key-append-only): one record per environment variable or config key.
+- [Silver JSONL schemas](#silver-jsonl-schemas): the two agentic Silver artefacts, plus the frontmatter convention all four files share.
+  - [`silver/data-flows.jsonl`: agentic: described data flows with evidence](#silverdata-flowsjsonl-agentic-described-data-flows-with-evidence): described data flows with their evidence.
+  - [`silver/integration-points.jsonl`: agentic: third-party / service integrations](#silverintegration-pointsjsonl-agentic-third-party--service-integrations): third-party and service integrations.
+- [File 1: `.indexing-kb/06-data-flow/database.md`](#file-1-indexing-kb06-data-flowdatabasemd): the database markdown template.
+- [File 2: `.indexing-kb/06-data-flow/external-apis.md`](#file-2-indexing-kb06-data-flowexternal-apismd): the external APIs markdown template.
+- [File 3: `.indexing-kb/06-data-flow/file-io.md`](#file-3-indexing-kb06-data-flowfile-iomd): the file I/O markdown template.
+- [File 4: `.indexing-kb/06-data-flow/configuration.md`](#file-4-indexing-kb06-data-flowconfigurationmd): the configuration markdown template.
+
 ## Bronze JSONL schemas
 
 ### `bronze/io-boundaries.jsonl`: one record per I/O call site, append-only

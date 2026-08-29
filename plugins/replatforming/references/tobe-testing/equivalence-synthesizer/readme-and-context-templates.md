@@ -16,19 +16,19 @@ bootstrap content.
 <frontmatter>
 ---
 
-# Phase 5 — TO-BE testing & equivalence verification
+# Phase 5: TO-BE testing & equivalence verification
 
 ## Reading order
 
-1. **`01-equivalence-report.md`** — start here. PO sign-off required.
-2. `00-context.md` — system summary, scope, run mode.
-3. `02-coverage-report.md` — backend / frontend / equivalence coverage.
-4. `03-contract-tests-report.md` — OpenAPI verification.
-5. `04-performance-comparison.md` — p95/p99 deltas vs AS-IS.
-6. `05-security-findings.md` — OWASP coverage and Phase 2 regressions.
-7. `06-tobe-bug-registry.md` — medium/low non-blocking findings.
-8. `14-unresolved-questions.md` — items needing human decision.
-9. `_meta/challenger-report.md` — adversarial review.
+1. **`01-equivalence-report.md`**: start here. PO sign-off required.
+2. `00-context.md`: system summary, scope, run mode.
+3. `02-coverage-report.md`: backend / frontend / equivalence coverage.
+4. `03-contract-tests-report.md`: OpenAPI verification.
+5. `04-performance-comparison.md`: p95/p99 deltas vs AS-IS.
+6. `05-security-findings.md`: OWASP coverage and Phase 2 regressions.
+7. `06-tobe-bug-registry.md`: medium/low non-blocking findings.
+8. `14-unresolved-questions.md`: items needing human decision.
+9. `_meta/challenger-report.md`: adversarial review.
 
 ## Quick links
 

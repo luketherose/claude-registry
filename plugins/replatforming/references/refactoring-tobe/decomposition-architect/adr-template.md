@@ -6,6 +6,11 @@
 
 ---
 
+## Contents
+
+- [File 4: `docs/adr/ADR-001-architecture-style.md`](#file-4-docsadradr-001-architecture-stylemd): the Nygard-format ADR for the architecture style.
+- [File 5: `docs/adr/ADR-002-target-stack.md`](#file-5-docsadradr-002-target-stackmd): the Nygard-format ADR for the target stack.
+
 ## File 4: `docs/adr/ADR-001-architecture-style.md`
 
 ```markdown
@@ -20,7 +25,7 @@ status: <complete|partial|needs-review|blocked>
 duration_seconds: <int>
 ---
 
-# ADR-001 — Architecture Style
+# ADR-001: Architecture Style
 
 ## Status
 proposed | accepted | superseded
@@ -85,7 +90,7 @@ status: <complete|partial|needs-review|blocked>
 duration_seconds: <int>
 ---
 
-# ADR-002 — Target Stack
+# ADR-002: Target Stack
 
 ## Status
 proposed | accepted | superseded
@@ -106,12 +111,12 @@ the AS-IS Python/Streamlit application.
 | Database | PostgreSQL | 16 | matches AS-IS (Phase 2 detection) |
 | Migrations | Liquibase | 4.x | YAML changelogs, immutable changesets, contexts |
 | Frontend framework | Angular | 18 | per workflow target |
-| Frontend build | Angular CLI / esbuild | — | standard |
-| Frontend tests | Jest + Angular Testing Library + Playwright | — | unit + E2E |
-| Backend tests | JUnit 5 + Mockito + Testcontainers | — | standard for Spring |
-| Logging | SLF4J + Logback (JSON) | — | observability (ADR-004) |
-| Metrics | Micrometer + Prometheus | — | (ADR-004) |
-| Tracing | OpenTelemetry | — | (ADR-004) |
+| Frontend build | Angular CLI / esbuild | not pinned | standard |
+| Frontend tests | Jest + Angular Testing Library + Playwright | not pinned | unit + E2E |
+| Backend tests | JUnit 5 + Mockito + Testcontainers | not pinned | standard for Spring |
+| Logging | SLF4J + Logback (JSON) | not pinned | observability (ADR-004) |
+| Metrics | Micrometer + Prometheus | not pinned | (ADR-004) |
+| Tracing | OpenTelemetry | not pinned | (ADR-004) |
 | API contract | OpenAPI | 3.1 | (ADR-003 details) |
 
 ## Consequences

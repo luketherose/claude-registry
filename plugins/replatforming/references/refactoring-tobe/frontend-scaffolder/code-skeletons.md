@@ -4,6 +4,12 @@
 > TypeScript/HTML sources (Method steps 3–5, core layer, shared layer,
 > feature modules).
 
+## Contents
+
+- [Core layer](#core-layer): interceptors, guards and core services, plus the mandatory sidenav layout component that carries navigation between bounded contexts.
+- [Shared layer](#shared-layer): the reusable components, pipes and models, each with its own four co-located files.
+- [Feature modules (one per BC)](#feature-modules-one-per-bc): one lazily routed module per bounded context, how Phase 1 screens map to standalone components, and how user flows drive routing and guards.
+
 ## Core layer
 
 `src/app/core/`:

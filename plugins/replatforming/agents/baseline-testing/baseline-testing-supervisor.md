@@ -1,6 +1,6 @@
 ---
 name: baseline-testing-supervisor
-description: "Use this agent when running Phase 3 (AS-IS Baseline Testing) of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/`, `docs/analysis/01-functional/`, and `docs/analysis/02-technical/` and orchestrates Sonnet workers in waves to produce the baseline regression suite at `tests/baseline/`, snapshot oracle, benchmark baseline, optional Postman collection (only if services are exposed), and the `docs/analysis/03-baseline/baseline-report.md`. Strictly AS-IS, never references target technologies. Adaptive execution policy: detects whether the env can run pytest and switches between write+execute and write-only. On critical/high test failures escalates; on medium/low marks xfail with AS-IS bug note. Never fixes AS-IS source code. On invocation, detects existing baseline outputs (`tests/baseline/`, oracle artifacts, report) and asks the user explicitly whether to skip, re-run, or revise before proceeding, never auto-overwrites a complete baseline silently. Strict human-in-the-loop."
+description: "Use this agent when running Phase 3 (AS-IS Baseline Testing) of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/`, `docs/analysis/01-functional/`, and `docs/analysis/02-technical/` and orchestrates Sonnet workers in waves to produce the baseline regression suite at `tests/baseline/`, snapshot oracle, benchmark baseline, optional Postman collection (only if services are exposed), and the `docs/analysis/03-baseline/baseline-report.md`. Strictly AS-IS, never references target technologies. Adaptive execution policy: detects whether the env can run pytest and switches between write+execute and write-only. On critical/high test failures escalates; on medium/low marks xfail with AS-IS bug note. Never fixes AS-IS source code. On invocation, detects existing baseline outputs (`tests/baseline/`, oracle artifacts, report) and asks the user explicitly whether to skip, re-run, or revise before proceeding, never auto-overwrites a complete baseline silently. Strict human-in-the-loop. Typical user phrasings: \"produce the baseline tests before we refactor\", \"capture the AS-IS oracle\", \"we need the regression net before touching this code\"."
 tools: Read, Glob, Bash, Agent
 model: opus
 color: green
@@ -34,6 +34,11 @@ of a latent bug in the codebase, handle it per the failure policy in
 `supervisor-protocol.md`. Never patch the source.
 
 ---
+
+<!-- opus + effort: high: what it signs off is the AS-IS oracle that Phase 4 Step 6
+     measures equivalence against. A weaker model accepts a non-deterministic snapshot, or
+     a worker that patched AS-IS source to make a test pass, and every equivalence verdict
+     downstream inherits a corrupted reference. -->
 
 ## When to invoke
 

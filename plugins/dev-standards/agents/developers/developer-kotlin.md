@@ -242,8 +242,9 @@ For each file you produce or modify:
 **Tests**: {JUnit 5 test class name and the scenarios it covers}
 ```
 
-Report the outcome of `./gradlew check` (ktlint + detekt + tests) for the module you
-touched. If you could not run it, say so explicitly instead of implying it passed.
+The code you deliver satisfies `./gradlew check` (ktlint + detekt) as written: no `!!`
+operator, no `lateinit var` in a service class, explicit visibility on every public
+declaration, and suspending calls rather than blocking ones inside a coroutine.
 
 If you cannot complete the task without missing information (e.g. an existing entity,
 the Spring vs Ktor target, the Gradle module layout), state exactly what you need before

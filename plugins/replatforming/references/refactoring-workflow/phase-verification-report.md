@@ -10,6 +10,15 @@
 > the deliverable targets external stakeholders, the verification
 > report targets the human reviewer running the workflow.
 
+## Contents
+
+- [Purpose](#purpose): why every analysis phase ends with a human-readable report rather than a data dump.
+- [File location and naming](#file-location-and-naming): the `_meta/phase-verification-report.md` path, per phase.
+- [Canonical structure](#canonical-structure): the fixed top-level structure every report shares, ending in the three-option prompt.
+- [What the verification report is NOT](#what-the-verification-report-is-not): what the report is not: the stakeholder deliverable is the exported PDF or PPTX.
+- [Per-phase customization](#per-phase-customization): which sections each phase plan redefines for itself.
+- [Iteration on the verification report itself](#iteration-on-the-verification-report-itself): the report is regenerated in full every iteration, never edited incrementally.
+
 ## Purpose
 
 Every analysis phase ends with a verification report that:
@@ -61,7 +70,7 @@ status: ready-for-review
 prior_iteration: <N-1 or null>
 ---
 
-# Phase <N> verification report — iteration <N>
+# Phase <N> verification report: iteration <N>
 
 ## 1. Executive summary
 
@@ -92,7 +101,7 @@ Each subsection states:
 <Only if iteration > 1. Otherwise omit this section entirely.>
 
 - Adjustments applied (from the iteration-log entry for this run)
-- Files touched (with a brief delta — "added 4 UCs", "rewrote IL-03
+- Files touched (with a brief delta such as "added 4 UCs", "rewrote IL-03
   flow", "removed the 'admin' actor and merged into 'user' per user
   feedback")
 - Sub-agents re-dispatched in this iteration
@@ -103,10 +112,10 @@ Each subsection states:
 Aggregated from `14-unresolved-questions.md` (or the phase's
 equivalent). Grouped by severity:
 
-- **Blocking** — the supervisor recommends NOT approving until these
+- **Blocking**: the supervisor recommends NOT approving until these
   are resolved
-- **Needs review** — the user should read before approving
-- **Nice to have** — informational
+- **Needs review**: the user should read before approving
+- **Nice to have**: informational
 
 For each open question: a one-line description, the source sub-agent,
 the impact on downstream phases, and a suggested resolution path
@@ -141,7 +150,7 @@ bullet is an actionable verification, not a restatement. Examples:
   what the app actually does, in your own understanding.
 - [ ] Review the 3 use cases marked `requires_human_confirmation` and
   decide whether to confirm, drop, or rephrase them.
-- [ ] Review the 2 blocking open questions — provide answers as part
+- [ ] Review the 2 blocking open questions. Provide answers as part
   of the next iteration if `iterate` is selected.
 
 The supervisor is encouraged to be opinionated here. Lower-confidence
@@ -151,11 +160,11 @@ items should be surfaced higher in the checklist.
 
 The supervisor states its recommendation:
 
-- `approve` — when all verdicts PASS, no blocking issues, ≤ 1 needs-
+- `approve`: when all verdicts PASS, no blocking issues, ≤ 1 needs-
   review item per major output, AS-IS purity OK.
-- `iterate` — when any verdict is not PASS, or ≥ 1 blocking issue,
+- `iterate`: when any verdict is not PASS, or ≥ 1 blocking issue,
   or the previous iteration left adjustments unresolved.
-- `stop` — never recommended automatically; only echo the user's
+- `stop`: never recommended automatically; only echo the user's
   choice if they pick it.
 
 Plus a 1-paragraph rationale.

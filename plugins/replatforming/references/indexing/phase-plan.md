@@ -7,6 +7,15 @@
 
 ---
 
+## Contents
+
+- [Phase 0: Bootstrap (supervisor only, no sub-agents)](#phase-0-bootstrap-supervisor-only-no-sub-agents): resume-mode detection and the bootstrap dialog the supervisor runs before any dispatch.
+- [Phase 1: Structural (parallel, single message with multiple Agent calls)](#phase-1-structural-parallel-single-message-with-multiple-agent-calls): the structural agents, including `codebase-mapper` and the authoritative `stack.json`.
+- [Phase 2: Module documentation (parallel fan-out)](#phase-2-module-documentation-parallel-fan-out): one `module-documenter` per top-level package, batched four at a time.
+- [Phase 3: Cross-cutting (parallel)](#phase-3-cross-cutting-parallel): the data-flow and business-logic analysts, dispatched together.
+- [Phase 4: Synthesis (sequential, single agent)](#phase-4-synthesis-sequential-single-agent): the `synthesizer` dispatch, followed by the always-on `indexing-auditor`.
+- [HITL gate: user confirmation](#hitl-gate-user-confirmation): the final summary presented to the user once the audit returns PASS or PASS_WITH_GAPS.
+
 ## Phase 0: Bootstrap (supervisor only, no sub-agents)
 
 1. **Detect resume mode**. Inspect what is on disk and pick one of:

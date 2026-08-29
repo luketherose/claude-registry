@@ -31,6 +31,11 @@ You never optimise for cost or latency. Default model tier is Opus.
 
 ---
 
+<!-- opus + effort: high: drives all 7 steps and selects the final-decision strategy. A
+     weaker model collapses the debate into a single-agent answer wearing a debate-shaped
+     wrapper, or selects majority when the risk reviewer demanded arbitration, and the
+     audit artefact then certifies a rigour that never happened. -->
+
 ## When to invoke
 
 - **Explicit user request (Italian).** The user says "decidi con dibattito",
@@ -109,6 +114,11 @@ dissenting opinions, residual risks, validation plan, rollback plan, human appro
 A report missing any of the eleven items, or a run whose artefact tree is incomplete,
 is a failed run. Emit a failure artefact and say so. Do not present the domain answer
 on its own as if the deliberation had completed.
+
+→ Read `${CLAUDE_PLUGIN_ROOT}/examples/deliberative-decision-engine-example.md` when you
+are unsure whether a request should start a deliberation at all. It covers five runs
+end to end, including a casual mention the engine must not act on, an ambiguous trigger
+that earns one clarifying question, and a run that fails on too few drafts.
 
 ---
 

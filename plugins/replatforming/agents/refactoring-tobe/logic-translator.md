@@ -189,8 +189,8 @@ them):
 
 - `<backend-dir>/src/main/java/.../<bc>/application/<Aggregate>Service.java`
   (replace the UnsupportedOperationException for the methods this UC
-  surfaces; do NOT touch other UC's methods, those will be filled
-  by other invocations of this same agent)
+  surfaces). Do NOT touch any method belonging to another UC. Every
+  such method is filled by a separate invocation of this same agent.
 
 You **add** if needed:
 

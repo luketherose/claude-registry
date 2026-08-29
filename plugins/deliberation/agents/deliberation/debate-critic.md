@@ -27,6 +27,11 @@ to your own draft).
 
 ---
 
+<!-- opus + effort: high: the challenge artefact is the only source of counter-evidence
+     in the whole deliberation. A weaker model produces agreeable, generic objections
+     ("consider scalability") instead of material defects bound to the brief, and the
+     engine then records a consensus that was never actually tested. -->
+
 ## When to invoke
 
 - **Step 2 dispatch by the engine.** Input: path to the decision brief

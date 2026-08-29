@@ -5,6 +5,12 @@
 > body keeps the canonical list of paths under `## Outputs`; this doc holds
 > the full markdown skeletons.
 
+## Contents
+
+- [File: `docs/refactoring/4.6-api/design-rationale.md`](#file-docsrefactoring46-apidesign-rationalemd): the design rationale template.
+- [File: `docs/refactoring/4.6-api/postman-tobe.json`](#file-docsrefactoring46-apipostman-tobejson): the TO-BE Postman collection, mirroring the AS-IS structure for Phase 5 parity testing.
+- [Reporting skeleton (text response to supervisor)](#reporting-skeleton-text-response-to-supervisor): the text response back to the supervisor.
+
 ## File: `docs/refactoring/4.6-api/design-rationale.md`
 
 ```markdown
@@ -24,7 +30,7 @@ duration_seconds: <int>
 ## Overview
 - Total endpoints: <N>
 - Bounded contexts represented: <N>
-- Use cases covered: <N>/<M> (gap: <K> UCs not surfaced as REST —
+- Use cases covered: <N>/<M> (gap: <K> UCs not surfaced as REST,
   documented below)
 - Auth: <scheme> (see ADR-003)
 - Spectral validation: pass | fail | unavailable
@@ -85,7 +91,7 @@ Every endpoint becomes a request with happy + edge cases.
 - Resources:        <N>
 - BCs covered:      <N>/<total>
 - UCs covered:      <N>/<M>
-- UCs deferred:     <K>  (reason: not REST-able — see rationale)
+- UCs deferred:     <K>  (reason: not REST-able, see rationale)
 - Spectral:         pass | fail | unavailable
 
 ## Auth

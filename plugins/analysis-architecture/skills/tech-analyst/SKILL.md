@@ -148,7 +148,7 @@ Save the output in the project's technical documentation folder (e.g. `docs/tech
 ### `module-map.md`
 
 ```markdown
-# Module Map — [Analysed scope]
+# Module Map: [Analysed scope]
 
 ## Module: [name]
 **Path**: `path/to/module`
@@ -166,7 +166,7 @@ Save the output in the project's technical documentation folder (e.g. `docs/tech
 ### `dependency-graph.md`
 
 ```markdown
-# Dependency Graph — [Scope]
+# Dependency Graph: [Scope]
 
 ## Static dependencies (import)
 [module_A] → [module_B]
@@ -185,7 +185,7 @@ Save the output in the project's technical documentation folder (e.g. `docs/tech
 ### `bounded-contexts.md`
 
 ```markdown
-# Bounded Contexts — [Scope]
+# Bounded Contexts: [Scope]
 
 ## [Context name]
 **Main entities**: [list]
@@ -217,7 +217,7 @@ Markdown table of external integrations (format see Step 6).
 At the end of the analysis, also produce a `semantic-index.md` file with this structure, optimised for indexing:
 
 ```markdown
-# Semantic Index — [Project name]
+# Semantic Index: [Project name]
 
 ## [Domain term]
 **Where it appears**: [file1, file2]

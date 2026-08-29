@@ -4,6 +4,11 @@
 > write either of the two output files. Both files MUST be produced via the
 > `Write` tool, see `file-writing-rule.md` in the same folder.
 
+## Contents
+
+- [File 1: `docs/analysis/02-technical/04-data-access/data-flow-diagram.md`](#file-1-docsanalysis02-technical04-data-accessdata-flow-diagrammd): the data flow diagram template.
+- [File 2: `docs/analysis/02-technical/04-data-access/access-pattern-map.md`](#file-2-docsanalysis02-technical04-data-accessaccess-pattern-mapmd): the access pattern map template.
+
 ## File 1: `docs/analysis/02-technical/04-data-access/data-flow-diagram.md`
 
 ```markdown
@@ -81,11 +86,11 @@ status: <complete|partial|needs-review|blocked>
 |---|---|---|
 | Parameterized via SQLAlchemy ORM | ~60 | none |
 | Raw SQL with `text()` + params | 4 | none |
-| Raw SQL with f-string interpolation | 2 | **SQL injection — flag** |
+| Raw SQL with f-string interpolation | 2 | **SQL injection: flag** |
 
 ### Findings
 
-#### RISK-DA-01 — Raw SQL with f-string interpolation
+#### RISK-DA-01: Raw SQL with f-string interpolation
 - **Severity**: critical | high
 - **Locations**: `<repo-path>:<line>`
 - **Description**: <details>
@@ -95,17 +100,17 @@ status: <complete|partial|needs-review|blocked>
 
 - **Read paths**:
   - `<repo>/config/*.yaml` (config)
-  - `<external>/data/*.csv` (input data — path from env var)
+  - `<external>/data/*.csv` (input data: path from env var)
 - **Write paths**:
   - `/tmp/exports/*.xlsx` (user-triggered exports)
-  - `<repo>/logs/*.log` (operational logs — see resilience-analyst)
+  - `<repo>/logs/*.log` (operational logs: see resilience-analyst)
 - **Path construction**: mostly Path objects; 3 sites use `os.path.join`
   + concatenation
 - **Formats**: CSV (read), Excel (write), JSON (config), pickle (1 site)
 
 ### Findings
 
-#### RISK-DA-02 — Pickle deserialization of user-uploaded files
+#### RISK-DA-02: Pickle deserialization of user-uploaded files
 - **Severity**: critical
 - **Location**: `<repo-path>:<line>`
 - **Description**: pickle.load() applied to st.file_uploader output
@@ -119,12 +124,12 @@ status: <complete|partial|needs-review|blocked>
   - `st.cache_resource` decorating <N> functions
 - **Invalidation correctness**:
   - <function>: keys cover all inputs ✓
-  - <function>: missing key for `current_user` — stale risk
+  - <function>: missing key for `current_user`, stale risk
 - **External cache**: <Redis 7 / none>
 
 ### Findings
 
-#### RISK-DA-NN — Cache invalidation gap
+#### RISK-DA-NN: Cache invalidation gap
 - ...
 
 ## Serialization
@@ -133,7 +138,7 @@ status: <complete|partial|needs-review|blocked>
 |---|---|---|---|
 | JSON | yes | yes | trusted (config) |
 | YAML | yes | no | trusted |
-| Pickle | yes | yes | **untrusted (file upload) — flag** |
+| Pickle | yes | yes | **untrusted (file upload): flag** |
 
 ## Open questions
 - <e.g., "DB engine inferred from connection string in env var; not

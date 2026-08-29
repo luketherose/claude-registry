@@ -3,6 +3,12 @@
 > Reference doc for `baseline-challenger`. Read at runtime when writing
 > the challenger report deliverables.
 
+## Contents
+
+- [File 1: `docs/analysis/03-baseline/_meta/challenger-report.md`](#file-1-docsanalysis03-baseline_metachallenger-reportmd): the full challenger report template, ending in the blocking-issue count and the Phase 3 ready verdict.
+- [File 2: appended section in `docs/analysis/03-baseline/unresolved-baseline.md`](#file-2-appended-section-in-docsanalysis03-baselineunresolved-baselinemd): the block appended to the unresolved file, and what to do when the heading already exists.
+- [Finding shape (per check)](#finding-shape-per-check): the fields every finding carries, including its type and severity.
+
 ## File 1: `docs/analysis/03-baseline/_meta/challenger-report.md`
 
 ```markdown
@@ -19,7 +25,7 @@ status: <complete|partial|needs-review|blocked>
 duration_seconds: <int>
 ---
 
-# Challenger report — Phase 3 Baseline Testing
+# Challenger report: Phase 3 Baseline Testing
 
 ## Summary
 - Blocking issues:    <N>
@@ -30,7 +36,7 @@ duration_seconds: <int>
 
 ### 1. Coverage gaps
 
-#### CHL-01 — UC-04 has no test file
+#### CHL-01: UC-04 has no test file
 - **Type**: gap
 - **Where**: `tests/baseline/`
 - **Description**: Phase 1 lists UC-04 (User registration) but no
@@ -41,7 +47,7 @@ duration_seconds: <int>
 
 ### 2. AS-IS source modifications
 
-#### CHL-NN — <title>
+#### CHL-NN: <title>
 - **Type**: source-modified
 - **Where**: `<repo>/<path>:<line>`
 - **Description**: git status shows `<file>` modified outside the
@@ -52,7 +58,7 @@ duration_seconds: <int>
 
 ### 3. Determinism risks
 
-#### CHL-NN — Raw `requests.get` without mock
+#### CHL-NN: Raw `requests.get` without mock
 - **Type**: determinism-risk
 - **Where**: `tests/baseline/test_integration_<X>.py:42`
 - **Description**: `requests.get("https://api.real.example/...")` is
@@ -63,7 +69,7 @@ duration_seconds: <int>
 
 ### 4. Oracle integrity
 
-#### CHL-NN — Missing benchmark JSON
+#### CHL-NN: Missing benchmark JSON
 - **Type**: oracle-integrity
 - **Where**: `_meta/benchmark-baseline.json`
 - **Description**: file is empty / doesn't exist despite execution
@@ -74,7 +80,7 @@ duration_seconds: <int>
 
 ### 5. Severity-mismatch
 
-#### CHL-NN — Critical bug marked xfail without escalation
+#### CHL-NN: Critical bug marked xfail without escalation
 - **Type**: severity-mismatch
 - **Where**: `tests/baseline/test_uc_07_*.py::test_uc_07_security_check`
 - **Description**: assertion involves "secret leaked"; severity should
@@ -85,7 +91,7 @@ duration_seconds: <int>
 
 ### 6. Streamlit-specific risks (if applicable)
 
-#### CHL-NN — session_state leak across tests
+#### CHL-NN: session_state leak across tests
 - **Type**: streamlit-risk
 - **Where**: `tests/baseline/test_uc_03_*.py`
 - **Description**: directly mutates `st.session_state` without using
@@ -96,7 +102,7 @@ duration_seconds: <int>
 
 ### 7. Postman collection integrity
 
-#### CHL-NN — Hard-coded token in environment file
+#### CHL-NN: Hard-coded token in environment file
 - **Type**: oracle-integrity / security
 - **Where**: `tests/baseline/postman/payments.postman_environment.json`
 - **Description**: `access_token` value is a real-looking token instead

@@ -3,6 +3,18 @@
 Reference doc. Read on demand when classifying a situation in the
 workflow. Each row maps a situation to the supervisor's decision.
 
+## Contents
+
+- [Bootstrap and inputs](#bootstrap-and-inputs): what to do when bootstrap is unconfirmed or phase inputs are missing.
+- [Pre-advancement audit gates (Phases 0–2)](#pre-advancement-audit-gates-phases-02): reading the auditor verdict before advancing out of Phases 0 to 2.
+- [Phase reporting (Phases 0–3)](#phase-reporting-phases-03): what a `complete` phase report triggers next.
+- [User answer handling](#user-answer-handling): how approve, iterate and stop answers are handled.
+- [Existing-output detection at bootstrap](#existing-output-detection-at-bootstrap): the per-phase skip, re-run or revise question, never resolved silently.
+- [Phase 4 step gating](#phase-4-step-gating): the per-step gates, starting with a failed Step 0 build.
+- [Per-iteration startup check (Phase 4 Step 2)](#per-iteration-startup-check-phase-4-step-2): the six sub-gates every Step 2 feature iteration must pass.
+- [Retrospective and cross-phase iteration](#retrospective-and-cross-phase-iteration): entering Step G automatically after PO sign-off.
+- [Deliberation routing](#deliberation-routing): when a decision is routed to the deliberation engine instead.
+
 ## Bootstrap and inputs
 
 | Situation | Decision |

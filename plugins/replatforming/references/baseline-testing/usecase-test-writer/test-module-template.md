@@ -3,6 +3,13 @@
 > Reference doc for `usecase-test-writer`. Read at runtime when writing the
 > per-UC pytest module (Method §4 and §6).
 
+## Contents
+
+- [Goal](#goal): what this file pins down for the per-use-case module.
+- [Module template](#module-template): the canonical `test_uc_<NN>_<slug>.py` shape.
+- [Streamlit-specific patterns (stack mode = `streamlit`)](#streamlit-specific-patterns-stack-mode--streamlit): `AppTest` interaction patterns, and what to do when an interaction cannot be reached.
+- [Output](#output): the single module the writer emits, with its minimum of three test functions.
+
 ## Goal
 
 Provide the canonical shape of `tests/baseline/test_uc_<NN>_<slug>.py` and the

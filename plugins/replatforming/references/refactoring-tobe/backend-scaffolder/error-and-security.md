@@ -3,6 +3,12 @@
 > Reference doc for `backend-scaffolder`. Read at runtime when generating
 > the shared error handler and security baseline (Method steps 6–7).
 
+## Contents
+
+- [RFC 7807 error handler](#rfc-7807-error-handler): the `@RestControllerAdvice` handler, including why the 405, 415 and 406 overrides are mandatory on Spring Boot 3.
+- [Security config baseline](#security-config-baseline): the `SecurityConfig` baseline, with the `CorsConfigurationSource` bean as the single source of truth for CORS.
+- [Boot smoke test (mandatory)](#boot-smoke-test-mandatory): the mandatory boot smoke test, and what the default profile must provide for it to pass.
+
 ## RFC 7807 error handler
 
 `shared/error/ProblemDetailExceptionHandler.java`:

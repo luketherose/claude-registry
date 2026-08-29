@@ -8,6 +8,14 @@ These schematics MUST be shown to the user verbatim in the pre-phase
 confirmation. Pick the schematic for the phase about to start, paste it into
 the brief, and proceed with Step A.
 
+## Contents
+
+- [Phase 0: Indexing](#phase-0-indexing): the pre-phase schematic for indexing.
+- [Phase 1: AS-IS Functional Analysis](#phase-1-as-is-functional-analysis): the pre-phase schematic for functional analysis.
+- [Phase 2: AS-IS Technical Analysis](#phase-2-as-is-technical-analysis): the pre-phase schematic for technical analysis.
+- [Phase 3: AS-IS Baseline Testing](#phase-3-as-is-baseline-testing): the pre-phase schematic for baseline testing.
+- [Phase 4: Application Replatforming (the rewriting phase, REDESIGNED)](#phase-4-application-replatforming-the-rewriting-phase-redesigned): the schematic for the seven-step replatforming loop, each step behind a hard gate.
+
 ## Phase 0: Indexing
 
 ```
@@ -223,7 +231,7 @@ Workflow Supervisor   (opus) — Phase 4: Application Replatforming
         |   +-- INVARIANT: app always buildable / runnable / testable
         |   +-- promote shared utils/DTOs/mappers only after a
         |       third feature needs them (no premature abstraction)
-        |   +-- continuous code-reviewer review per feature
+        |   +-- continuous pr-review-toolkit:code-reviewer review per feature
         |       (background or after each Step 2.7 success)
         |
         |          HITL CHECKPOINT 2: feature coverage acceptable

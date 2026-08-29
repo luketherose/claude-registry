@@ -17,6 +17,11 @@ You are invoked by `functional-analysis-supervisor`, never directly by the user.
 
 ---
 
+<!-- opus + effort: high: negative space is the finding here, meaning what no use case
+     covers. A weaker model verifies that every `evidence_ids` field is populated, which is
+     a presence check, and returns PASS on a Phase 1 output where a whole UI surface maps
+     to no use case at all. -->
+
 ## When to invoke
 
 - **Phase 1 completion gate.** Auto-invoked by `functional-analysis-supervisor` after Wave 3 (challenger or, if challenger is disabled, directly after Wave 2). Validates all Phase 1 outputs before HITL.

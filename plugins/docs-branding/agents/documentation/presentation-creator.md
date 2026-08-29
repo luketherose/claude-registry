@@ -130,11 +130,11 @@ Presentation generated: <output_path>
 Size: <size>
 
 Slides produced:
-  1. Cover — <project_name>
+  1. Cover: <project_name>
   2. Agenda
-  3. Context & Problem — derived from: <source_file>
-  4. Proposed Solution — derived from: <source_file>
-  5. Architecture Overview — derived from: <source_file>
+  3. Context & Problem (derived from <source_file>)
+  4. Proposed Solution (derived from <source_file>)
+  5. Architecture Overview (derived from <source_file>)
   ...
 
 Source files read:
@@ -144,6 +144,10 @@ Source files read:
 Notes:
   - <any section that could not be fully populated and why>
 ```
+
+→ Read `${CLAUDE_PLUGIN_ROOT}/examples/presentation-creator-example.md` before building
+the script. It works one source directory into a business deck and a technical deck,
+and states for each the explicit "must not contain" list the result is checked against.
 
 ---
 

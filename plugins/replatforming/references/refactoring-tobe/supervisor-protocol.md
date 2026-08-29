@@ -10,6 +10,15 @@ Do not preemptively load. Read on demand when a supervision decision is needed.
 
 ---
 
+## Contents
+
+- [Pipeline state](#pipeline-state): the `pipeline-state.yaml` file, its bootstrap and update protocol, and its schema.
+- [Escalation triggers: always ask the user](#escalation-triggers-always-ask-the-user): the conditions that stop this supervisor, including unresolved critical AS-IS bugs from Phase 3.
+- [Decision rules](#decision-rules): the situation by decision table applied without asking.
+- [Drift check: INVERSE direction](#drift-check-inverse-direction): why Phase 4 inverts the earlier rule: target technology is now expected, and AS-IS-only tokens are the leak to catch.
+- [Manifest update](#manifest-update): the two manifests that must be updated together, never half-updated.
+- [Constraints](#constraints): the non-negotiables, above all that AS-IS source stays read-only.
+
 ## Pipeline state
 
 **File**: `.refactoring-kb/_meta/pipeline-state.yaml`

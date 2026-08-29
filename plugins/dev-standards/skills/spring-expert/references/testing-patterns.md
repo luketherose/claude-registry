@@ -1,5 +1,12 @@
 # Testing patterns
 
+## Contents
+
+- [Testing with Spring](#testing-with-spring)
+  - [Unit test: without Spring context (preferred for speed)](#unit-test-without-spring-context-preferred-for-speed)
+  - [Controller integration test with @WebMvcTest](#controller-integration-test-with-webmvctest)
+  - [Integration test with a real H2 database](#integration-test-with-a-real-h2-database)
+
 ## Testing with Spring
 
 ### Unit test: without Spring context (preferred for speed)

@@ -5,6 +5,16 @@
 > matter. Contains boilerplate only. Decision logic on which pages to
 > author lives in the agent body (`## Method`).
 
+## Contents
+
+- [Diataxis quadrants](#diataxis-quadrants): the four Diataxis quadrants and what belongs in each.
+- [Canonical page set](#canonical-page-set): the default page list, and how to collapse or expand it for the project size.
+- [`_Sidebar.md` template](#_sidebarmd-template): the global sidebar navigation file.
+- [`_Footer.md` template](#_footermd-template): the global footer file, plus the rule to write both before any content page.
+- [Per-page contract](#per-page-contract): the six-point contract every content page satisfies.
+- [Page front-matter template](#page-front-matter-template): the invisible HTML-comment metadata block at the top of each page.
+- [Final-summary template](#final-summary-template): the summary posted once all pages are written.
+
 ## Diataxis quadrants
 
 Organize pages around the **Diataxis framework**:

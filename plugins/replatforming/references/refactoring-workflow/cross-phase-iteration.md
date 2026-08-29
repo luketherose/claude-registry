@@ -10,6 +10,18 @@
 > in a single orchestrated pass, carrying the retrospective delta forward to each
 > affected phase supervisor.
 
+## Contents
+
+- [Entry point calculation](#entry-point-calculation): how the re-entry phase is derived from the earliest open blocking or high issue.
+- [Delta schema](#delta-schema): the delta JSON written before any phase is dispatched.
+- [Archive policy](#archive-policy): archiving existing phase output before overwriting it, and why archives are never deleted.
+- [Execution protocol](#execution-protocol): the run sequence after archive and confirmation, with the same gates as a fresh run.
+- [Phase 4 re-run: artifact reuse](#phase-4-re-run-artifact-reuse): what is preserved and what re-runs when the scope is `step-6-only`.
+- [State management](#state-management): which files track the iteration number throughout.
+- [Post-iteration retrospective](#post-iteration-retrospective): the automatic new retrospective once the re-run range completes.
+- [Deliberation during cross-phase iteration](#deliberation-during-cross-phase-iteration): routing a contested adjustment to the deliberation engine.
+- [Escalation to user](#escalation-to-user): the situations that halt the supervisor and ask the user.
+
 ## Entry point calculation
 
 The re-entry phase is the earliest phase that contains at least one `open` blocking

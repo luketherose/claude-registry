@@ -5,6 +5,13 @@
 > logic (resource modelling, error format, pagination, idempotency, auth);
 > this doc holds the canonical YAML skeleton and validation rules.
 
+## Contents
+
+- [Top-level skeleton](#top-level-skeleton): the full `openapi.yaml` skeleton, written as a single file.
+- [Error envelope (RFC 7807)](#error-envelope-rfc-7807): the RFC 7807 ProblemDetail shape, and the rule against leaking internals in `detail`.
+- [Key authoring rules](#key-authoring-rules): the per-endpoint requirements, including `operationId` and the `x-uc-ref` extension.
+- [Validation step](#validation-step): the spectral lint step and the fallback when spectral is unavailable.
+
 ## Top-level skeleton
 
 Single file at `docs/refactoring/4.6-api/openapi.yaml`:

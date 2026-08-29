@@ -2,6 +2,11 @@
 
 > Reference doc for `technical-analysis-supervisor`. Read at runtime when assembling the prompt for any sub-agent invocation. Includes the Streamlit-aware adjustments block (inject only when stack mode = streamlit).
 
+## Contents
+
+- [Grounding policy: no evidence, no claim](#grounding-policy-no-evidence-no-claim): the block prepended to every Wave 1 dispatch, plus the rule to pass each agent only the context it needs.
+- [Streamlit instructions block (inject when stack mode = streamlit)](#streamlit-instructions-block-inject-when-stack-mode--streamlit): the extra block injected when the detected stack is Streamlit.
+
 ## Grounding policy: no evidence, no claim
 
 Prepend this block to every W1 sub-agent dispatch prompt:

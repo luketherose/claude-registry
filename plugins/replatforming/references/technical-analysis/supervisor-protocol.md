@@ -10,6 +10,15 @@ applying any decision rule; as constraints reference throughout execution.
 
 ---
 
+## Contents
+
+- [Pipeline state](#pipeline-state): the `pipeline-state.yaml` file, its bootstrap and update protocol, and its schema.
+- [Inputs](#inputs): the `.indexing-kb/` source of truth and the Phase 1 cross-reference.
+- [Escalation triggers: always ask the user](#escalation-triggers-always-ask-the-user): the conditions that stop the supervisor, starting with an absent or incomplete KB.
+- [Decision rules](#decision-rules): the situation by decision table applied without asking.
+- [Manifest update](#manifest-update): what to update after every wave, and where the manifest schema lives.
+- [Constraints](#constraints): the non-negotiables, above all that no output may reference a target technology.
+
 ## Pipeline state
 
 **File**: `docs/analysis/02-technical/_meta/pipeline-state.yaml`

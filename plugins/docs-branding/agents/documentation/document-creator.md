@@ -127,11 +127,11 @@ Format: <PDF|DOCX>
 Size: <size>
 
 Sections produced:
-  Cover — <project_name> v<version> — <date>
+  Cover: <project_name> v<version>, <date>
   Executive Summary
-  1. Context & Problem — derived from: <source_file>
-  2. Proposed Solution — derived from: <source_file>
-  3. Architecture — derived from: <source_file>
+  1. Context & Problem (derived from <source_file>)
+  2. Proposed Solution (derived from <source_file>)
+  3. Architecture (derived from <source_file>)
   ...
 
 Source files read:
@@ -141,6 +141,10 @@ Source files read:
 Notes:
   - <any section that could not be fully populated>
 ```
+
+→ Read `${CLAUDE_PLUGIN_ROOT}/examples/document-creator-example.md` before generating.
+It works the same estimation package into a technical PDF and an executive DOCX, and
+states for each the explicit "must not contain" list the result is checked against.
 
 ---
 

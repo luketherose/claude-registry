@@ -6,6 +6,14 @@
 > the agent body: this doc only carries the verbatim test-class
 > skeletons and Groovy DSL templates.
 
+## Contents
+
+- [Goal](#goal): the four canonical test layers this file templates.
+- [Unit test (service)](#unit-test-service): JUnit 5 plus Mockito with no Spring context, covering every branch, exception and invariant.
+- [Integration test (full Spring context with Testcontainers)](#integration-test-full-spring-context-with-testcontainers): the full Spring context with Testcontainers.
+- [Contract test (Spring Cloud Contract producer)](#contract-test-spring-cloud-contract-producer): one Groovy DSL contract per OpenAPI `operationId`, and the Maven plugin that generates the verifier.
+- [Error contract test (RFC 7807 ProblemDetail)](#error-contract-test-rfc-7807-problemdetail): one contract per documented error response, verifying the ProblemDetail shape.
+
 ## Goal
 
 Provide copy-and-adapt templates for the four canonical test layers

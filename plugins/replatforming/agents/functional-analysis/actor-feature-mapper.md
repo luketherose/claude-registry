@@ -142,25 +142,27 @@ If stack mode is `streamlit`:
 
 ## Output format
 
-Five files, JSONL first, markdown second. Exact frontmatter and record
-schemas live in `output-spec.md`; the shape below is the contract you are
-checked against.
+Six files, JSONL first, markdown second. Rows 1 to 5 are written on every
+run; row 6 is written only when the run produces at least one uncited item.
+Exact frontmatter and record schemas live in `output-spec.md`; the shape
+below is the contract you are checked against.
 
-| Order | File | Must contain |
-|---|---|---|
-| 1 | `raw/actor-candidates-raw.jsonl` | one record per candidate actor, before de-duplication |
-| 2 | `normalized/actor-candidates.jsonl` | one record per actor, each citing at least one `EV-NNNNNN` |
-| 3 | `normalized/feature-candidates.jsonl` | one record per feature, each citing at least one `EV-NNNNNN` |
-| 4 | `01-actors.md` | frontmatter, `## Summary`, `## Actor catalog` with one `### A-NN` block per actor, `## Open questions` |
-| 5 | `02-features.md` | frontmatter, `## Summary`, `## Feature catalog` with one `### F-NN` block per feature, `## Actor × Feature matrix`, `## Orphans (flag for review)`, `## Open questions` |
+| Order | File | Written | Must contain |
+|---|---|---|---|
+| 1 | `raw/actor-candidates-raw.jsonl` | always | one record per candidate actor, before de-duplication |
+| 2 | `normalized/actor-candidates.jsonl` | always | one record per actor, each citing at least one `EV-NNNNNN` |
+| 3 | `normalized/feature-candidates.jsonl` | always | one record per feature, each citing at least one `EV-NNNNNN` |
+| 4 | `01-actors.md` | always | frontmatter, `## Summary`, `## Actor catalog` with one `### A-NN` block per actor, `## Open questions` |
+| 5 | `02-features.md` | always | frontmatter, `## Summary`, `## Feature catalog` with one `### F-NN` block per feature, `## Actor × Feature matrix`, `## Orphans (flag for review)`, `## Open questions` |
+| 6 | `normalized/functional-gaps.jsonl` | only when at least one actor or feature cannot cite an evidence id | one record per uncited item; append if the file already exists |
 
-All five paths are relative to `docs/analysis/01-functional/`.
+All six paths are relative to `docs/analysis/01-functional/`.
 
 The run is not complete until every `A-NN` and every `F-NN` appears in the
 Actor × Feature matrix, or is listed under `## Orphans (flag for review)`
 with the reason. Every actor and feature block carries `Sources`,
 `Confidence`, and at least one evidence id. An item that cannot cite one is
-written with `confidence: low` and added to `normalized/functional-gaps.jsonl`.
+written with `confidence: low` and recorded in file 6.
 
 ---
 

@@ -3,6 +3,15 @@
 > Reference doc for `phase4-challenger`. Read at runtime when running the
 > nine adversarial checks defined in the agent's `## Method` section.
 
+## Contents
+
+- [Goal](#goal): what this file provides, and the division of labour with the agent body.
+- [Check 1: AS-IS↔TO-BE traceability matrix](#check-1-as-isto-be-traceability-matrix): the traceability hierarchy, plus the JSON schema for `as-is-to-be-matrix.json`.
+- [Check 8: AS-IS-only token regex](#check-8-as-is-only-token-regex): the regex used to scan TO-BE outputs for AS-IS-only token leaks.
+- [Finding shape (every check)](#finding-shape-every-check): the common shape every finding follows, including its type and severity.
+- [Check 10: Frontend navigation reachability](#check-10-frontend-navigation-reachability): how to prove every protected route is reachable from the UI.
+- [Check 11: Backend boots on default profile](#check-11-backend-boots-on-default-profile): how to prove the backend starts on the default profile, not only under the test profile.
+
 ## Goal
 
 Verbatim per-check matrices and schemas the challenger reuses while

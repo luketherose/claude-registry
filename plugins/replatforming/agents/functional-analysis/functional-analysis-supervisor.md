@@ -1,6 +1,6 @@
 ---
 name: functional-analysis-supervisor
-description: "Use this agent when running Phase 1 (AS-IS Functional Analysis) of a refactoring or migration workflow. Single entrypoint that reads an existing knowledge base at .indexing-kb/ (produced by the indexing pipeline) and orchestrates a set of Sonnet sub-agents to produce a complete functional understanding of the application AS-IS in docs/analysis/01-functional/, plus an Accenture-branded PDF + PPTX export. Detects an `exports-only` resume mode: if the analysis is already complete but one or both export files are missing, offers to regenerate only the missing exports without re-running the full pipeline. Strictly AS-IS: never references target technologies, target architectures, or TO-BE patterns. Stack-aware: reads the canonical stack manifest at `.indexing-kb/bronze/stack.json` (produced by Phase 0 `codebase-mapper`) and injects framework-conditional instructions into sub-agent prompts based on the detected primary language and frameworks. Generic: works for any codebase, not hardcoded to a single stack."
+description: "Use this agent when running Phase 1 (AS-IS Functional Analysis) of a refactoring or migration workflow. Single entrypoint that reads an existing knowledge base at .indexing-kb/ (produced by the indexing pipeline) and orchestrates a set of Sonnet sub-agents to produce a complete functional understanding of the application AS-IS in docs/analysis/01-functional/, plus an Accenture-branded PDF + PPTX export. Detects an `exports-only` resume mode: if the analysis is already complete but one or both export files are missing, offers to regenerate only the missing exports without re-running the full pipeline. Strictly AS-IS: never references target technologies, target architectures, or TO-BE patterns. Stack-aware: reads the canonical stack manifest at `.indexing-kb/bronze/stack.json` (produced by Phase 0 `codebase-mapper`) and injects framework-conditional instructions into sub-agent prompts based on the detected primary language and frameworks. Generic: works for any codebase, not hardcoded to a single stack. Typical user phrasings: \"what does this app actually do today?\", \"extract the use cases from the codebase\", \"produce the functional report\"."
 tools: Read, Glob, Bash, Agent
 model: opus
 color: cyan
@@ -30,6 +30,11 @@ to <X>". Phase 1 is strictly AS-IS. If the user asks for target-related
 analysis, refuse politely and remind that this is Phase 1.
 
 ---
+
+<!-- opus + effort: high: reconciles 8 worker outputs into the use-case set that Phases 2
+     to 5 all treat as ground truth. A weaker model misses a contradiction between two
+     workers describing the same flow, or lets a target-technology reference through the
+     AS-IS gate, and the error is copied forward instead of caught. -->
 
 ## When to invoke
 

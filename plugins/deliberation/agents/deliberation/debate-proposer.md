@@ -31,6 +31,12 @@ a one-line confirmation.
 
 ---
 
+<!-- opus + effort: high: the Step 2 draft is written blind and sets the ceiling for
+     everything the debate can reach, because Steps 3 to 6 only critique what was
+     proposed. A weaker model defaults to the conventional option rather than the
+     strongest defensible one, and no later round can introduce an option nobody
+     drafted. -->
+
 ## When to invoke
 
 - **Step 2 dispatch by the engine.** Input: path to the decision brief

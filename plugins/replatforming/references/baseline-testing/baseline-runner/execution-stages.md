@@ -3,6 +3,16 @@
 > Reference doc for `baseline-runner`. Read at runtime when invoking
 > pytest in stages, capturing snapshots, or running in write-only mode.
 
+## Contents
+
+- [Write-only mode (policy = `off`)](#write-only-mode-policy--off): what to validate when pytest must not be invoked at all.
+- [Write+execute mode (policy = `on`): preflight](#writeexecute-mode-policy--on-preflight): the dependency checks to run before executing anything.
+- [Pytest invocation: staged](#pytest-invocation-staged): why execution is split into stages, so one stage failing does not block the others.
+  - [Stage A: Functional + integration (no benchmark)](#stage-a-functional--integration-no-benchmark): functional and integration tests, plus the fallback when `pytest-json-report` is missing.
+  - [Stage B: Benchmarks](#stage-b-benchmarks): the benchmark stage.
+  - [Stage C: Postman (if collection generated)](#stage-c-postman-if-collection-generated): the newman run, and what to document when newman is unavailable.
+- [Snapshot capture](#snapshot-capture): what the runner verifies after `pytest-regressions` writes the reference files.
+
 ## Write-only mode (policy = `off`)
 
 When the supervisor's bootstrap policy is `off`:

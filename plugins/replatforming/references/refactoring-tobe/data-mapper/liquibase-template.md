@@ -5,6 +5,15 @@
 > rollback policy) live in the agent body under `## Method`. The YAML
 > skeletons below are the literal shapes to copy-and-parametrise.
 
+## Contents
+
+- [Layout](#layout): the master aggregator plus one changelog per logical change.
+- [`db.changelog-master.yaml`: option A (includeAll)](#dbchangelog-masteryaml-option-a-includeall): the `includeAll` variant of the master changelog.
+- [`db.changelog-master.yaml`: option B (explicit ordering)](#dbchangelog-masteryaml-option-b-explicit-ordering): the explicitly ordered variant of the master changelog.
+- [`01__baseline_schema.yaml`](#01__baseline_schemayaml): the baseline schema changelog.
+- [Rules](#rules): one changeSet per logical change, and the ban on editing a deployed changeSet.
+- [Case B: existing-schema migration](#case-b-existing-schema-migration): how the first changelog differs when starting from an existing schema.
+
 ## Layout
 
 Generate one master aggregator + one changelog file per logical change

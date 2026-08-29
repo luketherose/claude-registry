@@ -3,6 +3,12 @@
 > Reference doc for `migration-roadmap-builder`. Read at runtime when
 > emitting `docs/refactoring/roadmap.md` and the agent's reporting block.
 
+## Contents
+
+- [Goal](#goal): what this file provides, verbatim.
+- [File: `docs/refactoring/roadmap.md`](#file-docsrefactoringroadmapmd): the full roadmap skeleton: frontmatter, TL;DR, topology and Gantt diagrams, milestone template and risk register cross-references.
+- [Reporting (text response)](#reporting-text-response): the text response back to the supervisor.
+
 ## Goal
 
 Verbatim deliverable skeleton: roadmap document layout (frontmatter,
@@ -164,6 +170,6 @@ high | medium | low
 <seconds>
 
 ## Open questions
-- <e.g., "ops team to confirm secrets manager choice — placeholder
+- <e.g., "ops team to confirm secrets manager choice: placeholder
   in M-00 activities">
 ```

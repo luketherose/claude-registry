@@ -3,6 +3,15 @@
 Boilerplate the engine uses when dispatching personas via the `Agent`
 tool. Copy-adapt; do not paraphrase the hard rules.
 
+## Contents
+
+- [Step 2: independent draft (5-persona dispatch, parallel)](#step-2-independent-draft-5-persona-dispatch-parallel): the five-persona parallel dispatch that produces the independent drafts.
+- [Step 3: judge summarisation (single dispatch, sequential)](#step-3-judge-summarisation-single-dispatch-sequential): the single sequential dispatch that turns the drafts into a neutral evidence summary.
+- [Step 4: challenge round (parallel dispatch)](#step-4-challenge-round-parallel-dispatch): the parallel dispatch where each persona attacks the other drafts.
+- [Step 5: rebuttal round (parallel dispatch)](#step-5-rebuttal-round-parallel-dispatch): the parallel dispatch where each persona answers the challenges aimed at it.
+- [Step 6: judge arbitration (single dispatch, sequential)](#step-6-judge-arbitration-single-dispatch-sequential): the single dispatch used only when the strategy resolves to `judge_arbitration`.
+- [Failure-handling templates](#failure-handling-templates): the retry prompt after a persona dispatch fails, and the judge re-dispatch after a dropped objection.
+
 ## Step 2: independent draft (5-persona dispatch, parallel)
 
 The engine sends ONE message with five `Agent` calls (one per persona).
@@ -18,7 +27,7 @@ Step: 2 (independent draft)
 Round: 1
 Deliberation policy: <effective policy JSON>
 
-ANTI-ANCHORING — HARD RULE
+ANTI-ANCHORING: HARD RULE
 You MUST NOT read any of these files in this step:
   .deliberation-kb/del-.../01-drafts/<other-role>.json
 Reading another persona's draft is a protocol violation.

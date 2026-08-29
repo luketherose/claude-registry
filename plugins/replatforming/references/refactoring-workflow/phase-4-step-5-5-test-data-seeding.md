@@ -6,6 +6,18 @@
 > bridge that makes Step 6 actually meaningful: the UI smoke gate
 > cannot judge an app whose every screen is empty.
 
+## Contents
+
+- [Why this step exists](#why-this-step-exists): an empty database makes a working UI indistinguishable from a broken one.
+- [Sub-agent](#sub-agent): a single `test-data-seeder` dispatch, with no wave model.
+- [Inputs to the sub-agent](#inputs-to-the-sub-agent): what the supervisor passes to the agent.
+- [What the sub-agent produces](#what-the-sub-agent-produces): seed files in whichever migration tool the project already uses.
+- [Hard gate](#hard-gate): the gate items that must all hold before Step 6 is unlocked.
+- [Pre-Step-5.5 supervisor brief (mandatory user message)](#pre-step-55-supervisor-brief-mandatory-user-message): the brief posted before dispatch, and what the `defer` answer changes.
+- [Post-Step-5.5 supervisor recap (mandatory user message)](#post-step-55-supervisor-recap-mandatory-user-message): the recap posted after the agent returns, and what `redispatch` narrows.
+- [Manifest update](#manifest-update): the manifest fields written on success, including the credentials Step 6 needs to log in.
+- [What this step is NOT](#what-this-step-is-not): what this step is not, above all not fixture loading for the test suite.
+
 ## Why this step exists
 
 Phases 4.0 through 4.5 produce a fully-built, fully-tested TO-BE

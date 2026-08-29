@@ -14,6 +14,13 @@ entity: applies in any mode when the UC involves a state transition.
 
 ---
 
+## Contents
+
+- [`full` mode: complete service implementation](#full-mode-complete-service-implementation): a complete service implementation.
+- [`scaffold-todo` mode (DEFAULT): happy path + TODO markers](#scaffold-todo-mode-default-happy-path--todo-markers): the default mode: a happy path that compiles and runs, with TODO markers flagging the complex branches.
+- [`structural` mode: method signatures only](#structural-mode-method-signatures-only): signatures only, confirming the AS-IS reference without translating.
+- [State-machine method on a domain entity](#state-machine-method-on-a-domain-entity): translating a Phase 1 state machine into a method on the domain entity.
+
 ## `full` mode: complete service implementation
 
 Produce a complete service implementation:

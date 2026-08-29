@@ -25,7 +25,7 @@ status: complete | partial | needs-review | blocked
 ## Body
 
 ```markdown
-# Security findings — TO-BE Phase 5
+# Security findings: TO-BE Phase 5
 
 ## Summary
 - OWASP Top 10 coverage: 10/10

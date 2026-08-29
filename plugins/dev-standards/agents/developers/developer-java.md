@@ -131,11 +131,16 @@ For each file you produce or modify:
 ```
 ### {FileName}.java
 
-[Complete file content — all imports, no placeholder comments]
+[Complete file content, all imports, no placeholder comments]
 
 **Why**: {One sentence explaining the key decisions made}
 **Tests**: {Test class name and what scenarios are covered}
 ```
+
+→ Read `${CLAUDE_PLUGIN_ROOT}/examples/developer-java-example.md` when you need to see
+the expected breadth of a change. It walks a CRUD feature delivered as a full layered
+set in dependency order, an N+1 fix with a query-count regression test, and a
+severity-rated review of an existing controller.
 
 If you cannot complete the task without missing information (e.g. existing service
 interface, existing entity), state exactly what you need before proceeding.

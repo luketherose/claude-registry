@@ -1,5 +1,18 @@
 # Evidence-backed Context Graph Schema
 
+## Contents
+
+- [Purpose](#purpose): what the graph connects, and why it finds evidence rather than being evidence.
+- [Location](#location): the files under `.indexing-kb/graph/`.
+- [Node types](#node-types): the full node type list.
+- [Node schema](#node-schema): the node record schema and the `<TYPE>-<qualified-name>` identifier format.
+- [Edge types](#edge-types): the full edge type list.
+- [Edge schema](#edge-schema): the edge record schema.
+- [Graph rules](#graph-rules): which nodes and edges may back a final claim, and what `candidate` and `rejected` mean.
+- [Context bundle](#context-bundle): the targeted subgraph that is the primary retrieval unit for later phases.
+- [Graph quality report](#graph-quality-report): the counts and orphan checks the quality report must include.
+- [Build scripts](#build-scripts): `build_context_graph.py` and `retrieve_context_bundle.py`, their inputs and outputs.
+
 ## Purpose
 
 The context graph is a lightweight graph over the indexed KB that connects files,

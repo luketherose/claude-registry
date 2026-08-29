@@ -7,6 +7,17 @@
 
 > Reference doc for `baseline-testing-supervisor`. Read at runtime to drive the bootstrap dialog and dispatch each wave. The supervisor body keeps only the wave dependency chain and HITL checkpoints; the per-wave details live here.
 
+## Contents
+
+- [Phase 0: Bootstrap (supervisor only)](#phase-0-bootstrap-supervisor-only): resume-mode detection and the bootstrap dialog the supervisor runs before any dispatch.
+- [Wave 0: Fixture preparation (sequential, one agent)](#wave-0-fixture-preparation-sequential-one-agent): the single `fixture-builder` dispatch and the checks on its output.
+- [Wave 1: Test authoring (mode-dependent dispatch)](#wave-1-test-authoring-mode-dependent-dispatch): the mode-dependent dispatch of the test writers: parallel, batched or sequential.
+- [Wave 2: Execution & oracle capture (sequential)](#wave-2-execution--oracle-capture-sequential): the `baseline-runner` dispatch and the policies passed to it.
+- [Wave 3: Challenger (always ON, sequential)](#wave-3-challenger-always-on-sequential): the always-on adversarial review of every earlier wave.
+- [Wave 3b: Phase verification report (supervisor only)](#wave-3b-phase-verification-report-supervisor-only): the supervisor-written verification report that precedes the iteration loop.
+- [Wave 4: Iteration handling (supervisor only)](#wave-4-iteration-handling-supervisor-only): what happens on approve, iterate or stop, including the manifest append per iteration.
+- [Final report (legacy compatibility)](#final-report-legacy-compatibility): the superseded free-text closing block, kept for compatibility.
+
 ## Phase 0: Bootstrap (supervisor only)
 
 1. **Detect resume mode**. Inspect what is on disk and pick one of:

@@ -4,6 +4,20 @@
 >
 > **Iteration loop.** Phase 1 ends with the HITL iteration loop documented in [`refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md). The functional analysis is the most delicate part of the workflow, a misunderstanding here propagates everywhere downstream, so the loop allows unbounded iterations until the user picks `approve`. See § "Wave 4: Iteration handling" below.
 
+## Contents
+
+- [Phase 0: Bootstrap (supervisor only, no sub-agents)](#phase-0-bootstrap-supervisor-only-no-sub-agents): the `.indexing-kb/` completeness checks and the bootstrap dialog.
+- [Wave 1: Discovery (parallel, single message with multiple Agent calls)](#wave-1-discovery-parallel-single-message-with-multiple-agent-calls): the three discovery agents dispatched in parallel, and the checks on their outputs.
+- [Wave 1.5: Human-in-the-loop checkpoint](#wave-15-human-in-the-loop-checkpoint): what is presented to the user before behaviour analysis starts.
+- [Wave 2: Behavior (parallel, single message)](#wave-2-behavior-parallel-single-message): the behaviour agents, dispatched in parallel once Wave 1 outputs exist.
+- [Wave 3: Synthesis (sequential, supervisor only)](#wave-3-synthesis-sequential-supervisor-only): the three artefacts the supervisor produces itself, starting with traceability.
+- [Export Wave: Always ON (parallel, single message)](#export-wave-always-on-parallel-single-message): the PDF and PPTX exports (see also the gated version below).
+- [Wave 3c: Feature narrative (supervisor only)](#wave-3c-feature-narrative-supervisor-only): the supervisor-written feature narrative.
+- [Wave 3d: Phase verification report (supervisor only)](#wave-3d-phase-verification-report-supervisor-only): the supervisor-written verification report.
+- [Export Wave: gated on `approve`](#export-wave-gated-on-approve): the condition under which the exports actually run, rather than at every iteration.
+- [Wave 4: Iteration handling (supervisor only)](#wave-4-iteration-handling-supervisor-only): approve, iterate or stop, plus the manifest append per iteration.
+- [Closing summary (compatibility shim)](#closing-summary-compatibility-shim): the superseded free-text closing block, kept for older callers.
+
 ## Phase 0: Bootstrap (supervisor only, no sub-agents)
 
 1. Verify `.indexing-kb/` exists and contains at minimum:

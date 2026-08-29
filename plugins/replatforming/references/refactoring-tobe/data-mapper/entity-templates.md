@@ -5,6 +5,15 @@
 > emit @Embeddable, etc.) live in the agent body under `## Method`. The
 > code skeletons below are the literal shapes to copy-and-parametrise.
 
+## Contents
+
+- [Entity (one per aggregate / entity)](#entity-one-per-aggregate--entity): the JPA entity template, with the mandatory header comments.
+- [Enum (state machine / type)](#enum-state-machine--type): the enum template, mirroring any state machine Phase 1 documented.
+- [Value object (@Embeddable)](#value-object-embeddable): the `@Embeddable` value object template.
+- [Repository (Spring Data JPA)](#repository-spring-data-jpa): one Spring Data repository per aggregate root, plus what to do when the AS-IS needed raw SQL.
+- [MapStruct mapper (optional)](#mapstruct-mapper-optional): the MapStruct mapper, used when ADR-002 selects it, with the hand-written fallback.
+- [Idempotency repository implementation](#idempotency-repository-implementation): the JPA implementation of the interface `backend-scaffolder` left behind.
+
 ## Entity (one per aggregate / entity)
 
 ```java

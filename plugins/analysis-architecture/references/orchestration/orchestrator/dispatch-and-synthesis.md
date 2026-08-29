@@ -5,6 +5,17 @@
 > format). Decision logic stays in the supervisor body; the templates and the
 > response skeleton live here.
 
+## Contents
+
+- [Goal](#goal): why the two stable shapes exist and what they cover.
+- [Inputs](#inputs): table of what the orchestrator must read before dispatching, and which inputs are mandatory.
+- [Plan preview: template](#plan-preview-template): the shape of the Step 4 preview shown to the user before any dispatch.
+- [Sub-agent dispatch prompt: template](#sub-agent-dispatch-prompt-template): the copy-paste prompt shape for every Agent call, plus the rules each dispatch must satisfy.
+- [Parallel vs sequential dispatch: mechanics](#parallel-vs-sequential-dispatch-mechanics): how to launch a parallel phase in one message, and when work has to be serialised instead.
+- [Output: final response skeleton](#output-final-response-skeleton): the section-by-section skeleton of the final answer, and when to compress it.
+- [Synthesis rules (Step 6 expanded)](#synthesis-rules-step-6-expanded): the numbered rules for collecting agent outputs, detecting conflicts and resolving them.
+- [Stop conditions](#stop-conditions): the cases where the orchestrator stops and asks the user instead of dispatching.
+
 ## Goal
 
 Give the orchestrator a stable, copy-paste shape for (a) the prompts it sends
@@ -19,6 +30,21 @@ degrades into a dump of raw agent outputs.
 | The decomposition produced in Step 2 | Goal / Needs / Best agent / Surface per subtask | yes |
 | The phase plan produced in Step 3 | Phase number, mode (parallel/sequential), subtasks | yes |
 | The outputs of completed phases | File paths, summaries, decisions made | yes (for Step 6) |
+
+## Plan preview: template
+
+The Step 4 preview shown to the user before any dispatch. Required for any
+orchestration involving more than two agents.
+
+```
+## Plan
+<one paragraph: what we're doing and why this decomposition>
+
+## Phases
+Phase 1 (sequential): <agent> → <output>
+Phase 2 (parallel): <agent A> + <agent B> + <agent C>
+Phase 3 (sequential): <agent> integrates phase 2 outputs
+```
 
 ## Sub-agent dispatch prompt: template
 
@@ -85,9 +111,9 @@ For non-trivial orchestrations, structure the final response like this:
 <the decomposition + phase plan, briefly stated>
 
 ## Execution
-- Phase 1: <agent> — <one-line outcome>
-- Phase 2: <agent A> + <agent B> in parallel — <outcomes>
-- Phase 3: <agent> — <integration outcome>
+- Phase 1: <agent>, <one-line outcome>
+- Phase 2: <agent A> + <agent B> in parallel, <outcomes>
+- Phase 3: <agent>, <integration outcome>
 
 ## Synthesis
 <unified deliverable summary, organised by output not by agent>

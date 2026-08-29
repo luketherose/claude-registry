@@ -2,6 +2,14 @@
 
 > Reference doc for `functional-analysis-supervisor`. Read at runtime when planning where workers write their outputs and what frontmatter / per-item ID schema every artefact must carry.
 
+## Contents
+
+- [Output root](#output-root): the single writable directory and its full layout.
+- [The feature narrative: `00b-feature-narrative.md`](#the-feature-narrative-00b-feature-narrativemd): the supervisor-written narrative, the first document a human reviewer reads.
+- [Normalized JSONL artifacts](#normalized-jsonl-artifacts): pointer to the JSONL schemas, which live in a separate reference.
+- [Frontmatter contract (every output)](#frontmatter-contract-every-output): the YAML frontmatter every sub-agent output carries, plus the per-item ID rules.
+- [Manifest schema (`_meta/manifest.json`)](#manifest-schema-_metamanifestjson): the manifest the supervisor updates after every wave.
+
 ## Output root
 
 All outputs go under `<repo>/docs/analysis/01-functional/`. This directory is the single writable location for sub-agents. Layout:
@@ -83,7 +91,7 @@ audience: human-reviewer
 purpose: feature-by-feature narrative of what the application does
 ---
 
-# What the application does — feature narrative
+# What the application does: feature narrative
 
 > One short paragraph (3–5 sentences) describing the application in
 > business terms, derived from `00-context.md` + the feature catalogue.

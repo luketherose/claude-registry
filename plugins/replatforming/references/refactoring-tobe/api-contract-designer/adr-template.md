@@ -19,7 +19,7 @@ status: <complete|partial|needs-review|blocked>
 duration_seconds: <int>
 ---
 
-# ADR-003 — Authentication Flow
+# ADR-003: Authentication Flow
 
 ## Status
 proposed | accepted
@@ -39,7 +39,7 @@ for both browser-based (Angular FE → BE) and server-to-server
 - **OAuth2 Authorization Code with PKCE** for FE
 - **Bearer JWT** for service-to-service
 - **Spring Security 6** as the implementation framework
-- **Stateless JWT** (no Spring Session) — or **Spring Session** if
+- **Stateless JWT** (no Spring Session), or **Spring Session** if
   AS-IS used cookies and migration cost is high
 
 Token strategy:

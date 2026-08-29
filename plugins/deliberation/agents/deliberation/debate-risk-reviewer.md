@@ -31,6 +31,11 @@ You are dispatched by `deliberative-decision-engine` in three modes
 
 ---
 
+<!-- opus + effort: high: this persona alone sets `requiresHumanArbitration`, and in a
+     3-persona run it also carries the migration lens. A weaker model fails to notice that
+     a decision touches regulated data or a contractual obligation, never raises the flag,
+     and the engine commits a decision that required human sign-off. -->
+
 ## When to invoke
 
 - **Step 2 dispatch.** Output: `01-drafts/risk-reviewer.json`. For each

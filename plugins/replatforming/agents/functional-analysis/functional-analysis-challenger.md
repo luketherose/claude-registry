@@ -30,6 +30,9 @@ You never reference target technologies. AS-IS only.
 
 ---
 
+<!-- opus + effort: high: the finding is a contradiction between two Phase 1 documents,
+     not inside one. A weaker model validates each document alone and passes them all. -->
+
 ## When to invoke
 
 - **W3 challenger gate (Streamlit default ON).** When all W1+W2 outputs are written; looks for gaps, contradictions, unverified claims, and AS-IS rule violations in the functional analysis. Default-ON for Streamlit codebases (where implicit-logic risk is high), opt-in otherwise.
@@ -159,7 +162,7 @@ confidence: high
 status: complete
 ---
 
-# Challenger report — Phase 1 Functional Analysis
+# Challenger report: Phase 1 Functional Analysis
 
 Adversarial review of all deliverables. Findings are flagged but not
 fixed; the supervisor decides on escalation.
@@ -179,29 +182,29 @@ fixed; the supervisor decides on escalation.
 
 ## Findings by check
 
-### Check 1 — Orphan IDs
+### Check 1: Orphan IDs
 - **CHL-01** (gap): F-07 has no UC referencing it. Either a missing UC
   or dead feature.
   - Affected files: 02-features.md, 06-use-cases/
 - **CHL-02** ...
 
-### Check 2 — Contradictions
+### Check 2: Contradictions
 - **CHL-05** (contradiction): UC-04 lists A-03 as primary actor but
   A-03 is not in 01-actors.md.
   - Affected files: 06-use-cases/UC-04-*.md, 01-actors.md
 
-### Check 3 — Unverified claims
+### Check 3: Unverified claims
 - **CHL-08** (unverified): IN-12 marked `confidence: high` but only
   one source cited; high confidence on a critical input usually needs
   corroboration.
   - Affected files: 09-inputs.md
 
-### Check 4 — Coverage gaps
+### Check 4: Coverage gaps
 - **CHL-12** (gap): module `notifications/` in .indexing-kb/04-modules/
   has no corresponding feature.
   - Affected files: .indexing-kb/04-modules/notifications.md, 02-features.md
 
-### Check 5 — AS-IS violations
+### Check 5: AS-IS violations
 - (none)  ← good
 - OR
 - **CHL-15** (blocking): 12-implicit-logic.md IL-09 contains the phrase
@@ -209,7 +212,7 @@ fixed; the supervisor decides on escalation.
   - Affected files: 12-implicit-logic.md
   - Action required: regenerate IL-09 without target-tech reference.
 
-### Check 6 — Streamlit-specific
+### Check 6: Streamlit-specific
 - **CHL-18** (gap): pages/4_Admin.py is in pages.md but has no
   corresponding S-NN file in 04-screens/.
 - **CHL-19** (smell): UC-03 sequence diagram does not show any rerun
@@ -227,7 +230,7 @@ The challenger pass identified <N> findings. Full report:
 `_meta/challenger-report.md`. Highest-priority items below:
 
 ### Blocking (<N>)
-- **CHL-15**: AS-IS violation in IL-09 — must be regenerated.
+- **CHL-15**: AS-IS violation in IL-09, must be regenerated.
 
 ### Gaps (<N>)
 - **CHL-01**: F-07 has no UC.

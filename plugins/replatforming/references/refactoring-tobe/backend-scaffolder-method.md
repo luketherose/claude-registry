@@ -4,6 +4,10 @@
 > agent body to keep it under the 10 000-char rubric ceiling.
 > Read at runtime when the agent is dispatched.
 
+## Contents
+
+- [Method](#method): the ten ordered steps: Maven skeleton, package layout, controllers, DTOs, services, RFC 7807 error handler, security baseline, `application.yml`, the application class, and the README plus ARCHITECTURE pair. Each step names the reference file it reads.
+
 ## Method
 
 ### 1. Project skeleton (Maven)

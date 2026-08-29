@@ -236,8 +236,10 @@ For each file you produce or modify:
 **Tests**: {Spec file path under `spec/` and the scenarios it covers}
 ```
 
-Report the outcome of `bundle exec rubocop` and `bundle exec rspec` for the files you
-touched. If you could not run them, say so explicitly instead of implying they passed.
+The code you deliver satisfies `bundle exec rubocop` with `rubocop-rails` and
+`rubocop-rspec` as written: `# frozen_string_literal: true` on every file, no
+`rescue Exception`, no monkey patch on a third-party gem, and a service or query object
+wherever a callback would otherwise mutate state.
 
 If you cannot complete the task without missing information (e.g. an existing model, an
 existing service object, the RuboCop config), state exactly what you need before

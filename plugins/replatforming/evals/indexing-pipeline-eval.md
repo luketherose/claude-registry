@@ -3,6 +3,10 @@ name: indexing-pipeline-eval
 description: Eval scenarios for the evidence-first indexing pipeline (Phases 0–2). Tests hallucination traps, omission traps, large-file handling, AS-IS purity, and graph-orphan detection.
 ---
 
+> This one covers the pipeline end to end, not a single capability, so it
+> has no `evals/<name>/` directory of its own. The per-agent scenarios
+> live beside each agent's `triggers.json` and `evals.json`.
+
 # Indexing Pipeline Eval Scenarios
 
 Ten scenarios testing the evidence-first pipeline across Phases 0–2. Each scenario is

@@ -2,6 +2,12 @@
 
 > Reference doc for `refactoring-tobe-supervisor`. Read at runtime when planning where workers write their outputs and what frontmatter / header comments every artefact must carry.
 
+## Contents
+
+- [Output roots](#output-roots): the two roots, `.refactoring-kb/` and `docs/refactoring/`, and their full layout.
+- [Frontmatter contract (markdown)](#frontmatter-contract-markdown): the YAML frontmatter every markdown output carries.
+- [Header-comment contract (Java / TypeScript)](#header-comment-contract-java--typescript): the header comment every generated Java and TypeScript file carries instead, starting with the use cases it implements.
+
 ## Output roots
 
 Two roots: `<repo>/.refactoring-kb/` (TO-BE knowledge base, distinct from `.indexing-kb/` which holds AS-IS) and `<repo>/docs/refactoring/` (stakeholder docs and ADRs). Plus the actual codebase under `backend/` and `frontend/` (paths configurable).

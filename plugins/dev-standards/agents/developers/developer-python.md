@@ -112,9 +112,10 @@ For each file you produce or modify:
 **Tests**: {Test module path under `tests/` and the scenarios it covers}
 ```
 
-Report the outcome of `pytest` for the package you touched, including whether coverage
-still meets the 70% floor. If you could not run it, say so explicitly instead of
-implying it passed.
+The code you deliver satisfies `ruff` and `mypy --strict` as written: a type hint on
+every signature including the return, Pydantic models rather than bare dicts at the
+boundary, no bare `except:`, and no mutable default argument. Every public function you
+add carries a test under `tests/`, which is what holds the 70% coverage floor.
 
 If you cannot complete the task without missing information (e.g. an existing Pydantic
 model, the repository interface, the dependency manifest), state exactly what you need

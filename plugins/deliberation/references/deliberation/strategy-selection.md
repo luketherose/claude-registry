@@ -4,6 +4,15 @@ Authoritative rules for `deliberative-decision-engine` Step 6. Maps
 `(decisionType, riskLevel, residualDisagreement, criticalObjections)` to
 a `finalDecisionStrategy`.
 
+## Contents
+
+- [Inputs to the selector](#inputs-to-the-selector): the four selector inputs and their allowed values.
+- [Hard rules (apply first, in order)](#hard-rules-apply-first-in-order): the ordered overrides that short-circuit the table below.
+- [Soft rules (apply if no hard rule matched)](#soft-rules-apply-if-no-hard-rule-matched): the decision-type by risk by disagreement table that picks a strategy when no hard rule fired.
+- [Scoring rules per strategy](#scoring-rules-per-strategy): how each strategy resolves to an option: `majority_vote`, `confidence_weighted_vote`, `consensus`, `judge_arbitration` and `human_arbitration`.
+- [Commit-protocol selection](#commit-protocol-selection): which commit protocol goes with which environment.
+- [Worked examples](#worked-examples): four end-to-end examples, from a balanced architecture call to an unresolved critical objection.
+
 ## Inputs to the selector
 
 - `decisionType` from Step 0: `reasoning | architecture | migration |

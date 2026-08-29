@@ -34,7 +34,7 @@ If it is already covered, update rather than rewrite.
 ### Template: Streamlit page (or equivalent legacy component)
 
 ```markdown
-### `path/to/page.py` — [Functional title]
+### `path/to/page.py`: [Functional title]
 
 **What it does**: [1-2 sentences: end-user purpose]
 **When it is used**: [usage context in the application flow]
@@ -47,7 +47,7 @@ If it is already covered, update rather than rewrite.
 ### Template: Spring Boot Controller
 
 ```markdown
-### `[ControllerName]` — [Functional title]
+### `[ControllerName]`: [Functional title]
 
 **Endpoint**: `[METHOD] /api/[path]`
 **Purpose**: [what it enables for the user or the system]
@@ -60,7 +60,7 @@ If it is already covered, update rather than rewrite.
 ### Template: Java Service
 
 ```markdown
-### `[ServiceName]` — [Functional title]
+### `[ServiceName]`: [Functional title]
 
 **Responsibility**: [what this service manages]
 
@@ -72,7 +72,7 @@ If it is already covered, update rather than rewrite.
 ### Template: Angular Component
 
 ```markdown
-### `[ComponentName]` — [Functional title]
+### `[ComponentName]`: [Functional title]
 
 **Type**: [smart | dumb]
 **Usage**: [where it is used, in which feature module]
@@ -86,7 +86,7 @@ If it is already covered, update rather than rewrite.
 ### Template: Utility / helper module
 
 ```markdown
-### `path/to/helper.py` or `ClassName.java` — [Functional title]
+### `path/to/helper.py` or `ClassName.java`: [Functional title]
 
 **Responsibility**: [what this module manages]
 
@@ -168,7 +168,7 @@ docs/
 Maintain a glossary of the project's domain terms: identify and document project-specific business terminology. Always include a glossary section for the main data of the documented module:
 
 ```markdown
-## Data glossary — [Module]
+## Data glossary: [Module]
 
 | Field | Type | Description | Values |
 |---|---|---|---|

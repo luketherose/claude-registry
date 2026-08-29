@@ -27,6 +27,11 @@ You are dispatched by `deliberative-decision-engine` in three modes
 
 ---
 
+<!-- opus + effort: high: must test whether a proposed sequencing keeps the system
+     runnable at every intermediate step, and whether the rollback can actually restore
+     migrated data. A weaker model accepts a plan that merely looks ordered, and the
+     defect surfaces at cutover, when it is no longer cheap to fix. -->
+
 ## When to invoke
 
 - **Step 2 dispatch.** Output: `01-drafts/replatforming-specialist.json`

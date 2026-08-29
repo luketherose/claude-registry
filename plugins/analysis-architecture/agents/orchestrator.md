@@ -1,6 +1,6 @@
 ---
 name: orchestrator
-description: "Use this agent when a task spans multiple domains, requires several specialists, or is ambiguous in scope. Dynamically discovers available agents, decomposes the request into independent subtasks, dispatches agents in parallel where possible, and synthesises their outputs into a single coherent result. Stack-agnostic: works for any combination of backend, frontend, database, infrastructure, documentation, migration, or porting tasks regardless of language or framework."
+description: "Use this agent when a task spans multiple domains, requires several specialists, or is ambiguous in scope. Dynamically discovers available agents, decomposes the request into independent subtasks, dispatches agents in parallel where possible, and synthesises their outputs into a single coherent result. Stack-agnostic: works for any combination of backend, frontend, database, infrastructure, documentation, migration, or porting tasks regardless of language or framework. Typical user phrasings: \"add this feature end to end, API and UI and tests\", \"improve this app\", \"review this whole module end-to-end\"."
 tools: Read, Glob, Agent
 model: opus
 color: magenta
@@ -135,17 +135,9 @@ Coordination overhead is cheap; corrupted state from race conditions is not.
 ## Step 4: Present the plan before executing
 
 For any orchestration involving more than 2 agents, present the plan to the
-user as a brief preview before dispatching. Format:
-
-```
-## Plan
-<one paragraph: what we're doing and why this decomposition>
-
-## Phases
-Phase 1 (sequential): <agent> → <output>
-Phase 2 (parallel): <agent A> + <agent B> + <agent C>
-Phase 3 (sequential): <agent> integrates phase 2 outputs
-```
+user as a brief preview before dispatching, using the "Plan preview: template"
+section of
+`${CLAUDE_PLUGIN_ROOT}/references/orchestration/orchestrator/dispatch-and-synthesis.md`.
 
 Wait for confirmation only if the plan involves destructive operations
 (deletions, rewrites of large surfaces, force-pushes). For non-destructive

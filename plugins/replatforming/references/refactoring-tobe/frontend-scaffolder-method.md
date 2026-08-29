@@ -4,6 +4,10 @@
 > agent body to keep it under the 10 000-char rubric ceiling.
 > Read at runtime when the agent is dispatched.
 
+## Contents
+
+- [Method](#method): the ten ordered steps: workspace skeleton, OpenAPI typed client, core layer, shared layer, one feature module per bounded context, state management, Streamlit translations where the AS-IS needs them, the bootstrap files, the README, and a hard self-check gate that must pass before reporting `status: ok`.
+
 ## Method
 
 ### 1. Workspace skeleton

@@ -3,6 +3,12 @@
 > Reference doc for `equivalence-synthesizer`. Read at runtime when assembling
 > the deliverable equivalence report (W4 of Phase 5).
 
+## Contents
+
+- [Goal](#goal): why this report matters: the Product Owner signs it and it gates go-live.
+- [Required sections](#required-sections): the exact section list of the report.
+- [Verdict classification rules](#verdict-classification-rules): how each use case verdict is derived from its test outcome.
+
 ## Goal
 
 Define the exact structure of `01-equivalence-report.md`, the deliverable that
@@ -16,7 +22,7 @@ classification rules used to derive a per-UC verdict from test outcomes.
 <frontmatter>
 ---
 
-# TO-BE equivalence report — Phase 5
+# TO-BE equivalence report: Phase 5
 
 ## Executive summary
 
@@ -32,11 +38,11 @@ classification rules used to derive a per-UC verdict from test outcomes.
 
 | UC ID | UC title | Priority | Verdict | Test reference | Notes |
 |---|---|---|---|---|---|
-| UC-001 | <title> | critical | equivalent | tests/equivalence/test_uc_001_*.py | — |
-| UC-002 | <title> | high     | accepted-difference | tests/equivalence/test_uc_002_*.py | TZ format change — see Accepted differences |
-| UC-003 | <title> | medium   | regression-accepted | tests/equivalence/test_uc_003_*.py | TBUG-7 — PO accepted xfail until Phase 4 hardening loop |
-| UC-004 | <title> | critical | regression-blocking | tests/equivalence/test_uc_004_*.py | TBUG-12 — see Blocking regressions |
-| UC-005 | <title> | low      | not-tested | — | Streamlit-only diagnostic page; no Angular equivalent |
+| UC-001 | <title> | critical | equivalent | tests/equivalence/test_uc_001_*.py | none |
+| UC-002 | <title> | high     | accepted-difference | tests/equivalence/test_uc_002_*.py | TZ format change, see Accepted differences |
+| UC-003 | <title> | medium   | regression-accepted | tests/equivalence/test_uc_003_*.py | TBUG-7, PO accepted xfail until Phase 4 hardening loop |
+| UC-004 | <title> | critical | regression-blocking | tests/equivalence/test_uc_004_*.py | TBUG-12, see Blocking regressions |
+| UC-005 | <title> | low      | not-tested | none | Streamlit-only diagnostic page; no Angular equivalent |
 
 (One row per UC from Phase 1. Every UC must appear. If a UC has
 no row, this report is incomplete.)
@@ -45,7 +51,7 @@ no row, this report is incomplete.)
 
 | OperationId | Verdict | Notes |
 |---|---|---|
-| createCustomer | pass | — |
+| createCustomer | pass | none |
 | updateCustomer | drift | response missing `updatedAt` field |
 
 (One row per operationId in OpenAPI. Drifts are blocking.)
@@ -71,7 +77,7 @@ p95 regressions > +10%: PO sign-off required (regression-soft / -accepted).
 
 For each:
 
-### AD-NN — <title>
+### AD-NN: <title>
 - **Affected UC**: UC-<id>
 - **AS-IS behaviour**: <description>
 - **TO-BE behaviour**: <description>
@@ -83,7 +89,7 @@ For each:
 
 For each:
 
-### REG-NN — <title>
+### REG-NN: <title>
 - **Severity**: critical | high
 - **Affected UC**: UC-<id>
 - **Test that detected it**: <path:line>

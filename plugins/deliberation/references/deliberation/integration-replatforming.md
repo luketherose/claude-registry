@@ -4,6 +4,17 @@ How `deliberative-decision-engine` plugs into `refactoring-supervisor`
 (capability name: "Application Replatforming") at decision points
 across Phases 0–4.
 
+## Contents
+
+- [Integration model](#integration-model): the three conditions under which the supervisor hands a decision to the engine.
+- [Decision points (Phases 1–3)](#decision-points-phases-13): which decisions inside the analysis-phase iteration loop are routed to the engine.
+- [Decision points (Phase 4)](#decision-points-phase-4): the Phase 4 decision points the supervisor delegates instead of deciding alone.
+- [Programmatic invocation](#programmatic-invocation): the dispatch JSON the supervisor accepts, and what it changes at supervisor entry.
+- [Audit-trail integration](#audit-trail-integration): where deliberation artefacts live and how the phase recaps and the final report reference them.
+- [Trigger detection inside the supervisor](#trigger-detection-inside-the-supervisor): how the supervisor passes user prose to the Step 0 detector and what it gets back.
+- [Failure handling at the integration boundary](#failure-handling-at-the-integration-boundary): what the supervisor does when a deliberation aborts or degrades at the boundary.
+- [Example user invocations (recipes)](#example-user-invocations-recipes): four worked recipes: Italian prose trigger, Italian programmatic trigger, English prose trigger, and a high-risk auto-escalation.
+
 ## Integration model
 
 `refactoring-supervisor` retains its standard answering behaviour. The

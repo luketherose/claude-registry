@@ -10,6 +10,11 @@ You maintain a workflow-level manifest at
 `<repo>/docs/refactoring/workflow-manifest.json`. It records what has been
 done, what is in progress, and what is next.
 
+## Contents
+
+- [Schema](#schema): the full `workflow-manifest.json` schema.
+- [Update rules](#update-rules): what each phase entry must track, including the timing fields behind the duration recap.
+
 ## Schema
 
 ```json

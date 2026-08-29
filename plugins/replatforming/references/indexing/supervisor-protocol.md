@@ -6,6 +6,17 @@ updating the manifest, and on any unclear situation.
 
 ---
 
+## Contents
+
+- [Pipeline state](#pipeline-state): the `pipeline-state.yaml` file, its bootstrap and update protocol, and its schema.
+- [Inputs](#inputs): the repository path, and the note that Phase 0 has no prior-phase inputs.
+- [Manifest update](#manifest-update): which manifest fields change per wave.
+- [Sub-agents](#sub-agents): the wave by agent summary, with the full roster in a separate catalogue.
+- [Escalation triggers: always ask the user](#escalation-triggers-always-ask-the-user): the conditions that stop the supervisor, starting with repository size.
+- [Decision rules](#decision-rules): the situation by decision table the supervisor applies without asking.
+- [Output format for user-facing messages](#output-format-for-user-facing-messages): the per-phase update block and the final report posted at the HITL gate.
+- [Constraints](#constraints): the non-negotiables, above all the grounding policy block on every dispatch.
+
 ## Pipeline state
 
 **File**: `.indexing-kb/_meta/pipeline-state.yaml`
@@ -90,11 +101,11 @@ See `sub-agents-catalog.md` for the full roster (wave assignment, output targets
 
 | Wave | Agent | Conditional |
 |---|---|---|
-| W1 | `codebase-mapper`, `dependency-analyzer` | n/a |
+| W1 | `codebase-mapper`, `dependency-analyzer` | no condition, always runs |
 | W1 | `streamlit-analyzer` | only when `streamlit` ∈ stack.frameworks |
 | W2 | `module-documenter` × N | one per top-level package |
-| W3 | `data-flow-analyst`, `business-logic-analyst` | n/a |
-| W4 | `synthesizer` | n/a |
+| W3 | `data-flow-analyst`, `business-logic-analyst` | no condition, always runs |
+| W4 | `synthesizer` | no condition, always runs |
 | W4a | `indexing-auditor` | always ON |
 
 ---

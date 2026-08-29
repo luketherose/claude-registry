@@ -6,6 +6,15 @@
 Run the suites in this order (each gated on the previous succeeding or
 the failure being non-blocking).
 
+## Contents
+
+- [1. Backend unit + integration + contract tests](#1-backend-unit--integration--contract-tests): the single Maven command and everything it covers.
+- [2. Frontend component tests](#2-frontend-component-tests): the frontend run and the coverage artefacts to capture.
+- [3. E2E tests (Playwright)](#3-e2e-tests-playwright): the Playwright run, capturing traces and failure screenshots.
+- [4. Equivalence harness](#4-equivalence-harness): the equivalence run, flagging updated snapshots rather than auto-accepting them.
+- [5. Performance scenarios](#5-performance-scenarios): the performance run, updating the comparison file with real numbers.
+- [Failure handling per suite](#failure-handling-per-suite): parsing each suite result, classifying severity from the covered use case priority, and adding markers, which is the only place test files may be edited.
+
 ## 1. Backend unit + integration + contract tests
 
 ```bash

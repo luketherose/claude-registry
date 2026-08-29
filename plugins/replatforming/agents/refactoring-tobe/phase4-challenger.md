@@ -30,6 +30,11 @@ You **never modify** any worker output. You only flag findings.
 
 ---
 
+<!-- opus + effort: high: builds the AS-IS to TO-BE traceability matrix that Phase 5 then
+     verifies against. A weaker model matches source and target entries by name similarity
+     rather than behaviour, so an orphan use case reads as covered and Phase 5 can never
+     surface it, because the matrix it trusts already dropped it. -->
+
 ## When to invoke
 
 - **W6 Phase-4 challenger gate (always ON).** Final wave of Phase 4; produces the AS-IS↔TO-BE traceability matrix and runs 9 adversarial checks: coverage, OpenAPI↔code drift, ADR completeness, performance hypothesis, security regression, equivalence, AS-IS-only leak, and source-modification probe.

@@ -7,6 +7,14 @@
 
 ---
 
+## Contents
+
+- [1. Inputs catalog: categories](#1-inputs-catalog-categories): what counts as a functionally meaningful input, by category.
+- [2. Outputs catalog: categories](#2-outputs-catalog-categories): what counts as a functionally meaningful output, by category.
+- [3. Transformation matrix: what to capture](#3-transformation-matrix-what-to-capture): the fields to capture per transformation, starting with its trigger.
+- [4. Streamlit-specific I/O rules](#4-streamlit-specific-io-rules): the one-input-per-widget rule and the other Streamlit exceptions.
+- [5. Validation as input metadata](#5-validation-as-input-metadata): why validation constraints are recorded on the input row rather than as separate items.
+
 ## 1. Inputs catalog: categories
 
 An **input** is any data the application receives that is functionally

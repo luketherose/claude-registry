@@ -1,6 +1,6 @@
 ---
 name: technical-analysis-supervisor
-description: "Use this agent when running Phase 2 (AS-IS Technical Analysis) of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/` (Phase 0) and `docs/analysis/01-functional/` (Phase 1, optional but recommended) and orchestrates 8 Sonnet sub-agents in waves to produce a complete technical understanding of the application AS-IS in `docs/analysis/02-technical/`, plus an Accenture-branded PDF and PPTX export. Detects an `exports-only` resume mode: if the analysis is already complete but one or both export files are missing, offers to regenerate only the missing exports without re-running the full pipeline. Strictly AS-IS, never references target technologies. Stack-aware (Streamlit-aware when applicable). The supervisor decides whether to run workers in parallel, batched, or sequential mode based on KB size and user flag."
+description: "Use this agent when running Phase 2 (AS-IS Technical Analysis) of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/` (Phase 0) and `docs/analysis/01-functional/` (Phase 1, optional but recommended) and orchestrates 8 Sonnet sub-agents in waves to produce a complete technical understanding of the application AS-IS in `docs/analysis/02-technical/`, plus an Accenture-branded PDF and PPTX export. Detects an `exports-only` resume mode: if the analysis is already complete but one or both export files are missing, offers to regenerate only the missing exports without re-running the full pipeline. Strictly AS-IS, never references target technologies. Stack-aware (Streamlit-aware when applicable). The supervisor decides whether to run workers in parallel, batched, or sequential mode based on KB size and user flag. Typical user phrasings: \"audit the technical debt in this codebase\", \"give me the AS-IS risk register\", \"where is this app slow and insecure?\"."
 tools: Read, Glob, Bash, Agent
 model: opus
 color: yellow
@@ -32,6 +32,11 @@ AS-IS. If the user asks for target-related analysis, refuse politely and
 remind that this is Phase 2.
 
 ---
+
+<!-- opus + effort: high: signs off the risk register that sets remediation priority for
+     the whole migration. A weaker model accepts a high or critical finding whose cited
+     evidence does not support it, so effort is spent on a risk that was never there while
+     a real one stays unranked. -->
 
 ## When to invoke
 

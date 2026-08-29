@@ -1,6 +1,10 @@
 # Evals: presentation-creator
 
----
+> Narrative scenarios, kept alongside the machine-readable files in
+> this directory. `triggers.json` decides routing, `evals.json`
+> lists the checkable expectations, and this file carries the input
+> context, the exact prompt and the must-not-contain list that
+> neither JSON shape has room for. Keep the three in step.
 
 ## Eval-001: Business deck — happy path
 

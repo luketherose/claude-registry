@@ -24,6 +24,12 @@ underlying finding's severity.
 
 ---
 
+## Contents
+
+- [File 1: `_meta/challenger-report.md`](#file-1-_metachallenger-reportmd): the full challenger report template.
+- [File 2: appended section in `14-unresolved-questions.md`](#file-2-appended-section-in-14-unresolved-questionsmd): the block appended, never overwritten, to the unresolved-questions register.
+- [Streamlit-specific risk checklist (Check 6 detail)](#streamlit-specific-risk-checklist-check-6-detail): the Streamlit traps the analysis must be shown to have covered, starting with reactive cost.
+
 ## File 1: `_meta/challenger-report.md`
 
 ```markdown
@@ -37,7 +43,7 @@ confidence: <high|medium|low>
 status: <complete|partial|needs-review|blocked>
 ---
 
-# Challenger report — Phase 2 Technical Analysis
+# Challenger report: Phase 2 Technical Analysis
 
 ## Summary
 - Blocking issues:    <N>
@@ -48,7 +54,7 @@ status: <complete|partial|needs-review|blocked>
 
 ### 1. Orphan IDs and broken cross-references
 
-#### CHL-01 — <title>
+#### CHL-01: <title>
 - **Type**: orphan-id
 - **Where**: `09-synthesis/risk-register.md`
 - **Description**: References RISK-DA-04 but `04-data-access/` only
@@ -58,7 +64,7 @@ status: <complete|partial|needs-review|blocked>
 
 ### 2. Contradictions
 
-#### CHL-NN — <title>
+#### CHL-NN: <title>
 - **Type**: contradiction
 - **Where**: `04-data-access/access-pattern-map.md` vs
   `08-security/security-findings.md`
@@ -69,7 +75,7 @@ status: <complete|partial|needs-review|blocked>
 
 ### 3. Unverified claims
 
-#### CHL-NN — <title>
+#### CHL-NN: <title>
 - **Type**: unverified
 - **Where**: `08-security/security-findings.md`
 - **Description**: SEC-04 (critical) cites only KB sources, no
@@ -80,18 +86,18 @@ status: <complete|partial|needs-review|blocked>
 
 ### 4. Coverage gaps
 
-#### CHL-NN — <title>
+#### CHL-NN: <title>
 - **Type**: gap
 - **Where**: workflow-level
 - **Description**: package `<name>` from Phase 0 KB has no entry in
   any Wave 1 output.
-- **Suggested fix**: add a "no findings — clean" note in code-quality
+- **Suggested fix**: add a "no findings, clean" note in code-quality
   or trigger re-analysis on the missing module.
 - **Severity**: nice-to-have / needs-review (depends on package size)
 
 ### 5. AS-IS violations
 
-#### CHL-NN — <title>
+#### CHL-NN: <title>
 - **Type**: as-is-violation
 - **Where**: `06-performance/performance-bottleneck-report.md`
 - **Description**: Remediation hint says "consider migrating to
@@ -102,7 +108,7 @@ status: <complete|partial|needs-review|blocked>
 
 ### 6. Streamlit-specific risks (if applicable)
 
-#### CHL-NN — <title>
+#### CHL-NN: <title>
 - **Type**: streamlit-risk
 - **Where**: `02-state-runtime/session-state-inventory.md`
 - **Description**: cross-page key `current_user` documented as

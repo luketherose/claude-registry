@@ -3,6 +3,14 @@
 > Reference doc for `dependency-analyzer`. Read at runtime when extracting
 > external dependencies, parsing imports, or composing the two output files.
 
+## Contents
+
+- [Goal](#goal): what this file pins down, from manifest tables to the two output shapes.
+- [External dependencies: manifests by language](#external-dependencies-manifests-by-language): which manifest to read per language, and the dependency syntax in each.
+- [External dependencies: categorization heuristic](#external-dependencies-categorization-heuristic): the name-based heuristic that assigns each dependency to one category.
+- [Internal dependencies: import grep patterns](#internal-dependencies-import-grep-patterns): the line-based import regexes per language, plus the top-level package mapping rules.
+- [Output schemas](#output-schemas): the external and internal dependency markdown templates, and the open-questions section that records unresolved imports.
+
 ## Goal
 
 Provide the per-language manifest tables, import-grep patterns, top-level
@@ -129,26 +137,26 @@ status: complete
 
 ## By language and category
 
-### python — Web frameworks
+### python: Web frameworks
 | Name | Version | Source | Notes |
 |---|---|---|---|
 
-### python — ORM / database drivers
+### python: ORM / database drivers
 …
 
-### typescript — Web framework
+### typescript: Web framework
 …
 
-### typescript — Testing
+### typescript: Testing
 …
 
 (One section per language present in `stack.languages[]`.)
 
 ## Migration relevance flags
-- `streamlit` — UI framework; replacement target depends on TO-BE
+- `streamlit`: UI framework; replacement target depends on TO-BE
   decision in Phase 4 (typically Angular/React/Vue/Qwik via
   `developer-frontend`)
-- `<package>` — language-specific utility; check if equivalent exists
+- `<package>`: language-specific utility; check if equivalent exists
   in target language
 ```
 
@@ -170,10 +178,10 @@ status: complete
 |---|---|---|---|
 
 ## Circular dependencies
-- `A → B → C → A` — involves files: `<list>` (language: <X>)
+- `A → B → C → A` involves files: `<list>` (language: <X>)
 
 ## Standalone packages
-- `<pkg>` — no internal couplings (good migration unit)
+- `<pkg>`: no internal couplings (good migration unit)
 
 ## Coupling hotspots
 | Package | In-degree | Out-degree | Language | Risk |

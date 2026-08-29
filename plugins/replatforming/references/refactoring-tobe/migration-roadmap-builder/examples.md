@@ -3,6 +3,14 @@
 > Reference doc for `migration-roadmap-builder`. Read at runtime when
 > filling in concrete milestone entries in `docs/refactoring/roadmap.md`.
 
+## Contents
+
+- [Goal](#goal): what these worked examples are for, and which template they pair with.
+- [M-00: Foundation (always present)](#m-00-foundation-always-present): the cross-cutting milestone that always opens the roadmap.
+- [M-01: Identity & Access (worked example BC milestone)](#m-01-identity--access-worked-example-bc-milestone): a worked bounded-context milestone, with its use cases, retired modules and endpoints.
+- [M-Final: AS-IS retirement (always present)](#m-final-as-is-retirement-always-present): the cross-cutting milestone that always closes the roadmap.
+- [Strangler-fig topology choices](#strangler-fig-topology-choices): the three routing topologies for the cutover (reverse proxy, API gateway with feature flags, DNS or load balancer) and which to recommend when.
+
 ## Goal
 
 Worked example milestones (foundation, BC cutover, AS-IS retirement) the

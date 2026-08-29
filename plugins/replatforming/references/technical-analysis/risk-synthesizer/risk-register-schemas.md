@@ -4,6 +4,14 @@
 > consolidated risk register. Defines the three serialization shapes that
 > downstream tools (Excel, Jira import, dashboards) rely on.
 
+## Contents
+
+- [Goal](#goal): the three serialization shapes and who consumes each.
+- [Stable finding-ID prefixes (per source agent)](#stable-finding-id-prefixes-per-source-agent): the per-source-agent prefixes, preserved verbatim and never renumbered.
+- [Markdown: `09-synthesis/risk-register.md`](#markdown-09-synthesisrisk-registermd): the human-readable sortable table.
+- [JSON: `_meta/risk-register.json`](#json-_metarisk-registerjson): the JSON serialization.
+- [CSV: `_meta/risk-register.csv`](#csv-_metarisk-registercsv): the CSV serialization, whose column order external tools depend on.
+
 ## Goal
 
 Provide the canonical schemas for the three risk-register artifacts:

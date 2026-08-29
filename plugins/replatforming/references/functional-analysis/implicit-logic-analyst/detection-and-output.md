@@ -7,6 +7,12 @@
 
 ---
 
+## Contents
+
+- [Detection-pattern catalogue (seven categories)](#detection-pattern-catalogue-seven-categories): the seven detection categories: widget-embedded validation, conditional rendering, state-driven behaviours, callback chains, magic numbers, silent fallbacks, and cross-screen state mutations.
+- [Source-code descent rules](#source-code-descent-rules): when the analyst may read source directly instead of stopping at the KB.
+- [Output schema: `docs/analysis/01-functional/12-implicit-logic.md`](#output-schema-docsanalysis01-functional12-implicit-logicmd): the template for `12-implicit-logic.md`.
+
 ## Detection-pattern catalogue (seven categories)
 
 ### 1. Validation embedded in widgets (Streamlit mode)
@@ -167,12 +173,12 @@ constants and easily missed in a casual read of the codebase.
 
 ## Catalog
 
-### IL-01 — <Short business-language name>
+### IL-01: <Short business-language name>
 - **Category**: validation | rendering | state-machine | cascade | constant | fallback | cross-state
 - **Description**: <1-2 sentences in plain business language>
 - **Where**: <screen S-NN> / <file:line> / <widget id>
 - **Trigger / condition**: <when this rule applies>
-- **Consequence**: <what changes — feature visibility, output value, validation error>
+- **Consequence**: <what changes, feature visibility, output value, validation error>
 - **Related**:
   - inputs: IN-04
   - outputs: OUT-02
@@ -184,14 +190,14 @@ constants and easily missed in a casual read of the codebase.
 - **Confidence**: high | medium | low
 - **Notes**: <anything ambiguous>
 
-### IL-02 — ...
+### IL-02: ...
 
 ## High-impact items (deserve human review)
 
 Items with broad impact on functional behavior:
-- IL-03 — controls visibility of an entire feature
-- IL-08 — silent fallback that changes monetary computation outcome
-- IL-12 — cross-screen state machine driving the wizard flow
+- IL-03: controls visibility of an entire feature
+- IL-08: silent fallback that changes monetary computation outcome
+- IL-12: cross-screen state machine driving the wizard flow
 
 ## Magic numbers index
 
@@ -215,7 +221,7 @@ For each session_state key acting as a state machine:
 - Reset: navigation away from S-03 sets back to `select`
 
 ## Open questions
-- <e.g., "IL-08 — fallback to default tax rate of 0.05 when config is
+- <e.g., "IL-08: fallback to default tax rate of 0.05 when config is
   missing; is this a documented business decision or accidental
   behavior?">
 ```

@@ -45,43 +45,17 @@ tests follow `testing-standards`.
 
 ## Standards
 
-### Project structure
+### Project structure, compiler and analyzer settings
 
-For an ASP.NET Core Web API:
+| Read this | When |
+|---|---|
+| `${CLAUDE_PLUGIN_ROOT}/references/developers/developer-csharp/project-layout-and-build-settings.md` | Scaffolding a project or adding one to a solution |
 
-```
-.
-├── Acme.Orders.sln
-├── src/
-│   ├── Acme.Orders.Api/                ─ controllers / minimal APIs, DTOs
-│   ├── Acme.Orders.Application/        ─ business logic (commands, queries, MediatR if used)
-│   ├── Acme.Orders.Domain/             ─ entities, value objects, domain events
-│   └── Acme.Orders.Infrastructure/     ─ EF Core, external clients, persistence
-├── tests/
-│   ├── Acme.Orders.UnitTests/
-│   ├── Acme.Orders.IntegrationTests/
-│   └── Acme.Orders.ArchitectureTests/  ─ NetArchTest assertions
-└── .editorconfig
-```
-
-For smaller services collapse Application + Domain into a single project.
-
-### Compiler and analyzer settings
-
-In every `.csproj`:
-
-```xml
-<PropertyGroup>
-  <TargetFramework>net8.0</TargetFramework>
-  <Nullable>enable</Nullable>
-  <ImplicitUsings>enable</ImplicitUsings>
-  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-</PropertyGroup>
-```
-
-Pin Roslyn analyzers in `Directory.Packages.props` and use central package
-management (`<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>`).
+It carries the four-project skeleton (Api / Application / Domain /
+Infrastructure plus three test projects) and the mandatory `.csproj` set:
+`net8.0`, `Nullable`, `ImplicitUsings`, `TreatWarningsAsErrors`,
+`EnforceCodeStyleInBuild`, Roslyn analyzers pinned under central package
+management. Smaller services collapse Application + Domain into one project.
 
 ### Naming and style
 
@@ -282,9 +256,10 @@ For each file you produce or modify:
 **Tests**: {xUnit test class name and the scenarios it covers}
 ```
 
-Report the outcome of `dotnet format --verify-no-changes` and `dotnet test` for the
-project you touched. If you could not run them, say so explicitly instead of implying
-they passed.
+The code you deliver satisfies `dotnet format --verify-no-changes` and the Roslyn
+analyzer set as written: nullable reference types honoured with no `!` suppression,
+every awaitable awaited with no `.Result` or `.Wait()`, every `IDisposable` scoped by a
+`using`, and no `dynamic`.
 
 If you cannot complete the task without missing information (e.g. an existing DbContext,
 an existing DTO record, the target framework version), state exactly what you need

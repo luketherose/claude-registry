@@ -2,6 +2,17 @@
 
 > Reference doc for `tobe-testing-supervisor`. Read at runtime to drive the bootstrap dialog, dispatch each wave, and produce the closing report.
 
+## Contents
+
+- [Phase 0: Bootstrap (supervisor only, no sub-agents)](#phase-0-bootstrap-supervisor-only-no-sub-agents): resume-mode detection and the bootstrap dialog the supervisor runs before any dispatch.
+- [Wave 1: Test authoring (mode-dependent dispatch of 4 workers)](#wave-1-test-authoring-mode-dependent-dispatch-of-4-workers): the four test-authoring workers, dispatched parallel, batched or sequential.
+- [Wave 1.5: Human-in-the-loop checkpoint](#wave-15-human-in-the-loop-checkpoint): the coverage counts presented before performance comparison starts.
+- [Wave 2: Performance comparison (sequential, single Agent call)](#wave-2-performance-comparison-sequential-single-agent-call): the `performance-comparator` dispatch against the Phase 3 baseline.
+- [Wave 3: Execution & oracle capture (sequential, single Agent call)](#wave-3-execution--oracle-capture-sequential-single-agent-call): the `tobe-test-runner` dispatch and the artefacts it captures.
+- [Wave 4: Equivalence synthesis (sequential, single Agent call)](#wave-4-equivalence-synthesis-sequential-single-agent-call): the `equivalence-synthesizer` dispatch and the report it produces.
+- [Wave 5: Challenger (always ON)](#wave-5-challenger-always-on): the always-on adversarial review of every earlier wave.
+- [Final report](#final-report): the closing user-facing summary.
+
 ## Phase 0: Bootstrap (supervisor only, no sub-agents)
 
 1. **Detect resume mode**. Inspect what is on disk and pick one of:
@@ -162,7 +173,7 @@ Coverage summary:
 
 Equivalence verdict:
 - equivalent:           <N> UCs
-- accepted-difference:  <N> UCs (PO sign-off required — see report)
+- accepted-difference:  <N> UCs (PO sign-off required, see report)
 - regression-blocking:  <N> UCs
 - regression-accepted:  <N> UCs (PO sign-off required)
 - not-tested:           <N> UCs (with reasons)

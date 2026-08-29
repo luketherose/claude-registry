@@ -6,6 +6,14 @@
 
 ---
 
+## Contents
+
+- [Angular stack](#angular-stack): toolchain plus the non-negotiable Angular invariants, including the four co-located component files.
+- [React stack](#react-stack): toolchain plus the React invariants on prop typing and `useEffect` usage.
+- [Vue 3 stack](#vue-3-stack): toolchain plus the Vue 3 invariants, `<script setup lang="ts">` and typed `defineProps`.
+- [Qwik stack](#qwik-stack): toolchain plus the Qwik invariants on `$` lazy boundaries and `useVisibleTask$`.
+- [Vanilla JS/TS stack](#vanilla-jsts-stack): toolchain plus the Vanilla invariants on strict mode and Web Components.
+
 ## Angular stack
 
 ```

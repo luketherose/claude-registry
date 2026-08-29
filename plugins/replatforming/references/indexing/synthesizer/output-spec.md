@@ -4,6 +4,15 @@ Reference doc for `synthesizer`. Read before writing any output file.
 
 ---
 
+## Contents
+
+- [File 1: `.indexing-kb/00-index.md`](#file-1-indexing-kb00-indexmd): the KB index template.
+- [File 2: `.indexing-kb/01-overview.md`](#file-2-indexing-kb01-overviewmd): the overview template.
+- [File 3: `.indexing-kb/08-synthesis/bounded-contexts.md`](#file-3-indexing-kb08-synthesisbounded-contextsmd): the bounded contexts template.
+- [File 4: `.indexing-kb/08-synthesis/complexity-hotspots.md`](#file-4-indexing-kb08-synthesiscomplexity-hotspotsmd): the complexity hotspots template.
+- [File 5: `.indexing-kb/08-synthesis/indexing-report.md`](#file-5-indexing-kb08-synthesisindexing-reportmd): the indexing report template.
+- [File 6: `.indexing-kb/_meta/unresolved.md`](#file-6-indexing-kb_metaunresolvedmd): the unresolved questions template.
+
 ## File 1: `.indexing-kb/00-index.md`
 
 ```markdown
@@ -45,12 +54,12 @@ migration planning.
 <copied from indexing-report.md>
 
 ## Recommended reading order
-1. `01-overview.md` — orient yourself in 1 minute
-2. `08-synthesis/bounded-contexts.md` — the high-level shape
-3. `07-business-logic/domain-concepts.md` — the ubiquitous language
-4. `04-modules/<top-level packages>.md` — depth where you need it
-5. `06-data-flow/*.md` — what crosses the boundary
-6. `08-synthesis/complexity-hotspots.md` — where risk concentrates
+1. `01-overview.md`: orient yourself in 1 minute
+2. `08-synthesis/bounded-contexts.md`: the high-level shape
+3. `07-business-logic/domain-concepts.md`: the ubiquitous language
+4. `04-modules/<top-level packages>.md`: depth where you need it
+5. `06-data-flow/*.md`: what crosses the boundary
+6. `08-synthesis/complexity-hotspots.md`: where risk concentrates
 7. The rest as needed
 ```
 
@@ -78,7 +87,7 @@ status: complete
 
 ## External surface
 - HTTP endpoints exposed: <count + examples>
-- DB: `<engine>` — <table count> tables
+- DB: `<engine>`, <table count> tables
 - Files read/written: <summary>
 - Env vars consumed: <count>
 
@@ -86,7 +95,7 @@ status: complete
 - <Streamlit pages: count + entrypoint, OR "no UI">
 
 ## Key external dependencies
-1. `<dep>` — <role>
+1. `<dep>`: <role>
 ...
 ```
 
@@ -116,7 +125,7 @@ status: complete
 ### Context 2: ...
 
 ## Cross-context concerns
-- <Entity that appears in multiple contexts — flag for review>
+- <Entity that appears in multiple contexts: flag for review>
 - <Operations that cross context boundaries>
 
 ## Open questions
@@ -144,10 +153,10 @@ status: complete
 |---|---|---|---|---|---|
 
 ## High-risk hotspots (2+ axes high)
-- `<pkg>` — large + heavy coupling. Migration order: late, after dependents are migrated.
+- `<pkg>`: large + heavy coupling. Migration order: late, after dependents are migrated.
 
 ## Standalone migration candidates (low everything)
-- `<pkg>` — minimal coupling, small. Good first migration target.
+- `<pkg>`: minimal coupling, small. Good first migration target.
 ```
 
 ---
@@ -198,7 +207,7 @@ Total: <N high>, <N medium>, <N low>
 
 Aggregated from all phases.
 
-## Phase 1 — Structural
+## Phase 1: Structural
 ### codebase-mapper
 - <question>
 
@@ -208,11 +217,11 @@ Aggregated from all phases.
 ### streamlit-analyzer
 - <question>
 
-## Phase 2 — Module documentation
+## Phase 2: Module documentation
 ### <package-1>
 - <question>
 
-## Phase 3 — Cross-cutting
+## Phase 3: Cross-cutting
 ### data-flow-analyst
 - <question>
 

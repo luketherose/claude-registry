@@ -1,6 +1,6 @@
 ---
 name: registry-auditor
-description: "Use this agent when the user asks to audit, evaluate, score, or check a Claude Code agent/skill registry against Anthropic's official quality guidelines (the rubrics shipped in the official `agent-development`, `skill-development`, `skill-creator`, and `claude-md-improver` skills inside `anthropics/claude-plugins-official`)."
+description: "Use this agent when the user asks to audit, evaluate, score, or check a Claude Code agent/skill registry against Anthropic's official quality guidelines (the rubrics shipped in the official `agent-development`, `skill-development`, `skill-creator`, and `claude-md-improver` skills inside `anthropics/claude-plugins-official`). Typical user phrasings: \"audit the registry against Anthropic's guidelines\", \"which of my agents need rewriting first?\", \"show me what good looks like here\"."
 tools: Read, Grep, Glob, Bash
 model: opus
 color: cyan
@@ -23,6 +23,12 @@ specific rubric criterion behind each finding so the maintainer can verify it
 independently.
 
 ---
+
+<!-- opus + effort: high: scores every capability in a registry against four separate
+     rubrics and must tell a systemic pattern from a per-file defect. A weaker model
+     reports surface features (heading counts, file length) as rubric findings and
+     miscites the criterion, so the maintainer cannot verify a finding independently
+     and the real defects sit buried under false positives. -->
 
 ## When to invoke
 

@@ -2,6 +2,22 @@
 
 > Reference doc for `functional-analysis-supervisor` and Phase 1 sub-agents. Read at runtime when writing JSONL artifacts to `docs/analysis/01-functional/normalized/` or `raw/`.
 
+## Contents
+
+- [Purpose](#purpose): scope of the Phase 1 normalized artefacts.
+- [`normalized/use-case-candidates.jsonl`](#normalizeduse-case-candidatesjsonl): opens with the full `raw/` and `normalized/` directory tree.
+- [`normalized/use-case-candidates.jsonl`](#normalizeduse-case-candidatesjsonl-1): one record per use case candidate, plus the `status` rules.
+- [`normalized/feature-candidates.jsonl`](#normalizedfeature-candidatesjsonl-1): one record per feature.
+- [`normalized/actor-candidates.jsonl`](#normalizedactor-candidatesjsonl-1): one record per actor.
+- [`normalized/business-rules.jsonl`](#normalizedbusiness-rulesjsonl-1): one record per business rule.
+- [`normalized/functional-gaps.jsonl`](#normalizedfunctional-gapsjsonl): one record per unresolved gap or open question.
+- [`raw/` files](#raw-files): one pre-normalization JSONL per sub-agent, each record carrying an extra `raw_text` field.
+- [`normalized/uc-evidence-matrix.csv`](#normalizeduc-evidence-matrixcsv-1): the column list and the one-row-per-use-case rule.
+- [`normalized/functional-traceability-audit.json`](#normalizedfunctional-traceability-auditjson-1): the auditor verdict schema.
+- [Analysis quality summary](#analysis-quality-summary): the metrics the final quality summary must report.
+- [Confidence + inference levels (applies to all JSONL)](#confidence--inference-levels-applies-to-all-jsonl): the level by inference by meaning table that applies to every JSONL.
+- [Rules](#rules): the validation rules, including evidence required on confirmed use cases and the ban on TO-BE terms.
+
 ## Purpose
 
 ---

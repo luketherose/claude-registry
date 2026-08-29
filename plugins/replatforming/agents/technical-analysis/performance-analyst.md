@@ -185,11 +185,11 @@ disagree.
 
 ## Findings
 
-### PERF-01 — N+1 DB query in profile lookup
+### PERF-01: N+1 DB query in profile lookup
 - **Severity**: high
 - **Pattern**: N+1 DB query
 - **Location**: `<repo-path>:<line>`
-- **Loop bound**: `users` collection — KB indicates up to 5000
+- **Loop bound**: `users` collection, KB indicates up to 5000
   users in production
 - **Description**: <details>
 - **AS-IS remediation**:
@@ -197,7 +197,7 @@ disagree.
   - Or batch via `IN` clause
 - **Sources**: [.indexing-kb/06-data-flow/database.md, <repo-path>:<line>]
 
-### PERF-02 — Outbound HTTP call on every Streamlit rerun
+### PERF-02: Outbound HTTP call on every Streamlit rerun
 - **Severity**: high
 - **Pattern**: blocking I/O on UI path
 - **Location**: `<repo-path>:<line>`
@@ -206,7 +206,7 @@ disagree.
 - **AS-IS remediation**: wrap in `@st.cache_data(ttl=...)`
 - **Sources**: [...]
 
-### PERF-NN — ...
+### PERF-NN: ...
 
 ## Caching status (Streamlit only)
 

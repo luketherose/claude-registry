@@ -4,6 +4,14 @@
 > building the Postman 2.1 collection skeleton, the per-endpoint requests,
 > the environment file, and the pre-request scripts.
 
+## Contents
+
+- [Goal](#goal): what shapes this file pins down.
+- [Collection skeleton (Postman 2.1.0 schema)](#collection-skeleton-postman-210-schema): the verbatim Postman 2.1.0 collection JSON.
+- [Coverage rules per endpoint](#coverage-rules-per-endpoint): the minimum request set per endpoint, happy path plus edge and error.
+- [Environment file](#environment-file): the environment JSON and the rules for each variable, including never committing secrets.
+- [Pre-request scripts](#pre-request-scripts): when to add a pre-request script, for HMAC signatures and idempotency keys.
+
 ## Goal
 
 Provide the verbatim Postman 2.1 JSON shape, the environment-file shape,

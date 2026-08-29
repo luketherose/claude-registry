@@ -117,10 +117,10 @@ Do not activate a skill if:
 When two skills suggest different approaches, the priority is:
 
 ```
-1. Data integrity (DB)          — a failing DB constraint is non-negotiable
-2. Architectural correctness    — respect layer separation
-3. Performance                  — optimise only after the design is correct
-4. Clean code / idiomaticity    — refactoring only if it does not introduce risks
+1. Data integrity (DB):          a failing DB constraint is non-negotiable
+2. Architectural correctness:    respect layer separation
+3. Performance:                  optimise only after the design is correct
+4. Clean code / idiomaticity:    refactoring only if it does not introduce risks
 ```
 
 **Conflict example**: the JPA skill suggests `FetchType.EAGER` for simplicity, the DB skill flags an explosive query. **DB wins**: use explicit `JOIN FETCH` in the repository instead.

@@ -180,15 +180,15 @@ public class MdcLoggingFilter extends OncePerRequestFilter {
 ## Implementation order for a new module
 
 ```
-1. Entity        — data structure, relations, indices
-2. Repository    — derived queries + custom JPQL + projections
-3. DTO           — request (validated) + response (projection)
-4. Mapper        — entity ↔ DTO
-5. Service       — interface + implementation with business logic
-6. Controller    — REST endpoints, @Valid, response code mapping
-7. Exception     — custom exceptions if not already present
-8. SecurityConfig — authorisation for the new endpoints
-9. Test          — service unit tests (Mockito) + controller integration tests (@WebMvcTest)
+1. Entity:        data structure, relations, indices
+2. Repository:    derived queries + custom JPQL + projections
+3. DTO:           request (validated) + response (projection)
+4. Mapper:        entity ↔ DTO
+5. Service:       interface + implementation with business logic
+6. Controller:    REST endpoints, @Valid, response code mapping
+7. Exception:     custom exceptions if not already present
+8. SecurityConfig: authorisation for the new endpoints
+9. Test:          service unit tests (Mockito) + controller integration tests (@WebMvcTest)
 ```
 
 ---

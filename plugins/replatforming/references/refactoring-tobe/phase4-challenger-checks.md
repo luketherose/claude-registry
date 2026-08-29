@@ -4,6 +4,20 @@
 > agent body to keep it under the 10 000-char rubric ceiling.
 > Read at runtime when the agent is dispatched.
 
+## Contents
+
+- [Method: ten checks](#method-ten-checks): the ten checks, all reporting findings in the common `Type` / `Where` / `Description` / `Suggested fix` / `Severity` shape.
+  - [Check 1: AS-IS↔TO-BE traceability](#check-1-as-isto-be-traceability): the matrix connecting every Phase 1 use case to its TO-BE manifestation across four layers.
+  - [Check 2: OpenAPI↔code drift](#check-2-openapicode-drift): operations without a controller method, and controller methods without a use-case reference.
+  - [Check 3: ADR completeness](#check-3-adr-completeness): every major decision has its ADR.
+  - [Check 4: AS-IS bug carry-over consistency](#check-4-as-is-bug-carry-over-consistency): deferred and escalated Phase 3 bugs appear in the roadmap.
+  - [Check 5: Performance hypothesis sanity](#check-5-performance-hypothesis-sanity): high and critical Phase 2 bottlenecks are addressed in the TO-BE design.
+  - [Check 6: Security regression](#check-6-security-regression): OWASP categories that were missing or partial in the AS-IS are covered.
+  - [Check 7: Equivalence claims integrity](#check-7-equivalence-claims-integrity): equivalence targets in the roadmap are backed by real Phase 3 baseline metrics.
+  - [Check 8: AS-IS-only leak in TO-BE (inverse drift)](#check-8-as-is-only-leak-in-to-be-inverse-drift): AS-IS-only tokens leaking into TO-BE outputs.
+  - [Check 9: AS-IS source modification (forbidden)](#check-9-as-is-source-modification-forbidden): `git status` proves no AS-IS source file was modified.
+  - [Check 10: Frontend navigation reachability](#check-10-frontend-navigation-reachability): every protected route is reachable through the UI, not only by typing the URL.
+
 ## Method: ten checks
 
 For each check, list every finding using the common shape (`Type`,

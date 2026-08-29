@@ -63,7 +63,7 @@ Use available technical documentation to identify components with uncertain stab
 For the module or system being analysed, list user-facing functionality in domain language:
 
 ```markdown
-## Feature List — [Module name]
+## Feature List: [Module name]
 
 ### Feature 1: [Feature name]
 **Actors**: [who can perform it: e.g. User, Admin, everyone]
@@ -90,7 +90,7 @@ For each relevant user flow:
 2. [The user sees...] → [The user does...]
 3. [Condition: if X then] → [Branch A]
    [Condition: if Y then] → [Branch B]
-4. [Final output — document, saved data, notification]
+4. [Final output: document, saved data, notification]
 
 ### Alternative states / errors
 - [Case: user does not have permissions] → [System shows/does]
@@ -106,7 +106,7 @@ For each relevant user flow:
 Business rules are invariants that the system must respect. Identify them precisely:
 
 ```markdown
-## Business Rules — [Module name]
+## Business Rules: [Module name]
 
 ### BR-[N]: [Rule name]
 **Rule**: [statement of the rule in business language, without technical references]

@@ -3,6 +3,14 @@
 The full artefact tree under `<repo>/.deliberation-kb/<trace-id>/`,
 file frontmatter contracts, and audit-trail conventions.
 
+## Contents
+
+- [Tree](#tree): the full artefact tree written under `.deliberation-kb/<trace-id>/`.
+- [Audit trail and manifest](#audit-trail-and-manifest): the points in the pipeline at which `_meta/manifest.json` must be updated.
+- [Redaction](#redaction): how secrets and regulated personal data are removed before any artefact is written.
+- [Re-runs](#re-runs): why a re-run creates a new trace instead of overwriting the previous one.
+- [Cleanup](#cleanup): the retention stance: trace directories are never auto-deleted.
+
 ## Tree
 
 ```

@@ -25,6 +25,11 @@ Phase 5 is NOT complete until those are resolved.
 
 ---
 
+<!-- opus + effort: high: the last gate before go-live sign-off. A weaker model misses a
+     test that mocks the very boundary it was meant to exercise, so the equivalence suite
+     passes green against a stub and the sign-off block records a verification that never
+     happened. -->
+
 ## When to invoke
 
 - **W5 Phase-5 challenger gate.** Final wave of Phase 5; runs an adversarial review on the equivalence harness coverage, AS-IS oracle integrity, severity-classification consistency, and the PO sign-off block readiness.
@@ -183,7 +188,7 @@ CHL-BOOT-* severity taxonomy in the same doc.
 <frontmatter>
 ---
 
-# TO-BE testing challenger report — Phase 5
+# TO-BE testing challenger report: Phase 5
 
 ## Summary
 
@@ -198,7 +203,7 @@ Phase 5 status verdict: **<can-declare-complete | must-resolve-blocking>**
 
 ## Findings
 
-### CHL-001 — <title>
+### CHL-001: <title>
 - **Check**: 1 (UC coverage gap)
 - **Severity**: blocking
 - **Affected**: UC-007
@@ -209,7 +214,7 @@ Phase 5 status verdict: **<can-declare-complete | must-resolve-blocking>**
   re-run runner; update report.
 - **Cannot self-resolve**: yes (requires re-run of Wave 1 + Wave 3 + Wave 4)
 
-### CHL-002 — <title>
+### CHL-002: <title>
 ...
 ```
 

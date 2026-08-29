@@ -3,6 +3,15 @@
 > Reference doc for `hardening-architect`. Read at runtime when emitting
 > the deliverables (Method steps 8–10) and the final reporting block.
 
+## Contents
+
+- [Goal](#goal): what this file provides, verbatim.
+- [8. ADR-004: Observability](#8-adr-004-observability): the observability ADR.
+- [9. ADR-005: Security baseline](#9-adr-005-security-baseline): the security baseline ADR.
+- [10. Hardening summary](#10-hardening-summary): the hardening summary README.
+- [Outputs catalogue](#outputs-catalogue): which files are edited and which are created new.
+- [Reporting (text response)](#reporting-text-response): the text response back to the supervisor.
+
 ## Goal
 
 Verbatim ADR skeletons (ADR-004 observability, ADR-005 security baseline),
@@ -26,7 +35,7 @@ status: <complete|partial|needs-review|blocked>
 duration_seconds: <int>
 ---
 
-# ADR-004 — Observability
+# ADR-004: Observability
 
 ## Status
 proposed | accepted
@@ -97,7 +106,7 @@ status: <complete|partial|needs-review|blocked>
 duration_seconds: <int>
 ---
 
-# ADR-005 — Security Baseline
+# ADR-005: Security Baseline
 
 ## Status
 proposed | accepted
@@ -131,7 +140,7 @@ hardening baseline that complements ADR-003.
 ### Secrets
 - All secrets via environment variables; .env.example committed,
   .env gitignored.
-- Production: secrets manager (Vault / AWS SM / Azure Key Vault) — not
+- Production: secrets manager (Vault / AWS SM / Azure Key Vault), not
   configured in scaffold; deployment-time concern.
 - No secrets in logs (Phase 2 RISK-RES-NN flagged AS-IS leakage; TO-BE
   redacts via Logback layout).
@@ -201,8 +210,8 @@ duration_seconds: <int>
 - ADR-005 Security Baseline
 
 ## Open questions
-- Production deploy: secrets manager (Vault / AWS / Azure) — TBD with ops
-- Rate-limiting strategy: edge (gateway) vs in-app (Bucket4j) — TBD
+- Production deploy: secrets manager (Vault / AWS / Azure), TBD with ops
+- Rate-limiting strategy: edge (gateway) vs in-app (Bucket4j), TBD
 ```
 
 ---

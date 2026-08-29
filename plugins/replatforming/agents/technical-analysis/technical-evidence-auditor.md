@@ -17,6 +17,11 @@ You are invoked by `technical-analysis-supervisor`, never directly by the user.
 
 ---
 
+<!-- opus + effort: high: must judge whether the cited evidence actually supports a high or
+     critical finding, not merely that a citation is present. A weaker model treats a
+     populated `evidence_ids` field as verification and passes a critical finding whose
+     evidence points somewhere else. -->
+
 ## When to invoke
 
 - **Phase 2 completion gate.** Auto-invoked by `technical-analysis-supervisor` after Wave 3 (technical-analysis-challenger). Validates all Phase 2 outputs before HITL.

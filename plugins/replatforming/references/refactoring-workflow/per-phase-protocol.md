@@ -18,6 +18,25 @@
 
 For each phase N you are about to run, follow this protocol exactly.
 
+## Contents
+
+- [Step A: Pre-phase brief (you to user)](#step-a-pre-phase-brief-you-to-user): the exact pre-phase brief, and the rule to wait for an explicit yes.
+- [Step B: Pre-flight checks (you only)](#step-b-pre-flight-checks-you-only): verifying inputs exist on disk and the phase supervisor is available.
+- [Step C: Dispatch (single Agent call), Phases 0–3 only](#step-c-dispatch-single-agent-call-phases-03-only): the single Agent call for Phases 0 to 3, passing paths rather than contents.
+- [Step C (Phase 4): Driving model (NO single-supervisor dispatch)](#step-c-phase-4-driving-model-no-single-supervisor-dispatch): why Phase 4 is driven directly by the workflow supervisor instead.
+- [Step D: Read outputs (verify, do not synthesize)](#step-d-read-outputs-verify-do-not-synthesize): reading the phase manifest and verifying outputs without synthesising them.
+- [Step E: Post-phase recap (you to user), Phases 0–3](#step-e-post-phase-recap-you-to-user-phases-03): the exact post-phase recap, including the mandatory timing block.
+- [Step E.5: Phase verification report (mandatory for Phases 1–3)](#step-e5-phase-verification-report-mandatory-for-phases-13): the report written between the recap and the iteration loop.
+- [Step F: Iteration loop (HITL), Phases 1–3](#step-f-iteration-loop-hitl-phases-13): default deny, the three options presented, the per-option branches and the hard rules.
+- [Step F (Phase 0): Simple confirm](#step-f-phase-0-simple-confirm): the simpler confirm Phase 0 uses instead of the iteration loop.
+- [Step E.4: Phase 4 per-step recap (Application Replatforming)](#step-e4-phase-4-per-step-recap-application-replatforming): a recap after every step transition, because Phase 4 has no single end-of-phase recap.
+  - [Step 0 / 1 / 5 / 6 recap shape (gate steps)](#step-0--1--5--6-recap-shape-gate-steps): the recap shape for the hard-gate steps.
+  - [Step 2 per-feature recap shape (incremental loop)](#step-2-per-feature-recap-shape-incremental-loop): the recap shape after each feature completes, with the per-feature gate decision rules.
+  - [Step 3 sub-loop convergence recap (any time the sub-loop closes)](#step-3-sub-loop-convergence-recap-any-time-the-sub-loop-closes): the recap shape when the sub-loop closes, and the escalation after N failed attempts.
+  - [End-of-Phase-4 recap (Step 6 done + PO sign-off)](#end-of-phase-4-recap-step-6-done--po-sign-off): the recap shape once Step 6 and PO sign-off are done.
+- [Step F (Phase 4): End-of-phase handling](#step-f-phase-4-end-of-phase-handling): what happens when PO sign-off is captured, and what happens when it is declined.
+- [Step G: Workflow Retrospective](#step-g-workflow-retrospective): the retrospective that runs automatically after sign-off.
+
 ## Step A: Pre-phase brief (you to user)
 
 Post a brief in this exact shape:
@@ -105,10 +124,10 @@ Phase 4 driving — per-step protocol (driven by you, the Workflow Supervisor)
   Step 0 (Bootstrap, HARD GATE):
     - dispatch developer-java + developer-frontend in parallel
       to scaffold backend + frontend project structure
-    - run `mvn clean verify` (Bash) — must succeed
-    - run `mvn spring-boot:run` (Bash, background) — must start;
+    - run `mvn clean verify` (Bash): must succeed
+    - run `mvn spring-boot:run` (Bash, background): must start;
       capture startup log; kill process after readiness probe
-    - run `ng serve` (Bash, background) — must start; capture
+    - run `ng serve` (Bash, background): must start; capture
       ready-line; kill process after readiness probe
     - on ANY failure → enter Step 3 sub-loop (delegate to debugger),
       then re-run Step 0 from the failing sub-step
@@ -161,7 +180,7 @@ Phase 4 driving — per-step protocol (driven by you, the Workflow Supervisor)
 
   Step 4 (Progressive System Construction):
     - continue Step 2 across remaining features
-    - run code-reviewer in background after each Step 2.7 success
+    - run pr-review-toolkit:code-reviewer in background after each Step 2.7 success
       (delegate per-feature review; non-blocking unless severity
       ≥ high)
     - HITL CHECKPOINT 2 after every N features (default N=3, ask
@@ -254,7 +273,7 @@ Verification report:
 - <path-to-_meta/phase-verification-report.md>     (generated in Step E.5)
 
 Recommended review order:
-1. Verification report (above) — start here
+1. Verification report (above): start here
 2. <entry-point file>
 3. <unresolved-questions file>
 4. <other notable files>
@@ -479,8 +498,8 @@ Step 3 sub-loop:
 
 Feature-loop progress:
 - Done:         <K> / <total>    (<pct>%)
-- In flight:    (none — ready for next)
-- Next:         <UC-id-next>: <name>     [or "all features done — advance to Step 4"]
+- In flight:    (none, ready for next)
+- Next:         <UC-id-next>: <name>     [or "all features done, advance to Step 4"]
 
 Top remaining features (up to 5):
   1. <UC-id>  <name>     priority: <high|med|low>

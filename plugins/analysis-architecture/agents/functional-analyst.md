@@ -1,6 +1,6 @@
 ---
 name: functional-analyst
-description: "Use this agent when extracting functional requirements from specifications, user stories, or existing code; documenting use cases and business processes; producing acceptance criteria; mapping actors and system boundaries; or bridging business intent with technical implementation. Also use for requirement gap analysis, CRUD matrix generation, and traceability from requirements to code."
+description: "Use this agent when extracting functional requirements from specifications, user stories, or existing code; documenting use cases and business processes; producing acceptance criteria; mapping actors and system boundaries; or bridging business intent with technical implementation. Also use for requirement gap analysis, CRUD matrix generation, and traceability from requirements to code. Typical user phrasings: \"turn these user stories into acceptance criteria\", \"what are the real requirements in this spec?\", \"map the use cases for this module\"."
 tools: Read, Grep, Glob, Write, Skill
 model: inherit
 color: green
@@ -88,7 +88,7 @@ Do NOT use this agent for: AS-IS reverse-engineering of an entire app (use `func
 Use when producing or documenting a set of requirements.
 
 ```
-## Functional Requirements — {System / Module Name}
+## Functional Requirements: {System / Module Name}
 
 ### Actors
 
@@ -143,13 +143,13 @@ Use for documenting individual use cases in detail.
 
 ### Alternative Flows
 
-**A1 — {Alternative condition}** (from step N):
+**A1: {Alternative condition}** (from step N):
 1. {What happens instead}
 2. {Continue from step M, or End}
 
 ### Exception Flows
 
-**E1 — {Error condition}** (from step N):
+**E1: {Error condition}** (from step N):
 1. System {detection and response}
 2. {Recovery or end state}
 
@@ -171,61 +171,15 @@ Scenario: {Alternative scenario title}
 ```
 ```
 
-### Business Process Map
+### Business Process Map, CRUD Matrix, Traceability Matrix
 
-Use for end-to-end process documentation.
+→ Read `${CLAUDE_PLUGIN_ROOT}/references/requirements/functional-analyst/output-templates.md`
+when the task calls for one of these three. It holds the full template for each.
 
-```
-## Process: {Process Name}
-
-**Purpose**: {One sentence — what business outcome this process achieves}
-**Scope**: {Start event → End event}
-**Process Owner**: {Role responsible for this process}
-
-### Participants
-| Role | Responsibility in this process |
-|------|-------------------------------|
-| ... | ... |
-
-### Process Flow
-
-| Step | Participant | Activity | Input | Output | Business Rules |
-|------|-------------|----------|-------|--------|----------------|
-| 1 | {Role} | {Verb + noun activity} | {What is needed} | {What is produced} | {BR-NNN} |
-
-### Exception Handling
-{Describe what happens when the process cannot continue normally}
-
-### KPIs / Success Metrics
-{If known — what the business measures to evaluate this process}
-```
-
-### CRUD Matrix
-
-Use when mapping which features interact with which data entities.
-
-```
-## CRUD Matrix — {Module Name}
-
-| Feature / Use Case | Entity A | Entity B | Entity C |
-|--------------------|----------|----------|----------|
-| UC-001: {Name} | C R | R U | - |
-| UC-002: {Name} | R | - | C R U D |
-
-Legend: C=Create, R=Read, U=Update, D=Delete, -=No interaction
-```
-
-### Traceability Matrix
-
-Use when linking requirements to implementation artifacts.
-
-```
-## Traceability Matrix
-
-| Requirement | Use Case | Component / Class | Test Case |
-|-------------|----------|-------------------|-----------|
-| FR-001 | UC-001 | UserService.resetPassword() | TC-001 |
-```
+→ Read `${CLAUDE_PLUGIN_ROOT}/examples/functional-analyst-example.md` when you need to
+see how far to take a deliverable. It walks three runs end to end: requirements
+reconstructed from an undocumented codebase, BDD acceptance criteria from one user
+story, and a CRUD matrix traced back to the line that enforces each rule.
 
 ---
 

@@ -6,6 +6,15 @@
 
 ---
 
+## Contents
+
+- [File 1: `.refactoring-kb/00-decomposition/bounded-contexts.md`](#file-1-refactoring-kb00-decompositionbounded-contextsmd): the bounded contexts template, including the context map diagram.
+- [File 2: `.refactoring-kb/00-decomposition/aggregate-design.md`](#file-2-refactoring-kb00-decompositionaggregate-designmd): the aggregate design template.
+- [File 3: `.refactoring-kb/00-decomposition/module-decomposition.md`](#file-3-refactoring-kb00-decompositionmodule-decompositionmd): the authoritative AS-IS to TO-BE module mapping table.
+- [File 6: `docs/refactoring/4.1-decomposition/README.md`](#file-6-docsrefactoring41-decompositionreadmemd): the index linking every 4.1 output and both ADRs.
+- [File 7: `docs/refactoring/4.1-decomposition/decomposition-summary.md`](#file-7-docsrefactoring41-decompositiondecomposition-summarymd): the one-page stakeholder summary.
+- [Reporting (text response to supervisor)](#reporting-text-response-to-supervisor): the text response back to the supervisor.
+
 ## File 1: `.refactoring-kb/00-decomposition/bounded-contexts.md`
 
 ```markdown
@@ -55,7 +64,7 @@ SK = shared kernel; ACL = anti-corruption layer.)
 | `infosync.payments.charge` | 423 | business | BC-02 | direct port |
 | `infosync.shared.utils` | 89 | utility | (shared kernel) | promoted |
 | `infosync.streamlit.dashboard` | 612 | UI | (FE only) | Angular replacement |
-| `infosync.legacy.batch_v1` | 156 | batch | (deprecated — not migrating) | superseded by BC-03 reporting |
+| `infosync.legacy.batch_v1` | 156 | batch | (deprecated, not migrating) | superseded by BC-03 reporting |
 
 ## Coverage check
 
@@ -63,7 +72,7 @@ SK = shared kernel; ACL = anti-corruption layer.)
 - Mapped to a BC: <N>
 - Mapped to shared kernel: <N>
 - Frontend-only (no Java port): <N>
-- Deprecated (not migrating): <N> — see roadmap for cutover
+- Deprecated (not migrating): <N>, see roadmap for cutover
 
 ## Open questions
 - ...

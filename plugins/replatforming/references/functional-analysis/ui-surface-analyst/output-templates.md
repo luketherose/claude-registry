@@ -13,6 +13,13 @@ through the `Write` tool. See § File-writing rule in the agent body.
 
 ---
 
+## Contents
+
+- [File 1: `docs/analysis/01-functional/03-ui-map.md`](#file-1-docsanalysis01-functional03-ui-mapmd): the UI map template.
+- [File 2: `docs/analysis/01-functional/04-screens/README.md`](#file-2-docsanalysis01-functional04-screensreadmemd): the screens index template.
+- [File 3 (per screen): `docs/analysis/01-functional/04-screens/S-NN-<slug>.md`](#file-3-per-screen-docsanalysis01-functional04-screenss-nn-slugmd): the per-screen file template, one per `S-NN` identifier.
+- [File 4: `docs/analysis/01-functional/05-component-tree.md`](#file-4-docsanalysis01-functional05-component-treemd): the component tree template.
+
 ## File 1: `docs/analysis/01-functional/03-ui-map.md`
 
 ```markdown
@@ -100,7 +107,7 @@ related:
   actors: [A-01, A-02]
 ---
 
-# S-02 — Dashboard
+# S-02: Dashboard
 
 ## Purpose
 <1-2 sentences in plain language>
@@ -123,13 +130,13 @@ Page: Dashboard
 \`\`\`
 
 ## Inputs (widgets receiving user input)
-- `dataset_choice` (selectbox) — IN-04 in input catalog
-- `refresh_data` (button) — triggers transformation TR-02
+- `dataset_choice` (selectbox): IN-04 in input catalog
+- `refresh_data` (button): triggers transformation TR-02
 
 ## Outputs (widgets emitting data to user)
-- "Total rows" metric — OUT-01
-- `current_df` dataframe — OUT-02
-- `trend_fig` chart — OUT-03
+- "Total rows" metric: OUT-01
+- `current_df` dataframe: OUT-02
+- `trend_fig` chart: OUT-03
 
 ## State
 - Reads: `current_dataset`, `filters`
@@ -137,13 +144,13 @@ Page: Dashboard
 
 ## Navigation
 - Reachable from: S-01 (sidebar link)
-- Leads to: S-04 (reactive on row selection — see ui-map.md)
+- Leads to: S-04 (reactive on row selection, see ui-map.md)
 
 ## Notes
 - <anything ambiguous or noteworthy>
 
 ## Open questions
-- <e.g., "the `Refresh` button has no on_click handler — what does it do?">
+- <e.g., "the `Refresh` button has no on_click handler: what does it do?">
 ```
 
 ---

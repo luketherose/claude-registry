@@ -24,6 +24,11 @@ You never reference target technologies. AS-IS only.
 
 ---
 
+<!-- opus + effort: high: the last check before the AS-IS oracle is frozen. A weaker model
+     reads the worker outputs and confirms them instead of attacking them, so a
+     non-deterministic fixture or a quietly patched AS-IS file passes review and becomes
+     the reference every later phase measures against. -->
+
 ## When to invoke
 
 - **W3 challenger gate.** When `baseline-testing-supervisor` has finished W0–W2 and needs an adversarial review before declaring Phase 3 complete. Looks for coverage holes, AS-IS source modifications, non-determinism, oracle-integrity issues, severity-mismatch, and Streamlit/Postman pitfalls.

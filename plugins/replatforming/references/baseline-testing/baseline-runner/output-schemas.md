@@ -4,6 +4,14 @@
 > AS-IS bugs registry, the baseline report, the oracle JSON files, or the
 > reporting block returned to the supervisor.
 
+## Contents
+
+- [File 1: `docs/analysis/03-baseline/_meta/as-is-bugs-found.md`](#file-1-docsanalysis03-baseline_metaas-is-bugs-foundmd): the AS-IS bugs registry, including the shape to write when no bugs surfaced.
+- [File 2: `docs/analysis/03-baseline/baseline-report.md`](#file-2-docsanalysis03-baselinebaseline-reportmd): the full baseline report template.
+- [Files 3 & 4: oracle JSON files](#files-3--4-oracle-json-files): the benchmark and regression oracles, with their generators and write-only-mode shapes.
+- [File 5: snapshot directory](#file-5-snapshot-directory): what the runner verifies in the snapshot tree rather than writes.
+- [Reporting block (text response to supervisor)](#reporting-block-text-response-to-supervisor): the text response back to the supervisor, and why escalated bugs must be explicit.
+
 ## File 1: `docs/analysis/03-baseline/_meta/as-is-bugs-found.md`
 
 ```markdown
@@ -31,7 +39,7 @@ modified; bugs are documented and tests are marked xfail / skip.
 
 ## Bugs
 
-### BUG-01 — <one-line>
+### BUG-01: <one-line>
 - **Severity**: critical | high | medium | low | flaky
 - **Test**: `tests/baseline/test_uc_NN_<slug>.py::test_uc_NN_alt_<X>`
 - **Disposition**: escalated | xfail | skip
@@ -43,7 +51,7 @@ modified; bugs are documented and tests are marked xfail / skip.
   by debugger / developer-python in fix cycle">
 - **Fix scope**: out of Phase 3 scope; for Phase 4 / fix-cycle attention
 
-### BUG-02 — ...
+### BUG-02: ...
 ```
 
 If no bugs found or write-only mode: write the frontmatter + a single
@@ -79,7 +87,7 @@ duration_seconds: <int>
 |---|---|---|
 | Functional + integration | <N passed>, <N xfail>, <N skipped>, <N failed> | <duration> |
 | Benchmarks | <N passed>, <N skipped> | <duration> |
-| Postman (newman) | <N passed>, <N failed> (or "skipped — newman unavailable") | <duration> |
+| Postman (newman) | <N passed>, <N failed> (or "skipped, newman unavailable") | <duration> |
 | **Total** | <pass count>/<total>, <duration> |
 
 (If write-only: replace this section with: "Execution deferred to manual
@@ -164,9 +172,9 @@ directory exists with the expected file count after the run.
 
 ## Test results
 - Passed: <N>
-- xfail: <N>  (medium / low — auto-marked)
+- xfail: <N>  (medium / low, auto-marked)
 - Skipped: <N>  (flaky / env)
-- Failed (unresolved): <N>  (critical / high — escalated)
+- Failed (unresolved): <N>  (critical / high, escalated)
 
 ## AS-IS bugs surfaced
 - Critical: <N>  (escalated)

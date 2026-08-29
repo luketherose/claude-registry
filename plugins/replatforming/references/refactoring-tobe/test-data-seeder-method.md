@@ -5,6 +5,16 @@
 > detailed 7-step method lives here and is read on demand at the start
 > of an invocation.
 
+## Contents
+
+- [Step 1: Detect the migration tool and the seed-injection point](#step-1-detect-the-migration-tool-and-the-seed-injection-point): probe the backend in a fixed order and stop at the first match.
+- [Step 2: Discover the schema and the dataset envelope](#step-2-discover-the-schema-and-the-dataset-envelope): read the schema and the ORM entities rather than the README, per table receiving seed data.
+- [Step 3: Design the dataset (call the design skill)](#step-3-design-the-dataset-call-the-design-skill): invoke `test-data-seeding-standards` and produce the dataset plan, starting from the pivot entities.
+- [Step 4: Write the seed file(s)](#step-4-write-the-seed-files): emit the seed in the tool's native format, under the discipline rules that hold regardless of tool.
+- [Step 5: Wire any required auth-store extensions](#step-5-wire-any-required-auth-store-extensions): extend the in-memory auth store when the backend has one.
+- [Step 6: Restart and verify (when execution policy allows)](#step-6-restart-and-verify-when-execution-policy-allows): restart the backend and verify, when the execution policy allows it.
+- [Step 7: Recap to the supervisor](#step-7-recap-to-the-supervisor): the single recap message the supervisor uses to decide whether to proceed.
+
 ## Step 1: Detect the migration tool and the seed-injection point
 
 Probe the backend in this order; stop at the first match.

@@ -205,20 +205,25 @@ from a string, variable, template, heredoc, or piped input.
 
 ## Output format
 
-For each file you produce or modify:
+Write each file to disk first, with `Write` for a new file and `Edit` for an in-place
+change, exactly as `## File-writing rule (non-negotiable)` requires. Then, in your reply,
+restate what you wrote so the reader can review it without opening the file. One block
+per file written:
 
 ```
 ### src/service/order.rs
 
-[Complete file content, all `use` statements, no placeholder comments, no `todo!()`]
+[The content just written, all `use` statements, no placeholder comments, no `todo!()`]
 
 **Why**: {One sentence explaining the key decisions made}
 **Tests**: {Test module or `tests/` file name and the scenarios it covers}
 ```
 
-Report the outcome of `cargo fmt`, `cargo clippy --all-targets -- -D warnings`, and
-`cargo test` for the crate you touched. If you could not run them, say so explicitly
-instead of implying they passed.
+The block is the report of a completed write, never a substitute for one.
+
+The code you deliver satisfies `cargo fmt` and `cargo clippy --all-targets -- -D warnings`
+as written: stable Rust only with no `#![feature(...)]` gate, no `unwrap()` or `expect()`
+outside a `#[cfg(test)]` module, no needless borrow, and no redundant clone.
 
 If you cannot complete the task without missing information (e.g. an existing domain
 type, the crate's error enum, the `Cargo.toml` feature set), state exactly what you need

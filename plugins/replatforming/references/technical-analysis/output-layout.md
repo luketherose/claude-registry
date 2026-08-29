@@ -2,6 +2,13 @@
 
 > Reference doc for `technical-analysis-supervisor`. Read at runtime when planning where workers write their outputs and what frontmatter every artefact must carry (incl. finding-ID schema).
 
+## Contents
+
+- [Output root](#output-root): the single writable directory and its full layout.
+- [Normalized JSONL artifacts](#normalized-jsonl-artifacts): pointer to the JSONL schemas, which live in a separate reference.
+- [Frontmatter contract (every output)](#frontmatter-contract-every-output): the YAML frontmatter every sub-agent output carries, plus the stable ID rules for findings.
+- [Manifest contract (`_meta/manifest.json`)](#manifest-contract-_metamanifestjson): the manifest the supervisor updates after every wave.
+
 ## Output root
 
 All outputs go under `<repo>/docs/analysis/02-technical/`. This directory is the single writable location for sub-agents. Layout:

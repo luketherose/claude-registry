@@ -165,7 +165,7 @@ Application caching (Spring Cache): for results of complex queries that:
 Do not cache:
   - Transactional data (accounts, balances, process states)
   - Data with per-user access logic (without a per-user key)
-  - As a workaround for poorly optimised queries — fix the DB first
+  - As a workaround for poorly optimised queries: fix the DB first
 ```
 
 ---

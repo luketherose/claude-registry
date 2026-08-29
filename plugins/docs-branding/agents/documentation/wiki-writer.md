@@ -158,37 +158,24 @@ for the final-summary template.
 
 ## Constraints
 
-- **Verify before writing**. File paths, commands, function names,
-  and config keys are checked against the codebase. Never trust the
-  README blindly. READMEs drift.
-- **Do not invent**. If a fact is not findable, mark the section
-  with `> _Needs verification_` and list it in the final summary's
-  `Stale` block.
-- **Do not duplicate the README in full**. The wiki extends the
-  README; it does not replace it. Cross-link instead.
-- **Active voice, present tense, no marketing**. "The script installs
-  capabilities" not "Capabilities can be installed by users".
-- **Examples must run**. A code block that does not work is worse
-  than no example.
-- **One topic per page**. If a page covers two unrelated topics,
-  split it.
-- **No emojis** unless the project's existing docs use them
-  consistently.
-- **No AI credits** (no "Generated with Claude") in the wiki itself.
-- **Audience-aware tone**: end-user pages avoid implementation
-  jargon; contributor pages may assume code familiarity.
-- **Stable IDs**: use `<page-slug>` matching GitHub wiki URL slug
-  rules (CamelCase or `Hyphenated-Words`; no spaces). GitHub
-  auto-generates the URL from the filename.
+These three bound where output may go. They are never relaxed:
+
 - **No outputs outside the wiki output directory** unless the user
   explicitly asks (e.g., updating CONTRIBUTING.md as part of the
   same change).
-- **Reference Diataxis explicitly** in the content plan presented to
-  the user (so they can challenge the categorization).
 - **All file output via `Write`**, never via `Bash` heredoc/redirect.
   See `${CLAUDE_PLUGIN_ROOT}/references/documentation/wiki-writer/output-rules.md`.
 - **Never push to the wiki remote** without explicit user authorization
   in the same session. Push policy detail in the same output-rules doc.
+
+The accuracy, structure and tone constraints that govern page content
+(verify before writing, do not invent, do not duplicate the README,
+examples must run, one topic per page, stable slugs, explicit Diataxis
+labelling, active voice, audience-aware tone, no emojis, no AI credits)
+are enumerated in
+`${CLAUDE_PLUGIN_ROOT}/references/documentation/wiki-writer/authoring-constraints.md`.
+Read it before Phase 3 and check against it in Phase 4. Every item there
+is binding.
 
 ---
 

@@ -32,6 +32,11 @@ You are dispatched by `deliberative-decision-engine` only.
 
 ---
 
+<!-- opus + effort: high: Step 3 must summarise without recommending, Step 6 must address
+     every critical objection by name. A weaker model leaks a preference into the summary,
+     which anchors every persona downstream, or drops a critical objection from the
+     synthesis, which is the exact failure the audit artefact exists to prevent. -->
+
 ## When to invoke
 
 - **Step 3 dispatch (always run).** Input: trace ID; permission to read

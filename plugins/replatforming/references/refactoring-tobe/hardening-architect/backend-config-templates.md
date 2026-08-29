@@ -3,6 +3,15 @@
 > Reference doc for `hardening-architect`. Read at runtime when applying
 > Method steps 1–5 (backend logging, metrics, tracing, security, secrets).
 
+## Contents
+
+- [Goal](#goal): what this file provides, verbatim.
+- [1. Logging: structured JSON with correlation-id](#1-logging-structured-json-with-correlation-id): structured JSON logging with a correlation id, across `application.yml` and `logback-spring.xml`.
+- [2. Metrics: Micrometer + Prometheus](#2-metrics-micrometer--prometheus): verifying and extending the Actuator and Prometheus registry the scaffolder already added.
+- [3. Tracing: OpenTelemetry](#3-tracing-opentelemetry): the OpenTelemetry dependencies and config, plus how to add custom domain spans.
+- [4. Security: production baseline](#4-security-production-baseline): tightening the `SecurityConfig` baseline the scaffolder created.
+- [5. Secrets management](#5-secrets-management): environment variables for secrets, and the rule against committing a populated production profile.
+
 ## Goal
 
 Verbatim configuration blocks the agent emits when hardening the backend
@@ -228,7 +237,7 @@ meta), see frontend-config-templates.md.
 Provide a `<backend-dir>/.env.example`:
 
 ```
-# .env.example — copy to .env and fill (gitignored)
+# .env.example: copy to .env and fill (gitignored)
 DB_URL=jdbc:postgresql://localhost:5432/<app>
 DB_USER=<app>
 DB_PASSWORD=

@@ -4,6 +4,15 @@
 > per-UC time / memory / throughput benchmark modules and the suite README
 > (Method §2, §3, §4 and Outputs).
 
+## Contents
+
+- [Goal](#goal): what this file covers and where selection logic lives instead.
+- [Time benchmark module: `bench_uc_<NN>.py`](#time-benchmark-module-bench_uc_nnpy): the per-use-case time benchmark, with the realistic fixture driving the p95 that Phase 5 gates on.
+- [Memory benchmark module: `bench_memory.py`](#memory-benchmark-module-bench_memorypy): the memory benchmark, plus the `memory-profiler` alternative.
+- [Throughput benchmark module: `bench_throughput.py` (optional)](#throughput-benchmark-module-bench_throughputpy-optional): the throughput benchmark, skipped entirely when the AS-IS has no relevant endpoint.
+- [Suite `README.md`](#suite-readmemd): the README shipped with the benchmark suite.
+- [Output](#output): path by schema by owner for every artefact the writer emits.
+
 ## Goal
 
 Provide the canonical shape of every benchmark file the writer emits under
@@ -133,7 +142,7 @@ duration_seconds: <int>
 ## Selection rationale
 
 Selected UCs (with rationale):
-- UC-03: PERF-02 (high) — N+1 query in profile lookup
+- UC-03: PERF-02 (high), N+1 query in profile lookup
 - UC-07: realistic data > 10k rows; representative of typical load
 - ...
 

@@ -4,6 +4,21 @@
 >
 > **Iteration loop.** Phase 2 ends with the HITL iteration loop documented in [`../refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md). After Wave 3c the supervisor returns control to `refactoring-supervisor`, which presents `approve / iterate / stop`. On `iterate`, this supervisor is re-dispatched with `Resume mode: iterate` and a structured delta, see § "Wave 4: Iteration handling" below.
 
+## Contents
+
+- [Phase 0: Bootstrap (supervisor only, no sub-agents)](#phase-0-bootstrap-supervisor-only-no-sub-agents): the `.indexing-kb/` completeness checks and the bootstrap dialog.
+- [Wave 1: Discovery (mode-dependent dispatch of 8 workers)](#wave-1-discovery-mode-dependent-dispatch-of-8-workers): the eight discovery workers, dispatched parallel, batched or sequential.
+- [Wave 1.5: Human-in-the-loop checkpoint](#wave-15-human-in-the-loop-checkpoint): the finding counts and top risks presented before synthesis starts.
+- [Wave 2: Synthesis (sequential, single Agent call)](#wave-2-synthesis-sequential-single-agent-call): the `risk-synthesizer` dispatch and the register it produces.
+- [Wave 3: Challenger (always ON)](#wave-3-challenger-always-on): the always-on adversarial review of Wave 1 and Wave 2 outputs.
+- [Wave 3b: technical-evidence-auditor (always ON)](#wave-3b-technical-evidence-auditor-always-on): the always-on evidence audit that follows.
+- [Gap closure loop (before HITL)](#gap-closure-loop-before-hitl): the validation script run before the human checkpoint.
+- [Export Wave: Always ON (parallel, single message)](#export-wave-always-on-parallel-single-message): the PDF and PPTX exports (see also the gated version below).
+- [Wave 3c: Phase verification report (supervisor only)](#wave-3c-phase-verification-report-supervisor-only): the supervisor-written verification report.
+- [Export Wave: gated on `approve`](#export-wave-gated-on-approve): the condition under which the exports actually run, rather than at every iteration.
+- [Wave 4: Iteration handling (supervisor only)](#wave-4-iteration-handling-supervisor-only): approve, iterate or stop, plus the manifest append per iteration.
+- [Closing summary (compatibility shim)](#closing-summary-compatibility-shim): the superseded free-text closing block, kept for older callers.
+
 ## Phase 0: Bootstrap (supervisor only, no sub-agents)
 
 1. Verify `.indexing-kb/` exists and contains at minimum:

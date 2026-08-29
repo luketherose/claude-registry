@@ -1,6 +1,10 @@
 # Evals: test-data-seeder
 
----
+> Narrative scenarios, kept alongside the machine-readable files in
+> this directory. `triggers.json` decides routing, `evals.json`
+> lists the checkable expectations, and this file carries the input
+> context, the exact prompt and the must-not-contain list that
+> neither JSON shape has room for. Keep the three in step.
 
 ## Eval-001: Liquibase + Spring Boot — full happy path
 
@@ -81,7 +85,7 @@ Migrate, no raw SQL migrations).
 
 **Expected behavior**:
 - The agent halts at Step 1 (Detect the migration tool)
-- The recap contains `## Halted — reason` instead of "Migration tool
+- The recap contains `## Halted: reason` instead of "Migration tool
   detected"
 - The halt message asks the supervisor which seed mechanism to use
 - No seed files written
@@ -133,7 +137,7 @@ anyway.
 
 **Expected behavior**:
 - The agent detects the missing non-prod profile in Step 2
-- The agent halts with `## Halted — reason` explaining that no
+- The agent halts with `## Halted: reason` explaining that no
   non-production gating mechanism is available
 - The halt asks the supervisor to: (a) configure a dev / test
   profile first, or (b) explicitly confirm a non-production

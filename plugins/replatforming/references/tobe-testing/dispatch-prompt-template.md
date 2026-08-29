@@ -14,7 +14,7 @@ UC list:          <abs-path>/docs/analysis/01-functional/06-use-cases/
 Output root:      <abs-path>/docs/analysis/05-tobe-tests/  (reports)
                   <abs-path>/<test-paths>                  (per worker)
 Execute policy:   on | backend-only | frontend-only | off
-AS-IS bug carry-over: <list of BUG-NN deferred from Phase 3 — these are
+AS-IS bug carry-over: <list of BUG-NN deferred from Phase 3. These are
                      NOT TO-BE regressions; do not flag them>
 
 Required outputs:

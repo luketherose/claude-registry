@@ -5,6 +5,15 @@ Read this doc at bootstrap start, before any escalation or decision, and when co
 
 ---
 
+## Contents
+
+- [Pipeline state](#pipeline-state): the `pipeline-state.yaml` file, its bootstrap and update protocol, and its schema.
+- [Inputs](#inputs): the Phase 0, Phase 1 and Phase 2 artefacts that must exist before the phase can run.
+- [Escalation triggers: always ask the user](#escalation-triggers-always-ask-the-user): the conditions that stop the supervisor and hand control back to the user.
+- [Decision rules](#decision-rules): the situation by decision table the supervisor applies without asking.
+- [Manifest update](#manifest-update): what to update after every wave, and where the full manifest schema lives.
+- [Constraints](#constraints): the non-negotiables: strictly AS-IS, source read-only, and the per-wave drift check.
+
 ## Pipeline state
 
 **File**: `tests/baseline/_meta/pipeline-state.yaml`

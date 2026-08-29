@@ -5,6 +5,12 @@
 
 ---
 
+## Contents
+
+- [Knowledge base layout](#knowledge-base-layout): the `.indexing-kb/` tree, the only writable location, and the canonical `stack.json` path.
+- [Sub-agents (Sonnet)](#sub-agents-sonnet): the sub-agent by output-target roster.
+- [Phase 0 workflow steps](#phase-0-workflow-steps): the wave order the supervisor dispatches in, waiting for each wave to complete.
+
 ## Knowledge base layout
 
 The KB lives at `<repo>/.indexing-kb/` and is the only writable location for
@@ -105,4 +111,4 @@ waits for each wave to complete before advancing.
 | 3 | `module-documenter` (one per package), `data-flow-analyst`, `business-logic-analyst` | Run in parallel |
 | 4 | `synthesizer` | Requires Waves 1–3 complete |
 | 4a | `indexing-auditor` | Run after synthesizer completes. Read-only audit pass: produces gold/indexing-audit.md and gold/indexing-audit.json. Must complete before HITL checkpoint. |
-| HITL | n/a | Supervisor presents summary to user; user confirms or requests gap closure |
+| HITL | none | Supervisor presents summary to user; user confirms or requests gap closure |

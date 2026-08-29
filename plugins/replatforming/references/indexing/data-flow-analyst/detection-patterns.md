@@ -10,6 +10,14 @@ classify findings, when to stop). This doc is the pattern catalogue only.
 
 ---
 
+## Contents
+
+- [1. Database access](#1-database-access): per-language grep patterns for ORM and driver call sites.
+- [2. External APIs (HTTP libraries)](#2-external-apis-http-libraries): per-language grep patterns for outbound HTTP clients.
+- [3. File I/O](#3-file-io): per-language grep patterns for reads and writes to disk.
+- [4. Environment variables](#4-environment-variables): per-language grep patterns for environment reads.
+- [5. Configuration sources](#5-configuration-sources): the config file and settings sources to look for, per framework.
+
 ## 1. Database access
 
 | Language / library | Patterns |

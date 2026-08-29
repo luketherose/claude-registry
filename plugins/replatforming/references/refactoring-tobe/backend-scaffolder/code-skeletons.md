@@ -3,6 +3,13 @@
 > Reference doc for `backend-scaffolder`. Read at runtime when generating
 > Java sources (Method steps 3–5, controllers, DTOs, services).
 
+## Contents
+
+- [Controllers](#controllers): one controller class per OpenAPI tag, plus the rules on `@Valid`, path parameter typing and operationId-derived signatures.
+- [DTOs](#dtos): one Java record per OpenAPI schema, and what changes when the generator plugin is configured.
+- [Service skeletons](#service-skeletons): service interfaces whose bodies throw `UnsupportedOperationException` on purpose, so unfilled translations fail loudly.
+- [Application class](#application-class): the Spring Boot entry point.
+
 ## Controllers
 
 For each tag/operation in the OpenAPI spec, generate a controller class

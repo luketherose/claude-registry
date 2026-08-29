@@ -26,12 +26,12 @@ External agents called in the export wave (already published):
 
 | Step | Wave | Mode | Dispatched agents | Blocks |
 |---|---|---|---|---|
-| Phase 0 | Bootstrap | supervisor only | n/a | all waves until confirmed |
+| Phase 0 | Bootstrap | supervisor only | none | all waves until confirmed |
 | W1 | Discovery | per `--mode` (parallel / batched / sequential) | 8 W1 analysts | W2 |
-| W1.5 | HITL checkpoint | user confirm | n/a | W2 |
+| W1.5 | HITL checkpoint | user confirm | none | W2 |
 | W2 | Synthesis | sequential, single | `risk-synthesizer` | W3 |
 | W3 | Challenger | always ON | `technical-analysis-challenger` | export wave / completion |
-| Export | Always ON | parallel | `document-creator` + `presentation-creator` | n/a |
-| Recap | n/a | supervisor only | n/a | end |
+| Export | Always ON | parallel | `document-creator` + `presentation-creator` | none |
+| Recap | none | supervisor only | none | end |
 
 For the full per-wave dispatch instructions, the bootstrap dialog (incl. the `exports-only` resume mode), the HITL checkpoint prompts, and the closing-report schema, see [`phase-plan.md`](./phase-plan.md). For the W1 dispatch decision tree and the batching plan, see [`dispatch-mode.md`](./dispatch-mode.md). For the worker prompt boilerplate (incl. Streamlit-aware adjustments), see [`dispatch-prompt-template.md`](./dispatch-prompt-template.md).

@@ -178,7 +178,7 @@ status: complete
 |---|---|---|---|---|
 
 ## Cross-page state (high migration cost)
-- `<key>` — written in `<page A>`, read in `<page B>`. Migration: needs
+- `<key>`: written in `<page A>`, read in `<page B>`. Migration: needs
   shared state store (NgRx / signals) in Angular.
 
 ## Open questions
@@ -207,7 +207,7 @@ status: complete
 |---|---|---|---|---|
 
 ## Custom components
-- `st.components.v1.html(...)` at `<path:line>` — raw HTML/JS, requires
+- `st.components.v1.html(...)` at `<path:line>`: raw HTML/JS, requires
   Angular rewrite. Snippet: `<first 80 chars>`.
 
 ## Third-party Streamlit components
@@ -216,16 +216,16 @@ status: complete
 
 ## Migration-relevant anti-patterns
 ### DB calls inside pages (no service layer)
-- `<page>:<line>` — `<query summary>`
+- `<page>:<line>`: `<query summary>`
 
 ### Business logic mixed with rendering
-- `<page>` — <description>
+- `<page>`: <description>
 
 ### Heavy computation outside caching
-- `<page:line>` — <description>
+- `<page:line>`: <description>
 
 ### Deprecated APIs
-- `<file:line>` — `st.experimental_<name>` (replace with `st.<name>`)
+- `<file:line>`: `st.experimental_<name>` (replace with `st.<name>`)
 ```
 
 ## Stop conditions

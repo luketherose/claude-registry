@@ -55,53 +55,22 @@ formats (LaTeX has math + cross-refs; PDF is a final artefact; HTML is
 web-publishable; DOCX is reviewable in Word; Markdown is the universal source).
 Defaulting silently to Markdown loses the user's intent.
 
-### Step 0.1: Detect the local toolchain
+Run the four sub-steps in order. The probe commands, the exact menu block, the
+lock-in shape and the pandoc invocations are in the reference:
 
-Run these probes (Bash) and capture which formats are actually producible:
+| Read this | When |
+|---|---|
+| `${CLAUDE_PLUGIN_ROOT}/references/documentation/documentation-writer/output-format-negotiation.md` | At the start of Step 0, before any code reading or drafting |
 
-```bash
-which pandoc        # required for tex/html/docx/pdf-via-tex output
-which pdflatex      # required for pdf via LaTeX (best quality)
-which wkhtmltopdf   # alternative for pdf via HTML (fallback if no pdflatex)
-which lualatex      # optional alternative engine
-which xelatex       # optional alternative engine (Unicode-friendly)
-```
-
-From the probe results, build the **available formats list**:
-
-| Format    | Required tools                   |
-|-----------|----------------------------------|
-| `md`      | (none, always available)         |
-| `tex`     | `pandoc`                          |
-| `html`    | `pandoc`                          |
-| `docx`    | `pandoc`                          |
-| `pdf`     | `pandoc` + `pdflatex` (or `lualatex`/`xelatex`); fallback: `wkhtmltopdf` |
-
-Format `md` is always available because it is the source format you author in.
-
-### Step 0.2: Surface the menu and ask
-
-Use this exact shape (translate to the user's language if they wrote to you in
-non-English):
-
-```
-=== Output format selection ===
-
-Available on this machine:
-  [md]    Markdown (.md)         — always available; the source format
-  [tex]   LaTeX (.tex)           — pandoc detected
-  [html]  HTML (.html)           — pandoc detected
-  [docx]  Word (.docx)           — pandoc detected
-  [pdf]   PDF (.pdf)             — pandoc + pdflatex detected (LaTeX engine)
-
-Not available (missing toolchain):
-  (none)        OR        [<format>]   <missing-tool> not on PATH; install with: <hint>
-
-Default if you say nothing: md + tex + html + pdf
-(Markdown source + LaTeX + HTML + PDF — the most useful combination)
-
-Which format(s) do you want? Reply with one or more (e.g. "pdf, docx" or "all" or "just md").
-```
+1. **Detect the toolchain.** Probe for `pandoc`, `pdflatex`, `wkhtmltopdf`,
+   `lualatex`, `xelatex` and build the available-formats list from what is
+   actually on PATH. `md` is always available; it is the source format.
+2. **Surface the menu and ask.** Print the menu in the reference, translated to
+   the user's language if they wrote to you in non-English.
+3. **Confirm and lock.** Echo the agreed set back. It is the contract for the
+   rest of the session and does not change mid-session unless the user asks.
+4. **Author once, convert.** Write one Markdown source and derive every other
+   format from it with pandoc.
 
 Wait for the user's answer. Accept:
 - a single format       → produce only that
@@ -111,53 +80,9 @@ Wait for the user's answer. Accept:
 - "just md" / "only md" → produce Markdown only (skip the multi-format pipeline)
 
 **Default deny on unavailable formats.** If the user requests a format whose
-toolchain is missing, do NOT silently degrade. Reply explaining what's missing
+toolchain is missing, do NOT silently degrade. Reply explaining what is missing
 and offer the install hint. Let the user decide whether to install or pick a
 different format.
-
-### Step 0.3: Confirm and lock the format set
-
-Echo back the agreed set:
-
-```
-Producing documentation in: md, tex, pdf
-- Source:      <output-dir>/<slug>.md
-- LaTeX:       <output-dir>/<slug>.tex
-- PDF:         <output-dir>/<slug>.pdf
-Diagrams:      docs/diagrams/  (referenced from each format)
-```
-
-This locked set is the contract for the rest of the session. Do not change
-formats mid-session unless the user asks.
-
-### Step 0.4: Single-source authoring pipeline
-
-Author once in Markdown (with extended syntax: fenced code blocks, tables,
-math via `$...$`, footnotes, cross-refs via `[label](#anchor)`). Convert to all
-agreed formats from that single source via pandoc:
-
-```bash
-# md → tex
-pandoc <slug>.md -o <slug>.tex --standalone --listings
-
-# md → html (with embedded CSS)
-pandoc <slug>.md -o <slug>.html --standalone --self-contained --metadata title="<title>"
-
-# md → docx
-pandoc <slug>.md -o <slug>.docx --reference-doc=<optional-template>
-
-# md → pdf via LaTeX (preferred — best typesetting)
-pandoc <slug>.md -o <slug>.pdf --pdf-engine=pdflatex --listings -V geometry:margin=1in
-
-# md → pdf via wkhtmltopdf (fallback if no pdflatex)
-pandoc <slug>.md -o <slug>.pdf --pdf-engine=wkhtmltopdf
-```
-
-When emitting LaTeX directly (the user explicitly asked for `.tex` as the
-authoring format, not just an export), use these conventions: `\documentclass{article}`,
-`\usepackage{listings}` for code, `\usepackage{hyperref}` for cross-refs,
-`\usepackage{tikz}` only when the diagram skill cannot produce the asset. Always
-cite the toolchain version in a comment at the top so the file is reproducible.
 
 ---
 
@@ -220,9 +145,9 @@ Output dir:      <path>
 Formats:         md, tex, pdf  (per Step 0 negotiation)
 
 Files:
-- <slug>.md          (source — <line-count> lines)
-- <slug>.tex         (LaTeX — <line-count> lines)
-- <slug>.pdf         (PDF — <page-count> pages)
+- <slug>.md          (source: <line-count> lines)
+- <slug>.tex         (LaTeX: <line-count> lines)
+- <slug>.pdf         (PDF: <page-count> pages)
 
 Diagrams (rendered via uml-diagram-generator):
 - docs/diagrams/<slug>-architecture.svg     (component diagram)

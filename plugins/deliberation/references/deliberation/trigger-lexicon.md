@@ -20,6 +20,15 @@ The detector returns:
 `confidence < 0.7` ⇒ ask one focused clarifying question, do not
 auto-trigger.
 
+## Contents
+
+- [Italian triggers (high signal)](#italian-triggers-high-signal): the Italian stems and exact phrases, with the match type for each.
+- [English triggers (high signal)](#english-triggers-high-signal): the English equivalents, same table shape.
+- [Programmatic flag](#programmatic-flag): the dispatch-JSON fields that confirm deliberation without any prose matching.
+- [False-positive guards (do NOT auto-trigger)](#false-positive-guards-do-not-auto-trigger): utterances that contain trigger lemmas but must not fire.
+- [Confidence scoring](#confidence-scoring): how the per-match points add up, and the 0.7 threshold that separates auto-trigger from a clarifying question.
+- [Examples](#examples): utterance by match by confidence by action, end to end.
+
 ## Italian triggers (high signal)
 
 Match the **stem** as a whole word; match exact phrase where listed.

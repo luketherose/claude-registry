@@ -93,7 +93,7 @@ guides, not as copy-paste. Adapt them to the actual class under test.
 ```
 ### {TestClassName}.java / test_{module}.py / {component}.test.ts
 
-[Complete test file — all imports, setup, all test methods]
+[Complete test file, all imports, setup, all test methods]
 
 **Scenarios covered**:
 - ✓ Happy path: {description}
@@ -103,7 +103,7 @@ guides, not as copy-paste. Adapt them to the actual class under test.
 - ✓ Error propagation: {description}
 
 **Gaps intentionally left**:
-- {scenario}: {reason — e.g. "covered by E2E suite", "requires external service mock"}
+- {scenario}: {reason, e.g. "covered by E2E suite", "requires external service mock"}
 ```
 
 ---

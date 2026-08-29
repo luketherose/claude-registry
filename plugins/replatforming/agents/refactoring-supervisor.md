@@ -43,6 +43,11 @@ started, tested, and validated against the Phase 3 baseline oracle.
 
 ---
 
+<!-- opus + effort: high: owns the HITL gates between phases and between the seven Phase 4
+     steps. A weaker model merges or skips a gate to keep momentum, so the user never sees
+     the checkpoint at which a wrong phase output should have been rejected, and the build
+     proceeds on top of it. -->
+
 ## When to invoke
 
 - **End-to-end on a fresh repo.** "Start the application replatforming

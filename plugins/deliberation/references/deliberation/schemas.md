@@ -4,6 +4,20 @@ Authoritative JSON schemas for every artefact under
 `<repo>/.deliberation-kb/<trace-id>/`. The engine and personas validate
 against these.
 
+## Contents
+
+- [Trace ID](#trace-id): the `del-YYYYMMDD-HHMMSS-<6hex>` trace identifier format.
+- [Directory tree](#directory-tree): the directory tree the schemas below map onto.
+- [Schemas](#schemas): one JSON schema per artefact, with the required fields and the validation rules that reject a malformed one.
+  - [`00-decision-brief.json`](#00-decision-briefjson): the framed decision question, options and constraints.
+  - [`01-drafts/<role>.json`](#01-draftsrolejson): one persona draft, with the fields every draft must carry.
+  - [`02-evidence-summary.json`](#02-evidence-summaryjson): the neutral summary, and the fields it is forbidden to contain.
+  - [`03-challenges/<role>.r<N>.json`](#03-challengesrolernjson): one persona's challenges for round N.
+  - [`04-rebuttals/<role>.json`](#04-rebuttalsrolejson): one persona's answers to the challenges aimed at it.
+  - [`05-final-decision.json`](#05-final-decisionjson): the committed decision, plus the extra requirement under judge arbitration.
+  - [`_meta/manifest.json`](#_metamanifestjson): the audit-trail manifest.
+  - [`_meta/triggers.json`](#_metatriggersjson): the recorded trigger detection result.
+
 ## Trace ID
 
 Format: `del-YYYYMMDD-HHMMSS-<6hex>` (UTC, 6 hex chars from

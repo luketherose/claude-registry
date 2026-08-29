@@ -65,7 +65,7 @@ gate.
 **Recap returned to the supervisor**:
 
 ```markdown
-# Test Data Seeding — Recap
+# Test Data Seeding: Recap
 
 ## Migration tool detected
 Liquibase — backend/src/main/resources/db/changelog/db.changelog-master.yaml

@@ -4,6 +4,19 @@
 > about to start (Bootstrap detect at "current_step": 0..6) or when describing
 > Phase 4 in pre-phase brief / activation responses.
 
+## Contents
+
+- [Goal](#goal): a fully built, runnable and tested TO-BE application, produced incrementally.
+- [Driver](#driver): the workflow supervisor drives the seven steps directly, with no Phase 4 sub-supervisor.
+- [Sub-agents directly orchestrated](#sub-agents-directly-orchestrated): the sub-agents dispatched from the loop.
+- [Inputs](#inputs): the Phase 0 to Phase 3 artefacts consumed, and what each is for.
+- [Output roots](#output-roots): the TO-BE knowledge base and docs roots.
+- [Entry point file](#entry-point-file): where a reader starts.
+- [Manifest file](#manifest-file): what the manifest tracks, from current step to feature loop progress.
+- [Step structure (replaces the old W1–W6 wave model)](#step-structure-replaces-the-old-w1w6-wave-model): the seven steps that replace the old wave model, from bootstrap through the incremental feature loop, the validation sub-loop, hardening, test data seeding and final validation.
+- [Hard gates (non-negotiable per-step)](#hard-gates-non-negotiable-per-step): the per-step gate table, and which step each gate blocks.
+- [What is NOT in this phase (intentional non-goals)](#what-is-not-in-this-phase-intentional-non-goals): the intentional non-goals, including the ban on TODOs in delivered Step 6 code.
+
 ## Goal
 
 Produce a fully built, fully runnable, fully tested TO-BE Spring Boot 3

@@ -84,7 +84,7 @@ Followed by: **Design rationale**, one paragraph explaining key decisions
 **For reviews:**
 
 ```
-## API Review — {API name or file}
+## API Review: {API name or file}
 
 ### Findings
 

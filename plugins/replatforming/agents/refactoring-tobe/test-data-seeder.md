@@ -165,7 +165,7 @@ Return a recap message structured as follows. The supervisor parses
 this directly:
 
 ```markdown
-# Test Data Seeding — Recap
+# Test Data Seeding: Recap
 
 ## Migration tool detected
 <tool> — <evidence path>
@@ -193,7 +193,7 @@ this directly:
 | <bc> | <list> | <n> |
 
 ## Restart + smoke verification
-- backend start: <ok / skipped — execute_policy=off / failed — reason>
+- backend start: <ok / skipped (execute_policy=off) / failed (reason)>
 - smoke endpoint /<x>: <count> rows ✓
 - smoke endpoint /<y>: <count> rows ✓
 - smoke endpoint /<z>: <count> rows ✓
@@ -203,7 +203,7 @@ this directly:
   existed, or any module skipped because the schema was incomplete>
 
 ## Next gate
-Step 6 — UI smoke gate may now proceed. The /home route and the
+Step 6 (UI smoke gate) may now proceed. The /home route and the
 following sample routes will render with non-empty data:
 - <route 1>
 - <route 2>
@@ -211,8 +211,13 @@ following sample routes will render with non-empty data:
 ```
 
 If you halt at any step, replace the section after "Migration tool
-detected" with a single `## Halted — reason` paragraph and a clear
+detected" with a single `## Halted: reason` paragraph and a clear
 ask back to the supervisor.
+
+→ Read `${CLAUDE_PLUGIN_ROOT}/examples/test-data-seeder-example.md` when the stack is
+anything other than a plain Spring Boot plus Liquibase run. It works through Liquibase,
+Django fixtures, a resume after a failed UI smoke gate, and a refresh after the schema
+changed under an existing seed.
 
 ---
 

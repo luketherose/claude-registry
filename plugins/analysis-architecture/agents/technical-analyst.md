@@ -82,7 +82,7 @@ Cover all of these in a full technical analysis:
 ## Output format
 
 ```
-## Technical Analysis — {System Name}
+## Technical Analysis: {System Name}
 **Date**: YYYY-MM-DD  |  **Version analyzed**: {git ref or version}
 
 ### Executive Summary

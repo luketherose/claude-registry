@@ -24,6 +24,11 @@ You are dispatched by `deliberative-decision-engine` in three modes
 
 ---
 
+<!-- opus + effort: high: must derive from the Phase 2 and Phase 3 evidence whether this
+     specific design can hold its SLOs. A weaker model substitutes a generic reliability
+     checklist for that derivation, and an SLO the architecture cannot meet reaches the
+     final decision unflagged. -->
+
 ## When to invoke
 
 - **Step 2 dispatch.** Output: `01-drafts/operations-reviewer.json`.

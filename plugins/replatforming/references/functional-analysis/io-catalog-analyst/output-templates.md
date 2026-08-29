@@ -9,6 +9,12 @@ agent body is by ID convention only (IN-NN, OUT-NN, TR-NN, IL-NN).
 
 ---
 
+## Contents
+
+- [File 1: `docs/analysis/01-functional/09-inputs.md`](#file-1-docsanalysis01-functional09-inputsmd): the inputs catalog template, with frontmatter and per-item IDs.
+- [File 2: `docs/analysis/01-functional/10-outputs.md`](#file-2-docsanalysis01-functional10-outputsmd): the outputs catalog template.
+- [File 3: `docs/analysis/01-functional/11-transformations.md`](#file-3-docsanalysis01-functional11-transformationsmd): the transformation matrix template.
+
 ## File 1: `docs/analysis/01-functional/09-inputs.md`
 
 ```markdown
@@ -36,7 +42,7 @@ status: <complete|partial|needs-review|blocked>
 
 ## Input catalog
 
-### IN-01 — <descriptive name in business language>
+### IN-01: <descriptive name in business language>
 - **Source**: UI widget | file upload | webhook | schedule | config
 - **Where**: <screen S-NN> / <endpoint> / <cron name> / <config path>
 - **Type**: text | number | date | file | enum | structured
@@ -48,7 +54,7 @@ status: <complete|partial|needs-review|blocked>
 - **Confidence**: high | medium | low
 - **Notes**: <e.g., "actually a JSON blob; structure not enforced">
 
-### IN-02 — ...
+### IN-02: ...
 
 ## Open questions
 - <e.g., "input IN-04 is a free-text field; the parsing logic is hidden
@@ -81,7 +87,7 @@ status: <complete|partial|needs-review|blocked>
 
 ## Output catalog
 
-### OUT-01 — <descriptive name>
+### OUT-01: <descriptive name>
 - **Type**: ui-render | file-download | external-write | notification
 - **Format**: text | dataframe | chart | csv | xlsx | pdf | json | image
 - **Where**: <screen S-NN> / <endpoint> / <channel>
@@ -93,7 +99,7 @@ status: <complete|partial|needs-review|blocked>
 - **Confidence**: high | medium | low
 - **Notes**: <e.g., "chart updates reactively when filter changes">
 
-### OUT-02 — ...
+### OUT-02: ...
 
 ## Open questions
 - <e.g., "OUT-05 is generated only conditionally; the condition is
@@ -124,7 +130,7 @@ status: <complete|partial|needs-review|blocked>
 
 ## Transformation catalog
 
-### TR-01 — <verb-led name, e.g., "Generate monthly sales report">
+### TR-01: <verb-led name, e.g., "Generate monthly sales report">
 - **Trigger**: button click S-03 "Generate" | scheduled daily 02:00 | webhook /events
 - **Inputs**: IN-01, IN-02, IN-04
 - **Outputs**: OUT-01, OUT-03
@@ -138,19 +144,19 @@ status: <complete|partial|needs-review|blocked>
 - **Sources**: .indexing-kb/04-modules/reports.md
 - **Confidence**: high | medium | low
 
-### TR-02 — ...
+### TR-02: ...
 
 ## Cross-cutting matrix
 
 | Input \ Output | OUT-01 | OUT-02 | OUT-03 | ... |
 |---|---|---|---|---|
-| IN-01 | TR-01 | — | TR-01 | ... |
-| IN-02 | TR-01 | — | — | ... |
-| IN-03 | — | TR-02 | — | ... |
+| IN-01 | TR-01 | none | TR-01 | ... |
+| IN-02 | TR-01 | none | none | ... |
+| IN-03 | none | TR-02 | none | ... |
 
 ## Orphans
-- Inputs with no transformation: <list — likely dead code or doc gap>
-- Outputs with no transformation: <list — same>
+- Inputs with no transformation: <list, likely dead code or doc gap>
+- Outputs with no transformation: <list, same>
 
 ## Open questions
 - <e.g., "TR-04 has a documented business rule about partial refunds

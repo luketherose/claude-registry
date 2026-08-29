@@ -2,6 +2,17 @@
 
 > Reference doc for `refactoring-tobe-supervisor`. Read at runtime to drive the bootstrap dialog, dispatch each wave, and produce the closing report. The supervisor body keeps only the wave dependency chain and HITL checkpoints; the per-wave details and dispatch instructions live here.
 
+## Contents
+
+- [Phase 0: Bootstrap (supervisor only)](#phase-0-bootstrap-supervisor-only): resume-mode detection and the bootstrap dialog the supervisor runs before any dispatch.
+- [Wave 1: Decomposition (sequential, single agent, BLOCKS all)](#wave-1-decomposition-sequential-single-agent-blocks-all): `decomposition-architect`, which blocks every later wave.
+- [Wave 2: API Contract (sequential, single agent, BLOCKS W3)](#wave-2-api-contract-sequential-single-agent-blocks-w3): `api-contract-designer`, which blocks Wave 3.
+- [Wave 3: Implementation (parallel: BE track || FE track)](#wave-3-implementation-parallel-be-track--fe-track): the backend and frontend tracks, dispatched together in a single tool call.
+- [Wave 4: Hardening (sequential, single agent)](#wave-4-hardening-sequential-single-agent): `hardening-architect`, applied on top of the scaffolds.
+- [Wave 5: Roadmap (sequential, single agent)](#wave-5-roadmap-sequential-single-agent): `migration-roadmap-builder` and the milestone structure it produces.
+- [Wave 6: Challenger (always ON, sequential)](#wave-6-challenger-always-on-sequential): `phase4-challenger`, always on, producing the AS-IS to TO-BE traceability matrix.
+- [Export Wave: Opt-in (parallel, two agents)](#export-wave-opt-in-parallel-two-agents): the PDF and PPTX exports, run only when `--with-exports` was set at bootstrap.
+
 ## Phase 0: Bootstrap (supervisor only)
 
 1. **Detect resume mode**. Inspect what is on disk and pick one of:

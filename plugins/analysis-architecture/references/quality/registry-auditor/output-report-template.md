@@ -10,7 +10,7 @@ maintainer can navigate directly. Keep the full report under ~800 lines.
 ## Skeleton
 
 ```markdown
-# Registry Audit — Anthropic Rubric
+# Registry Audit: Anthropic Rubric
 
 ## Methodology notes
 - Rubrics resolved from: <list of file paths or "embedded fallback">
@@ -24,30 +24,30 @@ maintainer can navigate directly. Keep the full report under ~800 lines.
 | Skills | <A–F> | … |
 | CLAUDE.md | <score>/100 | … |
 
-## Agents — registry-wide patterns
+## Agents: registry-wide patterns
 | # | Pattern | Files affected | Severity |
 |---|---|---|---|
 | A1 | … | n / total | High/Med/Low |
 
-## Agents — top 10 to rewrite
+## Agents: top 10 to rewrite
 | # | File | Problem | Concrete fix |
 |---|---|---|---|
 
-## Agents — reference templates (well-written)
-- `<path>` — <why it works>
+## Agents: reference templates (well-written)
+- `<path>`: <why it works>
 
-## Skills — registry-wide patterns
+## Skills: registry-wide patterns
 | # | Pattern | Files affected | Severity |
 
-## Skills — top 10 to rewrite
+## Skills: top 10 to rewrite
 | # | File | Problem | Concrete fix |
 
-## Skills — word-count outliers
+## Skills: word-count outliers
 | Rank | File | Words | Action |
 
-## Skills — reference templates (well-written)
+## Skills: reference templates (well-written)
 
-## CLAUDE.md — score breakdown
+## CLAUDE.md: score breakdown
 | Criterion | Score | Evidence |
 
 ## Quick wins (script-able bulk fixes)

@@ -241,9 +241,10 @@ For each file you produce or modify:
 **Tests**: {`_test.go` file name and the table cases it covers}
 ```
 
-Report the outcome of `gofmt -l`, `go vet ./...`, `golangci-lint run`, and `go test ./...`
-for the package you touched. If you could not run them, say so explicitly instead of
-implying they passed.
+The code you deliver satisfies `gofmt`, `go vet ./...` and `golangci-lint run` as
+written: every error checked and wrapped with `%w` rather than discarded, `context.Context`
+as the first parameter of every call that can block, no `panic` outside `main`, no `init`
+with side effects, and no naked return in a function longer than ten lines.
 
 If you cannot complete the task without missing information (e.g. an existing interface,
 the router in use, the module path), state exactly what you need before proceeding.

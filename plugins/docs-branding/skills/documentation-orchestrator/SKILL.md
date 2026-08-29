@@ -187,9 +187,9 @@ At the end, report:
 ## Technical documentation orchestration summary
 
 ### Sources used
-- [project technical documentation] — [N BE nodes, M FE nodes, if available]
-- [pre-existing analyses] — [N documented modules]
-- [functional documentation] — [N chunks/files read]
+- [project technical documentation]: [N BE nodes, M FE nodes, if available]
+- [pre-existing analyses]: [N documented modules]
+- [functional documentation]: [N chunks/files read]
 
 ### Documents produced
 - [ ] docs/technical-output/backend-doc.tex

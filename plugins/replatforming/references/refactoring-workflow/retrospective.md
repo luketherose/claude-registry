@@ -10,6 +10,17 @@
 > earlier phase. It does NOT run any sub-agents. It synthesizes from artifacts
 > already on disk.
 
+## Contents
+
+- [When it runs](#when-it-runs): the automatic trigger after PO sign-off, and the manual one.
+- [Review dimensions: one per phase](#review-dimensions-one-per-phase): the per-phase artefacts to read, plus the issue schema with `downstream_impact` and `rerun_scope`.
+- [Severity classification](#severity-classification): the criteria for `blocking`, `high` and the lower severities.
+- [Output file](#output-file): the retrospective file, written to be both human-readable and machine-parseable.
+- [Decision options](#decision-options): the options presented, and the rule that `close` is never auto-selected.
+- [Routing to cross-phase iteration](#routing-to-cross-phase-iteration): how the phases to re-run are derived from the open blocking and high issues.
+- [Re-iteration record](#re-iteration-record): the record appended, never overwritten, when a cross-phase iteration is triggered.
+- [Idempotency](#idempotency): the same disk artefacts must always yield the same issue list.
+
 ## When it runs
 
 | Mode | Trigger |
@@ -81,14 +92,14 @@ readable AND machine-parseable (the `## Recommendation` section uses a canonical
 format the supervisor reads without re-inference).
 
 ```markdown
-# Workflow Retrospective — <project-name>
+# Workflow Retrospective: <project-name>
 Generated: <ISO-8601>
 Workflow: application-replatforming v<N>
 
 ## Executive summary
 <3–5 lines: overall verdict, issue counts, recommendation>
 
-## Phase 0 — Codebase Indexing
+## Phase 0: Codebase Indexing
 ### Verdict: green | amber | red
 ### What worked
 - ...
@@ -98,16 +109,16 @@ Workflow: application-replatforming v<N>
 | ID | Severity | Summary | Downstream impact | Rerun scope | Status |
 |---|---|---|---|---|---|
 
-## Phase 1 — Functional Analysis
+## Phase 1: Functional Analysis
 (same structure)
 
-## Phase 2 — Technical Analysis
+## Phase 2: Technical Analysis
 (same structure)
 
-## Phase 3 — Baseline Testing
+## Phase 3: Baseline Testing
 (same structure)
 
-## Phase 4 — Application Replatforming
+## Phase 4: Application Replatforming
 (same structure)
 
 ## Cross-cutting findings
@@ -183,7 +194,7 @@ existing `docs/refactoring/retrospective.md` (do NOT overwrite):
 ```markdown
 ## Re-iteration record
 
-### Iteration 1 — <ISO-8601>
+### Iteration 1: <ISO-8601>
 Triggered by: issues RETRO-01, RETRO-03
 Re-entry phase: phase-1
 Cross-phase delta: docs/refactoring/_meta/cross-phase-delta-iter1.json

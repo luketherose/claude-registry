@@ -4,6 +4,14 @@
 > the corresponding test class. Templates are skeletons: adapt the
 > resource path, role names, and payloads to the project under test.
 
+## Contents
+
+- [Authentication flow](#authentication-flow): the authentication test skeleton.
+- [Authorisation matrix](#authorisation-matrix): the role by endpoint allow and deny matrix, driven by a parameterised CSV source.
+- [OWASP A03: Injection](#owasp-a03-injection): the injection payload battery, and the responses that count as a pass.
+- [OWASP A09: Logging & monitoring](#owasp-a09-logging--monitoring): audit logs with correlation ids, matching the JSON shape Phase 4 hardening established.
+- [Headers & CORS](#headers--cors): the security header and CORS test skeleton.
+
 ## Authentication flow
 
 ```java

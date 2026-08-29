@@ -1,5 +1,16 @@
 # Large File Handling Policy
 
+## Contents
+
+- [Problem](#problem): the failure modes this policy exists to prevent.
+- [Thresholds](#thresholds): the line-count and byte thresholds for `large`, `huge` and `giant`.
+- [Mandatory strategy: outline → chunk → evidence → summary](#mandatory-strategy-outline--chunk--evidence--summary): the four ordered steps: outline, chunk, evidence, then summary. None may be skipped or reordered.
+- [Symbol classification taxonomy](#symbol-classification-taxonomy): the classification every symbol or chunk must be assigned.
+- [Generated, minified, and vendor files](#generated-minified-and-vendor-files): how to treat generated, minified and vendored files.
+- [Data files (JSON, CSV, XML, YAML)](#data-files-json-csv-xml-yaml): profiling rather than reading JSON, CSV, XML and YAML above the threshold.
+- [Parse errors](#parse-errors): what to record when a file cannot be parsed.
+- [Coverage gate](#coverage-gate): the condition under which Phase 0 cannot declare PASS.
+
 ## Problem
 
 Agents struggle with large source files. Common failure modes include losing content from the middle of the file, hallucinating behavior not present in the actual code, and citing a file as evidence for a claim without having read the relevant lines. This policy mandates a structured outline-first, chunk-based approach that produces verifiable evidence records for every large file.

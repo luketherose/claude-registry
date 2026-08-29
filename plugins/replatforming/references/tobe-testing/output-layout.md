@@ -2,6 +2,12 @@
 
 > Reference doc for `tobe-testing-supervisor`. Read at runtime when planning where workers write their outputs and what frontmatter every artefact must carry.
 
+## Contents
+
+- [Output roots](#output-roots): the split writable contract across test code and report roots.
+- [Frontmatter contract (every report)](#frontmatter-contract-every-report): the YAML frontmatter every report carries, plus the stable ID rules for findings.
+- [Manifest schema (`_meta/manifest.json`)](#manifest-schema-_metamanifestjson): the manifest the supervisor updates after every wave.
+
 ## Output roots
 
 All outputs go under multiple roots, but the writable contract is split:

@@ -12,6 +12,17 @@
 > and is expensive to undo. Therefore each analysis phase ends with a
 > human-in-the-loop iteration loop, not a one-shot proceed/stop choice.
 
+## Contents
+
+- [Scope](#scope): the loop covers Phases 1 to 3 only, and why Phase 0 and Phase 4 are excluded.
+- [States](#states): the state transitions, and the absence of any iteration cap.
+- [The three user options](#the-three-user-options): approve, iterate and stop, with the effect of each.
+- [Iteration delta: what the user provides](#iteration-delta-what-the-user-provides): how the user's adjustments are captured, verbatim and structured.
+- [Re-dispatch policy: what runs in iteration N+1](#re-dispatch-policy-what-runs-in-iteration-n1): why iteration N+1 re-dispatches only the sub-agents the delta touches.
+- [Optional deliberation: when adjustments are contested](#optional-deliberation-when-adjustments-are-contested): routing a contested adjustment to the deliberation engine.
+- [Convergence and exit conditions](#convergence-and-exit-conditions): the loop ends on approve or stop, plus practical guidance on when to stop.
+- [Idempotency](#idempotency): what the supervisor must pass so that the same delta always produces the same outputs.
+
 ## Scope
 
 The iteration loop applies to Phases 1–3 (analysis phases). It does NOT

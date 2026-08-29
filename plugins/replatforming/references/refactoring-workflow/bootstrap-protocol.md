@@ -7,6 +7,17 @@
 
 Before the first delegated phase, follow this exact sequence.
 
+## Contents
+
+- [1. Verify repo root is a git repository](#1-verify-repo-root-is-a-git-repository): the git repository check.
+- [2. Detect existing state: per-phase](#2-detect-existing-state-per-phase): per-phase detection of existing output, including the exports-missing sub-state for Phases 1 and 2.
+- [3. Read or create the workflow manifest](#3-read-or-create-the-workflow-manifest): read or create `workflow-manifest.json`.
+- [4. Present the detected state to the user as a table](#4-present-the-detected-state-to-the-user-as-a-table): the exact table shape, one row per phase, with a recommendation and the Phase 4 sub-states.
+- [5. Ask explicitly, per phase that is not `absent`, what to do](#5-ask-explicitly-per-phase-that-is-not-absent-what-to-do): the mandatory human-in-the-loop prompt, asked for every detected phase rather than resolved silently.
+- [6. Determine the effective phase plan from the user's answers](#6-determine-the-effective-phase-plan-from-the-users-answers): how skip, regenerate and re-run answers map onto the effective plan.
+- [7. Present the consolidated workflow plan to the user](#7-present-the-consolidated-workflow-plan-to-the-user): the consolidated plan presented before anything is dispatched.
+- [8. Wait for one final confirmation](#8-wait-for-one-final-confirmation): the final confirmation, non-negotiable even when the user has said to do everything.
+
 ## 1. Verify repo root is a git repository
 
 If not, ask the user.

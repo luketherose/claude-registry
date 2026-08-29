@@ -4,6 +4,14 @@
 > the Angular bootstrap files (Method step 8, main.ts + app.config.ts,
 > and Method step 9: README.md).
 
+## Contents
+
+- [main.ts](#maints): the bootstrap entry point.
+- [app.config.ts](#appconfigts): the provider bundle.
+- [app.component.ts](#appcomponentts): the root component.
+- [app.component.html](#appcomponenthtml): the root template, plus the hard rule that the `ng new` placeholder must be overwritten completely, and the self-check gate that runs before reporting `status: ok`.
+- [README.md](#readmemd): the frontend README: build instructions, layout overview and the bounded context mapping.
+
 ## main.ts
 
 ```typescript

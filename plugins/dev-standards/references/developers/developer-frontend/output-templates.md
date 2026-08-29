@@ -12,7 +12,7 @@ For each file produced or modified:
 ```
 ### {filename}.{ts|tsx|vue|html|scss|spec.ts}
 
-[Complete file content — all imports, all types, no placeholder comments]
+[Complete file content, all imports, all types, no placeholder comments]
 
 **Why**: {One sentence on the key decisions made}
 **Tests**: {What to test and with which testing tool}

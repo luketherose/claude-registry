@@ -2,6 +2,17 @@
 
 > Reference doc for `technical-analysis-supervisor` and Phase 2 sub-agents. Read at runtime when writing JSONL artifacts to `docs/analysis/02-technical/normalized/` or `raw/`.
 
+## Contents
+
+- [Purpose](#purpose): scope of the Phase 2 normalized artefacts.
+- [`normalized/technical-findings.jsonl`](#normalizedtechnical-findingsjsonl): opens with the full `raw/` and `normalized/` directory tree.
+- [`normalized/technical-findings.jsonl`](#normalizedtechnical-findingsjsonl-1): one record per finding, merged from the Wave 1 raw files, with the `finding_id` convention.
+- [`normalized/risk-register.jsonl`](#normalizedrisk-registerjsonl): one record per risk, aggregating one or more findings.
+- [`normalized/technical-gaps.jsonl`](#normalizedtechnical-gapsjsonl): one record per unresolved gap.
+- [`raw/` files](#raw-files): one pre-normalization JSONL per Wave 1 sub-agent.
+- [`normalized/risk-evidence-matrix.csv`](#normalizedrisk-evidence-matrixcsv-1): the column list and the one-row-per-risk rule.
+- [`normalized/technical-evidence-audit.json`](#normalizedtechnical-evidence-auditjson-1): the auditor output schema.
+
 ## Purpose
 
 ---
@@ -177,7 +188,7 @@ Schema (produced by `technical-evidence-auditor`):
 ---
 
 ```markdown
-# Analysis Quality Summary — Phase 2
+# Analysis Quality Summary: Phase 2
 
 Generated: <ISO-8601>
 Verdict: PASS | PASS_WITH_GAPS | FAIL
@@ -191,6 +202,7 @@ Verdict: PASS | PASS_WITH_GAPS | FAIL
 | `open_gaps` | Count of entries in `technical-gaps.jsonl` with `blocking: true` |
 | `validator_verdict` | Output of `validate_technical_analysis.py` (PASS / PASS_WITH_GAPS / FAIL) |
 | `auditor_verdict` | `technical-evidence-audit.json` verdict field |
+```
 
 ---
 

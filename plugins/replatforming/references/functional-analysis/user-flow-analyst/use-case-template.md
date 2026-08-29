@@ -9,6 +9,13 @@ agent body is by ID convention only.
 
 ---
 
+## Contents
+
+- [File 1: `docs/analysis/01-functional/06-use-cases/README.md`](#file-1-docsanalysis01-functional06-use-casesreadmemd): the use-case index template.
+- [File 2 (per UC): `docs/analysis/01-functional/06-use-cases/UC-NN-<slug>.md`](#file-2-per-uc-docsanalysis01-functional06-use-casesuc-nn-slugmd): the per-use-case file template, one per `UC-NN` identifier, with its fixed section order.
+- [File 3: `docs/analysis/01-functional/07-user-flows.md`](#file-3-docsanalysis01-functional07-user-flowsmd): the user flows template.
+- [File 4: `docs/analysis/01-functional/08-sequence-diagrams.md`](#file-4-docsanalysis01-functional08-sequence-diagramsmd): the sequence diagrams template.
+
 ## File 1: `docs/analysis/01-functional/06-use-cases/README.md`
 
 ```markdown
@@ -46,7 +53,7 @@ related:
   outputs: [OUT-01, OUT-03]
 ---
 
-# UC-02 — Generate monthly report
+# UC-02: Generate monthly report
 
 ## Primary actor
 A-01 (End user)
@@ -66,7 +73,7 @@ A-01 (End user)
 5. System invokes TR-01
 6. S-03 renders OUT-01 (table) and OUT-03 (chart)
 7. A-01 navigates to S-05 (Export) to download
-8. A-01 clicks "Download CSV" — produces OUT-04
+8. A-01 clicks "Download CSV": produces OUT-04
 
 ## Alternate flows
 - **2a. Month in future**: validation error displayed (see IL-04 for
@@ -125,15 +132,15 @@ status: <complete|partial|needs-review|blocked>
 
 High-level narratives chaining multiple UCs into typical journeys.
 
-## Flow 1 — Monthly reporting cycle
+## Flow 1: Monthly reporting cycle
 **Actor**: A-01
 
-1. UC-01 — Sign in
-2. UC-05 — Load latest dataset
-3. UC-02 — Generate monthly report
-4. UC-08 — Share report via email (if applicable)
+1. UC-01: Sign in
+2. UC-05: Load latest dataset
+3. UC-02: Generate monthly report
+4. UC-08: Share report via email (if applicable)
 
-## Flow 2 — ...
+## Flow 2: ...
 
 ## Open questions
 - <e.g., "Is the typical user expected to chain UC-02 → UC-04 → UC-08, or
@@ -168,7 +175,7 @@ files. This document catalogs and cross-references them.
 
 ## Cross-cutting patterns
 
-### Pattern 1 — Filter → rerun → render (Streamlit-specific)
+### Pattern 1: Filter → rerun → render (Streamlit-specific)
 Common shape across UC-02, UC-03, UC-05.
 
 \`\`\`mermaid
@@ -183,5 +190,5 @@ sequenceDiagram
     S-->>U: re-render with new filter applied
 \`\`\`
 
-### Pattern 2 — ...
+### Pattern 2: ...
 ```

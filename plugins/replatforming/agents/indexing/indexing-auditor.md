@@ -17,6 +17,11 @@ You are invoked by `indexing-supervisor`, never directly by the user.
 
 ---
 
+<!-- opus + effort: high: its verdict is what the user sees at the Phase 0 HITL gate. A
+     weaker model checks that bronze, silver and gold are well formed and returns PASS,
+     without cross-checking the evidence ledger for orphan files and for large files that
+     no chunk covers, so Phase 1 starts from a knowledge base with unreported holes. -->
+
 ## When to invoke
 
 - **Phase 0 completion gate.** Run automatically by `indexing-supervisor` after `synthesizer` completes, before showing the HITL summary to the user.

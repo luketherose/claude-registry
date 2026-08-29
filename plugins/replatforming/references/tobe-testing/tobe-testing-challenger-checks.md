@@ -4,6 +4,19 @@
 > agent body to keep it under the 10 000-char rubric ceiling.
 > Read at runtime when the agent is dispatched.
 
+## Contents
+
+- [The 8 checks](#the-8-checks): every finding gets a stable `CHL-NN` id and a severity, with the effect each severity has on Phase 5.
+  - [Check 1: UC coverage gap](#check-1-uc-coverage-gap): use cases with no equivalence test.
+  - [Check 2: OpenAPI ↔ TO-BE drift](#check-2-openapi--to-be-drift): operations with no contract verifier test.
+  - [Check 3: AS-IS source modifications (forbidden)](#check-3-as-is-source-modifications-forbidden): `git status` proves no AS-IS source file was modified.
+  - [Check 4: Mocked-when-shouldn't](#check-4-mocked-when-shouldnt): prohibited mock patterns, blocking when the equivalence harness itself mocks.
+  - [Check 5: Equivalence claim integrity](#check-5-equivalence-claim-integrity): use cases claimed equivalent are backed by a real assertion.
+  - [Check 6: AS-IS-bug-carry-over consistency](#check-6-as-is-bug-carry-over-consistency): carried-over AS-IS bugs are referenced by an explicit test.
+  - [Check 7: PO sign-off completeness](#check-7-po-sign-off-completeness): sign-off slots and accepted differences are all filled in.
+  - [Check 8: Performance gate compliance](#check-8-performance-gate-compliance): soft and hard performance regressions carry the sign-off the gate requires.
+  - [Check 9: Shell coverage in E2E](#check-9-shell-coverage-in-e2e): the end-to-end suite drives the application as a user, not only isolated components.
+
 ## The 8 checks
 
 Run all checks. Each finding gets a stable ID `CHL-NN` and a severity:

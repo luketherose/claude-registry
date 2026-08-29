@@ -10,6 +10,17 @@ section skeletons to copy into the `Write` call.
 
 ---
 
+## Contents
+
+- [Silver JSONL schemas](#silver-jsonl-schemas): the four Silver artefacts, all append-only, plus the frontmatter convention they share.
+  - [`silver/business-rules.jsonl`: one record per rule, append-only](#silverbusiness-rulesjsonl-one-record-per-rule-append-only): one record per business rule.
+  - [`silver/validation-rules.jsonl`: one record per validation rule](#silvervalidation-rulesjsonl-one-record-per-validation-rule): one record per validation rule.
+  - [`silver/state-machines.jsonl`: one record per state machine](#silverstate-machinesjsonl-one-record-per-state-machine): one record per state machine.
+  - [`silver/assumptions.jsonl`: rules that could not be code-grounded](#silverassumptionsjsonl-rules-that-could-not-be-code-grounded): rules that could not be grounded in code.
+- [File 1: `.indexing-kb/07-business-logic/domain-concepts.md`](#file-1-indexing-kb07-business-logicdomain-conceptsmd): the domain concepts markdown template.
+- [File 2: `.indexing-kb/07-business-logic/validation-rules.md`](#file-2-indexing-kb07-business-logicvalidation-rulesmd): the validation rules markdown template.
+- [File 3: `.indexing-kb/07-business-logic/business-rules.md`](#file-3-indexing-kb07-business-logicbusiness-rulesmd): the business rules markdown template.
+
 ## Silver JSONL schemas
 
 ### `silver/business-rules.jsonl`: one record per rule, append-only

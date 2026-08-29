@@ -3,6 +3,14 @@
 > Reference doc for `tobe-test-runner`. Read at runtime when writing
 > the consolidated coverage, contract-test, and bug-registry reports.
 
+## Contents
+
+- [Frontmatter (every markdown report)](#frontmatter-every-markdown-report): the YAML frontmatter every report carries.
+- [`02-coverage-report.md`](#02-coverage-reportmd): the coverage report template.
+- [`03-contract-tests-report.md`](#03-contract-tests-reportmd): the contract tests report template.
+- [`06-tobe-bug-registry.md`](#06-tobe-bug-registrymd): the bug registry template.
+- [Final report (printed to supervisor)](#final-report-printed-to-supervisor): the text response back to the supervisor.
+
 ## Frontmatter (every markdown report)
 
 ```yaml
@@ -33,7 +41,7 @@ status: complete | partial | needs-review | blocked
 | BC | Line % | Branch % | Threshold met? |
 |---|---|---|---|
 | <bc-1> | 84% | 72% | yes |
-| <bc-2> | 78% | 65% | NO — see exclusions |
+| <bc-2> | 78% | 65% | NO, see exclusions |
 
 Targets: line ≥ 80%, branch ≥ 70%.
 
@@ -45,8 +53,8 @@ Targets: line ≥ 80%, branch ≥ 70%.
 ## Equivalence (pytest)
 | UC ID | UC priority | Equivalent | Regression | Skipped |
 |---|---|---|---|---|
-| UC-001 | critical | yes | — | — |
-| UC-002 | high | partial | TBUG-3 | — |
+| UC-001 | critical | yes | none | none |
+| UC-002 | high | partial | TBUG-3 | none |
 
 ## Excluded code
 <list of generated code, presentation-only components, etc.>
@@ -64,9 +72,9 @@ Targets: line ≥ 80%, branch ≥ 70%.
 ## Coverage
 | OpenAPI operationId | SCC contract present | Verdict | Notes |
 |---|---|---|---|
-| createCustomer | yes | pass | — |
+| createCustomer | yes | pass | none |
 | updateCustomer | yes | FAIL | response body missing `updatedAt` field |
-| deleteCustomer | NO | n/a | contract not authored — escalate |
+| deleteCustomer | NO | n/a | contract not authored, escalate |
 
 ## Contract drift
 <critical drifts listed; each is a blocker>
@@ -84,7 +92,7 @@ Targets: line ≥ 80%, branch ≥ 70%.
 > Critical and high regressions are NOT in this registry — they are
 > in `01-equivalence-report.md` as blocking.
 
-## TBUG-001 — <title>
+## TBUG-001: <title>
 - **Severity**: medium
 - **Affected UC**: UC-007
 - **Test**: backend/src/test/.../FooServiceTest.java#test_normalises_address

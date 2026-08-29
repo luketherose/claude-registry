@@ -2,6 +2,13 @@
 
 > Reference doc for `baseline-testing-supervisor`. Read at runtime when answering Q1 (execution policy), Q2 (failure policy), the service-detection gate, or the dispatch-mode decision.
 
+## Contents
+
+- [Q1: Execution policy (adaptive)](#q1-execution-policy-adaptive): write-only versus write and execute, and how the detection result is surfaced.
+- [Q2: Failure policy (strict critical/high, xfail medium/low)](#q2-failure-policy-strict-criticalhigh-xfail-mediumlow): when a failure blocks the phase and when it becomes an expected failure.
+- [Service detection (gate for `service-collection-builder`)](#service-detection-gate-for-service-collection-builder): whether to dispatch `service-collection-builder`, and the positive signals from Phase 2.
+- [Dispatch mode decision (parallel / batched / sequential)](#dispatch-mode-decision-parallel--batched--sequential): how the Wave 1 dispatch mode is chosen, plus the batching plan and the confirmation posted before dispatch.
+
 ## Q1: Execution policy (adaptive)
 
 The supervisor decides whether to **write only** or **write + execute** during bootstrap.

@@ -9,6 +9,12 @@ across Phase 2 outputs (`agent`, `generated`, `sources`, `confidence`,
 
 ---
 
+## Contents
+
+- [File 1: `security-findings.md`](#file-1-security-findingsmd): the security findings template.
+- [File 2: `owasp-top10-coverage.md`](#file-2-owasp-top10-coveragemd): the OWASP Top 10 coverage template.
+- [File 3: `threat-model.md`](#file-3-threat-modelmd): the threat model template.
+
 ## File 1: `security-findings.md`
 
 ```markdown
@@ -34,7 +40,7 @@ status: <complete|partial|needs-review|blocked>
 
 ## Findings
 
-### SEC-01 — Hard-coded API key in source
+### SEC-01: Hard-coded API key in source
 - **Severity**: critical
 - **OWASP**: A02 / A05
 - **Location**: `<repo-path>:<line>`
@@ -44,7 +50,7 @@ status: <complete|partial|needs-review|blocked>
   redact from git history
 - **Sources**: [<repo-path>:<line>]
 
-### SEC-02 — SQL injection via f-string
+### SEC-02: SQL injection via f-string
 - **Severity**: critical
 - **OWASP**: A03
 - **Location**: `<repo-path>:<line>`
@@ -55,7 +61,7 @@ status: <complete|partial|needs-review|blocked>
 - **Cross-ref**: RISK-DA-01 (data-access-analyst)
 - **Sources**: [...]
 
-### SEC-NN — ...
+### SEC-NN: ...
 
 ## Cross-references
 
@@ -88,19 +94,19 @@ status: <complete|partial|needs-review|blocked>
 | A01 | Broken Access Control | partial | <evidence> | SEC-NN |
 | A02 | Cryptographic Failures | missing | <evidence> | SEC-NN |
 | A03 | Injection | partial | <evidence> | SEC-NN, SEC-NN |
-| A04 | Insecure Design | not assessable | KB lacks design docs | — |
+| A04 | Insecure Design | not assessable | KB lacks design docs | none |
 | A05 | Security Misconfiguration | partial | <evidence> | SEC-NN |
-| A06 | Vulnerable and Outdated Components | see 03-dependencies-security | — | (VULN-* refs) |
+| A06 | Vulnerable and Outdated Components | see 03-dependencies-security | in linked doc | (VULN-* refs) |
 | A07 | Authentication Failures | partial | <evidence> | SEC-NN |
 | A08 | Software and Data Integrity Failures | high risk | pickle of user input | SEC-NN |
-| A09 | Security Logging and Monitoring | see 07-resilience | — | (RISK-RES-* refs) |
-| A10 | Server-Side Request Forgery (SSRF) | low risk | no user-controlled outbound URL | — |
+| A09 | Security Logging and Monitoring | see 07-resilience | in linked doc | (RISK-RES-* refs) |
+| A10 | Server-Side Request Forgery (SSRF) | low risk | no user-controlled outbound URL | none |
 
 ## Notes
 <one-paragraph per row where status is partial / missing>
 
 ## Open questions
-- <e.g., "A01 — authorization is enforced upstream by an API gateway
+- <e.g., "A01: authorization is enforced upstream by an API gateway
   per ops; cannot verify from this codebase alone">
 ```
 
@@ -133,9 +139,9 @@ status: <complete|partial|needs-review|blocked>
 | Asset | Spoofing | Tampering | Repudiation | Info disclosure | DoS | Elevation |
 |---|---|---|---|---|---|---|
 | User data | login required | DB writes parameterized | audit log? | encrypted at rest? | rate limit? | role check? |
-| Billing data | login + 2FA? | parameterized | yes, audit_log table | no encryption flagged | — | — |
-| Admin actions | role-check enforced via decorator | SEC-NN | yes | — | — | flagged |
-| session_state | session-scoped | local | no | shared library on instance — flag | — | — |
+| Billing data | login + 2FA? | parameterized | yes, audit_log table | no encryption flagged | no concern | no concern |
+| Admin actions | role-check enforced via decorator | SEC-NN | yes | no concern | no concern | flagged |
+| session_state | session-scoped | local | no | shared library on instance, flag | no concern | no concern |
 
 ## Trust boundaries
 - Trusted: server-side code in this repo, env-var config

@@ -4,6 +4,12 @@
 > severity matrix and the ordered remediation backlog. Defines the markdown
 > shape of the two narrative artifacts that sit alongside the risk register.
 
+## Contents
+
+- [Goal](#goal): the two templates this file provides.
+- [Severity matrix: `09-synthesis/severity-matrix.md`](#severity-matrix-09-synthesisseverity-matrixmd): the likelihood by impact heatmap template, plus the ordered inference rules for placing a finding on it.
+- [Remediation priority: `09-synthesis/remediation-priority.md`](#remediation-priority-09-synthesisremediation-prioritymd): the ordered remediation backlog template, plus the sort keys applied in order.
+
 ## Goal
 
 Provide the canonical markdown templates for:
@@ -95,7 +101,7 @@ Remediation hints are AS-IS only — they propose changes within the
 current stack, not migration to a different one. Migration planning
 lives in Phase 4 of the workflow.
 
-## Tier 1 — Fix immediately (critical)
+## Tier 1: Fix immediately (critical)
 
 1. **SEC-01** [security] Hard-coded API key
    - Effort: small
@@ -105,15 +111,15 @@ lives in Phase 4 of the workflow.
    - Hint: parameterize via SQLAlchemy `text()` with bindparams
 3. ...
 
-## Tier 2 — Address in next iteration (high)
+## Tier 2: Address in next iteration (high)
 
 <numbered list>
 
-## Tier 3 — Plan in roadmap (medium)
+## Tier 3: Plan in roadmap (medium)
 
 <numbered list>
 
-## Tier 4 — Track (low / info)
+## Tier 4: Track (low / info)
 
 <numbered list>
 

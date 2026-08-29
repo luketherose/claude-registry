@@ -7,6 +7,22 @@ constraints. Do not preemptively load. Read on demand per step.
 
 ---
 
+## Contents
+
+- [Pipeline state](#pipeline-state): the `pipeline-state.yaml` file, its bootstrap and update protocol, and its schema.
+- [Inputs contract](#inputs-contract): what the caller must supply: decision question, context, options and the optional policy.
+- [Default deliberation policy](#default-deliberation-policy): the default policy object, and the rule that any override is documented in the manifest.
+- [Step 0: Trigger detection and task classification](#step-0-trigger-detection-and-task-classification): trigger detection against the IT/EN lexicon, and classification of the decision type.
+- [Step 1: Decision framing (decision brief)](#step-1-decision-framing-decision-brief): producing the structured decision brief.
+- [Step 2: Independent persona drafts (anti-anchoring)](#step-2-independent-persona-drafts-anti-anchoring): the parallel persona dispatch that keeps drafts unanchored.
+- [Step 3: Neutral structured evidence summary](#step-3-neutral-structured-evidence-summary): the judge in summariser mode, producing evidence without deciding.
+- [Step 4: Challenge round](#step-4-challenge-round): each persona attacks the others, given the brief, the summary and every draft.
+- [Step 5: Rebuttal round](#step-5-rebuttal-round): each persona answers the challenges addressed at it.
+- [Step 6: Convergence and final decision](#step-6-convergence-and-final-decision): strategy selection and the hard rules that force human arbitration.
+- [Final user-facing report (mandatory)](#final-user-facing-report-mandatory): the mandatory Markdown report sections, in order.
+- [Failure handling](#failure-handling): retries, the minimum viable draft count, and the abort conditions.
+- [Constraints (hard rules)](#constraints-hard-rules): the non-negotiables: model tier, draft isolation and artefact immutability.
+
 ## Pipeline state
 
 **File**: `.deliberation-kb/<trace-id>/pipeline-state.yaml`

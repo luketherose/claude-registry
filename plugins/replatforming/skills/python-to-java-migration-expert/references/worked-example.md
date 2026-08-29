@@ -61,8 +61,8 @@ public enum OrderStatus { PENDING, CONFIRMED, SHIPPED, CANCELLED }
 
 ```
 Migration Pitfall:
-| Django choices tuples | Python: `STATUS_CHOICES = [('PENDING', 'Pending')]` — string+label | Java: `@Enumerated(EnumType.STRING)` enum — no label in DB | Use enum for DB, separate display logic in DTO/frontend |
-| `auto_now_add=True` | Set at Python ORM level | Java: `@CreationTimestamp` Hibernate annotation | Equivalent — verify timezone handling (use Instant, not LocalDateTime) |
+| Django choices tuples | Python: `STATUS_CHOICES = [('PENDING', 'Pending')]`, string+label | Java: `@Enumerated(EnumType.STRING)` enum, no label in DB | Use enum for DB, separate display logic in DTO/frontend |
+| `auto_now_add=True` | Set at Python ORM level | Java: `@CreationTimestamp` Hibernate annotation | Equivalent, verify timezone handling (use Instant, not LocalDateTime) |
 ```
 
 ---

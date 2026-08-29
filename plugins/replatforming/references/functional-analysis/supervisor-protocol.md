@@ -4,6 +4,15 @@ This document holds the operational protocol for `functional-analysis-supervisor
 
 ---
 
+## Contents
+
+- [Pipeline state](#pipeline-state): the `pipeline-state.yaml` file, its bootstrap and update protocol, and its schema.
+- [Inputs](#inputs): the `.indexing-kb/` source of truth and the evidence ledger the phase reads from.
+- [Escalation triggers: always ask the user](#escalation-triggers-always-ask-the-user): the conditions that stop the supervisor, starting with an absent or stale KB.
+- [Decision rules](#decision-rules): the situation by decision table the supervisor applies without asking.
+- [Manifest update](#manifest-update): what to update after every wave, and where the full manifest schema lives.
+- [Constraints](#constraints): the non-negotiables, above all that no output may reference a target technology.
+
 ## Pipeline state
 
 **File**: `docs/analysis/01-functional/_meta/pipeline-state.yaml`

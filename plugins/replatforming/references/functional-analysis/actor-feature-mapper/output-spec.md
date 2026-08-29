@@ -4,6 +4,14 @@ This document defines the exact file formats, JSONL schemas, and output template
 
 ---
 
+## Contents
+
+- [Output files](#output-files): the two markdown deliverables, actors and features, with their full templates.
+- [JSONL outputs (write before markdown)](#jsonl-outputs-write-before-markdown): the JSONL artefacts, written before the markdown.
+  - [`docs/analysis/01-functional/raw/actor-candidates-raw.jsonl`](#docsanalysis01-functionalrawactor-candidates-rawjsonl): raw actor findings, one record per candidate.
+  - [`docs/analysis/01-functional/normalized/actor-candidates.jsonl`](#docsanalysis01-functionalnormalizedactor-candidatesjsonl): normalized actors, with the required fields and the low-confidence fallback.
+  - [`docs/analysis/01-functional/normalized/feature-candidates.jsonl`](#docsanalysis01-functionalnormalizedfeature-candidatesjsonl): normalized features, and the rule that every record cites at least one `EV-NNNNNN`.
+
 ## Output files
 
 ### File 1: `docs/analysis/01-functional/01-actors.md`
@@ -33,7 +41,7 @@ roles that interact with the application as it exists today.
 
 ## Actor catalog
 
-### A-01 — <Actor name>
+### A-01: <Actor name>
 - **Type**: human | system | inferred
 - **Description**: <1-2 sentences in plain language>
 - **Permissions / scope**: <what this actor can do, at high level>
@@ -44,7 +52,7 @@ roles that interact with the application as it exists today.
 - **Confidence**: high | medium | low
 - **Notes**: <anything ambiguous>
 
-### A-02 — ...
+### A-02: ...
 
 ## Open questions
 - <e.g., "Is there a distinction between 'analyst' and 'data scientist'
@@ -82,7 +90,7 @@ application AS-IS, grouped by bounded context where available.
 
 ## Feature catalog
 
-### F-01 — <Feature name (verb-led, business language)>
+### F-01: <Feature name (verb-led, business language)>
 - **Description**: <1-2 sentences, business language>
 - **Bounded context**: <name or "n/a">
 - **Type**: interactive | automated | hybrid
@@ -94,20 +102,20 @@ application AS-IS, grouped by bounded context where available.
 - **Confidence**: high | medium | low
 - **Notes**: <e.g., "feature is gated behind a feature flag in config.yaml">
 
-### F-02 — ...
+### F-02: ...
 
 ## Actor × Feature matrix
 
 | Actor \ Feature | F-01 | F-02 | F-03 | ... |
 |---|---|---|---|---|
-| A-01 | full | — | read | ... |
-| A-02 | — | full | full | ... |
+| A-01 | full | none | read | ... |
+| A-02 | none | full | full | ... |
 
-Legend: full | read | restricted | — (no access)
+Legend: full | read | restricted | none (no access)
 
 ## Orphans (flag for review)
-- Features without any actor: <list — likely dead code or missing actor>
-- Actors without any feature: <list — likely identification error>
+- Features without any actor: <list, likely dead code or missing actor>
+- Actors without any feature: <list, likely identification error>
 
 ## Open questions
 - <e.g., "Feature F-07 (export to CSV) is reachable from two screens but

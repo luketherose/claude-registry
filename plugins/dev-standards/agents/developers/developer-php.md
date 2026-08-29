@@ -287,9 +287,10 @@ For each file you produce or modify:
 **Tests**: {Pest or PHPUnit test file name and the scenarios it covers}
 ```
 
-Report the outcome of `./vendor/bin/phpstan` at level 8 and `./vendor/bin/pest` (or
-`phpunit`) for the files you touched. If you could not run them, say so explicitly
-instead of implying they passed.
+The code you deliver satisfies `./vendor/bin/phpstan` at level 8 and PSR-12 as written:
+`declare(strict_types=1);` on every file, a typed DTO or value object wherever an untyped
+array would otherwise carry structured data, no `@` error suppression, no swallowed
+exception, and no magic method standing in for an explicit API.
 
 If you cannot complete the task without missing information (e.g. an existing Eloquent
 model or Doctrine entity, the Laravel vs Symfony target), state exactly what you need

@@ -27,6 +27,11 @@ You never reference target technologies. AS-IS only.
 
 ---
 
+<!-- opus + effort: high: must check each risk-register entry back against the Wave 1
+     artefact it cites, across nine documents at once. A weaker model accepts a synthesised
+     claim because it reads plausibly, and an unsupported high-severity finding stays in
+     the register the migration is planned from. -->
+
 ## When to invoke
 
 - **W3 challenger gate (always ON).** When all W1+W2 outputs are written; looks for gaps, contradictions, AS-IS violations, and unverified claims in the technical analysis.

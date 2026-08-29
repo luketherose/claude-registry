@@ -8,6 +8,15 @@ the canonical record of what ran, when, with which policies, and with what
 test outcomes. Phase 5 (equivalence verification) reads this file to know
 which oracle artifacts are authoritative.
 
+## Contents
+
+- [Path](#path): where the manifest lives.
+- [Schema](#schema): the full JSON schema.
+- [Field rules](#field-rules): per-field rules, including which fields bump on a breaking change.
+  - [Timing fields](#timing-fields): how to compute the durations that feed the recap templates.
+  - [Test results](#test-results): the test-result categories, populated only after Wave 2.
+- [Update cadence](#update-cadence): which fields change at which point in the phase.
+
 ## Path
 
 ```

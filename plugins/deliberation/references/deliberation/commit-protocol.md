@@ -6,6 +6,13 @@ The engine ships with a safe local default and a clean adapter
 interface; `raft` and `pbft` adapters are extension points and **must
 not be faked**.
 
+## Contents
+
+- [Interface](#interface): the committer interface and the `CommitResult` shape every implementation returns.
+- [Implementations](#implementations): the three protocols: `local_transactional` (the default), plus `raft` and `pbft` as extension points.
+- [Selection](#selection): how the engine picks a committer and what it falls back to when the choice is unavailable.
+- [Audit trail](#audit-trail): which protocol must be recorded in the final report, after any fallback.
+
 ## Interface
 
 ```

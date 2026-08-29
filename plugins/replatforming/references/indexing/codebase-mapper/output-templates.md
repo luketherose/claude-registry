@@ -9,6 +9,17 @@ tool, never via Bash heredoc/redirect.
 
 ---
 
+## Contents
+
+- [bronze/file-inventory.jsonl (one record per file)](#bronzefile-inventoryjsonl-one-record-per-file): one record per file, with the allowed `category` values.
+- [bronze/large-files.jsonl (one record per large file)](#bronzelarge-filesjsonl-one-record-per-large-file): one record per oversized file, with the `large` / `huge` / `giant` / `generated` thresholds.
+- [bronze/large-file-chunks.jsonl (one record per chunk)](#bronzelarge-file-chunksjsonl-one-record-per-chunk): one record per chunk, each tied to a `source_chunk` entry in the evidence ledger.
+- [bronze/stack.json](#bronzestackjson): the single source of truth for AS-IS stack information, read by every later phase.
+- [Backward-compatible legacy files (02-structure/)](#backward-compatible-legacy-files-02-structure): the `02-structure/` files, written only when the directory already exists.
+- [File 1: `.indexing-kb/02-structure/codebase-map.md`](#file-1-indexing-kb02-structurecodebase-mapmd): the legacy codebase map.
+- [File 2: `.indexing-kb/02-structure/language-stats.md`](#file-2-indexing-kb02-structurelanguage-statsmd): the legacy language statistics.
+- [File 3: `.indexing-kb/02-structure/stack.json` (legacy backward-compat copy)](#file-3-indexing-kb02-structurestackjson-legacy-backward-compat-copy): the legacy copy of the stack manifest.
+
 ## bronze/file-inventory.jsonl (one record per file)
 
 ```json
@@ -138,7 +149,7 @@ status: complete
 |---|---|---|---|---|
 
 ## Entrypoints
-- `<path>` — <reason>
+- `<path>`: <reason>
 
 ## Directory tree (depth 3)
 
@@ -147,7 +158,7 @@ status: complete
 ```
 
 ## Skipped directories
-- `<dir>` — reason
+- `<dir>`: reason
 ````
 
 ---
