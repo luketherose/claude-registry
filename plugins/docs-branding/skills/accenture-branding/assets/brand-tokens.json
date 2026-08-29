@@ -1,0 +1,124 @@
+{
+  "_comment": "Machine-readable Accenture brand tokens. Read this instead of re-deriving the values from the SKILL.md prose. Hex values carry no leading '#' in the openpyxl form; see fills.openpyxl.",
+  "primary": {
+    "purple": {
+      "hex": "#A100FF",
+      "rgb": [
+        161,
+        0,
+        255
+      ]
+    },
+    "purple_dark": {
+      "hex": "#7500C0",
+      "rgb": [
+        117,
+        0,
+        192
+      ]
+    },
+    "purple_darker": {
+      "hex": "#460073",
+      "rgb": [
+        70,
+        0,
+        115
+      ]
+    },
+    "black": {
+      "hex": "#000000",
+      "rgb": [
+        0,
+        0,
+        0
+      ]
+    },
+    "white": {
+      "hex": "#FFFFFF",
+      "rgb": [
+        255,
+        255,
+        255
+      ]
+    },
+    "warm_gray": {
+      "hex": "#96968C",
+      "rgb": [
+        150,
+        150,
+        140
+      ]
+    },
+    "light_gray": {
+      "hex": "#E6E6DC",
+      "rgb": [
+        230,
+        230,
+        220
+      ]
+    }
+  },
+  "extended_purples": {
+    "purple_pink": {
+      "hex": "#B455AA"
+    },
+    "purple_light": {
+      "hex": "#BE82FF"
+    },
+    "purple_lighter": {
+      "hex": "#DCAFFF"
+    }
+  },
+  "data_visualization_only": {
+    "blue": "#0041F0",
+    "cyan": "#00FFFF",
+    "green": "#64FF50",
+    "teal": "#05F0A5",
+    "red": "#FF3246",
+    "pink": "#FF50A0",
+    "orange": "#FF7800",
+    "yellow": "#FFEB32"
+  },
+  "typography": {
+    "body": {
+      "brand": "Graphik",
+      "fallback": "Arial"
+    },
+    "display": {
+      "brand": "GT Sectra Fine",
+      "fallback": "Palatino Linotype"
+    },
+    "sizes_pt": {
+      "cover_title": {
+        "font": "display",
+        "min": 48,
+        "max": 60,
+        "weight": "bold",
+        "colour": "white"
+      },
+      "slide_title": {
+        "font": "body",
+        "min": 26,
+        "max": 28,
+        "weight": "bold",
+        "colour": "black"
+      },
+      "body": {
+        "font": "body",
+        "min": 12,
+        "max": 14,
+        "weight": "regular"
+      },
+      "footer": {
+        "font": "body",
+        "min": 8,
+        "max": 8,
+        "colour": "warm_gray"
+      }
+    }
+  },
+  "slide": {
+    "width_in": 13.33,
+    "height_in": 7.5
+  }
+}

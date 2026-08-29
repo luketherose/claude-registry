@@ -16,6 +16,10 @@ agents apply them consistently.
 
 ## Color Palette
 
+The values below are also in `assets/brand-tokens.json`, in hex and RGB. Read
+that file rather than parsing these tables: it is the same data without the
+prose, and it carries the typography scale and slide dimensions too.
+
 ### Primary (use freely)
 
 | Role | Hex | RGB |
@@ -45,29 +49,14 @@ Red `#FF3246` · Pink `#FF50A0` · Orange `#FF7800` · Yellow `#FFEB32`
 
 ## python-pptx Constants Block
 
-Copy verbatim at the top of any generation script:
+Import `assets/pptx_constants.py` rather than pasting a block into every
+script. It defines `ACC_PURPLE`, `ACC_PURPLE_DARK`, `ACC_PURPLE_DK2`,
+`ACC_PURPLE_PINK`, `ACC_PURPLE_LT`, `ACC_PURPLE_LT2`, `ACC_BLACK`,
+`ACC_WHITE`, `ACC_GRAY`, `ACC_GRAY_LT`, plus `SLIDE_W`, `SLIDE_H`,
+`FONT_BODY` and `FONT_DISPLAY`.
 
-```python
-from pptx.dml.color import RGBColor
-from pptx.util import Inches, Pt
-from pptx.enum.text import PP_ALIGN
-
-ACC_PURPLE      = RGBColor(0xA1, 0x00, 0xFF)
-ACC_PURPLE_DARK = RGBColor(0x75, 0x00, 0xC0)
-ACC_PURPLE_DK2  = RGBColor(0x46, 0x00, 0x73)
-ACC_PURPLE_PINK = RGBColor(0xB4, 0x55, 0xAA)
-ACC_PURPLE_LT   = RGBColor(0xBE, 0x82, 0xFF)
-ACC_PURPLE_LT2  = RGBColor(0xDC, 0xAF, 0xFF)
-ACC_BLACK       = RGBColor(0x00, 0x00, 0x00)
-ACC_WHITE       = RGBColor(0xFF, 0xFF, 0xFF)
-ACC_GRAY        = RGBColor(0x96, 0x96, 0x8C)
-ACC_GRAY_LT     = RGBColor(0xE6, 0xE6, 0xDC)
-
-SLIDE_W      = Inches(13.33)
-SLIDE_H      = Inches(7.50)
-FONT_BODY    = "Arial"
-FONT_DISPLAY = "Palatino Linotype"
-```
+When a value changes, change `assets/brand-tokens.json` first and bring the
+other two assets into step with it.
 
 ---
 
@@ -111,60 +100,8 @@ FONT_DISPLAY = "Palatino Linotype"
 
 ## CSS Template for HTML → PDF
 
-```css
-* { box-sizing: border-box; margin: 0; padding: 0; }
-@page { size: A4; margin: 0; }
-body { font-family: Arial, sans-serif; font-size: 11pt; color: #000; background: #fff; }
-
-.cover {
-  background: #000;
-  color: #fff;
-  min-height: 100vh;
-  padding: 80px;
-  border-left: 10px solid #A100FF;
-  page-break-after: always;
-}
-.cover h1 {
-  font-family: 'Palatino Linotype', Georgia, serif;
-  font-size: 48pt;
-  font-weight: bold;
-  margin-bottom: 16px;
-}
-.cover .subtitle { font-size: 18pt; color: #DCAFFF; }
-.cover .meta { font-size: 11pt; color: #96968C; margin-top: 40px; }
-
-.section { padding: 48px 80px; page-break-inside: avoid; }
-h2 {
-  font-size: 20pt;
-  font-weight: bold;
-  border-bottom: 3px solid #A100FF;
-  padding-bottom: 8px;
-  margin-bottom: 24px;
-}
-h3 { font-size: 14pt; color: #7500C0; font-weight: bold; margin: 24px 0 12px; }
-h4 { font-size: 12pt; color: #460073; font-weight: bold; margin: 16px 0 8px; }
-p { margin-bottom: 12px; line-height: 1.6; }
-ul, ol { padding-left: 24px; margin-bottom: 12px; }
-li { margin-bottom: 6px; line-height: 1.6; }
-
-pre, code { font-family: 'Courier New', monospace; font-size: 9.5pt; }
-pre {
-  background: #F4F0FF;
-  border-left: 4px solid #A100FF;
-  padding: 16px 20px;
-  margin: 12px 0;
-  white-space: pre-wrap;
-}
-code { background: #F4F0FF; padding: 1px 4px; }
-
-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 10pt; }
-th { background: #A100FF; color: #fff; font-weight: bold; padding: 8px 12px; text-align: left; }
-td { padding: 8px 12px; border-bottom: 1px solid #E6E6DC; vertical-align: top; }
-tr:nth-child(even) td { background: #F9F9F6; }
-
-.callout { border-left: 4px solid #A100FF; background: #F4F0FF; padding: 12px 16px; margin: 16px 0; }
-.footer-line { font-size: 9pt; color: #96968C; border-top: 1px solid #E6E6DC; padding: 16px; text-align: center; }
-```
+The stylesheet is `assets/accenture.css`. Link it from the generated HTML
+rather than inlining a copy, so a brand change lands in one place.
 
 ---
 
