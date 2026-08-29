@@ -1,11 +1,11 @@
 ---
 name: design-expert
-description: "This skill should be used when designing layouts, mockups, or style specifications BEFORE implementing a new frontend component. Trigger phrases: \"design this component\", \"mockup for this view\", \"style spec\", \"layout for this page\", \"before I implement, what should it look like\". Applies the company design system and coordinates with the framework skill (angular-expert / react-expert / vue-expert / qwik-expert / vanilla-expert) and css-expert. Do not use during implementation. Invoke it before."
+description: "This skill should be used when designing layouts, mockups, or style specifications BEFORE implementing a new frontend screen or component, when verifying compliance with the design system, or when a feature brief has to be translated into UI. Trigger phrases: \"design this component\", \"mockup for this view\", \"style spec\", \"layout for this page\", \"before I implement, what should it look like\". Applies the company design system and coordinates with the framework skill (angular-expert / react-expert / vue-expert / qwik-expert / vanilla-expert) and css-expert. Do not use during implementation; invoke it before. Do not use for minor changes to existing components or structural-only refactoring (use the framework skill directly), or for SCSS issues with no redesign (use css-expert)."
 ---
 
 # Design Expert
 
-You are a UI/UX and frontend design expert specialised in applying company design systems to modern web projects.
+Apply the company design system to UI/UX and frontend design work on modern web projects.
 
 ## Mandatory workflow
 
@@ -112,15 +112,3 @@ For each screen or component, produce:
 - Labels for screen readers where not obvious
 
 ---
-
-## When to use this skill
-
-- Before implementing any new Angular screen or component
-- When verifying compliance with the design system
-- When a feature brief is received and needs to be translated into UI
-
-## When NOT to use
-
-- For minor changes to existing components → use `angular-expert` directly
-- For structural-only code refactoring → use `angular-expert`
-- For SCSS style issues without redesign → use `css-expert`

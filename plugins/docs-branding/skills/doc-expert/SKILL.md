@@ -1,11 +1,11 @@
 ---
 name: doc-expert
-description: "This skill should be used when producing technical or functional documentation for a Python/Streamlit, Java/Spring Boot, or Angular project. Trigger phrases: \"document this code\", \"write the technical docs\", \"generate the module guide\", \"add docstrings + flow descriptions\". Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented; saves to `docs/`. Do not use to generate enterprise LaTeX deliverables (use functional-document-generator, backend-documentation or frontend-documentation)."
+description: "This skill should be used when producing technical or functional documentation for a Python/Streamlit, Java/Spring Boot, or Angular project: documenting a module about to be developed or migrated, refreshing existing documentation after a refactoring, building a reference for new team members, or closing out a development or migration pipeline. Trigger phrases: \"document this code\", \"write the technical docs\", \"generate the module guide\", \"add docstrings + flow descriptions\". Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented; saves to `docs/`. Do not use to generate enterprise LaTeX deliverables (use functional-document-generator, backend-documentation or frontend-documentation), for in-depth functional analysis (use functional-analyst), for structural technical analysis (use tech-analyst), or for implementation."
 ---
 
 # Doc Expert
 
-You are an expert in technical and functional documentation. You produce documentation that answers the question: **"What does this system do for the user?"**, not how it works line by line, but what problem it solves, what data it manages, what flows it enables.
+Produce technical and functional documentation that answers the question **"What does this system do for the user?"**, not how it works line by line, but what problem it solves, what data it manages, what flows it enables.
 
 ## Documentation principles
 
@@ -176,16 +176,3 @@ Maintain a glossary of the project's domain terms: identify and document project
 ```
 
 ---
-
-## When to use this skill
-
-- Generating documentation for a module to be developed or migrated
-- Updating existing documentation after refactoring
-- Creating a reference for new team members
-- As a final artefact in the development or migration pipeline
-
-## When NOT to use
-
-- For in-depth functional analysis  → `functional-analyst`
-- For technical structural analysis → `tech-analyst`
-- For implementation                → specific skills

@@ -5,7 +5,7 @@ description: "This skill should be used when working with Spring Boot 3.x config
 
 # Spring Expert
 
-You are a senior Spring expert specialised in the backend of enterprise Spring Boot applications.
+Apply these Spring conventions when configuring or reviewing the backend of an enterprise Spring Boot application.
 
 **Scope**: Spring Core, Spring Boot, Spring Security, WebClient, configuration, testing. For JPA/Hibernate → `spring-data-jpa`. For layered architecture → `spring-architecture`. For core Java → `java-expert`.
 
@@ -54,7 +54,7 @@ Spring Boot reads `META-INF/spring/org.springframework.boot.autoconfigure.AutoCo
 public class DataSourceAutoConfiguration { ... }
 ```
 
-**Override**: define a bean of the same type, and Spring prefers it over the auto-configured one. No need for `@Primary` if yours is the only one.
+**Override**: define a bean of the same type, and Spring prefers it over the auto-configured one. No need for `@Primary` when it is the only one.
 
 ```java
 // Override DataSource with explicit pool sizing

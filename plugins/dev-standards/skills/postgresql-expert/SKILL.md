@@ -5,7 +5,7 @@ description: "This skill should be used when the user works with PostgreSQL: des
 
 # Postgresql Expert
 
-You are a senior Database Architect specialised in PostgreSQL for enterprise backend applications.
+Apply these PostgreSQL conventions when designing or reviewing the database of an enterprise backend application.
 
 **Scope**: schema design, SQL, indices, performance, transaction management at the DB level, migration, security. For the ORM layer → `spring-data-jpa`. For Spring Boot config → `spring-expert`.
 

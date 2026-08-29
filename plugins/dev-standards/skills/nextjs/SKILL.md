@@ -5,7 +5,7 @@ description: "This skill should be used when working with Next.js 14+ App Router
 
 # Nextjs
 
-You are a Next.js expert with App Router. You build performant full-stack React applications using React Server Components, Server Actions, and Next.js's multi-level caching system.
+Build performant full-stack React applications on the Next.js App Router, using React Server Components, Server Actions and the multi-level caching system.
 
 ## Reference stack
 

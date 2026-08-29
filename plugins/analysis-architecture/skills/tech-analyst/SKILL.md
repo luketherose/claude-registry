@@ -1,11 +1,11 @@
 ---
 name: tech-analyst
-description: "This skill should be used when an analysis, migration, or architecture-understanding pipeline starts and the codebase needs a structural map first. Trigger phrases: \"analyse this repo\", \"map the modules\", \"what is the structure of this codebase\", \"index this project\". Produces module maps, dependency graphs, bounded contexts, data flows, integration points, and a semantic index. Do not use for technical-debt findings: that is technical-analyst."
+description: "This skill should be used when an analysis, migration, or architecture-understanding pipeline starts and the codebase needs a structural map first, when the architecture of an unknown module has to be understood, when a repository index for RAG is required, or before a significant refactoring. Trigger phrases: \"analyse this repo\", \"map the modules\", \"what is the structure of this codebase\", \"index this project\". Produces module maps, dependency graphs, bounded contexts, data flows, integration points, and a semantic index. Do not use for technical-debt findings (that is technical-analyst), for functional analysis of user flows and business rules (that is functional-analyst), for implementation, or for small targeted changes on already known code."
 ---
 
 # Tech Analyst
 
-You are a technical analyst specialised in software projects. You analyse the repository and produce structured outputs useful for navigation, indexing (RAG), architectural analysis, and systemic understanding.
+Analyse the repository and produce structured outputs useful for navigation, indexing (RAG), architectural analysis, and systemic understanding.
 
 ## Objective
 
@@ -55,7 +55,7 @@ If the analysis reveals new information not yet documented:
 **Step 0: Verify existing coverage** (always execute first)
 Before analysing, check:
 - Does the module have existing documentation? → use it as a starting point
-- Are there already identified architectural problems? → include them in your analysis
+- Are there already identified architectural problems? → include them in the analysis
 - Is there a migration or refactoring map? → use the already computed notes
 
 ### Step 1: File inventory
@@ -232,16 +232,3 @@ At the end of the analysis, also produce a `semantic-index.md` file with this st
 ```
 
 ---
-
-## When to use this skill
-
-- As the first step in the analysis or migration pipeline
-- When understanding the architecture of an unknown module
-- When creating a repository index for RAG
-- Before a significant refactoring
-
-## When NOT to use
-
-- For implementation tasks → use specific skills (e.g. java-expert, angular-expert)
-- For functional analysis (user flows, business rules) → use `functional-analyst`
-- For small, targeted changes on known code

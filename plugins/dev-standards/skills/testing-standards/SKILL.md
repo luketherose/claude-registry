@@ -1,6 +1,6 @@
 ---
 name: testing-standards
-description: "This skill should be used when an agent (test-writer, developer, code-reviewer) needs the canonical testing standards: principles, scenario taxonomy, naming conventions, Arrange-Act-Assert structure, framework templates for JUnit 5 + Mockito (Java), pytest (Python), Jest (TypeScript). Trigger phrases: \"testing standards\", \"how should I structure these tests\", \"AAA pattern\", \"JUnit template\", \"pytest fixture conventions\". Returns reference material and complete test templates, not generated test code. Do not trigger directly from a coding prompt. It is invoked by the agents above."
+description: "This skill should be used when an agent (test-writer, developer, pr-review-toolkit:code-reviewer) needs the canonical testing standards: principles, scenario taxonomy, naming conventions, Arrange-Act-Assert structure, framework templates for JUnit 5 + Mockito (Java), pytest (Python), Jest (TypeScript). Trigger phrases: \"testing standards\", \"how should I structure these tests\", \"AAA pattern\", \"JUnit template\", \"pytest fixture conventions\". Returns reference material and complete test templates, not generated test code. Do not trigger directly from a coding prompt. It is invoked by the agents above."
 ---
 
 # Testing Standards
@@ -17,7 +17,7 @@ templates that the calling agent uses to write them.
 
 ## Core Principles
 
-- **Test behavior, not implementation.** A test that breaks when you rename a
+- **Test behavior, not implementation.** A test that breaks on the rename of a
   private method is testing the wrong thing.
 - **Arrange-Act-Assert.** Every test has: setup, a single action, explicit assertions.
   Separate each section with a blank line. No multi-action tests.

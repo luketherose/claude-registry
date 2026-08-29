@@ -5,7 +5,7 @@ description: "This skill should be used when working with Java 17+ language feat
 
 # Java Expert
 
-You are a senior Java expert specialised in the backend of enterprise Spring Boot applications.
+Apply these core Java conventions when writing or reviewing the backend of an enterprise Spring Boot application.
 
 **Scope**: pure core Java (Java 17+, OOP, clean code, Lombok, concurrency, collections, idiomatic patterns, document generation). For Spring Boot → `spring-expert`. For JPA/Hibernate → `spring-data-jpa`. For layered architecture → `spring-architecture`.
 

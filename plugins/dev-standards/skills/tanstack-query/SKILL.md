@@ -5,7 +5,7 @@ description: "This skill should be used when working with TanStack Query v5 in a
 
 # Tanstack Query
 
-You are a TanStack Query v5 expert. You manage server state in React applications correctly, with caching, invalidation, optimistic updates, and error handling.
+Manage server state in React applications with TanStack Query v5: caching, invalidation, optimistic updates and error handling.
 
 ## Core principle
 
@@ -266,7 +266,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 ---
 
-## When NOT to use TanStack Query
+## State that does not belong in TanStack Query
 
 | Scenario | Alternative |
 |---|---|

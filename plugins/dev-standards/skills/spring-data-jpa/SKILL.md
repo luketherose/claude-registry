@@ -5,7 +5,7 @@ description: "This skill should be used when working with JPA/Hibernate inside a
 
 # Spring Data Jpa
 
-You are a senior JPA/Hibernate expert specialised in the backend of enterprise Spring Boot applications.
+Apply these JPA and Hibernate conventions when working on the persistence layer of an enterprise Spring Boot application: entity design, relations, fetch strategies, N+1 resolution, transaction boundaries, query optimisation, caching.
 
 **Scope**: entity design, JPA relations, fetch strategies, N+1, transactions, query optimisation, caching. For Spring Boot config → `spring-expert`. For layered architecture → `spring-architecture`. For core Java → `java-expert`.
 
@@ -14,6 +14,29 @@ You are a senior JPA/Hibernate expert specialised in the backend of enterprise S
 - Spring Data JPA 3.x, Hibernate 6.x (ORM)
 - PostgreSQL 15 (production), H2 (testing)
 - `@EntityListeners(AuditingEntityListener.class)` for created/updated timestamps
+
+---
+
+## Quick reference: frequent decisions
+
+| Situation | Correct choice |
+|---|---|
+| Primary key generation on PostgreSQL | `GenerationType.IDENTITY`, not `SEQUENCE` by default |
+| Enum persisted on an entity | `@Enumerated(EnumType.STRING)`, never `ORDINAL` |
+| `equals` / `hashCode` on an entity | `@EqualsAndHashCode(of = "id")`, never relations or mutable fields |
+| `toString` on an entity with collections | `@ToString(exclude = {...})` on every lazy collection |
+| Fetch type on `@OneToMany` | `LAZY`, overridden per query with `JOIN FETCH` or `@EntityGraph` |
+| Fetch type on `@ManyToOne` / `@OneToOne` | `LAZY`, except towards small entities always required |
+| Same fetch graph needed in several repository methods | `@EntityGraph`, not a repeated `JOIN FETCH` |
+| Many lazy collections loaded one by one | `@BatchSize(size = 20)` on the relation |
+| Many-to-many relation | Explicit join entity, never a bare `@ManyToMany` |
+| Query returning a subset of columns | Projection interface or constructor DTO, not the full entity |
+| Query that can return many rows | `findAll(Pageable)`, never bare `findAll()` |
+| `@Transactional` placement | Public service methods only. A private method is not intercepted |
+| Read-only service method | `@Transactional(readOnly = true)` as the class default |
+| UPDATE or DELETE in JPQL | `@Modifying` plus `@Transactional`, and `clearAutomatically = true` to drop the L1 cache |
+| Inserting thousands of rows | `saveAll` in chunks with `hibernate.jdbc.batch_size` configured |
+| Entity returned from a controller | Never. Map to a DTO in the controller layer |
 
 ---
 
@@ -68,353 +91,44 @@ public class Company {
 ```
 
 **Entity rules:**
-- `@NoArgsConstructor` is mandatory for Hibernate: do not make it `private` if you use proxying (Hibernate subclasses the entity)
+- `@NoArgsConstructor` is mandatory for Hibernate: do not make it `private` when proxying is in use (Hibernate subclasses the entity)
 - `equals`/`hashCode` based on `id` (business key), not on mutable fields or relations
-- `@Enumerated(EnumType.STRING)` always: ORDINAL breaks if you reorder the enum
+- `@Enumerated(EnumType.STRING)` always: ORDINAL breaks when the enum is reordered
 - Indices declared in `@Table`: Hibernate creates them with `ddl-auto=create`/`update`
 
 ---
 
-## Relations: correct mapping
+## Relations and fetch strategies
 
-### One-to-Many / Many-to-One (bidirectional)
+Map `@OneToMany` / `@ManyToOne` bidirectionally with the owning side on the `@ManyToOne`, and keep both ends in sync through helper methods on the parent. Model a many-to-many as an explicit join entity, never as a bare `@ManyToMany`, so the association can carry its own columns and lifecycle.
 
-```java
-// "Many" side — FK owner
-@Entity
-public class Order {
-    @ManyToOne(fetch = FetchType.LAZY) // LAZY always on ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
-}
+N+1 is the single most common JPA defect: one query for the parents followed by one query per parent for the collection. Detect it with `spring.jpa.show-sql=true` in dev, and resolve it with `JOIN FETCH` in JPQL, a reusable `@EntityGraph`, or `@BatchSize` on the relation. Do not reach for `FetchType.EAGER`, which loads the collection even when nothing needs it.
 
-// "One" side — helper methods to maintain consistency
-@Entity
-public class Company {
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orders = new ArrayList<>();
-
-    public void addOrder(Order order) {
-        orders.add(order);
-        order.setCompany(this);
-    }
-
-    public void removeOrder(Order order) {
-        orders.remove(order);
-        order.setCompany(null);
-    }
-}
-```
-
-**`orphanRemoval = true`**: when you remove an Order from the list, Hibernate executes the DELETE automatically. Use only when the "many" cannot exist without the "one".
-
-### Many-to-Many: use an explicit join entity
-
-```java
-// ❌ @ManyToMany with @JoinTable — does not allow attributes on the relation
-@ManyToMany
-@JoinTable(name = "company_tags", ...)
-private Set<Tag> tags;
-
-// ✅ Explicit join entity — allows extra attributes (assignment date, assigned by, etc.)
-@Entity
-@Table(name = "company_tags")
-public class CompanyTag {
-    @EmbeddedId
-    private CompanyTagId id;
-
-    @ManyToOne(fetch = FetchType.LAZY) @MapsId("companyId")
-    private Company company;
-
-    @ManyToOne(fetch = FetchType.LAZY) @MapsId("tagId")
-    private Tag tag;
-
-    @Column(name = "assigned_at")
-    private LocalDateTime assignedAt;
-}
-```
+Full mappings, generated SQL, the JOIN FETCH versus EntityGraph trade-off and the EAGER exception: see [references/relations-and-fetching.md](references/relations-and-fetching.md).
 
 ---
 
-## Fetch strategies: N+1 is problem #1
+## Repository queries and projections
 
-### N+1 diagnosis
+Derived query methods cover the simple cases. Beyond that, write explicit JPQL with `@Query` and named parameters, page every query that can grow, and return a projection (interface-based or constructor DTO) whenever only a subset of the entity's fields is needed.
 
-```
-// JPA logging (dev): spring.jpa.show-sql=true
-// Symptom: 1 query for Company + N queries for orders
-SELECT * FROM companies WHERE status = 'ACTIVE';      -- 1 query
-SELECT * FROM orders WHERE company_id = 1;             -- N queries
-SELECT * FROM orders WHERE company_id = 2;
-...
-```
-
-### Solutions for N+1
-
-```java
-// 1. JOIN FETCH in JPQL — for a single query with a collection
-@Query("SELECT DISTINCT c FROM Company c LEFT JOIN FETCH c.orders WHERE c.status = :status")
-List<Company> findActiveWithOrders(@Param("status") CompanyStatus status);
-
-// 2. @EntityGraph — declarative, reusable
-@NamedEntityGraph(name = "Company.withOrders",
-    attributeNodes = @NamedAttributeNode("orders"))
-@Entity
-public class Company { ... }
-
-// In the repository
-@EntityGraph("Company.withOrders")
-Optional<Company> findWithOrdersById(Long id);
-
-// 3. @BatchSize — Hibernate loads N lazy in batches instead of one-by-one
-@OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
-@BatchSize(size = 20)
-private List<Order> orders;
-```
-
-**Trade-off JOIN FETCH vs EntityGraph**: same generated SQL. JOIN FETCH is explicit in the query, EntityGraph is reusable across multiple repository methods. Use EntityGraph when the same graph is needed in multiple places.
-
-**When NOT to use EAGER fetch**: `FetchType.EAGER` always loads the collection even when it is not needed, so avoid it on relations with many elements. Exception: `@ManyToOne` and `@OneToOne` towards small entities that are always required.
-
----
-
-## Repository with custom queries
-
-```java
-public interface CompanyRepository extends JpaRepository<Company, Long> {
-
-    // Derived query — for simple conditions
-    Optional<Company> findByExternalCode(String externalCode);
-    List<Company> findByStatusOrderByNameAsc(CompanyStatus status);
-
-    // JPQL — for more complex logic, type-safe
-    @Query("""
-        SELECT c FROM Company c
-        WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :query, '%'))
-          AND c.status = 'ACTIVE'
-        ORDER BY c.name
-        """)
-    List<Company> searchByName(@Param("query") String query);
-
-    // JPQL with JOIN FETCH
-    @Query("""
-        SELECT DISTINCT c FROM Company c
-        LEFT JOIN FETCH c.orders o
-        WHERE c.id = :id
-        """)
-    Optional<Company> findByIdWithOrders(@Param("id") Long id);
-
-    // Native query — for PostgreSQL-specific features (ANY, JSONB, full-text)
-    @Query(value = "SELECT * FROM companies WHERE external_code = ANY(:codes)",
-           nativeQuery = true)
-    List<Company> findAllByExternalCodes(@Param("codes") String[] codes);
-
-    // Projection — only the required fields (avoids hydrating the entire entity)
-    @Query("SELECT new com.example.myapp.dto.CompanySummary(c.id, c.name, c.externalCode) FROM Company c WHERE c.status = 'ACTIVE'")
-    List<CompanySummary> findActiveSummaries();
-
-    // Pagination
-    @Query("SELECT c FROM Company c WHERE c.status = :status")
-    Page<Company> findByStatus(@Param("status") CompanyStatus status, Pageable pageable);
-}
-```
-
-### Projections: interface-based (alternative to constructor DTO)
-
-```java
-public interface CompanyProjection {
-    Long getId();
-    String getName();
-    String getExternalCode();
-}
-
-// In the repository — Spring Data automatically generates the proxy
-List<CompanyProjection> findProjectedByStatus(CompanyStatus status);
-```
-
-**When to use a projection**: when entities are large but the query only needs to return 3–4 fields. Avoids hydrating the entire entity just to serialise it partially.
+Query catalogue and both projection styles: see [references/queries-and-projections.md](references/queries-and-projections.md).
 
 ---
 
 ## Transaction management
 
-```java
-// Service: transaction on the public method
-@Service
-@RequiredArgsConstructor
-@Transactional(readOnly = true) // read-only default for the service — override on writes
-public class CompanyServiceImpl implements CompanyService {
+`@Transactional` goes on public service methods. Spring's proxy does not intercept a private method or a self-invocation, so the annotation is silently inert there. Default the service class to `@Transactional(readOnly = true)` and override on the writing methods. Keep transactions short and free of external I/O.
 
-    private final CompanyRepository companyRepository;
-
-    // Inherits readOnly = true from the class
-    public CompanyResponse getById(Long id) {
-        return companyRepository.findById(id)
-            .map(companyMapper::toResponse)
-            .orElseThrow(() -> new EntityNotFoundException("Company", id));
-    }
-
-    @Transactional // read-write — overrides the default
-    public CompanyResponse create(CompanyCreateRequest request) {
-        if (companyRepository.findByVatNumber(request.vatNumber()).isPresent()) {
-            throw new BusinessRuleViolationException(
-                "Company already exists with VAT: " + request.vatNumber());
-        }
-        Company company = companyMapper.toEntity(request);
-        return companyMapper.toResponse(companyRepository.save(company));
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        Company company = companyRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Company", id));
-        companyRepository.delete(company);
-    }
-}
-```
-
-**`readOnly = true`**: Hibernate skips dirty checking and flush (~20% less overhead on read-only queries). Set it as the default on the service, with explicit override on write methods.
-
-### Propagation: when it changes
-
-```java
-// REQUIRED (default): join the existing transaction or create a new one
-@Transactional(propagation = Propagation.REQUIRED)
-
-// REQUIRES_NEW: always a new transaction — useful for a separate audit log
-@Transactional(propagation = Propagation.REQUIRES_NEW)
-public void saveAuditEvent(AuditEvent event) { ... } // does not roll back with the parent transaction
-
-// NOT_SUPPORTED: suspends the current transaction — for operations that must not run in a transaction
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
-```
-
-### Common mistakes with @Transactional
-
-```java
-// ❌ @Transactional on a private method — Spring proxy does not intercept it
-@Transactional
-private void internalSave(Company c) { ... } // transaction NOT active
-
-// ❌ Self-invocation — bypasses the proxy
-@Service
-public class CompanyService {
-    @Transactional
-    public void processAll() {
-        this.save(company); // calls directly, not via proxy → @Transactional ignored
-    }
-
-    @Transactional
-    public void save(Company c) { ... }
-}
-
-// ✅ Inject the proxy (via self-injection or refactoring into separate methods)
-```
+Propagation modes, rollback rules and the full list of silent failures: see [references/transactions.md](references/transactions.md).
 
 ---
 
-## Performance: real optimisations
+## Performance and auditing
 
-### Bulk operations
+Configure `hibernate.jdbc.batch_size` and insert with `saveAll` in chunks rather than a loop of single saves. Express bulk updates and deletes as `@Modifying` JPQL so the rows never load into the persistence context. Enable the Hibernate second-level cache only for genuinely read-mostly reference data. Wire `@EnableJpaAuditing` plus `@EntityListeners(AuditingEntityListener.class)` so `createdAt` and `updatedAt` are never set by hand.
 
-```java
-// ❌ Loop of individual saves — N separate INSERTs
-companies.forEach(companyRepository::save);
-
-// ✅ saveAll — Hibernate can use batch insert if configured
-companyRepository.saveAll(companies);
-
-// application.yml — enable batching
-spring:
-  jpa:
-    properties:
-      hibernate:
-        jdbc:
-          batch_size: 50
-        order_inserts: true
-        order_updates: true
-```
-
-### Bulk update/delete without loading entities
-
-```java
-// ❌ Loads all entities to update a single field
-List<Company> companies = companyRepository.findAll();
-companies.forEach(c -> c.setStatus(CompanyStatus.INACTIVE));
-// Hibernate generates N separate UPDATEs
-
-// ✅ JPQL bulk update — a single query
-@Modifying
-@Transactional
-@Query("UPDATE Company c SET c.status = :status WHERE c.createdAt < :cutoff")
-int bulkDeactivate(@Param("status") CompanyStatus status, @Param("cutoff") LocalDateTime cutoff);
-```
-
-**`@Modifying`**: mandatory for UPDATE/DELETE JPQL. Also add `clearAutomatically = true` if you want the first-level cache to be cleared after the bulk update.
-
-### Second-level cache (Hibernate L2)
-
-```java
-// Cacheable entity
-@Entity
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class StatusType { ... } // stable lookup entity — good candidate for L2
-
-// application.yml — Caffeine as provider
-spring:
-  jpa:
-    properties:
-      hibernate:
-        cache:
-          use_second_level_cache: true
-          region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
-```
-
-**L2 candidates**: lookup entities (statuses, types, configurations) that change rarely. **Do not cache** high-write-volume transactional entities.
-
----
-
-## Automatic auditing
-
-```java
-@SpringBootApplication
-@EnableJpaAuditing
-public class MyApplication { ... }
-
-// Reusable base entity
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
-public abstract class AuditableEntity {
-
-    @CreatedDate
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @CreatedBy
-    @Column(name = "created_by", updatable = false, length = 50)
-    private String createdBy;
-
-    @LastModifiedBy
-    @Column(name = "updated_by", length = 50)
-    private String updatedBy;
-}
-
-// AuditorAware implementation — reads user from SecurityContext
-@Component
-public class SpringSecurityAuditorAware implements AuditorAware<String> {
-
-    @Override
-    public Optional<String> getCurrentAuditor() {
-        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-            .filter(Authentication::isAuthenticated)
-            .map(Authentication::getName);
-    }
-}
-```
+Batch configuration, bulk statement templates, L2 cache setup and the full auditing wiring: see [references/performance-and-auditing.md](references/performance-and-auditing.md).
 
 ---
 
@@ -425,7 +139,7 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
 | `FetchType.EAGER` on collections | Always loads, even when not needed | `LAZY` + `JOIN FETCH`/`@EntityGraph` where necessary |
 | `@Data` on entities with relations | `toString()`/`equals()` traverse lazy → `LazyInitializationException` / loop | `@EqualsAndHashCode(of="id")` + `@ToString(exclude=...)` |
 | `@Transactional` on private methods | Proxy does not intercept → no transaction | Only on `public` methods |
-| `EnumType.ORDINAL` | Breaks if you reorder the enum | `EnumType.STRING` always |
+| `EnumType.ORDINAL` | Breaks when the enum is reordered | `EnumType.STRING` always |
 | `findAll()` without pagination | OOM on large tables | `findAll(Pageable)` |
 | Undetected N+1 | Query explosion in production | `show-sql=true` in dev, profiler in staging |
 | Bulk update with loop of saves | N queries instead of 1 | `@Modifying` JPQL bulk + `saveAll` for inserts |
@@ -446,3 +160,10 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
 - [ ] Projections for queries that use only a subset of entity fields
 - [ ] `batch_size` configured in `application.yml` for bulk insert/update
 - [ ] Indices declared in `@Table` for columns used in `WHERE`/`JOIN`
+
+## Detailed references
+
+- **Relation mappings and the full N+1 diagnosis and resolution toolkit**: see [references/relations-and-fetching.md](references/relations-and-fetching.md)
+- **Custom repository queries and both projection styles**: see [references/queries-and-projections.md](references/queries-and-projections.md)
+- **Transaction placement, propagation modes and silent failures**: see [references/transactions.md](references/transactions.md)
+- **Bulk operations, second-level cache and automatic auditing**: see [references/performance-and-auditing.md](references/performance-and-auditing.md)

@@ -5,7 +5,7 @@ description: "This skill should be used when a dependency conflict blocks progre
 
 # Dependency Resolver
 
-You are an expert in resolving dependency mismatches. This is a **support skill**: intervene only when a dependency problem is blocking the work of another skill.
+Resolve dependency mismatches. This is a **support skill**: intervene only when a dependency problem is blocking the work of another skill.
 
 ## When to activate this skill
 

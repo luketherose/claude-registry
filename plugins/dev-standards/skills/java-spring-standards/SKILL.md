@@ -1,6 +1,6 @@
 ---
 name: java-spring-standards
-description: "This skill should be used when an agent (developer-java, code-reviewer, test-writer) needs the canonical Java/Spring Boot standards: package structure, layering rules, DI, JUnit 5 + Mockito + Testcontainers, RFC 7807 ProblemDetail, SLF4J + MDC logging, Spring Security 6 baseline, Micrometer observability, and Maven conventions. Trigger phrases: \"Spring standards\", \"review this Spring code\", \"how should I structure this Spring module\". Returns reference material, not code. Do not trigger directly from a coding prompt. Use spring-expert (config), spring-architecture (layering), or spring-data-jpa (ORM)."
+description: "This skill should be used when an agent (developer-java, pr-review-toolkit:code-reviewer, test-writer) needs the canonical Java/Spring Boot standards: package structure, layering rules, DI, JUnit 5 + Mockito + Testcontainers, RFC 7807 ProblemDetail, SLF4J + MDC logging, Spring Security 6 baseline, Micrometer observability, and Maven conventions. Trigger phrases: \"Spring standards\", \"review this Spring code\", \"how should I structure this Spring module\". Returns reference material, not code. Do not trigger directly from a coding prompt. Use spring-expert (config), spring-architecture (layering), or spring-data-jpa (ORM)."
 ---
 
 # Java Spring Standards
@@ -10,7 +10,7 @@ standards used by this team. Apply the section of
 the standard with enough precision that the calling agent can apply it without
 ambiguity.
 
-For every standard you return:
+For every standard returned:
 1. The rule (stated precisely)
 2. The rationale (one sentence)
 3. A minimal concrete example where the rule is non-obvious
@@ -90,306 +90,55 @@ dependency in the project's build file.
 
 ---
 
-## Testing Standards
+## Testing standards
 
-### Unit tests (no Spring context)
-Framework: JUnit 5 + Mockito. Must not start a Spring context.
+JUnit 5 plus Mockito for unit tests, which must not start a Spring context.
+`@SpringBootTest` plus Testcontainers plus `@Transactional` (rollback after each)
+for integration tests. `@WebMvcTest` with MockMvc and a mocked service for
+controller slices. Name every test method `{method}_{condition}_{expectedOutcome}`
+with no `test` prefix, and structure the body Arrange-Act-Assert. JaCoCo enforces
+a 70% line-coverage floor in CI.
 
-```java
-@ExtendWith(MockitoExtension.class)
-class OrderServiceTest {
-    @Mock private OrderRepository orderRepository;
-    @Mock private PaymentService paymentService;
-    @InjectMocks private OrderService orderService;
-
-    @Test
-    void createOrder_whenProductAvailable_shouldSaveAndReturnOrder() {
-        // Arrange
-        // Act
-        // Assert
-    }
-}
-```
-
-Test method naming: `{method}_{condition}_{expectedOutcome}`. No `test` prefix.
-
-### Integration tests (Spring context + real DB)
-Framework: `@SpringBootTest` + Testcontainers + `@Transactional` (rollback after each).
-
-```java
-@SpringBootTest
-@ActiveProfiles("test")
-@Transactional
-class OrderRepositoryIntegrationTest {
-    @Autowired private OrderRepository orderRepository;
-    // Testcontainers PostgreSQL configured via application-test.yml
-}
-```
-
-### Controller tests (slice)
-`@WebMvcTest` + `@MockBean` for service layer.
-
-```java
-@WebMvcTest(OrderController.class)
-class OrderControllerTest {
-    @Autowired private MockMvc mockMvc;
-    @MockBean private OrderService orderService;
-
-    @Test
-    void createOrder_withValidRequest_shouldReturn201() throws Exception {
-        mockMvc.perform(post("/api/v1/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""{"productId": 1, "quantity": 2}"""))
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.orderId").exists());
-    }
-}
-```
-
-### Coverage expectations
-- Service business logic: full branch coverage
-- Controllers: test all HTTP status codes (200, 201, 400, 404, 409, 500)
-- Custom `@Query` methods: integration test for each
-- Exception handlers: test each handler method
-- JaCoCo minimum: 70% line coverage enforced in CI
+Full templates for all three tiers and the per-layer coverage expectations: see [references/testing.md](references/testing.md).
 
 ---
 
-## Error Handling (RFC 7807)
+## Error handling (RFC 7807)
 
-### Exception hierarchy
+Every service throws from a typed exception hierarchy rooted in a single
+application exception. A `@RestControllerAdvice` maps each type to an RFC 7807
+`ProblemDetail` carrying `type`, `title`, `status`, `detail` and `instance`.
+Never swallow an exception, never log and rethrow at the same layer, never expose
+a stack trace or an internal class name in an API response, and never use an
+exception for flow control. Return `Optional<T>` for the absent case instead.
 
-```java
-public abstract class ApplicationException extends RuntimeException {
-    private final String errorCode;
-    protected ApplicationException(String errorCode, String message) {
-        super(message);
-        this.errorCode = errorCode;
-    }
-}
-
-public class ResourceNotFoundException extends ApplicationException {
-    public ResourceNotFoundException(String resource, Object id) {
-        super("RESOURCE_NOT_FOUND", resource + " not found with id: " + id);
-    }
-}
-
-public class BusinessRuleViolationException extends ApplicationException {
-    public BusinessRuleViolationException(String errorCode, String message) {
-        super(errorCode, message);
-    }
-}
-```
-
-### Global handler (RFC 7807 ProblemDetail)
-
-```java
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
-            HttpStatus.NOT_FOUND, ex.getMessage());
-        problem.setTitle("Resource Not Found");
-        problem.setProperty("errorCode", ex.getErrorCode());
-        return problem;
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ProblemDetail handleValidation(MethodArgumentNotValidException ex) {
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
-            HttpStatus.BAD_REQUEST, "Validation failed");
-        problem.setProperty("violations", ex.getBindingResult().getFieldErrors().stream()
-            .map(e -> Map.of("field", e.getField(), "message", e.getDefaultMessage()))
-            .toList());
-        return problem;
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ProblemDetail handleGeneral(Exception ex) {
-        log.error("Unhandled exception", ex);
-        return ProblemDetail.forStatusAndDetail(
-            HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
-    }
-}
-```
-
-### Error handling rules
-- Never swallow exceptions silently.
-- Never log and rethrow at the same layer (duplicate entries).
-- Never expose stack traces or internal class names in API responses.
-- Never use exceptions for flow control. Use `Optional<T>` instead.
+Hierarchy, global handler and the full rule list: see [references/error-handling.md](references/error-handling.md).
 
 ---
 
-## Logging (SLF4J + MDC)
+## Security, logging and observability
 
-```java
-private static final Logger log = LoggerFactory.getLogger(OrderService.class);
-// Or @Slf4j (Lombok) only if already in project
-```
+Spring Security 6 with stateless sessions for REST APIs, method-level
+authorisation and JSR-380 validation triggered on DTOs at the controller
+boundary. SLF4J with MDC correlation context (`traceId`, `userId`, `requestId`)
+and structured JSON in production. Never log a password, token, PII, credit card
+or secret. Actuator plus Micrometer for metrics and OpenTelemetry for traces, and
+SpringDoc annotations on every public endpoint.
 
-### Log level rules
-- `INFO`: business-significant events (order created, payment processed)
-- `DEBUG`: diagnostic info (intermediate state in multi-step processes)
-- `WARN`: recoverable issues (retry, fallback, degraded mode)
-- `ERROR`: unrecoverable issues, always with exception attached
-
-### Rules
-- Never log sensitive data: passwords, tokens, PII, credit cards, secrets.
-- Always include correlation context via MDC: `traceId`, `userId`, `requestId`.
-- Log messages must be useful to an on-call engineer with no prior code knowledge.
-- Use structured JSON in production: `logstash-logback-encoder`.
-
-```java
-// Good
-log.info("Order created. orderId={}, customerId={}, totalAmount={}",
-    order.getId(), order.getCustomerId(), order.getTotalAmount());
-
-// Wrong — useless
-log.info("Done");
-
-// Wrong — leaks PII
-log.info("User {} logged in with password {}", username, password);
-```
+Security config, log level rules, metric and trace setup and the OpenAPI
+annotations: see [references/security-logging-observability.md](references/security-logging-observability.md).
 
 ---
 
-## Spring Security 6 Baseline
+## Code formatting (non-negotiable)
 
-- Stateless sessions for REST APIs (`SessionCreationPolicy.STATELESS`)
-- CORS configured explicitly, never `allowedOrigins("*")` in production
-- CSRF disabled for stateless REST
-- Method-level security with `@PreAuthorize`
-- Passwords: `BCryptPasswordEncoder` strength ≥ 12
-- Never store secrets in `application.properties`: use env vars or secrets manager
+One annotation per line, vertically stacked, on classes, methods, fields and
+parameters alike. One POM element per line, never a collapsed `<dependency>`.
+Controllers and services never return `Map.of(...)`, a `HashMap<>` or an
+anonymous inline class as a response body. Always return a typed DTO produced by
+a `*Mapper` class.
 
-```java
-@Configuration @EnableWebSecurity @EnableMethodSecurity
-public class SecurityConfig {
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/actuator/health", "/actuator/info").permitAll()
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                .anyRequest().authenticated())
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-            .build();
-    }
-}
-```
-
-### Input validation (JSR-380)
-Validation annotations on DTO fields, `@Valid` on controller params.
-
-```java
-public record CreateOrderRequest(
-    @NotNull @Positive Long productId,
-    @NotNull @Min(1) @Max(100) Integer quantity
-) {}
-```
-
----
-
-## Observability (Micrometer + OpenTelemetry)
-
-- Include `spring-boot-starter-actuator`; expose health, info, metrics
-- Protect actuator endpoints except `/health` and `/info`
-
-```java
-// Custom metrics
-Counter ordersCreated = Counter.builder("orders.created")
-    .description("Total orders created")
-    .register(meterRegistry);
-
-Timer orderProcessingTime = Timer.builder("orders.processing.time")
-    .register(meterRegistry);
-```
-
-- Micrometer Tracing (OTel bridge) for distributed tracing
-- Include `traceId` and `spanId` in log output via MDC
-- Propagate `X-B3-TraceId` in RestTemplate/WebClient/Feign calls
-
----
-
-## OpenAPI Documentation (SpringDoc)
-
-```java
-@Operation(summary = "Create a new order")
-@ApiResponses({
-    @ApiResponse(responseCode = "201", description = "Order created"),
-    @ApiResponse(responseCode = "400", description = "Invalid request"),
-    @ApiResponse(responseCode = "409", description = "Product unavailable")
-})
-@PostMapping("/orders")
-public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody CreateOrderRequest req) {}
-```
-
-Public service interface methods require Javadoc describing the contract (not the implementation).
-
----
-
-## Code Formatting (non-negotiable)
-
-### Annotation formatting: one per line, vertically stacked
-
-Each annotation goes on its own line. Never inline-stack annotations on a single line, neither on classes, methods, fields, nor parameters. Logical groups of field annotations may be separated by a blank line.
-
-```java
-// ❌ WRONG — annotations inlined
-@Entity @Table(name = "companies") public class Company { ... }
-
-@NotNull @Size(max = 50) private String name;
-
-// ✅ CORRECT — one annotation per line
-@Entity
-@Table(name = "companies")
-public class Company { ... }
-
-@NotNull
-@Size(max = 50)
-private String name;
-```
-
-For records, the same rule applies to component declarations:
-
-```java
-public record CompanyCreateRequest(
-    @NotBlank
-    @Size(max = 200)
-    String name,
-
-    @NotBlank
-    @Pattern(regexp = "^[0-9]{11}$")
-    String vatNumber,
-
-    @Email
-    String email
-) {}
-```
-
-### POM file formatting
-
-`pom.xml` is XML: it must be hierarchically indented, one element per line, never collapsed. Use 4-space indentation (Maven default). Generated POMs that are written as a single line or with all `<dependency>` blocks on one line each are rejected.
-
-```xml
-<!-- ✅ CORRECT -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
-</dependency>
-
-<!-- ❌ WRONG -->
-<dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-web</artifactId></dependency>
-```
-
-### Inline response construction: forbidden
-
-Controllers and services must never return `Map.of(...)`, `HashMap<>`, or anonymous inline classes as response bodies. Always return a typed DTO produced by a `*Mapper` class. See `spring-architecture` for the full mapper-layer rules.
+Correct and incorrect form of each rule: see [references/formatting.md](references/formatting.md).
 
 ---
 
@@ -410,3 +159,10 @@ Approved dependencies:
 `springdoc-openapi-starter-webmvc-ui`, `logstash-logback-encoder`,
 `micrometer-tracing-bridge-otel`, `liquibase-core`, `h2` (runtime, scope `runtime`),
 `testcontainers`, `testcontainers-postgresql`
+
+## Detailed references
+
+- **Unit, integration and controller test templates with coverage expectations**: see [references/testing.md](references/testing.md)
+- **Typed exception hierarchy and the RFC 7807 global handler**: see [references/error-handling.md](references/error-handling.md)
+- **Spring Security 6 baseline, validation, logging, Micrometer and SpringDoc**: see [references/security-logging-observability.md](references/security-logging-observability.md)
+- **Annotation stacking, POM layout and the inline-response ban**: see [references/formatting.md](references/formatting.md)

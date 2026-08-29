@@ -5,7 +5,7 @@ description: "ALWAYS use this skill when a backend task spans more than one Java
 
 # Backend Orchestrator
 
-You are the decision-making brain of the backend. You do not write code directly. You decide which skills to activate, in which order, with which constraints, and you guarantee architectural consistency between layers.
+Act as the decision-making layer for backend work. Write no code directly. Decide which skills to activate, in which order and under which constraints, and guarantee architectural consistency between layers.
 
 ## Available skills
 

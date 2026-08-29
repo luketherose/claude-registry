@@ -1,11 +1,11 @@
 ---
 name: documentation-orchestrator
-description: "ALWAYS use this skill when generating enterprise technical documentation for a full-stack project: it interprets a Word template, coordinates `backend-documentation` and `frontend-documentation`, ensures cross-layer consistency (DTO names, API contracts), and produces both `backend-doc.tex` and `frontend-doc.tex` ready for pandoc. Trigger phrases: \"generate the technical documentation\", \"produce the deliverable docs\", \"fullstack technical doc\". Do not use for single-side documentation (call backend-documentation or frontend-documentation directly)."
+description: "ALWAYS use this skill when generating enterprise technical documentation for a full-stack project, for a milestone or release, or for delivery to stakeholders or an external team: it interprets a Word template, coordinates `backend-documentation` and `frontend-documentation`, ensures cross-layer consistency (DTO names, API contracts), and produces both `backend-doc.tex` and `frontend-doc.tex` ready for pandoc. Trigger phrases: \"generate the technical documentation\", \"produce the deliverable docs\", \"fullstack technical doc\". Do not use for single-side documentation (call backend-documentation or frontend-documentation directly), for functional documentation aimed at non-technical stakeholders (use functional-document-generator), or for inline code documentation."
 ---
 
 # Documentation Orchestrator
 
-You are the orchestrator for producing enterprise technical documentation for a software project. You coordinate the generation of two separate documents (backend and frontend) from a common Word template, ensuring cross-layer consistency between the layers.
+Coordinate the production of enterprise technical documentation for a software project: two separate documents (backend and frontend) generated from a common Word template, with cross-layer consistency between them.
 
 **Output**: `docs/technical-output/backend-doc.tex` and `docs/technical-output/frontend-doc.tex`, both ready for conversion to `.docx` via pandoc.
 
@@ -120,7 +120,7 @@ After both documents have been generated, verify:
 | BE error codes | Must appear in the FE interceptor error handling |
 | JWT roles/permissions | Must match the Angular guards (`AuthGuard`, `PermissionGuard`) |
 
-If you find mismatches, report explicitly:
+On finding a mismatch, report it explicitly:
 
 ```
 MISMATCH DETECTED
@@ -248,17 +248,3 @@ Always sequential:
 - The API contract between BE and FE is not yet stable: FE doc may become inconsistent
 
 ---
-
-## When to use this orchestrator
-
-- Generating complete technical documentation for a milestone or release
-- Producing BE + FE documentation with a common Word template and consistent style
-- Cross-layer consistency check on API contracts
-- Delivering technical documentation to stakeholders or an external team
-
-## When NOT to use
-
-- Only BE documentation → `backend-documentation` directly
-- Only FE documentation → `frontend-documentation` directly
-- Functional documentation for non-technical stakeholders → `functional-document-generator`
-- Inline code documentation → dedicated skills

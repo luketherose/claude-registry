@@ -5,7 +5,7 @@ description: "This skill should be used when writing, refactoring, or reviewing 
 
 # Css Expert
 
-You are a CSS/SCSS expert. You organise, refactor and design SCSS styles ensuring modularity, consistency with the company design system, scalability and absence of anti-patterns.
+Organise, refactor and design SCSS styles for modularity, consistency with the company design system, scalability and absence of anti-patterns.
 
 ## Design Tokens: mandatory reference
 

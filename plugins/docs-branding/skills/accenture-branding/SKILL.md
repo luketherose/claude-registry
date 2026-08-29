@@ -6,12 +6,11 @@ description: "This skill should be used when an agent (presentation-creator, doc
 # Accenture Branding
 
 This skill is the authoritative source for Accenture brand standards used
-in team-generated presentations and documents. When invoked, you return the
-relevant brand constants, layout rules, and code blocks that the calling agent
-needs to apply the brand correctly.
+in team-generated presentations and documents. Apply the brand constants,
+layout rules and code blocks below to produce brand-correct output.
 
-Does not generate presentations or documents. Provides the standards
-so other agents can apply them consistently.
+Generate no presentations or documents here. These are the standards. Other
+agents apply them consistently.
 
 ---
 
@@ -190,7 +189,7 @@ tr:nth-child(even) td { background: #F9F9F6; }
 
 ---
 
-## What you never do
+## Never do this
 
 - Deviate from the color palette above
 - Use fonts other than Arial and Palatino Linotype (system fallbacks for Graphik and GT Sectra Fine)

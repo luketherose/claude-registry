@@ -1,11 +1,11 @@
 ---
 name: backend-documentation
-description: "This skill should be used when generating enterprise technical documentation for a Java/Spring Boot backend, typically as part of a documentation-orchestrator pipeline. Trigger phrases: \"document this backend\", \"generate the backend technical doc\", \"produce backend-doc.tex\". Reads pre-existing analyses + source code and produces a `backend-doc.tex` covering architecture, API reference, data model, business logic, security, and error handling. Output is ready for pandoc conversion. Do not use for frontend documentation (use frontend-documentation)."
+description: "This skill should be used when generating enterprise technical documentation for a Java/Spring Boot backend, typically as part of a documentation-orchestrator pipeline: documenting the backend architecture for a release or technical delivery, or producing tech specs for architectural review. Trigger phrases: \"document this backend\", \"generate the backend technical doc\", \"produce backend-doc.tex\". Reads pre-existing analyses + source code and produces a `backend-doc.tex` covering architecture, API reference, data model, business logic, security, and error handling. Output is ready for pandoc conversion. Do not use for frontend documentation (use frontend-documentation), for coordinated backend plus frontend generation (use documentation-orchestrator), for functional documentation aimed at non-technical stakeholders (use functional-document-generator), or for inline code documentation."
 ---
 
 # Backend Documentation
 
-You are a senior Technical Writer specialised in technical documentation for Java/Spring Boot backend systems. You generate enterprise-level documentation for development teams, architects, and technical leads.
+Generate enterprise-level technical documentation for a Java/Spring Boot backend, addressed to development teams, architects and technical leads.
 
 **Scope**: read the available sources (pre-existing analyses, source code), interpret the provided Word template, produce `backend-doc.tex`, a complete, precise, compilable LaTeX file convertible to `.docx`. Do not invent components not evidenced by the sources. Do not produce placeholders.
 
@@ -46,11 +46,13 @@ If the Spring Boot source code is accessible, read primarily:
    - Map each section to available BE content
    - Determine which Word sections → LaTeX sections
 
-If the template is not provided, use the standard structure defined in STEP 2.
+If the template is not provided, use the default structure in [references/document-structure.md](references/document-structure.md).
 
 ---
 
-### STEP 1: Word template analysis → LaTeX mapping
+### STEP 1: Word template mapping and document structure
+
+Map Word elements onto LaTeX before writing a line of the document:
 
 | Word element | LaTeX equivalent |
 |---|---|
@@ -66,77 +68,30 @@ If the template is not provided, use the standard structure defined in STEP 2.
 | Code block | `\begin{lstlisting}[language=Java]` |
 | Header/footer | `\fancyhead` / `\fancyfoot` |
 
----
-
-### STEP 2: Backend document structure (default if not imposed by template)
+Then fix the document structure. Where the Word template does not impose one, use this default top-level layout:
 
 ```
-1.  Title page
-2.  Revision history
-3.  Table of contents
-4.  Introduction
-    4.1 Purpose of the document
-    4.2 Scope of application
-    4.3 Technology stack (the project's backend stack, e.g. Java 17 + Spring Boot 3.x + PostgreSQL)
-    4.4 Prerequisites and references
-
-5.  System Architecture
-    5.1 Architectural overview (layer: controller → service → repository → DB)
-    5.2 Bounded context and project package structure
-    5.3 Datasource configuration (if multi-datasource)
-    5.4 Java package schema
-
-6.  API Reference
-    6.1 Base configuration (base URL, versioning, authentication)
-    6.N [ControllerName] — [feature]
-        - Endpoint: METHOD /api/path
-        - Authorisation: required roles
-        - Request DTO: fields, validations
-        - Response DTO: fields, HTTP codes
-        - Errors: codes and causes
-
-7.  Data Model
-    7.1 Relational schema (main tables)
-    7.2 JPA Entities (per project bounded context)
-        - [EntityName]: fields, relations, constraints
-    7.3 Request/response DTOs for API
-
-8.  Business Logic
-    8.1 [ServiceName] — [responsibility]
-        - Main methods
-        - Applied business rules (BR-N reference)
-    8.N [ServiceName N]
-
-9.  Security Architecture
-    9.1 Authentication (JWT flow)
-    9.2 Authorisation (roles, @PreAuthorize)
-    9.3 Password hashing (BCrypt)
-    9.4 CORS and CSRF
-
-10. Error Handling and Logging
-    10.1 Exception hierarchy (base exception and project subclasses)
-    10.2 GlobalExceptionHandler — HTTP status mapping
-    10.3 Structured logging (MDC, correlation ID, log levels)
-    10.4 Monitoring and metrics
-
-11. External Integrations
-    For each external integration in the project:
-    11.N [Integration name] — WebClient pattern
-
-12. Configuration
-    12.1 Spring profiles (dev, prod)
-    12.2 DataSource configuration
-    12.3 Mandatory environment variables
-
-13. Appendix
-    13.1 Technical glossary
-    13.2 Known architectural issues (if documented in the project)
-    13.3 References
+1. Title page
+2. Revision history
+3. Table of contents
+4. Introduction (purpose, scope, technology stack, prerequisites)
+5. System Architecture (layers, bounded context, datasource, package schema)
+6. API Reference (base configuration, then one subsection per controller)
+7. Data Model (relational schema, JPA entities, request/response DTOs)
+8. Business Logic (one subsection per service, with the BR-N rules it applies)
+9. Security Architecture (JWT authentication, authorisation, hashing, CORS/CSRF)
+10. Error Handling and Logging (exception hierarchy, handler, MDC, monitoring)
+11. External Integrations (one subsection per integration)
+12. Configuration (Spring profiles, datasource, environment variables)
+13. Appendix (glossary, known architectural issues, references)
 ```
+
+- **Default chapter and section layout**: see [references/document-structure.md](references/document-structure.md)
+- **Element mapping table, mandatory preamble, title page and recurring patterns**: see [references/latex-templates.md](references/latex-templates.md)
 
 ---
 
-### STEP 3: Content normalisation
+### STEP 2: Content normalisation
 
 Before writing LaTeX:
 
@@ -149,221 +104,7 @@ Before writing LaTeX:
 
 ---
 
-### STEP 4: LaTeX file generation
-
-#### Mandatory preamble
-
-```latex
-\documentclass[12pt, a4paper]{report}
-
-% Encoding and language
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[english]{babel}
-
-% Page layout
-\usepackage[top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm]{geometry}
-
-% Typography
-\usepackage{lmodern}
-\usepackage{microtype}
-
-% Tables
-\usepackage{longtable}
-\usepackage{booktabs}
-\usepackage{tabularx}
-\usepackage{array}
-\usepackage{multirow}
-
-% Colours and boxes
-\usepackage[table]{xcolor}
-\usepackage{tcolorbox}
-\tcbuselibrary{skins}
-
-% Headers and footers
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[L]{\small\leftmark}
-\fancyhead[R]{\small Version \docversion}
-\fancyfoot[C]{\thepage}
-\fancyfoot[R]{\small\doctitle}
-\renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\footrulewidth}{0.4pt}
-
-% Code blocks
-\usepackage{listings}
-\lstset{
-  basicstyle=\ttfamily\small,
-  breaklines=true,
-  keywordstyle=\color{blue},
-  commentstyle=\color{gray},
-  stringstyle=\color{orange!80!black},
-  frame=single,
-  numbers=left,
-  numberstyle=\tiny\color{gray},
-  backgroundcolor=\color{gray!5}
-}
-
-% Hyperlinks and PDF metadata
-\usepackage[hidelinks, pdfauthor={\docauthor},
-            pdftitle={\doctitle}]{hyperref}
-
-% Images
-\usepackage{graphicx}
-
-% Lists
-\usepackage{enumitem}
-\setlist[itemize]{noitemsep, topsep=4pt}
-\setlist[enumerate]{noitemsep, topsep=4pt}
-
-% Spacing
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt}
-
-% Document metadata — edit here
-\newcommand{\doctitle}{Backend Technical Documentation --- [Project Name]}
-\newcommand{\docsubtitle}{[Technology stack, e.g. Java 17 + Spring Boot 3.x + PostgreSQL]}
-\newcommand{\docversion}{1.0}
-\newcommand{\docdate}{\today}
-\newcommand{\docauthor}{[Team / Author]}
-\newcommand{\docclassification}{Internal Use}
-```
-
-#### Title page
-
-```latex
-\begin{document}
-
-\begin{titlepage}
-  \centering
-  \vspace*{2cm}
-  {\Huge\bfseries \doctitle \par}
-  \vspace{0.5cm}
-  {\Large \docsubtitle \par}
-  \vspace{2cm}
-  \begin{tabular}{ll}
-    \textbf{Version:}         & \docversion \\[4pt]
-    \textbf{Date:}            & \docdate \\[4pt]
-    \textbf{Author:}          & \docauthor \\[4pt]
-    \textbf{Classification:}  & \docclassification \\
-  \end{tabular}
-  \vfill
-  {\small Document generated from the project's technical sources.}
-\end{titlepage}
-```
-
-#### Recurring patterns
-
-**Endpoint table:**
-```latex
-\begin{longtable}{|p{2cm}|p{5cm}|p{2.5cm}|p{4cm}|}
-\hline
-\rowcolor{gray!20}
-\textbf{Method} & \textbf{Path} & \textbf{Auth} & \textbf{Description} \\
-\hline
-\endfirsthead
-\hline
-\rowcolor{gray!20}
-\textbf{Method} & \textbf{Path} & \textbf{Auth} & \textbf{Description} \\
-\hline
-\endhead
-\texttt{GET} & \texttt{/api/entities/\{id\}} & Bearer JWT & Retrieves entity detail by ID \\
-\hline
-\end{longtable}
-```
-
-**DTO table:**
-```latex
-\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{1.5cm}|p{6cm}|}
-\hline
-\rowcolor{gray!20}
-\textbf{Field} & \textbf{Type} & \textbf{Req.} & \textbf{Description / Validation} \\
-\hline
-\endfirsthead
-\hline
-\rowcolor{gray!20}
-\textbf{Field} & \textbf{Type} & \textbf{Req.} & \textbf{Description / Validation} \\
-\hline
-\endhead
-\texttt{entityId} & \texttt{String} & \checkmark & Unique identifier, \texttt{@NotBlank} \\
-\hline
-\end{longtable}
-```
-
-**JPA entity table:**
-```latex
-\begin{longtable}{|p{3cm}|p{2.5cm}|p{2cm}|p{6cm}|}
-\hline
-\rowcolor{gray!20}
-\textbf{Field} & \textbf{Java Type} & \textbf{SQL Type} & \textbf{Constraints / Notes} \\
-\hline
-\endfirsthead
-\hline
-\rowcolor{gray!20}
-\textbf{Field} & \textbf{Java Type} & \textbf{SQL Type} & \textbf{Constraints / Notes} \\
-\hline
-\endhead
-\texttt{id} & \texttt{Long} & \texttt{BIGSERIAL} & PK, auto-generated \\
-\hline
-\end{longtable}
-```
-
-**HTTP error table:**
-```latex
-\begin{longtable}{|p{3.5cm}|p{1.8cm}|p{3cm}|p{5.5cm}|}
-\hline
-\rowcolor{gray!20}
-\textbf{Exception} & \textbf{HTTP} & \textbf{App code} & \textbf{Cause} \\
-\hline
-\endfirsthead
-\hline
-\rowcolor{gray!20}
-\textbf{Exception} & \textbf{HTTP} & \textbf{App code} & \textbf{Cause} \\
-\hline
-\endhead
-\texttt{EntityNotFoundException} & 404 & \texttt{ENTITY\_NOT\_FOUND} & Entity not found for the provided ID \\
-\hline
-\texttt{BusinessRuleViolationException} & 422 & \texttt{BR\_VIOLATION} & Business rule violation \\
-\hline
-\end{longtable}
-```
-
-**Java code block:**
-```latex
-\begin{lstlisting}[language=Java, caption={EntityController --- entity search}]
-@GetMapping("/search")
-public ResponseEntity<Page<EntityDto>> search(
-    @RequestParam String query,
-    @RequestParam(defaultValue = "0") int page,
-    @RequestParam(defaultValue = "20") int size) {
-    return ResponseEntity.ok(
-        entityService.search(query, PageRequest.of(page, size))
-    );
-}
-\end{lstlisting}
-```
-
-**Known architectural issue box:**
-```latex
-\begin{tcolorbox}[colback=red!5, colframe=red!50,
-                  title={\textbf{Known architectural issue}}]
-\textbf{Issue description}: brief explanation of the identified issue.
-Status: [under analysis / being migrated / resolved].
-Reference: [project technical documentation].
-\end{tcolorbox}
-```
-
-**Note box:**
-```latex
-\begin{tcolorbox}[colback=yellow!10, colframe=orange!70, title={\textbf{Note}}]
-Text of the note or warning.
-\end{tcolorbox}
-```
-
----
-
-### STEP 5: Notes and assumptions
+### STEP 3: Notes and assumptions
 
 After the LaTeX file, report:
 
@@ -387,32 +128,11 @@ After the LaTeX file, report:
 
 ---
 
-## Section: Conversion to Word
+## Conversion to Word
 
-```bash
-# PDF compilation (verify structure before converting)
+Compile with `pdflatex` to verify the structure before converting, then run pandoc with `--reference-doc=template.docx --listings --toc --toc-depth=3`. Syntax highlighting inside `lstlisting` is lost, `tcolorbox` borders are approximated, and `\rowcolor` backgrounds are not always preserved. Refine those manually.
 
-pdflatex backend-doc.tex
-
-# Conversion with reference Word template
-
-pandoc backend-doc.tex \
-  --reference-doc=template.docx \
-  --listings \
-  --toc \
-  --toc-depth=3 \
-  -o backend-doc.docx
-```
-
-| LaTeX element | Behaviour in Word |
-|---|---|
-| `lstlisting` (Java code) | Monospace block, syntax highlighting lost |
-| `longtable` | Word table, verify column widths |
-| `tcolorbox` | Text box, border approximated, refine manually |
-| `\rowcolor` | Cell background not always preserved |
-| `\fancyhdr` | Word headers if present in the reference template |
-| `\texttt` | Monospace correctly preserved |
-| Footnotes `\footnote` | Preserved as Word footnotes |
+Full command and the per-element behaviour table: see [references/pandoc-conversion.md](references/pandoc-conversion.md).
 
 ---
 
@@ -433,15 +153,8 @@ pandoc backend-doc.tex \
 
 ---
 
-## When to use this skill
+## Detailed references
 
-- Documenting the backend architecture for a release or technical delivery
-- Producing tech specs for architectural review
-- As output of the documentation phase for the BE layer
-
-## When NOT to use
-
-- Functional documentation for non-technical stakeholders → `functional-document-generator`
-- Inline code documentation → dedicated skills
-- Frontend documentation → `frontend-documentation`
-- Coordinated BE + FE generation → `documentation-orchestrator`
+- **Default backend document structure, chapter by chapter**: see [references/document-structure.md](references/document-structure.md)
+- **Word-to-LaTeX mapping, preamble, title page and recurring patterns**: see [references/latex-templates.md](references/latex-templates.md)
+- **Pandoc command and LaTeX-to-Word element behaviour**: see [references/pandoc-conversion.md](references/pandoc-conversion.md)

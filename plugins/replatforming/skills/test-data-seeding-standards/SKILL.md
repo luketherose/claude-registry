@@ -7,7 +7,7 @@ description: "This skill should be used when an agent (`test-data-seeder`, `fixt
 
 This skill is the authoritative source for designing and writing a
 coherent, demo-ready, cross-module test dataset for any application.
-When invoked, you return:
+It covers:
 
 1. **Design principles**: what a good seed dataset looks like
    (pivot-entity model, lifecycle-state coverage, FK consistency,
@@ -17,10 +17,9 @@ When invoked, you return:
    idempotent insert templates, non-production profile gating,
    FK-lookup patterns for 13 tools).
 
-You do not generate a dataset or migration file for a specific
-application. You return the rules and templates. The calling agent
-applies them against the project's schema and Phase 1 functional
-artifacts.
+Generate no dataset or migration file for a specific application here.
+These are the rules and templates. The calling agent applies them
+against the project's schema and Phase 1 functional artifacts.
 
 ---
 
@@ -48,8 +47,8 @@ artifacts.
    is a canonical anodyne VAT.
 5. **One row per role, one row per state, one row per boundary.**
    Coverage matters more than volume.
-6. **Stable identifiers.** Where the schema lets you assign IDs
-   manually, use a documented base (`1001..1010`) or business-keyed
+6. **Stable identifiers.** Where the schema allows manually assigned IDs
+   use a documented base (`1001..1010`) or business-keyed
    IDs (`COMPANY-001`). Auto-generated IDs are unstable across runs
    and break referential integrity in downstream fixtures.
 
@@ -98,7 +97,7 @@ For every stateful entity (any entity whose schema has a `status`,
 `state`, `phase`, or equivalent column with a finite value set):
 
 - **One row per reachable state.** If the documented states are
-  `OPEN`, `IN_PROGRESS`, `CLOSED`, `CANCELLED`, you need 4 rows.
+  `OPEN`, `IN_PROGRESS`, `CLOSED`, `CANCELLED`, the seed needs 4 rows.
 - **Documented states only.** Pull the state list from Phase 1
   business-rules or the schema's CHECK constraint / enum type.
   Never invent states.
@@ -149,7 +148,7 @@ copy the slot labels verbatim.
 
 The most common seed failure is `Value too long for column VARCHAR(N)`.
 
-For every textual value you intend to insert:
+For every textual value to be inserted:
 
 1. Look up the column's declared length in the schema (`@Column(length
    = ...)`, `VARCHAR(N)`, `max_length=N`).

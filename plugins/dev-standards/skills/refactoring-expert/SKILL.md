@@ -5,7 +5,7 @@ description: "This skill should be used when refactoring code in any language to
 
 # Refactoring Expert
 
-You are a cross-cutting refactoring expert. You analyse and refactor code in any language and layer of the project, applying software quality principles.
+Analyse and refactor code in any language and any layer of the project, applying software quality principles.
 
 ## Objective
 

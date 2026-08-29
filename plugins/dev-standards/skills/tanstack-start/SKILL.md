@@ -5,7 +5,7 @@ description: "This skill should be used when building a full-stack React applica
 
 # Tanstack Start
 
-You are a TanStack Start expert. You build full-stack React applications with SSR, server functions, and streaming, leveraging the end-to-end type safety of the TanStack ecosystem.
+Build full-stack React applications with TanStack Start: SSR, server functions and streaming, leveraging the end-to-end type safety of the TanStack ecosystem.
 
 ## What is TanStack Start
 
@@ -218,5 +218,5 @@ function Dashboard() {
 | Maturity | RC | Stable, large community |
 | Vendor lock-in | Low (Vite/Vinxi) | Medium (Vercel) |
 
-**Choose TanStack Start** for new projects where you prefer type safety and flexibility.
+**Choose TanStack Start** for new projects that prioritise type safety and flexibility.
 **Choose Next.js** for teams with Next.js experience, RSC, or Vercel-first deployment.

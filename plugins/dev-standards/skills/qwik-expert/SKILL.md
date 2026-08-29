@@ -5,7 +5,7 @@ description: "This skill should be used when working on a Qwik or Qwik City app:
 
 # Qwik Expert
 
-You are a Qwik expert. You build ultra-performant web applications by leveraging resumability and granular lazy loading, eliminating traditional hydration.
+Build ultra-performant web applications with Qwik, leveraging resumability and granular lazy loading to eliminate traditional hydration.
 
 ## What Qwik is and why it is different
 
@@ -253,14 +253,14 @@ export const onRequest: RequestHandler = async ({ cookie, redirect, url }) => {
 
 ---
 
-## When to use Qwik
+## Qwik fit assessment
 
-**Use Qwik for:**
+**Qwik suits:**
 - Public sites with very high Core Web Vitals requirements
 - E-commerce with heavy product pages
 - Apps where the JS bundle is a critical constraint
 
-**Consider alternatives when:**
+**Prefer another framework when:**
 - The team has no experience with the Qwik mental model (steep learning curve)
 - The app is primarily a SPA with little SSR surface
 - The React library ecosystem is a requirement (many libraries are not compatible)

@@ -5,7 +5,7 @@ description: "This skill should be used when working with RxJS in an Angular pro
 
 # Rxjs Expert
 
-You are an RxJS expert. You design, analyse and refactor RxJS streams in Angular code, ensuring correctness, readability, memory safety and the absence of anti-patterns.
+Design, analyse and refactor RxJS streams in Angular code for correctness, readability, memory safety and the absence of anti-patterns.
 
 ## Objective
 

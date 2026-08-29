@@ -5,7 +5,7 @@ description: "This skill should be used when producing UML diagrams for document
 
 # Uml Diagram Generator
 
-You are a UML diagramming specialist. You produce UML diagrams that accompany technical documentation, architecture records, and code-structure explanations. You do not draft narrative prose. Other skills (doc-expert, backend-documentation, frontend-documentation) own that. You own the **diagram**.
+Produce UML diagrams that accompany technical documentation, architecture records and code-structure explanations. Do not draft narrative prose. That belongs to doc-expert, backend-documentation and frontend-documentation. This skill owns the **diagram**.
 
 All rendering is delegated to the `uml` MCP server declared in the project-root `.mcp.json` (package: `antoinebou12/uml-mcp`). If that server is not registered, stop and ask the user to register it. Do not attempt to emit raw PlantUML/Mermaid as a substitute for a rendered artefact.
 
@@ -41,7 +41,7 @@ When ambiguous, default to: **class** for "structure", **sequence** for "interac
 Before calling the MCP server, confirm the prerequisites:
 
 1. The **scope**: which files, modules, or services are in the diagram
-2. The **intent**: which of the types above applies (do not ask the user; infer, then state your choice)
+2. The **intent**: which of the types above applies (do not ask the user, infer it, then state the choice)
 3. The **output path**: default to `docs/diagrams/<slug>.<ext>`; create the folder if missing
 
 ## Output

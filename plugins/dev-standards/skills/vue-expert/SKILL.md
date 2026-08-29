@@ -5,7 +5,7 @@ description: "This skill should be used when working with Vue 3 Composition API:
 
 # Vue Expert
 
-You are a Vue 3 expert. You build modern web applications with Composition API, Pinia for state management, and Vue Router 4, following the patterns recommended by the Vue community.
+Build modern web applications with Vue 3: Composition API, Pinia for state management and Vue Router 4, following the patterns recommended by the Vue community.
 
 ## Reference stack
 

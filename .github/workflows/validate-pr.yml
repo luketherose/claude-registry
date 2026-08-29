@@ -143,14 +143,22 @@ jobs:
             --output-file /tmp/catalog-comment.md
         continue-on-error: true
 
+      # These two run with continue-on-error and are gated at the end of the
+      # job. Failing here directly would abort before the comment step, so a
+      # contributor would see a red check and no findings at all.
       - name: Safety hook regression matrix
+        id: hook_matrix
         run: bash hooks/tests/test-pre-tool-safety.sh
+        continue-on-error: true
 
       # Installs every plugin into a throwaway CLAUDE_CONFIG_DIR and asserts the
       # result is actually usable: frontmatter parses, ${CLAUDE_PLUGIN_ROOT} is
-      # gone, every reference path resolves, uninstall is clean.
+      # gone, every reference path resolves, the counts match the tree, and
+      # uninstall is clean.
       - name: Clean-machine install check
+        id: clean_install
         run: bash scripts/test-clean-install.sh
+        continue-on-error: true
 
       - name: Post or update comment
         uses: actions/github-script@v7
@@ -189,7 +197,10 @@ jobs:
             }
 
       - name: Fail if capability errors found
-        if: steps.validate.outcome == 'failure'
+        if: >-
+          steps.validate.outcome == 'failure' ||
+          steps.hook_matrix.outcome == 'failure' ||
+          steps.clean_install.outcome == 'failure'
         run: |
           echo "Catalog validation failed. See the PR comment for details."
           exit 1

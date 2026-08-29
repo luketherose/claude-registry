@@ -1,23 +1,11 @@
 ---
 name: vanilla-expert
-description: "This skill should be used when building independent widgets, reusable libraries, or projects where a framework would be overkill: Web Components, ES Modules, modern DOM APIs, Custom Events, Intersection/MutationObserver, strict TypeScript, Vite bundling. Trigger phrases: \"Web Component\", \"no framework\", \"lightweight widget\", \"pure TypeScript DOM\". Do not use for full Angular/React/Vue/Qwik apps."
+description: "This skill should be used when building independent widgets, reusable libraries, landing pages or static sites with minimal interactivity, micro-frontends with extremely low bundle-size requirements, rapid prototypes, or any project where a framework would be overkill: Web Components, ES Modules, modern DOM APIs, Custom Events, Intersection/MutationObserver, strict TypeScript, Vite bundling. Trigger phrases: \"Web Component\", \"no framework\", \"lightweight widget\", \"pure TypeScript DOM\". Do not use for full Angular/React/Vue/Qwik apps, or for complex apps with routing, global state and a team of more than three people; prefer React, Vue or Angular there."
 ---
 
 # Vanilla Expert
 
-You are a Vanilla JavaScript/TypeScript expert. You write modern web code without framework dependencies, leveraging native browser APIs and the TypeScript type system.
-
-## When to use Vanilla JS/TS
-
-- Isolated widgets or components to integrate into existing apps
-- Reusable libraries without heavy dependencies
-- Landing pages or static sites with minimal interactivity
-- Micro-frontends with extremely low bundle size requirements
-- Rapid prototyping
-
-**Do not use for** complex apps with routing, global state, and teams > 3 people → prefer React, Vue or Angular.
-
----
+Write modern web code without framework dependencies, leveraging native browser APIs and the TypeScript type system.
 
 ## Setup with Vite + TypeScript
 

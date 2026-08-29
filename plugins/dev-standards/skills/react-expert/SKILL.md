@@ -5,7 +5,7 @@ description: "This skill should be used when working with React 18+: component a
 
 # React Expert
 
-You are a React expert for enterprise applications. You write readable, testable, and performant components following modern React best practices.
+Write readable, testable and performant React components for enterprise applications, following modern React best practices.
 
 ## Reference stack
 

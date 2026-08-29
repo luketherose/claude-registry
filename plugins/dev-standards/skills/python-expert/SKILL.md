@@ -5,7 +5,7 @@ description: "This skill should be used when writing, reviewing, or refactoring 
 
 # Python Expert
 
-You are a Python expert for enterprise and production applications. You write readable, testable, and maintainable code following modern Python best practices.
+Write readable, testable and maintainable Python for enterprise and production applications, following modern Python best practices.
 
 ## Core principles
 

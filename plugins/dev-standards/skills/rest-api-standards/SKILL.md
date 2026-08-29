@@ -1,6 +1,6 @@
 ---
 name: rest-api-standards
-description: "This skill should be used when an agent (api-designer, developer, code-reviewer) needs the canonical REST API design standards: resource modeling, HTTP method semantics, status codes, URL structure, versioning, pagination, RFC 7807 error format, and OpenAPI 3.1 authoring. Trigger phrases: \"REST API design\", \"how should this endpoint look\", \"review this API contract\", \"OpenAPI authoring rules\". Returns reference material, not a generated spec. Do not trigger directly from a coding prompt. It is invoked by the agents above."
+description: "This skill should be used when an agent (api-designer, developer, pr-review-toolkit:code-reviewer) needs the canonical REST API design standards: resource modeling, HTTP method semantics, status codes, URL structure, versioning, pagination, RFC 7807 error format, and OpenAPI 3.1 authoring. Trigger phrases: \"REST API design\", \"how should this endpoint look\", \"review this API contract\", \"OpenAPI authoring rules\". Returns reference material, not a generated spec. Do not trigger directly from a coding prompt. It is invoked by the agents above."
 ---
 
 # Rest Api Standards
@@ -133,7 +133,7 @@ Always paginate collection endpoints, never return unbounded lists.
 
 ---
 
-## What you never do
+## What this skill never does
 
 - Design a specific API (that is the api-designer role agent's job)
 - Write OpenAPI YAML for a specific service

@@ -1,11 +1,11 @@
 ---
 name: frontend-orchestrator
-description: "ALWAYS use this skill when a frontend task spans multiple concerns: the user asks to design a feature mixing routing, state management, styling, and API calls; the framework is undecided; or the request explicitly asks for cross-skill coordination. Trigger phrases: \"design a feature end-to-end\", \"review the architecture of this FE module\", \"plan the FE for X\", \"NgRx + RxJS + design system together\". Coordinates Angular, NgRx, RxJS, React, Vue, Qwik, CSS/SCSS, Design, FE Refactoring skills. Do not use for single-framework, single-concern tasks (use the targeted skill directly)."
+description: "ALWAYS use this skill when a frontend task spans multiple concerns: the user asks to design a feature mixing routing, state management, styling, and API calls; a new FE component or feature is built from scratch in any framework; an existing FE module is refactored or architecturally reviewed; the framework is undecided; or the request explicitly asks for cross-skill coordination. Trigger phrases: \"design a feature end-to-end\", \"review the architecture of this FE module\", \"plan the FE for X\", \"NgRx + RxJS + design system together\". Coordinates Angular, NgRx, RxJS, React, Vue, Qwik, CSS/SCSS, Design, FE Refactoring skills. Do not use for single-framework, single-concern tasks (use the targeted skill directly), for purely backend tasks (java-expert), for repository analysis (tech-analyst), or for migrations (migration-orchestrator)."
 ---
 
 # Frontend Orchestrator
 
-You are the orchestrator of the Front End domain. You coordinate FE skills, guaranteeing architectural, stylistic and functional consistency between design, implementation and state.
+Coordinate the frontend skills, guaranteeing architectural, stylistic and functional consistency between design, implementation and state.
 
 ## Step 0: Identify the project framework
 
@@ -251,18 +251,3 @@ At the end of FE orchestration, produce:
 - Summary of the skills activated and their contributions
 - Complete code for the chosen framework
 - Notes on the patterns adopted and architectural motivations
-
-## When to use this orchestrator
-
-- New FE components or features from scratch (any framework)
-- Refactoring of existing FE components or modules
-- FE features with complex state
-- Frontend architectural review
-- Tasks involving more than one FE skill
-
-## When NOT to use
-
-- Purely BE tasks                    → `java-expert`
-- Repository analysis tasks          → `tech-analyst`
-- Migration tasks                    → `/orchestrators/migration-orchestrator`
-- Simple FE task with a single skill → go directly to the skill

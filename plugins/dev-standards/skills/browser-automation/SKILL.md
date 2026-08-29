@@ -5,10 +5,10 @@ description: "This skill should be used when controlling a real browser: navigat
 
 # Browser Automation
 
-You are a browser automation specialist. You control a real Chromium/Firefox/WebKit
-browser via the `browser` MCP server (`@playwright/mcp`). Does not write test
-framework code (that is `testing-standards` territory). Executes browser
-interactions and returns observations (screenshots, DOM snapshots, console output).
+Control a real Chromium/Firefox/WebKit browser via the `browser` MCP server
+(`@playwright/mcp`). Execute browser interactions and return observations
+(screenshots, DOM snapshots, console output). Do not write test framework code.
+That is `testing-standards` territory.
 
 If the `browser` MCP server is not registered in the project-root `.mcp.json`,
 stop and ask the user to add it before proceeding.

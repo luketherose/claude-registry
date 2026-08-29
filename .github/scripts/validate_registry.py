@@ -251,7 +251,7 @@ def validate_cross_plugin_references():
     by `deliberation`; that is fine only because the line says so in words. A
     bare path there would be unresolvable for both the agent and the reader.
     """
-    owner = re.compile(r"the `[a-z0-9-]+` plugin")
+    owner = re.compile(r"the `([a-z0-9-]+)` plugin")
     link = re.compile(r"[`(]\.?/?(references/[A-Za-z0-9._/-]+\.md)[`)]")
     for path in sorted(glob.glob("plugins/*/agents/**/*.md", recursive=True)
                        + glob.glob("plugins/*/skills/*/SKILL.md")):
@@ -262,7 +262,16 @@ def validate_cross_plugin_references():
                 if os.path.exists(os.path.join(os.path.dirname(path), rel)) or \
                         os.path.exists(os.path.join(plugin_root, rel)):
                     continue
-                if owner.search(line):
+                # Naming an owner is not enough: the named plugin has to exist
+                # and the file has to be in it, or the sentence is decoration.
+                m_owner = owner.search(line)
+                if m_owner:
+                    other = os.path.join("plugins", m_owner.group(1), rel)
+                    if os.path.exists(other):
+                        continue
+                    err("%s:%d: names the `%s` plugin as owner of `%s`, but %s "
+                        "does not exist"
+                        % (path, i, m_owner.group(1), rel, other))
                     continue
                 err("%s:%d: `%s` resolves in neither this file's directory nor "
                     "%s, and the line does not say which plugin owns it"
@@ -278,8 +287,34 @@ def validate_evals():
     field named the routing winner on 364 of 365 cases, which let a nine-line
     keyword table score 232 out of 232 without reading anything.
     """
-    verdict = re.compile(r"primary invocation|should not activate|should activate"
-                         r"|route[sd]? to|belongs to|use \w+ instead", re.I)
+    # Listing phrasings only constrained six of them. The property is that the
+    # description says what the query is about and never which capability wins,
+    # so naming any capability in the registry is the thing to reject.
+    capability_names = sorted(
+        {os.path.basename(p)[:-3]
+         for p in glob.glob("plugins/*/agents/**/*.md", recursive=True)}
+        | {os.path.basename(os.path.dirname(p))
+           for p in glob.glob("plugins/*/skills/*/SKILL.md")},
+        key=len, reverse=True)
+    phrasings = re.compile(r"primary invocation|should not activate"
+                           r"|should activate|route[sd]? to|belongs to"
+                           r"|use \w+ instead", re.I)
+
+    def names_a_sibling(text, query, own):
+        """The leak is routing information the query does not already carry.
+
+        A description may repeat the subject the query names: a TanStack Start
+        query described as being about TanStack Start tells a grader nothing it
+        could not read off the query. Naming a capability the query never
+        mentions is what hands over the answer.
+        """
+        for other in capability_names:
+            if other == own:
+                continue
+            pat = r"(?<![\w-])%s(?![\w-])" % re.escape(other)
+            if re.search(pat, text, re.I) and not re.search(pat, query, re.I):
+                return other
+        return None
     for path in sorted(glob.glob("plugins/*/evals/*/triggers.json")):
         try:
             cases = json.load(open(path, encoding="utf-8"))
@@ -294,10 +329,18 @@ def validate_evals():
             if set(case) != {"query", "should_trigger", "description"}:
                 err("%s[%d]: keys are %s, expected query, should_trigger, "
                     "description" % (path, i, sorted(case)))
-            elif verdict.search(case["description"]):
-                err("%s[%d]: the description states the verdict (%r). It must "
-                    "describe the query only, or the case grades itself."
-                    % (path, i, case["description"][:60]))
+            else:
+                own = os.path.basename(os.path.dirname(path))
+                sibling = names_a_sibling(case["description"],
+                                          case["query"], own)
+                if phrasings.search(case["description"]):
+                    err("%s[%d]: the description states the verdict (%r). It "
+                        "must describe the query only, or the case grades "
+                        "itself." % (path, i, case["description"][:60]))
+                elif sibling:
+                    err("%s[%d]: the description names `%s`, which hands a "
+                        "grader the answer. Describe the query, not the winner."
+                        % (path, i, sibling))
 
     for path in sorted(glob.glob("plugins/*/evals/*/evals.json")):
         try:
@@ -326,6 +369,8 @@ def validate_workflow_dag():
     """
     path = "bmad/design/workflow-dag-draft.json"
     if not os.path.exists(path):
+        err("%s is missing. Deleting it must not be a way to silence this gate."
+            % path)
         return
     try:
         dag = json.load(open(path, encoding="utf-8"))
@@ -485,10 +530,13 @@ def validate_agent_references():
     scanned = [p for p in scanned
                if os.path.exists(p) and not any(x in p for x in exempt)]
     for name, guidance in RETIRED.items():
-        # Backticks in prose, double quotes in JSON. bmad/workflows.json listed
-        # two retired agents for weeks because the gate only looked for the
-        # markdown spelling.
-        pattern = re.compile(r'[`"]%s[`"]' % re.escape(name))
+        # Word boundaries, not just backticks and quotes. Matching only the
+        # decorated spellings left bare prose through, including a dispatch
+        # instruction naming an agent this registry no longer has. The
+        # lookbehind excludes a colon so the official `pr-review-toolkit:`
+        # replacement, which necessarily contains the retired string, is not
+        # flagged as the thing it replaces.
+        pattern = re.compile(r'(?<![\w:.-])%s(?![\w-])' % re.escape(name))
         for path in sorted(scanned):
             text = open(path, encoding="utf-8").read()
             for i, line in enumerate(text.splitlines(), 1):

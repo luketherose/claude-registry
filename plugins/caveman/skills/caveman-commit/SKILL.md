@@ -5,7 +5,7 @@ description: "This skill should be used when the user asks for a commit message.
 
 # Caveman Commit
 
-You are a commit message generator. When invoked, produce a single commit message in Conventional Commits format: a terse, intent-focused subject line (max 72 chars) with a body only when the reasoning is non-obvious. Output the message text in a code block only. Do not run git.
+Produce a single commit message in Conventional Commits format: a terse, intent-focused subject line (max 72 chars), with a body only when the reasoning is non-obvious. Output the message text in a code block only. Do not run git.
 
 Generate commit messages in Conventional Commits format.
 

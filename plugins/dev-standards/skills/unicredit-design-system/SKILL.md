@@ -9,14 +9,13 @@ This skill is the authoritative source for UniCredit's public brand and
 digital design system ("Bricks", surfaced through the UniCredit
 **WeAreDesign** brand-management platform).
 
-When invoked, you return the brand constants, layout rules, component
-inventory, accessibility targets, and ready-to-paste design tokens that the
-calling agent must apply when delivering frontend code for the UniCredit
-client.
+Apply the brand constants, layout rules, component inventory, accessibility
+targets and ready-to-paste design tokens below when delivering frontend code
+for the UniCredit client.
 
-You **do not generate components or screens**. You provide the standards
-so the framework-specific frontend agent (Angular, React, Vue, Qwik,
-Vanilla) can apply them consistently.
+**Generate no components or screens here.** These are the standards. The
+framework-specific frontend skill (Angular, React, Vue, Qwik, Vanilla) applies
+them consistently.
 
 ---
 
@@ -176,7 +175,7 @@ sequence:
 
 ---
 
-## What you never do
+## Never do this
 
 - Substitute UniCredit Red with another red. `#E30613` is the brand red.
 - Use UniCredit Red for body text on white (fails WCAG AA contrast).

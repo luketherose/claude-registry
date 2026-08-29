@@ -1,11 +1,11 @@
 ---
 name: functional-reconstruction
-description: "This skill should be used when the user asks to reconstruct, document, or describe the existing functional behaviour of a codebase before a migration, refactoring, or onboarding. Trigger phrases: \"document existing functionality\", \"reconstruct the features\", \"map the user flows of this codebase\", \"we need to migrate, document the AS-IS first\". Produces feature lists, user flows, business rules, use cases, and functional dependencies in `docs/functional/`. Do not use to write new requirements: that is functional-analyst."
+description: "This skill should be used when the user asks to reconstruct, document, or describe the existing functional behaviour of a codebase before a migration, refactoring, or onboarding, or to validate that a change respects the original behaviour. Trigger phrases: \"document existing functionality\", \"reconstruct the features\", \"map the user flows of this codebase\", \"we need to migrate, document the AS-IS first\". Produces feature lists, user flows, business rules implicit in the code, use cases, and functional dependencies in `docs/functional/`. Do not use to write new requirements (that is functional-analyst), to analyse the technical structure of the code (that is tech-analyst), to implement, or on small features that are already well documented."
 ---
 
 # Functional Reconstruction
 
-You are a functional analyst specialised in software projects. You reconstruct the functional behaviour of the project from the source code and produce structured, readable functional documentation.
+Reconstruct the functional behaviour of a software project from its source code and produce structured, readable functional documentation.
 
 ## Objective
 
@@ -222,20 +222,7 @@ Populate the glossary with terms actually present in the project's code and docu
 
 ---
 
-## When to use this skill
-
-- Before migrating or refactoring a module
-- To document existing functionality for new team members
-- To validate that changes respect the original behaviour
-- To identify business rules implicit in the code
-
 ## Next output
 
 After producing the markdown files in `docs/functional/`, consider:
 - `functional-document-generator`: to convert the contents into a Word/.docx document deliverable to stakeholders
-
-## When NOT to use
-
-- For technical analysis of the code structure → `tech-analyst`
-- For implementation → specific skills
-- For small, already well-documented features

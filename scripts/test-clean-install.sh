@@ -24,9 +24,9 @@ bash "$ROOT/scripts/install-local.sh" --all >"$TMP/install.log" 2>&1 || { cat "$
 tail -1 "$TMP/install.log" >/dev/null
 note "install --all" "$(grep -o 'Installed.*' "$TMP/install.log" | head -1)"
 
-python3 - "$CLAUDE_CONFIG_DIR" <<'PY'
+python3 - "$CLAUDE_CONFIG_DIR" "$ROOT" <<'PY'
 import glob, os, re, sys, yaml
-root = sys.argv[1]
+root, repo = sys.argv[1], sys.argv[2]
 agents = glob.glob(os.path.join(root, "agents", "*.md"))
 skills = glob.glob(os.path.join(root, "skills", "*", "SKILL.md"))
 bad = []
@@ -43,7 +43,9 @@ for p in agents + skills:
             bad.append(("frontmatter unparseable: %s" % str(exc).split("\n")[0], p))
     if "${CLAUDE_PLUGIN_ROOT}" in text:
         bad.append(("unexpanded ${CLAUDE_PLUGIN_ROOT}", p))
-    for m in re.finditer(r"/Users/[^\s)`'\"]*registry-references[^\s)`'\"]*", text):
+    # Anchoring this on /Users/ meant it never matched: the harness installs
+    # into mktemp -d, which is /var/folders on macOS and /tmp in CI.
+    for m in re.finditer(re.escape(root) + r"[^\s)`'\"]*", text):
         if not os.path.exists(m.group(0)):
             bad.append(("dangling absolute reference %s" % m.group(0), p))
     for m in re.finditer(r"[`(]\.?/?(references/[A-Za-z0-9._/-]+\.md)[`)]", text):
@@ -71,7 +73,25 @@ for p in agents:
             fm.get("tools") and "Skill" not in tools:
         bad.append(("invokes skills without the Skill tool", p))
 
-print("checked %d agents, %d skills" % (len(agents), len(skills)))
+# Without this the harness is green on an empty install: it only checks
+# properties of what it finds, so an installer that copies nothing passes.
+want_agents = len(glob.glob(os.path.join(repo, "plugins/*/agents/**/*.md"), recursive=True))
+want_skills = len(glob.glob(os.path.join(repo, "plugins/*/skills/*/SKILL.md")))
+# Comparing installed against the tree is not enough on its own: with both
+# empty the counts agree and the harness goes green. These floors are sanity
+# bounds, well below the current 86 and 46, not exact expectations.
+MIN_AGENTS, MIN_SKILLS = 50, 30
+if want_agents < MIN_AGENTS or want_skills < MIN_SKILLS:
+    bad.append(("the tree itself has only %d agents and %d skills, below the "
+                "%d and %d floor: the harness would pass vacuously"
+                % (want_agents, want_skills, MIN_AGENTS, MIN_SKILLS), "--all"))
+if len(agents) != want_agents:
+    bad.append(("installed %d agents, the tree has %d" % (len(agents), want_agents), "--all"))
+if len(skills) != want_skills:
+    bad.append(("installed %d skills, the tree has %d" % (len(skills), want_skills), "--all"))
+
+print("checked %d agents, %d skills (tree has %d, %d)"
+      % (len(agents), len(skills), want_agents, want_skills))
 for reason, path in bad:
     print("  FAIL %s: %s" % (os.path.basename(path), reason))
 sys.exit(1 if bad else 0)

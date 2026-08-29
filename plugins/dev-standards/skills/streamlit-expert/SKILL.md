@@ -1,11 +1,11 @@
 ---
 name: streamlit-expert
-description: "This skill should be used when developing or maintaining a Streamlit web app: page structure, session_state management, caching (`@st.cache_data`, `@st.cache_resource`), reusable components, PostgreSQL/API integration, Streamlit-specific anti-patterns. Trigger phrases: \"Streamlit page\", \"session_state\", \"st.cache\", \"multipage Streamlit\", \"Streamlit form\", \"st.experimental_rerun\". Do not use for pure Python logic outside the UI (use python-expert) or for non-Streamlit web frameworks."
+description: "This skill should be used when developing, maintaining, or fixing bugs in a Streamlit web app, or when documenting the business rules of a Streamlit module before a migration: page structure, session_state management, caching (`@st.cache_data`, `@st.cache_resource`), reusable components, PostgreSQL/API integration, Streamlit-specific anti-patterns. Trigger phrases: \"Streamlit page\", \"session_state\", \"st.cache\", \"multipage Streamlit\", \"Streamlit form\", \"st.experimental_rerun\". Do not use for pure Python logic outside the UI (use python-expert) or for non-Streamlit web frameworks. Where a more recent target architecture already exists, weigh implementing the new feature there instead, and coordinate significant refactoring of migration-bound code with the team."
 ---
 
 # Streamlit Expert
 
-You are a Streamlit expert for Python web applications. You know the patterns for state management, caching, multi-page routing, and integration with PostgreSQL and external APIs.
+Apply these Streamlit patterns for state management, caching, multi-page routing, and integration with PostgreSQL and external APIs in Python web applications.
 
 ## Reference stack
 
@@ -230,19 +230,6 @@ def execute_query(query: str, params: tuple = (), single: bool = False):
 ```
 
 ---
-
-## When to use this skill
-
-**Use this skill for:**
-- New Streamlit pages or components
-- Bug fixes on existing Streamlit apps
-- API or DB integration in a Streamlit context
-- Documenting business rules of a Streamlit module before a migration
-
-**Do not use this skill for:**
-- Pure Python logic without Streamlit dependencies → use `python-expert`
-- New features if a more recent target architecture exists → evaluate whether to implement there instead
-- Significant refactoring of code destined for migration → coordinate with the team
 - Non-critical optimisations on legacy code → invest in the target architecture
 
 **Practical rule**: if the task is > 4 hours and is not a critical bug on a production app, consider whether the value belongs in the current app or the future one. Flag to the team to decide on priority.

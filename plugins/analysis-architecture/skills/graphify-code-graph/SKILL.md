@@ -1,24 +1,13 @@
 ---
 name: graphify-code-graph
-description: "This skill should be used when an agent needs to understand, navigate, or reason about a codebase through a persistent code knowledge graph instead of ad-hoc grepping: architecture recovery, dependency and impact analysis, \"what calls X / what does X reach\", data-flow tracing, or token-efficient repo Q&A. Trigger phrases: \"map this codebase\", \"what depends on X\", \"impact of changing Y\", \"how does Z flow through the code\", \"build a knowledge graph of the repo\", \"query the codebase\". It documents the graphify CLI (local, deterministic tree-sitter AST extraction; GraphRAG-ready graph.json) and the compliance-safe workflow. Do not use for producing the narrative technical map / bounded-context report: that is tech-analyst; this skill feeds it."
+description: "This skill should be used when an agent needs to understand, navigate, or reason about a codebase through a persistent code knowledge graph instead of ad-hoc grepping: architecture recovery, onboarding onto a legacy codebase, dependency and impact analysis, \"what calls X / what does X reach\", data-flow tracing, refactoring and migration discovery (architectural hubs, hidden cross-module edges), or token-efficient repo Q&A. Trigger phrases: \"map this codebase\", \"what depends on X\", \"impact of changing Y\", \"how does Z flow through the code\", \"build a knowledge graph of the repo\", \"query the codebase\". It documents the graphify CLI (local, deterministic tree-sitter AST extraction; GraphRAG-ready graph.json) and the compliance-safe workflow. Do not use for producing the narrative technical map / bounded-context report: that is tech-analyst; this skill feeds it."
 ---
 
 
 # Graphify Code Graph
-You are a knowledge provider for **graphify**, an MIT-licensed CLI that turns a codebase into a **persistent, queryable knowledge graph**. When invoked, return the authoritative commands, workflow, and guardrails the calling agent needs to use graphify on code. You do not execute commands yourself. You provide the playbook; the caller (which holds `Bash`) runs it.
+Drive **graphify**, an MIT-licensed CLI that turns a codebase into a **persistent, queryable knowledge graph**, using the commands, workflow and guardrails below. This is a playbook, not an executor. Whichever agent holds `Bash` runs the commands.
 
 graphify parses code **locally with tree-sitter AST**: no LLM call, no network, no upload, and no API key. It emits `graph.json` (GraphRAG-ready), `graph.html` (interactive), and `GRAPH_REPORT.md` (audit). Every edge carries an honesty tag (`EXTRACTED` / `INFERRED` / `AMBIGUOUS`) and a `source_location` (`file:line`).
-
----
-
-## When to use graphify (code use cases)
-
-- **Onboarding / architecture recovery**: understand an unfamiliar or legacy codebase, its hubs, communities (modules), and how they connect.
-- **Dependency analysis**: "what does X depend on", call graphs, cross-module coupling.
-- **Impact analysis**: "what breaks if I change Y" via reverse traversal (`affected`).
-- **Data-flow / path tracing**: shortest connection between two symbols (`path`), or how a value flows across the system.
-- **Token-efficient repo Q&A**: answer questions from `graph.json` (BFS/DFS traversal) instead of loading many files into context.
-- **Refactoring / migration discovery**: surface architectural hubs (`god-nodes`) and hidden cross-module edges before restructuring.
 
 Prefer graphify over grep whenever the question is **relational** ("what connects / calls / reaches") rather than a literal string match.
 
@@ -33,7 +22,7 @@ Prefer graphify over grep whenever the question is **relational** ("what connect
   - Only set `GEMINI_API_KEY`/`GOOGLE_API_KEY` when the client's usage policy allows that content to reach that provider.
   - graphify reads **only** `GEMINI_API_KEY`/`GOOGLE_API_KEY` for semantic work, never `ANTHROPIC_API_KEY`/`OPENAI_API_KEY`. Never prompt for a key; a code-only run needs none.
 - `detect` reports `skipped_sensitive` files. Always surface that list so a wrongly-included secret file is visible before extraction.
-- **Never send raw code to an LLM out of band.** The graph (structure + `file:line`) is the artifact you share downstream, not the source.
+- **Never send raw code to an LLM out of band.** The graph (structure + `file:line`) is the artifact shared downstream, not the source.
 
 ---
 
@@ -97,7 +86,7 @@ When citing a fact from a query, quote the node's `source_location` (`file:line`
 ## Limitations to flag
 
 - **No SQL/PL-SQL tree-sitter grammar** ships by default: `.sql`/PL-SQL is not AST-parsed and would fall to the model backend (a compliance risk on sensitive schemas). For database dependencies prefer the DB data dictionary (`ALL_DEPENDENCIES`, `ALL_SOURCE`) and load the result via `--neo4j`.
-- Supported code grammars include Java, Python, TypeScript/JavaScript, Go, Rust, C/C++, C#, Kotlin, Scala, Ruby, PHP, Bash and more; confirm your language is covered before relying on AST edges.
+- Supported code grammars include Java, Python, TypeScript/JavaScript, Go, Rust, C/C++, C#, Kotlin, Scala, Ruby, PHP, Bash and more; confirm the target language is covered before relying on AST edges.
 - Large monorepos need scoping (see the corpus guardrail).
 
 ---

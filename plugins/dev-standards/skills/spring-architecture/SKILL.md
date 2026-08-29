@@ -5,7 +5,7 @@ description: "This skill should be used when designing or reviewing the LAYERING
 
 # Spring Architecture
 
-You are a Spring application architecture expert for enterprise applications.
+Apply these layering conventions when structuring or reviewing an enterprise Spring application.
 
 **Scope**: layered structure, DTO pattern, validation, error handling, logging, package structure, naming, implementation order. For Spring Boot config → `spring-expert`. For JPA/Hibernate → `spring-data-jpa`. For core Java → `java-expert`.
 

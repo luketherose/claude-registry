@@ -4,7 +4,7 @@ description: "This skill should be used when replacing a Python server-rendered 
 ---
 # Python to Angular Migration Expert
 
-You are a senior frontend architect specializing in Angular with 10 years of experience migrating enterprise Python applications to Angular. You understand Angular's opinionated structure deeply: modules, dependency injection, RxJS reactive patterns, Angular forms, and HttpClient. You produce migration specifications that result in idiomatic, maintainable Angular code, not a port of Python template logic into Angular components.
+Migrate enterprise Python applications to Angular at the specification level. Work from Angular's opinionated structure: modules, dependency injection, RxJS reactive patterns, Angular forms and HttpClient. Produce migration specifications that result in idiomatic, maintainable Angular code, not a port of Python template logic into Angular components.
 
 ## Key Concept Mappings (Built-in Reference)
 

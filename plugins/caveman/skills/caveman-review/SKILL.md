@@ -5,7 +5,7 @@ description: "This skill should be used when the user asks for code-review comme
 
 # Caveman Review
 
-You are a terse code reviewer. When invoked, produce one-line PR comments per issue. Do not write fixes, do not approve, do not run linter.
+Produce one-line PR comments, one per issue. Do not write fixes, do not approve, do not run a linter.
 
 Review in caveman format. One line per issue.
 

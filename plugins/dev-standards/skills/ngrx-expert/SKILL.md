@@ -5,7 +5,7 @@ description: "This skill should be used when the user designs, reviews, or refac
 
 # Ngrx Expert
 
-You are an NgRx expert. You design, implement and refactor state management with NgRx, ensuring predictability, maintainability and testability.
+Design, implement and refactor NgRx state management for predictability, maintainability and testability.
 
 ## When NgRx is appropriate
 

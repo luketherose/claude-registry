@@ -212,7 +212,7 @@ Production code standards, developer agents and test authoring for Java/Spring, 
 | `design-expert` | This skill should be used when designing layouts, mockups, or style specifications BEFORE implementing a new frontend component. Trigger phrases:... |
 | `frontend-orchestrator` | ALWAYS use this skill when a frontend task spans multiple concerns: the user asks to design a feature mixing routing, state management, styling, and... |
 | `java-expert` | This skill should be used when working with Java 17+ language features outside the Spring layer: records, sealed classes, Optional, Stream API,... |
-| `java-spring-standards` | This skill should be used when an agent (developer-java, code-reviewer, test-writer) needs the canonical Java/Spring Boot standards: package... |
+| `java-spring-standards` | This skill should be used when an agent (developer-java, pr-review-toolkit:code-reviewer, test-writer) needs the canonical Java/Spring Boot standards: package... |
 | `nextjs` | This skill should be used when working with Next.js 14+ App Router: React Server Components, Server Actions, file-based routing, metadata API,... |
 | `ngrx-expert` | This skill should be used when the user designs, reviews, or refactors NgRx state management: store design, event-driven actions, pure reducers,... |
 | `postgresql-expert` | This skill should be used when the user works with PostgreSQL: designing tables, writing or reviewing SQL, picking indices, tuning queries, authoring... |
@@ -220,7 +220,7 @@ Production code standards, developer agents and test authoring for Java/Spring, 
 | `qwik-expert` | This skill should be used when working on a Qwik or Qwik City app: resumability, lazy components, signals, server-side loaders/actions, file-based... |
 | `react-expert` | This skill should be used when working with React 18+: component architecture, hooks, TypeScript prop typing, performance optimisation... |
 | `refactoring-expert` | This skill should be used when refactoring code in any language to improve internal structure without changing behaviour. Trigger phrases: \"refactor... |
-| `rest-api-standards` | This skill should be used when an agent (api-designer, developer, code-reviewer) needs the canonical REST API design standards: resource modeling,... |
+| `rest-api-standards` | This skill should be used when an agent (api-designer, developer, pr-review-toolkit:code-reviewer) needs the canonical REST API design standards: resource modeling,... |
 | `rxjs-expert` | This skill should be used when working with RxJS in an Angular project: naming conventions, flattening strategies... |
 | `spring-architecture` | This skill should be used when designing or reviewing the LAYERING of a Spring Boot module: Controller/Service/Repository/Entity boundaries,... |
 | `spring-data-jpa` | This skill should be used when working with JPA/Hibernate inside a Spring project: entity design, relations, fetch strategies, N+1 fixes, transaction... |
@@ -229,7 +229,7 @@ Production code standards, developer agents and test authoring for Java/Spring, 
 | `tanstack-query` | This skill should be used when working with TanStack Query v5 in a React app: useQuery, useMutation, useInfiniteQuery, QueryClient configuration,... |
 | `tanstack-start` | This skill should be used when building a full-stack React application with TanStack Start: SSR, Server Functions, streaming, file-based routing,... |
 | `tanstack` | This skill should be used when adding type-safe routing to a React app with TanStack Router: file-based routes, route definitions, loaders, search... |
-| `testing-standards` | This skill should be used when an agent (test-writer, developer, code-reviewer) needs the canonical testing standards: principles, scenario taxonomy,... |
+| `testing-standards` | This skill should be used when an agent (test-writer, developer, pr-review-toolkit:code-reviewer) needs the canonical testing standards: principles, scenario taxonomy,... |
 | `unicredit-design-system` | ALWAYS use this skill when the project end client is UniCredit (UC banking group, including UniCredit Bank Italy/Germany/Austria/CEE). Trigger... |
 | `vanilla-expert` | This skill should be used when building independent widgets, reusable libraries, or projects where a framework would be overkill: Web Components, ES... |
 | `vue-expert` | This skill should be used when working with Vue 3 Composition API: components, composables, Pinia state management, Vue Router 4, TypeScript... |

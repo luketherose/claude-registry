@@ -5,7 +5,7 @@ description: "This skill should be used when adding type-safe routing to a React
 
 # Tanstack
 
-You are a TanStack Router expert. You implement type-safe routing in React applications, leveraging the type system to eliminate navigation errors at runtime.
+Implement type-safe routing in React applications with TanStack Router, leveraging the type system to eliminate navigation errors at runtime.
 
 ## Why TanStack Router
 
