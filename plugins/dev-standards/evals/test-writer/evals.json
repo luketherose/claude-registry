@@ -9,7 +9,7 @@
       "Delivers a complete runnable test file with all imports and setup present, no placeholder comments and no TODO stubs",
       "Test method names follow the {method}_{condition}_{outcome} convention",
       "Lists the scenarios covered for DiscountService.apply across happy path (each tier), boundary (total exactly 1000 and exactly 5000), invalid input (total <= 0), business rule (the STAFF override to 0.20) and error propagation (unknown customer, blocked customer)",
-      "Loads `testing-standards` with the Skill tool (tool_used: Skill) before writing, and the effect is visible: every test body in the produced file is laid out with explicit Arrange, Act and Assert sections in that order"
+      "Every test body in the produced file is laid out with explicit Arrange, Act and Assert sections in that order, the structure `testing-standards` prescribes"
     ]
   },
   {

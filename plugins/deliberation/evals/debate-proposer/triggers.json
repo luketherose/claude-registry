@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Step 2 del dibattito: produci la bozza indipendente dell'Architetto Proponente dal decision brief, senza leggere le altre bozze",
+    "should_trigger": true,
+    "description": "Step 2 independent Primary Architect draft built from the decision brief"
+  },
+  {
+    "query": "Step 4: produci le challenge alle bozze delle altre persona dal punto di vista della solidità tecnica",
+    "should_trigger": true,
+    "description": "Step 4 challenges raised from a technical soundness standpoint"
+  },
+  {
+    "query": "Step 5: rispondi alle challenge rivolte alla tua raccomandazione architetturale",
+    "should_trigger": true,
+    "description": "Step 5 rebuttals to challenges aimed at the architectural recommendation"
+  },
+  {
+    "query": "Step 2: produci la bozza della persona Skeptical Critic che attacca la soluzione più forte",
+    "should_trigger": false,
+    "description": "Step 2 Skeptical Critic draft attacking the strongest solution"
+  },
+  {
+    "query": "Step 3: organizza tutte le bozze in una evidence summary senza raccomandare nessuna opzione",
+    "should_trigger": false,
+    "description": "Step 3 evidence summary organised without recommending an option"
+  },
+  {
+    "query": "Scrivi l'ADR per la decisione di adottare event sourcing nel servizio ordini",
+    "should_trigger": false,
+    "description": "ADR for an event sourcing decision in an order service"
+  }
+]

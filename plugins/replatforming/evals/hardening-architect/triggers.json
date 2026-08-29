@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 4 di Fase 4: applica hardening di osservabilità e sicurezza allo scaffold TO-BE, logging JSON con correlation-id, Micrometer, OpenTelemetry",
+    "should_trigger": true,
+    "description": "Observability and security hardening of the TO-BE scaffold"
+  },
+  {
+    "query": "Aggiorna application.yml ed environment.ts con la baseline Spring Security 6 di produzione, gli header di sicurezza e la CSP",
+    "should_trigger": true,
+    "description": "Configuration updated with the Spring Security 6 baseline, security headers and CSP"
+  },
+  {
+    "query": "Serve ADR-004 sull'osservabilità e ADR-005 sulla baseline di sicurezza",
+    "should_trigger": true,
+    "description": "ADR-004 on observability and ADR-005 on the security baseline"
+  },
+  {
+    "query": "Scrivi la suite di test di sicurezza TO-BE su OWASP Top 10 con gli abuse case JWT",
+    "should_trigger": false,
+    "description": "TO-BE OWASP Top 10 security test suite with JWT abuse cases"
+  },
+  {
+    "query": "Analizza la postura di sicurezza AS-IS del codice contro la OWASP Top 10",
+    "should_trigger": false,
+    "description": "AS-IS code-level security posture against the OWASP Top 10"
+  },
+  {
+    "query": "Produci la roadmap di migrazione con criteri di go-live e piano di rollback",
+    "should_trigger": false,
+    "description": "Migration roadmap with go-live criteria and a rollback plan"
+  }
+]

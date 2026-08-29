@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Scrivi il modulo pytest di baseline per lo UC-07: happy path, path alternativi e casi limite, in test_uc_07_<slug>.py",
+    "should_trigger": true,
+    "description": "Baseline pytest module for one use case with happy, alternative and edge paths"
+  },
+  {
+    "query": "Wave 1 fan-out di Fase 3: un'invocazione per use case, usa streamlit.testing.v1.AppTest per questa pagina",
+    "should_trigger": true,
+    "description": "One invocation per use case using streamlit.testing.v1.AppTest"
+  },
+  {
+    "query": "Produci il modulo di regressione AS-IS per il caso d'uso 'checkout' a partire dalla spec UC di Fase 1",
+    "should_trigger": true,
+    "description": "AS-IS regression module for one use case built from its Phase 1 specification"
+  },
+  {
+    "query": "Scrivi i test di integrazione di baseline per accesso al DB, file system e API esterne mockate",
+    "should_trigger": false,
+    "description": "Baseline integration tests for database, file system and mocked external APIs"
+  },
+  {
+    "query": "Scrivi l'harness pytest di equivalenza per lo UC-07 che confronta l'output TO-BE con lo snapshot AS-IS",
+    "should_trigger": false,
+    "description": "Equivalence pytest harness comparing TO-BE output against the AS-IS snapshot"
+  },
+  {
+    "query": "Costruisci le fixture e il conftest.py con seed fisso e time freeze",
+    "should_trigger": false,
+    "description": "Fixtures and a conftest.py with a fixed seed and frozen time"
+  }
+]

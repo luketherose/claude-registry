@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 5 di Fase 5: fai la review avversariale degli output e segnala i gap che i test writer hanno mancato",
+    "should_trigger": true,
+    "description": "Adversarial review of the Phase 5 outputs flagging gaps left by the test writers"
+  },
+  {
+    "query": "Controlla i pattern mocked-when-shouldn't, l'integrità delle claim di equivalenza e la completezza del sign-off del PO",
+    "should_trigger": true,
+    "description": "Checks on over-mocking, equivalence claim integrity and Product Owner sign-off completeness"
+  },
+  {
+    "query": "Verifica che il backend TO-BE parta con java -jar sul profilo di default e che ci sia lo smoke spec Playwright della shell",
+    "should_trigger": true,
+    "description": "Default-profile boot check and Playwright shell smoke spec coverage"
+  },
+  {
+    "query": "Fai la review avversariale degli output di Fase 4 e produci la matrice di tracciabilità AS-IS verso TO-BE",
+    "should_trigger": false,
+    "description": "Adversarial review of the Phase 4 outputs plus the AS-IS to TO-BE traceability matrix"
+  },
+  {
+    "query": "Fai la review avversariale degli output di Fase 3 baseline, inclusi i rischi di determinismo",
+    "should_trigger": false,
+    "description": "Adversarial review of the Phase 3 baseline outputs including determinism risks"
+  },
+  {
+    "query": "Riscrivi i test che hai trovato incompleti e aggiorna il report di equivalenza",
+    "should_trigger": false,
+    "description": "Incomplete tests rewritten and the equivalence report updated"
+  }
+]

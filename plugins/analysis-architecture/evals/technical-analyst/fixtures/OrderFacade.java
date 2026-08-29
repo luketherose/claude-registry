@@ -9,7 +9,6 @@ public class OrderFacade {
     public static Connection CONN;
     public static Map<String, Object> STATE = new HashMap<>();
 
-    // 1 method, 6 responsibilities, no tests: surefire is configured with skipTests=true
     public Object handle(String action, Map params) throws Exception {
         if (action.equals("create")) {
             String sql = "INSERT INTO orders(customer, total) VALUES('"

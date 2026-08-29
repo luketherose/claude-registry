@@ -6,7 +6,6 @@ import java.util.Optional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-// data class used as a JPA entity: equals/hashCode and copy() break identity semantics
 @Entity
 data class OrderEntity(
     @Id var id: Long? = null,
@@ -25,7 +24,6 @@ class OrderService {
 
     private var lastOrder: OrderEntity? = null
 
-    // Java-style accessors carried into Kotlin
     fun getLastOrder(): OrderEntity? = lastOrder
     fun setLastOrder(o: OrderEntity?) { lastOrder = o }
 

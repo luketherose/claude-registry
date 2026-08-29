@@ -13,7 +13,6 @@ class OrderService
         $this->logger = $logger;
     }
 
-    // $payload is an untyped associative array used as a DTO; no parameter or return type
     public function place($payload)
     {
         $total = @$payload['total'];
@@ -35,7 +34,6 @@ class OrderService
         return ['id' => $order->id, 'total' => $total - $adjustment, 'email' => $email];
     }
 
-    // magic method faking an API surface
     public function __call($name, $arguments)
     {
         return $this->repository->$name(...$arguments);

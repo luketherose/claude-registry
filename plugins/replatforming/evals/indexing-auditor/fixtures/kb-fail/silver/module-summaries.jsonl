@@ -1,0 +1,3 @@
+{"record_id": "S-001", "file_id": "F-001", "path": "src/app/orders.py", "summary": "Order intake and status transitions. The order state machine should migrate to Spring Boot state handlers in the target stack.", "evidence_ids": ["EV-0001", "EV-0002"], "confidence": "high"}
+{"record_id": "S-002", "file_id": "F-002", "path": "src/app/billing.py", "summary": "Invoice totals and tax rounding.", "evidence_ids": [], "confidence": "medium"}
+{"record_id": "S-003", "file_id": "F-003", "path": "src/app/reporting.py", "summary": "Report aggregation over the orders table.", "evidence_ids": ["EV-0007"], "confidence": "medium"}

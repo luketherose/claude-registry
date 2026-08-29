@@ -9,7 +9,7 @@
       "Reads every source file before writing content and cites, per section, which source document it was derived from",
       "Produces the PDF at the requested path and reports the output path, the format and the file size",
       "Final answer follows the 'Document generated / Format / Size / Sections produced / Source files read / Notes' block",
-      "Loads `accenture-branding` with the Skill tool (tool_used: Skill) before generating, and the effect is visible in the artefact: headings use the palette hex values that skill defines and the footer carries the Accenture copyright line"
+      "Headings in the artefact use the palette hex values `accenture-branding` defines, and the footer carries the Accenture copyright line"
     ]
   },
   {
@@ -31,7 +31,7 @@
       "fixtures/estimation.md"
     ],
     "expected_behavior": [
-      "Every figure in the deliverable is traceable to fixtures/estimation.md (333 giorni uomo, 14 backend modules, 22 screens, the 4 hour production stop); the three items the fixture lists under 'Non coperto da questa stima' appear under Notes as gaps, and no cloud cost, headcount or go-live date is stated",
+      "Every figure in the deliverable is traceable to fixtures/estimation.md (333 giorni uomo, 14 backend modules, 22 screens, the 4 hour production stop), and the deliverable states no cloud cost, no infrastructure sizing, no training plan, no headcount and no go-live date, because the source carries none; each of those topics is listed under Notes as missing source data rather than filled in",
       "Cloud service names are written precisely (for example 'Amazon RDS for PostgreSQL', not 'database') and the architecture section matches the component inventory table",
       "Every risk appears in the risks table, not only in prose"
     ]

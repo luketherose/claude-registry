@@ -29,9 +29,3 @@ Versione 0.3, 12 giugno 2026. Fonte: workshop con il team applicativo.
 |---|---|---|
 | Regole di pricing non documentate | Alto | Alta |
 | Finestra di fermo produzione limitata a 4 ore | Alto | Media |
-
-## Non coperto da questa stima
-
-- Dimensionamento infrastrutturale e costi cloud ricorrenti.
-- Formazione degli utenti finali.
-- Data retention e conformità GDPR.

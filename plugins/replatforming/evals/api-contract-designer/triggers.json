@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 2 di Fase 4: produci il contratto OpenAPI 3.1 del backend TO-BE, l'ADR sul flusso di autenticazione e la collection Postman TO-BE",
+    "should_trigger": true,
+    "description": "TO-BE OpenAPI 3.1 contract, authentication-flow ADR and TO-BE Postman collection"
+  },
+  {
+    "query": "Backend e frontend devono consumare la stessa spec: scrivila prima che parta Wave 3",
+    "should_trigger": true,
+    "description": "Single shared spec written before the implementation wave starts"
+  },
+  {
+    "query": "Deriva le operation OpenAPI dai bounded context e dagli use case di Fase 1",
+    "should_trigger": true,
+    "description": "OpenAPI operations derived from the bounded contexts and the Phase 1 use cases"
+  },
+  {
+    "query": "Produci lo scaffold Spring Boot 3 con gli skeleton dei controller a partire dal contratto OpenAPI",
+    "should_trigger": false,
+    "description": "Spring Boot 3 scaffold with controller skeletons generated from the OpenAPI contract"
+  },
+  {
+    "query": "Rivedi questa spec OpenAPI esistente per breaking change e livello di maturità REST",
+    "should_trigger": false,
+    "description": "Review of an existing OpenAPI spec for breaking changes and REST maturity"
+  },
+  {
+    "query": "Produci la collection Postman dei servizi esposti dall'app AS-IS per la regressione di baseline",
+    "should_trigger": false,
+    "description": "Postman collection of the AS-IS exposed services for baseline regression"
+  }
+]

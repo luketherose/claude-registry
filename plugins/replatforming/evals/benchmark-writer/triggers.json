@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Scrivi i benchmark di baseline AS-IS: script pytest-benchmark per UC, probe di profiling memoria e throughput sugli endpoint caldi",
+    "should_trigger": true,
+    "description": "AS-IS baseline benchmarks: per-use-case pytest-benchmark, memory profiling and throughput probes"
+  },
+  {
+    "query": "Serve l'oracolo di performance deterministico e riproducibile che la Fase 5 userà per il confronto",
+    "should_trigger": true,
+    "description": "Deterministic, reproducible performance oracle for the later comparison phase"
+  },
+  {
+    "query": "Wave 1 di Fase 3: produci i benchmark di performance per use case sul codice AS-IS",
+    "should_trigger": true,
+    "description": "Per-use-case performance benchmarks for the AS-IS codebase"
+  },
+  {
+    "query": "Confronta le performance del TO-BE contro il benchmark AS-IS con delta p95 e p99 e scenari k6",
+    "should_trigger": false,
+    "description": "TO-BE versus AS-IS performance comparison with p95 and p99 deltas and k6 scenarios"
+  },
+  {
+    "query": "Analizza staticamente hot loop, N+1 e I/O bloccante sul path critico",
+    "should_trigger": false,
+    "description": "Static analysis of hot loops, N+1 and blocking I/O on the critical path"
+  },
+  {
+    "query": "Esegui la suite di baseline e cattura snapshot, benchmark JSON e coverage JSON",
+    "should_trigger": false,
+    "description": "Execution of the baseline suite capturing snapshots, benchmark JSON and coverage JSON"
+  }
+]

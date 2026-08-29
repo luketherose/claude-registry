@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 3 track backend passo 3, fan-out per UC: traduci la logica Python dello UC-05 nei metodi di servizio Java, sostituendo gli stub UnsupportedOperationException",
+    "should_trigger": true,
+    "description": "Per-use-case translation of AS-IS Python logic into Java service method bodies"
+  },
+  {
+    "query": "Modalità scaffold-todo: implementa l'happy path dello UC-11 e lascia marker TODO sui rami complessi",
+    "should_trigger": true,
+    "description": "Scaffold-todo mode: happy-path implementation with TODO markers on complex branches"
+  },
+  {
+    "query": "Traduci il set di regole Python AS-IS del caso d'uso 'applica sconto' in metodi di dominio sulle entity TO-BE",
+    "should_trigger": true,
+    "description": "AS-IS Python rule set for one use case translated into domain methods on TO-BE entities"
+  },
+  {
+    "query": "Genera lo scaffold Spring Boot con gli skeleton dei servizi per ogni bounded context",
+    "should_trigger": false,
+    "description": "Spring Boot scaffold with service skeletons per bounded context"
+  },
+  {
+    "query": "Rifattorizza questo servizio Java applicando SOLID e riducendo il coupling",
+    "should_trigger": false,
+    "description": "Refactor of an existing Java service applying SOLID and reducing coupling"
+  },
+  {
+    "query": "Estrai le regole di business dal codice Python AS-IS e scrivile nel glossario di dominio",
+    "should_trigger": false,
+    "description": "Business rules extracted from AS-IS Python code into the domain glossary"
+  }
+]

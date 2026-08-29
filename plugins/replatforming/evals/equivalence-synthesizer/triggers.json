@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 4 di Fase 5: consolida tutti gli output nel report di equivalenza 01-equivalence-report.md firmabile dal Product Owner",
+    "should_trigger": true,
+    "description": "All Phase 5 outputs consolidated into the deliverable equivalence report"
+  },
+  {
+    "query": "Per ogni UC dammi il verdetto: equivalent, accepted-difference, regression-blocking, regression-accepted o not-tested-with-reason",
+    "should_trigger": true,
+    "description": "Per-use-case verdict drawn from the fixed verdict vocabulary"
+  },
+  {
+    "query": "Produci anche il README di Fase 5, senza scoprire nuovi finding",
+    "should_trigger": true,
+    "description": "Phase 5 README produced without discovering new findings"
+  },
+  {
+    "query": "Scrivi l'harness di equivalenza per lo UC-09 contro lo snapshot AS-IS",
+    "should_trigger": false,
+    "description": "Equivalence harness for one use case against the AS-IS snapshot"
+  },
+  {
+    "query": "Consolida i findings dei worker di analisi tecnica in un risk register con severity matrix",
+    "should_trigger": false,
+    "description": "Technical analysis findings consolidated into a risk register with a severity matrix"
+  },
+  {
+    "query": "Cerca i gap di copertura UC che i test writer di Fase 5 hanno mancato",
+    "should_trigger": false,
+    "description": "Search for use-case coverage gaps the Phase 5 test writers missed"
+  }
+]

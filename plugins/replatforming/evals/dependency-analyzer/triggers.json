@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Leggi pom.xml e build.gradle e costruisci il grafo delle dipendenze interne, segnalando i cicli e i package isolati",
+    "should_trigger": true,
+    "description": "Internal module graph from Maven and Gradle manifests, with cycles and standalone packages"
+  },
+  {
+    "query": "Fase 0: inventaria le dipendenze esterne dichiarate in package.json e requirements.txt ed emettile in bronze/ con evidenza",
+    "should_trigger": true,
+    "description": "External dependency inventory from package.json and requirements.txt emitted to bronze/"
+  },
+  {
+    "query": "Which internal modules import each other in this Go repository, and are there import cycles?",
+    "should_trigger": true,
+    "description": "Internal import relations and import cycles in a Go repository"
+  },
+  {
+    "query": "Fammi l'inventario delle dipendenze vulnerabili con CVE, licenze e versioni non pinnate, con severity",
+    "should_trigger": false,
+    "description": "Vulnerable-dependency inventory with CVEs, licences and unpinned versions"
+  },
+  {
+    "query": "Produci l'albero delle directory, i conteggi file e le statistiche di linguaggio di questo repository",
+    "should_trigger": false,
+    "description": "Directory tree, file counts and language statistics of a repository"
+  },
+  {
+    "query": "Trova ogni punto in cui i dati attraversano il confine dell'applicazione: DB, API esterne, file I/O, variabili d'ambiente",
+    "should_trigger": false,
+    "description": "Inventory of the points where data crosses the application boundary"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Fase 0 passo 1: produci l'inventario strutturale del repository e il blocco di stack detection per le fasi a valle",
+    "should_trigger": true,
+    "description": "Structural inventory plus stack detection block for the downstream phases"
+  },
+  {
+    "query": "Build the bronze/ directory tree, the file counts and the language statistics for this polyglot repository, entrypoints included",
+    "should_trigger": true,
+    "description": "Directory tree, file counts, language statistics and entrypoints of a polyglot repository"
+  },
+  {
+    "query": "Rileva lo stack di questo repository (linguaggio primario, framework, build tool, package manager, test framework) e scrivilo in bronze/stack.json",
+    "should_trigger": true,
+    "description": "Stack detection written to bronze/stack.json"
+  },
+  {
+    "query": "Estrai le dipendenze esterne dai manifest di build e costruisci il grafo dei moduli interni, segnalando i cicli",
+    "should_trigger": false,
+    "description": "External dependencies from build manifests plus the internal module graph with cycles"
+  },
+  {
+    "query": "Documenta il package `billing` end-to-end: scopo, interfaccia pubblica, strutture dati chiave",
+    "should_trigger": false,
+    "description": "End-to-end API-level documentation of one package"
+  },
+  {
+    "query": "Consolida gli output delle fasi precedenti della KB nella system overview e nell'ipotesi di bounded context",
+    "should_trigger": false,
+    "description": "Consolidation of prior KB phases into a system overview and a bounded-context hypothesis"
+  }
+]

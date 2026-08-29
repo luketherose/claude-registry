@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Esegui la Fase 5: testing TO-BE e verifica di equivalenza contro la baseline AS-IS di Fase 3",
+    "should_trigger": true,
+    "description": "Phase 5 TO-BE testing and equivalence verification against the Phase 3 baseline"
+  },
+  {
+    "query": "Servono i test backend e frontend TO-BE, l'harness di equivalenza, il confronto di performance e il report di equivalenza firmabile dal PO",
+    "should_trigger": true,
+    "description": "Full Phase 5 output set from TO-BE tests through the Product Owner equivalence report"
+  },
+  {
+    "query": "Esegui la Fase 5 end to end: backend/, frontend/, tests/baseline/ e docs/refactoring/api/openapi.yaml sono tutti al loro posto",
+    "should_trigger": true,
+    "description": "End-to-end Phase 5 run with every prior artefact in place"
+  },
+  {
+    "query": "Esegui la Fase 3: costruisci la suite di regressione di baseline AS-IS",
+    "should_trigger": false,
+    "description": "Phase 3 run building the AS-IS baseline regression suite"
+  },
+  {
+    "query": "Esegui la Fase 4 TO-BE Refactoring e genera lo scaffold",
+    "should_trigger": false,
+    "description": "Phase 4 TO-BE Refactoring run generating the scaffold"
+  },
+  {
+    "query": "Esegui solo le suite di test TO-BE già scritte e cattura coverage e risultati del verifier",
+    "should_trigger": false,
+    "description": "Execution of the already-written TO-BE suites capturing coverage and verifier results"
+  }
+]

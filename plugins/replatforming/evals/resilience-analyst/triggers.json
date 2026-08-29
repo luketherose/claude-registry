@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Analizza la postura di resilienza AS-IS: try/except, qualità del logging, fallimenti silenziosi, catene di fallback, circuit breaker",
+    "should_trigger": true,
+    "description": "AS-IS resilience posture: error handling, logging quality, silent failures, fallbacks, circuit breakers"
+  },
+  {
+    "query": "Dove questa applicazione fallisce in silenzio e dove mancano i timeout?",
+    "should_trigger": true,
+    "description": "Where the application fails silently and where timeouts are missing"
+  },
+  {
+    "query": "Wave 1 di Fase 2: valuta i recovery path e la postura di error handling di questo codice",
+    "should_trigger": true,
+    "description": "Assessment of recovery paths and error-handling posture"
+  },
+  {
+    "query": "Cataloga le integrazioni esterne con contratto, metodo di auth e servizi terzi",
+    "should_trigger": false,
+    "description": "Catalogue of external integrations with contract, auth method and third-party services"
+  },
+  {
+    "query": "Applica il hardening di osservabilità al TO-BE: logging JSON strutturato con correlation-id, Micrometer, OpenTelemetry",
+    "should_trigger": false,
+    "description": "Observability hardening of the TO-BE stack: structured JSON logging, Micrometer, OpenTelemetry"
+  },
+  {
+    "query": "Ecco lo stack trace, questo endpoint ritorna 500 a intermittenza: trova la causa",
+    "should_trigger": false,
+    "description": "Intermittent 500 on one endpoint with a stack trace attached"
+  }
+]

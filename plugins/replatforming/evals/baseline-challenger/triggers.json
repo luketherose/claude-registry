@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Fai la review avversariale degli output di Fase 3: fixture, file di test, benchmark, collection Postman e report del runner",
+    "should_trigger": true,
+    "description": "Adversarial review of the Phase 3 fixtures, tests, benchmarks, Postman collection and runner report"
+  },
+  {
+    "query": "Cerca modifiche al sorgente AS-IS, rischi di determinismo e problemi di integrità dell'oracolo nella baseline",
+    "should_trigger": true,
+    "description": "Search for AS-IS source modifications, determinism risks and oracle integrity issues"
+  },
+  {
+    "query": "Wave 3 di Fase 3: le disposizioni dei bug hanno la severity giusta?",
+    "should_trigger": true,
+    "description": "Severity match of the bug dispositions in the baseline outputs"
+  },
+  {
+    "query": "Fai la review avversariale degli output di Fase 5 e cerca i gap di copertura UC che i test writer hanno mancato",
+    "should_trigger": false,
+    "description": "Adversarial review of the Phase 5 outputs for use-case coverage gaps"
+  },
+  {
+    "query": "Esegui la suite di baseline e cattura gli artefatti oracolo",
+    "should_trigger": false,
+    "description": "Execution of the baseline suite capturing the oracle artefacts"
+  },
+  {
+    "query": "Fai la review avversariale di tutti gli output di Fase 2 tecnica, incluso il risk register",
+    "should_trigger": false,
+    "description": "Adversarial review of the Phase 2 technical outputs including the risk register"
+  }
+]

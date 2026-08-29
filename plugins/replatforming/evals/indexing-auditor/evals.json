@@ -1,0 +1,58 @@
+[
+  {
+    "agent": "indexing-auditor",
+    "query": "L'indicizzazione è finita. Audita questa knowledge base e dammi il verdetto prima che parta la Fase 1.",
+    "files": [
+      "fixtures/kb-fail/bronze/file-inventory.jsonl",
+      "fixtures/kb-fail/bronze/large-files.jsonl",
+      "fixtures/kb-fail/bronze/large-file-chunks.jsonl",
+      "fixtures/kb-fail/bronze/routes.json",
+      "fixtures/kb-fail/silver/module-summaries.jsonl",
+      "fixtures/kb-fail/evidence-ledger.jsonl",
+      "fixtures/kb-fail/gold/system-overview.md"
+    ],
+    "expected_behavior": [
+      "The verdict is FAIL, and the report names at least two of the three blocking conditions that force it: `src/app/reporting.py` is in large-files.jsonl with no chunk in large-file-chunks.jsonl and no exclusion_reason, `EV-0007` appears twice in evidence-ledger.jsonl, and record S-001 carries the target-technology phrase 'migrate to Spring Boot'",
+      "Reports the coverage gap by name: `src/app/legacy_export.py` is in file-inventory.jsonl and has no record in module-summaries.jsonl, and the `/admin` route R-003 in routes.json has no use-case candidate in Silver",
+      "Reports that chunk CHK-002 has no `classification` field and that `gold/coverage-report.md` is absent, each tagged [BLOCKING] or [INFO] rather than left untagged",
+      "Writes only `gold/indexing-audit.md` and `gold/indexing-audit.json`; the fixture files under bronze/, silver/ and evidence-ledger.jsonl are byte-identical afterwards",
+      "The JSON output carries `verdict`, `blocking_gap_count`, `info_gap_count` and a `findings` list where every entry has `check_id`, `category`, `severity` and `affected_count`"
+    ]
+  },
+  {
+    "agent": "indexing-auditor",
+    "query": "Validate this KB before Phase 1 starts. I do not want the pipeline re-run, only the verdict and the gap list.",
+    "files": [
+      "fixtures/kb-gaps/bronze/file-inventory.jsonl",
+      "fixtures/kb-gaps/bronze/large-files.jsonl",
+      "fixtures/kb-gaps/bronze/large-file-chunks.jsonl",
+      "fixtures/kb-gaps/bronze/routes.json",
+      "fixtures/kb-gaps/silver/module-summaries.jsonl",
+      "fixtures/kb-gaps/evidence-ledger.jsonl",
+      "fixtures/kb-gaps/gold/system-overview.md",
+      "fixtures/kb-gaps/gold/coverage-report.md"
+    ],
+    "expected_behavior": [
+      "The verdict is PASS_WITH_GAPS, not FAIL and not PASS, and the report states the number that puts it there: 1 of 25 inventory files uncovered, which is 4 percent and under the 5 percent threshold",
+      "Names `src/app/scheduler.py` as the single uncovered file rather than reporting an unnamed count",
+      "Does not report a duplicate evidence_id, a large-file coverage gap or an AS-IS purity violation, because none of the three exists in these files",
+      "Does not regenerate, extend or repair any Silver record; the only files written are the two audit outputs under gold/"
+    ]
+  },
+  {
+    "agent": "indexing-auditor",
+    "query": "Fai girare tutti i controlli di audit sulla KB e spiegami perché il verdetto è quello, categoria per categoria.",
+    "files": [
+      "fixtures/kb-fail/bronze/file-inventory.jsonl",
+      "fixtures/kb-fail/bronze/large-file-chunks.jsonl",
+      "fixtures/kb-fail/silver/module-summaries.jsonl",
+      "fixtures/kb-fail/evidence-ledger.jsonl"
+    ],
+    "expected_behavior": [
+      "Groups the findings under the four categories coverage, evidence_quality, gold_synthesis and as_is_purity, and every finding sits under exactly one",
+      "Reports record S-002 (`src/app/billing.py`) as a Silver claim with an empty `evidence_ids` array, and states what share of Silver records that is (1 of 3) rather than only that it exists",
+      "States that `gold/coverage-report.md` and `graph/graph-quality-report.md` were not found rather than assuming they passed",
+      "Proposes no fix and applies none: no missing evidence_id is invented, no summary is rewritten, and the report says the gaps are for the pipeline to close"
+    ]
+  }
+]

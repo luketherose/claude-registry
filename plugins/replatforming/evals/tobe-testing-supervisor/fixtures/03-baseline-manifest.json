@@ -1,0 +1,55 @@
+{
+  "phase": 3,
+  "name": "baseline-testing",
+  "status": "partial",
+  "generated_at": "2026-08-14T09:41:02Z",
+  "waves": [
+    {
+      "wave": 0,
+      "worker": "fixture-builder",
+      "status": "complete",
+      "duration_s": 74
+    },
+    {
+      "wave": 1,
+      "worker": "usecase-test-writer",
+      "status": "complete",
+      "duration_s": 612,
+      "use_cases_covered": [
+        "UC-01",
+        "UC-02",
+        "UC-03"
+      ]
+    },
+    {
+      "wave": 1,
+      "worker": "integration-test-writer",
+      "status": "complete",
+      "duration_s": 188
+    },
+    {
+      "wave": 1,
+      "worker": "benchmark-writer",
+      "status": "failed",
+      "duration_s": 31,
+      "reason": "pytest-benchmark not installed in the analysis environment"
+    },
+    {
+      "wave": 2,
+      "worker": "baseline-runner",
+      "status": "skipped",
+      "reason": "execution policy resolved to write-only"
+    },
+    {
+      "wave": 3,
+      "worker": "baseline-challenger",
+      "status": "complete",
+      "duration_s": 143
+    }
+  ],
+  "oracle": {
+    "snapshots": 0,
+    "benchmark_json": null,
+    "coverage_json": null
+  }
+}

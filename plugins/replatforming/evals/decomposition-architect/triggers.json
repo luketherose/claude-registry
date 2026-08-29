@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 1 di Fase 4: produci la decomposizione in bounded context TO-BE e gli ADR fondativi su stile architetturale e stack target",
+    "should_trigger": true,
+    "description": "TO-BE bounded-context decomposition plus the foundational architecture and stack ADRs"
+  },
+  {
+    "query": "Mappa i moduli AS-IS su bounded context e aggregate TO-BE, leggendo .indexing-kb/, Fase 1 e Fase 2",
+    "should_trigger": true,
+    "description": "AS-IS modules mapped onto TO-BE bounded contexts and aggregates"
+  },
+  {
+    "query": "Serve l'ADR sullo stile architetturale prima che parta qualunque altro worker di Fase 4",
+    "should_trigger": true,
+    "description": "Architecture-style ADR needed before any other Phase 4 worker starts"
+  },
+  {
+    "query": "Produci il contratto OpenAPI 3.1 del backend TO-BE e l'ADR sul flusso di autenticazione",
+    "should_trigger": false,
+    "description": "TO-BE OpenAPI 3.1 contract and the authentication-flow ADR"
+  },
+  {
+    "query": "Produci l'ipotesi di bounded context AS-IS a partire dalla KB di indicizzazione",
+    "should_trigger": false,
+    "description": "AS-IS bounded-context hypothesis derived from the indexing KB"
+  },
+  {
+    "query": "Produci la roadmap di migrazione strangler fig con milestone e piano di rollback",
+    "should_trigger": false,
+    "description": "Strangler fig migration roadmap with milestones and a rollback plan"
+  }
+]

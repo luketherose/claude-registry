@@ -15,6 +15,11 @@
     "description": "CRUD matrix and requirement-to-code traceability"
   },
   {
+    "query": "Estrai i requisiti funzionali e i casi d'uso da questo codice PHP legacy",
+    "should_trigger": true,
+    "description": "Functional requirements and use cases extracted from legacy PHP code"
+  },
+  {
     "query": "Valuta se conviene passare a microservizi e scrivimi l'ADR con i trade-off",
     "should_trigger": false,
     "description": "Whether to move to microservices, with an ADR and trade-offs"
@@ -23,5 +28,10 @@
     "query": "Fammi l'inventario del debito tecnico e delle vulnerabilità delle dipendenze con severity",
     "should_trigger": false,
     "description": "Technical debt and dependency vulnerability inventory with severity"
+  },
+  {
+    "query": "Documenta questo codice Streamlit: docstring, descrizioni dei flussi e glossario di dominio",
+    "should_trigger": false,
+    "description": "Streamlit code documented with docstrings, flow descriptions and a domain glossary"
   }
 ]

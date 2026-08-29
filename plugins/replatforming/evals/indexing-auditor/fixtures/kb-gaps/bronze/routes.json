@@ -1,0 +1,124 @@
+{
+  "routes": [
+    {
+      "route_id": "R-001",
+      "path": "/orders",
+      "source": "src/app/orders.py"
+    },
+    {
+      "route_id": "R-002",
+      "path": "/billing",
+      "source": "src/app/billing.py"
+    },
+    {
+      "route_id": "R-003",
+      "path": "/reporting",
+      "source": "src/app/reporting.py"
+    },
+    {
+      "route_id": "R-004",
+      "path": "/auth",
+      "source": "src/app/auth.py"
+    },
+    {
+      "route_id": "R-005",
+      "path": "/catalog",
+      "source": "src/app/catalog.py"
+    },
+    {
+      "route_id": "R-006",
+      "path": "/cart",
+      "source": "src/app/cart.py"
+    },
+    {
+      "route_id": "R-007",
+      "path": "/checkout",
+      "source": "src/app/checkout.py"
+    },
+    {
+      "route_id": "R-008",
+      "path": "/shipping",
+      "source": "src/app/shipping.py"
+    },
+    {
+      "route_id": "R-009",
+      "path": "/returns",
+      "source": "src/app/returns.py"
+    },
+    {
+      "route_id": "R-010",
+      "path": "/pricing",
+      "source": "src/app/pricing.py"
+    },
+    {
+      "route_id": "R-011",
+      "path": "/promotions",
+      "source": "src/app/promotions.py"
+    },
+    {
+      "route_id": "R-012",
+      "path": "/inventory",
+      "source": "src/app/inventory.py"
+    },
+    {
+      "route_id": "R-013",
+      "path": "/suppliers",
+      "source": "src/app/suppliers.py"
+    },
+    {
+      "route_id": "R-014",
+      "path": "/warehouse",
+      "source": "src/app/warehouse.py"
+    },
+    {
+      "route_id": "R-015",
+      "path": "/invoicing",
+      "source": "src/app/invoicing.py"
+    },
+    {
+      "route_id": "R-016",
+      "path": "/payments",
+      "source": "src/app/payments.py"
+    },
+    {
+      "route_id": "R-017",
+      "path": "/refunds",
+      "source": "src/app/refunds.py"
+    },
+    {
+      "route_id": "R-018",
+      "path": "/notifications",
+      "source": "src/app/notifications.py"
+    },
+    {
+      "route_id": "R-019",
+      "path": "/audit",
+      "source": "src/app/audit.py"
+    },
+    {
+      "route_id": "R-020",
+      "path": "/search",
+      "source": "src/app/search.py"
+    },
+    {
+      "route_id": "R-021",
+      "path": "/settings",
+      "source": "src/app/settings.py"
+    },
+    {
+      "route_id": "R-022",
+      "path": "/profiles",
+      "source": "src/app/profiles.py"
+    },
+    {
+      "route_id": "R-023",
+      "path": "/exports",
+      "source": "src/app/exports.py"
+    },
+    {
+      "route_id": "R-024",
+      "path": "/imports",
+      "source": "src/app/imports.py"
+    }
+  ]
+}

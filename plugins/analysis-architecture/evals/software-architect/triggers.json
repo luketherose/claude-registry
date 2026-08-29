@@ -15,6 +15,26 @@
     "description": "Architecture analysis with performance, security and cost trade-offs"
   },
   {
+    "query": "Valuta Kafka contro RabbitMQ per questo sistema ordini Java e scrivimi l'ADR con i trade-off",
+    "should_trigger": true,
+    "description": "Kafka versus RabbitMQ for a Java order system, with an ADR and trade-offs"
+  },
+  {
+    "query": "Fammi il modello C4 di questo backend Kotlin e i rischi di integrazione, senza scrivere codice",
+    "should_trigger": true,
+    "description": "C4 model and integration risks of a Kotlin backend, no code"
+  },
+  {
+    "query": "Valuta se spezzare questo monolite Rails in servizi e scrivimi l'ADR con i trade-off",
+    "should_trigger": true,
+    "description": "Whether to split a Rails monolith into services, with an ADR and trade-offs"
+  },
+  {
+    "query": "Valuta se conviene axum o actix-web per questo sistema e scrivimi l'ADR con i trade-off",
+    "should_trigger": true,
+    "description": "axum versus actix-web for a system, with an ADR and trade-offs"
+  },
+  {
     "query": "Write the Spring Boot controller for the user registration endpoint",
     "should_trigger": false,
     "description": "Spring Boot controller for the user registration endpoint"
@@ -23,5 +43,20 @@
     "query": "Produce a CVE inventory for our third-party dependencies",
     "should_trigger": false,
     "description": "CVE inventory for third-party dependencies"
+  },
+  {
+    "query": "Fammi l'inventario del debito tecnico di questo servizio Spring Boot con severity e priorità",
+    "should_trigger": false,
+    "description": "Technical debt inventory of a Spring Boot service with severity and priority"
+  },
+  {
+    "query": "Prima di migrare questo gestionale dobbiamo documentare l'AS-IS: ricostruisci le funzionalità",
+    "should_trigger": false,
+    "description": "AS-IS functionality reconstructed before a migration"
+  },
+  {
+    "query": "Scrivi un servizio axum con tokio, thiserror e tracing",
+    "should_trigger": false,
+    "description": "axum service written with tokio, thiserror and tracing"
   }
 ]

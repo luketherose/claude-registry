@@ -15,7 +15,6 @@ public class OrderService
         _logger = logger;
     }
 
-    // CancellationToken accepted then dropped: not passed to any awaited call below.
     public async Task<Order> PlaceAsync(OrderRequest request, CancellationToken cancellationToken)
     {
         var customer = _repository.FindCustomer(request.CustomerId).Result;
@@ -35,7 +34,6 @@ public class OrderService
         return await Task.FromResult(order);
     }
 
-    // async void outside an event handler: exceptions here cannot be observed by the caller.
     private async void NotifyWarehouse(Order order)
     {
         try
@@ -44,7 +42,6 @@ public class OrderService
         }
         catch (Exception)
         {
-            // swallowed
         }
     }
 }

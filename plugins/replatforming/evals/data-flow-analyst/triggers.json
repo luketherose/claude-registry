@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Inventaria ogni punto in cui i dati attraversano il confine dell'applicazione: DB, API esterne, file I/O, variabili d'ambiente, sorgenti di configurazione",
+    "should_trigger": true,
+    "description": "Inventory of every data crossing at the application boundary"
+  },
+  {
+    "query": "Prima di progettare la persistenza TO-BE ci serve l'inventario completo dei touchpoint esterni dell'app AS-IS",
+    "should_trigger": true,
+    "description": "Full external-touchpoint inventory of the AS-IS application"
+  },
+  {
+    "query": "Fase 0: scrivi .indexing-kb/06-data-flow/ per questo progetto Django, usando i pattern ORM e HTTP client dichiarati in stack.json",
+    "should_trigger": true,
+    "description": "Boundary inventory written to .indexing-kb/06-data-flow/ using stack.json patterns"
+  },
+  {
+    "query": "Spiega il significato di business dei campi che scriviamo su `orders`, con glossario e regole",
+    "should_trigger": false,
+    "description": "Business meaning of persisted fields, with glossary and rules"
+  },
+  {
+    "query": "Analizza sorgenti, trasformazioni, validazioni e sink dei dati AS-IS attraverso DB, cache e serializzazione",
+    "should_trigger": false,
+    "description": "AS-IS data sources, transformations, validations and sinks across persistence and cache layers"
+  },
+  {
+    "query": "Documenta l'interfaccia pubblica del package `api/` con le sue strutture dati",
+    "should_trigger": false,
+    "description": "Public interface and data structures of one package"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Produci la collection Postman 2.1 dei servizi esposti dall'app AS-IS, con richieste happy ed edge, setup di auth e assertion di risposta",
+    "should_trigger": true,
+    "description": "Postman 2.1 collection of the AS-IS exposed services with happy and edge requests"
+  },
+  {
+    "query": "La mappa integrazioni di Fase 2 ha rilevato servizi esposti: preparane la regressione end-to-end contro la baseline",
+    "should_trigger": true,
+    "description": "End-to-end regression of the exposed services detected by the Phase 2 integration map"
+  },
+  {
+    "query": "Serve anche il file environment per la collection di regressione degli endpoint AS-IS",
+    "should_trigger": true,
+    "description": "Environment file accompanying the AS-IS endpoint regression collection"
+  },
+  {
+    "query": "Scrivi i test di integrazione di baseline sull'uso che l'app fa di DB, file system e API esterne",
+    "should_trigger": false,
+    "description": "Baseline integration tests on the application's use of database, file system and external APIs"
+  },
+  {
+    "query": "Produci la collection Postman TO-BE che rispecchi quella AS-IS di Fase 3",
+    "should_trigger": false,
+    "description": "TO-BE Postman collection mirroring the Phase 3 AS-IS one"
+  },
+  {
+    "query": "Cataloga le chiamate HTTP in uscita verso servizi terzi con contratto e metodo di auth",
+    "should_trigger": false,
+    "description": "Catalogue of outbound HTTP calls to third-party services with contract and auth method"
+  }
+]

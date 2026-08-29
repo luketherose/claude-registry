@@ -10,7 +10,7 @@
       "Output follows the Debug Report shape with Observed symptom, Root cause, Fix and Why this fixes it as separate sections",
       "The root cause is explained with concrete file:line references (PaymentClient.java:47 as the failing dereference of a null billing address, reached from PaymentClient.java:31) before any fix code is shown",
       "The fix touches PaymentClient.java only: no other fixture file is rewritten, nothing is renamed, and no method other than buildRequest is modified",
-      "Loads `spring-expert` with the Skill tool (tool_used: Skill) because the trace is a Spring MVC request, and the effect is visible: the report separates the framework frames (DispatcherServlet, InvocableHandlerMethod, HttpServlet) from the four application frames and reasons only about the application ones"
+      "The report separates the framework frames (DispatcherServlet, InvocableHandlerMethod, HttpServlet) from the four application frames and reasons only about the application ones, the Spring MVC frame split `spring-expert` describes"
     ]
   },
   {

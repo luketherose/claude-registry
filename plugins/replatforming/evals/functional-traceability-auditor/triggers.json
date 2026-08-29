@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Verifica che ogni UC confermato di Fase 1 abbia evidence_ids e che ogni UI surface mappi a uno UC",
+    "should_trigger": true,
+    "description": "Evidence ids on confirmed use cases and UI-surface to use-case mapping"
+  },
+  {
+    "query": "Controlla che negli output di Fase 1 non compaia nessun riferimento a tecnologie TO-BE",
+    "should_trigger": true,
+    "description": "TO-BE technology references checked against the Phase 1 outputs"
+  },
+  {
+    "query": "Wave 3b: audita docs/analysis/01-functional/normalized/ e raw/ contro .indexing-kb/ per il negative space",
+    "should_trigger": true,
+    "description": "Negative-space audit of the normalized and raw Phase 1 outputs against the KB"
+  },
+  {
+    "query": "Verifica che ogni finding tecnico di Fase 2 abbia evidence_ids e che gli high e critical siano in stato verified",
+    "should_trigger": false,
+    "description": "Evidence ids and verified status on the Phase 2 technical findings"
+  },
+  {
+    "query": "Audita la KB di Fase 0: coverage gap, file orfani, file grandi senza copertura a chunk",
+    "should_trigger": false,
+    "description": "Phase 0 KB audit for coverage gaps, orphan files and large files without chunk coverage"
+  },
+  {
+    "query": "Rigenera gli UC che non hanno evidenze, aggiungendo i riferimenti mancanti",
+    "should_trigger": false,
+    "description": "Regeneration of unevidenced use cases with the missing references added"
+  }
+]

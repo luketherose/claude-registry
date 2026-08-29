@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Scrivi i test di integrazione di baseline AS-IS: accesso DB, I/O su file system, consumo di API esterne mockate, layer di cache",
+    "should_trigger": true,
+    "description": "AS-IS baseline integration tests for database, file system, mocked external APIs and cache"
+  },
+  {
+    "query": "Wave 1 di Fase 3: copri l'uso che l'applicazione fa dei suoi confini, non i servizi che espone",
+    "should_trigger": true,
+    "description": "Coverage of the application's use of its boundaries rather than the services it exposes"
+  },
+  {
+    "query": "Aggiungi i test di baseline che esercitano il layer di cache e l'I/O su file system dell'app AS-IS",
+    "should_trigger": true,
+    "description": "Baseline tests exercising the cache layer and file system I/O of the AS-IS app"
+  },
+  {
+    "query": "Produci la collection Postman 2.1 dei servizi esposti dall'app, con auth e assertion di risposta",
+    "should_trigger": false,
+    "description": "Postman 2.1 collection of the exposed services with auth setup and response assertions"
+  },
+  {
+    "query": "Scrivi i test di contratto Spring Cloud Contract per il backend TO-BE verso l'OpenAPI 3.1",
+    "should_trigger": false,
+    "description": "Spring Cloud Contract tests for the TO-BE backend against the OpenAPI 3.1 spec"
+  },
+  {
+    "query": "Scrivi il modulo pytest di baseline per lo UC-02 con happy path e casi limite",
+    "should_trigger": false,
+    "description": "Baseline pytest module for one use case with happy path and edge cases"
+  }
+]

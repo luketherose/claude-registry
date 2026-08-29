@@ -29,7 +29,3 @@ database su Amazon RDS for PostgreSQL 16, batch su AWS Batch.
 |---|---|---|
 | Regole di pricing non documentate | Alto | Alta |
 | Finestra di fermo produzione limitata a 4 ore | Alto | Media |
-
-## Dati non disponibili
-
-Costi cloud ricorrenti, dimensionamento infrastrutturale, piano di formazione.

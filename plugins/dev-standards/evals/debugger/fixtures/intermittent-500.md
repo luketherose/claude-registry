@@ -26,7 +26,7 @@ Caused by: java.sql.SQLTransientConnectionException: HikariPool-1 - Connection i
 ```java
 @Transactional(readOnly = true)
 public DailyReport buildDaily(LocalDate day) {
-    Connection extra = dataSource.getConnection();          // line 52, never closed
+    Connection extra = dataSource.getConnection();
     List<Row> rows = jdbcTemplate.query(DAILY_SQL, day);
     return aggregate(rows, extra);
 }

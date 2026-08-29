@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Deriva i casi d'uso, gli user flow e i diagrammi di sequenza Mermaid da attori, feature, UI surface e catalogo I/O già estratti",
+    "should_trigger": true,
+    "description": "Use cases, user flows and Mermaid diagrams derived from the existing Phase 1 artefacts"
+  },
+  {
+    "query": "Wave 2 di Fase 1: produci gli UC AS-IS per i flussi reattivi Streamlit che non hanno routing esplicito",
+    "should_trigger": true,
+    "description": "AS-IS use cases for reactive Streamlit flows with no explicit routing"
+  },
+  {
+    "query": "Draw the Mermaid sequence diagram for each AS-IS user flow, from the artefacts already in the KB",
+    "should_trigger": true,
+    "description": "Mermaid sequence diagram per AS-IS user flow, from KB artefacts"
+  },
+  {
+    "query": "Estrai attori, ruoli e personas insieme alla mappa delle feature",
+    "should_trigger": false,
+    "description": "Actors, roles and personas together with the feature map"
+  },
+  {
+    "query": "Scrivi i criteri di accettazione Gherkin per il nuovo sistema a partire da queste user story",
+    "should_trigger": false,
+    "description": "Gherkin acceptance criteria for a new system drawn from user stories"
+  },
+  {
+    "query": "Scrivi il modulo pytest di baseline per lo UC-07, happy path e casi limite",
+    "should_trigger": false,
+    "description": "Baseline pytest module for one use case, happy path and edge cases"
+  }
+]

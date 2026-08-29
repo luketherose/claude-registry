@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 3 track backend passo 2: produci le entity JPA per l'aggregate Orders, i changelog Liquibase e le repository Spring Data",
+    "should_trigger": true,
+    "description": "JPA entities, Liquibase changelogs and Spring Data repositories for one aggregate"
+  },
+  {
+    "query": "Mappa i modelli dati AS-IS su entity JPA rispettando i confini degli aggregate DDD",
+    "should_trigger": true,
+    "description": "AS-IS data models mapped onto JPA entities honouring DDD aggregate boundaries"
+  },
+  {
+    "query": "Serve il value object per l'importo monetario e il changelog che crea la sua colonna",
+    "should_trigger": true,
+    "description": "Value object for a monetary amount plus the changelog that creates its column"
+  },
+  {
+    "query": "Analizza i pattern di accesso ai dati AS-IS: sorgenti, trasformazioni, validazioni e sink",
+    "should_trigger": false,
+    "description": "AS-IS data access patterns: sources, transformations, validations and sinks"
+  },
+  {
+    "query": "Progetta il dataset di test cross-modulo e caricalo come seed nel DB dell'app TO-BE",
+    "should_trigger": false,
+    "description": "Cross-module test dataset loaded as seed data into the TO-BE database"
+  },
+  {
+    "query": "Ho un N+1 su questa repository, sistemalo con una fetch join",
+    "should_trigger": false,
+    "description": "N+1 on an existing repository method to be fixed with a fetch join"
+  }
+]

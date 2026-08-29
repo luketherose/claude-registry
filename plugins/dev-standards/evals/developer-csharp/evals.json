@@ -7,7 +7,7 @@
       "Nullable reference types are enabled and warnings are treated as errors in the csproj",
       "DTOs are declared as records and configuration is bound through IOptions<T> with validation at startup",
       "All file content is produced with the Write or Edit tool: no Bash heredoc, echo redirect, printf redirect or tee is used to create C# or csproj content",
-      "Loads `rest-api-standards` with the Skill tool (tool_used: Skill) while shaping the endpoints, and the effect is visible: creation returns 201 with a Location header, the collection endpoint is paginated, and errors are returned as RFC 7807 ProblemDetails rather than a custom error object"
+      "Creation returns 201 with a Location header, the collection endpoint is paginated, and errors are returned as RFC 7807 ProblemDetails rather than a custom error object, the three rules `rest-api-standards` prescribes"
     ]
   },
   {

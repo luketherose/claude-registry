@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Inventaria tutti gli input e gli output funzionali dell'app e la matrice di trasformazione fra essi",
+    "should_trigger": true,
+    "description": "Functional input and output inventory plus the transformation matrix"
+  },
+  {
+    "query": "Quali dati fornisce l'utente a questa applicazione e quali riceve indietro, AS-IS?",
+    "should_trigger": true,
+    "description": "Data the user provides and receives back, AS-IS"
+  },
+  {
+    "query": "Fase 1: costruisci il catalogo I/O dalla KB, prospettiva funzionale, senza dettaglio infrastrutturale",
+    "should_trigger": true,
+    "description": "I/O catalogue built from the KB in functional terms, no infrastructure detail"
+  },
+  {
+    "query": "Mappa dove i dati attraversano il confine di sistema: DB, API esterne, file I/O, variabili d'ambiente",
+    "should_trigger": false,
+    "description": "Map of the infrastructure points where data crosses the system boundary"
+  },
+  {
+    "query": "Estrai le regole di validazione e il glossario di dominio dal codice",
+    "should_trigger": false,
+    "description": "Validation rules and domain glossary extracted from code"
+  },
+  {
+    "query": "Costruisci le fixture di test AS-IS minime, realistiche ed edge, più il conftest.py deterministico",
+    "should_trigger": false,
+    "description": "Minimal, realistic and edge AS-IS test fixtures plus a deterministic conftest.py"
+  }
+]

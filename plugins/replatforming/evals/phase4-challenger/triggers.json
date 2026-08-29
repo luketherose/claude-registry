@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 6 di Fase 4: produci la matrice di tracciabilità AS-IS verso TO-BE e i dieci controlli avversariali sugli output di Fase 4",
+    "should_trigger": true,
+    "description": "AS-IS to TO-BE traceability matrix plus the ten adversarial checks on the Phase 4 outputs"
+  },
+  {
+    "query": "Cerca drift fra contratto OpenAPI e codice, UC orfani, file TO-BE orfani e completezza degli ADR",
+    "should_trigger": true,
+    "description": "Search for OpenAPI to code drift, orphan use cases, orphan TO-BE files and ADR completeness"
+  },
+  {
+    "query": "Verifica la raggiungibilità della navigazione frontend: nessun placeholder CLI, la shell di layout esiste, ogni rotta protetta è raggiungibile dalla UI",
+    "should_trigger": true,
+    "description": "Frontend navigation reachability check on the TO-BE outputs"
+  },
+  {
+    "query": "Fai la review avversariale degli output di Fase 5 con i dieci controlli cross-cutting sui test TO-BE",
+    "should_trigger": false,
+    "description": "Adversarial review of the Phase 5 outputs with the cross-cutting checks on the TO-BE tests"
+  },
+  {
+    "query": "Fai la review avversariale degli output di Fase 2 tecnica",
+    "should_trigger": false,
+    "description": "Adversarial review of the Phase 2 technical outputs"
+  },
+  {
+    "query": "Correggi il drift fra il contratto OpenAPI e i controller generati",
+    "should_trigger": false,
+    "description": "Correction of the drift between the OpenAPI contract and the generated controllers"
+  }
+]

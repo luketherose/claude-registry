@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Fammi l'inventario delle dipendenze con CVE note, licenze e versioni non pinnate, più un SBOM-lite JSON",
+    "should_trigger": true,
+    "description": "Dependency inventory with CVEs, licences, unpinned versions and an SBOM-lite JSON"
+  },
+  {
+    "query": "Fase 2: quali librerie di terze parti di questo progetto sono deprecate o portano un advisory GHSA noto?",
+    "should_trigger": true,
+    "description": "Deprecated third-party libraries and known GHSA advisories"
+  },
+  {
+    "query": "Qual è la postura di licensing delle dipendenze di questo progetto?",
+    "should_trigger": true,
+    "description": "Licensing posture of a project's dependencies"
+  },
+  {
+    "query": "Quali moduli interni si importano a vicenda in questo repository e ci sono cicli di import?",
+    "should_trigger": false,
+    "description": "Internal module import relations and import cycles"
+  },
+  {
+    "query": "Ho un NoSuchMethodError dopo l'upgrade: la 2.x confligge con la 1.x, sbrogliami il conflitto transitivo",
+    "should_trigger": false,
+    "description": "NoSuchMethodError after an upgrade caused by a transitive version conflict"
+  },
+  {
+    "query": "Analizza la OWASP Top 10 a livello di codice: injection, XSS, CSRF, secret nel codice",
+    "should_trigger": false,
+    "description": "Code-level OWASP Top 10 analysis: injection, XSS, CSRF, secrets in code"
+  }
+]

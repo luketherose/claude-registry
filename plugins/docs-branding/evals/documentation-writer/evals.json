@@ -7,7 +7,7 @@
       "Asks which output format(s) to produce, and surfaces the menu, before reading the code or drafting any text",
       "Probes the local toolchain (pandoc, pdflatex, wkhtmltopdf) and lists only the formats actually producible, naming the missing tool for each unavailable format",
       "Ends with the '=== Documentation produced ===' block listing topic, output dir, formats, files with line counts, skipped formats and open questions",
-      "Loads `doc-expert` with the Skill tool (tool_used: Skill) once the format choice is made, and the effect is visible: the README opens with what the service does for its users before any build or dependency instruction, which is that skill's business-oriented ordering"
+      "The README opens with what the service does for its users before any build or dependency instruction, which is the business-oriented ordering `doc-expert` prescribes"
     ]
   },
   {

@@ -6,9 +6,7 @@ pub trait PriceRule {
 }
 
 pub struct OrderService {
-    // Arc<Mutex<..>> on a field only ever touched from one task
     cache: Arc<Mutex<HashMap<u64, Order>>>,
-    // Box<dyn Trait> where a single generic parameter would do
     rule: Box<dyn PriceRule>,
 }
 
@@ -19,14 +17,12 @@ impl OrderService {
 
         let mut lines = Vec::new();
         for id in ids {
-            // allocation inside the hot loop: a new String per iteration
             let label = format!("line-{}", id);
             let item = self.cache.lock().unwrap().get(id).unwrap().clone();
             lines.push((label, item));
         }
 
         let total = self.rule.apply(payload.total);
-        // clone() added to silence the borrow checker rather than restructuring ownership
         let owner = customer.name.clone();
 
         Order {

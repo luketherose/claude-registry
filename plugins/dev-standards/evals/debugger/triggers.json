@@ -15,6 +15,51 @@
     "description": "Spring Boot application failing to start, log attached"
   },
   {
+    "query": "Questo endpoint ASP.NET Core va in timeout a intermittenza, ecco i log, diagnostica il root cause",
+    "should_trigger": true,
+    "description": "ASP.NET Core endpoint timing out intermittently, logs attached"
+  },
+  {
+    "query": "Questo component Angular esplode con ExpressionChangedAfterItHasBeenCheckedError, ecco lo stack trace, trova la causa",
+    "should_trigger": true,
+    "description": "Angular component raising ExpressionChangedAfterItHasBeenCheckedError, stack attached"
+  },
+  {
+    "query": "Questo servizio Go va in panic a intermittenza sotto carico, ecco lo stack trace, trova la causa",
+    "should_trigger": true,
+    "description": "Go service panicking intermittently under load, stack trace attached"
+  },
+  {
+    "query": "La mia app Spring Boot non parte, ecco il log del bean che non si wira, diagnostica",
+    "should_trigger": true,
+    "description": "Spring Boot application failing to start on an unwired bean, log attached"
+  },
+  {
+    "query": "Questo service Kotlin lancia NullPointerException in produzione, ecco lo stack trace, trova la causa",
+    "should_trigger": true,
+    "description": "Kotlin service throwing NullPointerException in production, stack trace attached"
+  },
+  {
+    "query": "Questa route Laravel ritorna 500 a intermittenza, ecco lo stack trace, diagnostica il root cause",
+    "should_trigger": true,
+    "description": "Laravel route returning 500 intermittently, stack trace attached"
+  },
+  {
+    "query": "Questo endpoint FastAPI ritorna 500 a intermittenza, ecco lo stack trace, trova la causa",
+    "should_trigger": true,
+    "description": "FastAPI endpoint returning 500 intermittently, stack trace attached"
+  },
+  {
+    "query": "Questa action Rails ritorna 500 solo in produzione, ecco lo stack trace, trova la causa",
+    "should_trigger": true,
+    "description": "Rails action returning 500 in production only, stack trace attached"
+  },
+  {
+    "query": "Questo binario Rust va in panic solo in release, ecco il backtrace, trova la causa",
+    "should_trigger": true,
+    "description": "Rust binary panicking in release builds only, backtrace attached"
+  },
+  {
     "query": "Scrivi la test suite completa per PaymentService con JUnit 5 e Mockito",
     "should_trigger": false,
     "description": "Full JUnit 5 and Mockito test suite for a payment service"
@@ -23,5 +68,35 @@
     "query": "Rifattorizza questo modulo per togliere la duplicazione, non c'è nessun bug",
     "should_trigger": false,
     "description": "Duplication removed from a module, no bug involved"
+  },
+  {
+    "query": "Review this Go package for idiomatic error handling",
+    "should_trigger": false,
+    "description": "Go package reviewed for idiomatic error handling"
+  },
+  {
+    "query": "Scrivi un endpoint FastAPI con validazione Pydantic",
+    "should_trigger": false,
+    "description": "FastAPI endpoint with Pydantic validation"
+  },
+  {
+    "query": "Review this Kotlin code for null-safety issues",
+    "should_trigger": false,
+    "description": "Kotlin code reviewed for null-safety issues"
+  },
+  {
+    "query": "Rifattorizza questo fat Eloquent model in un service layer",
+    "should_trigger": false,
+    "description": "Fat Eloquent model refactored into a service layer"
+  },
+  {
+    "query": "Aggiungi copertura cargo test per il modulo domain",
+    "should_trigger": false,
+    "description": "cargo test coverage for a domain module"
+  },
+  {
+    "query": "Review this React hook for correctness",
+    "should_trigger": false,
+    "description": "React hook reviewed for correctness"
   }
 ]

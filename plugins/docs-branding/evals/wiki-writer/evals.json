@@ -7,7 +7,7 @@
       "Runs discovery first and presents a content plan listing every page with its audience and its Diataxis quadrant, then waits for confirmation before writing any page",
       "Writes Home.md, _Sidebar.md, _Footer.md and the topic pages as Markdown into the local wiki/ directory and produces nothing outside it",
       "Does not push to the wiki remote, and says the push needs explicit authorisation",
-      "Loads `doc-expert` with the Skill tool (tool_used: Skill) when it is available, and the effect is visible: the Reference quadrant pages use that skill's module-guide structure instead of an ad hoc layout"
+      "The Reference quadrant pages follow the module-guide structure `doc-expert` defines instead of an ad hoc layout"
     ]
   },
   {

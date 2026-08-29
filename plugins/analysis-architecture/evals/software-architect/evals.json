@@ -10,7 +10,7 @@
       "Findings are given as a table with a Dimension column, a High/Medium/Low Severity and an Evidence column; every Evidence cell names a line of fixtures/application.yml or a row of fixtures/ARCHITECTURE.md (for example the plaintext datasource password, hikari maximum-pool-size 5 against tomcat threads max 200, payment timeout-ms 0 with retries 5, or cors allowed-origins \"*\"), and no finding has an empty Evidence cell",
       "Every proposed change spells out Trade-offs split into Gains, Costs and Risks, plus an Alternatives considered line",
       "Ends with a Recommended Roadmap ordered quick wins first and an Open Questions section; the Security dimension carries at least three separate findings with their own Evidence cells, one of which is the plaintext spring.datasource.password in fixtures/application.yml",
-      "When the dev-standards plugin is enabled, loads `spring-architecture` and `postgresql-expert` with the Skill tool (tool_used: Skill); the effect is visible in the output as a persistence finding that names the concrete setting to change (hikari maximum-pool-size, jpa open-in-view or hibernate jdbc batch_size) rather than a generic instruction to tune the database"
+      "Carries a persistence finding that names the concrete setting to change (hikari maximum-pool-size, jpa open-in-view or hibernate jdbc batch_size) rather than a generic instruction to tune the database, at the level of specificity `spring-architecture` and `postgresql-expert` prescribe"
     ]
   },
   {

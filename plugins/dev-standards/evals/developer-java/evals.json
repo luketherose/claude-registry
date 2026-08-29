@@ -7,7 +7,7 @@
       "Each file is delivered under a `### {FileName}.java` heading with complete content (all imports, no placeholder comments), followed by a **Why** line and a **Tests** line",
       "Uses constructor injection throughout: no field injection and no @Autowired on a field",
       "The controller returns a DTO produced by a dedicated mapper rather than exposing the JPA entity, and validates the request DTO with bean validation plus @Valid on the parameter",
-      "Loads `java-spring-standards` and `spring-architecture` with the Skill tool (tool_used: Skill) before writing, and the effect is visible: the files are placed in the controller / service / repository / dto package split those skills prescribe, and the DTO mapper is a dedicated class rather than a method on the controller"
+      "The files are placed in the controller / service / repository / dto package split `java-spring-standards` and `spring-architecture` prescribe, and the DTO mapper is a dedicated class rather than a method on the controller"
     ]
   },
   {

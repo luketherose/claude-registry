@@ -15,6 +15,31 @@
     "description": "Security posture, dependency vulnerabilities and a remediation plan"
   },
   {
+    "query": "Fammi l'inventario del debito tecnico e delle dipendenze npm vulnerabili di questa app Angular, con severity",
+    "should_trigger": true,
+    "description": "Technical debt and vulnerable npm dependencies of an Angular app, with severity"
+  },
+  {
+    "query": "Audita la pipeline CI/CD e le vulnerabilità dei moduli Go di questo repo, con severity",
+    "should_trigger": true,
+    "description": "CI/CD pipeline and Go module vulnerabilities of a repository, with severity"
+  },
+  {
+    "query": "Fammi l'inventario del debito tecnico e della security posture di questo backend Kotlin, con severity",
+    "should_trigger": true,
+    "description": "Technical debt and security posture of a Kotlin backend, with severity"
+  },
+  {
+    "query": "Fammi l'inventario del debito tecnico e delle dipendenze vulnerabili di questo servizio FastAPI, con severity",
+    "should_trigger": true,
+    "description": "Technical debt and vulnerable dependencies of a FastAPI service, with severity"
+  },
+  {
+    "query": "Fammi l'inventario del debito tecnico e delle gemme vulnerabili di questa app Rails, con severity",
+    "should_trigger": true,
+    "description": "Technical debt and vulnerable gems of a Rails app, with severity"
+  },
+  {
     "query": "Progetta l'architettura TO-BE e scrivimi l'ADR sulla scelta del message broker",
     "should_trigger": false,
     "description": "TO-BE architecture and an ADR on the message broker"
@@ -23,5 +48,20 @@
     "query": "Estrai i requisiti funzionali e i casi d'uso da questo codice legacy",
     "should_trigger": false,
     "description": "Functional requirements and use cases from legacy code"
+  },
+  {
+    "query": "Review this Rails 7 controller for RuboCop and RSpec coverage",
+    "should_trigger": false,
+    "description": "Single Rails 7 controller reviewed for RuboCop and RSpec coverage"
+  },
+  {
+    "query": "Scrivi un servizio HTTP in Go con chi, log/slog e context propagation",
+    "should_trigger": false,
+    "description": "Go HTTP service written with chi, log/slog and context propagation"
+  },
+  {
+    "query": "Migra questa UI Streamlit in Angular",
+    "should_trigger": false,
+    "description": "Streamlit UI migrated to Angular"
   }
 ]

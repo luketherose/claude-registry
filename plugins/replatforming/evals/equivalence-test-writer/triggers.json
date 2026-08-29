@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Scrivi l'harness pytest di equivalenza per lo UC-09 sotto tests/equivalence/, che pilota il TO-BE e confronta con lo snapshot AS-IS di Fase 3",
+    "should_trigger": true,
+    "description": "Per-use-case equivalence pytest harness driving the TO-BE against the Phase 3 snapshot"
+  },
+  {
+    "query": "Wave 1 fan-out di Fase 5: un'invocazione per use case, con tolleranza su normalizzazione stringhe ed epsilon numerico",
+    "should_trigger": true,
+    "description": "One invocation per use case with a configurable tolerance policy"
+  },
+  {
+    "query": "Classifica ogni differenza fra output TO-BE e snapshot di Fase 3 come equivalent, accepted-difference o regression",
+    "should_trigger": true,
+    "description": "Differences classified as equivalent, accepted-difference or regression"
+  },
+  {
+    "query": "Scrivi il modulo pytest di baseline AS-IS per lo UC-09 con happy path e casi limite",
+    "should_trigger": false,
+    "description": "AS-IS baseline pytest module for one use case with happy path and edge cases"
+  },
+  {
+    "query": "Consolida i risultati di equivalenza nel report finale con il verdetto per UC",
+    "should_trigger": false,
+    "description": "Equivalence results consolidated into the final report with a per-use-case verdict"
+  },
+  {
+    "query": "Confronta le performance del TO-BE contro il benchmark AS-IS con delta p95",
+    "should_trigger": false,
+    "description": "TO-BE performance compared against the AS-IS benchmark with p95 deltas"
+  }
+]

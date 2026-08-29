@@ -1,0 +1,39 @@
+[
+  {
+    "agent": "refactoring-tobe-supervisor",
+    "query": "Esegui la Fase 4. Le Fasi 0-3 sono complete, questa è la lista UC di Fase 1.",
+    "files": [
+      "fixtures/phase1-use-cases.md"
+    ],
+    "expected_behavior": [
+      "UC-04 'Export ledger for the tax authority' is not silently carried into a bounded context: it either appears in `.refactoring-kb/02-traceability/as-is-to-be-matrix.json` with its `candidate_not_confirmed` status preserved, or it is listed in `.refactoring-kb/_meta/unresolved-tobe.md` with the reason that its evidence_ids array is empty",
+      "UC-01, UC-02 and UC-03 each appear in the traceability matrix mapped to a named bounded context",
+      "Dispatches decomposition-architect (4.1) before api-contract-designer (4.6), and both before backend-scaffolder and frontend-scaffolder (4.2/4.3); the manifest records the waves in that order",
+      "Stops at the post-decomposition HITL checkpoint and waits for the user before dispatching the API contract wave",
+      "Ends with all four supervisor-owned artefacts on disk: docs/refactoring/README.md, both manifest.json files, `.refactoring-kb/_meta/unresolved-tobe.md`, and the final recap"
+    ]
+  },
+  {
+    "agent": "refactoring-tobe-supervisor",
+    "query": "Scaffold the Spring Boot and Angular target. `backend/`, `frontend/` and `docs/refactoring/` already exist from a run we abandoned last week.",
+    "files": [],
+    "expected_behavior": [
+      "Detects the existing `backend/`, `frontend/`, `docs/refactoring/` and `.refactoring-kb/` outputs before dispatching any worker",
+      "Asks the user explicitly for skip, re-run or revise, and offers skip as the default because generated code may carry hand edits",
+      "Does not overwrite any file under `backend/` or `frontend/` before the user answers",
+      "Does not proceed past the detection gate on its own: no worker is dispatched until the user chooses"
+    ]
+  },
+  {
+    "agent": "refactoring-tobe-supervisor",
+    "query": "Fase 4 con --verify: dopo lo scaffold il backend non compila, `mvn compile` fallisce su un import mancante nel controller generato.",
+    "files": [],
+    "expected_behavior": [
+      "Reports the failing `mvn compile` output and the wave it belongs to instead of marking Wave 3 complete",
+      "Does not modify any file under the AS-IS source tree while resolving the failure",
+      "Does not dispatch the hardening wave (4.7) while the backend track of Wave 3 is unverified",
+      "Records the failure and its per-step timing in `docs/refactoring/_meta/manifest.json` and `.refactoring-kb/_meta/manifest.json`, both of which are rewritten after the wave",
+      "Escalates to the user rather than deleting or stubbing out the generated controller to make the build pass"
+    ]
+  }
+]

@@ -7,7 +7,7 @@
       "Names Angular as the detected target before writing code, and the deliverable contains no React or Vue idiom: no useState, no useEffect, no JSX and no <template> block",
       "Delivers the Angular component as four files (.ts, .html, .scss, .spec.ts) with no inline template: or styles: literal in the .ts",
       "Handles loading, empty and error states explicitly in the component",
-      "Loads `angular-expert` and `css-expert` with the Skill tool (tool_used: Skill) and loads no React, Vue or Qwik skill; the effect is visible as a standalone component declared with ChangeDetectionStrategy.OnPush and SCSS that references design tokens instead of literal colour values"
+      "Produces a standalone component declared with ChangeDetectionStrategy.OnPush and SCSS that references design tokens instead of literal colour values, the `angular-expert` and `css-expert` conventions, and no React, Vue or Qwik idiom appears anywhere in the output"
     ]
   },
   {

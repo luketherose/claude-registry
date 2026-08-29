@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Consolida i findings degli otto worker di Wave 1 in un risk register unificato con severity matrix e backlog di remediation ordinato",
+    "should_trigger": true,
+    "description": "Consolidation of the Wave 1 findings into a risk register, severity matrix and ordered backlog"
+  },
+  {
+    "query": "Produci il risk register di Fase 2 come JSON e CSV machine-readable più il sommario markdown",
+    "should_trigger": true,
+    "description": "Phase 2 risk register as machine-readable JSON and CSV plus a markdown summary"
+  },
+  {
+    "query": "Ordinami i rischi tecnici trovati per severità e dammi il backlog di remediation",
+    "should_trigger": true,
+    "description": "Technical risks ordered by severity with a remediation backlog"
+  },
+  {
+    "query": "Consolida la KB di Fase 0 in system overview e ipotesi di bounded context",
+    "should_trigger": false,
+    "description": "Phase 0 KB consolidated into a system overview and bounded-context hypothesis"
+  },
+  {
+    "query": "Fai la review avversariale degli output di Fase 2 e segnala contraddizioni e claim non verificati",
+    "should_trigger": false,
+    "description": "Adversarial review of the Phase 2 outputs for contradictions and unverified claims"
+  },
+  {
+    "query": "Analizza la postura di sicurezza del codice contro la OWASP Top 10",
+    "should_trigger": false,
+    "description": "Code-level security posture against the OWASP Top 10"
+  }
+]

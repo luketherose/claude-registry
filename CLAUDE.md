@@ -19,6 +19,12 @@ claude plugin validate .
 
 # Install this marketplace locally for development
 claude plugin marketplace add .
+
+# Bash safety hook regression matrix (24 cases)
+./hooks/tests/test-pre-tool-safety.sh
+
+# Clean-machine install check
+./scripts/test-clean-install.sh
 ```
 
 ## Primary rule: always update documentation
@@ -75,10 +81,16 @@ per-capability beta or stable flag. Versioning is semver on the plugin.
 - Skill `description` stays under 1024 characters and is written in the third person.
 - Skill `name` equals its directory name. Agent `name` equals its filename.
 - `model`, `tools` and `color` are not SKILL.md frontmatter fields.
-- Bundled material is referenced with `${CLAUDE_PLUGIN_ROOT}`, never with a repo-relative
-  path. A repo-relative path resolves against the user's project and silently returns
-  nothing.
-- Every agent body has a `## When to invoke` section.
+- Bundled material uses the form that resolves where the file lives. Agent bodies use
+  `${CLAUDE_PLUGIN_ROOT}/references/x.md` (55 of 86), because a repo-relative path there
+  resolves against the user's project and silently returns nothing. `SKILL.md` uses a
+  plain relative link `](references/x.md)` (all 9 skills that link references), which the
+  Agent Skills standard specifies and `validate_skills()` resolves from the SKILL.md
+  directory. Do not convert one form into the other.
+- Every agent body has a `## When to invoke` section, and the `description` never points
+  at it. The ending `See "When to invoke" in the agent body` that
+  `plugin-dev:agent-development` prescribes is rejected here, and carried by 0 of 86
+  agents: at delegation time the body is not loaded, so the pointer cannot be followed.
 - Every frontmatter under `plugins/` survives a real `yaml.safe_load`. An unescaped quote
   in a `description` fails the build. Claude Code would otherwise load the agent with its
   name taken from the filename and drop every other field without an error.
@@ -103,9 +115,11 @@ per-capability beta or stable flag. Versioning is semver on the plugin.
 | User-facing agents | `inherit` |
 | Pipeline workers dispatched in fan-out | `sonnet` |
 
-`inherit` is the platform default. Pinning a model is a deliberate act and is justified in
-an HTML comment in the agent body, never in a custom frontmatter field. A custom
-multi-line key corrupts the value of the key above it.
+`inherit` is the platform default. Pinning is deliberate, and justified per class, not per
+file: `opus` carries its reason in an HTML comment in its own body, which
+`validate_substance()` warns about when missing; the `sonnet` worker default is a class
+policy stated once per plugin, not repeated across 43 files. Never justify it in a custom
+frontmatter field. A custom multi-line key corrupts the value of the key above it.
 
 ## Skills
 
@@ -131,11 +145,14 @@ Write evaluations before the capability. Three scenarios minimum in
 that must activate the capability and the near-miss prompts that must not. Trigger evals
 are what catch a description edit that quietly breaks routing.
 
-One schema each, and CI has no gate on it, so it is on the author to match:
+One schema each, both gated by `validate_evals()`, which fails on a wrong key set, on a
+fixture path that does not resolve, and on a `description` that states the verdict:
 
 - `evals.json`: a list of `{agent, query, files, expected_behavior}`. `agent` equals the
-  eval directory name.
-- `triggers.json`: a list of `{query, should_trigger, description}`.
+  eval directory name; `files` are relative to the eval directory.
+- `triggers.json`: a list of `{query, should_trigger, description}`. The `description`
+  restates the query and never names the winner. Naming it lets a keyword table score the
+  suite without reading a capability, which is how 232 of 232 once passed.
 
 ## Adding a new capability
 

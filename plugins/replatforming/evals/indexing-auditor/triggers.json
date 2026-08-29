@@ -1,0 +1,32 @@
+[
+  {
+    "query": "L'indicizzazione è finita. Verifica la qualità della KB: coverage gap, claim non verificati, file orfani, violazioni di purezza AS-IS.",
+    "should_trigger": true,
+    "description": "Post-pipeline KB quality check for coverage gaps, unverified claims and orphan files"
+  },
+  {
+    "query": "Validate the existing .indexing-kb/ before we start Phase 1, without re-running the whole pipeline",
+    "should_trigger": true,
+    "description": "Validation of an existing .indexing-kb/ without re-running the pipeline"
+  },
+  {
+    "query": "Dammi un verdetto PASS, PASS_WITH_GAPS o FAIL su questa knowledge base, incrociando l'evidence ledger",
+    "should_trigger": true,
+    "description": "PASS, PASS_WITH_GAPS or FAIL verdict on a knowledge base cross-checked against the evidence ledger"
+  },
+  {
+    "query": "Genera l'overview di sistema e l'ipotesi di bounded context a partire dalla KB",
+    "should_trigger": false,
+    "description": "System overview and bounded-context hypothesis generated from the KB"
+  },
+  {
+    "query": "Verifica che ogni finding tecnico di Fase 2 abbia evidence_ids e che non ci siano raccomandazioni TO-BE non richieste",
+    "should_trigger": false,
+    "description": "Evidence grounding and TO-BE purity of Phase 2 technical findings"
+  },
+  {
+    "query": "Estrai le regole di business e il glossario di dominio da questo codice",
+    "should_trigger": false,
+    "description": "Business rules and domain glossary extracted from a codebase"
+  }
+]

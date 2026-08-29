@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Analizza stato e comportamento a runtime AS-IS: session state, global a livello di modulo, side effect, ordine di esecuzione, lifecycle",
+    "should_trigger": true,
+    "description": "AS-IS state and runtime behaviour: session state, module globals, side effects, execution order"
+  },
+  {
+    "query": "Come si comporta st.session_state in questa app e quali side effect dipendono dall'ordine di esecuzione?",
+    "should_trigger": true,
+    "description": "Behaviour of st.session_state and side effects that depend on execution order"
+  },
+  {
+    "query": "Wave 1 di Fase 2: mappa i global a livello di modulo e il lifecycle di questa applicazione",
+    "should_trigger": true,
+    "description": "Module-level globals and application lifecycle map"
+  },
+  {
+    "query": "Estrai la logica implicita nascosta nei parametri dei widget e nel rendering condizionale",
+    "should_trigger": false,
+    "description": "Implicit logic hidden in widget parameters and conditional rendering"
+  },
+  {
+    "query": "Analizza sorgenti, trasformazioni, validazioni e sink dei dati su DB, cache e serializzazione",
+    "should_trigger": false,
+    "description": "Data sources, transformations, validations and sinks across persistence and cache"
+  },
+  {
+    "query": "Analizza try/except, catene di fallback e fallimenti silenziosi",
+    "should_trigger": false,
+    "description": "Error handling, fallback chains and silent failures"
+  }
+]

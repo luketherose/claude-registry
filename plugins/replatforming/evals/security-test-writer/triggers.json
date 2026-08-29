@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 1 di Fase 5: scrivi la suite di test di sicurezza TO-BE su OWASP Top 10, con happy path e abuse case OAuth2 e JWT",
+    "should_trigger": true,
+    "description": "TO-BE OWASP Top 10 security test suite with OAuth2 and JWT happy and abuse cases"
+  },
+  {
+    "query": "Servono test di validazione input per ogni endpoint e ogni regola Bean Validation, più la verifica CSRF e CORS",
+    "should_trigger": true,
+    "description": "Input validation tests per endpoint and Bean Validation rule plus CSRF and CORS verification"
+  },
+  {
+    "query": "Scrivi 05-security-findings.md con severity e riferimento all'operationId, incrociando i finding AS-IS di Fase 2",
+    "should_trigger": true,
+    "description": "Security findings file with severity and operationId references cross-checked against Phase 2"
+  },
+  {
+    "query": "Analizza la postura di sicurezza AS-IS del codice contro la OWASP Top 10",
+    "should_trigger": false,
+    "description": "AS-IS code-level security posture against the OWASP Top 10"
+  },
+  {
+    "query": "Configura la baseline Spring Security 6 di produzione e la gestione dei secret",
+    "should_trigger": false,
+    "description": "Production Spring Security 6 baseline and secrets management configuration"
+  },
+  {
+    "query": "Scrivi i contract test Spring Cloud Contract per il backend TO-BE",
+    "should_trigger": false,
+    "description": "Spring Cloud Contract tests for the TO-BE backend"
+  }
+]

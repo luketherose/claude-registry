@@ -1,0 +1,2 @@
+{"chunk_id": "CHK-001", "file_id": "F-001", "path": "src/app/orders.py", "start_line": 1, "end_line": 212, "classification": "domain_logic"}
+{"chunk_id": "CHK-002", "file_id": "F-002", "path": "src/app/billing.py", "start_line": 1, "end_line": 178}

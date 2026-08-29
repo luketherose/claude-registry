@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Step 2 del dibattito: produci la bozza dello specialista di migrazione su fattibilità, sequencing, compatibilità, cutover e rollback",
+    "should_trigger": true,
+    "description": "Step 2 Migration Specialist draft on feasibility, sequencing, cutover and rollback"
+  },
+  {
+    "query": "Fai da ponte fra la visione architetturale del proponente e la realtà operativa di spostare un sistema in esercizio",
+    "should_trigger": true,
+    "description": "Bridge between the architectural vision and the reality of moving a running system"
+  },
+  {
+    "query": "Step 4: produci le challenge alle altre bozze dal punto di vista del rischio di dipendenza in migrazione",
+    "should_trigger": true,
+    "description": "Step 4 challenges raised from a migration dependency risk standpoint"
+  },
+  {
+    "query": "Step 2: produci la bozza su SLO, observability e incident response",
+    "should_trigger": false,
+    "description": "Step 2 draft on SLOs, observability and incident response"
+  },
+  {
+    "query": "Produci la roadmap strangler fig con milestone per bounded context e criteri di go-live",
+    "should_trigger": false,
+    "description": "Strangler fig roadmap with per-bounded-context milestones and go-live criteria"
+  },
+  {
+    "query": "Step 3: organizza le bozze in una evidence summary senza raccomandare",
+    "should_trigger": false,
+    "description": "Step 3 evidence summary produced without recommending"
+  }
+]

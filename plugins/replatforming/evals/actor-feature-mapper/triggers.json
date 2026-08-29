@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Estrai attori, ruoli e personas dell'app AS-IS insieme alla mappa completa delle feature, partendo dalla KB",
+    "should_trigger": true,
+    "description": "Actors, roles, personas and the full feature map extracted from the KB"
+  },
+  {
+    "query": "Fase 1: costruisci la mappa chi-può-fare-cosa da .indexing-kb/, un solo artefatto che copre attori e feature",
+    "should_trigger": true,
+    "description": "Single who-can-do-what artefact covering actors and features"
+  },
+  {
+    "query": "Quali ruoli esistono in questa applicazione e a quali feature arriva ciascuno, strettamente AS-IS?",
+    "should_trigger": true,
+    "description": "Roles present in the application and the features each one reaches, strictly AS-IS"
+  },
+  {
+    "query": "Deriva i casi d'uso e i diagrammi di sequenza Mermaid dagli attori e dalle feature già estratti",
+    "should_trigger": false,
+    "description": "Use cases and Mermaid sequence diagrams derived from already-extracted actors and features"
+  },
+  {
+    "query": "Inventaria schermate, mappa di navigazione e albero dei componenti dell'applicazione",
+    "should_trigger": false,
+    "description": "Screen inventory, navigation map and component tree"
+  },
+  {
+    "query": "Inventaria input e output funzionali e la matrice di trasformazione fra essi",
+    "should_trigger": false,
+    "description": "Functional input and output inventory plus the transformation matrix"
+  }
+]

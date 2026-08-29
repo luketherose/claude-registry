@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Esegui la Fase 4 (TO-BE Refactoring): .indexing-kb/, l'analisi funzionale, l'analisi tecnica e la baseline sono pronte",
+    "should_trigger": true,
+    "description": "Phase 4 TO-BE Refactoring run with all prior phase outputs in place"
+  },
+  {
+    "query": "Costruisci il TO-BE: decomposizione, contratto OpenAPI, scaffold Spring Boot e Angular, hardening e roadmap di migrazione",
+    "should_trigger": true,
+    "description": "Full TO-BE construction from decomposition through scaffold, hardening and roadmap"
+  },
+  {
+    "query": "Esegui la fase in cui le tecnologie target sono finalmente ammesse, con i tre checkpoint umani",
+    "should_trigger": true,
+    "description": "The phase where target technologies are allowed, with three human checkpoints"
+  },
+  {
+    "query": "Esegui la Fase 5: verifica di equivalenza del TO-BE contro la baseline AS-IS",
+    "should_trigger": false,
+    "description": "Phase 5 equivalence verification of the TO-BE against the AS-IS baseline"
+  },
+  {
+    "query": "Esegui la Fase 2: analisi tecnica AS-IS con risk register",
+    "should_trigger": false,
+    "description": "Phase 2 AS-IS technical analysis with a risk register"
+  },
+  {
+    "query": "Mi serve solo un pezzo: rigenera il workspace Angular dal contratto OpenAPI, niente backend e niente wave successive",
+    "should_trigger": false,
+    "description": "One piece only: the Angular workspace regenerated from the OpenAPI contract"
+  }
+]

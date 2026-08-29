@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 1 di Fase 5: scrivi i test dei componenti Angular con Jest e Angular Testing Library, uno per feature module",
+    "should_trigger": true,
+    "description": "Angular component tests with Jest and Angular Testing Library, one set per feature module"
+  },
+  {
+    "query": "Deriva gli E2E Playwright dagli user flow di Fase 1 per il frontend TO-BE",
+    "should_trigger": true,
+    "description": "Playwright E2E derived from the Phase 1 user flows for the TO-BE frontend"
+  },
+  {
+    "query": "Porta la copertura di linea del frontend TO-BE sopra l'80%, senza toccare il codice di produzione",
+    "should_trigger": true,
+    "description": "TO-BE frontend line coverage target reached without touching production code"
+  },
+  {
+    "query": "Scrivi i contract test Spring Cloud Contract per il backend TO-BE",
+    "should_trigger": false,
+    "description": "Spring Cloud Contract tests for the TO-BE backend"
+  },
+  {
+    "query": "Genera il workspace Angular con i feature module lazy e il client API tipizzato",
+    "should_trigger": false,
+    "description": "Angular workspace with lazy feature modules and a typed API client"
+  },
+  {
+    "query": "Scrivi un test React Testing Library per questo custom hook",
+    "should_trigger": false,
+    "description": "React Testing Library test for a custom hook"
+  }
+]

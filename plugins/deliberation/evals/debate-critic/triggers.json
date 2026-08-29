@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Step 2 del dibattito: produci la bozza dello Skeptical Critic che attacca la soluzione più forte, cercando assunzioni nascoste ed evidenze deboli",
+    "should_trigger": true,
+    "description": "Step 2 Skeptical Critic draft hunting hidden assumptions and weak evidence"
+  },
+  {
+    "query": "Step 4: attacca le bozze delle altre persona cercando edge case e failure mode non considerati",
+    "should_trigger": true,
+    "description": "Step 4 attack on the other drafts looking for edge cases and failure modes"
+  },
+  {
+    "query": "Step 5: produci le rebuttal alle challenge rivolte alla tua bozza critica",
+    "should_trigger": true,
+    "description": "Step 5 rebuttals to challenges aimed at the critical draft"
+  },
+  {
+    "query": "Step 2: produci la bozza del Proponente ottimizzata per correttezza e fit architetturale di lungo periodo",
+    "should_trigger": false,
+    "description": "Step 2 Proposer draft optimised for correctness and long-term architectural fit"
+  },
+  {
+    "query": "Step 2: produci la bozza focalizzata su scalabilità, observability, SLO e risposta agli incidenti",
+    "should_trigger": false,
+    "description": "Step 2 draft focused on scalability, observability, SLOs and incident response"
+  },
+  {
+    "query": "Step 6: arbitra la decisione finale indirizzando ogni obiezione high-severity irrisolta",
+    "should_trigger": false,
+    "description": "Step 6 arbitration addressing every unresolved high-severity objection"
+  }
+]

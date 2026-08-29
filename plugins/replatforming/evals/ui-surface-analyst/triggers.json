@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Inventaria la superficie UI AS-IS: schermate, mappa di navigazione e albero dei componenti",
+    "should_trigger": true,
+    "description": "AS-IS UI surface inventory: screens, navigation map, component tree"
+  },
+  {
+    "query": "Ogni page-script Streamlit è una schermata: mappa i widget come componenti di primo livello",
+    "should_trigger": true,
+    "description": "Streamlit page-scripts treated as screens and widgets as first-class components"
+  },
+  {
+    "query": "Fase 1: produci l'inventario delle schermate e la mappa di navigazione, strettamente AS-IS",
+    "should_trigger": true,
+    "description": "Screen inventory and navigation map, strictly AS-IS"
+  },
+  {
+    "query": "Estrai attori, ruoli e personas insieme alla mappa delle feature",
+    "should_trigger": false,
+    "description": "Actors, roles and personas together with the feature map"
+  },
+  {
+    "query": "Deriva user flow e diagrammi di sequenza dalle schermate già inventariate",
+    "should_trigger": false,
+    "description": "User flows and sequence diagrams derived from an existing screen inventory"
+  },
+  {
+    "query": "Progetta il workspace Angular TO-BE con un feature module lazy per bounded context",
+    "should_trigger": false,
+    "description": "TO-BE Angular workspace with one lazy feature module per bounded context"
+  }
+]

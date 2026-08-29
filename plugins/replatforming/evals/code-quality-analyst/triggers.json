@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Analizza la qualità del codice AS-IS: duplicazione, dead code, hotspot di complessità e monolith smell",
+    "should_trigger": true,
+    "description": "AS-IS code quality: duplication, dead code, complexity hotspots, monolith smells"
+  },
+  {
+    "query": "Wave 1 di Fase 2: mappa entrypoint, package, moduli e convenzioni di naming, poi ordina gli hotspot di complessità",
+    "should_trigger": true,
+    "description": "Structural map of entrypoints, packages, modules and naming conventions plus ranked hotspots"
+  },
+  {
+    "query": "Dove si concentra la complessità in questo codice, e quali convenzioni di naming convivono?",
+    "should_trigger": true,
+    "description": "Where complexity concentrates and which naming conventions coexist"
+  },
+  {
+    "query": "Analizza la postura di performance: hot loop, N+1, I/O bloccante sul path critico, caching mancante",
+    "should_trigger": false,
+    "description": "Performance posture: hot loops, N+1, blocking I/O, missing caching"
+  },
+  {
+    "query": "Analizza la postura di sicurezza a livello codice contro la OWASP Top 10",
+    "should_trigger": false,
+    "description": "Code-level security posture against the OWASP Top 10"
+  },
+  {
+    "query": "Rifattorizza questo modulo applicando SOLID e riducendo il coupling",
+    "should_trigger": false,
+    "description": "Refactor of a module applying SOLID and reducing coupling"
+  }
+]

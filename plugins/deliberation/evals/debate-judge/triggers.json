@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Step 3: leggi tutte le bozze e organizzale in 02-evidence-summary.json, senza raccomandare nessuna opzione",
+    "should_trigger": true,
+    "description": "Step 3 summarisation of all drafts into the evidence summary artefact"
+  },
+  {
+    "query": "Step 6 con strategia judge_arbitration: sintetizza la decisione finale indirizzando ogni obiezione high-severity irrisolta",
+    "should_trigger": true,
+    "description": "Step 6 arbitration synthesising the final decision under the judge_arbitration strategy"
+  },
+  {
+    "query": "Produci la matrice dei criteri di decisione con le opzioni ancora valide e quelle scartate",
+    "should_trigger": true,
+    "description": "Decision-criteria matrix with still-viable and rejected options"
+  },
+  {
+    "query": "Step 2: produci la bozza indipendente del Proponente dal decision brief",
+    "should_trigger": false,
+    "description": "Step 2 independent Proposer draft built from the decision brief"
+  },
+  {
+    "query": "Step 4: produci le challenge alle bozze delle altre persona dal punto di vista del rischio di compliance",
+    "should_trigger": false,
+    "description": "Step 4 challenges raised from a compliance risk standpoint"
+  },
+  {
+    "query": "Avvia il dibattito multi-agente su questa decisione e orchestra tutti gli step",
+    "should_trigger": false,
+    "description": "Multi-agent debate started and orchestrated end to end"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 0 di Fase 3: costruisci le fixture minime, realistiche ed edge per gli UC più il conftest.py con setup di determinismo",
+    "should_trigger": true,
+    "description": "Minimal, realistic and edge fixtures per use case plus a deterministic conftest.py"
+  },
+  {
+    "query": "Serve un conftest.py globale che fissi il seed, congeli il tempo e mocchi la rete per la suite di baseline",
+    "should_trigger": true,
+    "description": "Global conftest.py fixing the seed, freezing time and mocking the network"
+  },
+  {
+    "query": "Costruisci il layer di dati di test AS-IS prima che venga scritto qualunque modulo di baseline",
+    "should_trigger": true,
+    "description": "AS-IS test data layer built before any baseline test module"
+  },
+  {
+    "query": "Scrivi il modulo pytest di baseline per lo UC-04, happy path, path alternativi e casi limite",
+    "should_trigger": false,
+    "description": "Baseline pytest module for one use case with happy, alternative and edge paths"
+  },
+  {
+    "query": "Progetta il dataset di test cross-modulo e caricalo nel DB dell'app TO-BE, poi verifica via chiamate API",
+    "should_trigger": false,
+    "description": "Cross-module test dataset loaded into the TO-BE runtime database and verified via API"
+  },
+  {
+    "query": "Scrivi i benchmark pytest-benchmark per UC con profiling di memoria",
+    "should_trigger": false,
+    "description": "Per-use-case pytest-benchmark scripts with memory profiling"
+  }
+]

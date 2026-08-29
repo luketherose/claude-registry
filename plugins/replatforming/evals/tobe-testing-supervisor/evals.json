@@ -1,0 +1,41 @@
+[
+  {
+    "agent": "tobe-testing-supervisor",
+    "query": "Esegui la Fase 5 e verifica l'equivalenza del TO-BE contro la baseline. Questo è il manifest di Fase 3.",
+    "files": [
+      "fixtures/03-baseline-manifest.json"
+    ],
+    "expected_behavior": [
+      "Stops before Wave 1 and asks the user, because the Phase 3 manifest reports `status: partial` rather than complete",
+      "Names what is missing from the oracle when it stops: benchmark-writer failed, baseline-runner was skipped, and `oracle.snapshots` is 0, so there are no AS-IS snapshots to compare against",
+      "Notes that the Phase 3 use-case coverage is UC-01 to UC-03 only, so any use case outside that list has no baseline reference",
+      "Does not invent, regenerate or substitute a baseline, and does not dispatch equivalence-test-writer against an absent snapshot",
+      "Offers the user the two options the situation allows: run Phase 3 to completion first, or explicitly accept the partial input"
+    ]
+  },
+  {
+    "agent": "tobe-testing-supervisor",
+    "query": "Run Phase 5 end to end. tests/baseline/, backend/, frontend/ and docs/refactoring/api/openapi.yaml are all in place and both manifests say complete.",
+    "files": [],
+    "expected_behavior": [
+      "Dispatches Wave 1 as one equivalence-test-writer invocation per use case (fan-out), alongside backend-test-writer, frontend-test-writer and security-test-writer, rather than a single combined invocation",
+      "Runs performance-comparator (W2) only after Wave 1 completes, tobe-test-runner (W3) only after W2, and equivalence-synthesizer (W4) only after W3",
+      "Runs tobe-testing-challenger in W5 and reads its report before producing the recap; W5 is not skipped",
+      "Produces `docs/analysis/05-tobe-tests/01-equivalence-report.md` carrying a PO sign-off section, with every Phase 1 use case appearing either with a verdict or in `14-unresolved-questions.md`",
+      "Produces `04-performance-comparison.md` even when the execution policy resolves to off, in which case its status is `partial` and not `complete`",
+      "Confirms with `git status --porcelain` that no AS-IS and no TO-BE production file was modified"
+    ]
+  },
+  {
+    "agent": "tobe-testing-supervisor",
+    "query": "Il runner di Fase 5 riporta una regressione CRITICAL sull'endpoint di checkout e due difetti low sulla formattazione delle date.",
+    "files": [],
+    "expected_behavior": [
+      "Escalates the critical checkout regression to the user and does not mark it xfail",
+      "Sends the two low-severity date-formatting defects to the tobe-bug-registry as TBUG entries and does not fix them in this phase",
+      "Does not edit the TO-BE production code to make the checkout test pass, and states that the fix belongs to a Phase 4 hardening loop",
+      "Does not report a go-live verdict, and does not declare Phase 5 complete, while the critical regression is unresolved",
+      "The per-use-case verdict for the checkout use case is `regression-blocking`, not `accepted-difference`"
+    ]
+  }
+]

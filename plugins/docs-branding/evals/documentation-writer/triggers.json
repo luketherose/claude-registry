@@ -15,6 +15,26 @@
     "description": "Runbook for the on-call team"
   },
   {
+    "query": "Scrivi il README e il runbook on-call di questo servizio ASP.NET Core",
+    "should_trigger": true,
+    "description": "README and on-call runbook for an ASP.NET Core service"
+  },
+  {
+    "query": "Scrivi il README e la guida per i contributor di questa app React",
+    "should_trigger": true,
+    "description": "README and contributor guide for a React app"
+  },
+  {
+    "query": "Scrivi il README e la guida API di questo servizio Python",
+    "should_trigger": true,
+    "description": "README and API guide for a Python service"
+  },
+  {
+    "query": "Scrivi il README e la guida per gli integratori di questa crate Rust",
+    "should_trigger": true,
+    "description": "README and integrator guide for a Rust crate"
+  },
+  {
     "query": "Crea la wiki GitHub di questo repo con la struttura Diataxis",
     "should_trigger": false,
     "description": "GitHub wiki with a Diataxis structure"
@@ -23,5 +43,20 @@
     "query": "Genera una PowerPoint Accenture da questi documenti di stima",
     "should_trigger": false,
     "description": "Accenture PowerPoint from estimation documents"
+  },
+  {
+    "query": "Disegna il class diagram del package ordini e salvamelo come SVG in docs/diagrams/",
+    "should_trigger": false,
+    "description": "Class diagram of a package saved as SVG"
+  },
+  {
+    "query": "Genera Home, _Sidebar e _Footer come Markdown nella cartella wiki/ pronti per la PR",
+    "should_trigger": false,
+    "description": "Home, _Sidebar and _Footer Markdown pages in a wiki/ folder"
+  },
+  {
+    "query": "Costruisci un pitch deck per lo steering committee",
+    "should_trigger": false,
+    "description": "Pitch deck for a steering committee"
   }
 ]

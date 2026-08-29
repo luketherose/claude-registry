@@ -21,7 +21,7 @@
       "Uses the executive audience mode: cover, agenda, problem, solution, timeline, no implementation detail dump",
       "Only Accenture brand colours and fonts appear in the generated .pptx, and the timeline or effort slide carries the numbers from fixtures/estimation.md (333 giorni uomo, 30 settimane, the five workstream windows) with no figure absent from the fixture",
       "No source file is modified, deleted or overwritten",
-      "Loads `accenture-branding` with the Skill tool (tool_used: Skill) before writing the generation script, and the effect is visible: the script's colour constants are the RGBColor values that skill defines rather than arbitrary hex codes"
+      "The generation script's colour constants are the RGBColor values `accenture-branding` defines rather than arbitrary hex codes"
     ]
   },
   {

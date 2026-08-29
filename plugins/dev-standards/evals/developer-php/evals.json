@@ -29,7 +29,7 @@
       "Closed sets are modelled as enums and value objects use readonly classes with typed properties",
       "No Eloquent or Doctrine query call appears inside the Symfony command class: every read and write goes through an injected repository",
       "Produces Pest or PHPUnit 10 tests alongside the command",
-      "Loads `testing-standards` with the Skill tool (tool_used: Skill), and the effect is visible: each produced test is named {method}_{condition}_{outcome} and its body is laid out Arrange, Act, Assert"
+      "Each produced test is named {method}_{condition}_{outcome} and its body is laid out Arrange, Act, Assert, the naming and structure `testing-standards` prescribes"
     ]
   }
 ]

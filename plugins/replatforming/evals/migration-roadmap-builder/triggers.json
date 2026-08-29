@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 5 di Fase 4: produci la roadmap di migrazione strangler fig con una milestone per bounded context e il piano di rollback per ciascuna",
+    "should_trigger": true,
+    "description": "Strangler fig migration roadmap with one milestone per bounded context and per-milestone rollback"
+  },
+  {
+    "query": "Servono i criteri di go-live su equivalenza, performance e sicurezza, più la strategia di routing per il cutover",
+    "should_trigger": true,
+    "description": "Go-live criteria on equivalence, performance and security plus the cutover routing strategy"
+  },
+  {
+    "query": "Costruisci il piano di rollout del sistema TO-BE dagli ADR, dalla decomposizione e dalle metriche di baseline di Fase 3",
+    "should_trigger": true,
+    "description": "TO-BE rollout plan built from the ADRs, the decomposition and the Phase 3 baseline metrics"
+  },
+  {
+    "query": "Produci la decomposizione in bounded context TO-BE e gli ADR fondativi",
+    "should_trigger": false,
+    "description": "TO-BE bounded-context decomposition and the foundational ADRs"
+  },
+  {
+    "query": "Valuta fattibilità, sequencing e rischio di dipendenza della migrazione come persona di questo dibattito",
+    "should_trigger": false,
+    "description": "Migration feasibility, sequencing and dependency risk argued as a debate persona"
+  },
+  {
+    "query": "Applica hardening di osservabilità e sicurezza allo scaffold TO-BE",
+    "should_trigger": false,
+    "description": "Observability and security hardening applied to the TO-BE scaffold"
+  }
+]

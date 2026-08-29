@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Analizza la postura di sicurezza a livello codice AS-IS contro la OWASP Top 10, con validazione input e sanitizzazione",
+    "should_trigger": true,
+    "description": "AS-IS code-level security posture against the OWASP Top 10"
+  },
+  {
+    "query": "Ci sono secret nel codice, access control mancante o deserializzazione insicura in questo repository?",
+    "should_trigger": true,
+    "description": "Secrets in code, missing access control and insecure deserialization"
+  },
+  {
+    "query": "Wave 1 di Fase 2: mappa la superficie di threat model di questa applicazione, strettamente AS-IS",
+    "should_trigger": true,
+    "description": "Threat-model surface of the application, strictly AS-IS"
+  },
+  {
+    "query": "Scrivi la suite di test di sicurezza TO-BE su OWASP Top 10 per il backend Spring Boot, con abuse case JWT",
+    "should_trigger": false,
+    "description": "TO-BE OWASP Top 10 security test suite with JWT abuse cases"
+  },
+  {
+    "query": "Inventaria le CVE note e la postura di licensing delle dipendenze di terze parti",
+    "should_trigger": false,
+    "description": "Known CVEs and licensing posture of third-party dependencies"
+  },
+  {
+    "query": "Configura la baseline Spring Security 6 di produzione e gli header di sicurezza del frontend",
+    "should_trigger": false,
+    "description": "Production Spring Security 6 baseline and frontend security headers"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 3 track frontend: genera il workspace Angular TO-BE con core e shared, un feature module lazy per bounded context e il client API tipizzato dall'OpenAPI",
+    "should_trigger": true,
+    "description": "TO-BE Angular workspace with core and shared layers, lazy feature modules and a typed API client"
+  },
+  {
+    "query": "Serve routing, servizi e componenti list e detail per ogni bounded context, con marker TODO sulla logica complessa",
+    "should_trigger": true,
+    "description": "Routing, services and list plus detail components per bounded context with TODO markers"
+  },
+  {
+    "query": "Produci interceptor, guard, servizio API di base ed error handler dell'app Angular TO-BE",
+    "should_trigger": true,
+    "description": "Interceptors, guards, base API service and error handler of the TO-BE Angular app"
+  },
+  {
+    "query": "Scrivi i test dei componenti Angular con Jest e Angular Testing Library più gli E2E Playwright",
+    "should_trigger": false,
+    "description": "Angular component tests with Jest and Angular Testing Library plus Playwright E2E"
+  },
+  {
+    "query": "Genera lo scaffold Spring Boot 3 con i controller derivati dall'OpenAPI",
+    "should_trigger": false,
+    "description": "Spring Boot 3 scaffold with controllers derived from the OpenAPI contract"
+  },
+  {
+    "query": "Rivedi questo componente Angular e applica OnPush e lo split smart e dumb",
+    "should_trigger": false,
+    "description": "Review of an existing Angular component applying OnPush and the smart or dumb split"
+  }
+]

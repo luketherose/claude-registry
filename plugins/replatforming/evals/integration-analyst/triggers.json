@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Analizza le integrazioni esterne AS-IS: chiamate HTTP in uscita, servizi terzi, code, webhook, con contratto, auth, timeout e retry",
+    "should_trigger": true,
+    "description": "AS-IS external integrations with contract, auth method, timeout and retry posture"
+  },
+  {
+    "query": "Wave 1 di Fase 2: cataloga ogni servizio di terze parti con cui questa applicazione parla e come si autentica",
+    "should_trigger": true,
+    "description": "Catalogue of third-party services the application talks to and how it authenticates"
+  },
+  {
+    "query": "Quali sono i failure mode delle integrazioni esterne di questa app?",
+    "should_trigger": true,
+    "description": "Failure modes of the application's external integrations"
+  },
+  {
+    "query": "Produci la collection Postman dei servizi esposti dall'app, con richieste happy ed edge per ogni endpoint",
+    "should_trigger": false,
+    "description": "Postman collection of the services the application exposes, happy and edge requests"
+  },
+  {
+    "query": "Progetta il contratto OpenAPI 3.1 del backend TO-BE e l'ADR sul flusso di autenticazione",
+    "should_trigger": false,
+    "description": "TO-BE OpenAPI 3.1 contract and the authentication-flow ADR"
+  },
+  {
+    "query": "Analizza i pattern di accesso ai dati su DB, cache e file system",
+    "should_trigger": false,
+    "description": "Data access patterns across database, cache and file system"
+  }
+]

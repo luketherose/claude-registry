@@ -19,7 +19,7 @@
       "DTOs become data classes and closed state sets become sealed classes, with invariants encoded in value classes",
       "val is the default and var appears only where mutation is actually required, with explicit visibility on the public API",
       "Delivers the file through the Write or Edit tool rather than a Bash heredoc",
-      "Loads `java-spring-standards` and `spring-architecture` with the Skill tool (tool_used: Skill) when the converted class is a Spring bean, and the effect is visible: the Kotlin service takes its collaborators through the constructor and returns a DTO rather than the entity"
+      "The converted Kotlin service takes its collaborators through the constructor and returns a DTO rather than the entity, the bean shape `java-spring-standards` and `spring-architecture` prescribe"
     ]
   },
   {

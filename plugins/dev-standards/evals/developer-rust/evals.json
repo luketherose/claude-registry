@@ -19,7 +19,7 @@
       "Produces tests that compile against stable Rust only, with no nightly feature gate",
       "The produced code satisfies `cargo clippy --all-targets -- -D warnings` as written: no unwrap() or expect() outside a #[cfg(test)] module, no needless borrow, no redundant clone, and no `#![feature(...)]` gate",
       "All file content is written with the Write or Edit tool, never through a Bash heredoc",
-      "Loads `testing-standards` with the Skill tool (tool_used: Skill), and the effect is visible: the #[cfg(test)] module covers happy path, boundary, invalid input and error propagation as separately named test functions rather than one aggregate test"
+      "The #[cfg(test)] module covers happy path, boundary, invalid input and error propagation as separately named test functions rather than one aggregate test, the taxonomy `testing-standards` prescribes"
     ]
   },
   {

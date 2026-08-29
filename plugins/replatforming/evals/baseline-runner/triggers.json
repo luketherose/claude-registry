@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Esegui la suite di regressione di baseline AS-IS e cattura gli artefatti oracolo: snapshot, benchmark JSON, coverage JSON",
+    "should_trigger": true,
+    "description": "Execution of the AS-IS baseline suite capturing snapshots, benchmark JSON and coverage JSON"
+  },
+  {
+    "query": "Wave 2 di Fase 3: applica la failure policy, critical e high escalano, medium e low a xfail con record del bug AS-IS",
+    "should_trigger": true,
+    "description": "Failure policy applied to the baseline run: escalation for critical and high, xfail for medium and low"
+  },
+  {
+    "query": "La execution policy è write-only: valida la struttura della suite di baseline senza invocare pytest",
+    "should_trigger": true,
+    "description": "Write-only execution policy validating the baseline suite structure without invoking pytest"
+  },
+  {
+    "query": "Esegui le suite di test TO-BE di Wave 1 e gli scenari di carico di Wave 2, cattura JaCoCo e i risultati del verifier",
+    "should_trigger": false,
+    "description": "Execution of the TO-BE test suites and load scenarios capturing JaCoCo and verifier results"
+  },
+  {
+    "query": "Scrivi il modulo pytest di baseline per lo UC-03",
+    "should_trigger": false,
+    "description": "Baseline pytest module for one use case"
+  },
+  {
+    "query": "Rivedi in modo avversariale gli output di Fase 3 e segnala i rischi di determinismo",
+    "should_trigger": false,
+    "description": "Adversarial review of the Phase 3 outputs flagging determinism risks"
+  }
+]

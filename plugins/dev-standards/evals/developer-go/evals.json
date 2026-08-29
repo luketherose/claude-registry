@@ -19,7 +19,7 @@
       "Tests are table driven: one slice of cases driving a single subtest loop, not copy pasted test functions",
       "Every produced .go file is gofmt clean as written: tab indentation, a single grouped import block, no manual column alignment and no trailing whitespace",
       "All file content is written with the Write or Edit tool, never through a Bash heredoc or redirect",
-      "Loads `testing-standards` with the Skill tool (tool_used: Skill), and the effect is visible: the table cases are named for the scenario taxonomy (happy path, boundary, invalid input, error propagation) and each subtest is registered with t.Run using a {func}_{condition}_{outcome} name"
+      "The table cases are named for the `testing-standards` scenario taxonomy (happy path, boundary, invalid input, error propagation) and each subtest is registered with t.Run using a {func}_{condition}_{outcome} name"
     ]
   },
   {

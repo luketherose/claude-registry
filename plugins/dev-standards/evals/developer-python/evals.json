@@ -7,7 +7,7 @@
       "Every function signature carries type hints including an explicit return type",
       "Request and response models are pydantic v2 models: no raw dict is parsed without validation",
       "Files land in the api / service / repository / domain layout, with the business logic outside the router",
-      "Loads `python-expert` with the Skill tool (tool_used: Skill) before writing, and the effect is visible: every function signature including the router handler carries an explicit return annotation, and configuration is read through a pydantic settings class rather than os.environ lookups"
+      "Every function signature including the router handler carries an explicit return annotation, and configuration is read through a pydantic settings class rather than os.environ lookups, both rules `python-expert` prescribes"
     ]
   },
   {

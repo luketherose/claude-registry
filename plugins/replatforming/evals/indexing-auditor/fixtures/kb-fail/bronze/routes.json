@@ -1,0 +1,7 @@
+{
+  "routes": [
+    {"route_id": "R-001", "path": "/orders", "source": "src/app/orders.py"},
+    {"route_id": "R-002", "path": "/billing", "source": "src/app/billing.py"},
+    {"route_id": "R-003", "path": "/admin", "source": "src/app/legacy_export.py", "guard": "query_param:admin=true"}
+  ]
+}

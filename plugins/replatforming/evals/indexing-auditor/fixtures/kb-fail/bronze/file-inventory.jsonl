@@ -1,0 +1,4 @@
+{"file_id": "F-001", "path": "src/app/orders.py", "lines": 212, "language": "python"}
+{"file_id": "F-002", "path": "src/app/billing.py", "lines": 178, "language": "python"}
+{"file_id": "F-003", "path": "src/app/reporting.py", "lines": 1340, "language": "python"}
+{"file_id": "F-004", "path": "src/app/legacy_export.py", "lines": 96, "language": "python"}

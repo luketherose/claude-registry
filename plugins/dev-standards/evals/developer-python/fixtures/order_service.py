@@ -8,7 +8,6 @@ class OrderService:
         self.repository = repository
         self.gateway = gateway
 
-    # no type hints, no return annotation, payload is a raw dict
     def place(self, payload):
         total = payload["total"]
         email = payload["customer"]["email"]

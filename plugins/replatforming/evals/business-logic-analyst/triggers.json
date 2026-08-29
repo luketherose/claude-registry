@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Estrai le regole di business, la logica di validazione e i concetti di dominio da questo codice",
+    "should_trigger": true,
+    "description": "Business rules, validation logic and domain concepts extracted from a codebase"
+  },
+  {
+    "query": "Build the domain-level view of this Java codebase: glossary, business rules and state machines, independent of the file structure",
+    "should_trigger": true,
+    "description": "Domain-level view of a Java codebase: glossary, rules, state machines"
+  },
+  {
+    "query": "Sono comparsi nuovi termini di dominio dopo l'ultimo refactor. Aggiorna il glossario di dominio nella KB.",
+    "should_trigger": true,
+    "description": "Domain glossary refresh after new domain terms appeared"
+  },
+  {
+    "query": "Trova la logica implicita nascosta nei parametri dei widget e nel rendering condizionale delle pagine Streamlit",
+    "should_trigger": false,
+    "description": "Implicit logic hidden in widget parameters and conditional rendering"
+  },
+  {
+    "query": "Mappa dove i dati attraversano il confine dell'applicazione: accessi DB, chiamate API esterne, file I/O",
+    "should_trigger": false,
+    "description": "Map of where data crosses the application boundary"
+  },
+  {
+    "query": "Documenta l'interfaccia pubblica del package `orders`: classi esportate, funzioni, strutture dati",
+    "should_trigger": false,
+    "description": "Public interface documentation of one package"
+  }
+]

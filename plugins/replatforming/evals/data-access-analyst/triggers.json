@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Analizza i pattern di accesso ai dati AS-IS: origine, trasformazioni, validazioni e sink, su DB, file system, cache e serializzazione",
+    "should_trigger": true,
+    "description": "AS-IS data access patterns across persistence, file system, cache and serialization"
+  },
+  {
+    "query": "Wave 1 di Fase 2: come vengono letti e scritti i dati attraverso i layer di persistenza, cache e serializzazione?",
+    "should_trigger": true,
+    "description": "How data is read and written across the persistence, cache and serialization layers"
+  },
+  {
+    "query": "Traccia il percorso di un record dall'input alla scrittura su DB, AS-IS",
+    "should_trigger": true,
+    "description": "Path of a record from input to database write, AS-IS"
+  },
+  {
+    "query": "Progetta le entity JPA e i changelog Liquibase per il backend TO-BE",
+    "should_trigger": false,
+    "description": "JPA entities and Liquibase changelogs for the TO-BE backend"
+  },
+  {
+    "query": "Analizza le integrazioni esterne: chiamate HTTP in uscita, servizi terzi, code di messaggi, webhook",
+    "should_trigger": false,
+    "description": "External integrations: outbound HTTP calls, third-party services, queues, webhooks"
+  },
+  {
+    "query": "Scrivi i test di integrazione di baseline per l'accesso al DB e al file system, con le API esterne mockate",
+    "should_trigger": false,
+    "description": "Baseline integration tests for database and file system access with mocked external APIs"
+  }
+]

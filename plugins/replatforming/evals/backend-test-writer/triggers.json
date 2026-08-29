@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 1 di Fase 5: scrivi la suite di test del backend Spring Boot 3 TO-BE, unit con JUnit 5 e Mockito, integrazione con Testcontainers",
+    "should_trigger": true,
+    "description": "TO-BE Spring Boot 3 backend test suite with JUnit 5, Mockito and Testcontainers"
+  },
+  {
+    "query": "Servono i contract test Spring Cloud Contract verificati contro l'OpenAPI 3.1 di Fase 4, organizzati per bounded context",
+    "should_trigger": true,
+    "description": "Spring Cloud Contract tests verified against the Phase 4 OpenAPI, organised per bounded context"
+  },
+  {
+    "query": "Porta la copertura del backend TO-BE sopra l'80% di linea e il 70% di branch, ancorando le aspettative agli UC di Fase 1",
+    "should_trigger": true,
+    "description": "TO-BE backend coverage targets anchored to the Phase 1 use case specifications"
+  },
+  {
+    "query": "Scrivi i test dei componenti Angular con Jest e gli E2E Playwright",
+    "should_trigger": false,
+    "description": "Angular component tests with Jest plus Playwright E2E"
+  },
+  {
+    "query": "Scrivi l'harness pytest di equivalenza per lo UC-09 confrontando l'output TO-BE con lo snapshot AS-IS",
+    "should_trigger": false,
+    "description": "Equivalence pytest harness comparing TO-BE output against the AS-IS snapshot"
+  },
+  {
+    "query": "Aggiungi test JUnit 5 per questa classe di servizio, la copertura è al 40%",
+    "should_trigger": false,
+    "description": "JUnit 5 tests added to one service class sitting at 40% coverage"
+  }
+]

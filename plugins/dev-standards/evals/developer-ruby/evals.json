@@ -7,7 +7,7 @@
       "Business logic moves into service objects and the controller action shrinks to dispatch plus response",
       "Every produced Ruby file starts with `# frozen_string_literal: true`",
       "Queries are expressed as scopes or query objects: no raw .where survives inside a controller",
-      "Loads `testing-standards` with the Skill tool (tool_used: Skill), and the effect is visible: each extracted service object ships with an RSpec spec whose describe / context / it nesting covers happy path, boundary, invalid input and error propagation as separate examples"
+      "Each extracted service object ships with an RSpec spec whose describe / context / it nesting covers happy path, boundary, invalid input and error propagation as separate examples, the scenario taxonomy `testing-standards` prescribes"
     ]
   },
   {

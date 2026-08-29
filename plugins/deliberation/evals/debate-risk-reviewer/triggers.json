@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Step 2 del dibattito: produci la bozza del reviewer Security e Compliance su governance, GDPR, privacy, esposizione dei dati e auditabilità",
+    "should_trigger": true,
+    "description": "Step 2 Security and Compliance draft on governance, GDPR, privacy and auditability"
+  },
+  {
+    "query": "Setup a tre persona: copri anche le preoccupazioni di replatforming nella tua bozza di rischio",
+    "should_trigger": true,
+    "description": "Three-persona setup where the risk draft also covers replatforming concerns"
+  },
+  {
+    "query": "Questa decisione è ad alto rischio: chiedi arbitrato del judge nella tua bozza",
+    "should_trigger": true,
+    "description": "High-risk decision where the draft demands judge arbitration"
+  },
+  {
+    "query": "Step 2: produci la bozza su scalabilità, SLO, observability e incident response",
+    "should_trigger": false,
+    "description": "Step 2 draft on scalability, SLOs, observability and incident response"
+  },
+  {
+    "query": "Step 3: organizza tutte le bozze in una evidence summary neutrale senza decidere",
+    "should_trigger": false,
+    "description": "Step 3 neutral evidence summary produced without deciding"
+  },
+  {
+    "query": "Analizza la postura di sicurezza di questo repository contro la OWASP Top 10 e il debito tecnico",
+    "should_trigger": false,
+    "description": "Security posture and technical debt of a repository against the OWASP Top 10"
+  }
+]

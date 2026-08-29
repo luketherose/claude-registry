@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Step 2 del dibattito: produci la bozza dell'Operations e Reliability Reviewer su scalabilità, observability, SLO e prontezza alla produzione",
+    "should_trigger": true,
+    "description": "Step 2 Operations and Reliability draft on scalability, observability, SLOs and readiness"
+  },
+  {
+    "query": "Ragiona su cosa succede in produzione alle 02:00 quando questa opzione fallisce",
+    "should_trigger": true,
+    "description": "Reasoning about what happens in production at 02:00 when the option fails"
+  },
+  {
+    "query": "Step 4: produci le challenge alle altre bozze dal punto di vista della manutenibilità e dell'incident response",
+    "should_trigger": true,
+    "description": "Step 4 challenges raised from a maintainability and incident response standpoint"
+  },
+  {
+    "query": "Step 2: produci la bozza su governance, compliance GDPR e auditabilità",
+    "should_trigger": false,
+    "description": "Step 2 draft on governance, GDPR compliance and auditability"
+  },
+  {
+    "query": "Step 2: produci la bozza del Proponente ottimizzata per la solidità tecnica",
+    "should_trigger": false,
+    "description": "Step 2 Proposer draft optimised for technical soundness"
+  },
+  {
+    "query": "Analizza i gap di observability e la salute della pipeline CI/CD di questo repository",
+    "should_trigger": false,
+    "description": "Observability gaps and CI/CD pipeline health of a repository"
+  }
+]

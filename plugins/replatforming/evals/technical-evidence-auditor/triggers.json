@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Verifica che ogni finding tecnico di Fase 2 abbia evidence_ids e che gli high e critical siano in stato verified",
+    "should_trigger": true,
+    "description": "Evidence ids and verified status on the Phase 2 technical findings"
+  },
+  {
+    "query": "Controlla che negli output di Fase 2 non ci siano raccomandazioni TO-BE non richieste e che i JSONL normalizzati siano completi",
+    "should_trigger": true,
+    "description": "Unrequested TO-BE recommendations and completeness of the normalized JSONL artefacts"
+  },
+  {
+    "query": "Wave 3b di Fase 2: audita docs/analysis/02-technical/normalized/ e raw/ contro .indexing-kb/",
+    "should_trigger": true,
+    "description": "Audit of the normalized and raw Phase 2 outputs against the indexing KB"
+  },
+  {
+    "query": "Verifica che ogni UC confermato abbia evidence_ids e che ogni UI surface mappi a uno UC",
+    "should_trigger": false,
+    "description": "Evidence ids on confirmed use cases and UI-surface to use-case mapping"
+  },
+  {
+    "query": "Audita la KB di Fase 0: file orfani, coverage gap e verdetto PASS o FAIL",
+    "should_trigger": false,
+    "description": "Phase 0 KB audit for orphan files, coverage gaps and a PASS or FAIL verdict"
+  },
+  {
+    "query": "Cerca contraddizioni e rischi Streamlit mancati negli artefatti di Fase 2",
+    "should_trigger": false,
+    "description": "Search for contradictions and missed Streamlit risks in the Phase 2 artefacts"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Tutte le fasi di indicizzazione sono complete. Consolida la KB in system overview, ipotesi di bounded context e mappa degli hotspot di complessità.",
+    "should_trigger": true,
+    "description": "Consolidation of a complete KB into overview, bounded-context hypothesis and hotspot map"
+  },
+  {
+    "query": "Write gold/00-overview.md and the index page from the existing bronze/ and silver/ KB content",
+    "should_trigger": true,
+    "description": "gold/00-overview.md and the index page written from existing bronze/ and silver/ content"
+  },
+  {
+    "query": "Ho rigenerato due sezioni della KB. Ri-sintetizza l'overview senza rilanciare i worker.",
+    "should_trigger": true,
+    "description": "Overview re-synthesis after a partial KB refresh, without re-running the workers"
+  },
+  {
+    "query": "Verifica la qualità della KB prodotta: coverage gap, claim non verificati, file orfani, verdetto PASS o FAIL",
+    "should_trigger": false,
+    "description": "Quality audit of the produced KB with a PASS or FAIL verdict"
+  },
+  {
+    "query": "Produci la decomposizione in bounded context TO-BE e gli ADR fondativi su stile architetturale e stack target",
+    "should_trigger": false,
+    "description": "TO-BE bounded-context decomposition plus the foundational architecture ADRs"
+  },
+  {
+    "query": "Consolida i findings dei worker di analisi tecnica in un risk register unificato con severity matrix",
+    "should_trigger": false,
+    "description": "Consolidation of technical-analysis findings into a risk register with a severity matrix"
+  }
+]

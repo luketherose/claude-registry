@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Estrai la logica implicita non catturata dalle regole esplicite: parametri dei widget, rendering condizionale, catene di callback",
+    "should_trigger": true,
+    "description": "Implicit logic in widget parameters, conditional rendering and callback chains"
+  },
+  {
+    "query": "Wave 2 di Fase 1 su questa app Streamlit: cerca le mutazioni di stato cross-screen che nascondono regole di business",
+    "should_trigger": true,
+    "description": "Cross-screen state mutations that hide business rules in a Streamlit app"
+  },
+  {
+    "query": "Le regole di business esplicite sono già nella KB. Trova la validazione che esiste solo come vincolo di un widget.",
+    "should_trigger": true,
+    "description": "Validation that exists only as a widget constraint, beyond the explicit rules"
+  },
+  {
+    "query": "Estrai le regole di business esplicite e il glossario di dominio dai validator Pydantic",
+    "should_trigger": false,
+    "description": "Explicit business rules and domain glossary from Pydantic validators"
+  },
+  {
+    "query": "Analizza il caching Streamlit e gli anti-pattern rilevanti per la migrazione, pagina per pagina",
+    "should_trigger": false,
+    "description": "Streamlit caching and migration-relevant anti-patterns, page by page"
+  },
+  {
+    "query": "Verifica che ogni UC confermato abbia evidence_ids e che nessun riferimento TO-BE compaia negli output di Fase 1",
+    "should_trigger": false,
+    "description": "Evidence ids on confirmed use cases and TO-BE purity of the Phase 1 outputs"
+  }
+]

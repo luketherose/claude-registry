@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 2 di Fase 5: confronta le performance del TO-BE contro il benchmark AS-IS di Fase 3, con delta p95 e p99 per UC",
+    "should_trigger": true,
+    "description": "TO-BE versus Phase 3 AS-IS performance comparison with per-use-case p95 and p99 deltas"
+  },
+  {
+    "query": "Scrivi gli scenari di carico k6 sugli endpoint TO-BE guidati dal contratto OpenAPI, uno per UC critico",
+    "should_trigger": true,
+    "description": "k6 load scenarios on the TO-BE endpoints driven by the OpenAPI contract"
+  },
+  {
+    "query": "Segnala una regressione quando il p95 supera del 10% la baseline AS-IS",
+    "should_trigger": true,
+    "description": "Regression flag raised when p95 exceeds the AS-IS baseline by ten percent"
+  },
+  {
+    "query": "Scrivi i benchmark pytest-benchmark di baseline AS-IS con profiling di memoria",
+    "should_trigger": false,
+    "description": "AS-IS baseline pytest-benchmark scripts with memory profiling"
+  },
+  {
+    "query": "Analizza staticamente hot loop, N+1 e caching mancante nel codice AS-IS",
+    "should_trigger": false,
+    "description": "Static analysis of hot loops, N+1 and missing caching in the AS-IS code"
+  },
+  {
+    "query": "Esegui le suite di test TO-BE di Wave 1 e cattura la copertura JaCoCo",
+    "should_trigger": false,
+    "description": "Execution of the TO-BE test suites capturing JaCoCo coverage"
+  }
+]

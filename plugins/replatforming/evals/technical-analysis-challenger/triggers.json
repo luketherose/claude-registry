@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Fai la review avversariale degli output di Fase 2, inclusi gli artefatti di Wave 1 e il risk register sintetizzato",
+    "should_trigger": true,
+    "description": "Adversarial review of the Phase 2 Wave 1 artefacts and the synthesised risk register"
+  },
+  {
+    "query": "Cerca claim non verificati e leak di tecnologie target negli output dell'analisi tecnica",
+    "should_trigger": true,
+    "description": "Search for unverified claims and target-technology leaks in the technical analysis outputs"
+  },
+  {
+    "query": "Wave 3 di Fase 2: quali rischi specifici di Streamlit hanno mancato i worker?",
+    "should_trigger": true,
+    "description": "Streamlit-specific risks the Phase 2 workers may have missed"
+  },
+  {
+    "query": "Fai la review avversariale degli output di Fase 1 funzionale",
+    "should_trigger": false,
+    "description": "Adversarial review of the Phase 1 functional outputs"
+  },
+  {
+    "query": "Consolida i findings di Wave 1 in un risk register con severity matrix",
+    "should_trigger": false,
+    "description": "Wave 1 findings consolidated into a risk register with a severity matrix"
+  },
+  {
+    "query": "Rivedi gli output di Fase 4 TO-BE e produci la matrice di tracciabilità AS-IS verso TO-BE",
+    "should_trigger": false,
+    "description": "Review of the Phase 4 TO-BE outputs plus the AS-IS to TO-BE traceability matrix"
+  }
+]

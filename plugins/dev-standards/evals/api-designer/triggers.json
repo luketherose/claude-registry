@@ -15,6 +15,26 @@
     "description": "Pagination, versioning and RFC 7807 errors for a customer API"
   },
   {
+    "query": "Rivedi questo OpenAPI dell'API .NET e dimmi quali change sono breaking per i client esistenti",
+    "should_trigger": true,
+    "description": "Existing .NET OpenAPI reviewed for changes that break current clients"
+  },
+  {
+    "query": "Progetta il contratto REST che questo servizio Go dovrà esporre, con paginazione e RFC 7807, prima del codice",
+    "should_trigger": true,
+    "description": "REST contract for a Go service with pagination and RFC 7807, before any code"
+  },
+  {
+    "query": "Progetta il contratto OpenAPI 3.1 dell'API ordini Spring Boot con paginazione e versioning, prima del codice",
+    "should_trigger": true,
+    "description": "OpenAPI 3.1 contract for a Spring Boot orders API, with pagination and versioning"
+  },
+  {
+    "query": "Progetta il contratto REST dell'API ordini Symfony con paginazione e RFC 7807, prima del codice",
+    "should_trigger": true,
+    "description": "REST contract for a Symfony orders API with pagination and RFC 7807"
+  },
+  {
     "query": "Implementa i controller Spring Boot per questi endpoint",
     "should_trigger": false,
     "description": "Spring Boot controllers implemented for given endpoints"
@@ -23,5 +43,20 @@
     "query": "Scrivi i contract test JUnit 5 contro questo OpenAPI",
     "should_trigger": false,
     "description": "JUnit 5 contract tests against an OpenAPI spec"
+  },
+  {
+    "query": "Scrivi un servizio HTTP in Go con chi, log/slog e context propagation",
+    "should_trigger": false,
+    "description": "Go HTTP service written with chi, log/slog and context propagation"
+  },
+  {
+    "query": "Scrivi un endpoint Ktor con coroutine e structured concurrency",
+    "should_trigger": false,
+    "description": "Ktor endpoint with coroutines and structured concurrency"
+  },
+  {
+    "query": "Write an ASP.NET Core 8 minimal API for order management",
+    "should_trigger": false,
+    "description": "ASP.NET Core 8 minimal API implemented for order management"
   }
 ]

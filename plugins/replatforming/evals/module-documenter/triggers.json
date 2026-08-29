@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Documenta il package `src/myapp/billing/` a livello di API: scopo, interfaccia pubblica, strutture dati, organizzazione interna",
+    "should_trigger": true,
+    "description": "API-level documentation of one Python package"
+  },
+  {
+    "query": "The `cmd/server/` package was refactored; regenerate its module document only",
+    "should_trigger": true,
+    "description": "Regeneration of a single package's module document after a refactor"
+  },
+  {
+    "query": "Fan-out di modulo in Fase 0: scrivi .indexing-kb/04-modules/orders.md per il package `com.acme.orders`",
+    "should_trigger": true,
+    "description": "Per-package module document written under .indexing-kb/04-modules/"
+  },
+  {
+    "query": "Scrivi il README e la guida API di questo servizio per gli sviluppatori esterni",
+    "should_trigger": false,
+    "description": "README and API guide aimed at external developers"
+  },
+  {
+    "query": "Consolida i doc di modulo già prodotti nella system overview e nella mappa degli hotspot di complessità",
+    "should_trigger": false,
+    "description": "Consolidation of existing module docs into a system overview and complexity-hotspot map"
+  },
+  {
+    "query": "Estrai il glossario di dominio e le regole di business dal package billing",
+    "should_trigger": false,
+    "description": "Domain glossary and business rules extracted from a package"
+  }
+]

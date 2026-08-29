@@ -20,14 +20,12 @@ ALB. No cache tier. Deployed by hand from a laptop.
 | Tomcat max threads | 200 |
 | Hikari max pool size | 5 |
 
-## Known operational facts
+## Operations
 
-- Credentials for the database live in `application.yml`, committed to the repo.
-- `management.endpoints.web.exposure.include` is `*` and the actuator port is the
-  same as the public HTTP port.
-- CORS allows every origin.
-- The payment call is synchronous and inside the request transaction.
-- No structured audit log exists for order state changes.
-- Restores from backup have never been exercised. RPO and RTO are undefined.
-- Monthly cloud spend is 4,100 EUR, of which 2,600 EUR is the always-on
-  over-provisioned RDS instance (db.r6g.2xlarge at 6% average CPU).
+- `OrderService.place` is annotated `@Transactional`; the call to
+  `payments.internal` is made inside it, before the order row is flushed.
+- Order state changes are written with `log.info` and are not persisted anywhere.
+- RDS automated backup retention is 7 days. No restore drill appears in the
+  runbook, and the runbook states no RPO and no RTO.
+- Monthly cloud spend is 4,100 EUR, of which 2,600 EUR is the RDS instance
+  (db.r6g.2xlarge, 6% average CPU over the last 90 days).

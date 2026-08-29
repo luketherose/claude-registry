@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Analizza la postura di performance AS-IS via analisi statica: hot loop, N+1, I/O bloccante, caching mancante, operazioni memory-heavy",
+    "should_trigger": true,
+    "description": "Static AS-IS performance posture: hot loops, N+1, blocking I/O, caching, memory-heavy operations"
+  },
+  {
+    "query": "Quanto costano i rerun di questa app Streamlit dal punto di vista delle performance?",
+    "should_trigger": true,
+    "description": "Rerun cost of a Streamlit application from a performance standpoint"
+  },
+  {
+    "query": "Wave 1 di Fase 2: ordina i rischi di performance di questo codice senza eseguirlo",
+    "should_trigger": true,
+    "description": "Ranking of performance risks without executing the codebase"
+  },
+  {
+    "query": "Scrivi i benchmark pytest-benchmark per UC della baseline AS-IS, con profiling di memoria",
+    "should_trigger": false,
+    "description": "Per-use-case pytest-benchmark scripts with memory profiling for the AS-IS baseline"
+  },
+  {
+    "query": "Confronta le performance del TO-BE contro il benchmark AS-IS di Fase 3, con delta p95 e p99",
+    "should_trigger": false,
+    "description": "TO-BE performance compared against the Phase 3 AS-IS benchmark with p95 and p99 deltas"
+  },
+  {
+    "query": "Analizza la qualità del codice: duplicazione, dead code e hotspot di complessità",
+    "should_trigger": false,
+    "description": "Code quality: duplication, dead code and complexity hotspots"
+  }
+]

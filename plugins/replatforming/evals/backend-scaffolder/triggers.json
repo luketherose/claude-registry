@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 3 track backend passo 1: genera lo scaffold Spring Boot 3, struttura package per bounded context, skeleton dei controller dal contratto OpenAPI",
+    "should_trigger": true,
+    "description": "Spring Boot 3 scaffold with per-bounded-context packages and OpenAPI-derived controller skeletons"
+  },
+  {
+    "query": "Serve l'error handler RFC 7807 e la baseline di security config nello scaffold TO-BE",
+    "should_trigger": true,
+    "description": "RFC 7807 error handler and security config baseline in the TO-BE scaffold"
+  },
+  {
+    "query": "Crea il progetto Maven e gli skeleton di servizio per ogni bounded context, lasciando i corpi non implementati",
+    "should_trigger": true,
+    "description": "Maven project and service skeletons per bounded context with unimplemented bodies"
+  },
+  {
+    "query": "Traduci la logica di business Python dello UC-05 nei metodi di servizio Java",
+    "should_trigger": false,
+    "description": "AS-IS Python business logic for one use case translated into Java service methods"
+  },
+  {
+    "query": "Progetta le entity JPA e i changelog Liquibase per l'aggregate Orders",
+    "should_trigger": false,
+    "description": "JPA entities and Liquibase changelogs for one aggregate"
+  },
+  {
+    "query": "Genera il workspace Angular TO-BE con un feature module lazy per bounded context",
+    "should_trigger": false,
+    "description": "TO-BE Angular workspace with one lazy feature module per bounded context"
+  }
+]

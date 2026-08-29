@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Fai la review avversariale degli output di Fase 1: gap, contraddizioni, claim non verificati, violazioni AS-IS",
+    "should_trigger": true,
+    "description": "Adversarial review of the Phase 1 outputs for gaps, contradictions and AS-IS violations"
+  },
+  {
+    "query": "Wave 3 di Fase 1 su uno stack Streamlit: cerca quello che i worker funzionali hanno mancato, senza riscrivere nulla",
+    "should_trigger": true,
+    "description": "Search for what the functional workers missed, flagging only"
+  },
+  {
+    "query": "Cross-valida fra loro gli artefatti funzionali di Fase 1 e riporta solo i findings",
+    "should_trigger": true,
+    "description": "Cross-validation of the Phase 1 functional artefacts, findings only"
+  },
+  {
+    "query": "Fai la review avversariale degli output di Fase 2, incluso il risk register sintetizzato",
+    "should_trigger": false,
+    "description": "Adversarial review of the Phase 2 outputs including the synthesised risk register"
+  },
+  {
+    "query": "Rivedi gli output di Fase 3 baseline: fixture, file di test, benchmark, collection Postman e report del runner",
+    "should_trigger": false,
+    "description": "Review of the Phase 3 baseline outputs: fixtures, tests, benchmarks, Postman collection, runner report"
+  },
+  {
+    "query": "Riscrivi gli UC che risultano incompleti dopo la review, aggiungendo i flussi mancanti",
+    "should_trigger": false,
+    "description": "Rewriting of incomplete use cases with the missing flows added"
+  }
+]

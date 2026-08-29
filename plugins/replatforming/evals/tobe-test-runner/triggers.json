@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Wave 3 di Fase 5: esegui le suite di test TO-BE di Wave 1 e gli scenari di carico di Wave 2, cattura JaCoCo, i risultati del verifier e le trace Playwright",
+    "should_trigger": true,
+    "description": "Execution of the TO-BE test suites and load scenarios capturing the oracle artefacts"
+  },
+  {
+    "query": "Applica la failure policy: critical e high escalano, medium e low finiscono nel registro TBUG con xfail",
+    "should_trigger": true,
+    "description": "Failure policy applied with escalation for critical and high and TBUG entries for medium and low"
+  },
+  {
+    "query": "Scrivi i report consolidati di coverage e contract test senza toccare né i test né il codice di produzione",
+    "should_trigger": true,
+    "description": "Consolidated coverage and contract-test reports written without touching test or production code"
+  },
+  {
+    "query": "Esegui la suite di regressione di baseline AS-IS e cattura gli snapshot oracolo",
+    "should_trigger": false,
+    "description": "Execution of the AS-IS baseline regression suite capturing the oracle snapshots"
+  },
+  {
+    "query": "Riscrivi i test di contratto che falliscono per allinearli al nuovo OpenAPI",
+    "should_trigger": false,
+    "description": "Failing contract tests rewritten to match a new OpenAPI spec"
+  },
+  {
+    "query": "Consolida i risultati di Fase 5 nel report di equivalenza firmato dal Product Owner",
+    "should_trigger": false,
+    "description": "Phase 5 results consolidated into the Product Owner equivalence report"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Analizza le pagine Streamlit di questa app: session_state, widget, caching e anti-pattern rilevanti per la migrazione",
+    "should_trigger": true,
+    "description": "Streamlit pages, session_state, widgets, caching and migration-relevant anti-patterns"
+  },
+  {
+    "query": "streamlit compare in stack.frameworks. Esegui l'audit Streamlit di Fase 0 su pagine, componenti custom e modello di rerun.",
+    "should_trigger": true,
+    "description": "Gated Phase 0 Streamlit audit on pages, custom components and the rerun model"
+  },
+  {
+    "query": "Le pagine Streamlit sono state rifattorizzate a metà analisi. Rifai solo l'analisi Streamlit.",
+    "should_trigger": true,
+    "description": "Targeted Streamlit re-run after pages were refactored mid-analysis"
+  },
+  {
+    "query": "Scrivi i test pytest di baseline AS-IS per la pagina Streamlit `orders` usando streamlit.testing.v1.AppTest",
+    "should_trigger": false,
+    "description": "Baseline pytest module for a Streamlit page using AppTest"
+  },
+  {
+    "query": "Progetta come riprodurre le semantiche di rerun nella UI Angular TO-BE",
+    "should_trigger": false,
+    "description": "Design of the TO-BE Angular UI reproducing rerun semantics"
+  },
+  {
+    "query": "Produci l'albero delle directory, i conteggi file e le statistiche di linguaggio di questo repo",
+    "should_trigger": false,
+    "description": "Directory tree, file counts and language statistics of a repository"
+  }
+]

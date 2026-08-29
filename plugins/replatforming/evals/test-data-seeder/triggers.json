@@ -1,0 +1,32 @@
+[
+  {
+    "query": "L'app TO-BE è costruita e i test passano, ma il DB è vuoto e la UI non si può provare: progetta e carica un dataset di test cross-modulo",
+    "should_trigger": true,
+    "description": "Empty runtime database blocking any meaningful UI exercise of the built application"
+  },
+  {
+    "query": "Passo 5.5 di Fase 4: scrivi il seed nel formato di migrazione che il progetto già usa, registralo nel manifest e riavvia l'app",
+    "should_trigger": true,
+    "description": "Seed written in the project's own migration format, registered in the manifest, app restarted"
+  },
+  {
+    "query": "Lo smoke gate della UI è fallito perché ogni pagina mostra lo stato vuoto: rigenera i dati e verifica via chiamate API",
+    "should_trigger": true,
+    "description": "UI smoke gate failing on empty state, data regenerated and verified via API calls"
+  },
+  {
+    "query": "Costruisci le fixture pytest minime ed edge per la baseline AS-IS con conftest.py deterministico",
+    "should_trigger": false,
+    "description": "Minimal and edge pytest fixtures for the AS-IS baseline with a deterministic conftest.py"
+  },
+  {
+    "query": "Progetta le entity JPA e i changelog Liquibase per l'aggregate Orders",
+    "should_trigger": false,
+    "description": "JPA entities and Liquibase changelogs for one aggregate"
+  },
+  {
+    "query": "Quali convenzioni seguiamo per il seeding dei dati di test in questo repository?",
+    "should_trigger": false,
+    "description": "Conventions followed for test data seeding in this repository"
+  }
+]

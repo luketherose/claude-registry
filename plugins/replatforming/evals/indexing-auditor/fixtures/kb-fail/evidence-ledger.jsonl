@@ -1,0 +1,4 @@
+{"evidence_id": "EV-0001", "path": "src/app/orders.py", "start_line": 14, "end_line": 31, "kind": "symbol"}
+{"evidence_id": "EV-0002", "path": "src/app/orders.py", "start_line": 88, "end_line": 96, "kind": "branch"}
+{"evidence_id": "EV-0007", "path": "src/app/reporting.py", "start_line": 4, "end_line": 20, "kind": "symbol"}
+{"evidence_id": "EV-0007", "path": "src/app/reporting.py", "start_line": 210, "end_line": 244, "kind": "symbol"}
