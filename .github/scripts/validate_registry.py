@@ -190,12 +190,27 @@ def validate_plugin_root_refs():
                 err("%s: ${CLAUDE_PLUGIN_ROOT}/%s does not resolve" % (path, ref))
 
 
-def report(per_plugin, out):
+def report(per_plugin, out, only=None):
     total_tokens = int(sum(per_plugin.values()) * WORDS_TO_TOKENS)
     total_agents = len(glob.glob("plugins/*/agents/**/*.md", recursive=True))
-    lines = ["<!-- claude-registry-validation -->", "## Registry validation", "",
-             "### Subagent description budget", "",
-             "| plugin | agents | description tokens |", "|---|---:|---:|"]
+    title = {"manifests": "Marketplace validation",
+             "capabilities": "Catalog validation"}.get(only, "Registry validation")
+    marker = "<!-- claude-registry-validation-%s -->" % (only or "all")
+    lines = [marker, "## " + title, ""]
+    if not per_plugin:
+        lines.append("**Errors: %d | Warnings: %d**" % (len(errors), len(warnings)))
+        lines.append("")
+        for e in errors:
+            lines.append("- ERROR: %s" % e)
+        for w in warnings:
+            lines.append("- warn: %s" % w)
+        text = "\n".join(lines) + "\n"
+        print(text)
+        if out:
+            open(out, "w", encoding="utf-8").write(text)
+        return
+    lines += ["### Subagent description budget", "",
+              "| plugin | agents | description tokens |", "|---|---:|---:|"]
     for key in sorted(per_plugin, key=lambda x: -per_plugin[x]):
         count = len(glob.glob("plugins/%s/agents/**/*.md" % key, recursive=True))
         lines.append("| `%s` | %d | %d |" % (key, count, int(per_plugin[key] * WORDS_TO_TOKENS)))
@@ -220,10 +235,18 @@ def report(per_plugin, out):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-file")
+    parser.add_argument("--only", choices=["manifests", "capabilities"],
+                        help="Run only one half of the validation. "
+                             "'manifests' checks marketplace.json and every plugin.json; "
+                             "'capabilities' checks agents, skills, references and the "
+                             "description budget. Omit to run both.")
     args = parser.parse_args()
-    validate_manifests()
-    budget = validate_agents()
-    validate_skills()
-    validate_plugin_root_refs()
-    report(budget, args.output_file)
+    budget = {}
+    if args.only in (None, "manifests"):
+        validate_manifests()
+    if args.only in (None, "capabilities"):
+        budget = validate_agents()
+        validate_skills()
+        validate_plugin_root_refs()
+    report(budget, args.output_file, args.only)
     sys.exit(1 if errors else 0)

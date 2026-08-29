@@ -8,27 +8,31 @@ permissions:
   contents: read
   pull-requests: write
 
+# Job names are load-bearing: the "Protect main branch" ruleset requires the
+# status-check contexts "Validate marketplace" and "Validate catalog". Renaming
+# a job here silently blocks every pull request, because a required context
+# that never reports stays pending forever. Change the ruleset first.
+
 jobs:
-  validate-registry:
-    name: Validate registry
+  validate-marketplace:
+    name: Validate marketplace
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Run registry validation
+      - name: Validate marketplace.json and every plugin.json
         id: validate
         run: |
           python3 .github/scripts/validate_registry.py \
-            --output-file /tmp/registry-comment.md
+            --only manifests \
+            --output-file /tmp/marketplace-comment.md
         continue-on-error: true
 
       - name: Set up Node
@@ -37,34 +41,29 @@ jobs:
           node-version: "20"
 
       - name: Run claude plugin validate
-        id: plugin-validate
         run: |
           npm install -g @anthropic-ai/claude-code@latest
-          claude plugin validate . 2>&1 | tee /tmp/plugin-validate.txt
-        continue-on-error: true
-
-      - name: Append plugin validate output
-        run: |
           {
             echo ""
             echo "### \`claude plugin validate\`"
             echo ""
             echo '```'
-            cat /tmp/plugin-validate.txt 2>/dev/null || echo "(not available in this environment)"
+            claude plugin validate . 2>&1 || echo "(unavailable in this environment)"
             echo '```'
-          } >> /tmp/registry-comment.md
+          } >> /tmp/marketplace-comment.md
+        continue-on-error: true
 
-      - name: Post or update validation comment
+      - name: Post or update comment
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
-            const marker = '<!-- claude-registry-validation -->';
+            const marker = '<!-- claude-registry-validation-manifests -->';
             let body;
             try {
-              body = fs.readFileSync('/tmp/registry-comment.md', 'utf8');
+              body = fs.readFileSync('/tmp/marketplace-comment.md', 'utf8');
             } catch {
-              body = `${marker}\n## Registry validation\n\nCould not read validation output.`;
+              body = `${marker}\n## Marketplace validation\n\nCould not read validation output.`;
             }
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
@@ -90,8 +89,72 @@ jobs:
               });
             }
 
-      - name: Fail if validation errors found
+      - name: Fail if manifest errors found
         if: steps.validate.outcome == 'failure'
         run: |
-          echo "Registry validation failed. See the PR comment for details."
+          echo "Marketplace validation failed. See the PR comment for details."
+          exit 1
+
+  validate-catalog:
+    name: Validate catalog
+    runs-on: ubuntu-latest
+    needs: validate-marketplace
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate agents, skills, references and the description budget
+        id: validate
+        run: |
+          python3 .github/scripts/validate_registry.py \
+            --only capabilities \
+            --output-file /tmp/catalog-comment.md
+        continue-on-error: true
+
+      - name: Post or update comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- claude-registry-validation-capabilities -->';
+            let body;
+            try {
+              body = fs.readFileSync('/tmp/catalog-comment.md', 'utf8');
+            } catch {
+              body = `${marker}\n## Catalog validation\n\nCould not read validation output.`;
+            }
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c =>
+              c.user.type === 'Bot' && c.body.includes(marker)
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Fail if capability errors found
+        if: steps.validate.outcome == 'failure'
+        run: |
+          echo "Catalog validation failed. See the PR comment for details."
           exit 1
