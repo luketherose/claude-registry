@@ -54,7 +54,7 @@ deviation in the dataset-plan output.
 
 ## Step 3 — Design the dataset (call the design skill)
 
-Invoke `test-data-design-standards` and apply its rules. Produce, as
+Invoke `test-data-seeding-standards` and apply its rules. Produce, as
 an internal artifact, a **dataset plan** containing:
 
 1. **Pivot entities (5 by default).** A small set of core domain
@@ -90,7 +90,7 @@ Validate the plan against the **constraints**:
 ## Step 4 — Write the seed file(s)
 
 Generate the seed in the tool's native format (call
-`database-migration-patterns` for the exact templates). Apply these
+`test-data-seeding-standards` for the exact templates). Apply these
 discipline rules regardless of tool:
 
 - **Idempotent header.** The file must be safe to apply once and only
@@ -116,7 +116,7 @@ discipline rules regardless of tool:
 - **Length safety.** Before emitting any string literal, verify it
   is ≤ the declared column length. Common gotcha: a free-text
   comment exceeds a 10-char status column. Use the column-length
-  pass from `database-migration-patterns` as a final check.
+  pass from `test-data-seeding-standards` as a final check.
 - **Single file vs many.** Default to one file per bounded context
   with a clear `<NN>-<bc>-seed` numbering. If the project already
   has a one-file convention, follow it.

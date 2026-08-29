@@ -4,7 +4,7 @@
 
 - Controller layer
 - Service layer
-- Mapper — entity ↔ DTO conversion (mandatory layer)
+- Mapper: entity ↔ DTO conversion (mandatory layer)
 
 ## Controller layer
 
@@ -59,8 +59,8 @@ public class CompanyController {
 **Controller anti-patterns**:
 - Business logic (calculations, decisions, orchestrating multiple services)
 - Direct repository access
-- Exception handling with try/catch — delegate to `@ControllerAdvice`
-- `@Transactional` — belongs in the service layer
+- Exception handling with try/catch, which belongs in `@ControllerAdvice`
+- `@Transactional`, which belongs in the service layer
 
 ---
 
@@ -114,15 +114,15 @@ public class CompanyServiceImpl implements CompanyService {
 }
 ```
 
-**Service interface — when it is useful**: when multiple implementations exist (mock for tests, real for production) or when the service is exposed through multiple entry points. For simple services without foreseen alternatives, a direct class is acceptable. The interface + impl pattern guarantees consistency and testability.
+**When a service interface is useful**: when multiple implementations exist (mock for tests, real for production) or when the service is exposed through multiple entry points. For simple services without foreseen alternatives, a direct class is acceptable. The interface + impl pattern guarantees consistency and testability.
 
 ---
 
-## Mapper — entity ↔ DTO conversion (mandatory layer)
+## Mapper: entity ↔ DTO conversion (mandatory layer)
 
-A dedicated `*Mapper` class lives between the service layer and the controller. **Entities never reach the controller** — neither as method parameters nor as return types. The mapper is the only place allowed to convert entity ↔ DTO.
+A dedicated `*Mapper` class lives between the service layer and the controller. **Entities never reach the controller**, neither as method parameters nor as return types. The mapper is the only place allowed to convert entity ↔ DTO.
 
-**Forbidden patterns** (production-defect-grade — do not generate code that does any of these):
+**Forbidden patterns** (production-defect-grade, do not generate code that does any of these):
 
 ```java
 // ❌ Returning Map.of(...) from a controller or service
@@ -184,10 +184,10 @@ public class CompanyMapper {
 ```
 
 **Rules of the mapper layer**:
-- Every controller endpoint that returns a body returns a typed DTO (`record` or final class) — never `Map<String,Object>`, never `Map.of(...)`, never an anonymous inline class.
+- Every controller endpoint that returns a body returns a typed DTO (`record` or final class), never `Map<String,Object>`, never `Map.of(...)`, never an anonymous inline class.
 - Service methods may return entities to other services in the same domain, but never to a controller. The mapper is invoked at the service-controller boundary.
 - One mapper per aggregate root. Avoid one giant `MapperFacade` for the whole module.
-- The mapper has no Spring dependencies beyond `@Component` — no `HttpServletRequest`, no `SecurityContext`, no DB lookups. If a field needs enrichment, do it in the service before mapping.
+- The mapper has no Spring dependencies beyond `@Component`: no `HttpServletRequest`, no `SecurityContext`, no DB lookups. If a field needs enrichment, do it in the service before mapping.
 
 **MapStruct**: consider it if mappers become bulky. For applications with few fields per entity, a manual mapper is more readable and debuggable.
 

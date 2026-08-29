@@ -1,6 +1,6 @@
 ---
 name: dependency-resolver
-description: "This skill should be used when a dependency conflict blocks progress — the user reports `NoSuchMethodError`, \"works locally fails in CI\", incompatible peer deps, \"2.x conflicts with 1.x\", or a major-version bump that broke the build. Trigger phrases: \"NoSuchMethodError\", \"incompatible peer deps\", \"X conflicts with Y\", \"after upgrading Z it broke\", \"transitive dependency conflict\", \"deprecated API\". Investigates incompatible library versions, breaking changes, missing/outdated docs, transitive conflicts, and deprecated APIs. Support skill — do not use for routine version updates with no conflict."
+description: "This skill should be used when a dependency conflict blocks progress: the user reports `NoSuchMethodError`, \"works locally fails in CI\", incompatible peer deps, \"2.x conflicts with 1.x\", or a major-version bump that broke the build. Trigger phrases: \"NoSuchMethodError\", \"incompatible peer deps\", \"X conflicts with Y\", \"after upgrading Z it broke\", \"transitive dependency conflict\", \"deprecated API\". Investigates incompatible library versions, breaking changes, missing/outdated docs, transitive conflicts, and deprecated APIs. Support skill. Do not use for routine version updates with no conflict."
 ---
 
 # Dependency Resolver
@@ -27,7 +27,7 @@ You are an expert in resolving dependency mismatches. This is a **support skill*
 
 ## Resolution process
 
-### Step 1 — Diagnosis
+### Step 1: Diagnosis
 
 Collect the necessary information:
 
@@ -65,11 +65,11 @@ npm ls [package]
 npm audit
 ```
 
-### Step 2 — Conflict analysis
+### Step 2: Conflict analysis
 
 Identify:
 1. **Who requires what**: which dependency/module requires the incompatible version
-2. **Conflict graph**: A requires X@2.0, B requires X@1.8 — who is A, who is B
+2. **Conflict graph**: A requires X@2.0, B requires X@1.8 (who is A, who is B)
 3. **Breaking changes**: check the library's CHANGELOG between the conflicting versions
 
 **Sources to consult** (in order):
@@ -78,7 +78,7 @@ Identify:
 3. Library GitHub issues
 4. Official migration guide
 
-### Step 3 — Resolution strategies
+### Step 3: Resolution strategies
 
 **Strategy A: Coordinated update**
 If both conflicting dependencies have versions compatible with a common version:
@@ -115,7 +115,7 @@ If a transitive dependency causes conflicts:
 If the target is not yet compatible, use the highest available compatible version.
 
 **Strategy D: Shading/relocation**
-Only if nothing else works — create a fat-jar with relocated dependencies (a heavyweight strategy, use with caution).
+Only if nothing else works, create a fat-jar with relocated dependencies (a heavyweight strategy, use with caution).
 
 **Strategy E: Workaround for inconsistent behaviour**
 If the library behaves differently from its documentation:
@@ -123,7 +123,7 @@ If the library behaves differently from its documentation:
 2. Document the workaround in the code with an explicit comment
 3. Add a test that verifies the current behaviour
 
-### Step 4 — Verification
+### Step 4: Verification
 
 After resolution:
 1. Clean build without conflict warnings
@@ -155,5 +155,5 @@ If no documentation exists, **propose adding it** after resolving the conflict: 
 
 - Does not replace the official documentation of libraries
 - Cannot resolve breaking changes that require significant refactoring → hand off to `refactoring-expert`
-- Does not test fixes autonomously — testing is always the developer's responsibility
+- Does not test fixes autonomously: testing is always the developer's responsibility
 - If the problem requires more than 2 hours of research, escalate to the team or open an issue on the library

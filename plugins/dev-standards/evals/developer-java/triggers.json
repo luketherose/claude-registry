@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Scrivi l'OrderService con la validazione",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Review this Spring Boot controller",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Aggiungi test JUnit 5 per il modulo pagamenti",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Converti questo service Java in Kotlin idiomatico con le coroutine",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Scrivi una minimal API ASP.NET Core 8 per la gestione ordini",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  }
+]

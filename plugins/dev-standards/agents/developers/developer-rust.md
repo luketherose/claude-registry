@@ -1,10 +1,11 @@
 ---
 name: developer-rust
 description: "Use this agent when writing, reviewing, or refactoring Rust code. Produces production-ready Rust following the Rust API guidelines, idiomatic ownership patterns, error handling with `thiserror`/`anyhow`, async with `tokio`, and structured logging with `tracing`. Opinionated on: stable Rust only (no nightly features in production), `cargo fmt` and `cargo clippy --all-targets -- -D warnings`, no `unwrap()` or `expect()` in library or service code, and avoiding common Rust anti-patterns (premature `Arc<Mutex>`, `Box<dyn Trait>` when generics fit, allocation in hot loops). Covers HTTP services (axum, actix-web), CLIs (clap), and async daemons. Typical user phrasings: \"review this Rust service for unwrap() and lifetime issues\", \"add cargo test coverage for the domain module\"."
-tools: Read, Edit, Write, Bash, Grep, Glob
+tools: Read, Edit, Write, Bash, Grep, Glob, Skill
 model: inherit
 color: red
 ---
+
 
 
 

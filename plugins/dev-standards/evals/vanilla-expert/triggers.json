@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Fammi un widget standalone in Web Component, niente framework, bundle con Vite",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Libreria riutilizzabile in TypeScript strict con Custom Events e IntersectionObserver",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Questo banner lo faccio in DOM puro con ES Modules, il framework sarebbe overkill",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Component React con props tipizzate e custom hook",
+    "should_trigger": false,
+    "description": "Out of scope: react-expert, app con framework"
+  },
+  {
+    "query": "Component Angular standalone con OnPush",
+    "should_trigger": false,
+    "description": "Out of scope: angular-expert, app con framework"
+  }
+]

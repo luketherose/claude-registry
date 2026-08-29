@@ -17,5 +17,5 @@
 
 ## External agents (follow-up only — not dispatched inline)
 
-- `code-reviewer` — invoked separately on PRs touching TO-BE test code.
+- `pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed) — invoked separately on PRs touching TO-BE test code.
 - `debugger` — invoked separately when an equivalence failure has unclear root cause (e.g., snapshot diff that doesn't match any known bug).

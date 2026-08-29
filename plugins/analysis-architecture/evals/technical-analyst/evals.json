@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "technical-analyst",
+    "query": "Produce a technical health report for this repo",
+    "files": [],
+    "expected_behavior": [
+      "Opens with an Executive Summary of 3 to 5 sentences that names the overall health assessment, the single top risk and the single top recommendation",
+      "Findings table uses TA-NNN ids with an Area, a Severity, an Evidence column holding a file:line reference or a measured metric, and an Effort to Fix rating",
+      "Covers the eight analysis dimensions or explicitly names which ones are out of scope for this repo"
+    ]
+  },
+  {
+    "agent": "technical-analyst",
+    "query": "Fammi l'inventario del debito tecnico di questo servizio Spring Boot con severity e priorità di remediation",
+    "files": [],
+    "expected_behavior": [
+      "Every finding is anchored to a specific file reference or a metric, not to a general impression",
+      "Severity is justified by business risk rather than by code elegance, and the Remediation Roadmap table buckets findings into P1 (this sprint), P2 (this quarter) and P3 (backlog) with a rationale per bucket",
+      "The roadmap is sequenced by risk, not by ease of fixing"
+    ]
+  },
+  {
+    "agent": "technical-analyst",
+    "query": "Analizza la pipeline CI/CD e le vulnerabilità delle dipendenze di questo repo",
+    "files": [],
+    "expected_behavior": [
+      "Produces a Dependency Vulnerability Summary from an actual tool run, or states explicitly that tooling was unavailable and the assessment is manual",
+      "Reports CI/CD gaps as numbered findings with severity, not as prose recommendations",
+      "Proposes no target architecture and no technology replacement, and says that architecture recommendations belong to software-architect"
+    ]
+  }
+]

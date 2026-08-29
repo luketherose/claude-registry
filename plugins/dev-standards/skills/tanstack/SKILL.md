@@ -1,6 +1,6 @@
 ---
 name: tanstack
-description: "This skill should be used when adding type-safe routing to a React app with TanStack Router — file-based routes, route definitions, loaders, search params, lazy routes, per-route error boundaries. Trigger phrases: \"TanStack Router\", \"type-safe routing\", \"route loader\", \"search params\", \"replace React Router\". Type-safe alternative to React Router. Do not use for Next.js (which has its own router) or Remix-style data loading."
+description: "This skill should be used when adding type-safe routing to a React app with TanStack Router: file-based routes, route definitions, loaders, search params, lazy routes, per-route error boundaries. Trigger phrases: \"TanStack Router\", \"type-safe routing\", \"route loader\", \"search params\", \"replace React Router\". Type-safe alternative to React Router. Do not use for Next.js (which has its own router) or Remix-style data loading."
 ---
 
 # Tanstack
@@ -16,7 +16,7 @@ You are a TanStack Router expert. You implement type-safe routing in React appli
 
 ---
 
-## Setup — file-based routing (recommended)
+## Setup: file-based routing (recommended)
 
 ```
 src/
@@ -104,7 +104,7 @@ function UserDetail() {
 
 ---
 
-## Search params — state in the URL
+## Search params: state in the URL
 
 ```typescript
 // src/routes/users/index.tsx

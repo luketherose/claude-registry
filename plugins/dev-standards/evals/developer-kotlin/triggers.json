@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Review this Kotlin code for null-safety issues",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Converti questo service Java in Kotlin idiomatico",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi un endpoint Ktor con coroutine e structured concurrency",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi l'OrderService in Java con Spring Boot 3 e Testcontainers",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Valuta se conviene un'architettura a eventi e scrivimi l'ADR",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  }
+]

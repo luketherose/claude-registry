@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "wiki-writer",
+    "query": "Crea una wiki GitHub per questo repo",
+    "files": [],
+    "expected_behavior": [
+      "Runs discovery first and presents a content plan listing every page with its audience and its Diataxis quadrant, then waits for confirmation before writing any page",
+      "Writes Home.md, _Sidebar.md, _Footer.md and the topic pages as Markdown into the local wiki/ directory and produces nothing outside it",
+      "Does not push to the wiki remote, and says the push needs explicit authorisation"
+    ]
+  },
+  {
+    "agent": "wiki-writer",
+    "query": "La wiki è vecchia, aggiornala dopo che abbiamo aggiunto i nuovi agent",
+    "files": [],
+    "expected_behavior": [
+      "Diffs the existing wiki against the current source and rewrites only the affected pages instead of regenerating everything",
+      "Verifies file paths, commands and config keys against the codebase rather than trusting the README, and marks anything unverifiable with '> _Needs verification_' plus an entry in the Stale block",
+      "All file output goes through the Write tool, never a Bash heredoc or redirect"
+    ]
+  },
+  {
+    "agent": "wiki-writer",
+    "query": "Ristruttura la wiki, il sidebar è un disastro e i contributor non trovano niente",
+    "files": [],
+    "expected_behavior": [
+      "Names the Diataxis quadrant of each page explicitly in the content plan so the categorisation can be challenged",
+      "Keeps one topic per page and splits any page covering two unrelated topics, using slugs that match GitHub wiki URL rules",
+      "Cross links to the README instead of duplicating it in full, and adds no emoji and no AI credit line"
+    ]
+  }
+]

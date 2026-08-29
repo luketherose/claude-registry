@@ -76,7 +76,7 @@ After W3 completes, the supervisor attempts to verify the scaffolds build. Adapt
 
 ## Q4 — Code review policy (default `background`)
 
-After each major output (decomposition, API contract, backend scaffold, frontend scaffold), the supervisor MAY dispatch `code-reviewer` in parallel without blocking the next wave. Findings accumulate in `docs/refactoring/_meta/code-review-findings.md` and surface in the final recap.
+After each major output (decomposition, API contract, backend scaffold, frontend scaffold), the supervisor MAY dispatch `pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed) in parallel without blocking the next wave. Findings accumulate in `docs/refactoring/_meta/code-review-findings.md` and surface in the final recap.
 
 If `--review-mode sync`: review blocks the next wave. Slower but stricter.
 

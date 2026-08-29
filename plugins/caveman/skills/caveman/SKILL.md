@@ -1,6 +1,6 @@
 ---
 name: caveman
-description: "This skill should be used when the user asks for terser, more direct output — explicit triggers include \"caveman mode\", \"caveman lite|full|ultra\", \"be terse\", \"cut the fluff\", \"token-efficient\". Activates token-efficient communication mode (~75% token reduction). Switches responses to compressed prose with articles, fillers, hedging, and pleasantries removed; preserves exact technical terminology and code unchanged. Do not use for commit messages (use caveman-commit) or PR comments (use caveman-review)."
+description: "This skill should be used when the user asks for terser, more direct output. Explicit triggers include \"caveman mode\", \"caveman lite|full|ultra\", \"be terse\", \"cut the fluff\", \"token-efficient\". Activates token-efficient communication mode (~75% token reduction). Switches responses to compressed prose with articles, fillers, hedging, and pleasantries removed; preserves exact technical terminology and code unchanged. Do not use for commit messages (use caveman-commit) or PR comments (use caveman-review)."
 ---
 
 # Caveman
@@ -27,10 +27,10 @@ Caveman mode active. Rules:
 - Pattern: `[subject] [verb] [purpose]. [action].`
 
 ## Intensity levels
-- `lite` — remove only fillers and hedging, keep articles and full sentences
-- `full` — remove articles, use fragments, short synonyms (default)
-- `ultra` — abbreviate terms (DB/auth/FE/BE), use arrows for causality (X → Y)
-- `wenyan` — classical Chinese compression (experimental)
+- `lite`: remove only fillers and hedging, keep articles and full sentences
+- `full`: remove articles, use fragments, short synonyms (default)
+- `ultra`: abbreviate terms (DB/auth/FE/BE), use arrows for causality (X → Y)
+- `wenyan`: classical Chinese compression (experimental)
 
 Change level with `/caveman lite|full|ultra|wenyan`.
 

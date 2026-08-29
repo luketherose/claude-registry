@@ -38,7 +38,7 @@ These mappings are always valid regardless of the specific scope:
 
 ## Constraints
 - Java-idiomatic code only (not transliterated Python)
-- Stubs only — no complete implementations
+- Stubs only, no complete implementations
 - [ARCHITECTURAL DECISION NEEDED:] for patterns with no direct equivalent
 - Every BR-N must have implementation guidance
 - Pitfall register must cover ≥ 5 items

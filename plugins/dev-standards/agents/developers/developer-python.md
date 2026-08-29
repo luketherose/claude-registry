@@ -1,10 +1,11 @@
 ---
 name: developer-python
 description: "Use this agent when writing, reviewing, or refactoring Python code. Produces production-ready Python following PEP 8, type hints, pytest testing, structured logging, and clean architecture. Opinionated on: virtual environments, dependency management with uv or pip-tools, pydantic for validation, and avoiding common Python anti-patterns. Suitable for FastAPI services, CLI tools, data pipelines, and general backend work. Typical user phrasings: \"write a FastAPI endpoint with Pydantic validation\", \"review this Python service for anti-patterns\", \"add pytest tests for the data pipeline\"."
-tools: Read, Edit, Write, Bash, Grep, Glob
+tools: Read, Edit, Write, Bash, Grep, Glob, Skill
 model: inherit
 color: green
 ---
+
 
 
 

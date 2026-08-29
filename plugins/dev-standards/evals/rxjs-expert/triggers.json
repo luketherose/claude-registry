@@ -1,0 +1,27 @@
+[
+  {
+    "query": "switchMap o exhaustMap per il submit di questa form? Adesso parte il doppio invio",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Ci sono nested subscribe e unsubscribe manuali che leakano, sistema la pipeline",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Subject o BehaviorSubject qui? Devo combinare tre observable e gestire l'errore",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Splitta questo component Angular in smart e dumb e mettilo OnPush",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `angular-expert` instead"
+  },
+  {
+    "query": "L'effect NgRx non ricarica lo store dopo la delete, sistemalo",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `ngrx-expert` instead"
+  }
+]

@@ -116,7 +116,7 @@ required a bean of type 'UserRepository' that could not be found`.
 | Situation | Decision |
 |---|---|
 | User explicitly requests deliberation (IT/EN trigger lexicon match ≥ 0.7) for ANY decision (Phase 1–4) | Build a decision brief and dispatch `deliberative-decision-engine`; do not decide directly. See `deliberative-integration.md`. |
-| Dispatch JSON contains `decisionMode: deliberative` (or `useDeliberativeDecision: true`) | Route every decision listed in `the `deliberation` plugin's `references/deliberation/integration-replatforming.md` (Phases 1–4) to `deliberative-decision-engine` for the duration of the workflow |
+| Dispatch JSON contains `decisionMode: deliberative` (or `useDeliberativeDecision: true`) | Route every decision listed in the `deliberation` plugin's `references/deliberation/integration-replatforming.md` (Phases 1–4) to `deliberative-decision-engine` for the duration of the workflow |
 | Phase-4 decision is irreversible / production-impacting / compliance-sensitive | Auto-escalate to `deliberative-decision-engine` with `requireHumanApprovalForHighRisk: true`, even without an explicit trigger |
 | Phase 1–3 iteration adjustment contains a debate trigger (lexicon match ≥ 0.7) | Route the contested adjustment through `deliberative-decision-engine` BEFORE re-dispatching workers. See `iteration-loop.md` § "Optional deliberation" |
 | Phase 1–3 iteration adjustment conflicts with a prior sub-agent output and resolution is subjective | Route through `deliberative-decision-engine` (self-escalation) even without an explicit trigger |

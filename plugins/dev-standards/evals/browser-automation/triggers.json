@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Apri la pagina di login in staging, compila il form e fammi lo screenshot della dashboard",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi un E2E con Playwright che clicca su Checkout e verifica il totale a schermo",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Naviga su questa URL, cambia tab e valuta questo JS dentro la pagina",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi gli unit test del CartService con Jest, niente browser",
+    "should_trigger": false,
+    "description": "Out of scope: unit test, non automazione browser"
+  },
+  {
+    "query": "Fammi uno script che scarica il CSV dall'API e lo processa in batch",
+    "should_trigger": false,
+    "description": "Out of scope: automazione non browser"
+  }
+]

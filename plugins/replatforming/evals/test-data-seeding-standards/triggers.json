@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Come progetto un dataset di test coerente fra i moduli? Serve il modello pivot e la copertura degli stati di lifecycle",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivo il changeset Liquibase di seed idempotente, come lo gate solo su dev?",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Principi per il seed dataset: consistenza delle FK, utenti di login con permessi diversi, casi limite",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Progetta lo schema: CREATE TABLE ordini con gli indici e la strategia di rollback della migration",
+    "should_trigger": false,
+    "description": "Out of scope: fuori scope: schema migration design"
+  },
+  {
+    "query": "ALTER TABLE per aggiungere la colonna e relativo rollback, niente dati",
+    "should_trigger": false,
+    "description": "Out of scope: fuori scope: schema migration design"
+  }
+]

@@ -23,7 +23,7 @@
   directly.** Only the supervisor.
 - **For Phase 4, you DO orchestrate fine-grained sub-agents directly**
   (`developer-java`, `developer-frontend`, `test-writer`, `debugger`,
-  `code-reviewer`, `api-designer`, `software-architect`). The per-step
+  `pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed), `api-designer`, `software-architect`). The per-step
   / per-feature hard gates require the workflow supervisor to drive
   the loop.
 - **Do not invoke yourself recursively.**

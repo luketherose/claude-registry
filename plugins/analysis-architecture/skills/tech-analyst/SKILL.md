@@ -1,6 +1,6 @@
 ---
 name: tech-analyst
-description: "This skill should be used when an analysis, migration, or architecture-understanding pipeline starts and the codebase needs a structural map first. Trigger phrases: \"analyse this repo\", \"map the modules\", \"what is the structure of this codebase\", \"index this project\". Produces module maps, dependency graphs, bounded contexts, data flows, integration points, and a semantic index. Do not use for technical-debt findings — that is technical-analyst."
+description: "This skill should be used when an analysis, migration, or architecture-understanding pipeline starts and the codebase needs a structural map first. Trigger phrases: \"analyse this repo\", \"map the modules\", \"what is the structure of this codebase\", \"index this project\". Produces module maps, dependency graphs, bounded contexts, data flows, integration points, and a semantic index. Do not use for technical-debt findings: that is technical-analyst."
 ---
 
 # Tech Analyst
@@ -22,11 +22,11 @@ Before performing any analysis, **verify what is already available**:
 
 ### Technical documentation available in the project
 Look in folders such as `docs/`, `docs/graph/`, `docs/rag/` or equivalent structures:
-- Index of nodes/modules with metadata — structure of each module or component
-- Typed relations between modules — dependencies, calls, mappings
-- Already identified architectural problems — constraints and decisions taken
-- Mapping towards target architectures — if available (e.g. legacy→target migration)
-- End-to-end execution paths — if documented
+- Index of nodes/modules with metadata: structure of each module or component
+- Typed relations between modules: dependencies, calls, mappings
+- Already identified architectural problems: constraints and decisions taken
+- Mapping towards target architectures, if available (e.g. legacy→target migration)
+- End-to-end execution paths, if documented
 - Already produced functional and technical documentation
 
 ### How to use pre-existing sources
@@ -52,20 +52,20 @@ If the analysis reveals new information not yet documented:
 
 ## Analysis process
 
-**Step 0 — Verify existing coverage** (always execute first)
+**Step 0: Verify existing coverage** (always execute first)
 Before analysing, check:
 - Does the module have existing documentation? → use it as a starting point
 - Are there already identified architectural problems? → include them in your analysis
 - Is there a migration or refactoring map? → use the already computed notes
 
-### Step 1 — File inventory
+### Step 1: File inventory
 
 For the provided path, catalogue:
 - All files with their functional role
 - Extensions, imported dependencies, approximate size
 - Configuration files, entry points, main modules
 
-### Step 2 — Module map
+### Step 2: Module map
 
 Identify logical modules (not just directories):
 - What each module does
@@ -73,7 +73,7 @@ Identify logical modules (not just directories):
 - Which other modules it depends on
 - Which other modules depend on it
 
-### Step 3 — Dependency graph
+### Step 3: Dependency graph
 
 Build a textual graph:
 ```
@@ -87,7 +87,7 @@ Distinguish:
 - **Runtime dependencies** (API calls, DB, event bus)
 - **Configuration dependencies** (env vars, config files)
 
-### Step 4 — Bounded Context
+### Step 4: Bounded Context
 
 Identify the bounded contexts of the domain:
 
@@ -107,7 +107,7 @@ Generic examples of bounded contexts:
 
 Adapt these examples to the real bounded contexts of the analysed project.
 
-### Step 5 — Main data flows
+### Step 5: Main data flows
 
 For each relevant data flow, describe:
 
@@ -120,7 +120,7 @@ Flow: [Flow name]
   Persisted data: [tables/structures]
 ```
 
-### Step 6 — Integration points
+### Step 6: Integration points
 
 Identify all points where the system integrates with the outside:
 
@@ -130,7 +130,7 @@ Identify all points where the system integrates with the outside:
 | [Main DB] | JDBC/ORM | [connection] | CRUD | [modules] |
 | [Email/messaging system] | SMTP/AMQP | - | [templates/messages] | [modules] |
 
-### Step 7 — Complexity metrics
+### Step 7: Complexity metrics
 
 For each module, assess:
 - **Size**: lines of code, number of functions/classes

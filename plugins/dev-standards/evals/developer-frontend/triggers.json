@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Migra questa UI Streamlit in Angular",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Review this React hook for correctness",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi il componente Vue 3 per la lista ordini con stati di loading ed errore",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Rifattorizza questo fat Eloquent model Laravel in un service layer",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Progetta il contratto REST dell'API ordini prima di scrivere codice",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  }
+]

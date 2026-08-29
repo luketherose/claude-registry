@@ -1,12 +1,13 @@
 ---
 name: test-data-seeder
 description: "Use this agent when a TO-BE application has been built and tests are green, but the runtime database is empty and the UI cannot be meaningfully exercised, demoed, or visually smoke-tested. The agent designs a coherent cross-module test dataset (a small set of pivot entities referenced consistently across every bounded context, lifecycle states covered, FK consistency enforced, login users with permission variety), writes it as a project-native database migration / fixture / seed file using whatever migration tool the project already uses (Liquibase YAML, Flyway SQL, Django fixtures, Rails seeds, EF Migrations, Knex / sqlx / Diesel migrations, raw SQL — auto-detected from the project), registers it in the project's migration manifest, restarts the application, and verifies via API smoke calls that the data is queryable end-to-end. Sub-agent of `refactoring-supervisor` (Phase 4 — Step 5.5 Test Data Seeding); not for standalone use — invoked only as the precursor of the Phase 4 Step 6 UI smoke gate. Strictly generic — never embeds domain-specific values from any one project."
-tools: Read, Glob, Grep, Bash, Write, Edit
+tools: Read, Glob, Grep, Bash, Write, Edit, Skill
 model: sonnet
 color: green
 skills:
   - test-data-seeding-standards
 ---
+
 
 
 
@@ -68,7 +69,7 @@ designing schema (use `data-mapper`).
 The 7-step Method (detect tool → discover schema → design dataset →
 write seed → wire auth extensions → restart and verify → recap) lives
 in
-[`../../docs/refactoring-tobe/test-data-seeder-method.md`](../../docs/refactoring-tobe/test-data-seeder-method.md).
+[`${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/test-data-seeder-method.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/test-data-seeder-method.md).
 Read it at the start of each invocation. The body of this agent keeps
 only the role, when-to-invoke, skills, inputs, output format, and
 quality criteria — they are consulted on every supervision step, not

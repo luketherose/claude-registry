@@ -3,10 +3,10 @@
 ## Contents
 
 - 3. Orchestration order
-- New feature (TYPE A) — top-down
-- Bug / problem (TYPE B) — bottom-up
-- Optimisation (TYPE C) — diagnose first, fix later
-- Refactoring (TYPE D) — architecture guides everything
+- New feature (TYPE A): top-down
+- Bug / problem (TYPE B): bottom-up
+- Optimisation (TYPE C): diagnose first, fix later
+- Refactoring (TYPE D): architecture guides everything
 - Parallel execution
 - Independence criterion
 - Phase model
@@ -20,7 +20,7 @@
 
 ## 3. Orchestration order
 
-### New feature (TYPE A) — top-down
+### New feature (TYPE A): top-down
 
 ```
 1. /backend/spring-architecture   → define layer structure and contracts (DTO, interfaces)
@@ -32,7 +32,7 @@
 
 **Why this order**: the structure and public contract (DTO, interfaces) must be defined before implementation. The DB schema must exist before entity mapping. The entity must exist before the service. Reversing the order causes cascading refactoring.
 
-### Bug / problem (TYPE B) — bottom-up
+### Bug / problem (TYPE B): bottom-up
 
 ```
 1. /database/postgresql-expert    → does the query reach the DB? Is the data correct? Are indices used?
@@ -43,7 +43,7 @@
 
 **Why bottom-up**: most backend bugs have their root cause in the lowest layer. Starting from the top wastes time.
 
-### Optimisation (TYPE C) — diagnose first, fix later
+### Optimisation (TYPE C): diagnose first, fix later
 
 ```
 1. /database/postgresql-expert    → EXPLAIN ANALYZE, missing indices, query anti-patterns
@@ -52,7 +52,7 @@
    → DO NOT optimise at code level if the problem is in the DB
 ```
 
-### Refactoring (TYPE D) — architecture guides everything
+### Refactoring (TYPE D): architecture guides everything
 
 ```
 1. /backend/spring-architecture   → define the target structure

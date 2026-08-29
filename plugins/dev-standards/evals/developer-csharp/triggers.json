@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Write an ASP.NET Core 8 minimal API for order management",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Review this C# service for async anti-patterns",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Aggiungi test xUnit con Testcontainers per il repository layer",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi il controller Spring Boot 3 per la registrazione utente",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Converti questo service in Kotlin idiomatico con le coroutine",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  }
+]

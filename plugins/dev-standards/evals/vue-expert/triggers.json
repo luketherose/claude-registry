@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Estrai un composable da questo component Vue 3 e sposta lo stato in Pinia",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Vue Router 4 con guard e route lazy, piu i test con Vitest e Vue Test Utils",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Tipizza in TypeScript questo component Composition API",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Custom hook React e memo per questo component",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `react-expert` instead"
+  },
+  {
+    "query": "Questo component è in Options API di Vue 2, sistemalo li com'e'",
+    "should_trigger": false,
+    "description": "Out of scope: fuori scope: niente Vue 2 ne Options API"
+  }
+]

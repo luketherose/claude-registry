@@ -1,6 +1,6 @@
 ---
 name: spring-data-jpa
-description: "This skill should be used when working with JPA/Hibernate inside a Spring project — entity design, relations, fetch strategies, N+1 fixes, transaction boundaries, JPQL queries, second-level cache, bulk operations, automatic auditing, performance tuning. Trigger phrases: \"JPA entity\", \"@OneToMany\", \"N+1 query\", \"@Transactional placement\", \"Hibernate fetch\". Do not use for raw SQL or migrations (use postgresql-expert) or Spring Boot wiring (use spring-expert)."
+description: "This skill should be used when working with JPA/Hibernate inside a Spring project: entity design, relations, fetch strategies, N+1 fixes, transaction boundaries, JPQL queries, second-level cache, bulk operations, automatic auditing, performance tuning. Trigger phrases: \"JPA entity\", \"@OneToMany\", \"N+1 query\", \"@Transactional placement\", \"Hibernate fetch\". Do not use for raw SQL or migrations (use postgresql-expert) or Spring Boot wiring (use spring-expert)."
 ---
 
 # Spring Data Jpa
@@ -17,7 +17,7 @@ You are a senior JPA/Hibernate expert specialised in the backend of enterprise S
 
 ---
 
-## Entity design — base rules
+## Entity design: base rules
 
 ```java
 @Entity
@@ -68,14 +68,14 @@ public class Company {
 ```
 
 **Entity rules:**
-- `@NoArgsConstructor` is mandatory for Hibernate — do not make it `private` if you use proxying (Hibernate subclasses the entity)
-- `equals`/`hashCode` based on `id` (business key) — not on mutable fields or relations
-- `@Enumerated(EnumType.STRING)` always — ORDINAL breaks if you reorder the enum
-- Indices declared in `@Table` — Hibernate creates them with `ddl-auto=create`/`update`
+- `@NoArgsConstructor` is mandatory for Hibernate: do not make it `private` if you use proxying (Hibernate subclasses the entity)
+- `equals`/`hashCode` based on `id` (business key), not on mutable fields or relations
+- `@Enumerated(EnumType.STRING)` always: ORDINAL breaks if you reorder the enum
+- Indices declared in `@Table`: Hibernate creates them with `ddl-auto=create`/`update`
 
 ---
 
-## Relations — correct mapping
+## Relations: correct mapping
 
 ### One-to-Many / Many-to-One (bidirectional)
 
@@ -108,7 +108,7 @@ public class Company {
 
 **`orphanRemoval = true`**: when you remove an Order from the list, Hibernate executes the DELETE automatically. Use only when the "many" cannot exist without the "one".
 
-### Many-to-Many — use an explicit join entity
+### Many-to-Many: use an explicit join entity
 
 ```java
 // ❌ @ManyToMany with @JoinTable — does not allow attributes on the relation
@@ -136,7 +136,7 @@ public class CompanyTag {
 
 ---
 
-## Fetch strategies — N+1 is problem #1
+## Fetch strategies: N+1 is problem #1
 
 ### N+1 diagnosis
 
@@ -174,7 +174,7 @@ private List<Order> orders;
 
 **Trade-off JOIN FETCH vs EntityGraph**: same generated SQL. JOIN FETCH is explicit in the query, EntityGraph is reusable across multiple repository methods. Use EntityGraph when the same graph is needed in multiple places.
 
-**When NOT to use EAGER fetch**: `FetchType.EAGER` always loads the collection even when it is not needed — avoid it on relations with many elements. Exception: `@ManyToOne` and `@OneToOne` towards small entities that are always required.
+**When NOT to use EAGER fetch**: `FetchType.EAGER` always loads the collection even when it is not needed, so avoid it on relations with many elements. Exception: `@ManyToOne` and `@OneToOne` towards small entities that are always required.
 
 ---
 
@@ -219,7 +219,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 }
 ```
 
-### Projections — interface-based (alternative to constructor DTO)
+### Projections: interface-based (alternative to constructor DTO)
 
 ```java
 public interface CompanyProjection {
@@ -273,9 +273,9 @@ public class CompanyServiceImpl implements CompanyService {
 }
 ```
 
-**`readOnly = true`**: Hibernate skips dirty checking and flush — ~20% less overhead on read-only queries. Set it as the default on the service, with explicit override on write methods.
+**`readOnly = true`**: Hibernate skips dirty checking and flush (~20% less overhead on read-only queries). Set it as the default on the service, with explicit override on write methods.
 
-### Propagation — when it changes
+### Propagation: when it changes
 
 ```java
 // REQUIRED (default): join the existing transaction or create a new one
@@ -313,7 +313,7 @@ public class CompanyService {
 
 ---
 
-## Performance — real optimisations
+## Performance: real optimisations
 
 ### Bulk operations
 
@@ -433,12 +433,12 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
 ---
 
-## Checklist — JPA entity design
+## Checklist: JPA entity design
 
 - [ ] `@NoArgsConstructor` on all entities
-- [ ] `@EqualsAndHashCode(of = "id")` — no relations in equals/hashCode
-- [ ] `@ToString(exclude = {...})` — exclude lazy collections
-- [ ] `FetchType.LAZY` on `@OneToMany` and `@ManyToOne` — override with `JOIN FETCH` where needed
+- [ ] `@EqualsAndHashCode(of = "id")`: no relations in equals/hashCode
+- [ ] `@ToString(exclude = {...})`: exclude lazy collections
+- [ ] `FetchType.LAZY` on `@OneToMany` and `@ManyToOne`, overridden with `JOIN FETCH` where needed
 - [ ] `@Enumerated(EnumType.STRING)` on all enum fields
 - [ ] `@Transactional(readOnly = true)` as class default in services, override on writes
 - [ ] `@Modifying` + `@Transactional` on UPDATE/DELETE JPQL

@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Review this PHP code for PHPStan level 8 violations",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Rifattorizza questo fat Eloquent model in un service layer",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi un command Symfony 7 con enum e readonly class",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi un service object Rails 7 per la creazione ordine con test RSpec",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Rifai il frontend di questa pagina in React con TanStack Query",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  }
+]

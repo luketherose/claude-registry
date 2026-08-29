@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Crea una PowerPoint Accenture da questi documenti di stima",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Costruisci un pitch deck per lo steering committee",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Aggiorna il deck di architettura con la nuova proposta",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Genera un PDF Accenture brandizzato dagli stessi file",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Scrivi il README e il runbook di questo servizio",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  }
+]

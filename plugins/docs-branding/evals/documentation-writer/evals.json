@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "documentation-writer",
+    "query": "Scrivi il README per questo servizio",
+    "files": [],
+    "expected_behavior": [
+      "Asks which output format(s) to produce, and surfaces the menu, before reading the code or drafting any text",
+      "Probes the local toolchain (pandoc, pdflatex, wkhtmltopdf) and lists only the formats actually producible, naming the missing tool for each unavailable format",
+      "Ends with the '=== Documentation produced ===' block listing topic, output dir, formats, files with line counts, skipped formats and open questions"
+    ]
+  },
+  {
+    "agent": "documentation-writer",
+    "query": "The onboarding docs are stale, aggiornali con quello che c'è adesso nel repo",
+    "files": [],
+    "expected_behavior": [
+      "Reads the existing docs and the code, and updates only the sections that actually drifted rather than rewriting the whole document",
+      "Uses active voice and present tense ('The service authenticates users', 'Returns 404 if not found')",
+      "Every code example shown is one that actually runs against the current code, and stale claims are corrected rather than kept"
+    ]
+  },
+  {
+    "agent": "documentation-writer",
+    "query": "Scrivi il runbook per il team on-call, con lo schema dei componenti",
+    "files": [],
+    "expected_behavior": [
+      "Contains no inline PlantUML or Mermaid source: diagrams are rendered files under docs/diagrams/ referenced by relative path",
+      "Tone and depth are set for the operator audience, not for a developer or an architect",
+      "Reports the produced artefacts and does not claim done without the deliverable block"
+    ]
+  }
+]

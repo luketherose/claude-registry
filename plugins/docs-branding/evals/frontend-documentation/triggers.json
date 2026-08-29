@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Documenta questa app Angular, mi serve frontend-doc.tex",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Genera il documento tecnico del frontend: moduli, smart/dumb component, store NgRx, routing, design system, performance",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Produci frontend-doc.tex pronto per pandoc partendo dalle analisi e dal codice Angular",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Genera backend-doc.tex per il modulo Spring Boot",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `backend-documentation` instead"
+  },
+  {
+    "query": "Fammi tutta la documentazione tecnica fullstack con il template Word",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `documentation-orchestrator` instead"
+  }
+]

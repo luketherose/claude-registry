@@ -1,6 +1,6 @@
 ---
 name: tanstack-start
-description: "This skill should be used when building a full-stack React application with TanStack Start — SSR, Server Functions, streaming, file-based routing, end-to-end type safety. Trigger phrases: \"TanStack Start\", \"Server Functions\", \"full-stack React without Next\", \"streaming SSR\". Use for new full-stack React apps that do not require the Next.js ecosystem. Do not use for Next.js projects (use nextjs) or pure client-side React (use react-expert)."
+description: "This skill should be used when building a full-stack React application with TanStack Start: SSR, Server Functions, streaming, file-based routing, end-to-end type safety. Trigger phrases: \"TanStack Start\", \"Server Functions\", \"full-stack React without Next\", \"streaming SSR\". Use for new full-stack React apps that do not require the Next.js ecosystem. Do not use for Next.js projects (use nextjs) or pure client-side React (use react-expert)."
 ---
 
 # Tanstack Start

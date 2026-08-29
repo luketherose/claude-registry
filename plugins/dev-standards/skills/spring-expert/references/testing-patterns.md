@@ -2,7 +2,7 @@
 
 ## Testing with Spring
 
-### Unit test — without Spring context (preferred for speed)
+### Unit test: without Spring context (preferred for speed)
 
 ```java
 @ExtendWith(MockitoExtension.class)

@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "developer-php",
+    "query": "Review this PHP code for PHPStan level 8 violations",
+    "files": [],
+    "expected_behavior": [
+      "Flags every untyped associative array used as a DTO and every missing property or parameter type, with the file and line",
+      "Flags @ error suppression, catch (Throwable) that swallows, magic methods used to fake an API, and any eval()",
+      "States what has to change for the file to be PHPStan level 8 clean and PSR-12 formatted"
+    ]
+  },
+  {
+    "agent": "developer-php",
+    "query": "Rifattorizza questo fat Eloquent model in un service layer",
+    "files": [],
+    "expected_behavior": [
+      "Moves the business logic out of the model into service classes, leaving the model responsible for persistence only",
+      "Every produced PHP file opens with declare(strict_types=1);",
+      "Eloquent or Doctrine entities do not cross the queue boundary: jobs receive identifiers or DTOs"
+    ]
+  },
+  {
+    "agent": "developer-php",
+    "query": "Scrivi un command Symfony 7 che importa gli ordini, con enum e readonly class",
+    "files": [],
+    "expected_behavior": [
+      "Closed sets are modelled as enums and value objects use readonly classes with typed properties",
+      "Uses the repository pattern because the domain is non trivial, rather than querying inline",
+      "Produces Pest or PHPUnit 10 tests alongside the command"
+    ]
+  }
+]

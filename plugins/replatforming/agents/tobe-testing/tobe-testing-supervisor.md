@@ -38,7 +38,7 @@ job is to test, measure, and certify — not to change behaviour.
 - **Iterate on failures.** The user requests `Resume mode: iterate, Iteration scope: failures-only` after a previous run surfaced critical/high failures; the supervisor re-dispatches only on the failing scope.
 - **Performance comparison only.** The user wants Phase 5 W2 (perf comparator vs Phase 3 baseline) without re-running the full equivalence suite.
 
-Do NOT use this agent for: writing new TO-BE tests for green-field code (use `test-writer`), fixing failing TO-BE code (the supervisor only reports — fixes go to `developer-java-spring` / `developer-frontend`), or AS-IS work.
+Do NOT use this agent for: writing new TO-BE tests for green-field code (use `test-writer`), fixing failing TO-BE code (the supervisor only reports — fixes go to `developer-java` / `developer-frontend`), or AS-IS work.
 
 ---
 
@@ -50,12 +50,12 @@ only when the matching wave is about to start — not preemptively.
 
 | Doc | Read when |
 |---|---|
-| [`supervisor-protocol.md`](../../docs/tobe-testing/supervisor-protocol.md) | Any supervision decision — escalation triggers, decision rules, source preservation, manifest update, constraints |
-| [`output-layout.md`](../../docs/tobe-testing/output-layout.md) | planning where workers write, what frontmatter every report must carry (incl. finding-ID schema), or updating the `_meta/manifest.json` schema after a wave |
-| [`policies.md`](../../docs/tobe-testing/policies.md) | answering the execution policy (auto/on/off), applying the failure-severity matrix, or deciding the W1 dispatch mode |
-| [`phase-plan.md`](../../docs/tobe-testing/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W5 / final report |
-| [`sub-agents.md`](../../docs/tobe-testing/sub-agents.md) | confirming which sub-agent owns which wave/output target before dispatching |
-| [`dispatch-prompt-template.md`](../../docs/tobe-testing/dispatch-prompt-template.md) | assembling the prompt for any sub-agent invocation |
+| [`supervisor-protocol.md`](${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/supervisor-protocol.md) | Any supervision decision — escalation triggers, decision rules, source preservation, manifest update, constraints |
+| [`output-layout.md`](${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/output-layout.md) | planning where workers write, what frontmatter every report must carry (incl. finding-ID schema), or updating the `_meta/manifest.json` schema after a wave |
+| [`policies.md`](${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/policies.md) | answering the execution policy (auto/on/off), applying the failure-severity matrix, or deciding the W1 dispatch mode |
+| [`phase-plan.md`](${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W5 / final report |
+| [`sub-agents.md`](${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/sub-agents.md) | confirming which sub-agent owns which wave/output target before dispatching |
+| [`dispatch-prompt-template.md`](${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/dispatch-prompt-template.md) | assembling the prompt for any sub-agent invocation |
 
 ---
 
@@ -91,7 +91,7 @@ Never invent baselines. Sub-agents read from disk; you pass paths.
 
 Eight Sonnet sub-agents distributed across W1–W5: `equivalence-test-writer`, `backend-test-writer`, `frontend-test-writer`, `security-test-writer` (W1); `performance-comparator` (W2); `tobe-test-runner` (W3); `equivalence-synthesizer` (W4); `tobe-testing-challenger` (W5, always ON).
 
-→ Read [`sub-agents.md`](../../docs/tobe-testing/sub-agents.md) for the full wave-↔-output-target mapping and the list of external agents (`code-reviewer`, `debugger`) referenced for follow-up only.
+→ Read [`sub-agents.md`](${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/sub-agents.md) for the full wave-↔-output-target mapping and the list of external agents (`pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed), `debugger`) referenced for follow-up only.
 
 ---
 
@@ -110,7 +110,7 @@ Eight Sonnet sub-agents distributed across W1–W5: `equivalence-test-writer`, `
 
 For the full per-wave dispatch instructions, the bootstrap dialog, the
 HITL checkpoint prompts, and the closing-report schema, see
-[`phase-plan.md`](../../docs/tobe-testing/phase-plan.md).
+[`phase-plan.md`](${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/phase-plan.md).
 
 For the worker prompt boilerplate, see
-[`dispatch-prompt-template.md`](../../docs/tobe-testing/dispatch-prompt-template.md).
+[`dispatch-prompt-template.md`](${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/dispatch-prompt-template.md).

@@ -1,6 +1,6 @@
 ---
 name: vue-expert
-description: "This skill should be used when working with Vue 3 Composition API — components, composables, Pinia state management, Vue Router 4, TypeScript patterns, performance optimisation, testing with Vitest and Vue Test Utils. Trigger phrases: \"Vue 3 component\", \"composable\", \"Pinia store\", \"Vue Router\", \"Vitest test\". Does NOT cover Vue 2 or the Options API. Do not use for React (use react-expert) or Nuxt-specific concerns."
+description: "This skill should be used when working with Vue 3 Composition API: components, composables, Pinia state management, Vue Router 4, TypeScript patterns, performance optimisation, testing with Vitest and Vue Test Utils. Trigger phrases: \"Vue 3 component\", \"composable\", \"Pinia store\", \"Vue Router\", \"Vitest test\". Does NOT cover Vue 2 or the Options API. Do not use for React (use react-expert) or Nuxt-specific concerns."
 ---
 
 # Vue Expert
@@ -83,7 +83,7 @@ const displayName = computed(() =>
 
 ---
 
-## Composables — reusable logic
+## Composables: reusable logic
 
 ```typescript
 // composables/useDebounce.ts
@@ -118,7 +118,7 @@ export function usePagination(total: Ref<number>, pageSize = 20) {
 
 ---
 
-## Reactivity — ref vs reactive
+## Reactivity: ref vs reactive
 
 ```typescript
 // ✅ ref for primitive values and when the entire object needs replacing
@@ -154,7 +154,7 @@ bigList.value = [...bigList.value, newItem]; // must always reassign
 
 ---
 
-## Pinia — State Management
+## Pinia: State Management
 
 ```typescript
 // stores/orders.ts
@@ -271,7 +271,7 @@ watchEffect(async () => {
 
 ---
 
-## v-memo — list optimisation
+## v-memo: list optimisation
 
 ```vue
 <!-- Re-renders the row only if item.id or item.isSelected changes -->

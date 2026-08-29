@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Review this Rust service for unwrap() and lifetime issues",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Aggiungi copertura cargo test per il modulo domain",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi un servizio axum con tokio, thiserror e tracing",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Rifai lo stesso servizio HTTP in Go con chi e log/slog",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Fai il bridge WebAssembly e la UI in React con TanStack Router",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  }
+]

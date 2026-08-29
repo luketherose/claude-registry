@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "developer-go",
+    "query": "Review this Go package for idiomatic error handling",
+    "files": [],
+    "expected_behavior": [
+      "Flags every error wrapped without %w and every error discarded with _ where the value is not genuinely meaningless, with the file and line",
+      "Flags panic used in library code and init() used for anything beyond trivial registration",
+      "Flags business logic living inside the HTTP handler and global mutable state"
+    ]
+  },
+  {
+    "agent": "developer-go",
+    "query": "Aggiungi table-driven test per l'order service",
+    "files": [],
+    "expected_behavior": [
+      "Tests are table driven: one slice of cases driving a single subtest loop, not copy pasted test functions",
+      "gofmt or goimports formatting is applied to every file produced",
+      "All file content is written with the Write or Edit tool, never through a Bash heredoc or redirect"
+    ]
+  },
+  {
+    "agent": "developer-go",
+    "query": "Scrivi un servizio HTTP in Go con chi, log/slog e context propagation",
+    "files": [],
+    "expected_behavior": [
+      "context.Context is plumbed through every I/O path rather than created ad hoc inside the handler",
+      "http.Server is configured with explicit read, write and idle timeouts",
+      "Every goroutine started is paired with a stop signal, and no dependency is added where the standard library suffices"
+    ]
+  }
+]

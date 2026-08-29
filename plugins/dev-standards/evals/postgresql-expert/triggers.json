@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Questa query Postgres fa seq scan su 2 milioni di righe, che indice ci metto?",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi il changelog Liquibase per aggiungere la colonna status con default e backfill",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Configura il profilo H2 per il dev locale, in prod restiamo su Postgres",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Come mappo questa @OneToMany con fetch join per evitare l'N+1?",
+    "should_trigger": false,
+    "description": "Out of scope: spring-data-jpa, mapping ORM"
+  },
+  {
+    "query": "Il progetto usa Flyway, dove metto il @Transactional sulle entity?",
+    "should_trigger": false,
+    "description": "Out of scope: concern JPA: spring-data-jpa"
+  }
+]

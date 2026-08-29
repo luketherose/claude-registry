@@ -19,10 +19,44 @@ RESERVED_MARKETPLACES = {"claude-code-marketplace", "claude-code-plugins",
 VALID_MODELS = {"sonnet", "opus", "haiku", "fable", "inherit"}
 VALID_EFFORT = {"low", "medium", "high", "xhigh", "max"}
 # Anthropic documents a 15000-token ceiling on combined custom subagent descriptions.
-# Gate at 12000 to leave room for subagents the user enables from other marketplaces.
-BUDGET_FAIL, BUDGET_WARN = 15000, 12000
-WORDS_TO_TOKENS = 1.35
+# Gate at 13000 to leave room for subagents the user enables from other marketplaces.
+BUDGET_FAIL, BUDGET_WARN = 15000, 13000
+
+# Measure with a real tokenizer when one is available. The word-count heuristic that
+# preceded this underestimated by 17% on these descriptions, because they are dense
+# with backticks, escaped quotes and technical terms that tokenize worse than prose.
+# That error is why a pre-migration budget of 17018 tokens, already 2018 over the
+# platform ceiling, was reported as 14246 and read as comfortably under it.
+# 4.67 characters per token is calibrated against tiktoken on this corpus.
+CHARS_PER_TOKEN = 4.67
+
+try:
+    import tiktoken
+    _ENC = tiktoken.get_encoding("cl100k_base")
+except Exception:
+    _ENC = None
+
+
+def count_tokens(text):
+    if _ENC is not None:
+        return len(_ENC.encode(text))
+    return int(len(text) / CHARS_PER_TOKEN)
 SKILL_BODY_MAX_LINES = 500
+
+# Capabilities this registry has retired or renamed, with what to use instead.
+# Add an entry here whenever a capability is removed, so stale references fail CI
+# rather than becoming dangling dispatch instructions at runtime.
+RETIRED = {
+    "code-reviewer":
+        "Removed 2026-08; superseded by pr-review-toolkit from the official "
+        "Anthropic marketplace. State the dependency as optional.",
+    "test-data-design-standards":
+        "Merged 2026-05 into `test-data-seeding-standards`.",
+    "database-migration-patterns":
+        "Merged 2026-05 into `test-data-seeding-standards`.",
+    "developer-java-spring":
+        "Renamed 2026-08 to `developer-java`.",
+}
 
 errors, warnings = [], []
 
@@ -124,7 +158,7 @@ def validate_agents():
         if not desc:
             err("%s: missing 'description'" % path)
         else:
-            per_plugin[plugin] += len(desc.split())
+            per_plugin[plugin] += count_tokens(desc)
         model = field(fm, "model")
         if model and model not in VALID_MODELS and not model.startswith("claude-"):
             err("%s: invalid model '%s'" % (path, model))
@@ -133,6 +167,13 @@ def validate_agents():
             err("%s: invalid effort '%s'" % (path, effort))
         if "## When to invoke" not in body:
             warn("%s: no '## When to invoke' section in the body" % path)
+        # An agent told to load a skill must actually hold the Skill tool. Without it
+        # the instruction is inert and the agent silently substitutes its own priors
+        # for the team standard, with no error surfaced anywhere.
+        tools = field(fm, "tools")
+        if "## Skills" in body and tools and "Skill" not in [
+                x.strip() for x in tools.split(",")]:
+            err("%s: has a '## Skills' section but 'Skill' is missing from tools" % path)
     return per_plugin
 
 
@@ -190,8 +231,43 @@ def validate_plugin_root_refs():
                 err("%s: ${CLAUDE_PLUGIN_ROOT}/%s does not resolve" % (path, ref))
 
 
+def validate_relative_links():
+    """Every relative markdown link inside a plugin must resolve.
+
+    Agent bodies and reference files carry links written as [`x.md`](../../docs/x.md),
+    a form that predates the plugin layout. They are invisible to the
+    ${CLAUDE_PLUGIN_ROOT} check because they contain no such variable, and they were
+    the source of 84 dangling read instructions after the plugin migration.
+    """
+    pattern = re.compile(r"\]\((\.\.?/[A-Za-z0-9/._-]+\.md)\)|`(\.\./[A-Za-z0-9/._-]+\.md)`")
+    for path in sorted(glob.glob("plugins/**/*.md", recursive=True)):
+        directory = os.path.dirname(path)
+        for match in pattern.finditer(open(path, encoding="utf-8").read()):
+            rel = match.group(1) or match.group(2)
+            if not os.path.exists(os.path.normpath(os.path.join(directory, rel))):
+                err("%s: relative link does not resolve -> %s" % (path, rel))
+
+
+def validate_agent_references():
+    """Flag references to capabilities this registry has retired or renamed.
+
+    Detecting every unknown name produces false positives on mode words and CLI
+    verbs. Seeding the check from the retirement history is exact: it catches the
+    one regression class that matters, a capability removed or renamed while
+    references to it were left behind.
+    """
+    for name, guidance in RETIRED.items():
+        pattern = re.compile(r"`%s`" % re.escape(name))
+        for path in sorted(glob.glob("plugins/**/*.md", recursive=True)):
+            text = open(path, encoding="utf-8").read()
+            for i, line in enumerate(text.splitlines(), 1):
+                if pattern.search(line):
+                    err("%s:%d: references retired capability `%s`. %s"
+                        % (path, i, name, guidance))
+
+
 def report(per_plugin, out, only=None):
-    total_tokens = int(sum(per_plugin.values()) * WORDS_TO_TOKENS)
+    total_tokens = sum(per_plugin.values())
     total_agents = len(glob.glob("plugins/*/agents/**/*.md", recursive=True))
     title = {"manifests": "Marketplace validation",
              "capabilities": "Catalog validation"}.get(only, "Registry validation")
@@ -211,9 +287,12 @@ def report(per_plugin, out, only=None):
         return
     lines += ["### Subagent description budget", "",
               "| plugin | agents | description tokens |", "|---|---:|---:|"]
+    if _ENC is None:
+        lines.insert(3, "> tiktoken not installed: token counts are estimated from "
+                        "character length and may be off by a few percent.\n")
     for key in sorted(per_plugin, key=lambda x: -per_plugin[x]):
         count = len(glob.glob("plugins/%s/agents/**/*.md" % key, recursive=True))
-        lines.append("| `%s` | %d | %d |" % (key, count, int(per_plugin[key] * WORDS_TO_TOKENS)))
+        lines.append("| `%s` | %d | %d |" % (key, count, per_plugin[key]))
     lines.append("| **all enabled** | **%d** | **%d** |" % (total_agents, total_tokens))
     lines.append("")
     if total_tokens > BUDGET_FAIL:
@@ -248,5 +327,7 @@ if __name__ == "__main__":
         budget = validate_agents()
         validate_skills()
         validate_plugin_root_refs()
+        validate_relative_links()
+        validate_agent_references()
     report(budget, args.output_file, args.only)
     sys.exit(1 if errors else 0)

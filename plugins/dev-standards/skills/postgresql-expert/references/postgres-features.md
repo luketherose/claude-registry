@@ -3,15 +3,15 @@
 ## Contents
 
 - 3. PostgreSQL Best Practices
-- Data types — choose with precision
-- Indices — types and when to use them
-- EXPLAIN ANALYZE — practical reading
-- Transactions — correct usage
+- Data types: choose with precision
+- Indices: types and when to use them
+- EXPLAIN ANALYZE: practical reading
+- Transactions: correct usage
 - Locking and concurrency
 
 ## 3. PostgreSQL Best Practices
 
-### Data types — choose with precision
+### Data types: choose with precision
 
 ```sql
 -- Text
@@ -40,7 +40,7 @@ external_id UUID DEFAULT gen_random_uuid()
 metadata JSONB                  -- JSONB (binary, indexable) not JSON (text, slow)
 ```
 
-**JSONB — when to use and when not to**:
+**When to use JSONB and when not to**:
 
 ```sql
 -- ✅ Use JSONB for semi-structured data that varies per record and does not require frequent queries
@@ -55,7 +55,7 @@ CREATE INDEX idx_companies_extra_data ON companies USING GIN (extra_data);
 -- If you query extra_data->>'city' frequently, that column should be a real column
 ```
 
-### Indices — types and when to use them
+### Indices: types and when to use them
 
 ```sql
 -- B-tree (default) — for =, <, >, BETWEEN, ORDER BY, LIKE 'prefix%'
@@ -94,7 +94,7 @@ CREATE INDEX idx_items_owner_id ON items (owner_id);
 CREATE INDEX idx_contacts_company_id ON contacts (company_id);
 ```
 
-### EXPLAIN ANALYZE — practical reading
+### EXPLAIN ANALYZE: practical reading
 
 ```sql
 EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
@@ -109,9 +109,9 @@ ORDER BY item_count DESC;
 **What to look for**:
 - `Seq Scan` on a large table → consider an index
 - `Nested Loop` with many rows → evaluate `Hash Join` (increase `work_mem`)
-- `cost=X..Y` — planner estimate; `actual time=X..Y` — real time
-- `rows=N` vs `actual rows=M` — if very different, stale statistics → `ANALYZE table`
-- `Buffers: hit=N read=M` — high `read` → data not in cache → I/O problem
+- `cost=X..Y` is the planner estimate; `actual time=X..Y` is the real time
+- `rows=N` vs `actual rows=M`: if very different, stale statistics → `ANALYZE table`
+- `Buffers: hit=N read=M`: high `read` → data not in cache → I/O problem
 
 ```sql
 -- Stale statistics — refresh them
@@ -123,7 +123,7 @@ EXPLAIN ANALYZE <query>;
 RESET work_mem;
 ```
 
-### Transactions — correct usage
+### Transactions: correct usage
 
 ```sql
 -- Explicit transaction
@@ -165,7 +165,7 @@ FOR UPDATE SKIP LOCKED; -- skip rows already locked by other workers
 SELECT pg_try_advisory_xact_lock(12345); -- false if already locked → non-blocking
 ```
 
-**Isolation levels** — PostgreSQL default is `READ COMMITTED`. For critical financial operations:
+**Isolation levels**: PostgreSQL default is `READ COMMITTED`. For critical financial operations:
 
 ```sql
 BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;

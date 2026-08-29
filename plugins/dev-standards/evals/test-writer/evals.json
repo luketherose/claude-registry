@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "test-writer",
+    "query": "Aggiungi i test per questa service class",
+    "files": [],
+    "expected_behavior": [
+      "Delivers a complete runnable test file with all imports and setup present, no placeholder comments and no TODO stubs",
+      "Test method names follow the {method}_{condition}_{outcome} convention",
+      "Lists the scenarios covered across happy path, boundary, invalid input, business rule and error propagation"
+    ]
+  },
+  {
+    "agent": "test-writer",
+    "query": "Coverage è al 40%, riempi i buchi nella test suite esistente",
+    "files": [],
+    "expected_behavior": [
+      "Reads the existing suite first and adds only the missing scenarios instead of duplicating tests that already exist",
+      "Declares a Gaps intentionally left block naming each uncovered scenario and the reason it was left out",
+      "No shared mutable state between tests: each test sets up and tears down its own fixtures"
+    ]
+  },
+  {
+    "agent": "test-writer",
+    "query": "Scrivi i test di integrazione JUnit 5 per il repository layer",
+    "files": [],
+    "expected_behavior": [
+      "Uses JUnit 5 with Testcontainers for the database rather than mocking the repository under test",
+      "Every custom query has an integration test asserting the returned rows, not just a non null check",
+      "Diagnoses no failing test and writes no production code, deferring those to debugger and to the relevant developer-* agent"
+    ]
+  }
+]

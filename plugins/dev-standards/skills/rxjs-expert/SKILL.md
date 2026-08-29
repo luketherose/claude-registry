@@ -1,6 +1,6 @@
 ---
 name: rxjs-expert
-description: "This skill should be used when working with RxJS in an Angular project — naming conventions, flattening strategies (switchMap/mergeMap/concatMap/exhaustMap), subscription management, memory safety, stream combination, error handling, pipeline clarity, elimination of anti-patterns (nested subscribes, manual unsubscribe leaks). Trigger phrases: \"switchMap vs mergeMap\", \"unsubscribe properly\", \"combine these observables\", \"RxJS pipeline\", \"Subject vs BehaviorSubject\". Do not use for component design (use angular-expert) or NgRx effects (use ngrx-expert)."
+description: "This skill should be used when working with RxJS in an Angular project: naming conventions, flattening strategies (switchMap/mergeMap/concatMap/exhaustMap), subscription management, memory safety, stream combination, error handling, pipeline clarity, elimination of anti-patterns (nested subscribes, manual unsubscribe leaks). Trigger phrases: \"switchMap vs mergeMap\", \"unsubscribe properly\", \"combine these observables\", \"RxJS pipeline\", \"Subject vs BehaviorSubject\". Do not use for component design (use angular-expert) or NgRx effects (use ngrx-expert)."
 ---
 
 # Rxjs Expert
@@ -37,7 +37,7 @@ private refresh$ = new Subject<void>();                    // manual trigger
 
 ---
 
-## Subscription management — memory safety
+## Subscription management: memory safety
 
 **Approach 1: `async` pipe (preferred)**
 ```typescript
@@ -195,7 +195,7 @@ this.actions$.pipe(
 
 ---
 
-## Subject — which one to use
+## Subject: which one to use
 
 | Type | Behaviour | When to use it |
 |---|---|---|
@@ -214,7 +214,7 @@ setLoading(value: boolean) { this._loading$.next(value); }
 
 ---
 
-## Common operators — correct usage
+## Common operators: correct usage
 
 ```typescript
 // debounceTime + distinctUntilChanged — search input
@@ -275,7 +275,7 @@ Observable.create(obs => {
 
 ---
 
-## Readable pipelines — formatting
+## Readable pipelines: formatting
 
 ```typescript
 // ✅ One operation per line, vertically aligned

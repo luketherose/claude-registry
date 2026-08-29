@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "developer-frontend",
+    "query": "Migra questa UI Streamlit in Angular",
+    "files": [],
+    "expected_behavior": [
+      "Detects and names the target framework before writing code, and uses only that framework's conventions (no React idioms in an Angular deliverable)",
+      "Delivers the Angular component as four files (.ts, .html, .scss, .spec.ts) with no inline template: or styles: literal in the .ts",
+      "Handles loading, empty and error states explicitly in the component"
+    ]
+  },
+  {
+    "agent": "developer-frontend",
+    "query": "Review this React hook for correctness",
+    "files": [],
+    "expected_behavior": [
+      "Flags any `any` type, untyped props and implicit returns with the file and line",
+      "Checks that state lives at the right level (local, then service or store, then global) and reports it when state is lifted too high or too low",
+      "Reports hardcoded hex colours, pixel spacing and font sizes as design token violations"
+    ]
+  },
+  {
+    "agent": "developer-frontend",
+    "query": "Scrivi il componente Vue 3 per la lista ordini con loading, empty ed errore",
+    "files": [],
+    "expected_behavior": [
+      "Delivers a Vue SFC plus its spec file, not a single untested file",
+      "Interactive elements are keyboard navigable and carry ARIA roles",
+      "Includes a test plan naming the scenarios covered for the produced components"
+    ]
+  }
+]

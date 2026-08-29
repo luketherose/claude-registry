@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Il cliente è UniCredit, questa dashboard deve seguire Bricks e i token di brand",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "App UCB: che colori, logo e tipografia posso usare e che target di accessibilita devo rispettare?",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Component per UniCredit Bank Austria, usa il catalogo Bricks e arriva a WCAG 2.1 AA",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Deck Accenture per il cliente, servono palette e layout di brand",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `accenture-branding` instead"
+  },
+  {
+    "query": "Cliente retail generico, dammi la style spec del component prima che lo implementi",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `design-expert` instead"
+  }
+]

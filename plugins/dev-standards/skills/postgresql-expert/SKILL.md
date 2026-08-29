@@ -1,6 +1,6 @@
 ---
 name: postgresql-expert
-description: "This skill should be used when the user works with PostgreSQL — designing tables, writing or reviewing SQL, picking indices, tuning queries, authoring Liquibase migrations, configuring transactions, or setting up the H2 local-dev profile. Trigger phrases: \"PostgreSQL\", \"Postgres\", \"Liquibase changelog\", \"SQL performance\", \"index tuning\", \"H2 local profile\". Liquibase is the only supported migration tool — Flyway is forbidden; if Flyway appears, this skill should redirect to Liquibase. Do not use for ORM/JPA mapping concerns (use spring-data-jpa)."
+description: "This skill should be used when the user works with PostgreSQL: designing tables, writing or reviewing SQL, picking indices, tuning queries, authoring Liquibase migrations, configuring transactions, or setting up the H2 local-dev profile. Trigger phrases: \"PostgreSQL\", \"Postgres\", \"Liquibase changelog\", \"SQL performance\", \"index tuning\", \"H2 local profile\". Liquibase is the only supported migration tool. Flyway is forbidden; if Flyway appears, this skill should redirect to Liquibase. Do not use for ORM/JPA mapping concerns (use spring-data-jpa)."
 ---
 
 # Postgresql Expert
@@ -14,27 +14,27 @@ You are a senior Database Architect specialised in PostgreSQL for enterprise bac
 - PostgreSQL 15 (production)
 - H2 in-memory (local development + tests)
 - Schemas: `schema_main`, `schema_secondary` (or `public` for single-schema projects)
-- **Liquibase for versioned migrations** — the only supported migration tool. Flyway is forbidden in every project produced through this registry, even when the AS-IS legacy project uses it. When migrating from a Flyway-based AS-IS, generate Liquibase YAML changelogs from scratch (or via `liquibase generateChangeLog` against a copy of the existing DB) and retire the Flyway scripts.
+- **Liquibase for versioned migrations**, the only supported migration tool. Flyway is forbidden in every project produced through this registry, even when the AS-IS legacy project uses it. When migrating from a Flyway-based AS-IS, generate Liquibase YAML changelogs from scratch (or via `liquibase generateChangeLog` against a copy of the existing DB) and retire the Flyway scripts.
 - Spring Data JPA / Hibernate 6 as ORM
 
 ---
 
-## Quick Reference — Frequent Decisions
+## Quick Reference: Frequent Decisions
 
 | Situation | Correct choice |
 |---|---|
 | PK for a new table | `BIGINT GENERATED ALWAYS AS IDENTITY` |
 | PK exposed in URL or cross-system | `UUID DEFAULT gen_random_uuid()` |
-| Monetary value | `NUMERIC(15,2)` — never `FLOAT` |
-| Timestamp with time zone | `TIMESTAMPTZ` — never `TIMESTAMP` |
-| Variable-length string | `TEXT` — not `VARCHAR(255)` |
-| Enum in DB | `TEXT` + `CHECK` — never `SMALLINT` |
-| Index on FK | **Mandatory** — PostgreSQL does not create it automatically |
+| Monetary value | `NUMERIC(15,2)`, never `FLOAT` |
+| Timestamp with time zone | `TIMESTAMPTZ`, never `TIMESTAMP` |
+| Variable-length string | `TEXT`, not `VARCHAR(255)` |
+| Enum in DB | `TEXT` + `CHECK`, never `SMALLINT` |
+| Index on FK | **Mandatory**: PostgreSQL does not create it automatically |
 | Add NOT NULL column on table with data | Two separate migrations: first nullable+default, then NOT NULL |
-| Pagination on > 10k rows | Keyset (`WHERE id > :lastId`) — never `OFFSET` |
+| Pagination on > 10k rows | Keyset (`WHERE id > :lastId`), never `OFFSET` |
 | Slow query | `EXPLAIN (ANALYZE, BUFFERS)` before any optimisation |
 | Circular dependency in inserts | FK `DEFERRABLE INITIALLY DEFERRED` |
-| Structured data queried frequently | Dedicated columns — not JSONB |
+| Structured data queried frequently | Dedicated columns, not JSONB |
 | Auxiliary semi-structured metadata | `JSONB` + GIN index if querying by key |
 
 **Reference sections**: §1 Design · §2 Data Modelling · §3 PostgreSQL best practices · §4 Performance · §5 Java Integration · §6 Data Integrity · §7 Monitoring · §8 Anti-patterns · §9 Checklist
@@ -50,7 +50,7 @@ You are a senior Database Architect specialised in PostgreSQL for enterprise bac
 | Universal VARCHAR(255) | Does not document real constraints, wasteful for short columns | Use `TEXT` or `CHAR(n)` with semantic length |
 | EnumType.ORDINAL JPA ↔ SMALLINT DB | Breaks when re-ordering the enum | `EnumType.STRING` + `TEXT` in the DB |
 | FK without index | Full scan on child table on every parent DELETE | `CREATE INDEX idx_{child}_{fk_col}` always |
-| OFFSET pagination on large tables | O(N) — slows down linearly | Keyset pagination (`WHERE id > :lastId`) |
+| OFFSET pagination on large tables | O(N), slows down linearly | Keyset pagination (`WHERE id > :lastId`) |
 | JSONB for structured data with frequent queries | Slow without index, implicit schema | Structured columns for queried data; JSONB for auxiliary metadata |
 | Very long transactions | Prolonged locks, blocked vacuuming, connection pool exhaustion | Short transactions; frequent commits in batch jobs |
 | Business logic in triggers | Invisible to the Java team, hard to test, problematic ordering | Business logic in the Java service, structural constraints in the DB |
@@ -63,7 +63,7 @@ You are a senior Database Architect specialised in PostgreSQL for enterprise bac
 
 ### Initial design checklist (new table/module)
 
-- [ ] PK: `BIGINT GENERATED ALWAYS AS IDENTITY` or `UUID` — rationale documented
+- [ ] PK: `BIGINT GENERATED ALWAYS AS IDENTITY` or `UUID` (rationale documented)
 - [ ] FKs declared with explicit `ON DELETE` (`RESTRICT`, `CASCADE`, `SET NULL`)
 - [ ] Index on every FK (PostgreSQL does not create it automatically)
 - [ ] `NOT NULL` on every mandatory column
@@ -85,7 +85,7 @@ You are a senior Database Architect specialised in PostgreSQL for enterprise bac
 - [ ] Named/positional parameters in all queries (no concatenation)
 - [ ] Index created for every new column used in frequent `WHERE` clauses
 - [ ] `EXPLAIN ANALYZE` run for queries on tables with > 10k rows
-- [ ] Short transactions — no external I/O inside BEGIN/COMMIT
+- [ ] Short transactions: no external I/O inside BEGIN/COMMIT
 
 ### Performance tuning checklist
 

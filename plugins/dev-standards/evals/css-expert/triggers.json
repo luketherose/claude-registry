@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Questo SCSS ha una specificity war con !important ovunque, rifallo con BEM e design token",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Elimina gli inline style e porta tutto su token, il tema dark non si applica",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Layout responsive mobile-first per questa griglia di card, ora sfonda sotto i 375px",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Prima di implementare dammi il mockup e la style spec di questa dashboard",
+    "should_trigger": false,
+    "description": "Out of scope: design-expert, fase di design"
+  },
+  {
+    "query": "Come faccio lo styling scoped dentro un component Vue 3?",
+    "should_trigger": false,
+    "description": "Out of scope: vue-expert, styling framework-specific"
+  }
+]

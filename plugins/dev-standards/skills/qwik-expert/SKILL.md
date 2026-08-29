@@ -1,6 +1,6 @@
 ---
 name: qwik-expert
-description: "This skill should be used when working on a Qwik or Qwik City app — resumability, lazy components, signals, server-side loaders/actions, file-based routing, Qwik-specific performance patterns. Trigger phrases: \"Qwik component\", \"resumability\", \"Qwik signals\", \"route loader\", \"minimum TTI\". Use when extreme performance and minimum Time To Interactive are required. Do not use for general React or Angular FE work (use react-expert or angular-expert)."
+description: "This skill should be used when working on a Qwik or Qwik City app: resumability, lazy components, signals, server-side loaders/actions, file-based routing, Qwik-specific performance patterns. Trigger phrases: \"Qwik component\", \"resumability\", \"Qwik signals\", \"route loader\", \"minimum TTI\". Use when extreme performance and minimum Time To Interactive are required. Do not use for general React or Angular FE work (use react-expert or angular-expert)."
 ---
 
 # Qwik Expert
@@ -51,7 +51,7 @@ src/
 
 ---
 
-## Qwik components — basic syntax
+## Qwik components: basic syntax
 
 ```typescript
 // component$ — the $ indicates a lazy boundary
@@ -85,7 +85,7 @@ export const UserCard = component$<UserCardProps>(({ name, role }) => {
 
 ---
 
-## Signals — Qwik reactivity
+## Signals: Qwik reactivity
 
 ```typescript
 import { useSignal, useStore, useComputed$, $ } from '@builder.io/qwik';
@@ -113,9 +113,9 @@ const isValid = useComputed$(() =>
 
 ---
 
-## Qwik City — Loaders and Actions
+## Qwik City: Loaders and Actions
 
-### Loaders — server-side data fetching
+### Loaders: server-side data fetching
 
 ```typescript
 // routes/dashboard/index.tsx
@@ -147,7 +147,7 @@ export default component$(() => {
 });
 ```
 
-### Actions — server-side mutations
+### Actions: server-side mutations
 
 ```typescript
 // routes/orders/index.tsx

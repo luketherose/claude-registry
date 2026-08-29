@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Migra da React Router a TanStack Router con route type-safe e file-based",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Definisci il loader e i search param tipizzati per la route /orders/$id",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Error boundary per singola route e route lazy con TanStack Router",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Sostituisci questo useEffect di fetch con useQuery e gestisci l'invalidazione della cache",
+    "should_trigger": false,
+    "description": "Out of scope: tanstack-query, server state"
+  },
+  {
+    "query": "Routing in app/ con Next 14, mi serve il layout annidato",
+    "should_trigger": false,
+    "description": "Out of scope: nextjs, ha il suo router"
+  }
+]

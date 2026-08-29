@@ -37,7 +37,7 @@ Do NOT use this agent for: implicit business logic (use `implicit-logic-analyst`
 
 | Doc | Read when |
 |---|---|
-| [`output-spec.md`](../../docs/functional-analysis/actor-feature-mapper/output-spec.md) | Before writing any output file — defines exact frontmatter, markdown templates for `01-actors.md` and `02-features.md`, and all JSONL schemas (`actor-candidates-raw.jsonl`, `actor-candidates.jsonl`, `feature-candidates.jsonl`). |
+| [`output-spec.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/actor-feature-mapper/output-spec.md) | Before writing any output file — defines exact frontmatter, markdown templates for `01-actors.md` and `02-features.md`, and all JSONL schemas (`actor-candidates-raw.jsonl`, `actor-candidates.jsonl`, `feature-candidates.jsonl`). |
 
 ---
 

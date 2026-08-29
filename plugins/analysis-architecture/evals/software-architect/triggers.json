@@ -2,21 +2,26 @@
   {
     "query": "Write an ADR for the decision to use event sourcing in the order management system",
     "should_trigger": true,
-    "description": "Architecture Decision Record authoring"
+    "description": "Primary invocation"
   },
   {
     "query": "Should we use a monolith or microservices for this new application?",
     "should_trigger": true,
-    "description": "Architecture trade-off analysis"
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Analizza l'architettura di questo servizio e valuta i trade-off su performance, sicurezza e costi",
+    "should_trigger": true,
+    "description": "Primary invocation"
   },
   {
     "query": "Write the Spring Boot controller for the user registration endpoint",
     "should_trigger": false,
-    "description": "Implementation task — routes to developer-java-spring"
+    "description": "Should not activate this capability"
   },
   {
     "query": "What are the security risks in this codebase?",
     "should_trigger": false,
-    "description": "Security analysis — routes to security-analyst or technical-analyst"
+    "description": "Should not activate this capability"
   }
 ]

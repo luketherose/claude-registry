@@ -2,21 +2,26 @@
   {
     "query": "I need help with both the backend Java migration and the Angular frontend refactoring at the same time",
     "should_trigger": true,
-    "description": "Multi-domain task that requires coordinating multiple specialist agents"
-  },
-  {
-    "query": "Fix the null pointer exception in the UserController",
-    "should_trigger": false,
-    "description": "Single-domain bug fix — routes to debugger directly"
-  },
-  {
-    "query": "Write tests for the PaymentService",
-    "should_trigger": false,
-    "description": "Single-domain task — routes to test-writer directly"
+    "description": "Primary invocation"
   },
   {
     "query": "Review this PR for Java and Angular changes across 12 files",
     "should_trigger": true,
-    "description": "Cross-domain review that benefits from parallel specialist coordination"
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Devo migrare questo servizio, documentarlo e aggiungere i test: coordina tu gli specialisti",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Fix the null pointer exception in the UserController",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Write tests for the PaymentService",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
   }
 ]

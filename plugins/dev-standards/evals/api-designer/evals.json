@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "api-designer",
+    "query": "Design the REST contract for the order management API, con paginazione e versioning",
+    "files": [],
+    "expected_behavior": [
+      "Emits OpenAPI 3.1 YAML declaring openapi: \"3.1.0\", with every schema defined under components/schemas and referenced by $ref rather than inlined",
+      "Creation returns 201 with a Location header, deletion returns 204, and every collection endpoint is paginated",
+      "Error responses use the RFC 7807 ProblemDetail shape, and a Design rationale paragraph explains the versioning, pagination and error format choices"
+    ]
+  },
+  {
+    "agent": "api-designer",
+    "query": "Rivedi questo OpenAPI spec e dimmi se ci sono breaking change per i client esistenti",
+    "files": [],
+    "expected_behavior": [
+      "Produces an API Review findings table with a Severity of Blocking, Suggestion or Info, the specific endpoint, and the rest-api-standards rule violated",
+      "Each finding is followed by the concrete change to make, not a generic recommendation",
+      "Classifies each change as breaking or non breaking for existing clients and says which ones require a version bump"
+    ]
+  },
+  {
+    "agent": "api-designer",
+    "query": "Le nostre URL sono tipo /api/preflight e /api/pick, sistemale",
+    "files": [],
+    "expected_behavior": [
+      "Flags the RPC style verb endpoints as a violation and rewrites them as resource oriented paths with GET, POST, PUT and DELETE on /api/<resource>",
+      "Keeps the semantics of every original operation in the rewritten contract and maps old path to new path explicitly",
+      "Writes no implementation code and states that implementing the endpoints belongs to the relevant developer-* agent"
+    ]
+  }
+]

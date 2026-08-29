@@ -13,7 +13,7 @@ answer, route the decision to `deliberative-decision-engine`.
    mode`, `multi-agent debate`, `deliberative decision`, `decision
    review`, `red team this decision`, `robust decision`. Confidence
    0.4–0.7 ⇒ ask one focused clarifying question. Full lexicon and
-   scoring rules in `the `deliberation` plugin's `references/deliberation/trigger-lexicon.md`.
+   scoring rules in the `deliberation` plugin's `references/deliberation/trigger-lexicon.md`.
 2. **Programmatic flag** in the dispatch JSON (`decisionMode:
    "deliberative"` or `useDeliberativeDecision: true`, optionally with
    a `deliberationPolicy` block). When present at supervisor entry,
@@ -29,7 +29,7 @@ answer, route the decision to `deliberative-decision-engine`.
 ## Dispatch protocol
 
 For each routed decision, build a self-contained decision brief per the
-schema at `the `deliberation` plugin's `references/deliberation/schemas.md` § "00-decision-
+schema at the `deliberation` plugin's `references/deliberation/schemas.md` § "00-decision-
 brief.json" — including the migration-criteria block when relevant —
 and dispatch `deliberative-decision-engine` via the `Agent` tool. The
 engine writes its full audit trail under
@@ -60,7 +60,7 @@ true`, `finalDecisionStrategy: "auto"`, `commitProtocol: "auto"`,
   routine answers. The three activation paths above are the only entry
   conditions.
 - **Decision points eligible for deliberation** are listed in
-  `the `deliberation` plugin's `references/deliberation/integration-replatforming.md`:
+  the `deliberation` plugin's `references/deliberation/integration-replatforming.md`:
   - § "Decision points (Phase 4)" — target architecture, migration
     approach (lift-and-shift vs refactor vs rearchitect vs rebuild vs
     replace), target cloud / runtime / platform, sequencing of

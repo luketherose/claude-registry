@@ -179,7 +179,7 @@ Sub-agents must not write outside `docs/analysis/01-functional/`. Verify after e
 
 ## Normalized JSONL artifacts
 
-For full schemas of the JSONL files in `normalized/` and `raw/`, see [`normalized-output-schema.md`](../../docs/functional-analysis/normalized-output-schema.md).
+For full schemas of the JSONL files in `normalized/` and `raw/`, see [`normalized-output-schema.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/normalized-output-schema.md).
 
 Key schemas in brief:
 

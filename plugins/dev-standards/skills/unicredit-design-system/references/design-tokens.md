@@ -3,19 +3,19 @@
 ## Contents
 
 - Color palette
-- Primary — use freely
+- Primary: use freely
 - Functional / state palette (Bricks-aligned, derived from public refresh)
-- Neutrals — Bricks "lighter chromatic" approach
+- Neutrals: Bricks "lighter chromatic" approach
 - Typography
-- Brand typeface — public truth
+- Brand typeface: public truth
 - Fallback stack (ship by default unless the WeAreDesign font is provisioned)
 - Type scale (rem, root = 16 px)
 - Spacing, radius, elevation
-- CSS custom-properties block — paste verbatim
+- CSS custom-properties block: paste verbatim
 
 ## Color palette
 
-### Primary — use freely
+### Primary: use freely
 
 | Role | Hex | RGB | Notes |
 |---|---|---|---|
@@ -25,7 +25,7 @@
 | Dark Navy | `#1A1A2E` | 26, 26, 46 | Limited application: dark themes, footer surfaces, inverted hero blocks. |
 
 > The 2012 brand book also defined a "Mediterranean" warm palette
-> (terracotta / sand) for collateral. **Do not use it for digital UI** —
+> (terracotta / sand) for collateral. **Do not use it for digital UI**:
 > the Bricks refresh removed it.
 
 ### Functional / state palette (Bricks-aligned, derived from public refresh)
@@ -40,7 +40,7 @@ the gated WeAreDesign tokens.
 | Error | `#E30613` (UniCredit Red) | Destructive actions, validation errors |
 | Info | `#0050B3` | Informative banners, neutral notifications |
 
-### Neutrals — Bricks "lighter chromatic" approach
+### Neutrals: Bricks "lighter chromatic" approach
 
 | Token | Hex | Use |
 |---|---|---|
@@ -59,7 +59,7 @@ no neon green, no off-brand red).
 
 ## Typography
 
-### Brand typeface — public truth
+### Brand typeface: public truth
 
 UniCredit commissioned a custom typeface for its wordmark and digital
 properties (publicly described as "energetic and modern, evoking the
@@ -69,11 +69,11 @@ WeAreDesign masterfiles.
 
 **Historic / supporting brand fonts** (from the public 2012 brand book):
 
-- **Pryor Medium** — used for brand creation
-- **Dax** (Light / Regular / Medium / Bold) — used for stationery and
+- **Pryor Medium**: used for brand creation
+- **Dax** (Light / Regular / Medium / Bold): used for stationery and
   descriptors. Designer: Hans Reichel. Closest match for the wordmark
   shapes.
-- **FS Joey** (Fontsmith) — licensed for some publications.
+- **FS Joey** (Fontsmith): licensed for some publications.
 
 ### Fallback stack (ship by default unless the WeAreDesign font is provisioned)
 
@@ -151,7 +151,7 @@ xl:  1280px
 
 ---
 
-## CSS custom-properties block — paste verbatim
+## CSS custom-properties block: paste verbatim
 
 Drop this into the project's `_uc-tokens.scss` (or equivalent global
 stylesheet). The `--uc-*` prefix prevents collisions with the host design

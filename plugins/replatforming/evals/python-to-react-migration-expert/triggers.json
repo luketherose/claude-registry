@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Sostituiamo la UI Streamlit con una SPA React: come mappo session_state e i form su component controllati?",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Da Jinja2 a component React con hook, e il view routing su un router React",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Migrazione Flask server-rendered verso React, i form post diventano mutation",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Il target frontend e' Angular, non React: mappa i template su component e Reactive Forms",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `python-to-angular-migration-expert` instead"
+  },
+  {
+    "query": "Migra il backend Python su Spring Boot con JPA",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `python-to-java-migration-expert` instead"
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Analizza questo repo e dammi la mappa dei moduli, i bounded context e i punti di integrazione",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Qual e la struttura di questo progetto? Serve un indice semantico prima di partire con la migrazione",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Mappa i data flow e il dependency graph di questo monolite, è il primo step della pipeline di analisi",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Dammi la lista del debito tecnico, la security posture e le vulnerabilità nelle dipendenze",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `technical-analyst` instead"
+  },
+  {
+    "query": "Costruisci il graph.json con graphify e interrogalo per sapere chi chiama questo metodo",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `graphify-code-graph` instead"
+  }
+]

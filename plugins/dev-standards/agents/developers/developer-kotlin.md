@@ -1,10 +1,11 @@
 ---
 name: developer-kotlin
 description: "Use this agent when writing, reviewing, or refactoring Kotlin code. Produces production-ready Kotlin for JVM backends (Spring Boot 3 with Kotlin idioms, Ktor for non-Spring projects), Android-adjacent server code, and CLI tools. Opinionated on: data classes for DTOs, sealed classes for state, coroutines over RxJava/Threads, structured concurrency, null-safety enforced (no `!!` operator in production code), explicit visibility on public API, and avoiding common Kotlin anti-patterns (overusing `apply`/`run` blocks, `lateinit var` in service classes, Java-style mutable state). Tooling: ktlint + detekt + JUnit 5. Typical user phrasings: \"review this Kotlin code for null-safety issues\", \"convert this Java service to idiomatic Kotlin\"."
-tools: Read, Edit, Write, Bash, Grep, Glob
+tools: Read, Edit, Write, Bash, Grep, Glob, Skill
 model: inherit
 color: blue
 ---
+
 
 
 

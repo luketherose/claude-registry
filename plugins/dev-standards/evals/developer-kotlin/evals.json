@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "developer-kotlin",
+    "query": "Review this Kotlin code for null-safety issues",
+    "files": [],
+    "expected_behavior": [
+      "Flags every `!!` in production code and every lateinit var in a service class, with the file and line, and proposes constructor injection instead",
+      "Flags Java style carried into Kotlin: getX()/setX() accessors, Optional<T>, checked exception ceremony",
+      "Flags data class used for a JPA entity"
+    ]
+  },
+  {
+    "agent": "developer-kotlin",
+    "query": "Converti questo service Java in Kotlin idiomatico",
+    "files": [],
+    "expected_behavior": [
+      "DTOs become data classes and closed state sets become sealed classes, with invariants encoded in value classes",
+      "val is the default and var appears only where mutation is actually required, with explicit visibility on the public API",
+      "Delivers the file through the Write or Edit tool rather than a Bash heredoc"
+    ]
+  },
+  {
+    "agent": "developer-kotlin",
+    "query": "Scrivi un endpoint Ktor con coroutine e structured concurrency",
+    "files": [],
+    "expected_behavior": [
+      "Uses coroutines with structured concurrency and contains no Thread.sleep inside coroutine code",
+      "Does not overuse apply/run blocks to hide sequencing, and keeps the flow readable",
+      "States that ktlint and detekt were applied before declaring the code done"
+    ]
+  }
+]

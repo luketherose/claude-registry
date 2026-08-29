@@ -7,7 +7,7 @@ description: "This skill should be used when generating enterprise technical doc
 
 You are a senior Technical Writer specialised in technical documentation for Java/Spring Boot backend systems. You generate enterprise-level documentation for development teams, architects, and technical leads.
 
-**Scope**: read the available sources (pre-existing analyses, source code), interpret the provided Word template, produce `backend-doc.tex` — a complete, precise, compilable LaTeX file convertible to `.docx`. Do not invent components not evidenced by the sources. Do not produce placeholders.
+**Scope**: read the available sources (pre-existing analyses, source code), interpret the provided Word template, produce `backend-doc.tex`, a complete, precise, compilable LaTeX file convertible to `.docx`. Do not invent components not evidenced by the sources. Do not produce placeholders.
 
 ---
 
@@ -34,7 +34,7 @@ If the Spring Boot source code is accessible, read primarily:
 
 ## Mandatory process (in order)
 
-### STEP 0 — Input collection and source verification
+### STEP 0: Input collection and source verification
 
 > **Prerequisite**: at least one source (pre-existing analyses, source code) must be available. If no source is accessible, stop and request input.
 
@@ -50,7 +50,7 @@ If the template is not provided, use the standard structure defined in STEP 2.
 
 ---
 
-### STEP 1 — Word template analysis → LaTeX mapping
+### STEP 1: Word template analysis → LaTeX mapping
 
 | Word element | LaTeX equivalent |
 |---|---|
@@ -68,7 +68,7 @@ If the template is not provided, use the standard structure defined in STEP 2.
 
 ---
 
-### STEP 2 — Backend document structure (default if not imposed by template)
+### STEP 2: Backend document structure (default if not imposed by template)
 
 ```
 1.  Title page
@@ -136,7 +136,7 @@ If the template is not provided, use the standard structure defined in STEP 2.
 
 ---
 
-### STEP 3 — Content normalisation
+### STEP 3: Content normalisation
 
 Before writing LaTeX:
 
@@ -149,7 +149,7 @@ Before writing LaTeX:
 
 ---
 
-### STEP 4 — LaTeX file generation
+### STEP 4: LaTeX file generation
 
 #### Mandatory preamble
 
@@ -363,7 +363,7 @@ Text of the note or warning.
 
 ---
 
-### STEP 5 — Notes and assumptions
+### STEP 5: Notes and assumptions
 
 After the LaTeX file, report:
 
@@ -408,7 +408,7 @@ pandoc backend-doc.tex \
 |---|---|
 | `lstlisting` (Java code) | Monospace block, syntax highlighting lost |
 | `longtable` | Word table, verify column widths |
-| `tcolorbox` | Text box, border approximated — refine manually |
+| `tcolorbox` | Text box, border approximated, refine manually |
 | `\rowcolor` | Cell background not always preserved |
 | `\fancyhdr` | Word headers if present in the reference template |
 | `\texttt` | Monospace correctly preserved |

@@ -1,6 +1,6 @@
 ---
 name: tanstack-query
-description: "This skill should be used when working with TanStack Query v5 in a React app — useQuery, useMutation, useInfiniteQuery, QueryClient configuration, cache invalidation, optimistic updates, prefetching. Trigger phrases: \"useQuery\", \"useMutation\", \"invalidateQueries\", \"optimistic update\", \"prefetch a query\", \"replace useEffect with TanStack Query\". Replaces useEffect for server state management. Do not use for client-only state or for routing (use tanstack)."
+description: "This skill should be used when working with TanStack Query v5 in a React app: useQuery, useMutation, useInfiniteQuery, QueryClient configuration, cache invalidation, optimistic updates, prefetching. Trigger phrases: \"useQuery\", \"useMutation\", \"invalidateQueries\", \"optimistic update\", \"prefetch a query\", \"replace useEffect with TanStack Query\". Replaces useEffect for server state management. Do not use for client-only state or for routing (use tanstack)."
 ---
 
 # Tanstack Query
@@ -10,7 +10,7 @@ You are a TanStack Query v5 expert. You manage server state in React application
 ## Core principle
 
 TanStack Query separates **server state** (remote data) from **client state** (local UI state).
-Do not use `useState` + `useEffect` for data fetching — use TanStack Query.
+Do not use `useState` + `useEffect` for data fetching. Use TanStack Query.
 
 ```typescript
 // ❌ Pattern to never use
@@ -54,7 +54,7 @@ createRoot(document.getElementById('root')!).render(
 
 ---
 
-## useQuery — reading data
+## useQuery: reading data
 
 ```typescript
 // Query key: array that uniquely identifies the resource
@@ -92,7 +92,7 @@ const { data, status, fetchStatus, isLoading, isFetching, isError, isSuccess } =
 
 ---
 
-## useMutation — writing data
+## useMutation: writing data
 
 ```typescript
 const createOrder = useMutation({
@@ -155,7 +155,7 @@ const toggleFavourite = useMutation({
 
 ---
 
-## useInfiniteQuery — infinite pagination
+## useInfiniteQuery: infinite pagination
 
 ```typescript
 const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
@@ -183,7 +183,7 @@ const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuer
 
 ---
 
-## Query Keys — convention
+## Query Keys: convention
 
 Organise query keys in an object for type safety and easy invalidation:
 

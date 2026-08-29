@@ -1,11 +1,11 @@
 ---
 name: backend-orchestrator
-description: "ALWAYS use this skill when a backend task spans more than one Java/Spring layer — the user asks to add a new endpoint end-to-end, design a module from Controller to DB, refactor an existing feature across Service/Repository/Entity, or resolve cross-layer inconsistencies. Trigger phrases: \"add a new endpoint end-to-end\", \"wire a service\", \"from controller to database\", \"full backend feature\", \"design this module Controller to DB\". Coordinates java-expert, spring-expert, spring-data-jpa, spring-architecture, postgresql-expert, and guarantees cross-layer consistency. Do not use for single-layer tasks (use the targeted skill directly)."
+description: "ALWAYS use this skill when a backend task spans more than one Java/Spring layer: the user asks to add a new endpoint end-to-end, design a module from Controller to DB, refactor an existing feature across Service/Repository/Entity, or resolve cross-layer inconsistencies. Trigger phrases: \"add a new endpoint end-to-end\", \"wire a service\", \"from controller to database\", \"full backend feature\", \"design this module Controller to DB\". Coordinates java-expert, spring-expert, spring-data-jpa, spring-architecture, postgresql-expert, and guarantees cross-layer consistency. Do not use for single-layer tasks (use the targeted skill directly)."
 ---
 
 # Backend Orchestrator
 
-You are the decision-making brain of the backend. You do not write code directly — you decide which skills to activate, in which order, with which constraints, and you guarantee architectural consistency between layers.
+You are the decision-making brain of the backend. You do not write code directly. You decide which skills to activate, in which order, with which constraints, and you guarantee architectural consistency between layers.
 
 ## Available skills
 
@@ -19,13 +19,13 @@ You are the decision-making brain of the backend. You do not write code directly
 
 ---
 
-## Context sources — decreasing priority
+## Context sources (decreasing priority)
 
 Before activating any backend skill, query sources in this order:
 
 | Priority | Source | When to use it |
 |---|---|---|
-| 1 | **Real code** | Absolute source of truth — always |
+| 1 | **Real code** | Absolute source of truth, always |
 | 2 | **Pre-existing analyses** | Quickly understand what a module does without reading all the code, if available in the project |
 | 3 | **Dependency graph / architectural artefacts** | Dependencies, migration targets, architectural impacts, if available |
 | 4 | **Functional documentation** | Business rules, user flows, use cases |
@@ -35,8 +35,8 @@ Before activating any backend skill, query sources in this order:
 ### When to consult pre-existing analysis artefacts
 
 **Use analysis artefacts when:**
-- Implementing a Service that replicates legacy logic — read the source code or the corresponding pre-indexed chunks
-- Deciding the public interface of a service — the inputs/outputs of available artefacts tell what goes in and what comes out
+- Implementing a Service that replicates legacy logic: read the source code or the corresponding pre-indexed chunks
+- Deciding the public interface of a service: the inputs/outputs of available artefacts tell what goes in and what comes out
 - Understanding the dependencies of a module without reading all the code
 - Validating whether a JPA entity is complete with respect to the business logic
 
@@ -44,22 +44,22 @@ Before activating any backend skill, query sources in this order:
 1. Identify the relevant bounded context (the project's bounded contexts)
 2. Go to the corresponding artefacts available in the project (functional analysis, technical analysis, semantic chunks)
 3. Filter by type, layer or tag to find the exact artefact
-4. Extract the business rules — those belong in the Java Service, not in the Controller
+4. Extract the business rules: those belong in the Java Service, not in the Controller
 
 **Do not use analysis artefacts when:**
 - The task concerns completely new code (no artefacts available)
-- An artefact is marked as unstable or out of date — verify against the real code
+- An artefact is marked as unstable or out of date: verify against the real code
 
 ### Conflicts between sources
 
 - **Real code always wins** over any analysis artefact
 - Detailed analyses beat architectural ones for implementation details and business rules
 - Architectural artefacts beat detailed ones for relationships and migration targets
-- If analysis and code contradict each other: the code is more recent — update the artefacts if significant
+- If analysis and code contradict each other, the code is more recent: update the artefacts if significant
 
 ---
 
-## 1. Intent Recognition — request classification
+## 1. Intent Recognition: request classification
 
 Before activating any skill, classify the request into one of the categories:
 
@@ -84,7 +84,7 @@ TYPE E — Atomic single-layer task
 
 ---
 
-## 2. Skill Selection Strategy — decision rules
+## 2. Skill Selection Strategy: decision rules
 
 ### Request → skill mapping
 
@@ -101,13 +101,13 @@ TYPE E — Atomic single-layer task
 | Security / JWT | `spring-expert` | `spring-architecture` |
 | Liquibase migration | `postgresql-expert` | `spring-data-jpa` |
 | Exception handling | `spring-architecture` | `java-expert` |
-| PDF/Excel generation | `java-expert` | — |
+| PDF/Excel generation | `java-expert` | n/a |
 
 ### Exclusion rule
 
 Do not activate a skill if:
 - Its domain is not touched by the request
-- Another skill already covers the overlap point (e.g.: `spring-architecture` covers controller error handling — `spring-expert` is not also needed for that)
+- Another skill already covers the overlap point (e.g.: `spring-architecture` covers controller error handling, so `spring-expert` is not also needed for that)
 - The request is already resolved by the primary skill without cross-layer ambiguity
 
 ---
@@ -123,13 +123,13 @@ When two skills suggest different approaches, the priority is:
 4. Clean code / idiomaticity    — refactoring only if it does not introduce risks
 ```
 
-**Conflict example**: the JPA skill suggests `FetchType.EAGER` for simplicity, the DB skill flags an explosive query. **DB wins** — use explicit `JOIN FETCH` in the repository instead.
+**Conflict example**: the JPA skill suggests `FetchType.EAGER` for simplicity, the DB skill flags an explosive query. **DB wins**: use explicit `JOIN FETCH` in the repository instead.
 
 **Conflict example**: the Java skill suggests logic in the service, the architecture skill suggests extracting it to a helper. **Architecture wins** if the logic is reusable across modules; **service wins** if it is specific to that case.
 
 ---
 
-## 6. Cross-layer consistency — mandatory invariants
+## 6. Cross-layer consistency: mandatory invariants
 
 These rules must be respected in every orchestrated output:
 
@@ -161,7 +161,7 @@ These rules must be respected in every orchestrated output:
 
 ---
 
-## 7. Output Strategy — response structure
+## 7. Output Strategy: response structure
 
 Every orchestrated response must be structured by layer, in dependency order:
 
@@ -188,7 +188,7 @@ Every orchestrated response must be structured by layer, in dependency order:
   Trade-offs, alternatives considered, constraints
 ```
 
-Not all layers need to be included in every response — include only those impacted by the request. But if a layer is impacted, do not omit it for brevity.
+Not all layers need to be included in every response: include only those impacted by the request. But if a layer is impacted, do not omit it for brevity.
 
 ---
 
@@ -197,7 +197,7 @@ Not all layers need to be included in every response — include only those impa
 ### Design Mode
 **Activate when**: new feature request, redesign, question "how do we structure X"
 **Focus**: public contracts, separation of concerns, DB schema
-**Output**: layer structure + DDL + service interfaces + DTO — without complete implementation
+**Output**: layer structure + DDL + service interfaces + DTO, without complete implementation
 **Primary skill**: `spring-architecture` + `postgresql-expert`
 
 ### Implementation Mode
@@ -227,9 +227,9 @@ Not all layers need to be included in every response — include only those impa
 | Activating all skills for every request | Verbose response, duplications, confusion | Activate only skills with direct responsibility for the request |
 | Ignoring the DB in JPA decisions | Poorly mapped entity, missing indices, constraints only in Java | `postgresql-expert` always paired with `spring-data-jpa` |
 | Optimising before diagnosing | Cache added before EXPLAIN ANALYZE | Measure → identify cause → minimal fix |
-| Business logic in the controller | Controller with if/for, domain validations, direct repository access | Move to the service — the controller manages only HTTP |
+| Business logic in the controller | Controller with if/for, domain validations, direct repository access | Move to the service: the controller manages only HTTP |
 | Emergent design (no architectural phase) | Inconsistent layers discovered late | Always `spring-architecture` before implementing |
-| Feature flags and backward compat not requested | Dead code, accidental complexity | Change directly — compat is not needed unless explicitly requested |
+| Feature flags and backward compat not requested | Dead code, accidental complexity | Change directly: compat is not needed unless explicitly requested |
 
 ---
 

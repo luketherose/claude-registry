@@ -1,24 +1,24 @@
 ---
 name: graphify-code-graph
-description: "This skill should be used when an agent needs to understand, navigate, or reason about a codebase through a persistent code knowledge graph instead of ad-hoc grepping — architecture recovery, dependency and impact analysis, \"what calls X / what does X reach\", data-flow tracing, or token-efficient repo Q&A. Trigger phrases: \"map this codebase\", \"what depends on X\", \"impact of changing Y\", \"how does Z flow through the code\", \"build a knowledge graph of the repo\", \"query the codebase\". It documents the graphify CLI (local, deterministic tree-sitter AST extraction; GraphRAG-ready graph.json) and the compliance-safe workflow. Do not use for producing the narrative technical map / bounded-context report — that is tech-analyst; this skill feeds it."
+description: "This skill should be used when an agent needs to understand, navigate, or reason about a codebase through a persistent code knowledge graph instead of ad-hoc grepping: architecture recovery, dependency and impact analysis, \"what calls X / what does X reach\", data-flow tracing, or token-efficient repo Q&A. Trigger phrases: \"map this codebase\", \"what depends on X\", \"impact of changing Y\", \"how does Z flow through the code\", \"build a knowledge graph of the repo\", \"query the codebase\". It documents the graphify CLI (local, deterministic tree-sitter AST extraction; GraphRAG-ready graph.json) and the compliance-safe workflow. Do not use for producing the narrative technical map / bounded-context report: that is tech-analyst; this skill feeds it."
 ---
 
 
 # Graphify Code Graph
-You are a knowledge provider for **graphify** — an MIT-licensed CLI that turns a codebase into a **persistent, queryable knowledge graph**. When invoked, return the authoritative commands, workflow, and guardrails the calling agent needs to use graphify on code. You do not execute commands yourself — you provide the playbook; the caller (which holds `Bash`) runs it.
+You are a knowledge provider for **graphify**, an MIT-licensed CLI that turns a codebase into a **persistent, queryable knowledge graph**. When invoked, return the authoritative commands, workflow, and guardrails the calling agent needs to use graphify on code. You do not execute commands yourself. You provide the playbook; the caller (which holds `Bash`) runs it.
 
-graphify parses code **locally with tree-sitter AST** — no LLM call, no network, no upload, and no API key. It emits `graph.json` (GraphRAG-ready), `graph.html` (interactive), and `GRAPH_REPORT.md` (audit). Every edge carries an honesty tag (`EXTRACTED` / `INFERRED` / `AMBIGUOUS`) and a `source_location` (`file:line`).
+graphify parses code **locally with tree-sitter AST**: no LLM call, no network, no upload, and no API key. It emits `graph.json` (GraphRAG-ready), `graph.html` (interactive), and `GRAPH_REPORT.md` (audit). Every edge carries an honesty tag (`EXTRACTED` / `INFERRED` / `AMBIGUOUS`) and a `source_location` (`file:line`).
 
 ---
 
 ## When to use graphify (code use cases)
 
-- **Onboarding / architecture recovery** — understand an unfamiliar or legacy codebase: hubs, communities (modules), and how they connect.
-- **Dependency analysis** — "what does X depend on", call graphs, cross-module coupling.
-- **Impact analysis** — "what breaks if I change Y" via reverse traversal (`affected`).
-- **Data-flow / path tracing** — shortest connection between two symbols (`path`), or how a value flows across the system.
-- **Token-efficient repo Q&A** — answer questions from `graph.json` (BFS/DFS traversal) instead of loading many files into context.
-- **Refactoring / migration discovery** — surface architectural hubs (`god-nodes`) and hidden cross-module edges before restructuring.
+- **Onboarding / architecture recovery**: understand an unfamiliar or legacy codebase, its hubs, communities (modules), and how they connect.
+- **Dependency analysis**: "what does X depend on", call graphs, cross-module coupling.
+- **Impact analysis**: "what breaks if I change Y" via reverse traversal (`affected`).
+- **Data-flow / path tracing**: shortest connection between two symbols (`path`), or how a value flows across the system.
+- **Token-efficient repo Q&A**: answer questions from `graph.json` (BFS/DFS traversal) instead of loading many files into context.
+- **Refactoring / migration discovery**: surface architectural hubs (`god-nodes`) and hidden cross-module edges before restructuring.
 
 Prefer graphify over grep whenever the question is **relational** ("what connects / calls / reaches") rather than a literal string match.
 
@@ -31,8 +31,8 @@ Prefer graphify over grep whenever the question is **relational** ("what connect
   - Run graphify on **code only** (point it at source directories; exclude docs/dumps), OR
   - Keep semantic extraction **on-device** with a local backend (e.g. Ollama), OR
   - Only set `GEMINI_API_KEY`/`GOOGLE_API_KEY` when the client's usage policy allows that content to reach that provider.
-  - graphify reads **only** `GEMINI_API_KEY`/`GOOGLE_API_KEY` for semantic work — never `ANTHROPIC_API_KEY`/`OPENAI_API_KEY`. Never prompt for a key; a code-only run needs none.
-- `detect` reports `skipped_sensitive` files — always surface that list so a wrongly-included secret file is visible before extraction.
+  - graphify reads **only** `GEMINI_API_KEY`/`GOOGLE_API_KEY` for semantic work, never `ANTHROPIC_API_KEY`/`OPENAI_API_KEY`. Never prompt for a key; a code-only run needs none.
+- `detect` reports `skipped_sensitive` files. Always surface that list so a wrongly-included secret file is visible before extraction.
 - **Never send raw code to an LLM out of band.** The graph (structure + `file:line`) is the artifact you share downstream, not the source.
 
 ---
@@ -61,15 +61,15 @@ graphify <path> --neo4j         # emit cypher for Neo4j; --neo4j-push bolt://…
 graphify <path> --watch         # rebuild on save (deterministic, no LLM)
 ```
 
-Outputs land in `graphify-out/`: `graph.json` (persistent — query it for weeks without rebuilding), `graph.html`, `GRAPH_REPORT.md`. On a code-only corpus the semantic (LLM) stage is skipped entirely.
+Outputs land in `graphify-out/`: `graph.json` (persistent: query it for weeks without rebuilding), `graph.html`, `GRAPH_REPORT.md`. On a code-only corpus the semantic (LLM) stage is skipped entirely.
 
 **Corpus guardrail:** if `detect` reports > 2,000,000 words or > 500 files, scope to a subfolder before building (rank top subdirectories by file count) rather than graphing everything at once.
 
 ---
 
-## Query playbook (use the existing graph — do not rebuild)
+## Query playbook (use the existing graph, do not rebuild)
 
-**Fast path:** if `graphify-out/graph.json` already exists and the user asks a question about the code, query it directly — do not re-run the pipeline.
+**Fast path:** if `graphify-out/graph.json` already exists and the user asks a question about the code, query it directly. Do not re-run the pipeline.
 
 ```bash
 graphify query "how does authentication reach the database?"   # BFS traversal, broad context
@@ -90,7 +90,7 @@ When citing a fact from a query, quote the node's `source_location` (`file:line`
 - Respect edge tags: `EXTRACTED` (found in code) > `INFERRED` (derived) > `AMBIGUOUS` (uncertain). Never present an `INFERRED`/`AMBIGUOUS` edge as fact.
 - `god-nodes` = architectural hubs; high degree often means a refactoring or risk hotspot.
 - Communities = candidate modules/bounded contexts; use them as a starting hypothesis, not ground truth.
-- Surface any `GRAPH HEALTH WARNING` (dangling/collapsed edges) — do not hide it.
+- Surface any `GRAPH HEALTH WARNING` (dangling/collapsed edges). Do not hide it.
 
 ---
 
@@ -104,5 +104,5 @@ When citing a fact from a query, quote the node's `source_location` (`file:line`
 
 ## Integration with the analysis pipeline
 
-- graphify produces the **deterministic, on-device structural layer** (call graph, dependencies, `file:line`) — the low, factual level of a code knowledge graph. Hand the graph and `GRAPH_REPORT.md` to `tech-analyst` for the narrative module map / bounded-context write-up; this skill does not produce that report.
+- graphify produces the **deterministic, on-device structural layer** (call graph, dependencies, `file:line`), the low, factual level of a code knowledge graph. Hand the graph and `GRAPH_REPORT.md` to `tech-analyst` for the narrative module map / bounded-context write-up; this skill does not produce that report.
 - `--neo4j` export lets the same graph feed a Neo4j-based analysis (e.g. alongside jQAssistant) and GraphRAG-style querying.

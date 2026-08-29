@@ -6,7 +6,7 @@
 > live in `decision-rules.md` § "Deliberation routing"; this doc covers
 > the activation paths, default policy, and hard rules.
 >
-> Related: `the `deliberation` plugin's `references/deliberation/integration-replatforming.md`
+> Related: the `deliberation` plugin's `references/deliberation/integration-replatforming.md`
 > lists the eligible decision points per phase.
 
 ## Activation paths
@@ -22,7 +22,7 @@ three paths:
    mode`, `multi-agent debate`, `deliberative decision`, `decision
    review`, `red team this decision`, `robust decision`. Confidence
    0.4–0.7 ⇒ ask one focused clarifying question. Full lexicon and
-   scoring rules in `../deliberation/trigger-lexicon.md`.
+   scoring rules in the `deliberation` plugin's `references/deliberation/trigger-lexicon.md`.
 2. **Programmatic flag** in the dispatch JSON (`decisionMode:
    "deliberative"` or `useDeliberativeDecision: true`, optionally with
    a `deliberationPolicy` block). When present at supervisor entry,
@@ -40,7 +40,7 @@ three paths:
 For each routed decision:
 
 1. Build a self-contained decision brief per the schema at
-   `../deliberation/schemas.md` § "00-decision-brief.json" — include
+   the `deliberation` plugin's `references/deliberation/schemas.md` § "00-decision-brief.json" — include
    the migration-criteria block when relevant.
 2. Dispatch `deliberative-decision-engine` via the `Agent` tool.
 3. The engine writes its full audit trail under
@@ -85,7 +85,7 @@ task is highly ambiguous.
   routine answers. The activation paths above are the only entry
   conditions.
 - **Decision points eligible for deliberation** are listed in
-  `../deliberation/integration-replatforming.md`. The doc has two
+  the `deliberation` plugin's `references/deliberation/integration-replatforming.md`. The doc has two
   sections: § "Decision points (Phase 4)" — target architecture,
   migration approach (lift-and-shift vs refactor vs rearchitect vs
   rebuild vs replace), target cloud / runtime / platform, sequencing

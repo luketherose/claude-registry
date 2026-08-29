@@ -5,7 +5,7 @@
 > a worker prompt to its declared output target.
 
 The Phase 4 supervisor coordinates 9 in-house Sonnet workers across 6
-waves plus an opt-in export wave. External agents (`code-reviewer`,
+waves plus an opt-in export wave. External agents (`pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed),
 `debugger`, `documentation-writer`, `document-creator`,
 `presentation-creator`) are called on demand outside the wave grid.
 
@@ -27,7 +27,7 @@ waves plus an opt-in export wave. External agents (`code-reviewer`,
 
 | Agent | Used for | Mode |
 |---|---|---|
-| `code-reviewer` | Background review after each scaffold/translation (W4 review-mode) | per Q4 flag |
+| `pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed) | Background review after each scaffold/translation (W4 review-mode) | per Q4 flag |
 | `debugger` | Equivalence discrepancies vs. Phase 3 baseline | on demand |
 | `documentation-writer` | Polish of ADRs | background |
 | `document-creator` | PDF export of roadmap | opt-in (Export Wave) |

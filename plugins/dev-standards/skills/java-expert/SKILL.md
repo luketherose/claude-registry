@@ -1,13 +1,13 @@
 ---
 name: java-expert
-description: "This skill should be used when working with Java 17+ language features outside the Spring layer — records, sealed classes, Optional, Stream API, Lombok, concurrency (CompletableFuture, virtual threads), custom exception hierarchies, SLF4J logging conventions, and document generation (Apache POI, iText). Trigger phrases: \"Java records\", \"sealed class\", \"Optional best practice\", \"Stream API\", \"POI\", \"iText\". Do not use for Spring Boot configuration (use spring-expert), JPA (use spring-data-jpa), or layered architecture (use spring-architecture)."
+description: "This skill should be used when working with Java 17+ language features outside the Spring layer: records, sealed classes, Optional, Stream API, Lombok, concurrency (CompletableFuture, virtual threads), custom exception hierarchies, SLF4J logging conventions, and document generation (Apache POI, iText). Trigger phrases: \"Java records\", \"sealed class\", \"Optional best practice\", \"Stream API\", \"POI\", \"iText\". Do not use for Spring Boot configuration (use spring-expert), JPA (use spring-data-jpa), or layered architecture (use spring-architecture)."
 ---
 
 # Java Expert
 
 You are a senior Java expert specialised in the backend of enterprise Spring Boot applications.
 
-**Scope**: pure core Java — Java 17+, OOP, clean code, Lombok, concurrency, collections, idiomatic patterns, document generation. For Spring Boot → `spring-expert`. For JPA/Hibernate → `spring-data-jpa`. For layered architecture → `spring-architecture`.
+**Scope**: pure core Java (Java 17+, OOP, clean code, Lombok, concurrency, collections, idiomatic patterns, document generation). For Spring Boot → `spring-expert`. For JPA/Hibernate → `spring-data-jpa`. For layered architecture → `spring-architecture`.
 
 ## Reference stack
 
@@ -17,7 +17,7 @@ You are a senior Java expert specialised in the backend of enterprise Spring Boo
 
 ---
 
-## Java 17 — features to use actively
+## Java 17: features to use actively
 
 ### Records for immutable DTOs
 
@@ -33,7 +33,7 @@ public record CompanyCreateRequest(
 ) {}
 ```
 
-**Trade-off**: records are immutable and non-extendable — ideal for DTOs, not for JPA entities (Hibernate requires a no-arg constructor and mutability).
+**Trade-off**: records are immutable and non-extendable, ideal for DTOs but not for JPA entities (Hibernate requires a no-arg constructor and mutability).
 
 ### Sealed classes for closed hierarchies
 
@@ -79,7 +79,7 @@ String sql = """
 
 ---
 
-## Lombok — usage rules
+## Lombok: usage rules
 
 ```java
 // Entity/mutable classes
@@ -146,7 +146,7 @@ Map<String, Long> countByIndustry = companies.stream()
 
 ---
 
-## Optional — correct usage
+## Optional: correct usage
 
 ```java
 // ✅ Transform without explicit unwrapping
@@ -161,9 +161,9 @@ String displayName = Optional.ofNullable(company.getAlias())
 ```
 
 **Optional anti-patterns:**
-- `optional.get()` without `.isPresent()` — equivalent to a deferred NPE
-- `Optional` as a method parameter — degrades readability
-- `Optional<List<T>>` — use `List.of()` as fallback
+- `optional.get()` without `.isPresent()`: equivalent to a deferred NPE
+- `Optional` as a method parameter: degrades readability
+- `Optional<List<T>>`: use `List.of()` as fallback
 
 ---
 
@@ -171,11 +171,11 @@ String displayName = Optional.ofNullable(company.getAlias())
 
 The full hierarchy (`AppException`, `EntityNotFoundException`, `BusinessRuleViolationException`, `ExternalApiException`) and the `GlobalExceptionHandler` are defined in `spring-architecture` § Custom exception hierarchy.
 
-**Relevant Java rules here**: use `RuntimeException` for business errors (do not force catch on the caller). Checked exceptions only for external I/O where the caller must decide on recovery. Never an empty catch — at minimum, log it.
+**Relevant Java rules here**: use `RuntimeException` for business errors (do not force catch on the caller). Checked exceptions only for external I/O where the caller must decide on recovery. Never an empty catch: at minimum, log it.
 
 ---
 
-## Concurrency — practical patterns
+## Concurrency: practical patterns
 
 ### I/O-bound parallelism with CompletableFuture
 
@@ -210,7 +210,7 @@ private final AtomicReference<CacheState> state = new AtomicReference<>(CacheSta
 
 ---
 
-## Logging — conventions
+## Logging: conventions
 
 ```java
 @Slf4j // Lombok — SLF4J Logger
@@ -238,7 +238,7 @@ public class CompanyServiceImpl {
 | WARN | Handled anomalies: fallback activated, retry, missing data |
 | ERROR | Unexpected exceptions, permanently failed operations |
 
-**Anti-pattern**: `log.debug("Company: " + company)` — the concatenation is always evaluated, even when DEBUG is disabled. Use `log.debug("Company: {}", company)`.
+**Anti-pattern**: `log.debug("Company: " + company)`. The concatenation is always evaluated, even when DEBUG is disabled. Use `log.debug("Company: {}", company)`.
 
 ---
 
@@ -309,7 +309,7 @@ public byte[] generateFinancialReport(List<FinancialData> data) {
 
 ---
 
-## Checklist — Java code review
+## Checklist: Java code review
 
 - [ ] No explicit casts where generics or pattern matching can be used
 - [ ] Optional: no naked `.get()`, not used as a method parameter, no `Optional<Collection>`

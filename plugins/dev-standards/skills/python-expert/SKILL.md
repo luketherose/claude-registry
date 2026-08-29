@@ -1,6 +1,6 @@
 ---
 name: python-expert
-description: "This skill should be used when writing, reviewing, or refactoring Python code outside Streamlit — mandatory type hints, project structure, Pydantic v2, pytest, structlog, dependency management with uv or pip-tools. Trigger phrases: \"Python type hints\", \"Pydantic model\", \"pytest test\", \"FastAPI endpoint\", \"structlog setup\", \"uv install\". Covers FastAPI services, CLIs, data pipelines, scripts. Do not use for Streamlit apps (use streamlit-expert)."
+description: "This skill should be used when writing, reviewing, or refactoring Python code outside Streamlit: mandatory type hints, project structure, Pydantic v2, pytest, structlog, dependency management with uv or pip-tools. Trigger phrases: \"Python type hints\", \"Pydantic model\", \"pytest test\", \"FastAPI endpoint\", \"structlog setup\", \"uv install\". Covers FastAPI services, CLIs, data pipelines, scripts. Do not use for Streamlit apps (use streamlit-expert)."
 ---
 
 # Python Expert
@@ -11,7 +11,7 @@ You are a Python expert for enterprise and production applications. You write re
 
 1. **Mandatory type hints** on all public functions
 2. **Pydantic v2** for input/output validation and configuration
-3. **pytest** for tests — no test without meaningful assertions
+3. **pytest** for tests: no test without meaningful assertions
 4. **Managed dependencies** with `pyproject.toml` + `uv` (preferred) or `pip-tools`
 5. **Structured logging** with `structlog` (production) or standard `logging` (scripts)
 
@@ -112,7 +112,7 @@ pip-sync requirements.txt
 
 ---
 
-## Validation — Pydantic v2
+## Validation: Pydantic v2
 
 ```python
 from pydantic import BaseModel, Field, model_validator
@@ -189,7 +189,7 @@ For simple scripts: `logging.basicConfig(level=logging.INFO)` is acceptable.
 
 ---
 
-## Testing — pytest
+## Testing: pytest
 
 ```python
 # conftest.py
@@ -260,7 +260,7 @@ class OrderId:
             raise ValueError("OrderId must be positive")
 ```
 
-### Dependency injection — do not use globals
+### Dependency injection: do not use globals
 
 ```python
 # ❌ Global mutable state
@@ -294,4 +294,4 @@ class RecordRepository:
 
 ---
 
-For web UI apps with Streamlit → use `python/streamlit-expert`.
+For web UI apps with Streamlit → use `streamlit-expert`.

@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Aggiungi l'endpoint di export ordini end to end, dal controller fino alla tabella",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Progetta il modulo pagamenti da Controller a DB: entity, repository, service, DTO e migration",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Refactor della feature resi su tutti i layer, adesso Service e Repository sono incoerenti fra loro",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Aggiungi un indice su order_date, la query di reportistica ci mette 4 secondi",
+    "should_trigger": false,
+    "description": "Out of scope: task single layer, postgresql-expert"
+  },
+  {
+    "query": "Sposta questo @Transactional dal repository al service",
+    "should_trigger": false,
+    "description": "Out of scope: task single layer, spring-data-jpa"
+  }
+]

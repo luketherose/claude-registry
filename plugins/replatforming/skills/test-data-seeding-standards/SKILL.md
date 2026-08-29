@@ -1,6 +1,6 @@
 ---
 name: test-data-seeding-standards
-description: "This skill should be used when an agent (`test-data-seeder`, `fixture-builder`, a developer agent producing demo or seed data) needs both the design principles for a coherent cross-module test dataset AND the tool-specific patterns to write it. Returns: the pivot-entity model, lifecycle-state coverage rule, FK consistency rules, login-user permission spread, edge/boundary realism, dataset-plan template, column-length safety checklist, auto-detection logic for 13 migration tools (Liquibase, Flyway, Django, Rails, EF Core, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic, raw SQL), idempotent insert templates per tool, non-production profile gating per tool, and FK-lookup patterns. Trigger phrases: \"test data design\", \"seed dataset principles\", \"how do I gate a seed to dev only\", \"Liquibase changeset\", \"idempotent seed\". Returns standards and templates, not generated code. Do not use this skill for schema migration design (CREATE TABLE, ALTER TABLE, rollback strategies) — that is out of scope."
+description: "This skill should be used when an agent (`test-data-seeder`, `fixture-builder`, a developer agent producing demo or seed data) needs both the design principles for a coherent cross-module test dataset AND the tool-specific patterns to write it. Returns: the pivot-entity model, lifecycle-state coverage rule, FK consistency rules, login-user permission spread, edge/boundary realism, dataset-plan template, column-length safety checklist, auto-detection logic for 13 migration tools (Liquibase, Flyway, Django, Rails, EF Core, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic, raw SQL), idempotent insert templates per tool, non-production profile gating per tool, and FK-lookup patterns. Trigger phrases: \"test data design\", \"seed dataset principles\", \"how do I gate a seed to dev only\", \"Liquibase changeset\", \"idempotent seed\". Returns standards and templates, not generated code. Do not use this skill for schema migration design (CREATE TABLE, ALTER TABLE, rollback strategies). That is out of scope."
 ---
 
 # Test Data Seeding Standards
@@ -9,22 +9,22 @@ This skill is the authoritative source for designing and writing a
 coherent, demo-ready, cross-module test dataset for any application.
 When invoked, you return:
 
-1. **Design principles** — what a good seed dataset looks like
+1. **Design principles**: what a good seed dataset looks like
    (pivot-entity model, lifecycle-state coverage, FK consistency,
    login-user spread, edge realism, column-length safety).
-2. **Injection patterns** — how to write the seed file in whatever
+2. **Injection patterns**: how to write the seed file in whatever
    migration tool the project already uses (auto-detection logic,
    idempotent insert templates, non-production profile gating,
    FK-lookup patterns for 13 tools).
 
 You do not generate a dataset or migration file for a specific
-application — you return the rules and templates. The calling agent
+application. You return the rules and templates. The calling agent
 applies them against the project's schema and Phase 1 functional
 artifacts.
 
 ---
 
-## Part 1 — Dataset design
+## Part 1: Dataset design
 
 ### Core principles
 
@@ -42,7 +42,7 @@ artifacts.
    per state. The reviewer cannot judge a "Closed" tab if no row is
    in the Closed state.
 4. **Realistic but anodyne.** Use plausible domain values (company
-   names, amounts, dates) — but values that could not be mistaken
+   names, amounts, dates), but values that could not be mistaken
    for real customers. `Acme`, `Beta`, `Gamma`, `Delta`, `Epsilon` is
    a canonical alias set for five pivot companies. `IT12345678901`
    is a canonical anodyne VAT.
@@ -58,7 +58,7 @@ artifacts.
 ### The pivot-entity model
 
 A **pivot entity** is a core domain entity (Customer, Account,
-Order, Product, Project — whatever the system is about) that every
+Order, Product, Project, or whatever the system is about) that every
 other module references. Pivot entities are the spine of the dataset.
 
 #### Default pivot count: 5
@@ -82,7 +82,7 @@ other module references. Pivot entities are the spine of the dataset.
 | Epsilon | 1005 / `COMPANY-005` | Epsilon Tech | Niche / tech | CRM, Billing, Reporting |
 
 Adapt the *profile mix* to the application's domain (`Customers`,
-`Accounts`, `Projects`, `Devices`, …) — but keep the five-slot
+`Accounts`, `Projects`, `Devices`, …), but keep the five-slot
 diversity and the stable-ID convention.
 
 **Anti-pattern:** do not let each module invent its own anchor IDs.
@@ -122,7 +122,7 @@ For every stateful entity (any entity whose schema has a `status`,
 
 Use `password == username` for the test profile so the recap can
 publish credentials in plain text without raising a security alarm.
-Derive role names from the project's actor list in Phase 1 — do not
+Derive role names from the project's actor list in Phase 1. Do not
 copy the slot labels verbatim.
 
 ---
@@ -130,8 +130,8 @@ copy the slot labels verbatim.
 ### Foreign-key consistency rules
 
 1. **Orphan FK.** A child row references a parent ID that doesn't
-   exist. **Prevention:** topologically sort the seed by dependency
-   — parents first.
+   exist. **Prevention:** topologically sort the seed by dependency,
+   parents first.
 2. **Stale auto-generated PK.** A child row hardcodes a parent's
    auto-generated ID from a previous run. **Prevention:** use lookup
    patterns (see Part 2, Step 4).
@@ -154,7 +154,7 @@ For every textual value you intend to insert:
 1. Look up the column's declared length in the schema (`@Column(length
    = ...)`, `VARCHAR(N)`, `max_length=N`).
 2. Compare to the literal value's character length.
-3. If the value exceeds the length, **shorten the value** — do not
+3. If the value exceeds the length, **shorten the value**. Do not
    extend the column. The schema is the contract; the seed conforms.
 4. Pay special attention to small VARCHAR columns: `VARCHAR(10)`,
    `VARCHAR(20)`, `VARCHAR(50)` are common limits on status,
@@ -211,7 +211,7 @@ filled.
 
 ### Domain examples
 
-**M&A / CRM:** Acme / Beta / Gamma / Delta / Epsilon — see anchor
+**M&A / CRM:** Acme / Beta / Gamma / Delta / Epsilon. See anchor
 table above.
 
 **Banking:**
@@ -239,7 +239,7 @@ table above.
 ## Anti-patterns
 
 - **Seed without gate.** Any seed file without an explicit non-production
-  gate is a defect — refuse to emit it.
+  gate is a defect: refuse to emit it.
 - **DROP + INSERT.** Never seed by dropping tables; use the tool's
   idempotence mechanism.
 - **Hardcoded auto-generated IDs.** Always lookup, never hardcode.
@@ -250,7 +250,7 @@ table above.
 - **Production-targeted seed.** If the project's only running DB is
   prod, refuse the task.
 - **Per-module pivots.** Don't let each module invent its own anchor
-  IDs — the dataset breaks cross-module flows.
+  IDs: the dataset breaks cross-module flows.
 - **One huge SQL file with no structure.** Group by bounded context,
   prefix with `<NN>-<bc>-seed`.
 - **Domain values from another project.** Derive the dataset's shape

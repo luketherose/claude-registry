@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "registry-auditor",
+    "query": "Audita questo registry di agent e skill contro le linee guida ufficiali Anthropic",
+    "files": [],
+    "expected_behavior": [
+      "Every finding cites a specific rubric criterion by number or by name, taken from agent-development, skill-development, skill-creator or claude-md-improver",
+      "All file counts in the report are resolved from an actual find run over the repo, not from an estimate supplied in the prompt",
+      "Modifies no file: the deliverable is a Markdown report only"
+    ]
+  },
+  {
+    "agent": "registry-auditor",
+    "query": "Dammi i 10 file peggiori da riscrivere e quali fix posso applicare in bulk",
+    "files": [],
+    "expected_behavior": [
+      "Produces a ranked list of files to rewrite with the rubric criterion each one fails",
+      "Separates quick wins that are genuinely scriptable with a mechanical sed or grep pass from case by case rewrites, and does not present the second as the first",
+      "Includes at least one concrete rewrite example, such as a rewritten description, that the maintainer can copy and adapt"
+    ]
+  },
+  {
+    "agent": "registry-auditor",
+    "query": "Fammi vedere quali sono gli agent e le skill migliori del registry da usare come template",
+    "files": [],
+    "expected_behavior": [
+      "Includes a reference templates section covering both agents and skills, not just one of the two",
+      "Justifies each template pick against a named rubric criterion rather than by preference",
+      "Keeps the report under roughly 800 lines and does not write a new agent or skill file"
+    ]
+  }
+]

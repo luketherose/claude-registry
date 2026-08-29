@@ -3,18 +3,18 @@
 ## Contents
 
 - 1. Relational Design Fundamentals
-- Normalisation — just enough, no more
-- Keys — surrogate vs natural
-- Constraints — declare them in the DB, not only in Java
+- Normalisation: just enough, no more
+- Keys: surrogate vs natural
+- Constraints: declare them in the DB, not only in Java
 - 2. Practical Data Modelling
-- From requirements to schema — process
+- From requirements to schema: process
 - Naming conventions
 - Schema versioning with Liquibase (preferred)
-- Local-dev profile — H2 in-memory + seed data
+- Local-dev profile: H2 in-memory + seed data
 
 ## 1. Relational Design Fundamentals
 
-### Normalisation — just enough, no more
+### Normalisation: just enough, no more
 
 **First Normal Form (1NF)**: every column is atomic, no arrays in cells, no repeating groups.
 
@@ -37,7 +37,7 @@ CREATE TABLE contact_phones (
 
 **Second Normal Form (2NF)**: every non-key attribute depends on the entire PK (relevant with composite PKs).
 
-**Third Normal Form (3NF)**: no transitive dependencies — if `city → region`, `region` must not appear in `companies` alongside `city`.
+**Third Normal Form (3NF)**: no transitive dependencies. If `city → region`, `region` must not appear in `companies` alongside `city`.
 
 ```sql
 -- ❌ Transitive dependency: city determines region, region does not depend on company
@@ -64,7 +64,7 @@ CREATE TABLE companies (
 
 **Normalisation vs performance trade-off**: 3NF reduces update anomalies but increases JOINs. For stable lookup tables (regions, categories), controlled denormalisation (copying a field) can be pragmatic if a critical query runs millions of times. Always document the choice and the reason.
 
-### Keys — surrogate vs natural
+### Keys: surrogate vs natural
 
 ```sql
 -- Surrogate key: BIGINT IDENTITY — recommended for most cases
@@ -79,7 +79,7 @@ id UUID DEFAULT gen_random_uuid() PRIMARY KEY
 
 **General rule**: use `BIGINT GENERATED ALWAYS AS IDENTITY` as the default PK. Use `UUID` only for entities that must be created on the client side before being persisted, or for IDs exposed in public URLs (security through sequence obfuscation).
 
-### Constraints — declare them in the DB, not only in Java
+### Constraints: declare them in the DB, not only in Java
 
 ```sql
 CREATE TABLE items (
@@ -106,19 +106,19 @@ CREATE TABLE items (
 );
 ```
 
-**DB constraints vs Java-only constraints**: DB constraints are the last line of defence — code can have bugs, SQL batch jobs bypass the ORM, and migration scripts can insert data directly. Do not rely solely on Bean Validation.
+**DB constraints vs Java-only constraints**: DB constraints are the last line of defence. Code can have bugs, SQL batch jobs bypass the ORM, and migration scripts can insert data directly. Do not rely solely on Bean Validation.
 
 ---
 
 ## 2. Practical Data Modelling
 
-### From requirements to schema — process
+### From requirements to schema: process
 
 ```
 Requirements → Entities → Attributes → Relations → Cardinality → Schema → Indices
 ```
 
-**Example — N:M relation with join entity**:
+**Example (N:M relation with join entity)**:
 
 Requirement: "A parent entity can have multiple child entities. Each child entity has a unique code and can be associated with multiple participants with different allocations."
 
@@ -189,7 +189,7 @@ databaseChangeLog:
 - Each changeset has an `id`, `author`, and (where useful) `preConditions`.
 - Use Liquibase changelog formats: YAML (default), XML, or SQL formatted-changelog. Avoid mixing.
 - Rollback blocks defined in the same changeset (`rollback:` key) for any non-trivial DDL.
-- In production: `ddl-auto=validate` — Liquibase manages the schema, never Hibernate.
+- In production: `ddl-auto=validate`. Liquibase manages the schema, never Hibernate.
 
 ```yaml
 # application.yml (production / shared baseline)
@@ -204,9 +204,9 @@ spring:
       ddl-auto: validate           # Hibernate validates, does not modify
 ```
 
-### Local-dev profile — H2 in-memory + seed data
+### Local-dev profile: H2 in-memory + seed data
 
-Every Spring project ships an `application-local.yml` profile that runs against H2 in-memory with the **same Liquibase changelog** plus a seed-data changeset. Goal: a contributor can clone the repo and run `mvn spring-boot:run -Dspring-boot.run.profiles=local` — the app comes up populated with realistic sample rows, no external DB required.
+Every Spring project ships an `application-local.yml` profile that runs against H2 in-memory with the **same Liquibase changelog** plus a seed-data changeset. Goal: a contributor can clone the repo and run `mvn spring-boot:run -Dspring-boot.run.profiles=local`. The app comes up populated with realistic sample rows, no external DB required.
 
 ```yaml
 # application-local.yml

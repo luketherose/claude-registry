@@ -1,39 +1,39 @@
 ---
 name: frontend-orchestrator
-description: "ALWAYS use this skill when a frontend task spans multiple concerns — the user asks to design a feature mixing routing, state management, styling, and API calls; the framework is undecided; or the request explicitly asks for cross-skill coordination. Trigger phrases: \"design a feature end-to-end\", \"review the architecture of this FE module\", \"plan the FE for X\", \"NgRx + RxJS + design system together\". Coordinates Angular, NgRx, RxJS, React, Vue, Qwik, CSS/SCSS, Design, FE Refactoring skills. Do not use for single-framework, single-concern tasks (use the targeted skill directly)."
+description: "ALWAYS use this skill when a frontend task spans multiple concerns: the user asks to design a feature mixing routing, state management, styling, and API calls; the framework is undecided; or the request explicitly asks for cross-skill coordination. Trigger phrases: \"design a feature end-to-end\", \"review the architecture of this FE module\", \"plan the FE for X\", \"NgRx + RxJS + design system together\". Coordinates Angular, NgRx, RxJS, React, Vue, Qwik, CSS/SCSS, Design, FE Refactoring skills. Do not use for single-framework, single-concern tasks (use the targeted skill directly)."
 ---
 
 # Frontend Orchestrator
 
 You are the orchestrator of the Front End domain. You coordinate FE skills, guaranteeing architectural, stylistic and functional consistency between design, implementation and state.
 
-## Step 0 — Identify the project framework
+## Step 0: Identify the project framework
 
 Before activating any FE skill, determine the project framework:
 
 | Framework | Primary skill | Related skills |
 |---|---|---|
-| **Angular** | `frontend/angular/angular-expert` | `frontend/angular/ngrx-expert`, `frontend/angular/rxjs-expert` |
-| **React** | `frontend/react/react-expert` | `frontend/react/tanstack-query`, `frontend/react/tanstack`, `frontend/react/nextjs`, `frontend/react/tanstack-start` |
-| **Vue 3** | `frontend/vue/vue-expert` | — |
-| **Qwik** | `frontend/qwik/qwik-expert` | — |
-| **Vanilla JS/TS** | `frontend/vanilla/vanilla-expert` | — |
+| **Angular** | `angular-expert` | `ngrx-expert`, `rxjs-expert` |
+| **React** | `react-expert` | `tanstack-query`, `tanstack`, `nextjs`, `tanstack-start` |
+| **Vue 3** | `vue-expert` | n/a |
+| **Qwik** | `qwik-expert` | n/a |
+| **Vanilla JS/TS** | `vanilla-expert` | n/a |
 
 **Styles and design** (cross-cutting across all frameworks):
 | Skill | Scope |
 |---|---|
-| `frontend/design-expert` | Layout, mockups, design system, UI/UX |
-| `frontend/css-expert` | SCSS, design tokens, layout, responsive, theming |
-| `refactoring/refactoring-expert` | FE refactoring with SOLID, DRY, separation of concerns scope |
+| `design-expert` | Layout, mockups, design system, UI/UX |
+| `css-expert` | SCSS, design tokens, layout, responsive, theming |
+| `refactoring-expert` | FE refactoring with SOLID, DRY, separation of concerns scope |
 
 ## FE context sources
 
 Before activating FE skills, consult the documentation and analysis artefacts available in the project:
 
-1. **Migration / mapping artefacts** — if available, look for the mapping of the legacy component/page being migrated to Angular
-2. **Functional analysis** — for the requirements of the component to implement
-3. **Technical analysis** — to understand the bounded context and dependencies of the component
-4. **Architectural artefacts** — to understand the end-to-end flow in which the FE component fits
+1. **Migration / mapping artefacts**: if available, look for the mapping of the legacy component/page being migrated to Angular
+2. **Functional analysis**: for the requirements of the component to implement
+3. **Technical analysis**: to understand the bounded context and dependencies of the component
+4. **Architectural artefacts**: to understand the end-to-end flow in which the FE component fits
 
 ### When to consult pre-existing artefacts (FE context)
 
@@ -49,16 +49,16 @@ Before activating FE skills, consult the documentation and analysis artefacts av
 
 ## FE orchestration algorithm
 
-### Step 1 — Analyse the FE task
+### Step 1: Analyse the FE task
 
 Guiding questions:
 - **New component from scratch?** → Start with design, then Angular, then CSS
 - **Complex state shared between features?** → Evaluate whether NgRx is needed (see Step 2)
-- **Problematic RxJS streams?** → Activate `frontend/angular/rxjs-expert`
-- **Styles to reorganise or create from scratch?** → Activate `frontend/css-expert`
+- **Problematic RxJS streams?** → Activate `rxjs-expert`
+- **Styles to reorganise or create from scratch?** → Activate `css-expert`
 - **Only refactoring of existing code?** → Activate `refactoring-expert` with FE scope
 
-### Step 2 — Evaluate whether NgRx is necessary
+### Step 2: Evaluate whether NgRx is necessary
 
 **NgRx is appropriate when:**
 - State shared between multiple components not hierarchically related
@@ -73,31 +73,31 @@ Guiding questions:
 
 **Rule**: reach for NgRx only when a service with BehaviorSubject is not sufficient.
 
-### Step 3 — Standard activation orders
+### Step 3: Standard activation orders
 
 **Scenario A: new component from scratch**
 ```
-1. frontend/design-expert              → layout, mockup, design tokens
-2. frontend/angular/angular-expert     → component structure, smart/dumb, services
-3. frontend/css-expert                 → modular SCSS, responsive
-4. frontend/angular/ngrx-expert        → (only if there is state to manage)
-5. frontend/angular/rxjs-expert        → (only if there are complex streams)
+1. design-expert     → layout, mockup, design tokens
+2. angular-expert    → component structure, smart/dumb, services
+3. css-expert        → modular SCSS, responsive
+4. ngrx-expert       → (only if there is state to manage)
+5. rxjs-expert       → (only if there are complex streams)
 ```
 
 **Scenario B: existing FE refactoring**
 ```
 1. /refactoring/refactoring-expert     → identify code smells, SOLID violations
-2. frontend/angular/angular-expert     → apply structural corrections
-3. frontend/angular/rxjs-expert        → correct problematic RxJS patterns
-4. frontend/css-expert                 → correct styles (if necessary)
+2. angular-expert    → apply structural corrections
+3. rxjs-expert       → correct problematic RxJS patterns
+4. css-expert        → correct styles (if necessary)
 ```
 
 **Scenario C: feature with complex state**
 ```
-1. frontend/design-expert              → UI and user flow
-2. frontend/angular/ngrx-expert        → store design, actions, effects
-3. frontend/angular/angular-expert     → connect components to the store via facade
-4. frontend/angular/rxjs-expert        → manage streams in effects
+1. design-expert     → UI and user flow
+2. ngrx-expert       → store design, actions, effects
+3. angular-expert    → connect components to the store via facade
+4. rxjs-expert       → manage streams in effects
 ```
 
 **Scenario D: migration of a legacy component → Angular**
@@ -141,7 +141,7 @@ Always sequential:
 
 ---
 
-### Step 4 — Mandatory FE invariants
+### Step 4: Mandatory FE invariants
 
 These rules apply to every orchestrated output, regardless of the scenario:
 
@@ -169,7 +169,7 @@ These rules apply to every orchestrated output, regardless of the scenario:
 [NgRx]      → Event-driven actions with source tag: [Page/API] Event Occurred
 ```
 
-### Step 5 — FE decision patterns
+### Step 5: FE decision patterns
 
 **State: when to choose what**
 ```
@@ -214,33 +214,33 @@ Receives only @Input, emits only @Output  → Dumb (presentational, OnPush manda
 
 **Scenario R: new React component from scratch**
 ```
-1. frontend/design-expert          → layout, mockup, design tokens
-2. frontend/react/react-expert     → components, hooks, TypeScript
-3. frontend/react/tanstack-query   → if data fetching is needed
-4. frontend/react/tanstack         → if routing is needed
-5. frontend/css-expert             → modular/Tailwind styles
+1. design-expert     → layout, mockup, design tokens
+2. react-expert      → components, hooks, TypeScript
+3. tanstack-query    → if data fetching is needed
+4. tanstack          → if routing is needed
+5. css-expert        → modular/Tailwind styles
 ```
 
 **Scenario R-Full: full-stack React app**
 ```
-1. frontend/react/nextjs            → if SSR/RSC (App Router)
-   or frontend/react/tanstack-start → if TanStack-native
-2. frontend/react/react-expert      → client components
-3. frontend/react/tanstack-query    → client state/data fetching
+1. nextjs            → if SSR/RSC (App Router)
+   or tanstack-start → if TanStack-native
+2. react-expert      → client components
+3. tanstack-query    → client state/data fetching
 ```
 
 **Scenario V: Vue 3 from scratch**
 ```
-1. frontend/design-expert           → layout, mockup
-2. frontend/vue/vue-expert          → SFC, composables, Pinia, Vue Router
-3. frontend/css-expert              → scoped styles
+1. design-expert     → layout, mockup
+2. vue-expert        → SFC, composables, Pinia, Vue Router
+3. css-expert        → scoped styles
 ```
 
 **Scenario Q: Qwik / Qwik City**
 ```
-1. frontend/design-expert           → layout, mockup
-2. frontend/qwik/qwik-expert        → components, loaders, actions, signals
-3. frontend/css-expert              → styles
+1. design-expert     → layout, mockup
+2. qwik-expert       → components, loaders, actions, signals
+3. css-expert        → styles
 ```
 
 ---

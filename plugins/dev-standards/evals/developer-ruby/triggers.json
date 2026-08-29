@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Rifattorizza questo fat ActiveRecord model estraendo dei service object",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi un worker Sidekiq idempotente per le notifiche",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Review this Rails 7 controller for RuboCop and RSpec coverage",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi un endpoint FastAPI con validazione Pydantic",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Progetta l'architettura target e scrivimi l'ADR sul message broker",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  }
+]

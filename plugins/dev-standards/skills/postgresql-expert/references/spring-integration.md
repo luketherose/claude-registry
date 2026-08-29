@@ -3,13 +3,13 @@
 ## Contents
 
 - 5. Java / Spring Integration
-- JPA → PostgreSQL mapping — critical points
+- JPA → PostgreSQL mapping: critical points
 - Common ORM ↔ DB issues
-- Liquibase — migration best practice
+- Liquibase: migration best practice
 
 ## 5. Java / Spring Integration
 
-### JPA → PostgreSQL mapping — critical points
+### JPA → PostgreSQL mapping: critical points
 
 ```java
 // BIGINT GENERATED ALWAYS AS IDENTITY → IDENTITY strategy in JPA
@@ -53,10 +53,10 @@ spring.jpa.hibernate.ddl-auto: validate
 
 **Hibernate does not use the index you created**:
 - Verify with `EXPLAIN ANALYZE` that PostgreSQL sees it
-- Hibernate does not control indices — only the PostgreSQL query planner decides
+- Hibernate does not control indices: only the PostgreSQL query planner decides
 - If the planner does not use it, the cause may be stale statistics (`ANALYZE`) or too low selectivity
 
-**N+1 at the DB level** — see `spring-data-jpa` for the ORM solution. At the DB level:
+**N+1 at the DB level**: see `spring-data-jpa` for the ORM solution. At the DB level:
 ```sql
 -- Diagnostics: how many queries arrive for a single operation?
 -- Enable log_min_duration_statement in dev
@@ -64,7 +64,7 @@ log_min_duration_statement = 0  -- logs all queries
 -- In staging: log_min_duration_statement = 100 (ms)
 ```
 
-### Liquibase — migration best practice
+### Liquibase: migration best practice
 
 ```yaml
 # db/changelog/v1.0/01-init-main-schema.yaml
@@ -157,7 +157,7 @@ databaseChangeLog:
             columnName: industry
 ```
 
-**Rule for ADD COLUMN NOT NULL on a table with data**: split into two separate changesets — first nullable with DEFAULT, then NOT NULL after backfill. Adding NOT NULL directly on a table with existing rows can cause a prolonged lock or failure.
+**Rule for ADD COLUMN NOT NULL on a table with data**: split into two separate changesets, first nullable with DEFAULT, then NOT NULL after backfill. Adding NOT NULL directly on a table with existing rows can cause a prolonged lock or failure.
 
 **Free-form SQL fallback**: when a Liquibase declarative change is more verbose than helpful (complex constraints, partial indexes, generated columns, PostgreSQL-specific DDL), use the `sql:` change-type with the SQL written verbatim, **always paired with a `rollback:` block**. Do not use `formatted SQL` changelogs unless the team has standardised on them.
 

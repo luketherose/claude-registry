@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Nuova app full-stack React senza Next, partiamo con TanStack Start e le Server Functions",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Streaming SSR e type safety end to end con TanStack Start",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Come organizzo il file-based routing e le server function in TanStack Start?",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Server Action e Server Component nella app/ directory di Next 14",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `nextjs` instead"
+  },
+  {
+    "query": "Custom hook e memo per questo component React lato client",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `react-expert` instead"
+  }
+]

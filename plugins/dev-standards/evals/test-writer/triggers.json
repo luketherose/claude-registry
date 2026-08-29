@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Aggiungi i test per questa service class",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Coverage is at 40%, riempi i buchi nella test suite",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi test di integrazione JUnit 5 per il repository layer",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Questo test fallisce con NullPointerException, capisci perché",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Scrivi l'OrderService con la validazione dei campi",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  }
+]

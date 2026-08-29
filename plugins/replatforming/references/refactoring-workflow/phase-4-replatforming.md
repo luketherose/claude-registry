@@ -33,7 +33,7 @@ compatibility but are NOT invoked in the canonical Phase 4 path.
 - `developer-frontend` — Angular code
 - `test-writer` — unit + integration + E2E test authoring
 - `debugger` — root-cause on any build/runtime/functional failure
-- `code-reviewer` — per-feature review at end of Step 2 inner loop
+- `pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed) — per-feature review at end of Step 2 inner loop
 - `api-designer` — OpenAPI evolution as features are added
 - `software-architect` — ADRs when architecturally significant
   decisions arise during the feature loop

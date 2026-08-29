@@ -1,6 +1,6 @@
 ---
 name: react-expert
-description: "This skill should be used when working with React 18+ — component architecture, hooks, TypeScript prop typing, performance optimisation (memo/useCallback/useMemo), Suspense, concurrent features, React Testing Library. Trigger phrases: \"React component\", \"custom hook\", \"memo this\", \"TypeScript props\", \"Suspense boundary\", \"RTL test\". For data fetching use tanstack-query, for routing use tanstack, for SSR/Next ecosystem use nextjs. Do not use for plain Vanilla JS (use vanilla-expert)."
+description: "This skill should be used when working with React 18+: component architecture, hooks, TypeScript prop typing, performance optimisation (memo/useCallback/useMemo), Suspense, concurrent features, React Testing Library. Trigger phrases: \"React component\", \"custom hook\", \"memo this\", \"TypeScript props\", \"Suspense boundary\", \"RTL test\". For data fetching use tanstack-query, for routing use tanstack, for SSR/Next ecosystem use nextjs. Do not use for plain Vanilla JS (use vanilla-expert)."
 ---
 
 # React Expert
@@ -39,7 +39,7 @@ src/
 
 ## Core principles
 
-### TypeScript — strict typing
+### TypeScript: strict typing
 
 ```typescript
 // ✅ Props always typed with an interface
@@ -82,9 +82,9 @@ function OrderList() {
 
 ---
 
-## Hooks — rules and patterns
+## Hooks: rules and patterns
 
-### useState — simple local state
+### useState: simple local state
 
 ```typescript
 const [isOpen, setIsOpen] = useState(false);
@@ -94,7 +94,7 @@ const [filter, setFilter] = useState<'all' | 'active' | 'done'>('all');
 const [data, setData] = useState(() => parseExpensiveData(rawInput));
 ```
 
-### useEffect — only for external synchronisation
+### useEffect: only for external synchronisation
 
 ```typescript
 // ✅ Synchronisation with an external system (DOM, API, WebSocket)
@@ -112,7 +112,7 @@ useEffect(() => {
 const fullName = useMemo(() => `${firstName} ${lastName}`, [firstName, lastName]);
 ```
 
-### useCallback and useMemo — when they are genuinely needed
+### useCallback and useMemo: when they are genuinely needed
 
 ```typescript
 // ✅ useCallback: when the function is a dependency of an effect
@@ -131,7 +131,7 @@ const sortedItems = useMemo(
 const label = useMemo(() => `${count} items`, [count]); // just use: `${count} items`
 ```
 
-### Custom hooks — extract shared logic
+### Custom hooks: extract shared logic
 
 ```typescript
 // hooks/useDebounce.ts
@@ -168,7 +168,7 @@ function useLocalStorage<T>(key: string, initialValue: T) {
 
 ## Performance
 
-### React.memo — only where measurable
+### React.memo: only where measurable
 
 ```typescript
 // ✅ Memoise only components that re-render frequently
@@ -227,7 +227,7 @@ function VirtualList({ items }: { items: Item[] }) {
 
 ---
 
-## Context — correct usage
+## Context: correct usage
 
 ```typescript
 // ✅ Context for state that changes infrequently (auth, theme, locale)
@@ -312,8 +312,8 @@ test('shows error if required field is empty', async () => {
 
 ## Related skills
 
-- **`react/tanstack-query`** — data fetching, caching, server-state mutations
-- **`react/tanstack`** — type-safe routing with TanStack Router
-- **`react/nextjs`** — SSR, App Router, React Server Components
-- **`react/tanstack-start`** — full-stack React with TanStack Start
-- **`frontend/css-expert`** — CSS Modules, tokens, responsive
+- **`react/tanstack-query`**: data fetching, caching, server-state mutations
+- **`react/tanstack`**: type-safe routing with TanStack Router
+- **`react/nextjs`**: SSR, App Router, React Server Components
+- **`react/tanstack-start`**: full-stack React with TanStack Start
+- **`css-expert`**: CSS Modules, tokens, responsive

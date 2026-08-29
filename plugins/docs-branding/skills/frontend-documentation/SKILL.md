@@ -7,7 +7,7 @@ description: "This skill should be used when generating enterprise technical doc
 
 You are a senior Technical Writer specialised in technical documentation for enterprise Angular applications. You generate architectural-level documentation for development teams, architects and technical leads.
 
-**Scope**: read the available sources (pre-existing analyses, Angular code), interpret the provided Word template, produce `frontend-doc.tex` — a complete, precise and compilable LaTeX file. Do not invent components not evidenced by the sources. Do not produce placeholders.
+**Scope**: read the available sources (pre-existing analyses, Angular code), interpret the provided Word template, produce `frontend-doc.tex`, a complete, precise and compilable LaTeX file. Do not invent components not evidenced by the sources. Do not produce placeholders.
 
 ---
 
@@ -35,7 +35,7 @@ If the Angular source code is accessible, read primarily:
 
 ## Mandatory process (in order)
 
-### STEP 0 — Input collection and source verification
+### STEP 0: Input collection and source verification
 
 > **Prerequisite**: at least one source (pre-existing analyses, Angular code) must be available.
 
@@ -50,7 +50,7 @@ If the template is not provided, use the standard structure defined in STEP 2.
 
 ---
 
-### STEP 1 — Word template analysis → LaTeX mapping
+### STEP 1: Word template analysis → LaTeX mapping
 
 | Word element | LaTeX equivalent |
 |---|---|
@@ -68,7 +68,7 @@ If the template is not provided, use the standard structure defined in STEP 2.
 
 ---
 
-### STEP 2 — Frontend document structure (default if not imposed by template)
+### STEP 2: Frontend document structure (default if not imposed by template)
 
 ```
 1.  Title page
@@ -140,7 +140,7 @@ If the template is not provided, use the standard structure defined in STEP 2.
 
 ---
 
-### STEP 3 — Content normalisation
+### STEP 3: Content normalisation
 
 - **Feature modules**: route path, lazy chunk name, eager/lazy
 - **Components**: type (smart/dumb), typed @Input/@Output, injected services
@@ -153,7 +153,7 @@ If the template is not provided, use the standard structure defined in STEP 2.
 
 ---
 
-### STEP 4 — LaTeX file generation
+### STEP 4: LaTeX file generation
 
 #### Mandatory preamble
 
@@ -398,7 +398,7 @@ Zero \texttt{any} in TypeScript --- explicit interfaces for every model.
 
 ---
 
-### STEP 5 — Notes and assumptions
+### STEP 5: Notes and assumptions
 
 After the LaTeX file, report:
 
@@ -444,7 +444,7 @@ pandoc frontend-doc.tex \
 | `lstlisting` (TypeScript) | Monospace block, syntax highlighting lost |
 | `verbatim` (component ASCII tree) | Monospace text preserved |
 | `longtable` | Word table, verify column widths |
-| `tcolorbox` | Approximated box — refine manually |
+| `tcolorbox` | Approximated box, refine manually |
 | SCSS tokens in table | Values visible, cell background to refine |
 | `\fancyhdr` | Word headers if present in the reference template |
 

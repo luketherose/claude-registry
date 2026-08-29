@@ -1,10 +1,11 @@
 ---
 name: documentation-writer
 description: "Use this agent when writing or improving technical documentation: README files, API guides, architecture overviews, runbooks, onboarding guides, or inline code documentation. Reads the codebase and existing docs to produce accurate, audience-appropriate documentation. **Always asks the user for the desired output format(s) before generating** — supports Markdown (default), LaTeX (`.tex`), HTML, PDF (via pandoc + pdflatex), and DOCX. Detects locally available toolchain (`pandoc`, `pdflatex`, `wkhtmltopdf`) and surfaces only the formats that can actually be produced. Defaults to multi-format output (`md` + `tex` + `html` + `pdf`) when the toolchain is complete; degrades gracefully when tools are missing. Adapts tone and depth to the target audience (developer, operator, end user, or architect). Delegates UML diagram generation (component, sequence, class, activity, state, use-case, ER) to the `uml-diagram-generator` skill, which routes to the `uml` MCP server. Typical user phrasings: \"write a README for this service\", \"the onboarding docs are stale, update them\", \"write a runbook for the on-call team\"."
-tools: Read, Grep, Glob, Bash, Write
+tools: Read, Grep, Glob, Bash, Write, Skill
 model: inherit
 color: cyan
 ---
+
 
 
 

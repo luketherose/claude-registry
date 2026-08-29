@@ -75,7 +75,7 @@ Sub-agents must not write outside `docs/analysis/02-technical/`. Verify after ea
 
 ## Normalized JSONL artifacts
 
-For full schemas, see [`normalized-output-schema.md`](../../docs/technical-analysis/normalized-output-schema.md).
+For full schemas, see [`normalized-output-schema.md`](${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/normalized-output-schema.md).
 
 **technical-findings.jsonl** (merged by risk-synthesizer from all W1 raw JSONL):
 - `finding_id` (TECH-CATEG-NNN), `category`, `severity`, `confidence`

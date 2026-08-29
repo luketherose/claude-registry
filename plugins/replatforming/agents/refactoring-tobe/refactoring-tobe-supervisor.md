@@ -60,34 +60,34 @@ preemptively.
 
 | Doc | Read when |
 |---|---|
-| [`supervisor-protocol.md`](../../docs/refactoring-tobe/supervisor-protocol.md) | Any supervision decision — escalation triggers, decision rules, drift check, manifest update, constraints |
-| [`inputs-and-flags.md`](../../docs/refactoring-tobe/inputs-and-flags.md) | Phase 0 bootstrap — validating Phase 0–3 inputs and parsing optional flags |
-| [`output-layout.md`](../../docs/refactoring-tobe/output-layout.md) | planning where workers write, and what frontmatter / header comments every artefact must carry |
-| [`iteration-and-scope-modes.md`](../../docs/refactoring-tobe/iteration-and-scope-modes.md) | answering Q1 (iteration model A/B), Q2 (code-generation scope), Q3 (verification policy), Q4 (code-review policy) |
-| [`sub-agents-roster.md`](../../docs/refactoring-tobe/sub-agents-roster.md) | deciding which sub-agent to dispatch in a wave or wiring a worker prompt to its declared output target |
-| [`phase-plan.md`](../../docs/refactoring-tobe/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W6 / Export Wave |
-| [`dispatch-prompt-template.md`](../../docs/refactoring-tobe/dispatch-prompt-template.md) | assembling the prompt for any worker invocation |
-| [`manifest-schema.md`](../../docs/refactoring-tobe/manifest-schema.md) | updating `.refactoring-kb/_meta/manifest.json` and `docs/refactoring/_meta/manifest.json` after each wave |
-| [`final-recap-template.md`](../../docs/refactoring-tobe/final-recap-template.md) | producing the closing report after Wave 6 / Export Wave |
+| [`supervisor-protocol.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/supervisor-protocol.md) | Any supervision decision — escalation triggers, decision rules, drift check, manifest update, constraints |
+| [`inputs-and-flags.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/inputs-and-flags.md) | Phase 0 bootstrap — validating Phase 0–3 inputs and parsing optional flags |
+| [`output-layout.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/output-layout.md) | planning where workers write, and what frontmatter / header comments every artefact must carry |
+| [`iteration-and-scope-modes.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/iteration-and-scope-modes.md) | answering Q1 (iteration model A/B), Q2 (code-generation scope), Q3 (verification policy), Q4 (code-review policy) |
+| [`sub-agents-roster.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/sub-agents-roster.md) | deciding which sub-agent to dispatch in a wave or wiring a worker prompt to its declared output target |
+| [`phase-plan.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/phase-plan.md) | running Phase 0 bootstrap dialog or dispatching any of W1–W6 / Export Wave |
+| [`dispatch-prompt-template.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/dispatch-prompt-template.md) | assembling the prompt for any worker invocation |
+| [`manifest-schema.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/manifest-schema.md) | updating `.refactoring-kb/_meta/manifest.json` and `docs/refactoring/_meta/manifest.json` after each wave |
+| [`final-recap-template.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/final-recap-template.md) | producing the closing report after Wave 6 / Export Wave |
 
 ---
 
 ## Inputs and sub-agents
 
 - **Inputs and bootstrap flags** → Read
-  [`inputs-and-flags.md`](../../docs/refactoring-tobe/inputs-and-flags.md)
+  [`inputs-and-flags.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/inputs-and-flags.md)
   during Phase 0 bootstrap. It enumerates the four required Phase 0–3
   paths, the optional resume paths, and the seven optional CLI flags
   (`--mode`, `--code-scope`, `--verify`, `--review-mode`,
   `--with-exports`, `--target-backend-dir`, `--target-frontend-dir`).
 - **Mode flags Q1–Q4** → For the full description of each mode, the
   bootstrap recommendation heuristics, and the decision logic, see
-  [`iteration-and-scope-modes.md`](../../docs/refactoring-tobe/iteration-and-scope-modes.md).
+  [`iteration-and-scope-modes.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/iteration-and-scope-modes.md).
 - **Sub-agent roster (9 in-house workers + external agents)** → Read
-  [`sub-agents-roster.md`](../../docs/refactoring-tobe/sub-agents-roster.md)
+  [`sub-agents-roster.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/sub-agents-roster.md)
   when picking which worker to dispatch in a wave.
 - **Output layout & frontmatter contract** → Read
-  [`output-layout.md`](../../docs/refactoring-tobe/output-layout.md)
+  [`output-layout.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/output-layout.md)
   before any worker writes to disk.
 
 ---
@@ -100,12 +100,12 @@ The wave grid is: **Phase 0 (bootstrap) → W1 (decomp) → HITL#1 → W2
 (opt-in) → Recap.** Strict dependency chain: 4.1 → 4.6 → 4.2/4.3
 (parallel) → 4.7 → 4.8.
 
-→ Read [`phase-plan.md`](../../docs/refactoring-tobe/phase-plan.md)
+→ Read [`phase-plan.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/phase-plan.md)
 for the full per-wave dispatch template (worker outputs, HITL prompts,
 escalation conditions per wave).
 
-→ Read [`dispatch-prompt-template.md`](../../docs/refactoring-tobe/dispatch-prompt-template.md)
+→ Read [`dispatch-prompt-template.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/dispatch-prompt-template.md)
 when assembling any worker prompt.
 
-→ Read [`final-recap-template.md`](../../docs/refactoring-tobe/final-recap-template.md)
+→ Read [`final-recap-template.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/final-recap-template.md)
 when producing the closing report.

@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "orchestrator",
+    "query": "Devo rifare il backend Java e allo stesso tempo il frontend Angular di questo modulo, coordina tu",
+    "files": [],
+    "expected_behavior": [
+      "Opens with a Plan section that lists the independent subtasks and names the specialist agent assigned to each one",
+      "Dispatches the independent subtasks in parallel rather than one after the other, and says so in the Execution section",
+      "Returns a single synthesised result, not a concatenation of the raw agent transcripts"
+    ]
+  },
+  {
+    "agent": "orchestrator",
+    "query": "Review this PR: ci sono modifiche Java, Angular e allo schema del database su 12 file",
+    "files": [],
+    "expected_behavior": [
+      "Decomposes the review into non overlapping lanes with explicit file ownership per agent, so no two agents review the same file",
+      "Names every agent it dispatched and attributes each finding in the synthesis to the agent that produced it",
+      "Flags contradictions between agent outputs in a Notes section instead of silently picking one"
+    ]
+  },
+  {
+    "agent": "orchestrator",
+    "query": "Non so bene da dove partire: bisogna migrare questo servizio, documentarlo e aggiungere i test",
+    "files": [],
+    "expected_behavior": [
+      "Restates the ambiguous request as a concrete decomposition before dispatching anything",
+      "Assigns each subtask to a named specialist and states which subtasks must run sequentially because of a dependency",
+      "Escalates to the user rather than guessing when a subtask cannot be assigned to any discovered agent"
+    ]
+  }
+]

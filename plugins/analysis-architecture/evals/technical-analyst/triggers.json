@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Produce a technical health report for this repo",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Fammi l'inventario del debito tecnico di questo servizio Spring Boot con severity e priorità",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Analizza la security posture e le vulnerabilità delle dipendenze, poi dammi il piano di remediation",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Progetta l'architettura TO-BE e scrivimi l'ADR sulla scelta del message broker",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Estrai i requisiti funzionali e i casi d'uso da questo codice legacy",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  }
+]

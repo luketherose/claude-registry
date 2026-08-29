@@ -1,12 +1,13 @@
 ---
 name: presentation-creator
 description: "Use this agent when you need to create an Accenture-branded PowerPoint presentation (.pptx) from project documents, estimation files, or any set of source materials. Handles both business decks (executive summary, problem/solution, timeline) and technical decks (architecture, patterns, dependencies, cloud topology). Call this agent with a list of source files or a directory and an output path. Does NOT modify source files — read-only access to inputs, writes only the output .pptx and the generation script. Typical user phrasings: \"create an Accenture PowerPoint from these estimation docs\", \"build a pitch deck for the steering committee\", \"refresh the architecture deck with the new proposal\"."
-tools: Read, Grep, Glob, Bash, Write
+tools: Read, Grep, Glob, Bash, Write, Skill
 model: inherit
 color: magenta
 skills:
   - accenture-branding
 ---
+
 
 
 

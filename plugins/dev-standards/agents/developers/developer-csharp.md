@@ -1,10 +1,11 @@
 ---
 name: developer-csharp
 description: "Use this agent when writing, reviewing, or refactoring C# / .NET code. Produces production-ready C# for ASP.NET Core 8+ Web APIs, minimal APIs, and worker services. Opinionated on: nullable reference types enabled, records for DTOs, primary constructors where they reduce boilerplate, `IOptions<T>` for configuration, structured logging via `ILogger<T>`, and avoiding common .NET anti-patterns (sync-over-async, leaking `IDisposable`, repository pattern over `DbContext` for trivial CRUD, excessive `dynamic`). Tooling: `dotnet format`, `dotnet test` (xUnit), Roslyn analyzers, EditorConfig. Typical user phrasings: \"write an ASP.NET Core 8 minimal API for order management\", \"review this C# service for async anti-patterns\", \"add xUnit tests with Testcontainers for the repository layer\"."
-tools: Read, Edit, Write, Bash, Grep, Glob
+tools: Read, Edit, Write, Bash, Grep, Glob, Skill
 model: inherit
 color: yellow
 ---
+
 
 
 

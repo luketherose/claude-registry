@@ -8,8 +8,8 @@
 - Query anti-patterns
 - Statistics and autovacuum
 - 7. Logging, Monitoring and Debugging
-- Slow queries — configuration
-- pg_stat_statements — aggregate query analysis
+- Slow queries: configuration
+- pg_stat_statements: aggregate query analysis
 - Key metrics to monitor
 
 ## 4. Performance and Optimisation
@@ -104,7 +104,7 @@ VACUUM ANALYZE companies;
 
 ## 7. Logging, Monitoring and Debugging
 
-### Slow queries — configuration
+### Slow queries: configuration
 
 ```sql
 -- postgresql.conf (or ALTER SYSTEM for runtime changes)
@@ -121,7 +121,7 @@ ALTER SYSTEM SET log_min_duration_statement = '1000';
 SELECT pg_reload_conf();
 ```
 
-### pg_stat_statements — aggregate query analysis
+### pg_stat_statements: aggregate query analysis
 
 ```sql
 -- Enable the extension (requires superuser or pg_monitor)

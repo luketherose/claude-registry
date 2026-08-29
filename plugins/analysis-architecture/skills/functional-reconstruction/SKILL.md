@@ -1,6 +1,6 @@
 ---
 name: functional-reconstruction
-description: "This skill should be used when the user asks to reconstruct, document, or describe the existing functional behaviour of a codebase before a migration, refactoring, or onboarding. Trigger phrases: \"document existing functionality\", \"reconstruct the features\", \"map the user flows of this codebase\", \"we need to migrate, document the AS-IS first\". Produces feature lists, user flows, business rules, use cases, and functional dependencies in `docs/functional/`. Do not use to write new requirements — that is functional-analyst."
+description: "This skill should be used when the user asks to reconstruct, document, or describe the existing functional behaviour of a codebase before a migration, refactoring, or onboarding. Trigger phrases: \"document existing functionality\", \"reconstruct the features\", \"map the user flows of this codebase\", \"we need to migrate, document the AS-IS first\". Produces feature lists, user flows, business rules, use cases, and functional dependencies in `docs/functional/`. Do not use to write new requirements: that is functional-analyst."
 ---
 
 # Functional Reconstruction
@@ -9,7 +9,7 @@ You are a functional analyst specialised in software projects. You reconstruct t
 
 ## Objective
 
-Answer the question: **"What does this system do for the user?"** — not how the code works, but what problem it solves, what flows it enables, what rules it applies.
+Answer the question: **"What does this system do for the user?"**, not how the code works, but what problem it solves, what flows it enables, what rules it applies.
 
 The output is used to:
 - Understand existing functionality before a migration or refactoring
@@ -24,9 +24,9 @@ Before analysing the code, verify what is already documented:
 
 ### Existing functional documentation in the project
 Look in folders such as `docs/functional/`, `docs/specs/`, `wiki/` or equivalent structures:
-- Already documented feature lists — features already extracted
-- Already extracted Business Rules — with references to the source code
-- Already mapped functional dependencies — with migration/development order
+- Already documented feature lists: features already extracted
+- Already extracted Business Rules, with references to the source code
+- Already mapped functional dependencies, with migration/development order
 
 **If the module is already in these lists**: extend/correct rather than rewrite from scratch.
 
@@ -38,27 +38,27 @@ Use available technical analysis (e.g. graph, RAG, `docs/graph/`) to **validate*
 
 ### Graph/index to identify gaps
 If project graph documentation is available:
-- Look for nodes with "unclear" or "fragile" stability — these are functional gaps
+- Look for nodes with "unclear" or "fragile" stability: these are functional gaps
 - Validate user flows by comparing them with end-to-end execution paths
 - Documented architectural problems may impact functional flows
 
 ## Analysis process
 
-**Step 0 — Verify existing coverage** (always execute first)
+**Step 0: Verify existing coverage** (always execute first)
 1. Check whether functional documentation already exists in the project (README, wiki, specs)
 2. Look for the module in the existing feature list
 3. Check whether there are already extracted Business Rules
 4. If the module is already covered → focus on integrations, gaps, and uncertain points
 
-**Step 3 — Business Rules** (note)
+**Step 3: Business Rules** (note)
 Consult the BR already extracted in the existing documentation first. Only add new BR not yet present.
 
-**Step 6 — Assumptions** (note)
-Use available technical documentation to identify components with uncertain stability — these are candidates for assumptions and uncertain points.
+**Step 6: Assumptions** (note)
+Use available technical documentation to identify components with uncertain stability: these are candidates for assumptions and uncertain points.
 
 ## Functional analysis process
 
-### Step 1 — Feature List
+### Step 1: Feature List
 
 For the module or system being analysed, list user-facing functionality in domain language:
 
@@ -73,7 +73,7 @@ For the module or system being analysed, list user-facing functionality in domai
 **Effects**: [what changes in the system — DB, file, email, navigation]
 ```
 
-### Step 2 — User Flow
+### Step 2: User Flow
 
 For each relevant user flow:
 
@@ -101,7 +101,7 @@ For each relevant user flow:
 **Data involved**: [DB tables, session state, API]
 ```
 
-### Step 3 — Business Rules
+### Step 3: Business Rules
 
 Business rules are invariants that the system must respect. Identify them precisely:
 
@@ -126,7 +126,7 @@ Generic examples:
 **Source in code**: `utils/database.py:get_entity_by_id()`
 ```
 
-### Step 4 — Use Cases
+### Step 4: Use Cases
 
 For each significant use case:
 
@@ -147,7 +147,7 @@ For each significant use case:
 **Applied business rules**: [list of BR-N]
 ```
 
-### Step 5 — Functional dependencies between modules
+### Step 5: Functional dependencies between modules
 
 Identify how modules functionally influence each other:
 
@@ -165,7 +165,7 @@ Identify how modules functionally influence each other:
 ...
 ```
 
-### Step 6 — Assumptions and uncertain points
+### Step 6: Assumptions and uncertain points
 
 ```markdown
 ## Assumptions and Uncertain Points
@@ -183,7 +183,7 @@ Identify how modules functionally influence each other:
 
 ---
 
-## Output — docs/functional/ folder structure
+## Output: docs/functional/ folder structure
 
 ```
 docs/functional/
@@ -232,7 +232,7 @@ Populate the glossary with terms actually present in the project's code and docu
 ## Next output
 
 After producing the markdown files in `docs/functional/`, consider:
-- `functional-document-generator` — to convert the contents into a Word/.docx document deliverable to stakeholders
+- `functional-document-generator`: to convert the contents into a Word/.docx document deliverable to stakeholders
 
 ## When NOT to use
 

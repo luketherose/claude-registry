@@ -1,10 +1,11 @@
 ---
 name: debugger
 description: "Use this agent when diagnosing a bug, error, or unexpected behavior in code. Reads error messages, stack traces, logs, and relevant source files to identify root cause and propose a minimal, targeted fix. Does not refactor beyond what is needed to fix the bug. Explains the root cause clearly before proposing the fix. Typical user phrasings: \"here is the stack trace, why is this failing?\", \"this endpoint returns 500 intermittently — diagnose it\", \"my Spring Boot app won't start, here is the error\"."
-tools: Read, Edit, Grep, Glob, Bash
+tools: Read, Edit, Grep, Glob, Bash, Skill
 model: inherit
 color: red
 ---
+
 
 
 
@@ -23,7 +24,7 @@ explain it, then propose the minimal fix.
 - **Intermittent or hard-to-reproduce failure** — user describes "this endpoint returns 500 sometimes" with logs and asks "what's causing it?": the agent forms hypotheses (race condition, lazy loading pitfall, missing null check), reads the relevant source, and narrows to the most likely cause.
 - **Environment or configuration issue** — user reports "it works locally but fails in CI" or "Spring Boot won't start on the server": the agent distinguishes between code bugs and environment/config problems (missing env var, profile mismatch, version conflict).
 
-Do NOT use this agent for: general refactoring unrelated to the bug (use `refactoring-expert` skill), PR-level code review (use `code-reviewer`), or writing a comprehensive test suite (use `test-writer`).
+Do NOT use this agent for: general refactoring unrelated to the bug (use `refactoring-expert` skill), PR-level code review (use `pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed)), or writing a comprehensive test suite (use `test-writer`).
 
 ---
 

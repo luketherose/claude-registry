@@ -1,12 +1,13 @@
 ---
 name: api-designer
 description: "Use this agent when designing or reviewing REST API contracts: resource modeling, HTTP method and status code selection, URL structure, request/response schema design, versioning strategy, pagination, error format, and OpenAPI specification authoring. Produces OpenAPI 3.1 YAML specs and design rationale. Also reviews existing APIs for REST maturity level, consistency, and breaking change risk. Typical user phrasings: \"design the REST contract for the order management API\", \"review this OpenAPI spec for breaking changes\"."
-tools: Read, Grep, Glob, Write
+tools: Read, Grep, Glob, Write, Skill
 model: inherit
 color: blue
 skills:
   - rest-api-standards
 ---
+
 
 
 

@@ -54,14 +54,14 @@ are read on demand. Read each doc only when the matching condition is met
 
 | Doc | Read when |
 |---|---|
-| [`supervisor-protocol.md`](../../docs/baseline-testing/supervisor-protocol.md) | Bootstrap start; before any escalation or decision; for constraints reference. |
-| [`output-layout.md`](../../docs/baseline-testing/output-layout.md) | Planning where workers write, and what frontmatter / module-docstring every artefact must carry. |
-| [`policies.md`](../../docs/baseline-testing/policies.md) | Answering Q1 (execution policy), Q2 (failure policy), the service-detection gate, or the dispatch-mode decision. |
-| [`wave-overview.md`](../../docs/baseline-testing/wave-overview.md) | Looking up the sub-agents matrix, mode flags, or phase-plan overview. |
-| [`phase-plan.md`](../../docs/baseline-testing/phase-plan.md) | Running Phase 0 bootstrap dialog or dispatching any of W0–W3 / Wave 3b (verification report) / Wave 4 (iteration handling). |
-| [`dispatch-prompt-template.md`](../../docs/baseline-testing/dispatch-prompt-template.md) | Assembling the prompt for any worker invocation (incl. the "User feedback from prior iteration" block when in `Resume mode: iterate`). |
-| [`recap-templates.md`](../../docs/baseline-testing/recap-templates.md) | Posting per-wave mini-recap (legacy compatibility — primary HITL surface is the verification report). |
-| [`manifest-schema.md`](../../docs/baseline-testing/manifest-schema.md) | Updating `_meta/manifest.json` after each wave (full schema, field rules, timing, update cadence). |
-| [`../refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md) | Running Wave 4 — every time this supervisor is re-dispatched with `Resume mode: iterate`. |
-| [`../refactoring-workflow/phase-verification-report.md`](../refactoring-workflow/phase-verification-report.md) | Running Wave 3b — every time `_meta/phase-verification-report.md` must be produced. |
-| [`../deliberation/integration-replatforming.md`](../deliberation/integration-replatforming.md) | Running Wave 4 with an adjustment that requires deliberation (debate trigger OR contested test disposition / blocking-failure severity). |
+| [`supervisor-protocol.md`](${CLAUDE_PLUGIN_ROOT}/references/baseline-testing/supervisor-protocol.md) | Bootstrap start; before any escalation or decision; for constraints reference. |
+| [`output-layout.md`](${CLAUDE_PLUGIN_ROOT}/references/baseline-testing/output-layout.md) | Planning where workers write, and what frontmatter / module-docstring every artefact must carry. |
+| [`policies.md`](${CLAUDE_PLUGIN_ROOT}/references/baseline-testing/policies.md) | Answering Q1 (execution policy), Q2 (failure policy), the service-detection gate, or the dispatch-mode decision. |
+| [`wave-overview.md`](${CLAUDE_PLUGIN_ROOT}/references/baseline-testing/wave-overview.md) | Looking up the sub-agents matrix, mode flags, or phase-plan overview. |
+| [`phase-plan.md`](${CLAUDE_PLUGIN_ROOT}/references/baseline-testing/phase-plan.md) | Running Phase 0 bootstrap dialog or dispatching any of W0–W3 / Wave 3b (verification report) / Wave 4 (iteration handling). |
+| [`dispatch-prompt-template.md`](${CLAUDE_PLUGIN_ROOT}/references/baseline-testing/dispatch-prompt-template.md) | Assembling the prompt for any worker invocation (incl. the "User feedback from prior iteration" block when in `Resume mode: iterate`). |
+| [`recap-templates.md`](${CLAUDE_PLUGIN_ROOT}/references/baseline-testing/recap-templates.md) | Posting per-wave mini-recap (legacy compatibility — primary HITL surface is the verification report). |
+| [`manifest-schema.md`](${CLAUDE_PLUGIN_ROOT}/references/baseline-testing/manifest-schema.md) | Updating `_meta/manifest.json` after each wave (full schema, field rules, timing, update cadence). |
+| [`${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/iteration-loop.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/iteration-loop.md) | Running Wave 4 — every time this supervisor is re-dispatched with `Resume mode: iterate`. |
+| [`${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/phase-verification-report.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/phase-verification-report.md) | Running Wave 3b — every time `_meta/phase-verification-report.md` must be produced. |
+| the `deliberation` plugin's `references/deliberation/integration-replatforming.md` | Running Wave 4 with an adjustment that requires deliberation (debate trigger OR contested test disposition / blocking-failure severity). |

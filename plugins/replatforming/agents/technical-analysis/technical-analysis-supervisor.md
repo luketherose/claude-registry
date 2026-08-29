@@ -51,13 +51,13 @@ each doc only when the matching wave is about to start — not preemptively.
 
 | Doc | Read when |
 |---|---|
-| [`supervisor-protocol.md`](../../docs/technical-analysis/supervisor-protocol.md) | Bootstrap start; before any escalation or decision; for constraints reference. |
-| [`output-layout.md`](../../docs/technical-analysis/output-layout.md) | Planning where workers write, the frontmatter / finding-ID schema, and the `_meta/manifest.json` schema updated after every wave. |
-| [`sub-agents.md`](../../docs/technical-analysis/sub-agents.md) | Looking up the W1–W3 roster, output targets, and the phase-plan overview table. |
-| [`dispatch-mode.md`](../../docs/technical-analysis/dispatch-mode.md) | Deciding the W1 dispatch mode (parallel / batched / sequential) and the batching plan. |
-| [`phase-plan.md`](../../docs/technical-analysis/phase-plan.md) | Running Phase 0 bootstrap dialog or dispatching any of W1–W3 / Wave 3c (verification report) / Export Wave / Wave 4 (iteration handling). |
-| [`dispatch-prompt-template.md`](../../docs/technical-analysis/dispatch-prompt-template.md) | Assembling the prompt for any sub-agent invocation (incl. Streamlit-aware adjustments block and the "User feedback from prior iteration" block when in `Resume mode: iterate`). |
-| [`normalized-output-schema.md`](../../docs/technical-analysis/normalized-output-schema.md) | Knowing the JSONL schemas for normalized/ artifacts (technical-findings, risk-register, risk-evidence-matrix, technical-gaps, technical-evidence-audit). |
-| [`../refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md) | Running Wave 4 — every time this supervisor is re-dispatched with `Resume mode: iterate`. |
-| [`../refactoring-workflow/phase-verification-report.md`](../refactoring-workflow/phase-verification-report.md) | Running Wave 3c — every time `_meta/phase-verification-report.md` must be produced. |
-| [`../deliberation/integration-replatforming.md`](../deliberation/integration-replatforming.md) | Running Wave 4 with an adjustment that requires deliberation (debate trigger OR contested severity / cross-domain assignment). |
+| [`supervisor-protocol.md`](${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/supervisor-protocol.md) | Bootstrap start; before any escalation or decision; for constraints reference. |
+| [`output-layout.md`](${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/output-layout.md) | Planning where workers write, the frontmatter / finding-ID schema, and the `_meta/manifest.json` schema updated after every wave. |
+| [`sub-agents.md`](${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/sub-agents.md) | Looking up the W1–W3 roster, output targets, and the phase-plan overview table. |
+| [`dispatch-mode.md`](${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/dispatch-mode.md) | Deciding the W1 dispatch mode (parallel / batched / sequential) and the batching plan. |
+| [`phase-plan.md`](${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/phase-plan.md) | Running Phase 0 bootstrap dialog or dispatching any of W1–W3 / Wave 3c (verification report) / Export Wave / Wave 4 (iteration handling). |
+| [`dispatch-prompt-template.md`](${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/dispatch-prompt-template.md) | Assembling the prompt for any sub-agent invocation (incl. Streamlit-aware adjustments block and the "User feedback from prior iteration" block when in `Resume mode: iterate`). |
+| [`normalized-output-schema.md`](${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/normalized-output-schema.md) | Knowing the JSONL schemas for normalized/ artifacts (technical-findings, risk-register, risk-evidence-matrix, technical-gaps, technical-evidence-audit). |
+| [`${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/iteration-loop.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/iteration-loop.md) | Running Wave 4 — every time this supervisor is re-dispatched with `Resume mode: iterate`. |
+| [`${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/phase-verification-report.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/phase-verification-report.md) | Running Wave 3c — every time `_meta/phase-verification-report.md` must be produced. |
+| the `deliberation` plugin's `references/deliberation/integration-replatforming.md` | Running Wave 4 with an adjustment that requires deliberation (debate trigger OR contested severity / cross-domain assignment). |

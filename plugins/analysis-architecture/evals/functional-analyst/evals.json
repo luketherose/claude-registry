@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "functional-analyst",
+    "query": "Estrai i requisiti funzionali da queste user story del modulo ordini e scrivi i criteri di accettazione",
+    "files": [],
+    "expected_behavior": [
+      "Emits an Actors table whose Type column classifies each actor as Primary, Secondary or System",
+      "Every requirement carries a unique FR-NNN id, a Must/Should/Could priority, a Source reference and a testable acceptance criterion (no wording like 'responds quickly')",
+      "Closes with an explicit Out of Scope list and an Open Questions table, and tags every inferred fact with [ASSUMPTION]"
+    ]
+  },
+  {
+    "agent": "functional-analyst",
+    "query": "Documenta il caso d'uso 'registrazione ordine' con attori, precondizioni e flussi alternativi",
+    "files": [],
+    "expected_behavior": [
+      "Produces a UC-NNN specification with Primary Actor, Trigger, Preconditions, Postconditions (Success) and Postconditions (Failure) all filled",
+      "Includes a Main Success Scenario step table plus at least one alternative flow labelled A1 and at least one exception flow labelled E1, each anchored to the step it branches from",
+      "Adds acceptance criteria as gherkin Scenario blocks with Given/When/Then, and lists the BR-NNN business rules the use case enforces"
+    ]
+  },
+  {
+    "agent": "functional-analyst",
+    "query": "Genera la matrice CRUD e la tracciabilità fra requisiti e codice per il modulo pagamenti, poi dimmi cosa manca",
+    "files": [],
+    "expected_behavior": [
+      "Produces a CRUD matrix mapping each entity against the requirements that create, read, update or delete it",
+      "Traces each FR-NNN to the specific file or class that implements it, and lists requirements with no implementation found as gaps",
+      "Does not propose an architecture change or a technology choice, and states that architecture questions belong to software-architect"
+    ]
+  }
+]

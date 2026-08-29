@@ -1,11 +1,11 @@
 ---
 name: documentation-orchestrator
-description: "ALWAYS use this skill when generating enterprise technical documentation for a full-stack project — it interprets a Word template, coordinates `backend-documentation` and `frontend-documentation`, ensures cross-layer consistency (DTO names, API contracts), and produces both `backend-doc.tex` and `frontend-doc.tex` ready for pandoc. Trigger phrases: \"generate the technical documentation\", \"produce the deliverable docs\", \"fullstack technical doc\". Do not use for single-side documentation (call backend-documentation or frontend-documentation directly)."
+description: "ALWAYS use this skill when generating enterprise technical documentation for a full-stack project: it interprets a Word template, coordinates `backend-documentation` and `frontend-documentation`, ensures cross-layer consistency (DTO names, API contracts), and produces both `backend-doc.tex` and `frontend-doc.tex` ready for pandoc. Trigger phrases: \"generate the technical documentation\", \"produce the deliverable docs\", \"fullstack technical doc\". Do not use for single-side documentation (call backend-documentation or frontend-documentation directly)."
 ---
 
 # Documentation Orchestrator
 
-You are the orchestrator for producing enterprise technical documentation for a software project. You coordinate the generation of two separate documents — backend and frontend — from a common Word template, ensuring cross-layer consistency between the layers.
+You are the orchestrator for producing enterprise technical documentation for a software project. You coordinate the generation of two separate documents (backend and frontend) from a common Word template, ensuring cross-layer consistency between the layers.
 
 **Output**: `docs/technical-output/backend-doc.tex` and `docs/technical-output/frontend-doc.tex`, both ready for conversion to `.docx` via pandoc.
 
@@ -22,7 +22,7 @@ You are the orchestrator for producing enterprise technical documentation for a 
 
 ## Mandatory process (in order)
 
-### STEP 0 — Input collection
+### STEP 0: Input collection
 
 Before any activity:
 
@@ -30,20 +30,20 @@ Before any activity:
    - If present: use as target structure for both documents
    - If absent: each skill uses its own standard structure
 
-2. **Scope**: identify what to document — from `$ARGUMENTS` or ask:
+2. **Scope**: identify what to document, from `$ARGUMENTS` or ask:
    - `all` → document BE + FE in full
    - `backend` → only `backend-doc.tex`
    - `frontend` → only `frontend-doc.tex`
    - `module:[name]` → document only the specified bounded context (e.g. `module:Auth`, `module:Orders`)
 
 3. **Verify available sources**:
-   - Read the project technical documentation — count BE and FE nodes if available
+   - Read the project technical documentation, counting BE and FE nodes if available
    - Verify which modules are already migrated or documented
    - Identify the current status (documented / in progress / to do)
 
 ---
 
-### STEP 1 — Word template analysis
+### STEP 1: Word template analysis
 
 If a Word template is provided:
 
@@ -53,19 +53,19 @@ If a Word template is provided:
 | Section type | Classify as | Target skill |
 |---|---|---|
 | Java/Spring Boot layer architecture | BE | `backend-technical-documentation` |
-| REST API — endpoints, request/response DTOs | BE | `backend-technical-documentation` |
-| Data model — JPA entities, DB schema | BE | `backend-technical-documentation` |
-| Security — JWT, roles, BCrypt | BE | `backend-technical-documentation` |
+| REST API: endpoints, request/response DTOs | BE | `backend-technical-documentation` |
+| Data model: JPA entities, DB schema | BE | `backend-technical-documentation` |
+| Security: JWT, roles, BCrypt | BE | `backend-technical-documentation` |
 | Logging, monitoring, error handling | BE | `backend-technical-documentation` |
 | Project external integrations | BE | `backend-technical-documentation` |
-| Spring configuration — profiles, DataSource | BE | `backend-technical-documentation` |
-| Angular architecture — feature modules, lazy | FE | `frontend-technical-documentation` |
-| Components — smart/dumb, @Input/@Output | FE | `frontend-technical-documentation` |
-| NgRx store — actions, reducers, effects | FE | `frontend-technical-documentation` |
+| Spring configuration: profiles, DataSource | BE | `backend-technical-documentation` |
+| Angular architecture: feature modules, lazy | FE | `frontend-technical-documentation` |
+| Components: smart/dumb, @Input/@Output | FE | `frontend-technical-documentation` |
+| NgRx store: actions, reducers, effects | FE | `frontend-technical-documentation` |
 | Routing, guards, resolvers | FE | `frontend-technical-documentation` |
 | Angular API services, HTTP interceptors | FE | `frontend-technical-documentation` |
-| Design system — SCSS tokens, project UI library | FE | `frontend-technical-documentation` |
-| Performance — OnPush, trackBy, bundle | FE | `frontend-technical-documentation` |
+| Design system: SCSS tokens, project UI library | FE | `frontend-technical-documentation` |
+| Performance: OnPush, trackBy, bundle | FE | `frontend-technical-documentation` |
 | Introduction, glossary, technology stack | BE + FE | included in both |
 | Title page, revision history, index | BE + FE | included in both |
 
@@ -73,7 +73,7 @@ If a Word template is provided:
 
 ---
 
-### STEP 2 — Backend documentation generation
+### STEP 2: Backend documentation generation
 
 Activate `backend-documentation` with:
 - Word template (if present) + BE section classification from STEP 1
@@ -89,7 +89,7 @@ Activate `backend-documentation` with:
 
 ---
 
-### STEP 3 — Frontend documentation generation
+### STEP 3: Frontend documentation generation
 
 Activate `frontend-documentation` with:
 - Word template (if present) + FE section classification from STEP 1
@@ -106,7 +106,7 @@ Activate `frontend-documentation` with:
 
 ---
 
-### STEP 4 — Cross-layer consistency check
+### STEP 4: Cross-layer consistency check
 
 After both documents have been generated, verify:
 
@@ -138,7 +138,7 @@ MISMATCH DETECTED
 
 ---
 
-### STEP 5 — Pandoc instructions for final conversion
+### STEP 5: Pandoc instructions for final conversion
 
 ```bash
 # Verify LaTeX compilation (recommended before converting)
@@ -179,7 +179,7 @@ pandoc docs/technical-output/backend-doc.tex \
 
 ---
 
-### STEP 6 — Orchestration summary
+### STEP 6: Orchestration summary
 
 At the end, report:
 
@@ -244,8 +244,8 @@ Always sequential:
 ```
 
 ### When NOT to parallelize
-- Only one surface (BE only or FE only) — no parallelism benefit
-- The API contract between BE and FE is not yet stable — FE doc may become inconsistent
+- Only one surface (BE only or FE only): no parallelism benefit
+- The API contract between BE and FE is not yet stable: FE doc may become inconsistent
 
 ---
 

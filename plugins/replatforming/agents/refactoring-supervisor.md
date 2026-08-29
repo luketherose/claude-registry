@@ -34,7 +34,7 @@ One layer above the phase supervisors:
 For Phases 0–3 never invoke a phase supervisor's sub-agents directly.
 For Phase 4 you DO orchestrate fine-grained sub-agents
 (`developer-java`, `developer-frontend`, `test-writer`, `debugger`,
-`code-reviewer`, `api-designer`, `software-architect`) — the
+`pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed), `api-designer`, `software-architect`) — the
 per-feature gating cannot be delegated.
 
 Phases 0–3 are AS-IS only; Phase 4 introduces target tech and enforces
@@ -93,5 +93,5 @@ All templates, schematics, and per-step / per-rule protocols live in
 | `retrospective.md` | After Phase 4 PO sign-off (Step G auto-entry); when presenting the close/iterate/defer-and-close choice. |
 | `cross-phase-iteration.md` | When the retrospective routes to `iterate`; computing re-entry phase, archive policy, delta propagation, Phase 4 re-run granularity. |
 | `activation-examples.md` | User's opening message is ambiguous. |
-| `../deliberation/integration-replatforming.md` | Eligible deliberation decision points (Phase 4 + Phases 1–3). |
+| the `deliberation` plugin's `references/deliberation/integration-replatforming.md` | Eligible deliberation decision points (Phase 4 + Phases 1–3). |
 | `supervisor-protocol.md` | Bootstrap start; before any escalation or HITL prompt; workflow phase map, escalation rules, output format. |

@@ -41,10 +41,10 @@ demand. Read each doc only when the matching step is about to start.
 
 | Doc | Read when |
 |---|---|
-| [`use-case-template.md`](../../docs/functional-analysis/user-flow-analyst/use-case-template.md) | Writing the UC index, per-UC files, user-flows file, or sequence-diagrams overview. |
-| [`mermaid-templates.md`](../../docs/functional-analysis/user-flow-analyst/mermaid-templates.md) | Drawing a sequence diagram for a UC (Streamlit or generic skeleton + required lanes). |
-| [`file-writing-rule.md`](../../docs/functional-analysis/user-flow-analyst/file-writing-rule.md) | Once at session start — non-negotiable rule on `Write` vs Bash redirects. |
-| [`jsonl-output-spec.md`](../../docs/functional-analysis/user-flow-analyst/jsonl-output-spec.md) | Before writing any JSONL file — schemas for `user-flow-findings.jsonl` and `use-case-candidates.jsonl`. |
+| [`use-case-template.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/user-flow-analyst/use-case-template.md) | Writing the UC index, per-UC files, user-flows file, or sequence-diagrams overview. |
+| [`mermaid-templates.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/user-flow-analyst/mermaid-templates.md) | Drawing a sequence diagram for a UC (Streamlit or generic skeleton + required lanes). |
+| [`file-writing-rule.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/user-flow-analyst/file-writing-rule.md) | Once at session start — non-negotiable rule on `Write` vs Bash redirects. |
+| [`jsonl-output-spec.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/user-flow-analyst/jsonl-output-spec.md) | Before writing any JSONL file — schemas for `user-flow-findings.jsonl` and `use-case-candidates.jsonl`. |
 
 ---
 
@@ -132,7 +132,7 @@ For each non-trivial UC, produce a Mermaid sequence diagram showing:
 are first-class in Streamlit — do not hide them. For non-Streamlit stacks,
 diagrams are conventional (request → response, no rerun loops).
 
-Read [`mermaid-templates.md`](../../docs/functional-analysis/user-flow-analyst/mermaid-templates.md)
+Read [`mermaid-templates.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/user-flow-analyst/mermaid-templates.md)
 for the Streamlit and generic skeletons and the required lanes per UC.
 
 ### 4. Streamlit-mode flow caveats
@@ -174,7 +174,7 @@ Four files under `docs/analysis/01-functional/`:
 | 3 | `07-user-flows.md` | High-level narratives chaining UCs into typical journeys |
 | 4 | `08-sequence-diagrams.md` | Index of per-UC diagrams + cross-cutting reusable patterns |
 
-Read [`use-case-template.md`](../../docs/functional-analysis/user-flow-analyst/use-case-template.md)
+Read [`use-case-template.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/user-flow-analyst/use-case-template.md)
 for the exact frontmatter, section order, and sample bodies for all four files.
 
 ---
@@ -220,4 +220,4 @@ Write raw JSONL to `docs/analysis/01-functional/raw/` BEFORE writing narrative m
 - Do not write outside `docs/analysis/01-functional/`.
 - Do not invoke other sub-agents.
 - **All file output via `Write`**, never via `Bash` heredoc/redirect.
-  See [`file-writing-rule.md`](../../docs/functional-analysis/user-flow-analyst/file-writing-rule.md).
+  See [`file-writing-rule.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/user-flow-analyst/file-writing-rule.md).

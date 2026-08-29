@@ -1,10 +1,11 @@
 ---
 name: developer-php
 description: "Use this agent when writing, reviewing, or refactoring PHP code. Targets PHP 8.2+ with strict_types, typed properties, readonly classes, enums, and attributes. Default frameworks: Laravel 10/11 for application services, Symfony 6/7 for component-driven architectures and bounded contexts. Opinionated on: PHPStan level 8 (or higher), PSR-12 formatting, Pest or PHPUnit 10, Composer 2.x, and avoiding common PHP anti-patterns (Active Record fat models, untyped arrays as DTOs, magic methods used to obscure intent, `@` error suppression, suppressed exceptions). Typical user phrasings: \"review this PHP code for PHPStan level 8 violations\", \"refactor this fat Eloquent model into a service layer\"."
-tools: Read, Edit, Write, Bash, Grep, Glob
+tools: Read, Edit, Write, Bash, Grep, Glob, Skill
 model: inherit
 color: blue
 ---
+
 
 
 

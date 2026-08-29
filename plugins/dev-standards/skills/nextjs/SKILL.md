@@ -1,6 +1,6 @@
 ---
 name: nextjs
-description: "This skill should be used when working with Next.js 14+ App Router — React Server Components, Server Actions, file-based routing, metadata API, multi-level caching, deployment patterns. Trigger phrases: \"Next.js app router\", \"Server Component\", \"Server Action\", \"generateMetadata\", \"app/ directory\", \"Next.js caching\". Does NOT cover the legacy Pages Router. Do not use for plain React (use react-expert) or for full-stack outside the Next ecosystem (use tanstack-start)."
+description: "This skill should be used when working with Next.js 14+ App Router: React Server Components, Server Actions, file-based routing, metadata API, multi-level caching, deployment patterns. Trigger phrases: \"Next.js app router\", \"Server Component\", \"Server Action\", \"generateMetadata\", \"app/ directory\", \"Next.js caching\". Does NOT cover the legacy Pages Router. Do not use for plain React (use react-expert) or for full-stack outside the Next ecosystem (use tanstack-start)."
 ---
 
 # Nextjs
@@ -258,6 +258,6 @@ export const config = {
 
 ## Related skills
 
-- **`react/react-expert`** — React patterns, hooks, TypeScript
-- **`react/tanstack-query`** — client-side data fetching in interactive components
-- **`react/tanstack-start`** — Next.js alternative, TanStack-native
+- **`react/react-expert`**: React patterns, hooks, TypeScript
+- **`react/tanstack-query`**: client-side data fetching in interactive components
+- **`react/tanstack-start`**: Next.js alternative, TanStack-native

@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "presentation-creator",
+    "query": "Crea una PowerPoint Accenture da questi documenti di stima",
+    "files": [],
+    "expected_behavior": [
+      "Reads every source file first, then writes a self contained Python script to /tmp/gen_presentation_<projectname>.py and executes it",
+      "Confirms the output path and the file size, and notes per slide which source document it was derived from",
+      "Final answer follows the 'Presentation generated / Size / Slides produced / Source files read / Notes' block"
+    ]
+  },
+  {
+    "agent": "presentation-creator",
+    "query": "Costruisci un pitch deck per lo steering committee",
+    "files": [],
+    "expected_behavior": [
+      "Uses the executive audience mode: cover, agenda, problem, solution, timeline, no implementation detail dump",
+      "Only Accenture brand colours and fonts appear, and the timeline or effort slide reflects the numbers taken from the source estimation files",
+      "No source file is modified, deleted or overwritten"
+    ]
+  },
+  {
+    "agent": "presentation-creator",
+    "query": "Aggiorna il deck di architettura con la nuova proposta",
+    "files": [],
+    "expected_behavior": [
+      "Architecture slides are drawn as labelled shapes: no imported image file and no empty box",
+      "Nothing is invented: any section the sources do not cover is marked 'To be defined, source data not available' rather than filled with a plausible guess",
+      "No TODO or placeholder is left in the generated .pptx"
+    ]
+  }
+]

@@ -1,6 +1,6 @@
 ---
 name: streamlit-expert
-description: "This skill should be used when developing or maintaining a Streamlit web app — page structure, session_state management, caching (`@st.cache_data`, `@st.cache_resource`), reusable components, PostgreSQL/API integration, Streamlit-specific anti-patterns. Trigger phrases: \"Streamlit page\", \"session_state\", \"st.cache\", \"multipage Streamlit\", \"Streamlit form\", \"st.experimental_rerun\". Do not use for pure Python logic outside the UI (use python-expert) or for non-Streamlit web frameworks."
+description: "This skill should be used when developing or maintaining a Streamlit web app: page structure, session_state management, caching (`@st.cache_data`, `@st.cache_resource`), reusable components, PostgreSQL/API integration, Streamlit-specific anti-patterns. Trigger phrases: \"Streamlit page\", \"session_state\", \"st.cache\", \"multipage Streamlit\", \"Streamlit form\", \"st.experimental_rerun\". Do not use for pure Python logic outside the UI (use python-expert) or for non-Streamlit web frameworks."
 ---
 
 # Streamlit Expert
@@ -43,7 +43,7 @@ utils/
 
 ---
 
-## Session state — correct management
+## Session state: correct management
 
 ### Safe access
 
@@ -155,7 +155,7 @@ def call_external_api(query: str, access_token: str) -> list[dict]:
 
 ---
 
-## Credentials — never hardcoded
+## Credentials: never hardcoded
 
 ```python
 # ✅ Correct — read from config.json (excluded from git)
@@ -201,11 +201,11 @@ def show_page_name():
 ```
 
 File naming: `pages/[module]/[page_name].py` (snake_case).
-Main function: `def show_[name]():` — one per file.
+Main function: `def show_[name]():`, one per file.
 
 ---
 
-## Database — retry pattern
+## Database: retry pattern
 
 ```python
 # utils/database.py
@@ -240,7 +240,7 @@ def execute_query(query: str, params: tuple = (), single: bool = False):
 - Documenting business rules of a Streamlit module before a migration
 
 **Do not use this skill for:**
-- Pure Python logic without Streamlit dependencies → use `python/python-expert`
+- Pure Python logic without Streamlit dependencies → use `python-expert`
 - New features if a more recent target architecture exists → evaluate whether to implement there instead
 - Significant refactoring of code destined for migration → coordinate with the team
 - Non-critical optimisations on legacy code → invest in the target architecture
@@ -251,6 +251,6 @@ def execute_query(query: str, params: tuple = (), single: bool = False):
 
 ## Before modifying an existing module
 
-1. Check whether analysis documents exist (`docs/`, README, comments) — understand the module's role without reading all the code
+1. Check whether analysis documents exist (`docs/`, README, comments) to understand the module's role without reading all the code
 2. If migration notes exist for the module → do not add complexity that would slow down the migration
 3. If the module has many dependencies on other modules → document the expected behaviour before modifying, test manually afterwards

@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Disegna il class diagram del package ordini e salvamelo come SVG in docs/diagrams/",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Sequence diagram del flusso di checkout, dal controller al payment gateway",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "ER diagram del data model e component diagram dell'architettura",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Fammi un'infografica con i numeri del progetto per la slide",
+    "should_trigger": false,
+    "description": "Out of scope: non è UML"
+  },
+  {
+    "query": "Disegnami il processo di approvazione in BPMN",
+    "should_trigger": false,
+    "description": "Out of scope: non è UML"
+  }
+]

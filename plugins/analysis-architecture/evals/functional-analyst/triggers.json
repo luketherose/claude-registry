@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Estrai i requisiti funzionali da queste user story e scrivi i criteri di accettazione",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Documenta il caso d'uso di registrazione ordine con attori, precondizioni e flussi alternativi",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Genera la matrice CRUD e la tracciabilità fra requisiti e codice del modulo pagamenti",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Valuta se conviene passare a microservizi e scrivimi l'ADR con i trade-off",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Fammi l'inventario del debito tecnico e delle vulnerabilità delle dipendenze con severity",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  }
+]

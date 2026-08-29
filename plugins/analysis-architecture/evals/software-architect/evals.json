@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "software-architect",
+    "query": "Analizza l'architettura di questo servizio e valuta performance, sicurezza, scalabilita e costi",
+    "files": [],
+    "expected_behavior": [
+      "Findings are given as a table with a Dimension column, a High/Medium/Low Severity and an Evidence column pointing at a file:line or a config reference, never at an unsupported assertion",
+      "Every proposed change spells out Trade-offs split into Gains, Costs and Risks, plus an Alternatives considered line",
+      "Ends with a Recommended Roadmap ordered quick wins first and an Open Questions section; the security dimension is substantive, not a one liner"
+    ]
+  },
+  {
+    "agent": "software-architect",
+    "query": "Scrivi l'ADR per la scelta fra Kafka e RabbitMQ nel sistema ordini",
+    "files": [],
+    "expected_behavior": [
+      "Produces an ADR-NNN record with Date, Status (Proposed/Accepted/Deprecated/Superseded), Context, Decision and Rationale sections",
+      "Includes an Alternatives Considered table with a 'Rejected because' column filled for every rejected option, and evaluates at least one alternative to the recommendation",
+      "Splits Consequences into Positive, Negative and Neutral, and sets a Review Date for the technology choice"
+    ]
+  },
+  {
+    "agent": "software-architect",
+    "query": "Fammi un modello C4 di questo sistema e identifica i rischi di integrazione",
+    "files": [],
+    "expected_behavior": [
+      "Produces a System Context paragraph naming the actors and the external systems with the direction of each dependency",
+      "Produces a Containers table with Technology, Responsibility and Exposes columns per container",
+      "Emits no implementation code and states that coding is delegated to the developer-* agents"
+    ]
+  }
+]

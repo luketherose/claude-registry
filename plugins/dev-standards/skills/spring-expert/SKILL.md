@@ -1,6 +1,6 @@
 ---
 name: spring-expert
-description: "This skill should be used when working with Spring Boot 3.x configuration and runtime concerns — IoC/DI, auto-configuration, profiles, @ConfigurationProperties, WebClient for external APIs, Spring Security 6 with JWT, MockMvc and @WebMvcTest/@SpringBootTest test patterns. Trigger phrases: \"Spring Boot config\", \"@ConfigurationProperties\", \"WebClient\", \"Spring Security JWT\", \"MockMvc test\". Do not use for layering decisions (use spring-architecture) or JPA (use spring-data-jpa)."
+description: "This skill should be used when working with Spring Boot 3.x configuration and runtime concerns: IoC/DI, auto-configuration, profiles, @ConfigurationProperties, WebClient for external APIs, Spring Security 6 with JWT, MockMvc and @WebMvcTest/@SpringBootTest test patterns. Trigger phrases: \"Spring Boot config\", \"@ConfigurationProperties\", \"WebClient\", \"Spring Security JWT\", \"MockMvc test\". Do not use for layering decisions (use spring-architecture) or JPA (use spring-data-jpa)."
 ---
 
 # Spring Expert
@@ -13,15 +13,15 @@ You are a senior Spring expert specialised in the backend of enterprise Spring B
 
 - Spring Boot 3.2.x / Spring Framework 6.x
 - Spring Security 6.x (declarative Security Filter Chain)
-- Spring WebFlux — WebClient only (not reactive server)
+- Spring WebFlux: WebClient only (not reactive server)
 - Spring Validation (Jakarta Bean Validation 3.x)
 - JJWT (io.jsonwebtoken) for JWT signing/verification
 
 ---
 
-## Spring IoC — principles and bean scope
+## Spring IoC: principles and bean scope
 
-**Constructor injection always** — the pattern applied to the Service layer is in `spring-architecture` § Service layer. Here the scope is the Spring container.
+**Constructor injection always**. The pattern applied to the Service layer is in `spring-architecture` § Service layer. Here the scope is the Spring container.
 
 ### Bean scopes
 
@@ -54,7 +54,7 @@ Spring Boot reads `META-INF/spring/org.springframework.boot.autoconfigure.AutoCo
 public class DataSourceAutoConfiguration { ... }
 ```
 
-**Override**: define a bean of the same type — Spring prefers it over the auto-configured one. No need for `@Primary` if yours is the only one.
+**Override**: define a bean of the same type, and Spring prefers it over the auto-configured one. No need for `@Primary` if yours is the only one.
 
 ```java
 // Override DataSource with explicit pool sizing
@@ -79,15 +79,15 @@ public DataSource dataSource(DataSourceProperties props) {
 | Anti-pattern | Problem | Solution |
 |---|---|---|
 | `@Autowired` on field | Not testable without ApplicationContext | Constructor injection + `@RequiredArgsConstructor` |
-| `ApplicationContext.getBean()` in application code | Service Locator — coupling to the container | Declarative injection |
-| `@Transactional` on the controller | Transaction open for the entire HTTP request | In services only — see also `spring-data-jpa` for all `@Transactional` mistakes |
+| `ApplicationContext.getBean()` in application code | Service Locator, coupling to the container | Declarative injection |
+| `@Transactional` on the controller | Transaction open for the entire HTTP request | In services only (see also `spring-data-jpa` for all `@Transactional` mistakes) |
 | `new` on Spring beans inside other beans | Bypasses the container, no DI/AOP | Injection or `@Bean` factory |
 | Plain SHA-256 for passwords | Reversible hash with rainbow table; migrate to BCrypt | `BCryptPasswordEncoder(12)` |
 | `@Value` scattered across dozens of classes | Difficult refactoring, no startup validation | `@ConfigurationProperties` for config groups |
 
 ---
 
-## Actuator — minimal configuration
+## Actuator: minimal configuration
 
 ```yaml
 management:
@@ -105,7 +105,7 @@ management:
 
 ---
 
-## Checklist — Spring Boot configuration
+## Checklist: Spring Boot configuration
 
 - [ ] Constructor injection everywhere, zero `@Autowired` on fields
 - [ ] `@ConfigurationProperties` for config groups, validated with `@Validated`
@@ -115,7 +115,7 @@ management:
 - [ ] WebClient: timeout configured, retry on 5xx only, explicit fallback on error
 - [ ] `@Transactional` only on `public` service methods, never on the controller
 - [ ] Tests: Mockito unit (fast) + `@WebMvcTest` for controllers + `@SpringBootTest` + H2 for integration
-- [ ] Actuator: exposes only `health`, `info`, `metrics` — not `/env` in production
+- [ ] Actuator: exposes only `health`, `info`, `metrics`, not `/env` in production
 
 ## Detailed references
 

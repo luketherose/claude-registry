@@ -34,11 +34,11 @@ gate.
    bounded contexts (Customers, Orders, Audit, Reporting, Admin), and
    the lifecycle states (`ACTIVE`, `INACTIVE`, `LOCKED` for customers;
    `OPEN`, `IN_PROGRESS`, `CLOSED`, `CANCELLED` for orders).
-4. Invokes `test-data-design-standards` and produces the dataset plan
+4. Invokes `test-data-seeding-standards` and produces the dataset plan
    (5 pivot customers across 5 profile slots, 4 login users covering
    admin / analyst / multi-role / inactive, one order per state per
    pivot customer, audit rows on every state transition).
-5. Invokes `database-migration-patterns` for the Liquibase YAML
+5. Invokes `test-data-seeding-standards` for the Liquibase YAML
    template.
 6. Runs the column-length pre-check; shortens a draft `additional_notes`
    value from 18 chars to 9 to fit a `VARCHAR(10)` status column it had
@@ -145,7 +145,7 @@ returns empty grids.
    `max_length=`, and FK targets.
 3. Designs the dataset (same 5-pivot principle adapted to the
    project's domain entities).
-4. Invokes `database-migration-patterns` for the Django fixture
+4. Invokes `test-data-seeding-standards` for the Django fixture
    template.
 5. Writes `<app>/fixtures/test_seed.json` per bounded context
    (`customers/fixtures/test_seed.json`,

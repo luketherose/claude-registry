@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Traduci questo modulo Python in Java su Spring Boot: Django ORM verso JPA, Celery verso Spring Batch",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "L'architettura target e' gia definita, produci la specifica di migrazione modulo per modulo",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Come mappo i decorator Python su Spring AOP e come pianifico la migrazione dei dati?",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Sostituisci i template Jinja2 con component Angular e Reactive Forms",
+    "should_trigger": false,
+    "description": "Out of scope: python-to-angular-migration-expert, frontend"
+  },
+  {
+    "query": "Portiamo la UI Streamlit su React con hook e state management",
+    "should_trigger": false,
+    "description": "Out of scope: python-to-react-migration-expert, frontend"
+  }
+]

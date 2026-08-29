@@ -1,6 +1,6 @@
 ---
 name: accenture-branding
-description: "This skill should be used when an agent (presentation-creator, document-creator) generates an Accenture-branded deliverable and needs the brand reference data — color palette (hex values, python-pptx + CSS constants), typography (fonts and sizes), slide layout specs, HTML/CSS template for PDF, and usage guidelines. Trigger phrases: \"Accenture branding\", \"Accenture deck\", \"Accenture PDF template\", \"brand colors\". Do not use for client-specific design systems (e.g., UniCredit Bricks — use unicredit-design-system)."
+description: "This skill should be used when an agent (presentation-creator, document-creator) generates an Accenture-branded deliverable and needs the brand reference data: color palette (hex values, python-pptx + CSS constants), typography (fonts and sizes), slide layout specs, HTML/CSS template for PDF, and usage guidelines. Trigger phrases: \"Accenture branding\", \"Accenture deck\", \"Accenture PDF template\", \"brand colors\". Do not use for client-specific design systems (e.g., UniCredit Bricks, which is covered by unicredit-design-system)."
 ---
 
 # Accenture Branding
@@ -10,7 +10,7 @@ in team-generated presentations and documents. When invoked, you return the
 relevant brand constants, layout rules, and code blocks that the calling agent
 needs to apply the brand correctly.
 
-Does not generate presentations or documents — provides the standards
+Does not generate presentations or documents. Provides the standards
 so other agents can apply them consistently.
 
 ---
@@ -194,4 +194,4 @@ tr:nth-child(even) td { background: #F9F9F6; }
 
 - Deviate from the color palette above
 - Use fonts other than Arial and Palatino Linotype (system fallbacks for Graphik and GT Sectra Fine)
-- Generate output files — provide the constants and rules for the calling agent to use
+- Generate output files: the constants and rules are provided for the calling agent to use

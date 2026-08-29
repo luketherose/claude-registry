@@ -1,6 +1,6 @@
 ---
 name: angular-expert
-description: "This skill should be used when the user works on Angular 17+ code — writing or reviewing components, applying the smart/dumb split, configuring OnPush, integrating RxJS observables in templates, building Reactive Forms, setting up lazy-loaded routes, or refactoring an Angular module. Trigger phrases: \"Angular component\", \"OnPush\", \"standalone component\", \"reactive form\", \"lazy module\", \"Angular FE refactoring\". Do not use for state-management tasks specifically (use ngrx-expert) or pure RxJS pipelines (use rxjs-expert)."
+description: "This skill should be used when the user works on Angular 17+ code: writing or reviewing components, applying the smart/dumb split, configuring OnPush, integrating RxJS observables in templates, building Reactive Forms, setting up lazy-loaded routes, or refactoring an Angular module. Trigger phrases: \"Angular component\", \"OnPush\", \"standalone component\", \"reactive form\", \"lazy module\", \"Angular FE refactoring\". Do not use for state-management tasks specifically (use ngrx-expert) or pure RxJS pipelines (use rxjs-expert)."
 ---
 
 # Angular Expert
@@ -58,7 +58,7 @@ Produce Angular code that is **readable, maintainable, scalable and testable**.
 - A smart component does not also handle detailed data rendering
 
 **Open/Closed**
-- Extend via `@Input`, composition and `ng-content` — avoid invasive modifications
+- Extend via `@Input`, composition and `ng-content`, avoiding invasive modifications
 - Prefer configurable components over components specialised for each case
 
 **Liskov Substitution**
@@ -71,29 +71,29 @@ Produce Angular code that is **readable, maintainable, scalable and testable**.
 - Each @Input carries one concept, not a bundle of heterogeneous options
 
 **Dependency Inversion**
-- Always inject via DI — never `new MyService()`
+- Always inject via DI, never `new MyService()`
 - Components depend on abstractions (interfaces/tokens), not on concrete implementations
 
-### 2. Smart / Dumb component pattern (strict — non-negotiable)
+### 2. Smart / Dumb component pattern (strict and non-negotiable)
 
 This is the most frequently violated rule in our generated code. **Apply it without exception.**
 
-**Smart (container) component** — the page-level component owned by a route:
+**Smart (container) component**, the page-level component owned by a route:
 - Aware of services, store, router, route params
 - Orchestrates data flow: invokes services, subscribes to streams, dispatches actions
 - Renders dumb components and binds data into them
 - **Does not** contain markup-heavy templates (>30 lines of HTML is a smell)
-- **Does not** contain raw business logic — that lives in services
+- **Does not** contain raw business logic: that lives in services
 
-**Dumb (presentational) component** — every reusable UI piece:
+**Dumb (presentational) component**, every reusable UI piece:
 - Receives data via `input()` (signals) or `@Input`; emits via `output()` or `@Output`
 - **Zero injected services**, **zero `HttpClient`**, **zero store access**
 - Uses `ChangeDetectionStrategy.OnPush`
 - Has no knowledge of how data was fetched or where events go
 
-**Defect to avoid**: a "page component" that injects `HttpClient`, calls the API directly, transforms the payload inline, and renders the result. This is three responsibilities collapsed into one — split it.
+**Defect to avoid**: a "page component" that injects `HttpClient`, calls the API directly, transforms the payload inline, and renders the result. This is three responsibilities collapsed into one. Split it.
 
-**File layout per component** (mandatory): every component is a triplet of co-located files — `name.component.ts`, `name.component.html`, `name.component.scss` (or `.css`). The `.ts` references them via `templateUrl` and `styleUrls`. See "External templates and styles" rule below for rationale.
+**File layout per component** (mandatory): every component is a triplet of co-located files, namely `name.component.ts`, `name.component.html`, and `name.component.scss` (or `.css`). The `.ts` references them via `templateUrl` and `styleUrls`. See "External templates and styles" rule below for rationale.
 
 ```typescript
 // ✅ Dumb component — externalised template + styles
@@ -146,7 +146,7 @@ export class ItemListPageComponent {
 
 ### 2.b Service ownership of HTTP and business logic (strict)
 
-Components never call `HttpClient` directly. A feature service or facade is the single entrypoint to the backend; components consume signals/observables exposed by that service. Business logic — calculations, validations, state derivations — lives in services or pure functions, never in templates and never in component methods that double as orchestrators.
+Components never call `HttpClient` directly. A feature service or facade is the single entrypoint to the backend; components consume signals/observables exposed by that service. Business logic (calculations, validations, state derivations) lives in services or pure functions, never in templates and never in component methods that double as orchestrators.
 
 ```typescript
 // ✅ Feature service owns HTTP + cache
@@ -184,17 +184,17 @@ Every feature module is loaded lazily:
 
 The Core Module is imported only by AppModule. The Shared Module is imported by feature modules.
 
-### 4. State management — complexity hierarchy
+### 4. State management: complexity hierarchy
 
-1. **Local component state** — for simple UI state (e.g. `isLoading`, `isOpen`)
-2. **Service + BehaviorSubject** — for shared state within a feature
-3. **NgRx** — for complex global state, side effects, time-travel debugging
+1. **Local component state**: for simple UI state (e.g. `isLoading`, `isOpen`)
+2. **Service + BehaviorSubject**: for shared state within a feature
+3. **NgRx**: for complex global state, side effects, time-travel debugging
 
 Use the simplest level that solves the problem. Do not reach for NgRx if a service is sufficient.
 
 ### 5. RxJS and observables
 
-**Prefer `async` pipe** — avoid manual subscribes:
+**Prefer `async` pipe** and avoid manual subscribes:
 
 ```typescript
 // ✅ Correct
@@ -219,10 +219,10 @@ ngOnInit() {
 ```
 
 **Correct flattening strategy**:
-- `switchMap` — live search, cancels the previous request
-- `concatMap` — sequential operations dependent on order
-- `mergeMap` — independent parallel operations
-- `exhaustMap` — form submit, ignores new clicks during the request
+- `switchMap`: live search, cancels the previous request
+- `concatMap`: sequential operations dependent on order
+- `mergeMap`: independent parallel operations
+- `exhaustMap`: form submit, ignores new clicks during the request
 
 **Error handling**:
 ```typescript
@@ -266,7 +266,7 @@ export function codeValidator(control: AbstractControl): ValidationErrors | null
 
 Never use template-driven forms for complex forms.
 
-### 8. TypeScript — zero `any`
+### 8. TypeScript: zero `any`
 
 ```typescript
 // ❌ Avoid
@@ -334,21 +334,21 @@ Pulled from the official style guide at https://angular.dev/style-guide. These a
 - Use `inject()` function over constructor parameter injection. Better readability and type inference.
 - Mark `inject()`-assigned fields `private readonly`.
 
-### Components and directives — structure
-- Group Angular-specific properties first: injected dependencies, inputs, outputs, queries — at the top of the class.
+### Components and directives: structure
+- Group Angular-specific properties first, at the top of the class: injected dependencies, inputs, outputs, queries.
 - Define Angular-specific properties before methods.
 - Implement lifecycle hook interfaces (`OnInit`, `OnDestroy`) when using lifecycle methods.
-- Keep lifecycle hooks short — extract logic into separate methods.
+- Keep lifecycle hooks short: extract logic into separate methods.
 
 ### Inputs/outputs (signals-first)
 - Prefer the signal-based `input()` / `input.required()` / `output()` over `@Input` / `@Output` decorators in new code.
-- Mark inputs/outputs `readonly` — prevents accidental overwrite of Angular-managed properties.
+- Mark inputs/outputs `readonly` (this prevents accidental overwrite of Angular-managed properties).
 - Apply `readonly` broadly to all properties initialised by Angular: `input`, `model`, `output`, `viewChild`, `contentChild`, etc.
 - Use `protected` (not `public`) for component members accessed only from the template.
 
 ### Templates
-- **External template files are the default** — every component declares `templateUrl: './name.component.html'`, never an inline `template:` literal. Inline templates allowed only for trivial components (≤ 5 lines of markup, no bindings beyond a single `{{ value }}`) and never for any component containing more than one element. See § External templates and styles below.
-- Avoid complex template logic — refactor into `computed()` signals or component methods.
+- **External template files are the default**: every component declares `templateUrl: './name.component.html'`, never an inline `template:` literal. Inline templates allowed only for trivial components (≤ 5 lines of markup, no bindings beyond a single `{{ value }}`) and never for any component containing more than one element. See § External templates and styles below.
+- Avoid complex template logic: refactor into `computed()` signals or component methods.
 - Prefer direct `[class]` and `[style]` bindings over `NgClass` / `NgStyle`.
 - Use the new control-flow blocks (`@if`, `@for`, `@switch`) over `*ngIf`, `*ngFor`, `*ngSwitch` in new code.
 - For `@for`, always provide `track` (mandatory in modern Angular).
@@ -384,11 +384,11 @@ export class UserProfileComponent { /* ... */ }
 ```
 
 **Why this is non-negotiable**:
-- IDE tooling — Angular Language Service, autocomplete, template type-checking, and Prettier all behave better against `.html` files than against template literals.
-- Diffs — template-only changes don't pollute the `.ts` diff and vice versa, easing review.
-- Separation of concerns at the file level — markup, behaviour, and styling are three concerns and three files.
+- IDE tooling: Angular Language Service, autocomplete, template type-checking, and Prettier all behave better against `.html` files than against template literals.
+- Diffs: template-only changes don't pollute the `.ts` diff and vice versa, easing review.
+- Separation of concerns at the file level: markup, behaviour, and styling are three concerns and three files.
 - Designers and accessibility tooling can edit `.html`/`.scss` without touching TypeScript.
-- Search/grep — finding "where is this markup defined" is unambiguous.
+- Search/grep: finding "where is this markup defined" is unambiguous.
 
 **Allowed exception**: trivial micro-components used as render-prop wrappers (≤ 5 markup lines, single binding, no logic) may use `template:`. When in doubt, externalise.
 
@@ -397,7 +397,7 @@ export class UserProfileComponent { /* ... */ }
 - Test files end with `.spec.ts`.
 - Match file name to TypeScript identifier: class `UserProfile` lives in `user-profile.ts`.
 - Component family: same base name across `.ts`, `.html`, `.scss`, `.spec.ts`.
-- Avoid generic file names: no `helpers.ts`, `utils.ts`, `common.ts` — name by purpose.
+- Avoid generic file names such as `helpers.ts`, `utils.ts`, `common.ts`. Name by purpose.
 - Organise by feature, not by type. Avoid top-level `components/`, `services/`, `directives/` directories.
 - One concept per file.
 
@@ -407,11 +407,11 @@ export class UserProfileComponent { /* ... */ }
 - Directives use camelCase attribute selectors with an app prefix: `[appTooltip]`.
 
 ### Consistency
-- When existing project conventions differ from these rules, prioritise consistency within the file/feature being edited. Do not rewrite a whole module to match style — change only the file under edit.
+- When existing project conventions differ from these rules, prioritise consistency within the file/feature being edited. Do not rewrite a whole module to match style: change only the file under edit.
 
 ---
 
-## TODOs are not optional — be aggressive, not conservative
+## TODOs are not optional: be aggressive, not conservative
 
 Defect repeatedly observed: the agent leaves Angular components empty (`// TBD`, `throw new Error('Not implemented')`, empty templates) when the source-to-Angular translation is uncertain. **This is forbidden.**
 

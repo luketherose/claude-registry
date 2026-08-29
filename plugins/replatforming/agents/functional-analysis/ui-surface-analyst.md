@@ -159,7 +159,7 @@ You emit four files under `docs/analysis/01-functional/`:
 
 For exact frontmatter, section order, and templates (including Mermaid
 navigation graph and ASCII component tree), see
-[`docs/functional-analysis/ui-surface-analyst/output-templates.md`](../../docs/functional-analysis/ui-surface-analyst/output-templates.md).
+[`docs/functional-analysis/ui-surface-analyst/output-templates.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/ui-surface-analyst/output-templates.md).
 
 ---
 

@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Progetta end to end la feature ricerca: routing, state management, styling e chiamate API insieme",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Review dell'architettura di questo modulo FE, NgRx piu RxJS piu design system nello stesso passaggio",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Dobbiamo pianificare il frontend del portale, il framework non è ancora deciso",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Metti questo component Angular in OnPush",
+    "should_trigger": false,
+    "description": "Out of scope: single framework, single concern: angular-expert"
+  },
+  {
+    "query": "Rinomina questi observable secondo convenzione e togli il nested subscribe",
+    "should_trigger": false,
+    "description": "Out of scope: single concern: rxjs-expert"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "developer-csharp",
+    "query": "Write an ASP.NET Core 8 minimal API for order management",
+    "files": [],
+    "expected_behavior": [
+      "Nullable reference types are enabled and warnings are treated as errors in the csproj",
+      "DTOs are declared as records and configuration is bound through IOptions<T> with validation at startup",
+      "All file content is produced with the Write or Edit tool: no Bash heredoc, echo redirect, printf redirect or tee is used to create C# or csproj content"
+    ]
+  },
+  {
+    "agent": "developer-csharp",
+    "query": "Review this C# service for async anti-patterns",
+    "files": [],
+    "expected_behavior": [
+      "Flags every .Result and .Wait() on a Task and every async void outside an event handler, with the file and line",
+      "Checks that CancellationToken is threaded through the async chain rather than dropped at the first await",
+      "Flags string interpolated log messages and requires ILogger<T> message templates instead"
+    ]
+  },
+  {
+    "agent": "developer-csharp",
+    "query": "Aggiungi test xUnit con Testcontainers per il repository layer",
+    "files": [],
+    "expected_behavior": [
+      "Produces xUnit tests that run against a Testcontainers backed database rather than a mocked DbContext",
+      "Flags any catch that swallows the exception and any bare `throw new Exception`",
+      "Does not introduce a repository abstraction over DbContext for trivial CRUD"
+    ]
+  }
+]

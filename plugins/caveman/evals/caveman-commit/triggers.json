@@ -1,0 +1,27 @@
+[
+  {
+    "query": "cc: ho spostato il retry dentro il client HTTP, scrivimi il messaggio di commit",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Conventional commit per questo diff, solo il subject se il body non serve",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "write a commit message per il fix del NPE nel mapper degli indirizzi",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Review di questa PR, dammi i commenti riga per riga con severita e fix",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `caveman-review` instead"
+  },
+  {
+    "query": "Da adesso rispondi in caveman mode, taglia hedging e pleasantries",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `caveman` instead"
+  }
+]

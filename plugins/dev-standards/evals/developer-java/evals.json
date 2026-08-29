@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "developer-java",
+    "query": "Scrivi l'OrderService con la validazione e il controller REST che lo espone",
+    "files": [],
+    "expected_behavior": [
+      "Each file is delivered under a `### {FileName}.java` heading with complete content (all imports, no placeholder comments), followed by a **Why** line and a **Tests** line",
+      "Uses constructor injection throughout: no field injection and no @Autowired on a field",
+      "The controller returns a DTO produced by a dedicated mapper rather than exposing the JPA entity, and validates the request DTO with bean validation plus @Valid on the parameter"
+    ]
+  },
+  {
+    "agent": "developer-java",
+    "query": "Review this Spring Boot controller",
+    "files": [],
+    "expected_behavior": [
+      "Flags business logic sitting in the controller and repository access sitting outside the service layer as layering violations, quoting the offending lines",
+      "Checks error handling for catch all blocks that swallow exceptions and for log and rethrow at the same layer, and requires RFC 7807 ProblemDetail for error responses",
+      "Checks that no sensitive data is logged and that no secret is hardcoded, and reports each issue with the file and line"
+    ]
+  },
+  {
+    "agent": "developer-java",
+    "query": "Migra questa app Java legacy a Spring Boot 3, il framework è Spring non Quarkus",
+    "files": [],
+    "expected_behavior": [
+      "Assumes Spring Boot 3 only because the user declared it, and states the assumption explicitly",
+      "Produces the layered structure with Micrometer observability, structured logging and OpenAPI annotations on the endpoints",
+      "Stops and states exactly what is missing (an existing service interface, an entity definition) instead of inventing it"
+    ]
+  }
+]

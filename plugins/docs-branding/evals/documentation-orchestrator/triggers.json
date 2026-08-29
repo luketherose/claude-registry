@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Genera la documentazione tecnica del progetto fullstack, backend e frontend, con il template Word del cliente",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Produci i deliverable doc: backend-doc.tex e frontend-doc.tex, coerenti sui nomi dei DTO e sui contratti API",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Serve il documento tecnico enterprise di tutto il progetto, pronto per pandoc",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Solo il frontend: genera frontend-doc.tex per l'app Angular",
+    "should_trigger": false,
+    "description": "Out of scope: frontend-documentation, un solo lato"
+  },
+  {
+    "query": "Solo il backend Spring, produci backend-doc.tex",
+    "should_trigger": false,
+    "description": "Out of scope: backend-documentation, un solo lato"
+  }
+]

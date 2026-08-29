@@ -91,7 +91,7 @@ tests/equivalence/       @pytest.mark.xfail
 ```
 
 Frontmatter, per-report body, and final-report skeletons live in
-[`output-templates.md`](../../docs/tobe-testing/tobe-test-runner/output-templates.md).
+[`output-templates.md`](${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/tobe-test-runner/output-templates.md).
 
 ---
 
@@ -111,7 +111,7 @@ write the consolidated reports.
 
 Exact commands, capture paths, and the failure-classification matrix
 (severity decision table + marker syntax for Java / Jest / pytest)
-live in [`execution-stages.md`](../../docs/tobe-testing/tobe-test-runner/execution-stages.md).
+live in [`execution-stages.md`](${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/tobe-test-runner/execution-stages.md).
 
 Failure policy (summary):
 - `critical` / `high` regression → record in TBUG, do NOT `xfail`,
@@ -156,7 +156,7 @@ Failure policy (summary):
 ## Final report
 
 Print the completion summary using the
-[`output-templates.md`](../../docs/tobe-testing/tobe-test-runner/output-templates.md)
+[`output-templates.md`](${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/tobe-test-runner/output-templates.md)
 "Final report" skeleton. It must include: execute policy, per-suite
 pass/total + coverage, contract pass/total + drift count, failure
 classification breakdown (critical/high/medium/low), files modified

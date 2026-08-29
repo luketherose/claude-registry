@@ -1,10 +1,11 @@
 ---
 name: functional-analyst
 description: "Use this agent when extracting functional requirements from specifications, user stories, or existing code; documenting use cases and business processes; producing acceptance criteria; mapping actors and system boundaries; or bridging business intent with technical implementation. Also use for requirement gap analysis, CRUD matrix generation, and traceability from requirements to code."
-tools: Read, Grep, Glob, Write
+tools: Read, Grep, Glob, Write, Skill
 model: inherit
 color: green
 ---
+
 
 
 

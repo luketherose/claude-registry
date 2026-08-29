@@ -1,10 +1,11 @@
 ---
 name: software-architect
 description: "Use this agent when analyzing or designing system architecture, evaluating technology choices, reviewing integration patterns, writing Architecture Decision Records (ADRs), assessing non-functional requirements (performance, security, scalability, reliability, cost, maintainability), or reasoning about deployment and operational strategy. Also use for architecture trade-off analysis, C4 system modeling, and risk identification. Does not write implementation code — delegates to developer subagents for that."
-tools: Read, Grep, Glob, Bash, Write, WebFetch
+tools: Read, Grep, Glob, Bash, Write, WebFetch, Skill
 model: inherit
 color: blue
 ---
+
 
 
 

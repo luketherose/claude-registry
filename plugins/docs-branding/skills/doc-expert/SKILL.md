@@ -5,7 +5,7 @@ description: "This skill should be used when producing technical or functional d
 
 # Doc Expert
 
-You are an expert in technical and functional documentation. You produce documentation that answers the question: **"What does this system do for the user?"** — not how it works line by line, but what problem it solves, what data it manages, what flows it enables.
+You are an expert in technical and functional documentation. You produce documentation that answers the question: **"What does this system do for the user?"**, not how it works line by line, but what problem it solves, what data it manages, what flows it enables.
 
 ## Documentation principles
 
@@ -13,8 +13,8 @@ You are an expert in technical and functional documentation. You produce documen
 - **Concise**: one sentence for a simple function, three lines maximum for complex modules  
 - **Structured**: use fixed templates for each type of artefact
 - **Durable**: write in a way that remains valid even after implementation refactoring
-- **Format-aware**: documentation may need to render in `.md`, `.tex`, `.html`, `.pdf`, `.docx`. Use Markdown extensions that round-trip through pandoc (fenced code, tables, math, footnotes, cross-refs). Avoid HTML inlines or framework-specific shortcodes — they do not survive conversion.
-- **Diagrams via the UML skill, never inline source**: when a diagram is needed (component, sequence, class, activity, state, use-case, ER), delegate to `uml-diagram-generator`. Reference the produced artefact under `docs/diagrams/` by relative path. Pasting raw PlantUML or Mermaid into the documentation source is forbidden — it does not render in PDF/DOCX without diagram-aware renderers and breaks the multi-format pipeline.
+- **Format-aware**: documentation may need to render in `.md`, `.tex`, `.html`, `.pdf`, `.docx`. Use Markdown extensions that round-trip through pandoc (fenced code, tables, math, footnotes, cross-refs). Avoid HTML inlines or framework-specific shortcodes: they do not survive conversion.
+- **Diagrams via the UML skill, never inline source**: when a diagram is needed (component, sequence, class, activity, state, use-case, ER), delegate to `uml-diagram-generator`. Reference the produced artefact under `docs/diagrams/` by relative path. Pasting raw PlantUML or Mermaid into the documentation source is forbidden: it does not render in PDF/DOCX without diagram-aware renderers and breaks the multi-format pipeline.
 
 ## Sources to consult before documenting
 
@@ -119,11 +119,11 @@ If it is already covered, update rather than rewrite.
 
 Document in this order:
 
-1. **Main user flows** — what a user can do from login to final output
-2. **Business rules** — rules not obvious from the code
-3. **DB helper / Repository classes** — core of persistence
-4. **Shared components/services** — used by many modules
-5. **Pages/Controllers** — per module, in order of criticality
+1. **Main user flows**: what a user can do from login to final output
+2. **Business rules**: rules not obvious from the code
+3. **DB helper / Repository classes**: core of persistence
+4. **Shared components/services**: used by many modules
+5. **Pages/Controllers**: per module, in order of criticality
 
 ---
 
@@ -145,7 +145,7 @@ Document in this order:
 
 ---
 
-## Output — docs/ folder structure
+## Output: docs/ folder structure
 
 ```
 docs/
@@ -165,7 +165,7 @@ docs/
 
 ## Domain terms glossary
 
-Maintain a glossary of the project's domain terms — identify and document project-specific business terminology. Always include a glossary section for the main data of the documented module:
+Maintain a glossary of the project's domain terms: identify and document project-specific business terminology. Always include a glossary section for the main data of the documented module:
 
 ```markdown
 ## Data glossary — [Module]

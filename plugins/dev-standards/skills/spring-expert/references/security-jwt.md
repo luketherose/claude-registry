@@ -2,14 +2,14 @@
 
 ## Contents
 
-- Spring Security — JWT with Security 6
-- SecurityFilterChain (lambda DSL — not extends WebSecurityConfigurerAdapter)
+- Spring Security: JWT with Security 6
+- SecurityFilterChain (lambda DSL, not extends WebSecurityConfigurerAdapter)
 - JWT Filter
 - JwtService
 
-## Spring Security — JWT with Security 6
+## Spring Security: JWT with Security 6
 
-### SecurityFilterChain (lambda DSL — not extends WebSecurityConfigurerAdapter)
+### SecurityFilterChain (lambda DSL, not extends WebSecurityConfigurerAdapter)
 
 ```java
 @Configuration

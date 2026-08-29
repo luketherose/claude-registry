@@ -17,7 +17,7 @@ Improve the internal structure of code **without changing its functional behavio
 
 ### 1. SOLID
 
-**S — Single Responsibility Principle**
+**S: Single Responsibility Principle**
 Every class, function or component has a single reason to change.
 
 ```python
@@ -38,7 +38,7 @@ def format_product_metrics(product: dict) -> dict: ...      # transformation onl
 def render_product_header(product: dict): ...               # UI only
 ```
 
-**O — Open/Closed Principle**
+**O: Open/Closed Principle**
 Open for extension, closed for modification.
 
 Prefer composition and configuration over growing if/else chains:
@@ -59,18 +59,18 @@ def generate_document(doc_type: str, data: dict):
     return generator(data)
 ```
 
-**L — Liskov Substitution Principle**
+**L: Liskov Substitution Principle**
 Subtypes respect the parent's contract. Do not change semantics in specialisations.
 
-**I — Interface Segregation Principle**
+**I: Interface Segregation Principle**
 Small, specific interfaces > large, generic interfaces.
 
-**D — Dependency Inversion Principle**
+**D: Dependency Inversion Principle**
 Depend on abstractions, not on concrete implementations. Inject dependencies.
 
 ---
 
-### 2. DRY — Don't Repeat Yourself
+### 2. DRY: Don't Repeat Yourself
 
 Identify duplications and centralise them:
 
@@ -85,11 +85,11 @@ def get_item_by_id(item_id: str) -> dict | None:
     return execute_query("SELECT id, name, status FROM items WHERE id = %s", (item_id,), single=True)
 ```
 
-**Caution**: do not apply DRY prematurely. Three similar occurrences are not always duplication — it may be coincidence. Unify only when the semantics are truly identical.
+**Caution**: do not apply DRY prematurely. Three similar occurrences are not always duplication: it may be coincidence. Unify only when the semantics are truly identical.
 
 ---
 
-### 3. KISS — Keep It Simple, Stupid
+### 3. KISS: Keep It Simple, Stupid
 
 The simplest solution that works is the right one.
 
@@ -108,7 +108,7 @@ def is_admin(user_data: dict) -> bool:
 
 ---
 
-### 4. YAGNI — You Ain't Gonna Need It
+### 4. YAGNI: You Ain't Gonna Need It
 
 Do not add functionality "for the future" that is not required now.
 
@@ -209,7 +209,7 @@ def render_item_list(items: list[dict]) -> None:
 
 - Names that explain intent, not implementation
 - Short functions (indicatively < 20-30 lines)
-- No obvious comments — the code must explain itself
+- No obvious comments: the code must explain itself
 - Comments ONLY for the non-obvious "why"
 
 ```python
@@ -238,7 +238,7 @@ seen_ids = set()
 
 ## Process given input code
 
-### Step 1 — Code smell identification
+### Step 1: Code smell identification
 
 Look for:
 - [ ] Functions > 30 lines with multiple responsibilities
@@ -252,14 +252,14 @@ Look for:
 - [ ] Classes/modules with too many responsibilities
 - [ ] God object (class that knows everything and does everything)
 
-### Step 2 — Classification by impact
+### Step 2: Classification by impact
 
 For each smell found:
 - **Critical**: changes behaviour or breaks tests → fix immediately
 - **Structural**: does not break anything but prevents maintainability → refactor
 - **Cosmetic**: names, formatting → fix opportunistically when nearby code is already being touched
 
-### Step 3 — Refactoring
+### Step 3: Refactoring
 
 Apply safe transformations (that do not change behaviour):
 - Extract function / method
@@ -269,7 +269,7 @@ Apply safe transformations (that do not change behaviour):
 - Replace conditional with polymorphism
 - Separate queries from modifications (Command-Query Separation)
 
-### Step 4 — Verification
+### Step 4: Verification
 
 Behaviour must remain identical:
 - If tests exist: they must pass after refactoring
@@ -296,9 +296,9 @@ Behaviour must remain identical:
 
 Before refactoring, assess the architectural impact by reading the documentation available in the project:
 
-- **Dependency graph/map** — if the project maintains a graph of relations between modules, check who depends on the module being modified. Every dependant may be impacted.
-- **Module stability** — if the project documents the stability of components (e.g. "fragile", "stable"), treat fragile modules with greater care: document the expected behaviour before proceeding.
-- **Migration target** — if an architectural migration plan exists, the refactoring must be consistent with that target, not diverge from it.
+- **Dependency graph/map**: if the project maintains a graph of relations between modules, check who depends on the module being modified. Every dependant may be impacted.
+- **Module stability**: if the project documents the stability of components (e.g. "fragile", "stable"), treat fragile modules with greater care, documenting the expected behaviour before proceeding.
+- **Migration target**: if an architectural migration plan exists, the refactoring must be consistent with that target, not diverge from it.
 
 Do not apply this analysis for purely local refactoring (renaming, extracting functions with no architectural impact).
 

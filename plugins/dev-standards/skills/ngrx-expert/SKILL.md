@@ -1,6 +1,6 @@
 ---
 name: ngrx-expert
-description: "This skill should be used when the user designs, reviews, or refactors NgRx state management — store design, event-driven actions, pure reducers, memoised selectors, effects, facade pattern, state normalisation. Also use when deciding whether NgRx is the right choice or a simpler alternative (signals, services) is enough. Trigger phrases: \"NgRx store\", \"add an action\", \"reducer\", \"memoised selector\", \"effect\", \"should I use NgRx\". Do not use for general Angular component patterns (use angular-expert)."
+description: "This skill should be used when the user designs, reviews, or refactors NgRx state management: store design, event-driven actions, pure reducers, memoised selectors, effects, facade pattern, state normalisation. Also use when deciding whether NgRx is the right choice or a simpler alternative (signals, services) is enough. Trigger phrases: \"NgRx store\", \"add an action\", \"reducer\", \"memoised selector\", \"effect\", \"should I use NgRx\". Do not use for general Angular component patterns (use angular-expert)."
 ---
 
 # Ngrx Expert
@@ -54,7 +54,7 @@ features/[feature-name]/store/
 
 ---
 
-## Actions — event-driven naming
+## Actions: event-driven naming
 
 Actions describe **what happened**, not what to do.
 
@@ -84,7 +84,7 @@ export const setItems = createAction('[Item] Set', props<{ data: any[] }>());
 
 ---
 
-## Reducers — pure and deterministic
+## Reducers: pure and deterministic
 
 Absolute rules:
 - No side effects, no async calls, no direct mutations
@@ -121,7 +121,7 @@ export const itemReducer = createReducer(
 
 ---
 
-## Selectors — memoised and composable
+## Selectors: memoised and composable
 
 ```typescript
 const selectItemState = createFeatureSelector<ItemState>('items');
@@ -152,7 +152,7 @@ export const selectSelectedItem = createSelector(
 
 ---
 
-## Effects — one effect = one side effect
+## Effects: one effect = one side effect
 
 ```typescript
 @Injectable()
@@ -177,7 +177,7 @@ export class ItemEffects {
 }
 ```
 
-**Flattening strategies in effects** → `frontend/angular/rxjs-expert` § Flattening strategies is the source of truth for operator selection.
+**Flattening strategies in effects** → `rxjs-expert` § Flattening strategies is the source of truth for operator selection.
 
 Summary for NgRx effects context:
 - `switchMap` → search/query (cancels the previous request)
@@ -187,7 +187,7 @@ Summary for NgRx effects context:
 
 ---
 
-## Facade Pattern — recommended
+## Facade Pattern: recommended
 
 The facade isolates components from the store. Components are unaware of the internal structure of the store.
 
@@ -278,7 +278,7 @@ it('dispatches itemsLoaded on API success', () => {
 ## Constraints
 
 - Do not use NgRx if a service with BehaviorSubject solves the problem
-- Reducers must be pure — no side effects
-- No HTTP calls in reducers or selectors — only in effects
+- Reducers must be pure: no side effects
+- No HTTP calls in reducers or selectors, only in effects
 - If using a facade, components do not access the store directly
-- Always type state with explicit interfaces — zero `any`
+- Always type state with explicit interfaces: zero `any`

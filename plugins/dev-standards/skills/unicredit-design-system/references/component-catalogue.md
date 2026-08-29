@@ -21,7 +21,7 @@
 
 The Bricks design system "standardises all UX and UI design elements and
 components of UniCredit's digital user touchpoints" (UniCredit / Tangity).
-The following inventory is the public reconstruction — always prefer the
+The following inventory is the public reconstruction. Always prefer the
 WeAreDesign master components when available.
 
 ### 1. Inputs & selections

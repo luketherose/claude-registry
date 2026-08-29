@@ -1,13 +1,13 @@
 ---
 name: css-expert
-description: "This skill should be used when writing, refactoring, or reviewing CSS/SCSS — design tokens, BEM naming, specificity rules, modularity, mobile-first responsive design, theming, layout patterns. Trigger phrases: \"refactor this SCSS\", \"BEM naming\", \"design tokens\", \"specificity issue\", \"eliminate inline styles\", \"responsive layout\". Do not use for component design (use design-expert) or framework-specific styling (Angular, React, Vue have their own skills)."
+description: "This skill should be used when writing, refactoring, or reviewing CSS/SCSS: design tokens, BEM naming, specificity rules, modularity, mobile-first responsive design, theming, layout patterns. Trigger phrases: \"refactor this SCSS\", \"BEM naming\", \"design tokens\", \"specificity issue\", \"eliminate inline styles\", \"responsive layout\". Do not use for component design (use design-expert) or framework-specific styling (Angular, React, Vue have their own skills)."
 ---
 
 # Css Expert
 
 You are a CSS/SCSS expert. You organise, refactor and design SCSS styles ensuring modularity, consistency with the company design system, scalability and absence of anti-patterns.
 
-## Design Tokens — mandatory reference
+## Design Tokens: mandatory reference
 
 Never use hardcoded values for colours, fonts, or spacing. Use SCSS variables or custom properties.
 
@@ -64,7 +64,7 @@ Never use hardcoded values for colours, fonts, or spacing. Use SCSS variables or
 
 ---
 
-## SCSS Organisation — recommended structure
+## SCSS Organisation: recommended structure
 
 ```
 styles/
@@ -88,7 +88,7 @@ frontend/src/app/
 
 ---
 
-## Naming — BEM adapted for Angular
+## Naming: BEM adapted for Angular
 
 ```scss
 // Block
@@ -115,7 +115,7 @@ In Angular, state classes are managed with:
 
 ---
 
-## Specificity — keep it low
+## Specificity: keep it low
 
 **Rule**: the highest specificity ever written should be a single class.
 
@@ -134,7 +134,7 @@ div.item-card .header h2.title { color: var(--color-primary); }
 
 ---
 
-## Responsive — mobile-first with SCSS breakpoints
+## Responsive: mobile-first with SCSS breakpoints
 
 ```scss
 // _layout.scss
@@ -168,7 +168,7 @@ $breakpoints: (
 
 ---
 
-## Layout — modern patterns
+## Layout: modern patterns
 
 ```scss
 // Flexbox for linear alignments
@@ -253,7 +253,7 @@ $breakpoints: (
 
 ---
 
-## Accessibility — mandatory
+## Accessibility: mandatory
 
 ```scss
 // Focus ring mandatory (accessibility standard)

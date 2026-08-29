@@ -122,7 +122,7 @@ The frontend doesn't have a per-UC fan-out because Angular components are typica
 After both tracks complete:
 - Read all outputs from disk; verify file structure
 - Run **adaptive verification** per Q3 (mvn compile, ng build)
-- Background dispatch `code-reviewer` per Q4 (review-mode background)
+- Background dispatch `pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed) per Q4 (review-mode background)
 
 **HITL CHECKPOINT 3**: present verification result + code review summary to user. User decides to proceed to W4 or revise.
 

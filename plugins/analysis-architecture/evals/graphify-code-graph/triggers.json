@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Costruisci un knowledge graph del repo cosi posso chiedere chi dipende da OrderService senza grepare ogni volta",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Che impatto ha cambiare la firma di PaymentGateway.charge? Chi la chiama e cosa raggiunge a valle?",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Traccia il data flow del campo customerId attraverso il codice, voglio interrogare il grafo non leggere 40 file",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivimi il technical map narrativo con i bounded context e i punti di integrazione di questo repo",
+    "should_trigger": false,
+    "description": "Out of scope: tech-analyst, il report; graphify lo alimenta"
+  },
+  {
+    "query": "Genera un class diagram UML dei package di dominio e salvalo come SVG",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `uml-diagram-generator` instead"
+  }
+]

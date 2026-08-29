@@ -1,10 +1,12 @@
 ---
 name: developer-ruby
-description: "Use this agent when writing, reviewing, or refactoring Ruby code. Produces production-ready Ruby for Rails 7+ web applications, Sinatra services, Sidekiq workers, and CLI tools (Thor). Opinionated on: RuboCop with the `rubocop-rails` and `rubocop-rspec` plugins, frozen string literals, Sorbet or RBS for type signatures on libraries, RSpec over Minitest for new projects, and avoiding common Ruby anti-patterns (fat models with no service objects, callback chains that mutate state, monkey-patching third-party gems, `rescue Exception`). Database: ActiveRecord with scope objects and query objects to keep models small."
-tools: Read, Edit, Write, Bash, Grep, Glob
+description: "Use this agent when writing, reviewing, or refactoring Ruby code. Produces production-ready Ruby for Rails 7+ web applications, Sinatra services, Sidekiq workers, and CLI tools (Thor). Opinionated on: RuboCop with the `rubocop-rails` and `rubocop-rspec` plugins, frozen string literals, Sorbet or RBS for type signatures on libraries, RSpec over Minitest for new projects, and avoiding common Ruby anti-patterns (fat models with no service objects, callback chains that mutate state, monkey-patching third-party gems, `rescue Exception`). Database: ActiveRecord with scope objects and query objects to keep models small. Typical user phrasings: \"write a Rails 7 service object for order creation with RSpec tests\", \"review this fat ActiveRecord model and extract service objects\", \"add Sidekiq worker with idempotency guarantees\"."
+tools: Read, Edit, Write, Bash, Grep, Glob, Skill
 model: inherit
 color: red
 ---
+
+
 
 
 

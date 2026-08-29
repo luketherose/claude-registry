@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Dopo il bump di Jackson a 2.17 parte NoSuchMethodError a runtime, in locale funziona e in CI no",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "npm mi dice incompatible peer deps tra React 18 e questa libreria, come ne esco",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Conflitto transitivo: il modulo A tira guava 2.x, il modulo B la 1.x, il build è rotto",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Aggiorna Spring Boot da 3.2.4 a 3.2.5 nel pom, è solo una patch e non ha rotto niente",
+    "should_trigger": false,
+    "description": "Out of scope: update di routine senza conflitto"
+  },
+  {
+    "query": "Quali dipendenze hanno CVE aperte in questo progetto?",
+    "should_trigger": false,
+    "description": "Out of scope: technical-analyst, security posture"
+  }
+]

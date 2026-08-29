@@ -1,6 +1,6 @@
 ---
 name: rest-api-standards
-description: "This skill should be used when an agent (api-designer, developer, code-reviewer) needs the canonical REST API design standards: resource modeling, HTTP method semantics, status codes, URL structure, versioning, pagination, RFC 7807 error format, and OpenAPI 3.1 authoring. Trigger phrases: \"REST API design\", \"how should this endpoint look\", \"review this API contract\", \"OpenAPI authoring rules\". Returns reference material, not a generated spec. Do not trigger directly from a coding prompt — invoked by the agents above."
+description: "This skill should be used when an agent (api-designer, developer, code-reviewer) needs the canonical REST API design standards: resource modeling, HTTP method semantics, status codes, URL structure, versioning, pagination, RFC 7807 error format, and OpenAPI 3.1 authoring. Trigger phrases: \"REST API design\", \"how should this endpoint look\", \"review this API contract\", \"OpenAPI authoring rules\". Returns reference material, not a generated spec. Do not trigger directly from a coding prompt. It is invoked by the agents above."
 ---
 
 # Rest Api Standards
@@ -9,7 +9,7 @@ This skill is the authoritative source for REST API design standards used
 by this team. Apply the section of the standard
 so the calling agent can apply it without ambiguity.
 
-Does not design APIs or write OpenAPI specs — provides the standards.
+Does not design APIs or write OpenAPI specs. Provides the standards.
 
 ---
 
@@ -18,7 +18,7 @@ Does not design APIs or write OpenAPI specs — provides the standards.
 - URLs identify resources, not actions: `/orders/{id}` not `/getOrder`
 - Plural nouns for collections: `/orders`, `/customers`, `/products`
 - Nest only when the relationship is strong and ownership is clear:
-  `/orders/{id}/items` ✓ — `/order-items?orderId=` ✗
+  `/orders/{id}/items` ✓, `/order-items?orderId=` ✗
 - Keep URLs flat when nesting would exceed two levels
 - Resource names in URLs are always lowercase, words separated by hyphens
 - No verbs in URLs except for non-CRUD actions: `/orders/{id}/cancel` is acceptable
@@ -106,7 +106,7 @@ For validation errors, add `violations` array: `[{"field": "productId", "message
 }
 ```
 
-Always paginate collection endpoints — never return unbounded lists.
+Always paginate collection endpoints, never return unbounded lists.
 
 ---
 
@@ -115,7 +115,7 @@ Always paginate collection endpoints — never return unbounded lists.
 - Request bodies: validate all fields; return 400 with violations array on failure
 - Response bodies: stable field names; never remove or rename without versioning
 - Dates: ISO 8601 (`2026-04-20T14:30:00Z`); always UTC
-- IDs: UUIDs or opaque strings — avoid sequential integers in public APIs
+- IDs: UUIDs or opaque strings (avoid sequential integers in public APIs)
 - Null vs. absent: prefer `null` for explicitly-absent values; prefer field omission
   for optional fields not relevant to the response
 - Envelopes: use `data` wrapper only if metadata is also returned; flat response otherwise
@@ -127,7 +127,7 @@ Always paginate collection endpoints — never return unbounded lists.
 - Every endpoint must have: `summary`, `operationId`, at least one `responses` entry
 - Every `200`/`201` response must have a `$ref` to a schema component
 - Every `400` and `500` response must reference the ProblemDetail schema
-- Use `$ref` for all reusable schemas — no inline schema definitions in path operations
+- Use `$ref` for all reusable schemas: no inline schema definitions in path operations
 - `operationId` format: `{verb}{Resource}` e.g. `createOrder`, `getOrderById`, `listOrders`
 - Authentication: document via `securitySchemes` (OAuth2, Bearer JWT, API key)
 

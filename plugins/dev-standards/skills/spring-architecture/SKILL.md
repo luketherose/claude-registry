@@ -1,6 +1,6 @@
 ---
 name: spring-architecture
-description: "This skill should be used when designing or reviewing the LAYERING of a Spring Boot module — Controller/Service/Repository/Entity boundaries, DTO+mapper introduction, Bean Validation placement, global exception handling, naming conventions, or module implementation order. Trigger phrases: \"add a new module\", \"where does this belong\", \"split this controller\", \"DTO mapping\", \"how do I layer this Spring code\". Do not use for Spring Boot configuration concerns (use spring-expert) or JPA/ORM specifics (use spring-data-jpa)."
+description: "This skill should be used when designing or reviewing the LAYERING of a Spring Boot module: Controller/Service/Repository/Entity boundaries, DTO+mapper introduction, Bean Validation placement, global exception handling, naming conventions, or module implementation order. Trigger phrases: \"add a new module\", \"where does this belong\", \"split this controller\", \"DTO mapping\", \"how do I layer this Spring code\". Do not use for Spring Boot configuration concerns (use spring-expert) or JPA/ORM specifics (use spring-data-jpa)."
 ---
 
 # Spring Architecture
@@ -40,7 +40,7 @@ com.example.myapp/
 
 ---
 
-## DTO vs Entity — mandatory separation
+## DTO vs Entity: mandatory separation
 
 ```
 Entity:  represents the database structure — coupled to Hibernate
@@ -113,7 +113,7 @@ public OrderResponse create(OrderCreateRequest request) {
 
 ---
 
-## Structured logging — conventions
+## Structured logging: conventions
 
 ```java
 // Pattern: [level] [action] [identifiers] [state/result]
@@ -201,7 +201,7 @@ Every service bean is stateless (singleton). Session state lives in the JWT, not
 
 ### Domain separation
 
-When the application manages distinct domains (e.g. CRM and Orders), keep them with separate DB schemas or at minimum with separate packages. Avoid direct dependencies between services from different domains — use an `orchestration service` if coordination is needed.
+When the application manages distinct domains (e.g. CRM and Orders), keep them with separate DB schemas or at minimum with separate packages. Avoid direct dependencies between services from different domains: use an `orchestration service` if coordination is needed.
 
 ```java
 // ❌ Service of one domain that directly depends on the service of another
@@ -219,15 +219,15 @@ public class CompanyDossierService {
 }
 ```
 
-### Feature scaling — adding a module without touching existing code
+### Feature scaling: adding a module without touching existing code
 
-Each new domain follows the same structure. Do not modify existing classes to add unrelated features — open new files, respect OCP.
+Each new domain follows the same structure. Do not modify existing classes to add unrelated features: open new files, respect OCP.
 
 ---
 
-## Checklist — layer architecture
+## Checklist: layer architecture
 
-- [ ] Controller: routing, validation, HTTP status mapping only — zero business logic
+- [ ] Controller: routing, validation, HTTP status mapping only, zero business logic
 - [ ] Service: interface + impl, `@Transactional(readOnly=true)` default, override for writes
 - [ ] Repository: derived queries for simple cases, JPQL for complex logic, native only for DB-specific features
 - [ ] DTO: immutable records, requests validated with `@Valid`, responses never JPA entities

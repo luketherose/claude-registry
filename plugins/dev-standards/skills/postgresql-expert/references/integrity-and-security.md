@@ -37,7 +37,7 @@ public ResponseEntity<ErrorResponse> handleDataIntegrity(DataIntegrityViolationE
 }
 ```
 
-### SQL Injection — prevention
+### SQL Injection: prevention
 
 ```java
 // ❌ String concatenation — vulnerable to SQL injection

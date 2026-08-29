@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Review the diff, voglio i commenti pronti da incollare in PR",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "PR feedback su questa change: secco, niente hedging, niente ripetizione del codice",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Commenti per questa change, formato riga, severita, problema e fix",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivi il commit message conventional per queste modifiche",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `caveman-commit` instead"
+  },
+  {
+    "query": "Rispondi piu corto per il resto della sessione, cut the fluff",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `caveman` instead"
+  }
+]

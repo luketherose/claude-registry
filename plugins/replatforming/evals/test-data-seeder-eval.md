@@ -106,7 +106,7 @@ limits.
 
 **Expected behavior**:
 - The agent runs the column-length pre-check from
-  `test-data-design-standards`
+  `test-data-seeding-standards`
 - The dataset plan's column-length pre-check table marks the long
   values with "shorten"
 - The emitted seed file uses shortened values (e.g. `'Q2 2024'`,

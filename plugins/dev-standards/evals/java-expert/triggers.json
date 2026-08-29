@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Trasforma questi DTO in record Java 17 e usa una sealed class per il risultato del parsing",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Qui Optional è usato male e la Stream API è illeggibile, sistema anche il logging SLF4J",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Genera l'export Excel con Apache POI e il PDF con iText, piu la gerarchia di eccezioni custom",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Configura @ConfigurationProperties e il WebClient per chiamare l'API esterna",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `spring-expert` instead"
+  },
+  {
+    "query": "Dove metto il DTO mapper, nel service o nel controller?",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `spring-architecture` instead"
+  }
+]

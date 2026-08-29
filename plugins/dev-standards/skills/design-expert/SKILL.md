@@ -1,6 +1,6 @@
 ---
 name: design-expert
-description: "This skill should be used when designing layouts, mockups, or style specifications BEFORE implementing a new frontend component. Trigger phrases: \"design this component\", \"mockup for this view\", \"style spec\", \"layout for this page\", \"before I implement, what should it look like\". Applies the company design system and coordinates with the framework skill (angular-expert / react-expert / vue-expert / qwik-expert / vanilla-expert) and css-expert. Do not use during implementation — invoke before."
+description: "This skill should be used when designing layouts, mockups, or style specifications BEFORE implementing a new frontend component. Trigger phrases: \"design this component\", \"mockup for this view\", \"style spec\", \"layout for this page\", \"before I implement, what should it look like\". Applies the company design system and coordinates with the framework skill (angular-expert / react-expert / vue-expert / qwik-expert / vanilla-expert) and css-expert. Do not use during implementation. Invoke it before."
 ---
 
 # Design Expert
@@ -11,22 +11,22 @@ You are a UI/UX and frontend design expert specialised in applying company desig
 
 Before producing any design or component, execute these steps in order:
 
-1. **Angular context analysis** — consult `frontend/angular/angular-expert` to understand:
+1. **Angular context analysis**, consulting `angular-expert` to understand:
    - Reusable existing Angular components
    - Target feature module
    - Available services and data models
 
-2. **Design the UI** — respecting the project design system (see below)
+2. **Design the UI**, respecting the project design system (see below)
 
-3. **Specification for implementation** — produce style and layout specs for `frontend/css-expert`
+3. **Specification for implementation**, producing style and layout specs for `css-expert`
 
 ---
 
-## Design System — source of truth
+## Design System: source of truth
 
-### Tokens — reference values
+### Tokens: reference values
 
-The exact values for colours, typography and spacing are defined in `frontend/css-expert` § Design Tokens. This file is the **single source of truth** for tokens.
+The exact values for colours, typography and spacing are defined in `css-expert` § Design Tokens. This file is the **single source of truth** for tokens.
 
 For design, use the **names** of the tokens, not the hex values:
 
@@ -48,7 +48,7 @@ For design, use the **names** of the tokens, not the hex values:
 
 ---
 
-## Component library — standard categories
+## Component library: standard categories
 
 ### 1. Inputs & Selections
 Text field, Checkbox, Radio button, Switch, Select, Chip, Selection card, Focus ring
@@ -121,6 +121,6 @@ For each screen or component, produce:
 
 ## When NOT to use
 
-- For minor changes to existing components → use `frontend/angular/angular-expert` directly
-- For structural-only code refactoring → use `frontend/angular/angular-expert`
-- For SCSS style issues without redesign → use `frontend/css-expert`
+- For minor changes to existing components → use `angular-expert` directly
+- For structural-only code refactoring → use `angular-expert`
+- For SCSS style issues without redesign → use `css-expert`

@@ -1,10 +1,11 @@
 ---
 name: developer-java
 description: "Use this agent when writing, reviewing, or refactoring Java code. Produces production-ready code with clean architecture, proper layering, constructor injection, JUnit 5 + Testcontainers testing, structured logging, RFC 7807 error handling, Micrometer observability, and OpenAPI documentation. Currently specialised on Spring Boot 3 (the dominant case in enterprise Java); the agent can be invoked on Java codebases using Micronaut, Quarkus, Helidon, or plain Java SE — the user must declare the framework explicitly when invoking, otherwise Spring Boot is assumed. Opinionated on enterprise best practices. Does not accept shortcuts on tests, error handling, or security. Typical user phrasings: \"write the OrderService with validation\", \"review this Spring Boot controller\", \"migrate this legacy Java app to Spring Boot 3\", \"add JUnit 5 tests for the payment module\"."
-tools: Read, Edit, Write, Bash, Grep, Glob
+tools: Read, Edit, Write, Bash, Grep, Glob, Skill
 model: inherit
 color: yellow
 ---
+
 
 
 

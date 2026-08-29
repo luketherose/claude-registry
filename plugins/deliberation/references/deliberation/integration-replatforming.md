@@ -24,7 +24,7 @@ behaviour is single-agent.
 ## Decision points (Phases 1–3)
 
 The analysis phases run inside the iteration loop documented in
-`the `replatforming` plugin's `references/refactoring-workflow/iteration-loop.md`. The
+the `replatforming` plugin's `references/refactoring-workflow/iteration-loop.md`. The
 iteration loop is single-agent by default. Deliberation is invoked
 ONLY when:
 

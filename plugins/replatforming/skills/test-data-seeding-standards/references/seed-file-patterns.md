@@ -2,17 +2,17 @@
 
 ## Contents
 
-- Part 2 — Seed-file injection patterns
-- Step 1 — Auto-detect the migration tool
-- Step 2 — Gate the seed to a non-production profile
-- Step 3 — Idempotent insert templates per tool
-- Step 4 — Resolve FK parent IDs by lookup, never by hardcoded value
-- Step 5 — File naming and registration
-- Step 6 — Invocation commands (for the recap)
+- Part 2: Seed-file injection patterns
+- Step 1: Auto-detect the migration tool
+- Step 2: Gate the seed to a non-production profile
+- Step 3: Idempotent insert templates per tool
+- Step 4: Resolve FK parent IDs by lookup, never by hardcoded value
+- Step 5: File naming and registration
+- Step 6: Invocation commands (for the recap)
 
-## Part 2 — Seed-file injection patterns
+## Part 2: Seed-file injection patterns
 
-### Step 1 — Auto-detect the migration tool
+### Step 1: Auto-detect the migration tool
 
 Probe the project root and backend module in this order; stop at
 the first match.
@@ -38,7 +38,7 @@ whose migrations create the tables you are about to seed).
 
 ---
 
-### Step 2 — Gate the seed to a non-production profile
+### Step 2: Gate the seed to a non-production profile
 
 The seed MUST NOT execute in `prod`.
 
@@ -60,7 +60,7 @@ and ask. Never emit a seed without a gate.
 
 ---
 
-### Step 3 — Idempotent insert templates per tool
+### Step 3: Idempotent insert templates per tool
 
 #### Liquibase (YAML)
 
@@ -200,13 +200,13 @@ Document invocation in the recap (e.g. `psql -d demo -f seed-test.sql`).
 
 ---
 
-### Step 4 — Resolve FK parent IDs by lookup, never by hardcoded value
+### Step 4: Resolve FK parent IDs by lookup, never by hardcoded value
 
 The most common cross-tool failure: hardcoding `parent_id = 7`
 because that's what auto-increment produced last run. On a fresh DB
 the parent's ID is different and the FK breaks.
 
-**Liquibase** — use `valueComputed` or embedded SQL:
+**Liquibase** (use `valueComputed` or embedded SQL):
 
 ```yaml
 - column:
@@ -214,29 +214,29 @@ the parent's ID is different and the FK breaks.
     valueComputed: "(SELECT id FROM customers WHERE business_key = 'COMPANY-001')"
 ```
 
-**Flyway / raw SQL** — use `INSERT ... SELECT`:
+**Flyway / raw SQL** (use `INSERT ... SELECT`):
 
 ```sql
 INSERT INTO orders (customer_id, status)
 SELECT id, 'OPEN' FROM customers WHERE business_key = 'COMPANY-001';
 ```
 
-**Rails** — use ActiveRecord association:
+**Rails** (use ActiveRecord association):
 
 ```ruby
 acme = Customer.find_by!(business_key: 'COMPANY-001')
 Order.find_or_create_by!(customer: acme, status: 'OPEN')
 ```
 
-**EF Core** — anchor the parent at a stable PK; child references it
+**EF Core**: anchor the parent at a stable PK; child references it
 by that PK in `HasData`.
 
-**Knex / TypeORM / Prisma** — query the parent first, then insert
+**Knex / TypeORM / Prisma**: query the parent first, then insert
 the child with the looked-up ID.
 
 ---
 
-### Step 5 — File naming and registration
+### Step 5: File naming and registration
 
 | Tool | Naming pattern | Registration |
 |---|---|---|
@@ -253,7 +253,7 @@ the child with the looked-up ID.
 
 ---
 
-### Step 6 — Invocation commands (for the recap)
+### Step 6: Invocation commands (for the recap)
 
 | Tool | Apply command |
 |---|---|

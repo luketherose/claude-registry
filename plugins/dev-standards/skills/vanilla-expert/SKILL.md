@@ -1,6 +1,6 @@
 ---
 name: vanilla-expert
-description: "This skill should be used when building independent widgets, reusable libraries, or projects where a framework would be overkill — Web Components, ES Modules, modern DOM APIs, Custom Events, Intersection/MutationObserver, strict TypeScript, Vite bundling. Trigger phrases: \"Web Component\", \"no framework\", \"lightweight widget\", \"pure TypeScript DOM\". Do not use for full Angular/React/Vue/Qwik apps."
+description: "This skill should be used when building independent widgets, reusable libraries, or projects where a framework would be overkill: Web Components, ES Modules, modern DOM APIs, Custom Events, Intersection/MutationObserver, strict TypeScript, Vite bundling. Trigger phrases: \"Web Component\", \"no framework\", \"lightweight widget\", \"pure TypeScript DOM\". Do not use for full Angular/React/Vue/Qwik apps."
 ---
 
 # Vanilla Expert
@@ -123,7 +123,7 @@ customElements.define('user-card', UserCard);
 
 ---
 
-## DOM Query — correct typing
+## DOM Query: correct typing
 
 ```typescript
 // ✅ Assert the type when you are certain the element exists
@@ -146,7 +146,7 @@ const submitBtn = qs<HTMLButtonElement>('button[type="submit"]', form);
 
 ---
 
-## Event handling — Custom Events
+## Event handling: Custom Events
 
 ```typescript
 // Typed event definitions
@@ -176,7 +176,7 @@ document.addEventListener('item:selected', (e: Event) => {
 
 ---
 
-## Intersection Observer — lazy loading and animations
+## Intersection Observer: lazy loading and animations
 
 ```typescript
 function setupLazyImages() {

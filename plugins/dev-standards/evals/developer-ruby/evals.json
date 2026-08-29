@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "developer-ruby",
+    "query": "Rifattorizza questo fat ActiveRecord model estraendo dei service object",
+    "files": [],
+    "expected_behavior": [
+      "Business logic moves into service objects and the controller action shrinks to dispatch plus response",
+      "Every produced Ruby file starts with `# frozen_string_literal: true`",
+      "Queries are expressed as scopes or query objects: no raw .where survives inside a controller"
+    ]
+  },
+  {
+    "agent": "developer-ruby",
+    "query": "Scrivi un worker Sidekiq idempotente per l'invio delle notifiche",
+    "files": [],
+    "expected_behavior": [
+      "The job receives an identifier, not an ActiveRecord instance",
+      "Idempotency is enforced explicitly (a guard, a lock or a status check) rather than assumed from retry behaviour",
+      "No `rescue Exception` appears anywhere in the produced code"
+    ]
+  },
+  {
+    "agent": "developer-ruby",
+    "query": "Review this Rails 7 controller for RuboCop and RSpec coverage",
+    "files": [],
+    "expected_behavior": [
+      "Reports violations against rubocop-rails and rubocop-rspec by cop name, with the file and line",
+      "Flags long callback chains that perform business logic and any monkey patching of a third party gem",
+      "Proposes RSpec specs for the uncovered paths rather than Minitest"
+    ]
+  }
+]

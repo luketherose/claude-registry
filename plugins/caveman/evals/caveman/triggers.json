@@ -1,0 +1,27 @@
+[
+  {
+    "query": "caveman mode on, da qui in poi rispondi corto",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Taglia il fluff, voglio risposte token-efficient senza preamboli ne cortesie",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "attiva caveman ultra per il resto della sessione",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Scrivimi il commit message per questa modifica, conventional commits",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `caveman-commit` instead"
+  },
+  {
+    "query": "Dammi i commenti di review pronti da incollare su questa PR",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `caveman-review` instead"
+  }
+]

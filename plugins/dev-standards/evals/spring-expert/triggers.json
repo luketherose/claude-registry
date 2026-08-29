@@ -1,0 +1,32 @@
+[
+  {
+    "query": "Configura Spring Security 6 con JWT su questi endpoint, il resto resta pubblico",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Il WebClient verso il servizio esterno non ha timeout ne retry, sistemalo",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Test con MockMvc e @WebMvcTest per questo controller, piu @ConfigurationProperties per la config esterna",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Trasforma questi DTO in record Java 17 e sistema l'uso di Optional e Stream",
+    "should_trigger": false,
+    "description": "Out of scope: java-expert, fuori dal layer Spring"
+  },
+  {
+    "query": "Questo controller è troppo grasso, dove sposto la logica?",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `spring-architecture` instead"
+  },
+  {
+    "query": "Sistema il fetch della @ManyToOne che fa N+1",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `spring-data-jpa` instead"
+  }
+]

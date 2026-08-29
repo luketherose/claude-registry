@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Questo reducer muta lo stato e i selector non sono memoizzati, sistema lo store",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Serve davvero NgRx qui o bastano un service e i signals?",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Aggiungi action ed effect per il caricamento della lista ordini, con stato normalizzato e facade",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Metti questo component in OnPush e splitta smart/dumb",
+    "should_trigger": false,
+    "description": "Out of scope: angular-expert, pattern di component"
+  },
+  {
+    "query": "Rifai questa form in Reactive Forms con validator custom",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `angular-expert` instead"
+  }
+]

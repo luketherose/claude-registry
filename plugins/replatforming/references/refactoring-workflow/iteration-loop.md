@@ -109,7 +109,7 @@ delta schema below (written to `_meta/iteration-log.jsonl`):
 When the user input is unstructured prose, the supervisor must produce
 at least one `adjustment` per distinct intent it can identify. If the
 input contains a debate trigger (lexicon match — see
-`the `deliberation` plugin's `references/deliberation/trigger-lexicon.md`), set
+the `deliberation` plugin's `references/deliberation/trigger-lexicon.md`), set
 `debate_requested: true` and route the contested adjustment through
 deliberation (see § "Optional deliberation" below).
 
@@ -159,13 +159,13 @@ The flow:
 
 1. Identify the contested adjustment(s) (one or more from the delta).
 2. Build a decision brief per the schema in
-   `the `deliberation` plugin's `references/deliberation/schemas.md`. The brief includes:
+   the `deliberation` plugin's `references/deliberation/schemas.md`. The brief includes:
    - the original sub-agent output(s) for the contested artifact(s)
    - the user's adjustment text and rationale
    - the supervisor's framing of the disagreement
 3. Dispatch the engine via the Agent tool with the brief + default
    policy from § "Default deliberation policy" in
-   `the `deliberation` plugin's `references/deliberation/integration-replatforming.md`.
+   the `deliberation` plugin's `references/deliberation/integration-replatforming.md`.
 4. Read the engine's final-decision artefact from disk.
 5. If `requiredHumanApproval == true`: halt; surface the engine's
    recommendation to the user; ask for explicit acceptance before

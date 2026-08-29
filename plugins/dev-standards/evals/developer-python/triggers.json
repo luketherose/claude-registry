@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Scrivi un endpoint FastAPI con validazione Pydantic",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Review this Python service for anti-patterns",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Aggiungi test pytest per la data pipeline",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Rifai questa UI Streamlit in Angular con i componenti standalone",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  },
+  {
+    "query": "Scrivi un worker Sidekiq idempotente per Rails 7",
+    "should_trigger": false,
+    "description": "Should not activate this capability"
+  }
+]

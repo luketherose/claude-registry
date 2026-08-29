@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "debugger",
+    "query": "Ecco lo stack trace, perché questa chiamata fallisce?",
+    "files": [],
+    "expected_behavior": [
+      "Output follows the Debug Report shape with Observed symptom, Root cause, Fix and Why this fixes it as separate sections",
+      "The root cause is explained with concrete file:line references before any fix code is shown",
+      "The fix is the minimal targeted change: no unrelated renaming, no restructuring of files that are not implicated"
+    ]
+  },
+  {
+    "agent": "debugger",
+    "query": "Questo endpoint ritorna 500 a intermittenza, diagnostica il problema",
+    "files": [],
+    "expected_behavior": [
+      "States the observed symptom verbatim (the exact error or status) rather than paraphrasing it",
+      "Explains why the failure is intermittent and what condition triggers it, instead of proposing a speculative fix",
+      "Anything unrelated it notices near the bug goes under Related issues, not into the fix itself"
+    ]
+  },
+  {
+    "agent": "debugger",
+    "query": "La mia app Spring Boot non parte, ecco l'errore nei log",
+    "files": [],
+    "expected_behavior": [
+      "Identifies the specific failing bean, configuration property or missing dependency named in the log, quoting the log line",
+      "Proposes one targeted change and explains the causal link between the change and the startup failure",
+      "Does not rewrite the test suite and does not perform a broad refactor of the configuration"
+    ]
+  }
+]

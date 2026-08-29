@@ -2,14 +2,14 @@
 
 ## Contents
 
-- Configuration — YAML and ConfigurationProperties
+- Configuration: YAML and ConfigurationProperties
 - Recommended profile structure
-- ConfigurationProperties — preferable to scattered @Value
-- WebClient — external HTTP calls
+- ConfigurationProperties: preferable to scattered @Value
+- WebClient: external HTTP calls
 - Bean configuration
 - Call pattern with full error handling
 
-## Configuration — YAML and ConfigurationProperties
+## Configuration: YAML and ConfigurationProperties
 
 ### Recommended profile structure
 
@@ -64,7 +64,7 @@ spring:
       ddl-auto: validate
 ```
 
-### ConfigurationProperties — preferable to scattered @Value
+### ConfigurationProperties: preferable to scattered @Value
 
 ```java
 @ConfigurationProperties(prefix = "app.service-a")
@@ -92,7 +92,7 @@ public class MyApplication { ... }
 
 ---
 
-## WebClient — external HTTP calls
+## WebClient: external HTTP calls
 
 ### Bean configuration
 

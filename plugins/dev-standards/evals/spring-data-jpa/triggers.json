@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Questa repository method fa N+1 sulle order lines, sistemala",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "La @OneToMany è EAGER e si porta dietro mezzo DB, cambia la fetch strategy senza rompere le firme",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Dove metto il @Transactional e come scrivo questa JPQL con la bulk update e l'auditing automatico?",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Splitta questo controller e dimmi dove va il DTO mapper",
+    "should_trigger": false,
+    "description": "Out of scope: layering: spring-architecture"
+  },
+  {
+    "query": "Scrivi il changelog Liquibase per la nuova tabella e l'indice",
+    "should_trigger": false,
+    "description": "Out of scope: SQL e migration: postgresql-expert"
+  }
+]

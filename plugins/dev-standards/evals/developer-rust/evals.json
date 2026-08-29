@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "developer-rust",
+    "query": "Review this Rust service for unwrap() and lifetime issues",
+    "files": [],
+    "expected_behavior": [
+      "Flags every unwrap() and expect() in library or service code with the file and line, and proposes the typed error path instead",
+      "Flags Box<dyn Trait> used where a generic constraint fits, and any clone() added to silence the borrow checker without re-examining ownership",
+      "Flags allocation inside hot loops and premature Arc<Mutex> wrapping"
+    ]
+  },
+  {
+    "agent": "developer-rust",
+    "query": "Aggiungi copertura cargo test per il modulo domain",
+    "files": [],
+    "expected_behavior": [
+      "Produces tests that compile against stable Rust only, with no nightly feature gate",
+      "States that cargo fmt and cargo clippy were run with warnings denied before responding",
+      "All file content is written with the Write or Edit tool, never through a Bash heredoc"
+    ]
+  },
+  {
+    "agent": "developer-rust",
+    "query": "Scrivi un servizio axum con tokio, thiserror e tracing",
+    "files": [],
+    "expected_behavior": [
+      "Library errors are defined with thiserror and anyhow is confined to the binary edge, not leaked into library signatures",
+      "tracing spans are plumbed through the async paths and long lived tasks get an explicit shutdown signal",
+      "The async runtime is never blocked with std::thread::sleep or synchronous I/O"
+    ]
+  }
+]

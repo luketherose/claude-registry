@@ -1,0 +1,32 @@
+[
+  {
+    "agent": "developer-python",
+    "query": "Scrivi un endpoint FastAPI per la registrazione utente con validazione Pydantic",
+    "files": [],
+    "expected_behavior": [
+      "Every function signature carries type hints including an explicit return type",
+      "Request and response models are pydantic v2 models: no raw dict is parsed without validation",
+      "Files land in the api / service / repository / domain layout, with the business logic outside the router"
+    ]
+  },
+  {
+    "agent": "developer-python",
+    "query": "Review this Python service for anti-patterns",
+    "files": [],
+    "expected_behavior": [
+      "Flags missing or partial type hints, untyped dict payloads and swallowed exceptions, each with the file and line",
+      "Checks that the exception hierarchy is custom and typed and that FastAPI handlers return RFC 7807 compatible JSON",
+      "Checks that no sensitive data reaches the logs and that structlog is used for production logging"
+    ]
+  },
+  {
+    "agent": "developer-python",
+    "query": "Aggiungi i test pytest per la data pipeline",
+    "files": [],
+    "expected_behavior": [
+      "Produces pytest tests split into unit tests that perform no I/O and integration tests that use testcontainers-python",
+      "Uses parametrize and fixtures rather than copy pasted test bodies",
+      "States the resulting coverage against the 70% minimum, or says what is needed to measure it"
+    ]
+  }
+]

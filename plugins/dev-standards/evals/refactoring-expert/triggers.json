@@ -1,0 +1,27 @@
+[
+  {
+    "query": "Questo metodo è lungo 300 righe e fa cinque cose, spaccalo senza cambiare il comportamento",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Riduci il coupling tra questi due package applicando SOLID, la testabilita adesso è zero",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Clean up di questa classe: extract method, extract class, niente feature nuove",
+    "should_trigger": true,
+    "description": "Primary invocation"
+  },
+  {
+    "query": "Aggiungi la feature di export CSV a questo service",
+    "should_trigger": false,
+    "description": "Out of scope: nuova funzionalita, skill di sviluppo del linguaggio"
+  },
+  {
+    "query": "Parte NullPointerException nel mapper quando l'indirizzo è nullo, trova la causa",
+    "should_trigger": false,
+    "description": "Confusable query, should route to `debugger` instead"
+  }
+]

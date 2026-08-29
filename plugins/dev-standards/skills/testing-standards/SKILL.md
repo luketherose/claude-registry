@@ -1,6 +1,6 @@
 ---
 name: testing-standards
-description: "This skill should be used when an agent (test-writer, developer, code-reviewer) needs the canonical testing standards: principles, scenario taxonomy, naming conventions, Arrange-Act-Assert structure, framework templates for JUnit 5 + Mockito (Java), pytest (Python), Jest (TypeScript). Trigger phrases: \"testing standards\", \"how should I structure these tests\", \"AAA pattern\", \"JUnit template\", \"pytest fixture conventions\". Returns reference material and complete test templates, not generated test code. Do not trigger directly from a coding prompt — invoked by the agents above."
+description: "This skill should be used when an agent (test-writer, developer, code-reviewer) needs the canonical testing standards: principles, scenario taxonomy, naming conventions, Arrange-Act-Assert structure, framework templates for JUnit 5 + Mockito (Java), pytest (Python), Jest (TypeScript). Trigger phrases: \"testing standards\", \"how should I structure these tests\", \"AAA pattern\", \"JUnit template\", \"pytest fixture conventions\". Returns reference material and complete test templates, not generated test code. Do not trigger directly from a coding prompt. It is invoked by the agents above."
 ---
 
 # Testing Standards
@@ -10,7 +10,7 @@ used by this team. Apply the testing doctrine,
 conventions, and framework templates with enough precision that the calling
 agent can produce consistent, high-quality tests.
 
-Does not write tests for a specific class — provides the standards and
+Does not write tests for a specific class. Provides the standards and
 templates that the calling agent uses to write them.
 
 ---
@@ -37,11 +37,11 @@ templates that the calling agent uses to write them.
 
 For any unit under test, always identify scenarios in this order:
 
-1. **Happy path** — expected successful execution with valid, representative input
-2. **Boundary conditions** — min/max values, empty collections, zero, single-element
-3. **Invalid input** — null, empty string, negative numbers, wrong types
-4. **Business rule violations** — combinations of valid inputs that violate a rule
-5. **Error propagation** — what happens when a dependency throws or returns empty/null
+1. **Happy path**: expected successful execution with valid, representative input
+2. **Boundary conditions**: min/max values, empty collections, zero, single-element
+3. **Invalid input**: null, empty string, negative numbers, wrong types
+4. **Business rule violations**: combinations of valid inputs that violate a rule
+5. **Error propagation**: what happens when a dependency throws or returns empty/null
 
 Do not ship tests that only cover the happy path.
 
@@ -61,8 +61,8 @@ processPayment_whenGatewayTimesOut_shouldRetryAndFail
 
 Rules:
 - No `test` prefix
-- Use `should` in the outcome — describes expected behavior
-- Use `when` or `with` in the condition — describes the scenario
+- Use `should` in the outcome: describes expected behavior
+- Use `when` or `with` in the condition: describes the scenario
 - Test class name: `{ClassName}Test` (Java) or `test_{module}.py` (Python)
 
 ---
@@ -312,5 +312,5 @@ Minimum enforced in CI: **70% line coverage** (Java: JaCoCo; Python: pytest-cov)
 - Depend on execution order
 - Share mutable state between test methods
 - Hit real external services (databases, APIs, message queues) in unit tests
-- Use `Thread.sleep()` to wait for async operations — use `CompletableFuture`, `awaitility`, or test doubles
-- Assert on log output (fragile) — assert on observable side effects instead
+- Use `Thread.sleep()` to wait for async operations: use `CompletableFuture`, `awaitility`, or test doubles
+- Assert on log output (fragile): assert on observable side effects instead

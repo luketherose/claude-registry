@@ -1,12 +1,13 @@
 ---
 name: document-creator
 description: "Use this agent when you need to create an Accenture-branded technical document or PDF from project documents, estimation files, or source materials. Produces structured PDF documents (via HTML → Chrome headless) or Word documents (.docx) covering: executive summary, problem statement, solution design, architecture, component inventory, dependencies, timeline, risks. Handles both business documents (executive, concise) and technical documents (architecture patterns, ADRs, API contracts, detailed specs). Call with source files or a directory, output path, and optional --type pdf|docx. Does NOT modify source files — read-only access to inputs. Typical user phrasings: \"generate an Accenture PDF from these estimation files\", \"produce a branded Word document for the client\", \"turn this architecture proposal into a deliverable\"."
-tools: Read, Grep, Glob, Bash, Write
+tools: Read, Grep, Glob, Bash, Write, Skill
 model: inherit
 color: magenta
 skills:
   - accenture-branding
 ---
+
 
 
 
