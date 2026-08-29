@@ -2,26 +2,26 @@
   {
     "query": "Quali sono gli standard Spring che seguiamo? Package structure, regole di layering, DI",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Company Spring standards: package structure, layering, DI"
   },
   {
     "query": "Dammi il riferimento canonico su ProblemDetail RFC 7807, logging SLF4J con MDC e baseline Spring Security 6",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Canonical reference on ProblemDetail, SLF4J MDC and Spring Security 6"
   },
   {
     "query": "Convenzioni Maven, JUnit 5, Mockito e Testcontainers del nostro standard Java/Spring",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Company Maven, JUnit 5, Mockito and Testcontainers conventions"
   },
   {
     "query": "Scrivi il @RestController per la registrazione utente con validazione",
     "should_trigger": false,
-    "description": "Out of scope: prompt di coding: spring-expert o spring-architecture"
+    "description": "@RestController for user registration with validation"
   },
   {
     "query": "Questa query JPA fa N+1 sulle righe ordine, sistemala",
     "should_trigger": false,
-    "description": "Out of scope: prompt di coding: spring-data-jpa"
+    "description": "JPA query causing N+1 on order rows"
   }
 ]

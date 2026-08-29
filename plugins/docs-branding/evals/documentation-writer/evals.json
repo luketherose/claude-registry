@@ -6,7 +6,8 @@
     "expected_behavior": [
       "Asks which output format(s) to produce, and surfaces the menu, before reading the code or drafting any text",
       "Probes the local toolchain (pandoc, pdflatex, wkhtmltopdf) and lists only the formats actually producible, naming the missing tool for each unavailable format",
-      "Ends with the '=== Documentation produced ===' block listing topic, output dir, formats, files with line counts, skipped formats and open questions"
+      "Ends with the '=== Documentation produced ===' block listing topic, output dir, formats, files with line counts, skipped formats and open questions",
+      "Loads `doc-expert` with the Skill tool (tool_used: Skill) once the format choice is made, and the effect is visible: the README opens with what the service does for its users before any build or dependency instruction, which is that skill's business-oriented ordering"
     ]
   },
   {
@@ -16,7 +17,7 @@
     "expected_behavior": [
       "Reads the existing docs and the code, and updates only the sections that actually drifted rather than rewriting the whole document",
       "Uses active voice and present tense ('The service authenticates users', 'Returns 404 if not found')",
-      "Every code example shown is one that actually runs against the current code, and stale claims are corrected rather than kept"
+      "Each code example names the repository file and symbol it was taken from, and every claim the current code contradicts is corrected in place rather than left standing"
     ]
   },
   {
@@ -25,7 +26,7 @@
     "files": [],
     "expected_behavior": [
       "Contains no inline PlantUML or Mermaid source: diagrams are rendered files under docs/diagrams/ referenced by relative path",
-      "Tone and depth are set for the operator audience, not for a developer or an architect",
+      "The runbook is written for the operator audience: every section is a numbered procedure with a copy-pasteable command, its expected output and an escalation threshold, and it contains no class, method or internal design discussion",
       "Reports the produced artefacts and does not claim done without the deliverable block"
     ]
   }

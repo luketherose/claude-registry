@@ -6,7 +6,8 @@
     "expected_behavior": [
       "Runs discovery first and presents a content plan listing every page with its audience and its Diataxis quadrant, then waits for confirmation before writing any page",
       "Writes Home.md, _Sidebar.md, _Footer.md and the topic pages as Markdown into the local wiki/ directory and produces nothing outside it",
-      "Does not push to the wiki remote, and says the push needs explicit authorisation"
+      "Does not push to the wiki remote, and says the push needs explicit authorisation",
+      "Loads `doc-expert` with the Skill tool (tool_used: Skill) when it is available, and the effect is visible: the Reference quadrant pages use that skill's module-guide structure instead of an ad hoc layout"
     ]
   },
   {
@@ -15,7 +16,7 @@
     "files": [],
     "expected_behavior": [
       "Diffs the existing wiki against the current source and rewrites only the affected pages instead of regenerating everything",
-      "Verifies file paths, commands and config keys against the codebase rather than trusting the README, and marks anything unverifiable with '> _Needs verification_' plus an entry in the Stale block",
+      "Every file path, command and config key in the updated pages exists in the repo; anything that could not be confirmed carries an inline '> _Needs verification_' marker and also appears in the Stale block",
       "All file output goes through the Write tool, never a Bash heredoc or redirect"
     ]
   },

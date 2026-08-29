@@ -2,26 +2,26 @@
   {
     "query": "Ecco lo stack trace, perché fallisce questa chiamata?",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Stack trace of a failing call"
   },
   {
     "query": "Questo endpoint ritorna 500 a intermittenza, diagnostica il root cause",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Endpoint returning 500 intermittently"
   },
   {
     "query": "La mia app Spring Boot non parte, ecco l'errore nei log",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Spring Boot application failing to start, log attached"
   },
   {
     "query": "Scrivi la test suite completa per PaymentService con JUnit 5 e Mockito",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Full JUnit 5 and Mockito test suite for a payment service"
   },
   {
     "query": "Rifattorizza questo modulo per togliere la duplicazione, non c'è nessun bug",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Duplication removed from a module, no bug involved"
   }
 ]

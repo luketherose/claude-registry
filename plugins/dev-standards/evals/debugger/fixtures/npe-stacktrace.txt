@@ -1,0 +1,12 @@
+2026-08-27 09:14:02.881 ERROR 4412 --- [http-nio-8080-exec-3] c.e.s.web.CheckoutController : checkout failed
+
+java.lang.NullPointerException: Cannot invoke "com.example.shop.model.Address.getCountry()" because the return value of "com.example.shop.model.Customer.getBillingAddress()" is null
+	at com.example.shop.payment.PaymentClient.buildRequest(PaymentClient.java:47)
+	at com.example.shop.payment.PaymentClient.charge(PaymentClient.java:31)
+	at com.example.shop.order.OrderService.place(OrderService.java:64)
+	at com.example.shop.web.CheckoutController.checkout(CheckoutController.java:38)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at java.base/java.lang.Thread.run(Thread.java:1583)

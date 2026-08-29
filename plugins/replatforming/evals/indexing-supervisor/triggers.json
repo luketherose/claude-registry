@@ -2,21 +2,21 @@
   {
     "query": "Index this codebase and build the knowledge base",
     "should_trigger": true,
-    "description": "Direct Phase 0 invocation"
+    "description": "Codebase indexing and knowledge base build"
   },
   {
     "query": "Produce the .indexing-kb/ for this repository",
     "should_trigger": true,
-    "description": "Explicit output-target invocation"
+    "description": "Producing .indexing-kb/ for a repository"
   },
   {
     "query": "Start the application replatforming workflow",
     "should_trigger": false,
-    "description": "Replatforming entry — routes to refactoring-supervisor, not indexing-supervisor directly"
+    "description": "Application replatforming workflow start"
   },
   {
     "query": "What does this function do?",
     "should_trigger": false,
-    "description": "Generic code question — should not activate any pipeline supervisor"
+    "description": "What a single function does"
   }
 ]

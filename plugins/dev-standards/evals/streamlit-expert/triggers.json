@@ -2,26 +2,26 @@
   {
     "query": "L'app Streamlit ricalcola tutto ad ogni click, metti a posto st.cache_data e session_state",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Streamlit recomputing on every click, st.cache_data and session_state"
   },
   {
     "query": "Trasforma questo script in una multipage Streamlit con form e navigazione fra le pagine",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Script turned into a multipage Streamlit app with forms and navigation"
   },
   {
     "query": "st.experimental_rerun è deprecato, come lo sostituisco in questa pagina?",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Deprecated st.experimental_rerun replacement"
   },
   {
     "query": "Aggiungi type hints e modelli Pydantic v2 a questo modulo di parsing",
     "should_trigger": false,
-    "description": "Out of scope: python-expert, logica fuori dalla UI"
+    "description": "Type hints and Pydantic v2 on a parsing module"
   },
   {
     "query": "Scrivi i test pytest per il service di calcolo, niente UI di mezzo",
     "should_trigger": false,
-    "description": "Confusable query, should route to `python-expert` instead"
+    "description": "pytest tests for a calculation service with no UI"
   }
 ]

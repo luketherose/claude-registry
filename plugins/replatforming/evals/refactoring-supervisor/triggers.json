@@ -2,31 +2,31 @@
   {
     "query": "Start the application replatforming workflow",
     "should_trigger": true,
-    "description": "Primary canonical trigger phrase"
+    "description": "Application replatforming workflow start"
   },
   {
     "query": "Lancia il refactoring dell'applicazione",
     "should_trigger": true,
-    "description": "Italian trigger phrase"
+    "description": "Application replatforming launch"
   },
   {
     "query": "Resume Phase 4 from Step 2",
     "should_trigger": true,
-    "description": "Phase 4 step-level resume"
+    "description": "Resuming Phase 4 from step 2"
   },
   {
     "query": "Run Phase 1",
     "should_trigger": true,
-    "description": "Single-phase invocation — the supervisor runs only that phase"
+    "description": "Bare phase-number invocation, phase 1"
   },
   {
     "query": "Index this codebase",
     "should_trigger": false,
-    "description": "Phase 0 only — can be handled by indexing-supervisor directly without the full workflow supervisor"
+    "description": "Codebase indexing"
   },
   {
     "query": "What are the technical risks in this codebase?",
     "should_trigger": false,
-    "description": "Standalone technical analysis question — routes to technical-analyst or technical-analysis-supervisor directly"
+    "description": "Technical risks in a codebase"
   }
 ]

@@ -1,0 +1,20 @@
+2026-08-27 08:02:11.204  INFO 8123 --- [           main] c.e.shop.ShopApplication : Starting ShopApplication using Java 21
+2026-08-27 08:02:13.918  WARN 8123 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'orderController'
+2026-08-27 08:02:13.955 ERROR 8123 --- [           main] o.s.b.d.LoggingFailureAnalysisReporter :
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 1 of constructor in com.example.shop.order.OrderService required a bean of type 'com.example.shop.payment.PaymentGateway' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+Action:
+
+Consider defining a bean of type 'com.example.shop.payment.PaymentGateway' in your configuration.
+
+2026-08-27 08:02:13.956  WARN 8123 --- [           main] o.s.b.c.c.ConfigDataEnvironmentPostProcessor : Property 'shop.payment.api-key' is not set; PaymentGatewayAutoConfiguration is disabled by @ConditionalOnProperty(name = "shop.payment.api-key")

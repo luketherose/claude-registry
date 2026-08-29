@@ -2,26 +2,26 @@
   {
     "query": "Apri la pagina di login in staging, compila il form e fammi lo screenshot della dashboard",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Browser login on staging, form fill and screenshot"
   },
   {
     "query": "Scrivi un E2E con Playwright che clicca su Checkout e verifica il totale a schermo",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Playwright end-to-end test clicking Checkout and asserting the total"
   },
   {
     "query": "Naviga su questa URL, cambia tab e valuta questo JS dentro la pagina",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Browser navigation, tab switching and in-page JS evaluation"
   },
   {
     "query": "Scrivi gli unit test del CartService con Jest, niente browser",
     "should_trigger": false,
-    "description": "Out of scope: unit test, non automazione browser"
+    "description": "Jest unit tests for a cart service, no browser"
   },
   {
     "query": "Fammi uno script che scarica il CSV dall'API e lo processa in batch",
     "should_trigger": false,
-    "description": "Out of scope: automazione non browser"
+    "description": "Script that downloads a CSV and processes it in batch"
   }
 ]

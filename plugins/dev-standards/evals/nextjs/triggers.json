@@ -2,26 +2,26 @@
   {
     "query": "In app/ questa pagina deve diventare Server Component con Server Action per il form",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Page turned into a Server Component with a Server Action form"
   },
   {
     "query": "generateMetadata dinamico per le pagine prodotto e caching corretto in Next 14",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Dynamic generateMetadata and caching in Next 14"
   },
   {
     "query": "Il fetch viene cachato male nell'App Router, come lo invalido dopo la mutation?",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "App Router fetch caching and invalidation after a mutation"
   },
   {
     "query": "Custom hook React per il debounce dell'input, con props tipizzate",
     "should_trigger": false,
-    "description": "Out of scope: react-expert, React puro"
+    "description": "React debounce custom hook with typed props"
   },
   {
     "query": "Voglio full-stack React senza Next, con Server Functions e streaming SSR",
     "should_trigger": false,
-    "description": "Confusable query, should route to `tanstack-start` instead"
+    "description": "Full-stack React without Next, Server Functions and streaming SSR"
   }
 ]

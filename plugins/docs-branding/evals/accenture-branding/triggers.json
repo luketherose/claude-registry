@@ -2,26 +2,26 @@
   {
     "query": "Sto generando il deck Accenture per il cliente, dammi palette e specifiche di layout slide",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Accenture deck palette and slide layout specs"
   },
   {
     "query": "Template HTML/CSS con brand Accenture per il PDF del deliverable",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Accenture branded HTML/CSS template for a PDF deliverable"
   },
   {
     "query": "Che font e che hex uso per il documento Accenture? Mi servono anche le costanti python-pptx",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Accenture fonts, hex values and python-pptx constants"
   },
   {
     "query": "Il cliente è UniCredit, servono i token Bricks e le regole sul logo UC",
     "should_trigger": false,
-    "description": "Confusable query, should route to `unicredit-design-system` instead"
+    "description": "UniCredit Bricks tokens and UC logo rules"
   },
   {
     "query": "Genera il documento funzionale in LaTeX partendo da docs/functional",
     "should_trigger": false,
-    "description": "Confusable query, should route to `functional-document-generator` instead"
+    "description": "Functional document in LaTeX from docs/functional"
   }
 ]

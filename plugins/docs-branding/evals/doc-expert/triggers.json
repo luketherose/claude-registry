@@ -2,26 +2,26 @@
   {
     "query": "Documenta questo codice Streamlit: docstring, descrizioni dei flussi e glossario di dominio",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Streamlit code documented with docstrings, flows and glossary"
   },
   {
     "query": "Scrivi la guida dei moduli di questo progetto Spring, taglio business, salvala in docs/",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Business-oriented module guide for a Spring project in docs/"
   },
   {
     "query": "Aggiungi docstring e flow description a questa app Angular",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Docstrings and flow descriptions for an Angular app"
   },
   {
     "query": "Genera il .tex enterprise del backend pronto per pandoc",
     "should_trigger": false,
-    "description": "Confusable query, should route to `backend-documentation` instead"
+    "description": "Enterprise backend .tex ready for pandoc"
   },
   {
     "query": "Converti docs/functional nel documento Word per il cliente",
     "should_trigger": false,
-    "description": "Confusable query, should route to `functional-document-generator` instead"
+    "description": "docs/functional converted to a client Word document"
   }
 ]

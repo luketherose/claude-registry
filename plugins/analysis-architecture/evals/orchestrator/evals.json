@@ -6,7 +6,7 @@
     "expected_behavior": [
       "Opens with a Plan section that lists the independent subtasks and names the specialist agent assigned to each one",
       "Dispatches the independent subtasks in parallel rather than one after the other, and says so in the Execution section",
-      "Returns a single synthesised result, not a concatenation of the raw agent transcripts"
+      "The final section is a single synthesis: it contains no verbatim per-agent transcript block, and each finding appears exactly once under a shared heading instead of being repeated per agent"
     ]
   },
   {

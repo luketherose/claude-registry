@@ -2,26 +2,51 @@
   {
     "query": "Rifattorizza questo fat ActiveRecord model estraendo dei service object",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Fat ActiveRecord model split into service objects"
   },
   {
     "query": "Scrivi un worker Sidekiq idempotente per le notifiche",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Idempotent Sidekiq worker for notifications"
   },
   {
     "query": "Review this Rails 7 controller for RuboCop and RSpec coverage",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Rails 7 controller reviewed for RuboCop and RSpec coverage"
   },
   {
-    "query": "Scrivi un endpoint FastAPI con validazione Pydantic",
+    "query": "Rifattorizza questo fat Eloquent model in un service layer",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Fat Eloquent model split into a service layer"
   },
   {
-    "query": "Progetta l'architettura target e scrivimi l'ADR sul message broker",
+    "query": "Review this Rust service for unwrap() and lifetime issues",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Rust service reviewed for unwrap() and lifetime issues"
+  },
+  {
+    "query": "Review this Go package for idiomatic error handling",
+    "should_trigger": false,
+    "description": "Go package reviewed for idiomatic error handling"
+  },
+  {
+    "query": "Write an ASP.NET Core 8 minimal API for order management",
+    "should_trigger": false,
+    "description": "ASP.NET Core 8 minimal API for order management"
+  },
+  {
+    "query": "Questa action Rails ritorna 500 solo in produzione, ecco lo stack trace, trova la causa",
+    "should_trigger": false,
+    "description": "Rails action returning 500 only in production, stack trace attached"
+  },
+  {
+    "query": "Fammi l'inventario del debito tecnico e delle gemme vulnerabili di questa app Rails, con severity",
+    "should_trigger": false,
+    "description": "Technical debt and vulnerable gems of a Rails app with severity"
+  },
+  {
+    "query": "Valuta se spezzare questo monolite Rails in servizi e scrivimi l'ADR con i trade-off",
+    "should_trigger": false,
+    "description": "Whether to split a Rails monolith into services, with an ADR"
   }
 ]

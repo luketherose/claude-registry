@@ -12,11 +12,14 @@
   {
     "agent": "api-designer",
     "query": "Rivedi questo OpenAPI spec e dimmi se ci sono breaking change per i client esistenti",
-    "files": [],
+    "files": [
+      "fixtures/orders-openapi.yaml"
+    ],
     "expected_behavior": [
-      "Produces an API Review findings table with a Severity of Blocking, Suggestion or Info, the specific endpoint, and the rest-api-standards rule violated",
+      "Produces an API Review findings table with a Severity of Blocking, Suggestion or Info, the exact path from fixtures/orders-openapi.yaml, and the rest-api-standards rule violated; /api/getOrders, /api/createOrder and /api/order/{id}/cancel are each flagged as RPC style verb paths",
       "Each finding is followed by the concrete change to make, not a generic recommendation",
-      "Classifies each change as breaking or non breaking for existing clients and says which ones require a version bump"
+      "Classifies each change as breaking or non breaking for existing clients and says which ones require a version bump",
+      "Loads `rest-api-standards` with the Skill tool (tool_used: Skill) before reviewing, and the effect is visible: at least one finding cites the RFC 7807 ProblemDetail rule against the errorCode/errorMessage body declared for the 500 response of /api/createOrder"
     ]
   },
   {

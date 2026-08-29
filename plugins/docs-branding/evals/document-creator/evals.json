@@ -2,17 +2,22 @@
   {
     "agent": "document-creator",
     "query": "Genera un PDF Accenture da questi file di stima",
-    "files": [],
+    "files": [
+      "fixtures/estimation.md"
+    ],
     "expected_behavior": [
       "Reads every source file before writing content and cites, per section, which source document it was derived from",
       "Produces the PDF at the requested path and reports the output path, the format and the file size",
-      "Final answer follows the 'Document generated / Format / Size / Sections produced / Source files read / Notes' block"
+      "Final answer follows the 'Document generated / Format / Size / Sections produced / Source files read / Notes' block",
+      "Loads `accenture-branding` with the Skill tool (tool_used: Skill) before generating, and the effect is visible in the artefact: headings use the palette hex values that skill defines and the footer carries the Accenture copyright line"
     ]
   },
   {
     "agent": "document-creator",
     "query": "Produci un Word brandizzato per il cliente da questi documenti di progetto",
-    "files": [],
+    "files": [
+      "fixtures/estimation.md"
+    ],
     "expected_behavior": [
       "Generates the .docx through a python-docx script and confirms the resulting path and size",
       "Cover page carries project name, date, version and the Accenture copyright line, and the document control table is present",
@@ -22,9 +27,11 @@
   {
     "agent": "document-creator",
     "query": "Trasforma questa proposta di architettura in un deliverable per il cliente",
-    "files": [],
+    "files": [
+      "fixtures/estimation.md"
+    ],
     "expected_behavior": [
-      "Invents no estimate, no figure and no architecture detail absent from the sources: gaps are listed under Notes instead",
+      "Every figure in the deliverable is traceable to fixtures/estimation.md (333 giorni uomo, 14 backend modules, 22 screens, the 4 hour production stop); the three items the fixture lists under 'Non coperto da questa stima' appear under Notes as gaps, and no cloud cost, headcount or go-live date is stated",
       "Cloud service names are written precisely (for example 'Amazon RDS for PostgreSQL', not 'database') and the architecture section matches the component inventory table",
       "Every risk appears in the risks table, not only in prose"
     ]

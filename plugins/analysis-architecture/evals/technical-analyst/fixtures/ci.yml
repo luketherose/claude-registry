@@ -1,0 +1,22 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+      - name: Build
+        run: mvn -B package -DskipTests
+      - name: Publish
+        env:
+          NEXUS_PASSWORD: hunter2-prod-nexus
+        run: mvn deploy -DskipTests
+      - name: Deploy to production
+        run: ssh deploy@prod-app.internal 'systemctl restart orders'

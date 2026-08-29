@@ -2,26 +2,26 @@
   {
     "query": "Aggiungi type hints ovunque e converti questi dict in modelli Pydantic v2",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Type hints everywhere, dicts converted to Pydantic v2"
   },
   {
     "query": "Scrivi i test pytest per questo parser e configurami structlog come si deve",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "pytest tests for a parser and structlog configuration"
   },
   {
     "query": "Endpoint FastAPI per l'upload, con dependency injection e gestione errori, dipendenze gestite con uv",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "FastAPI upload endpoint with dependency injection and uv"
   },
   {
     "query": "La pagina si ricarica ad ogni widget, sistema session_state e le cache st.cache_data",
     "should_trigger": false,
-    "description": "Confusable query, should route to `streamlit-expert` instead"
+    "description": "Page reloading on every widget, session_state and st.cache_data"
   },
   {
     "query": "Multipage Streamlit con form e rerun, come la struttturo?",
     "should_trigger": false,
-    "description": "Confusable query, should route to `streamlit-expert` instead"
+    "description": "Multipage Streamlit structure with forms and rerun"
   }
 ]

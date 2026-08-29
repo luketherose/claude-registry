@@ -2,26 +2,51 @@
   {
     "query": "Review this PHP code for PHPStan level 8 violations",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "PHP code reviewed for PHPStan level 8 violations"
   },
   {
     "query": "Rifattorizza questo fat Eloquent model in un service layer",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Fat Eloquent model split into a service layer"
   },
   {
     "query": "Scrivi un command Symfony 7 con enum e readonly class",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Symfony 7 command with enums and readonly classes"
   },
   {
-    "query": "Scrivi un service object Rails 7 per la creazione ordine con test RSpec",
+    "query": "Scrivi un servizio axum con tokio, thiserror e tracing",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "axum service with tokio, thiserror and tracing"
   },
   {
-    "query": "Rifai il frontend di questa pagina in React con TanStack Query",
+    "query": "Review this Go package for idiomatic error handling",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Go package reviewed for idiomatic error handling"
+  },
+  {
+    "query": "Aggiungi test xUnit con Testcontainers per il repository layer",
+    "should_trigger": false,
+    "description": "xUnit and Testcontainers tests for a repository layer"
+  },
+  {
+    "query": "Converti questo service Java in Kotlin idiomatico",
+    "should_trigger": false,
+    "description": "Java service converted to idiomatic Kotlin"
+  },
+  {
+    "query": "Questa route Laravel ritorna 500 a intermittenza, ecco lo stack trace, diagnostica il root cause",
+    "should_trigger": false,
+    "description": "Laravel route returning 500 intermittently, stack trace attached"
+  },
+  {
+    "query": "Progetta il contratto REST dell'API ordini Symfony con paginazione e RFC 7807, prima del codice",
+    "should_trigger": false,
+    "description": "REST contract for a Symfony order API with pagination and RFC 7807"
+  },
+  {
+    "query": "Estrai i requisiti funzionali e i casi d'uso da questo codice PHP legacy",
+    "should_trigger": false,
+    "description": "Functional requirements and use cases from legacy PHP code"
   }
 ]

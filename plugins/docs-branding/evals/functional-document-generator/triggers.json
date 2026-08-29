@@ -2,26 +2,26 @@
   {
     "query": "Converti docs/functional in LaTeX e generami il .docx per il cliente",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "docs/functional converted to LaTeX and a client .docx"
   },
   {
     "query": "Genera il documento funzionale enterprise usando questo template Word",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Enterprise functional document from a Word template"
   },
   {
     "query": "Produci il .tex del documento funzionale pronto per pandoc, senza inventare funzionalita",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Functional document .tex for pandoc with nothing invented"
   },
   {
     "query": "Scrivi tu l'analisi funzionale del nuovo modulo partendo dai requisiti",
     "should_trigger": false,
-    "description": "Out of scope: functional-analyst, produce il contenuto"
+    "description": "Functional analysis written for a new module from requirements"
   },
   {
     "query": "Genera backend-doc.tex per il backend Spring",
     "should_trigger": false,
-    "description": "Out of scope: backend-documentation, documento tecnico"
+    "description": "backend-doc.tex for a Spring backend"
   }
 ]

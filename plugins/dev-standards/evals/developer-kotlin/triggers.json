@@ -2,26 +2,51 @@
   {
     "query": "Review this Kotlin code for null-safety issues",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Kotlin code reviewed for null-safety issues"
   },
   {
     "query": "Converti questo service Java in Kotlin idiomatico",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Java service converted to idiomatic Kotlin"
   },
   {
     "query": "Scrivi un endpoint Ktor con coroutine e structured concurrency",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Ktor endpoint with coroutines and structured concurrency"
   },
   {
     "query": "Scrivi l'OrderService in Java con Spring Boot 3 e Testcontainers",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Order service in Java on Spring Boot 3 with Testcontainers"
   },
   {
-    "query": "Valuta se conviene un'architettura a eventi e scrivimi l'ADR",
+    "query": "Aggiungi test pytest per la data pipeline",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "pytest tests for a data pipeline"
+  },
+  {
+    "query": "Scrivi il componente Vue 3 per la lista ordini con stati di loading ed errore",
+    "should_trigger": false,
+    "description": "Vue 3 order list component with loading and error states"
+  },
+  {
+    "query": "Review this Rails 7 controller for RuboCop and RSpec coverage",
+    "should_trigger": false,
+    "description": "Rails 7 controller reviewed for RuboCop and RSpec coverage"
+  },
+  {
+    "query": "Questo service Kotlin lancia NullPointerException in produzione, ecco lo stack trace, trova la causa",
+    "should_trigger": false,
+    "description": "Kotlin service throwing NullPointerException in production, trace attached"
+  },
+  {
+    "query": "Fammi il modello C4 di questo backend Kotlin e i rischi di integrazione, senza scrivere codice",
+    "should_trigger": false,
+    "description": "C4 model and integration risks of a Kotlin backend, no code"
+  },
+  {
+    "query": "Fammi l'inventario del debito tecnico e della security posture di questo backend Kotlin, con severity",
+    "should_trigger": false,
+    "description": "Technical debt and security posture of a Kotlin backend with severity"
   }
 ]

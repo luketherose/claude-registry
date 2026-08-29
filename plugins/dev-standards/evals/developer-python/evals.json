@@ -6,17 +6,20 @@
     "expected_behavior": [
       "Every function signature carries type hints including an explicit return type",
       "Request and response models are pydantic v2 models: no raw dict is parsed without validation",
-      "Files land in the api / service / repository / domain layout, with the business logic outside the router"
+      "Files land in the api / service / repository / domain layout, with the business logic outside the router",
+      "Loads `python-expert` with the Skill tool (tool_used: Skill) before writing, and the effect is visible: every function signature including the router handler carries an explicit return annotation, and configuration is read through a pydantic settings class rather than os.environ lookups"
     ]
   },
   {
     "agent": "developer-python",
     "query": "Review this Python service for anti-patterns",
-    "files": [],
+    "files": [
+      "fixtures/order_service.py"
+    ],
     "expected_behavior": [
-      "Flags missing or partial type hints, untyped dict payloads and swallowed exceptions, each with the file and line",
-      "Checks that the exception hierarchy is custom and typed and that FastAPI handlers return RFC 7807 compatible JSON",
-      "Checks that no sensitive data reaches the logs and that structlog is used for production logging"
+      "Flags, each with its fixtures/order_service.py line: the missing parameter and return annotations on place() and cancel(), the raw dict payload indexed without validation, the bare `except Exception` in place() that returns None, and the one in cancel() that logs at debug level",
+      "Reports that `raise Exception(\"payment failed\")` must become a typed domain exception in a custom hierarchy, and that the FastAPI handler wrapping this service must return an RFC 7807 compatible JSON body",
+      "Reports the logger.info call in place() as logging sensitive data because it writes the customer email and card number, and requires structlog with explicit field binding for production logging"
     ]
   },
   {
@@ -26,7 +29,7 @@
     "expected_behavior": [
       "Produces pytest tests split into unit tests that perform no I/O and integration tests that use testcontainers-python",
       "Uses parametrize and fixtures rather than copy pasted test bodies",
-      "States the resulting coverage against the 70% minimum, or says what is needed to measure it"
+      "Reports the coverage figure produced by an actual pytest run against the 70% minimum; if coverage cannot be executed, names the missing tool and the exact command the user must run to produce the figure"
     ]
   }
 ]

@@ -2,19 +2,25 @@
   {
     "agent": "test-writer",
     "query": "Aggiungi i test per questa service class",
-    "files": [],
+    "files": [
+      "fixtures/discount_service.py"
+    ],
     "expected_behavior": [
       "Delivers a complete runnable test file with all imports and setup present, no placeholder comments and no TODO stubs",
       "Test method names follow the {method}_{condition}_{outcome} convention",
-      "Lists the scenarios covered across happy path, boundary, invalid input, business rule and error propagation"
+      "Lists the scenarios covered for DiscountService.apply across happy path (each tier), boundary (total exactly 1000 and exactly 5000), invalid input (total <= 0), business rule (the STAFF override to 0.20) and error propagation (unknown customer, blocked customer)",
+      "Loads `testing-standards` with the Skill tool (tool_used: Skill) before writing, and the effect is visible: every test body in the produced file is laid out with explicit Arrange, Act and Assert sections in that order"
     ]
   },
   {
     "agent": "test-writer",
     "query": "Coverage è al 40%, riempi i buchi nella test suite esistente",
-    "files": [],
+    "files": [
+      "fixtures/discount_service.py",
+      "fixtures/test_discount_service.py"
+    ],
     "expected_behavior": [
-      "Reads the existing suite first and adds only the missing scenarios instead of duplicating tests that already exist",
+      "Adds no test that repeats test_apply_five_percent_tier or test_apply_ten_percent_tier, and the added tests cover what fixtures/test_discount_service.py leaves out: total <= 0, unknown customer, blocked customer, the STAFF override, tier boundary rounding, and the audit_log side effect",
       "Declares a Gaps intentionally left block naming each uncovered scenario and the reason it was left out",
       "No shared mutable state between tests: each test sets up and tears down its own fixtures"
     ]

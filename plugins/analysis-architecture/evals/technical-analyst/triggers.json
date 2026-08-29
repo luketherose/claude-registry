@@ -2,26 +2,26 @@
   {
     "query": "Produce a technical health report for this repo",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Technical health report for a repository"
   },
   {
     "query": "Fammi l'inventario del debito tecnico di questo servizio Spring Boot con severity e priorità",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Technical debt inventory of a Spring Boot service with severity"
   },
   {
     "query": "Analizza la security posture e le vulnerabilità delle dipendenze, poi dammi il piano di remediation",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Security posture, dependency vulnerabilities and a remediation plan"
   },
   {
     "query": "Progetta l'architettura TO-BE e scrivimi l'ADR sulla scelta del message broker",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "TO-BE architecture and an ADR on the message broker"
   },
   {
     "query": "Estrai i requisiti funzionali e i casi d'uso da questo codice legacy",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Functional requirements and use cases from legacy code"
   }
 ]

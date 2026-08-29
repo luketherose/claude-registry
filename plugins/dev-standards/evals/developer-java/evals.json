@@ -6,17 +6,20 @@
     "expected_behavior": [
       "Each file is delivered under a `### {FileName}.java` heading with complete content (all imports, no placeholder comments), followed by a **Why** line and a **Tests** line",
       "Uses constructor injection throughout: no field injection and no @Autowired on a field",
-      "The controller returns a DTO produced by a dedicated mapper rather than exposing the JPA entity, and validates the request DTO with bean validation plus @Valid on the parameter"
+      "The controller returns a DTO produced by a dedicated mapper rather than exposing the JPA entity, and validates the request DTO with bean validation plus @Valid on the parameter",
+      "Loads `java-spring-standards` and `spring-architecture` with the Skill tool (tool_used: Skill) before writing, and the effect is visible: the files are placed in the controller / service / repository / dto package split those skills prescribe, and the DTO mapper is a dedicated class rather than a method on the controller"
     ]
   },
   {
     "agent": "developer-java",
     "query": "Review this Spring Boot controller",
-    "files": [],
+    "files": [
+      "fixtures/OrderController.java"
+    ],
     "expected_behavior": [
-      "Flags business logic sitting in the controller and repository access sitting outside the service layer as layering violations, quoting the offending lines",
-      "Checks error handling for catch all blocks that swallow exceptions and for log and rethrow at the same layer, and requires RFC 7807 ProblemDetail for error responses",
-      "Checks that no sensitive data is logged and that no secret is hardcoded, and reports each issue with the file and line"
+      "Flags the discount and status computation inside create, and the @Autowired field injection of OrderRepository into the controller, as layering violations, quoting the offending lines of fixtures/OrderController.java",
+      "Flags the empty catch (Exception) in get that returns null and the log-then-rethrow in create, and requires an RFC 7807 ProblemDetail response in place of the RuntimeException",
+      "Reports the hardcoded STRIPE_KEY constant and the log statement that writes customer email and card number, each with its fixtures/OrderController.java line"
     ]
   },
   {
@@ -24,7 +27,7 @@
     "query": "Migra questa app Java legacy a Spring Boot 3, il framework è Spring non Quarkus",
     "files": [],
     "expected_behavior": [
-      "Assumes Spring Boot 3 only because the user declared it, and states the assumption explicitly",
+      "States in one explicit sentence that Spring Boot 3 is used because the user declared the framework, and the output contains no Quarkus, Micronaut or Helidon annotation or API",
       "Produces the layered structure with Micrometer observability, structured logging and OpenAPI annotations on the endpoints",
       "Stops and states exactly what is missing (an existing service interface, an entity definition) instead of inventing it"
     ]

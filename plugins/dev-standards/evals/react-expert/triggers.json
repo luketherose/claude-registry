@@ -2,31 +2,31 @@
   {
     "query": "Estrai un custom hook da questo component e tipizza le props in TypeScript",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Custom hook extracted and props typed in TypeScript"
   },
   {
     "query": "Questo component ri-renderizza troppo, valuta memo, useCallback e useMemo",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Component re-rendering, memo, useCallback and useMemo"
   },
   {
     "query": "Aggiungi un Suspense boundary e scrivi i test con React Testing Library",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "React Suspense boundary with React Testing Library tests"
   },
   {
     "query": "Server Component e Server Action nella cartella app/ di Next 14",
     "should_trigger": false,
-    "description": "Confusable query, should route to `nextjs` instead"
+    "description": "Server Component and Server Action in the Next 14 app/ folder"
   },
   {
     "query": "Sostituisci questo useEffect di fetch con useQuery e gestisci invalidateQueries",
     "should_trigger": false,
-    "description": "Confusable query, should route to `tanstack-query` instead"
+    "description": "useEffect fetch replaced by useQuery and invalidateQueries"
   },
   {
     "query": "Fammi un widget standalone in Web Component senza framework",
     "should_trigger": false,
-    "description": "Confusable query, should route to `vanilla-expert` instead"
+    "description": "Standalone Web Component widget with no framework"
   }
 ]

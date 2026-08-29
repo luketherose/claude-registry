@@ -2,11 +2,13 @@
   {
     "agent": "developer-rust",
     "query": "Review this Rust service for unwrap() and lifetime issues",
-    "files": [],
+    "files": [
+      "fixtures/order_service.rs"
+    ],
     "expected_behavior": [
-      "Flags every unwrap() and expect() in library or service code with the file and line, and proposes the typed error path instead",
-      "Flags Box<dyn Trait> used where a generic constraint fits, and any clone() added to silence the borrow checker without re-examining ownership",
-      "Flags allocation inside hot loops and premature Arc<Mutex> wrapping"
+      "Flags, each with its fixtures/order_service.rs line: the unwrap() on serde_json::from_str, the expect(\"customer must exist\") on lookup, and the unwrap() calls on the mutex and map lookups, and proposes a thiserror typed error returned as Result instead",
+      "Flags the `rule: Box<dyn PriceRule>` field as a case where a generic parameter fits, and both clone() calls (customer.name.clone() and lines.clone()) as clones added to satisfy the borrow checker rather than to restructure ownership",
+      "Flags the format!(\"line-{}\", id) allocation inside the for loop and the Arc<Mutex<HashMap<..>>> cache field as premature Arc<Mutex> wrapping"
     ]
   },
   {
@@ -15,8 +17,9 @@
     "files": [],
     "expected_behavior": [
       "Produces tests that compile against stable Rust only, with no nightly feature gate",
-      "States that cargo fmt and cargo clippy were run with warnings denied before responding",
-      "All file content is written with the Write or Edit tool, never through a Bash heredoc"
+      "The produced code satisfies `cargo clippy --all-targets -- -D warnings` as written: no unwrap() or expect() outside a #[cfg(test)] module, no needless borrow, no redundant clone, and no `#![feature(...)]` gate",
+      "All file content is written with the Write or Edit tool, never through a Bash heredoc",
+      "Loads `testing-standards` with the Skill tool (tool_used: Skill), and the effect is visible: the #[cfg(test)] module covers happy path, boundary, invalid input and error propagation as separately named test functions rather than one aggregate test"
     ]
   },
   {

@@ -15,7 +15,7 @@
     "files": [],
     "expected_behavior": [
       "Produces a ranked list of files to rewrite with the rubric criterion each one fails",
-      "Separates quick wins that are genuinely scriptable with a mechanical sed or grep pass from case by case rewrites, and does not present the second as the first",
+      "Splits the fixes into a Bulk section and a Case by case section; every Bulk item is accompanied by the literal command that applies it (a sed, grep or find invocation the maintainer can paste), and no item lacking such a command appears in that section",
       "Includes at least one concrete rewrite example, such as a rewritten description, that the maintainer can copy and adapt"
     ]
   },
@@ -26,7 +26,7 @@
     "expected_behavior": [
       "Includes a reference templates section covering both agents and skills, not just one of the two",
       "Justifies each template pick against a named rubric criterion rather than by preference",
-      "Keeps the report under roughly 800 lines and does not write a new agent or skill file"
+      "The report is at most 800 lines long and no new file is created under any agents/ or skills/ directory during the run"
     ]
   }
 ]

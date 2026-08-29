@@ -2,29 +2,37 @@
   {
     "agent": "debugger",
     "query": "Ecco lo stack trace, perché questa chiamata fallisce?",
-    "files": [],
+    "files": [
+      "fixtures/npe-stacktrace.txt",
+      "fixtures/PaymentClient.java"
+    ],
     "expected_behavior": [
       "Output follows the Debug Report shape with Observed symptom, Root cause, Fix and Why this fixes it as separate sections",
-      "The root cause is explained with concrete file:line references before any fix code is shown",
-      "The fix is the minimal targeted change: no unrelated renaming, no restructuring of files that are not implicated"
+      "The root cause is explained with concrete file:line references (PaymentClient.java:47 as the failing dereference of a null billing address, reached from PaymentClient.java:31) before any fix code is shown",
+      "The fix touches PaymentClient.java only: no other fixture file is rewritten, nothing is renamed, and no method other than buildRequest is modified",
+      "Loads `spring-expert` with the Skill tool (tool_used: Skill) because the trace is a Spring MVC request, and the effect is visible: the report separates the framework frames (DispatcherServlet, InvocableHandlerMethod, HttpServlet) from the four application frames and reasons only about the application ones"
     ]
   },
   {
     "agent": "debugger",
     "query": "Questo endpoint ritorna 500 a intermittenza, diagnostica il problema",
-    "files": [],
+    "files": [
+      "fixtures/intermittent-500.md"
+    ],
     "expected_behavior": [
-      "States the observed symptom verbatim (the exact error or status) rather than paraphrasing it",
-      "Explains why the failure is intermittent and what condition triggers it, instead of proposing a speculative fix",
+      "Quotes the symptom verbatim from the fixture, including the status and the message 'HikariPool-1 - Connection is not available, request timed out after 30000ms', rather than paraphrasing it",
+      "Names the exhaustion condition explicitly: buildDaily leaks the connection opened at ReportService.java:52, so requests fail only once all 10 connections of maximum-pool-size are held, which is why the same URL succeeds on retry",
       "Anything unrelated it notices near the bug goes under Related issues, not into the fix itself"
     ]
   },
   {
     "agent": "debugger",
     "query": "La mia app Spring Boot non parte, ecco l'errore nei log",
-    "files": [],
+    "files": [
+      "fixtures/startup-failure.log"
+    ],
     "expected_behavior": [
-      "Identifies the specific failing bean, configuration property or missing dependency named in the log, quoting the log line",
+      "Names the failing bean and the missing property taken from the log (bean 'orderController', the OrderService constructor parameter of type PaymentGateway, and the unset property shop.payment.api-key) and quotes the log line carrying each",
       "Proposes one targeted change and explains the causal link between the change and the startup failure",
       "Does not rewrite the test suite and does not perform a broad refactor of the configuration"
     ]

@@ -26,7 +26,8 @@
     "expected_behavior": [
       "Produces a CRUD matrix mapping each entity against the requirements that create, read, update or delete it",
       "Traces each FR-NNN to the specific file or class that implements it, and lists requirements with no implementation found as gaps",
-      "Does not propose an architecture change or a technology choice, and states that architecture questions belong to software-architect"
+      "Does not propose an architecture change or a technology choice, and states that architecture questions belong to software-architect",
+      "Loads `functional-reconstruction` with the Skill tool before building the matrix (tool_used: Skill), and the effect is visible: the CRUD matrix rows are named business features taken from the reconstructed feature list, not raw class or table names"
     ]
   }
 ]

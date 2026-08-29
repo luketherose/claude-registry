@@ -2,26 +2,26 @@
   {
     "query": "Quali sono i nostri testing standard? Naming, tassonomia degli scenari, struttura AAA",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Company testing standards: naming, scenario taxonomy, AAA"
   },
   {
     "query": "Dammi il template JUnit 5 piu Mockito che usiamo e le convenzioni pytest per le fixture",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "JUnit 5 with Mockito template and pytest fixture conventions"
   },
   {
     "query": "Come dovrei strutturare questi test secondo lo standard aziendale?",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Company standard for structuring tests"
   },
   {
     "query": "Scrivi i test per OrderService coprendo anche il caso ordine vuoto",
     "should_trigger": false,
-    "description": "Out of scope: prompt di coding: test-writer"
+    "description": "Tests for an order service including the empty-order case"
   },
   {
     "query": "Configura Playwright e scrivi l'E2E del checkout",
     "should_trigger": false,
-    "description": "Confusable query, should route to `browser-automation` instead"
+    "description": "Playwright setup and a checkout end-to-end test"
   }
 ]

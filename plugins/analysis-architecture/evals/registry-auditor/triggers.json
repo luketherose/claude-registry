@@ -2,26 +2,26 @@
   {
     "query": "Audita il registry degli agent e delle skill secondo le linee guida ufficiali Anthropic",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Registry audit against the official Anthropic guidelines"
   },
   {
     "query": "Dammi un punteggio dei nostri agent contro la rubrica di agent-development e skill-development",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Agents scored against the agent-development and skill-development rubrics"
   },
   {
     "query": "Valuta la qualità delle skill di questo marketplace Claude Code e dimmi quali sono sotto standard",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Skill quality of a Claude Code marketplace scored"
   },
   {
     "query": "Scrivimi un nuovo agent per il code review dei PR",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "A new agent authored for PR code review"
   },
   {
     "query": "Lancia validate_registry.py e dimmi se il gate CI passa",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Running validate_registry.py and reporting the CI gate"
   }
 ]

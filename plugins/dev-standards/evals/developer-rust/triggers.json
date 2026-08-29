@@ -2,26 +2,51 @@
   {
     "query": "Review this Rust service for unwrap() and lifetime issues",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Rust service reviewed for unwrap() and lifetime issues"
   },
   {
     "query": "Aggiungi copertura cargo test per il modulo domain",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "cargo test coverage for a domain module"
   },
   {
     "query": "Scrivi un servizio axum con tokio, thiserror e tracing",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "axum service with tokio, thiserror and tracing"
   },
   {
-    "query": "Rifai lo stesso servizio HTTP in Go con chi e log/slog",
+    "query": "Scrivi un servizio HTTP in Go con chi, log/slog e context propagation",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Go HTTP service with chi, log/slog and context propagation"
   },
   {
-    "query": "Fai il bridge WebAssembly e la UI in React con TanStack Router",
+    "query": "Review this C# service for async anti-patterns",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "C# service reviewed for async anti-patterns"
+  },
+  {
+    "query": "Review this Kotlin code for null-safety issues",
+    "should_trigger": false,
+    "description": "Kotlin code reviewed for null-safety issues"
+  },
+  {
+    "query": "Review this Spring Boot controller",
+    "should_trigger": false,
+    "description": "Spring Boot controller reviewed"
+  },
+  {
+    "query": "Questo binario Rust va in panic solo in release, ecco il backtrace, trova la causa",
+    "should_trigger": false,
+    "description": "Rust binary panicking only in release, backtrace attached"
+  },
+  {
+    "query": "Valuta se conviene axum o actix-web per questo sistema e scrivimi l'ADR con i trade-off",
+    "should_trigger": false,
+    "description": "axum versus actix-web for a system, with an ADR"
+  },
+  {
+    "query": "Scrivi il README e la guida per gli integratori di questa crate Rust",
+    "should_trigger": false,
+    "description": "README and integrator guide for a Rust crate"
   }
 ]

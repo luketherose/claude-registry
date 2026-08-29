@@ -2,26 +2,56 @@
   {
     "query": "Scrivi l'OrderService con la validazione",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Order service with validation"
   },
   {
     "query": "Review this Spring Boot controller",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Spring Boot controller reviewed"
   },
   {
     "query": "Aggiungi test JUnit 5 per il modulo pagamenti",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "JUnit 5 tests for a payment module"
   },
   {
-    "query": "Converti questo service Java in Kotlin idiomatico con le coroutine",
-    "should_trigger": false,
-    "description": "Should not activate this capability"
+    "query": "Scrivi l'OrderService in Java con Spring Boot 3 e Testcontainers",
+    "should_trigger": true,
+    "description": "Order service in Java on Spring Boot 3 with Testcontainers"
   },
   {
-    "query": "Scrivi una minimal API ASP.NET Core 8 per la gestione ordini",
+    "query": "Scrivi un endpoint FastAPI con validazione Pydantic",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "FastAPI endpoint with Pydantic validation"
+  },
+  {
+    "query": "Review this React hook for correctness",
+    "should_trigger": false,
+    "description": "React hook reviewed for correctness"
+  },
+  {
+    "query": "Rifattorizza questo fat ActiveRecord model estraendo dei service object",
+    "should_trigger": false,
+    "description": "Fat ActiveRecord model split into service objects"
+  },
+  {
+    "query": "Scrivi un command Symfony 7 con enum e readonly class",
+    "should_trigger": false,
+    "description": "Symfony 7 command with enums and readonly classes"
+  },
+  {
+    "query": "La mia app Spring Boot non parte, ecco il log del bean che non si wira, diagnostica",
+    "should_trigger": false,
+    "description": "Spring Boot startup failure on an unwired bean, log attached"
+  },
+  {
+    "query": "Progetta il contratto OpenAPI 3.1 dell'API ordini Spring Boot con paginazione e versioning, prima del codice",
+    "should_trigger": false,
+    "description": "OpenAPI 3.1 contract for a Spring Boot order API before any code"
+  },
+  {
+    "query": "Valuta Kafka contro RabbitMQ per questo sistema ordini Java e scrivimi l'ADR con i trade-off",
+    "should_trigger": false,
+    "description": "Kafka versus RabbitMQ for a Java order system, with an ADR"
   }
 ]

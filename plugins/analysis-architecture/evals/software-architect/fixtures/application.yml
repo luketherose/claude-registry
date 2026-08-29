@@ -1,0 +1,38 @@
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 200
+
+spring:
+  datasource:
+    url: jdbc:postgresql://prod-db.internal:5432/orders
+    username: app
+    password: Sup3rS3cret!
+    hikari:
+      maximum-pool-size: 5
+  jpa:
+    open-in-view: true
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+shop:
+  cache:
+    enabled: false
+  payment:
+    endpoint: http://payments.internal/v1
+    timeout-ms: 0
+    retries: 5
+  cors:
+    allowed-origins: "*"

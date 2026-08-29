@@ -2,26 +2,26 @@
   {
     "query": "Sostituisci questo useEffect che fa fetch con useQuery e la cache invalidation giusta",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "useEffect fetch replaced by useQuery with cache invalidation"
   },
   {
     "query": "useMutation con optimistic update sulla lista todo, e rollback se l'API fallisce",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "useMutation with optimistic update and rollback"
   },
   {
     "query": "useInfiniteQuery per lo scroll infinito e prefetch della pagina successiva",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "useInfiniteQuery for infinite scroll with prefetching"
   },
   {
     "query": "Route type-safe con loader e search param, voglio togliere React Router",
     "should_trigger": false,
-    "description": "Out of scope: tanstack, routing"
+    "description": "Type-safe routes with loader and search params replacing React Router"
   },
   {
     "query": "Il modale e il wizard hanno stato solo client, come lo gestisco?",
     "should_trigger": false,
-    "description": "Out of scope: client state, react-expert"
+    "description": "Client-only state for a modal and a wizard"
   }
 ]

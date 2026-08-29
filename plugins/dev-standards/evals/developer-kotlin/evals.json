@@ -2,11 +2,13 @@
   {
     "agent": "developer-kotlin",
     "query": "Review this Kotlin code for null-safety issues",
-    "files": [],
+    "files": [
+      "fixtures/OrderService.kt"
+    ],
     "expected_behavior": [
-      "Flags every `!!` in production code and every lateinit var in a service class, with the file and line, and proposes constructor injection instead",
-      "Flags Java style carried into Kotlin: getX()/setX() accessors, Optional<T>, checked exception ceremony",
-      "Flags data class used for a JPA entity"
+      "Flags every `!!` in fixtures/OrderService.kt (customerId!!, total!!, findCustomer(id)!! and customer.email!!) and both lateinit var fields of OrderService, each with its line, and proposes constructor injection instead",
+      "Flags the Java style carried into Kotlin in fixtures/OrderService.kt: the getLastOrder()/setLastOrder() accessor pair, the Optional<OrderEntity> return type, and the @Throws checked exception declaration",
+      "Flags OrderEntity, declared as a data class and annotated @Entity, as a data class used for a JPA entity, and states the identity consequence of the generated equals/hashCode and copy()"
     ]
   },
   {
@@ -16,7 +18,8 @@
     "expected_behavior": [
       "DTOs become data classes and closed state sets become sealed classes, with invariants encoded in value classes",
       "val is the default and var appears only where mutation is actually required, with explicit visibility on the public API",
-      "Delivers the file through the Write or Edit tool rather than a Bash heredoc"
+      "Delivers the file through the Write or Edit tool rather than a Bash heredoc",
+      "Loads `java-spring-standards` and `spring-architecture` with the Skill tool (tool_used: Skill) when the converted class is a Spring bean, and the effect is visible: the Kotlin service takes its collaborators through the constructor and returns a DTO rather than the entity"
     ]
   },
   {
@@ -25,8 +28,8 @@
     "files": [],
     "expected_behavior": [
       "Uses coroutines with structured concurrency and contains no Thread.sleep inside coroutine code",
-      "Does not overuse apply/run blocks to hide sequencing, and keeps the flow readable",
-      "States that ktlint and detekt were applied before declaring the code done"
+      "No apply, run, with or also block in the produced endpoint spans more than three statements, and no such block both mutates its receiver and returns a different value",
+      "The produced code satisfies the ktlint and detekt rules it cites: explicit visibility on every public declaration, no wildcard import, no line longer than 120 characters, and no function longer than 30 lines"
     ]
   }
 ]

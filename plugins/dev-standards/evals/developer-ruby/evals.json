@@ -6,7 +6,8 @@
     "expected_behavior": [
       "Business logic moves into service objects and the controller action shrinks to dispatch plus response",
       "Every produced Ruby file starts with `# frozen_string_literal: true`",
-      "Queries are expressed as scopes or query objects: no raw .where survives inside a controller"
+      "Queries are expressed as scopes or query objects: no raw .where survives inside a controller",
+      "Loads `testing-standards` with the Skill tool (tool_used: Skill), and the effect is visible: each extracted service object ships with an RSpec spec whose describe / context / it nesting covers happy path, boundary, invalid input and error propagation as separate examples"
     ]
   },
   {
@@ -22,10 +23,12 @@
   {
     "agent": "developer-ruby",
     "query": "Review this Rails 7 controller for RuboCop and RSpec coverage",
-    "files": [],
+    "files": [
+      "fixtures/orders_controller.rb"
+    ],
     "expected_behavior": [
-      "Reports violations against rubocop-rails and rubocop-rspec by cop name, with the file and line",
-      "Flags long callback chains that perform business logic and any monkey patching of a third party gem",
+      "Reports violations by cop name with the fixtures/orders_controller.rb line: Style/FrozenStringLiteralComment for the missing magic comment, Rails/WhereEquals for the string conditions in index, Rails/FindBy for the where(...).first in load_order, and Lint/RescueException for the rescue in update",
+      "Flags the three before_action callbacks that run business logic (apply_discount, recalculate_totals and notify_warehouse each save or call out during a filter) and the reopened core String class adding to_money as monkey patching",
       "Proposes RSpec specs for the uncovered paths rather than Minitest"
     ]
   }

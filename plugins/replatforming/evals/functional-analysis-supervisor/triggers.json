@@ -2,26 +2,26 @@
   {
     "query": "Run Phase 1 — produce the functional analysis of this application",
     "should_trigger": true,
-    "description": "Direct Phase 1 invocation"
+    "description": "Phase 1 functional analysis run"
   },
   {
     "query": "What does this app do? Extract the use cases and user flows",
     "should_trigger": true,
-    "description": "Functional analysis natural-language invocation"
+    "description": "What the application does, use cases and user flows"
   },
   {
     "query": "Analyse the technical debt and security posture of this codebase",
     "should_trigger": false,
-    "description": "Technical analysis request — routes to technical-analysis-supervisor"
+    "description": "Technical debt and security posture of a codebase"
   },
   {
     "query": "Write unit tests for the billing module",
     "should_trigger": false,
-    "description": "Test writing — routes to test-writer, not a phase supervisor"
+    "description": "Unit tests for a billing module"
   },
   {
-    "query": "Run Phase 1",
+    "query": "Start the application replatforming workflow end to end, from indexing to the rewrite",
     "should_trigger": false,
-    "description": "Bare phase-number invocation routes to refactoring-supervisor (single-phase mode), not directly to functional-analysis-supervisor"
+    "description": "End-to-end replatforming workflow from indexing to rewrite"
   }
 ]

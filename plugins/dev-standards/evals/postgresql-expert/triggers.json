@@ -2,26 +2,26 @@
   {
     "query": "Questa query Postgres fa seq scan su 2 milioni di righe, che indice ci metto?",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Postgres sequential scan on two million rows, index choice"
   },
   {
     "query": "Scrivi il changelog Liquibase per aggiungere la colonna status con default e backfill",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Liquibase changelog adding a column with default and backfill"
   },
   {
     "query": "Configura il profilo H2 per il dev locale, in prod restiamo su Postgres",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "H2 profile for local dev, Postgres in production"
   },
   {
     "query": "Come mappo questa @OneToMany con fetch join per evitare l'N+1?",
     "should_trigger": false,
-    "description": "Out of scope: spring-data-jpa, mapping ORM"
+    "description": "Mapping a @OneToMany with fetch join to avoid N+1"
   },
   {
-    "query": "Il progetto usa Flyway, dove metto il @Transactional sulle entity?",
+    "query": "Configura il second-level cache di Hibernate e le bulk operation su queste entity",
     "should_trigger": false,
-    "description": "Out of scope: concern JPA: spring-data-jpa"
+    "description": "Hibernate second-level cache and bulk operations on entities"
   }
 ]

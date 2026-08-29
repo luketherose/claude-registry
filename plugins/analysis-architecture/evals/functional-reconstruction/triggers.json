@@ -2,26 +2,26 @@
   {
     "query": "Prima di migrare questo gestionale dobbiamo documentare l'AS-IS: ricostruisci le funzionalita esistenti e i flussi utente",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "AS-IS functionality and user flows reconstructed before migration"
   },
   {
     "query": "Mappa gli user flow di questo codebase e tirami fuori feature list e business rules in docs/functional/",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "User flows, feature list and business rules into docs/functional"
   },
   {
     "query": "Nuovo collega in onboarding: ricostruisci dal codice cosa fa oggi l'applicazione, casi d'uso inclusi",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Existing application behaviour reconstructed from code for onboarding"
   },
   {
     "query": "Scrivi i requisiti funzionali del nuovo modulo di fatturazione elettronica che dobbiamo costruire da zero",
     "should_trigger": false,
-    "description": "Out of scope: functional-analyst, non ricostruzione dell'esistente"
+    "description": "Functional requirements for a new module built from scratch"
   },
   {
     "query": "Dammi la mappa dei moduli e il dependency graph di questo repo",
     "should_trigger": false,
-    "description": "Out of scope: tech-analyst, analisi strutturale non funzionale"
+    "description": "Module map and dependency graph of a repository"
   }
 ]

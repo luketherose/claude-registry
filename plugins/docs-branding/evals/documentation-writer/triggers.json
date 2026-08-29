@@ -2,26 +2,26 @@
   {
     "query": "Scrivi il README per questo servizio",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "README for a service"
   },
   {
     "query": "The onboarding docs are stale, aggiornali",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Stale onboarding documentation"
   },
   {
     "query": "Scrivi il runbook per il team on-call",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Runbook for the on-call team"
   },
   {
     "query": "Crea la wiki GitHub di questo repo con la struttura Diataxis",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "GitHub wiki with a Diataxis structure"
   },
   {
     "query": "Genera una PowerPoint Accenture da questi documenti di stima",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Accenture PowerPoint from estimation documents"
   }
 ]

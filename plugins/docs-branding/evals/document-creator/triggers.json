@@ -2,26 +2,26 @@
   {
     "query": "Genera un PDF Accenture da questi file di stima",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Accenture PDF from estimation files"
   },
   {
     "query": "Produci un Word brandizzato per il cliente da questi documenti",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Branded client Word document from project documents"
   },
   {
     "query": "Trasforma questa proposta di architettura in un deliverable",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Architecture proposal turned into a deliverable"
   },
   {
     "query": "Fammi una PowerPoint Accenture per lo steering committee",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Accenture PowerPoint for a steering committee"
   },
   {
     "query": "Scrivi il README e la guida API dentro il repo",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "README and API guide inside the repository"
   }
 ]

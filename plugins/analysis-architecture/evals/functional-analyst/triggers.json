@@ -2,26 +2,26 @@
   {
     "query": "Estrai i requisiti funzionali da queste user story e scrivi i criteri di accettazione",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Functional requirements and acceptance criteria from user stories"
   },
   {
     "query": "Documenta il caso d'uso di registrazione ordine con attori, precondizioni e flussi alternativi",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Use case for order registration with actors and flows"
   },
   {
     "query": "Genera la matrice CRUD e la tracciabilità fra requisiti e codice del modulo pagamenti",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "CRUD matrix and requirement-to-code traceability"
   },
   {
     "query": "Valuta se conviene passare a microservizi e scrivimi l'ADR con i trade-off",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Whether to move to microservices, with an ADR and trade-offs"
   },
   {
     "query": "Fammi l'inventario del debito tecnico e delle vulnerabilità delle dipendenze con severity",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Technical debt and dependency vulnerability inventory with severity"
   }
 ]

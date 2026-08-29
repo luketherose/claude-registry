@@ -2,26 +2,51 @@
   {
     "query": "Scrivi un endpoint FastAPI con validazione Pydantic",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "FastAPI endpoint with Pydantic validation"
   },
   {
     "query": "Review this Python service for anti-patterns",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Python service reviewed for anti-patterns"
   },
   {
     "query": "Aggiungi test pytest per la data pipeline",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "pytest tests for a data pipeline"
   },
   {
-    "query": "Rifai questa UI Streamlit in Angular con i componenti standalone",
+    "query": "Migra questa UI Streamlit in Angular",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Streamlit UI migrated to Angular"
   },
   {
-    "query": "Scrivi un worker Sidekiq idempotente per Rails 7",
+    "query": "Scrivi un worker Sidekiq idempotente per le notifiche",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Idempotent Sidekiq worker for notifications"
+  },
+  {
+    "query": "Review this PHP code for PHPStan level 8 violations",
+    "should_trigger": false,
+    "description": "PHP code reviewed for PHPStan level 8 violations"
+  },
+  {
+    "query": "Aggiungi copertura cargo test per il modulo domain",
+    "should_trigger": false,
+    "description": "cargo test coverage for a domain module"
+  },
+  {
+    "query": "Questo endpoint FastAPI ritorna 500 a intermittenza, ecco lo stack trace, trova la causa",
+    "should_trigger": false,
+    "description": "FastAPI endpoint returning 500 intermittently, stack trace attached"
+  },
+  {
+    "query": "Fammi l'inventario del debito tecnico e delle dipendenze vulnerabili di questo servizio FastAPI, con severity",
+    "should_trigger": false,
+    "description": "Technical debt and vulnerable dependencies of a FastAPI service"
+  },
+  {
+    "query": "Scrivi il README e la guida API di questo servizio Python",
+    "should_trigger": false,
+    "description": "README and API guide for a Python service"
   }
 ]

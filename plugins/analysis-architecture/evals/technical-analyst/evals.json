@@ -12,11 +12,16 @@
   {
     "agent": "technical-analyst",
     "query": "Fammi l'inventario del debito tecnico di questo servizio Spring Boot con severity e priorità di remediation",
-    "files": [],
+    "files": [
+      "fixtures/pom.xml",
+      "fixtures/OrderFacade.java",
+      "fixtures/ci.yml"
+    ],
     "expected_behavior": [
-      "Every finding is anchored to a specific file reference or a metric, not to a general impression",
-      "Severity is justified by business risk rather than by code elegance, and the Remediation Roadmap table buckets findings into P1 (this sprint), P2 (this quarter) and P3 (backlog) with a rationale per bucket",
-      "The roadmap is sequenced by risk, not by ease of fixing"
+      "Every finding names a fixture file plus a line, element or dependency coordinate (for example log4j-core 2.14.1 in fixtures/pom.xml, the string-concatenated SQL in fixtures/OrderFacade.java, the surefire skipTests=true, or the NEXUS_PASSWORD literal in fixtures/ci.yml), and no finding is stated without one",
+      "The Remediation Roadmap table buckets findings into P1 (this sprint), P2 (this quarter) and P3 (backlog), and each bucket rationale states the business consequence of not fixing it (data breach, outage, regulatory exposure, delivery slowdown) instead of a code-quality adjective",
+      "Reading the Remediation Roadmap from P1 to P3, severity never increases: no P2 or P3 row carries a higher severity than any P1 row",
+      "Loads `tech-analyst` with the Skill tool (tool_used: Skill) before reporting; the effect is visible as a module or component inventory section placed before the findings table, which every finding then references by module name"
     ]
   },
   {

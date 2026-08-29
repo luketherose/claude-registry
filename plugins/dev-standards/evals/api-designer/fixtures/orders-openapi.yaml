@@ -1,0 +1,57 @@
+openapi: "3.0.1"
+info:
+  title: Orders API
+  version: "1.3.0"
+paths:
+  /api/getOrders:
+    get:
+      parameters:
+        - name: customerEmail
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    total: { type: number }
+                    status: { type: string, enum: [NEW, PAID, SHIPPED] }
+  /api/createOrder:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerId: { type: string }
+                total: { type: number }
+      responses:
+        "200":
+          description: created
+        "500":
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorCode: { type: integer }
+                  errorMessage: { type: string }
+  /api/order/{id}/cancel:
+    post:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: cancelled

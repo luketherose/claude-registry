@@ -2,26 +2,26 @@
   {
     "query": "Quali sono i nostri standard REST? Serve il riferimento su status code, versioning e paginazione",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Company REST standards: status codes, versioning, pagination"
   },
   {
     "query": "Review di questo contratto API contro le nostre regole di resource modeling e formato errore RFC 7807",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "API contract against resource modeling and RFC 7807 rules"
   },
   {
     "query": "Regole di authoring OpenAPI 3.1 che seguiamo in azienda",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Company OpenAPI 3.1 authoring rules"
   },
   {
     "query": "Scrivi il controller Spring per POST /api/orders con la validazione",
     "should_trigger": false,
-    "description": "Out of scope: prompt di coding: spring-architecture"
+    "description": "Spring controller for POST /api/orders with validation"
   },
   {
     "query": "Come strutturo i layer di questo modulo, controller e service?",
     "should_trigger": false,
-    "description": "Confusable query, should route to `spring-architecture` instead"
+    "description": "Layering a module into controller and service"
   }
 ]

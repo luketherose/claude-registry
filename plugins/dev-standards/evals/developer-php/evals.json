@@ -2,11 +2,13 @@
   {
     "agent": "developer-php",
     "query": "Review this PHP code for PHPStan level 8 violations",
-    "files": [],
+    "files": [
+      "fixtures/OrderService.php"
+    ],
     "expected_behavior": [
-      "Flags every untyped associative array used as a DTO and every missing property or parameter type, with the file and line",
-      "Flags @ error suppression, catch (Throwable) that swallows, magic methods used to fake an API, and any eval()",
-      "States what has to change for the file to be PHPStan level 8 clean and PSR-12 formatted"
+      "Flags the untyped $payload associative array used as a DTO and every missing type in fixtures/OrderService.php (the $repository and $logger properties, both constructor parameters, and the place() parameter and return type), each with its line",
+      "Flags, each with its line, the two @ suppressions on the $payload lookups, the catch (\\Throwable) in place() that returns null, the __call and __get magic methods, and the eval() of $payload['pricing_rule']",
+      "Names what must change for fixtures/OrderService.php to pass PHPStan level 8 and PSR-12: declare(strict_types=1), a typed DTO or readonly class replacing the array, property and parameter types, and removal of eval() and the magic methods"
     ]
   },
   {
@@ -25,8 +27,9 @@
     "files": [],
     "expected_behavior": [
       "Closed sets are modelled as enums and value objects use readonly classes with typed properties",
-      "Uses the repository pattern because the domain is non trivial, rather than querying inline",
-      "Produces Pest or PHPUnit 10 tests alongside the command"
+      "No Eloquent or Doctrine query call appears inside the Symfony command class: every read and write goes through an injected repository",
+      "Produces Pest or PHPUnit 10 tests alongside the command",
+      "Loads `testing-standards` with the Skill tool (tool_used: Skill), and the effect is visible: each produced test is named {method}_{condition}_{outcome} and its body is laid out Arrange, Act, Assert"
     ]
   }
 ]

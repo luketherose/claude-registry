@@ -2,26 +2,26 @@
   {
     "query": "I need help with both the backend Java migration and the Angular frontend refactoring at the same time",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Java backend migration and Angular frontend refactoring together"
   },
   {
     "query": "Review this PR for Java and Angular changes across 12 files",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "PR with Java and Angular changes across 12 files"
   },
   {
     "query": "Devo migrare questo servizio, documentarlo e aggiungere i test: coordina tu gli specialisti",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Migration, documentation and tests coordinated across specialists"
   },
   {
     "query": "Fix the null pointer exception in the UserController",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Null pointer exception in a controller"
   },
   {
     "query": "Write tests for the PaymentService",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Tests for a payment service"
   }
 ]

@@ -2,26 +2,51 @@
   {
     "query": "Write an ASP.NET Core 8 minimal API for order management",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "ASP.NET Core 8 minimal API for order management"
   },
   {
     "query": "Review this C# service for async anti-patterns",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "C# service reviewed for async anti-patterns"
   },
   {
     "query": "Aggiungi test xUnit con Testcontainers per il repository layer",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "xUnit and Testcontainers tests for a repository layer"
   },
   {
-    "query": "Scrivi il controller Spring Boot 3 per la registrazione utente",
+    "query": "Converti questo service Java in Kotlin idiomatico",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Java service converted to idiomatic Kotlin"
   },
   {
-    "query": "Converti questo service in Kotlin idiomatico con le coroutine",
+    "query": "Review this Spring Boot controller",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Spring Boot controller reviewed"
+  },
+  {
+    "query": "Review this Python service for anti-patterns",
+    "should_trigger": false,
+    "description": "Python service reviewed for anti-patterns"
+  },
+  {
+    "query": "Migra questa UI Streamlit in Angular",
+    "should_trigger": false,
+    "description": "Streamlit UI migrated to Angular"
+  },
+  {
+    "query": "Questo endpoint ASP.NET Core va in timeout a intermittenza, ecco i log, diagnostica il root cause",
+    "should_trigger": false,
+    "description": "ASP.NET Core endpoint timing out intermittently, logs attached"
+  },
+  {
+    "query": "Rivedi questo OpenAPI dell'API .NET e dimmi quali change sono breaking per i client esistenti",
+    "should_trigger": false,
+    "description": "OpenAPI of a .NET API reviewed for breaking changes"
+  },
+  {
+    "query": "Scrivi il README e il runbook on-call di questo servizio ASP.NET Core",
+    "should_trigger": false,
+    "description": "README and on-call runbook for an ASP.NET Core service"
   }
 ]

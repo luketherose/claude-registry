@@ -2,26 +2,26 @@
   {
     "query": "Questo controller ha la business logic dentro, splittalo e dimmi cosa va dove",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Controller holding business logic, split and placement"
   },
   {
     "query": "Aggiungo un nuovo modulo: in che ordine implemento controller, service e repository, e dove metto DTO e mapper?",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Implementation order of controller, service, repository, DTO and mapper"
   },
   {
     "query": "Dove va la Bean Validation e come imposto la global exception handling?",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Bean Validation placement and global exception handling"
   },
   {
     "query": "Configura i profili e @ConfigurationProperties per l'ambiente di collaudo",
     "should_trigger": false,
-    "description": "Confusable query, should route to `spring-expert` instead"
+    "description": "Profiles and @ConfigurationProperties for a staging environment"
   },
   {
     "query": "Questa @OneToMany fa N+1 sulle order lines, cambia la fetch strategy",
     "should_trigger": false,
-    "description": "Confusable query, should route to `spring-data-jpa` instead"
+    "description": "@OneToMany causing N+1 on order lines"
   }
 ]

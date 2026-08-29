@@ -2,26 +2,26 @@
   {
     "query": "Questo component Angular fa change detection su tutto, mettilo OnPush e splitta smart/dumb",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Angular change detection, OnPush and smart/dumb split"
   },
   {
     "query": "Converti questo NgModule in standalone component con route lazy",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "NgModule converted to standalone components with lazy routes"
   },
   {
     "query": "Rifai questa form in Reactive Forms con validator custom e messaggi di errore",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Form rebuilt as Reactive Forms with validators and error messages"
   },
   {
     "query": "Il selector dello store ricalcola ad ogni tick, memoizzalo e sistema l'effect che non ricarica",
     "should_trigger": false,
-    "description": "Confusable query, should route to `ngrx-expert` instead"
+    "description": "Store selector recomputing every tick, effect not reloading"
   },
   {
     "query": "switchMap o mergeMap in questa pipeline di ricerca? Ho nested subscribe ovunque",
     "should_trigger": false,
-    "description": "Confusable query, should route to `rxjs-expert` instead"
+    "description": "switchMap versus mergeMap with nested subscribes"
   }
 ]

@@ -6,26 +6,31 @@
     "expected_behavior": [
       "Nullable reference types are enabled and warnings are treated as errors in the csproj",
       "DTOs are declared as records and configuration is bound through IOptions<T> with validation at startup",
-      "All file content is produced with the Write or Edit tool: no Bash heredoc, echo redirect, printf redirect or tee is used to create C# or csproj content"
+      "All file content is produced with the Write or Edit tool: no Bash heredoc, echo redirect, printf redirect or tee is used to create C# or csproj content",
+      "Loads `rest-api-standards` with the Skill tool (tool_used: Skill) while shaping the endpoints, and the effect is visible: creation returns 201 with a Location header, the collection endpoint is paginated, and errors are returned as RFC 7807 ProblemDetails rather than a custom error object"
     ]
   },
   {
     "agent": "developer-csharp",
     "query": "Review this C# service for async anti-patterns",
-    "files": [],
+    "files": [
+      "fixtures/OrderService.cs"
+    ],
     "expected_behavior": [
-      "Flags every .Result and .Wait() on a Task and every async void outside an event handler, with the file and line",
-      "Checks that CancellationToken is threaded through the async chain rather than dropped at the first await",
-      "Flags string interpolated log messages and requires ILogger<T> message templates instead"
+      "Flags each of these with its fixtures/OrderService.cs line: the .Result on FindCustomer, the GetAwaiter().GetResult() on ChargeAsync, the .Wait() on SaveAsync, and the async void NotifyWarehouse",
+      "Reports that the cancellationToken parameter of PlaceAsync is never passed to any awaited call, and names the calls that should receive it",
+      "Flags the interpolated log message in PlaceAsync and requires an ILogger<T> message template with named placeholders instead"
     ]
   },
   {
     "agent": "developer-csharp",
     "query": "Aggiungi test xUnit con Testcontainers per il repository layer",
-    "files": [],
+    "files": [
+      "fixtures/OrderService.cs"
+    ],
     "expected_behavior": [
       "Produces xUnit tests that run against a Testcontainers backed database rather than a mocked DbContext",
-      "Flags any catch that swallows the exception and any bare `throw new Exception`",
+      "Flags the empty catch (Exception) in NotifyWarehouse and the bare `throw new Exception(\"payment failed\")` in fixtures/OrderService.cs instead of writing tests that accept them",
       "Does not introduce a repository abstraction over DbContext for trivial CRUD"
     ]
   }

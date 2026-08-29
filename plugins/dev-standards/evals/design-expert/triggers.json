@@ -2,26 +2,26 @@
   {
     "query": "Prima di implementare, che aspetto deve avere la pagina di riepilogo ordine? Dammi layout e style spec",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Layout and style spec for an order summary page"
   },
   {
     "query": "Mockup della vista filtri seguendo il design system aziendale, poi la implemento io",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Mockup of a filter view following the design system"
   },
   {
     "query": "Design di questo component, spaziature e stati, prima che scriva una riga di codice",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Component design, spacing and states before any code"
   },
   {
     "query": "Sto gia implementando: sistema il padding e la specificity di questo SCSS",
     "should_trigger": false,
-    "description": "Out of scope: css-expert, fase di implementazione"
+    "description": "Padding and specificity fixed in SCSS during implementation"
   },
   {
     "query": "Scrivi il component React della card con le props tipizzate",
     "should_trigger": false,
-    "description": "Out of scope: react-expert, fase di implementazione"
+    "description": "React card component with typed props"
   }
 ]

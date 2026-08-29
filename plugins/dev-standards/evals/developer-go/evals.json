@@ -2,11 +2,13 @@
   {
     "agent": "developer-go",
     "query": "Review this Go package for idiomatic error handling",
-    "files": [],
+    "files": [
+      "fixtures/handler.go"
+    ],
     "expected_behavior": [
-      "Flags every error wrapped without %w and every error discarded with _ where the value is not genuinely meaningless, with the file and line",
-      "Flags panic used in library code and init() used for anything beyond trivial registration",
-      "Flags business logic living inside the HTTP handler and global mutable state"
+      "Flags, each with its fixtures/handler.go line, the fmt.Errorf in Load that uses %v instead of %w and so destroys the sql.ErrNoRows sentinel, and the discarded error in Handler (`o, _ := Load(id)`)",
+      "Flags the panic in MustLoad as panic in library code, and the init() that opens the database connection and panics as init used beyond trivial registration",
+      "Flags the pricing and status branching inside Handler as business logic in the HTTP handler, and the package level `cache` map and `db` variable as global mutable state"
     ]
   },
   {
@@ -15,8 +17,9 @@
     "files": [],
     "expected_behavior": [
       "Tests are table driven: one slice of cases driving a single subtest loop, not copy pasted test functions",
-      "gofmt or goimports formatting is applied to every file produced",
-      "All file content is written with the Write or Edit tool, never through a Bash heredoc or redirect"
+      "Every produced .go file is gofmt clean as written: tab indentation, a single grouped import block, no manual column alignment and no trailing whitespace",
+      "All file content is written with the Write or Edit tool, never through a Bash heredoc or redirect",
+      "Loads `testing-standards` with the Skill tool (tool_used: Skill), and the effect is visible: the table cases are named for the scenario taxonomy (happy path, boundary, invalid input, error propagation) and each subtest is registered with t.Run using a {func}_{condition}_{outcome} name"
     ]
   },
   {
@@ -26,7 +29,7 @@
     "expected_behavior": [
       "context.Context is plumbed through every I/O path rather than created ad hoc inside the handler",
       "http.Server is configured with explicit read, write and idle timeouts",
-      "Every goroutine started is paired with a stop signal, and no dependency is added where the standard library suffices"
+      "Every goroutine started is paired with an explicit stop signal (context cancellation or a done channel), and the produced go.mod requires nothing beyond the chi router and the standard library"
     ]
   }
 ]

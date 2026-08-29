@@ -2,26 +2,26 @@
   {
     "query": "Dobbiamo sostituire questa UI Streamlit con una SPA Angular, come mappo session_state e i form?",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Streamlit UI replaced by an Angular SPA, session_state and forms"
   },
   {
     "query": "Da template Jinja2 a component Angular con Reactive Forms e Angular Router",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Jinja2 templates to Angular components, Reactive Forms and Router"
   },
   {
     "query": "Migrazione della UI Django templates verso Angular, servizi e stream RxJS al posto della sessione server",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Django templates to Angular services and RxJS streams"
   },
   {
     "query": "Traduci questi moduli Python in Java su Spring Boot, Django ORM verso JPA",
     "should_trigger": false,
-    "description": "Out of scope: python-to-java-migration-expert, backend"
+    "description": "Python modules translated to Java on Spring Boot, Django ORM to JPA"
   },
   {
     "query": "Stessa migrazione della UI ma il target e' React, con hook e router React",
     "should_trigger": false,
-    "description": "Confusable query, should route to `python-to-react-migration-expert` instead"
+    "description": "Same UI migration with React as the target"
   }
 ]

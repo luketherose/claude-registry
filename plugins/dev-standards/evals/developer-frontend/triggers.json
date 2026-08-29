@@ -2,26 +2,51 @@
   {
     "query": "Migra questa UI Streamlit in Angular",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Streamlit UI migrated to Angular"
   },
   {
     "query": "Review this React hook for correctness",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "React hook reviewed for correctness"
   },
   {
     "query": "Scrivi il componente Vue 3 per la lista ordini con stati di loading ed errore",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Vue 3 order list component with loading and error states"
   },
   {
-    "query": "Rifattorizza questo fat Eloquent model Laravel in un service layer",
+    "query": "Scrivi un worker Sidekiq idempotente per le notifiche",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Idempotent Sidekiq worker for notifications"
   },
   {
-    "query": "Progetta il contratto REST dell'API ordini prima di scrivere codice",
+    "query": "Rifattorizza questo fat Eloquent model in un service layer",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Fat Eloquent model split into a service layer"
+  },
+  {
+    "query": "Scrivi un servizio axum con tokio, thiserror e tracing",
+    "should_trigger": false,
+    "description": "axum service with tokio, thiserror and tracing"
+  },
+  {
+    "query": "Scrivi un servizio HTTP in Go con chi, log/slog e context propagation",
+    "should_trigger": false,
+    "description": "Go HTTP service with chi, log/slog and context propagation"
+  },
+  {
+    "query": "Questo component Angular esplode con ExpressionChangedAfterItHasBeenCheckedError, ecco lo stack trace, trova la causa",
+    "should_trigger": false,
+    "description": "Angular ExpressionChangedAfterItHasBeenChecked error, stack trace attached"
+  },
+  {
+    "query": "Fammi l'inventario del debito tecnico e delle dipendenze npm vulnerabili di questa app Angular, con severity",
+    "should_trigger": false,
+    "description": "Technical debt and vulnerable npm dependencies of an Angular app"
+  },
+  {
+    "query": "Scrivi il README e la guida per i contributor di questa app React",
+    "should_trigger": false,
+    "description": "README and contributor guide for a React app"
   }
 ]

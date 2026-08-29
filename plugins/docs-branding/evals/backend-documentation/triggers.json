@@ -2,26 +2,26 @@
   {
     "query": "Documenta questo backend Spring Boot, mi serve backend-doc.tex pronto per pandoc",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "backend-doc.tex for a Spring Boot backend"
   },
   {
     "query": "Genera la documentazione tecnica del backend: architettura, API reference, data model, sicurezza, error handling",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Backend technical documentation: architecture, API, data model, security"
   },
   {
     "query": "Produci backend-doc.tex partendo dalle analisi gia fatte e dal codice Java",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "backend-doc.tex from existing analyses and Java code"
   },
   {
     "query": "Genera frontend-doc.tex per l'app Angular",
     "should_trigger": false,
-    "description": "Confusable query, should route to `frontend-documentation` instead"
+    "description": "frontend-doc.tex for an Angular app"
   },
   {
     "query": "Documentazione tecnica fullstack, backend e frontend insieme con il template Word",
     "should_trigger": false,
-    "description": "Confusable query, should route to `documentation-orchestrator` instead"
+    "description": "Full-stack technical documentation with a Word template"
   }
 ]

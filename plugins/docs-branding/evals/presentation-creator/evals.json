@@ -2,7 +2,9 @@
   {
     "agent": "presentation-creator",
     "query": "Crea una PowerPoint Accenture da questi documenti di stima",
-    "files": [],
+    "files": [
+      "fixtures/estimation.md"
+    ],
     "expected_behavior": [
       "Reads every source file first, then writes a self contained Python script to /tmp/gen_presentation_<projectname>.py and executes it",
       "Confirms the output path and the file size, and notes per slide which source document it was derived from",
@@ -12,17 +14,22 @@
   {
     "agent": "presentation-creator",
     "query": "Costruisci un pitch deck per lo steering committee",
-    "files": [],
+    "files": [
+      "fixtures/estimation.md"
+    ],
     "expected_behavior": [
       "Uses the executive audience mode: cover, agenda, problem, solution, timeline, no implementation detail dump",
-      "Only Accenture brand colours and fonts appear, and the timeline or effort slide reflects the numbers taken from the source estimation files",
-      "No source file is modified, deleted or overwritten"
+      "Only Accenture brand colours and fonts appear in the generated .pptx, and the timeline or effort slide carries the numbers from fixtures/estimation.md (333 giorni uomo, 30 settimane, the five workstream windows) with no figure absent from the fixture",
+      "No source file is modified, deleted or overwritten",
+      "Loads `accenture-branding` with the Skill tool (tool_used: Skill) before writing the generation script, and the effect is visible: the script's colour constants are the RGBColor values that skill defines rather than arbitrary hex codes"
     ]
   },
   {
     "agent": "presentation-creator",
     "query": "Aggiorna il deck di architettura con la nuova proposta",
-    "files": [],
+    "files": [
+      "fixtures/estimation.md"
+    ],
     "expected_behavior": [
       "Architecture slides are drawn as labelled shapes: no imported image file and no empty box",
       "Nothing is invented: any section the sources do not cover is marked 'To be defined, source data not available' rather than filled with a plausible guess",

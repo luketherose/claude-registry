@@ -2,26 +2,26 @@
   {
     "query": "Crea una wiki GitHub per questo repo",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "GitHub wiki for a repository"
   },
   {
     "query": "Ristruttura la wiki con la struttura Diataxis così i contributor trovano le cose",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Wiki restructured on Diataxis for contributor navigation"
   },
   {
     "query": "Genera Home, _Sidebar e _Footer come Markdown nella cartella wiki/ pronti per la PR",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Home, _Sidebar and _Footer Markdown in wiki/ ready for a PR"
   },
   {
     "query": "Scrivi il README e il runbook on-call di questo servizio",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "README and on-call runbook for a service"
   },
   {
     "query": "Genera un PDF Accenture brandizzato da questi documenti",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Accenture branded PDF from documents"
   }
 ]

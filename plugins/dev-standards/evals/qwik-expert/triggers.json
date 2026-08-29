@@ -2,26 +2,26 @@
   {
     "query": "Questo component Qwik non è resumable, rifallo con i signal e il lazy loading corretto",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Qwik component made resumable with signals and lazy loading"
   },
   {
     "query": "Route loader e server action in Qwik City per la pagina catalogo",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Route loader and server action in Qwik City"
   },
   {
     "query": "Il TTI deve stare sotto i 200ms, riscrivo questo widget in Qwik",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Widget rewritten in Qwik for sub-200ms TTI"
   },
   {
     "query": "Ottimizza questo component React con memo e useCallback",
     "should_trigger": false,
-    "description": "Confusable query, should route to `react-expert` instead"
+    "description": "React component optimised with memo and useCallback"
   },
   {
     "query": "Component Angular standalone con OnPush",
     "should_trigger": false,
-    "description": "Confusable query, should route to `angular-expert` instead"
+    "description": "Standalone Angular component with OnPush"
   }
 ]

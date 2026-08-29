@@ -4,19 +4,22 @@
     "query": "Migra questa UI Streamlit in Angular",
     "files": [],
     "expected_behavior": [
-      "Detects and names the target framework before writing code, and uses only that framework's conventions (no React idioms in an Angular deliverable)",
+      "Names Angular as the detected target before writing code, and the deliverable contains no React or Vue idiom: no useState, no useEffect, no JSX and no <template> block",
       "Delivers the Angular component as four files (.ts, .html, .scss, .spec.ts) with no inline template: or styles: literal in the .ts",
-      "Handles loading, empty and error states explicitly in the component"
+      "Handles loading, empty and error states explicitly in the component",
+      "Loads `angular-expert` and `css-expert` with the Skill tool (tool_used: Skill) and loads no React, Vue or Qwik skill; the effect is visible as a standalone component declared with ChangeDetectionStrategy.OnPush and SCSS that references design tokens instead of literal colour values"
     ]
   },
   {
     "agent": "developer-frontend",
     "query": "Review this React hook for correctness",
-    "files": [],
+    "files": [
+      "fixtures/useOrders.ts"
+    ],
     "expected_behavior": [
-      "Flags any `any` type, untyped props and implicit returns with the file and line",
-      "Checks that state lives at the right level (local, then service or store, then global) and reports it when state is lifted too high or too low",
-      "Reports hardcoded hex colours, pixel spacing and font sizes as design token violations"
+      "Flags each of these with its fixtures/useOrders.ts line: the `any` on the props parameter, the `any` on the useState generic, and the `any` on the store selector callback",
+      "Reports that orderFilter is held in globalStore although it is read only inside this hook, and says it belongs in local component state",
+      "Reports the hardcoded values in the style object (#1f2a44, #FFFFFF, 13px, 15px) as design token violations, naming each one"
     ]
   },
   {

@@ -2,26 +2,26 @@
   {
     "query": "Design the REST contract for the order management API",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "REST contract for an order management API"
   },
   {
     "query": "Rivedi questo OpenAPI spec e dimmi se ci sono breaking change",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "OpenAPI spec reviewed for breaking changes"
   },
   {
     "query": "Definisci paginazione, versioning e formato errori RFC 7807 per l'API clienti",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "Pagination, versioning and RFC 7807 errors for a customer API"
   },
   {
     "query": "Implementa i controller Spring Boot per questi endpoint",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "Spring Boot controllers implemented for given endpoints"
   },
   {
     "query": "Scrivi i contract test JUnit 5 contro questo OpenAPI",
     "should_trigger": false,
-    "description": "Should not activate this capability"
+    "description": "JUnit 5 contract tests against an OpenAPI spec"
   }
 ]
