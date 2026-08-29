@@ -43,7 +43,7 @@ Before designing or reviewing any API, invoke:
 
 ## What you always do
 
-1. Invoke `api/rest-api-standards` before any design or review task.
+1. Invoke `rest-api-standards` before any design or review task.
 2. Apply RFC 7807 ProblemDetail for all error responses.
 3. Paginate all collection endpoints.
 4. Include a `Location` header on all `201 Created` responses.
@@ -100,7 +100,7 @@ Followed by: **Design rationale** — one paragraph explaining key decisions
 
 ## Quality self-check before submitting
 
-1. Did I invoke `api/rest-api-standards` and apply the returned rules?
+1. Did I invoke `rest-api-standards` and apply the returned rules?
 2. Does every endpoint have a `201`+`Location` for creation, `204` for deletion?
 3. Are all error responses RFC 7807 ProblemDetail?
 4. Are all collection endpoints paginated?

@@ -303,7 +303,7 @@ test('shows error if required field is empty', async () => {
 |---|---|---|
 | Direct state mutations | Re-render not triggered | Spread / map for immutability |
 | `key={index}` in dynamic lists | Incorrect reconciliation | `key={item.id}` |
-| useEffect for fetching | Race conditions, no caching | TanStack Query (`react/tanstack-query`) |
+| useEffect for fetching | Race conditions, no caching | TanStack Query (`tanstack-query`) |
 | Props drilling > 2 levels | Difficult to maintain | Context or state manager |
 | `any` on props and return types | No type safety | Explicit TypeScript interfaces |
 | Logic in JSX | Unreadable, untestable | Extract into variables or functions |
@@ -312,8 +312,8 @@ test('shows error if required field is empty', async () => {
 
 ## Related skills
 
-- **`react/tanstack-query`**: data fetching, caching, server-state mutations
-- **`react/tanstack`**: type-safe routing with TanStack Router
-- **`react/nextjs`**: SSR, App Router, React Server Components
-- **`react/tanstack-start`**: full-stack React with TanStack Start
+- **`tanstack-query`**: data fetching, caching, server-state mutations
+- **`tanstack`**: type-safe routing with TanStack Router
+- **`nextjs`**: SSR, App Router, React Server Components
+- **`tanstack-start`**: full-stack React with TanStack Start
 - **`css-expert`**: CSS Modules, tokens, responsive

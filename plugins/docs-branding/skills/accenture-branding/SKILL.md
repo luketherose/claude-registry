@@ -194,4 +194,4 @@ tr:nth-child(even) td { background: #F9F9F6; }
 
 - Deviate from the color palette above
 - Use fonts other than Arial and Palatino Linotype (system fallbacks for Graphik and GT Sectra Fine)
-- Generate output files: the constants and rules are provided for the calling agent to use
+- Generate output files. Provide the constants and rules for the calling agent to use instead.

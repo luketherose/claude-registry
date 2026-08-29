@@ -52,11 +52,11 @@ Before activating FE skills, consult the documentation and analysis artefacts av
 ### Step 1: Analyse the FE task
 
 Guiding questions:
-- **New component from scratch?** → Start with design, then Angular, then CSS
-- **Complex state shared between features?** → Evaluate whether NgRx is needed (see Step 2)
-- **Problematic RxJS streams?** → Activate `rxjs-expert`
+- **New component from scratch?**                  → Start with design, then Angular, then CSS
+- **Complex state shared between features?**       → Evaluate whether NgRx is needed (see Step 2)
+- **Problematic RxJS streams?**                    → Activate `rxjs-expert`
 - **Styles to reorganise or create from scratch?** → Activate `css-expert`
-- **Only refactoring of existing code?** → Activate `refactoring-expert` with FE scope
+- **Only refactoring of existing code?**           → Activate `refactoring-expert` with FE scope
 
 ### Step 2: Evaluate whether NgRx is necessary
 
@@ -86,10 +86,10 @@ Guiding questions:
 
 **Scenario B: existing FE refactoring**
 ```
-1. /refactoring/refactoring-expert     → identify code smells, SOLID violations
-2. angular-expert    → apply structural corrections
-3. rxjs-expert       → correct problematic RxJS patterns
-4. css-expert        → correct styles (if necessary)
+1. refactoring-expert     → identify code smells, SOLID violations
+2. angular-expert         → apply structural corrections
+3. rxjs-expert            → correct problematic RxJS patterns
+4. css-expert             → correct styles (if necessary)
 ```
 
 **Scenario C: feature with complex state**
@@ -130,7 +130,7 @@ Parallelizable pairs:
   - component implementation ∥ unit tests for already-specified component interface
 
 Always sequential:
-  design-expert → framework-expert (component needs finalized design tokens)
+  design-expert    → framework-expert (component needs finalized design tokens)
   framework-expert → ngrx-expert/tanstack-query (state needs component contract defined)
 ```
 
@@ -262,7 +262,7 @@ At the end of FE orchestration, produce:
 
 ## When NOT to use
 
-- Purely BE tasks → `java-expert`
-- Repository analysis tasks → `tech-analyst`
-- Migration tasks → `/orchestrators/migration-orchestrator`
+- Purely BE tasks                    → `java-expert`
+- Repository analysis tasks          → `tech-analyst`
+- Migration tasks                    → `/orchestrators/migration-orchestrator`
 - Simple FE task with a single skill → go directly to the skill

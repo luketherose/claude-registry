@@ -8,7 +8,7 @@
 > We have this Streamlit app and no docs. Reconstruct the functional requirements before we plan the migration.
 
 **What the subagent does**:
-1. Loads `analysis/functional-reconstruction` skill for the methodology
+1. Loads `functional-reconstruction` skill for the methodology
 2. Walks the codebase: pages, services, business logic
 3. Produces structured artifacts in `docs/functional/`:
    - **Feature inventory**: every distinct feature the system supports, with the entry point and the user-facing outcome

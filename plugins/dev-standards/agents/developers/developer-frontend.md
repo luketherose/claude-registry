@@ -81,21 +81,21 @@ invariants for that stack.
 
 These skills apply regardless of the detected framework:
 
-- **`frontend/design-expert`** — invoke before implementing any new screen or component.
+- **`design-expert`** — invoke before implementing any new screen or component.
   Produces design spec, component tree, token-based style guide.
   Invoke with: `"Produce design spec for: [component/screen description]"`
 
-- **`frontend/css-expert`** — invoke when writing or reviewing styles.
+- **`css-expert`** — invoke when writing or reviewing styles.
   SCSS, design tokens, BEM, responsive patterns, accessibility.
   Invoke when: creating new stylesheets, refactoring existing SCSS, or applying theming.
 
-- **`testing/testing-standards`** — invoke when writing or reviewing tests.
+- **`testing-standards`** — invoke when writing or reviewing tests.
   Provides scenario taxonomy, naming conventions, and framework-specific test templates.
 
-- **`api/rest-api-standards`** — invoke when integrating REST endpoints.
+- **`rest-api-standards`** — invoke when integrating REST endpoints.
   URL conventions, error handling, pagination.
 
-- **`refactoring/refactoring-expert`** — invoke when refactoring existing frontend code.
+- **`refactoring-expert`** — invoke when refactoring existing frontend code.
   SOLID, DRY, KISS applied to component design.
 
 ---
@@ -121,7 +121,7 @@ If detected:
 
 ```
 Invoke:
-  frontend/unicredit-design-system   — UniCredit brand, Bricks components,
+  unicredit-design-system   — UniCredit brand, Bricks components,
                                        --uc-* token block, EN 301 549 / WCAG 2.1 AA
                                        targets, tone of voice. Overrides the generic
                                        design-expert defaults for visual decisions.

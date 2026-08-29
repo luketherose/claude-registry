@@ -258,6 +258,6 @@ export const config = {
 
 ## Related skills
 
-- **`react/react-expert`**: React patterns, hooks, TypeScript
-- **`react/tanstack-query`**: client-side data fetching in interactive components
-- **`react/tanstack-start`**: Next.js alternative, TanStack-native
+- **`react-expert`**: React patterns, hooks, TypeScript
+- **`tanstack-query`**: client-side data fetching in interactive components
+- **`tanstack-start`**: Next.js alternative, TanStack-native

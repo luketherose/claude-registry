@@ -1,6 +1,6 @@
 ---
 name: doc-expert
-description: "This skill should be used when producing technical or functional documentation for a Python/Streamlit, Java/Spring Boot, or Angular project. Trigger phrases: \"document this code\", \"write the technical docs\", \"generate the module guide\", \"add docstrings + flow descriptions\". Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented; saves to `docs/`. Do not use to generate enterprise LaTeX deliverables (use functional-document-generator or backend/frontend-documentation)."
+description: "This skill should be used when producing technical or functional documentation for a Python/Streamlit, Java/Spring Boot, or Angular project. Trigger phrases: \"document this code\", \"write the technical docs\", \"generate the module guide\", \"add docstrings + flow descriptions\". Covers docstrings, flow descriptions, domain glossary, and module guides. Output is business-oriented, not implementation-oriented; saves to `docs/`. Do not use to generate enterprise LaTeX deliverables (use functional-document-generator, backend-documentation or frontend-documentation)."
 ---
 
 # Doc Expert
@@ -103,8 +103,8 @@ If it is already covered, update rather than rewrite.
 **Actor**: [user type]
 **Objective**: [what they want to achieve]
 
-1. [Step 1] → [what happens]
-2. [Step 2] → [what happens]
+1. [Step 1]             → [what happens]
+2. [Step 2]             → [what happens]
 3. [Decision/Condition] → [Branch A] / [Branch B]
 4. [Final output]
 
@@ -186,6 +186,6 @@ Maintain a glossary of the project's domain terms: identify and document project
 
 ## When NOT to use
 
-- For in-depth functional analysis → `functional-analyst`
+- For in-depth functional analysis  → `functional-analyst`
 - For technical structural analysis → `tech-analyst`
-- For implementation → specific skills
+- For implementation                → specific skills

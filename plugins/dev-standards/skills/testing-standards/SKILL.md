@@ -312,5 +312,5 @@ Minimum enforced in CI: **70% line coverage** (Java: JaCoCo; Python: pytest-cov)
 - Depend on execution order
 - Share mutable state between test methods
 - Hit real external services (databases, APIs, message queues) in unit tests
-- Use `Thread.sleep()` to wait for async operations: use `CompletableFuture`, `awaitility`, or test doubles
-- Assert on log output (fragile): assert on observable side effects instead
+- Use `Thread.sleep()` to wait for async operations. Use `CompletableFuture`, `awaitility`, or test doubles instead.
+- Assert on log output, which is fragile. Assert on observable side effects instead.

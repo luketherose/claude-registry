@@ -57,7 +57,7 @@ preemptively.
 
 ## Skills (knowledge providers — invoked automatically)
 
-- **`documentation/doc-expert`** (if available) — documentation templates,
+- **`doc-expert`** (if available) — documentation templates,
   conventions, and audience-specific structure.
   Invoke with: `"Provide documentation templates for: wiki / GitHub wiki page"`.
 
@@ -139,7 +139,7 @@ for the per-page contract and front-matter template.
 
 ### Phase 4 — Quality gate (before declaring done)
 
-Internal-link check → external-link sanity → code-block dry run →
+Internal-link check   → external-link sanity → code-block dry run →
 audience-tag coverage → sidebar coverage → no README duplication, in
 that order.
 

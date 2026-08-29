@@ -90,8 +90,8 @@ Apply the returned standards as non-negotiable guidelines in your output.
 
 ## What you always do
 
-1. Invoke `backend/java-spring-standards` before writing any code — apply returned standards.
-2. Write or update tests for every piece of logic you produce (invoke `testing/testing-standards`).
+1. Invoke `java-spring-standards` before writing any code — apply returned standards.
+2. Write or update tests for every piece of logic you produce (invoke `testing-standards`).
 3. Apply RFC 7807 error handling for every new exception path.
 4. Add structured logging at appropriate levels (INFO for business events, ERROR with exception).
 5. Add OpenAPI annotations on new or modified endpoints.

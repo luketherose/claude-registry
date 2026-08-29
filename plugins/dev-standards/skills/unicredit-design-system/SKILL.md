@@ -182,8 +182,8 @@ sequence:
 - Use UniCredit Red for body text on white (fails WCAG AA contrast).
 - Recolour, distort, or recreate the logo as inline SVG paths.
 - Mix in palettes from other banks or generic Tailwind/Material defaults.
-- Apply Bricks rules to a non-UniCredit project: this skill is **client-scoped**.
-- Hardcode hex values in component styles: always reference `--uc-*` tokens.
+- Apply Bricks rules to a non-UniCredit project. This skill is **client-scoped**.
+- Hardcode hex values in component styles. Always reference the `--uc-*` tokens instead.
 - Disable focus rings or motion preferences for visual reasons.
 
 ---

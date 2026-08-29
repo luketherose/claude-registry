@@ -23,11 +23,11 @@
 ### New feature (TYPE A): top-down
 
 ```
-1. /backend/spring-architecture   → define layer structure and contracts (DTO, interfaces)
-2. /database/postgresql-expert    → schema, tables, indices, constraints, migration DDL
-3. /backend/spring-data-jpa       → entity mapping, relationships, fetch strategy, repository
-4. /backend/java-expert           → Java logic in the service (if complex)
-5. /backend/spring-expert         → configuration, security, WebClient if necessary
+1. spring-architecture   → define layer structure and contracts (DTO, interfaces)
+2. postgresql-expert     → schema, tables, indices, constraints, migration DDL
+3. spring-data-jpa       → entity mapping, relationships, fetch strategy, repository
+4. java-expert           → Java logic in the service (if complex)
+5. spring-expert         → configuration, security, WebClient if necessary
 ```
 
 **Why this order**: the structure and public contract (DTO, interfaces) must be defined before implementation. The DB schema must exist before entity mapping. The entity must exist before the service. Reversing the order causes cascading refactoring.
@@ -35,10 +35,10 @@
 ### Bug / problem (TYPE B): bottom-up
 
 ```
-1. /database/postgresql-expert    → does the query reach the DB? Is the data correct? Are indices used?
-2. /backend/spring-data-jpa       → does the ORM generate the expected query? Is the transaction correct?
-3. /backend/java-expert / /backend/spring-expert → is the application logic correct?
-4. /backend/spring-architecture   → is the problem structural (wrong layer)?
+1. postgresql-expert           → does the query reach the DB? Is the data correct? Are indices used?
+2. spring-data-jpa             → does the ORM generate the expected query? Is the transaction correct?
+3. java-expert / spring-expert → is the application logic correct?
+4. spring-architecture         → is the problem structural (wrong layer)?
 ```
 
 **Why bottom-up**: most backend bugs have their root cause in the lowest layer. Starting from the top wastes time.
@@ -46,18 +46,18 @@
 ### Optimisation (TYPE C): diagnose first, fix later
 
 ```
-1. /database/postgresql-expert    → EXPLAIN ANALYZE, missing indices, query anti-patterns
-2. /backend/spring-data-jpa       → N+1, fetch strategy, bulk operations, projections
-3. /backend/java-expert           → concurrency, inefficient streams, unnecessary objects
-   → DO NOT optimise at code level if the problem is in the DB
+1. postgresql-expert     → EXPLAIN ANALYZE, missing indices, query anti-patterns
+2. spring-data-jpa       → N+1, fetch strategy, bulk operations, projections
+3. java-expert           → concurrency, inefficient streams, unnecessary objects
+                         → DO NOT optimise at code level if the problem is in the DB
 ```
 
 ### Refactoring (TYPE D): architecture guides everything
 
 ```
-1. /backend/spring-architecture   → define the target structure
+1. spring-architecture             → define the target structure
 2. All involved skills             → adapt each layer to the target structure
-   → Maintain unchanged functional behaviour during refactoring
+                                   → Maintain unchanged functional behaviour during refactoring
 ```
 
 ---
@@ -87,8 +87,8 @@ Parallelizable pairs (no shared state):
 
 Always sequential (output dependency):
   spring-architecture → spring-data-jpa (entity needs defined contracts)
-  postgresql-expert → spring-data-jpa (entity mapping needs final schema)
-  spring-data-jpa → spring-expert (service needs repository interface)
+  postgresql-expert   → spring-data-jpa (entity mapping needs final schema)
+  spring-data-jpa     → spring-expert (service needs repository interface)
 ```
 
 ### When NOT to parallelize

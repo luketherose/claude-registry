@@ -10,14 +10,14 @@
 
 ```
 Always invoke:
-  frontend/angular/angular-expert   — component architecture, smart/dumb, routing, forms, guards
+  angular-expert   — component architecture, smart/dumb, routing, forms, guards
 
 Invoke when state management is needed:
-  frontend/angular/ngrx-expert      — only if shared state across features, side effects,
-                                      or undo/redo is required. Not for local state.
+  ngrx-expert      — only if shared state across features, side effects,
+                     or undo/redo is required. Not for local state.
 
 Invoke when RxJS streams are involved:
-  frontend/angular/rxjs-expert      — flattening operators, subscription cleanup, stream design
+  rxjs-expert      — flattening operators, subscription cleanup, stream design
 ```
 
 **Angular — invariants (non-negotiable):**
@@ -36,20 +36,20 @@ Invoke when RxJS streams are involved:
 
 ```
 Always invoke:
-  frontend/react/react-expert       — hooks, component architecture, TypeScript, performance
+  react-expert       — hooks, component architecture, TypeScript, performance
 
 Invoke when server data fetching is needed:
-  frontend/react/tanstack-query     — useQuery, useMutation, cache invalidation, optimistic updates
+  tanstack-query     — useQuery, useMutation, cache invalidation, optimistic updates
 
 Invoke when client-side routing is needed:
-  frontend/react/tanstack           — TanStack Router, file-based routes, type-safe navigation,
-                                      loaders, search params
+  tanstack           — TanStack Router, file-based routes, type-safe navigation,
+                       loaders, search params
 
 Invoke when full-stack SSR is needed:
-  frontend/react/nextjs             — App Router, RSC, Server Actions, metadata, caching
-  OR
-  frontend/react/tanstack-start     — TanStack Start, createServerFn, SSR, streaming
-                                      (use nextjs if team is Next.js-experienced;
+  nextjs             — App Router, RSC, Server Actions, metadata, caching
+                       OR
+  tanstack-start     — TanStack Start, createServerFn, SSR, streaming
+                       (use nextjs if team is Next.js-experienced;
                                        use tanstack-start for TanStack-native stacks)
 ```
 
@@ -67,8 +67,8 @@ Invoke when full-stack SSR is needed:
 
 ```
 Always invoke:
-  frontend/vue/vue-expert           — Composition API, script setup, Pinia, Vue Router 4,
-                                      composables, reactivity rules
+  vue-expert           — Composition API, script setup, Pinia, Vue Router 4,
+                         composables, reactivity rules
 ```
 
 **Vue 3 — invariants (non-negotiable):**
@@ -84,8 +84,8 @@ Always invoke:
 
 ```
 Always invoke:
-  frontend/qwik/qwik-expert         — resumability, component$, signals, useSignal/useStore,
-                                      routeLoader$, routeAction$, Qwik City routing
+  qwik-expert         — resumability, component$, signals, useSignal/useStore,
+                        routeLoader$, routeAction$, Qwik City routing
 ```
 
 **Qwik — invariants (non-negotiable):**
@@ -100,8 +100,8 @@ Always invoke:
 
 ```
 Always invoke:
-  frontend/vanilla/vanilla-expert   — Web Components, TypeScript strict, DOM API,
-                                      fetch wrapper, Custom Events, Intersection Observer
+  vanilla-expert   — Web Components, TypeScript strict, DOM API,
+                     fetch wrapper, Custom Events, Intersection Observer
 ```
 
 **Vanilla — invariants (non-negotiable):**
