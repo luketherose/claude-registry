@@ -342,6 +342,55 @@ def validate_workflow_dag():
             % (path, name))
 
 
+
+# Findings the structural gates never covered. Every one of these was a real
+# defect found by auditing against Anthropic's rubrics, not a hypothetical.
+# They start as warnings so the backlog can be worked down, then become errors.
+AGENT_BODY_MAX_CHARS = 10000
+SKILL_SPLIT_HINT_LINES = 400
+REFERENCE_TOC_LINES = 100
+
+
+def validate_substance():
+    for path in sorted(glob.glob("plugins/*/skills/*/SKILL.md")):
+        body = split_frontmatter(path)[1]
+        skill_dir = os.path.dirname(path)
+        lines = body.count("\n")
+        if lines > SKILL_SPLIT_HINT_LINES and not os.path.isdir(
+                os.path.join(skill_dir, "references")):
+            warn("%s: %d-line body with no references/. The 500-line gate is a "
+                 "ceiling, not a target; split the detail out." % (path, lines))
+        # Routing happens on the description alone. A "when to use" section in
+        # the body is unreachable at that moment and only duplicates it.
+        for i, line in enumerate(body.splitlines(), 1):
+            if re.match(r"^#+ .*[Ww]hen (to|NOT to|not to) use", line):
+                warn("%s:%d: trigger conditions belong in the description, "
+                     "which is what the model routes on" % (path, i))
+
+    for path in sorted(glob.glob("plugins/*/references/**/*.md", recursive=True)
+                       + glob.glob("plugins/*/skills/*/references/**/*.md",
+                                   recursive=True)):
+        text = open(path, encoding="utf-8").read()
+        n = text.count("\n")
+        if n > REFERENCE_TOC_LINES and not re.search(r"^#+ Contents", text, re.M):
+            warn("%s: %d lines with no '## Contents'. Claude previews long "
+                 "files head-first and acts on a partial read." % (path, n))
+
+    for path in sorted(glob.glob("plugins/*/agents/**/*.md", recursive=True)):
+        fm, body = split_frontmatter(path)
+        if fm is None:
+            continue
+        if len(body) > AGENT_BODY_MAX_CHARS:
+            warn("%s: agent body is %d characters, over the %d ceiling"
+                 % (path, len(body), AGENT_BODY_MAX_CHARS))
+        # Opus is the expensive, non-default choice, so it carries its reason
+        # in the file. The sonnet worker default is a class policy stated once
+        # per plugin rather than repeated across 43 files.
+        if field(fm, "model") == "opus" and "<!--" not in body:
+            warn("%s: pins model opus with no justification comment in the body"
+                 % path)
+
+
 def validate_skills():
     seen = {}
     for path in sorted(glob.glob("plugins/*/skills/*/SKILL.md")):
@@ -510,6 +559,7 @@ if __name__ == "__main__":
         validate_frontmatter_yaml()
         validate_evals()
         validate_workflow_dag()
+        validate_substance()
         validate_cross_plugin_references()
         budget = validate_agents()
         validate_skills()
