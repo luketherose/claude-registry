@@ -1,9 +1,9 @@
 # Supervisor extraction template
 
-Concrete recipe for extracting per-phase / per-wave content out of a large
+Concrete recipe for extracting per-phase or per-wave content out of a large
 supervisor agent body into reference docs. Use this when an agent's system
 prompt grows past the Anthropic `agent-development` rubric body ceiling
-(10 000 chars) — typical for the Phase 0–5 supervisors in this registry.
+(10 000 chars), which is typical for the phase supervisors in `replatforming`.
 
 ---
 
@@ -17,7 +17,7 @@ Extract a section out of a supervisor body when **all** of the following hold:
    or per-sub-agent dispatch templates that the supervisor reads once at
    dispatch time, not on every reasoning step.
 3. The extracted content is reference material (templates, schemas, schematics,
-   sample prompts) — not the supervisor's own decision logic.
+   sample prompts) rather than the supervisor's own decision logic.
 
 Do NOT extract:
 
@@ -25,7 +25,7 @@ Do NOT extract:
 - The orchestration loop (the actual decision flow).
 - The `## When to invoke` section.
 - The `## Output format` for user-facing messages.
-- Any `## What you always do` / `## What you never do` invariants — these are
+- Any `## What you always do` or `## What you never do` invariants. Those are
   consulted on every step.
 
 ---
@@ -33,31 +33,35 @@ Do NOT extract:
 ## Target layout
 
 ```
-claude-catalog/
+plugins/<plugin>/
 ├── agents/<topic>/<supervisor>.md       ← supervisor body (≤ ~8 000 chars)
-└── docs/
+└── references/
     └── <topic>/                         ← extracted reference docs
         ├── phase-<N>-<name>.md
         ├── wave-<N>-<name>.md
         └── dispatch-templates.md
 ```
 
-`<topic>` matches the agent's catalog topic folder (e.g., `refactoring-tobe`,
-`baseline-testing`, `tobe-testing`).
+`<topic>` matches the agent's own subdirectory under `agents/`, for example
+`refactoring-tobe`, `baseline-testing` or `tobe-testing`. Reference docs live in
+the plugin's `references/` tree, not in `docs/`: `docs/` is repository
+documentation and is not shipped to a consumer's install.
 
 ---
 
 ## How the supervisor references the extracted docs
 
 The supervisor body should contain a **single anchor section** that lists every
-reference doc with one line per doc explaining when to read it. Example:
+reference doc with one line per doc explaining when to read it. Address the
+directory with `${CLAUDE_PLUGIN_ROOT}`. A repo-relative path resolves against the
+consumer's project, returns nothing, and fails CI. Example:
 
 ```markdown
 ## Reference docs
 
 This supervisor's per-wave templates and dispatch prompts live in
-`claude-catalog/docs/refactoring-tobe/` and are read on demand. Read each
-doc only when the matching wave is about to start — not preemptively.
+`${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/` and are read on demand. Read
+each doc only when the matching wave is about to start, not preemptively.
 
 | Doc | Read when |
 |---|---|
@@ -80,7 +84,7 @@ doc at runtime. No new tool is needed.
 Each extracted doc is a stand-alone Markdown file with this skeleton:
 
 ```markdown
-# <Phase|Wave|Step> <N> — <name>
+# <Phase|Wave|Step> <N>: <name>
 
 > Reference doc for `<supervisor-agent>`. Read at runtime when the matching
 > wave is about to start.
@@ -105,7 +109,7 @@ copies and parametrises:
 You are `<sub-agent>`.
 Read: <inputs>
 Produce: <output path>
-Constraints: <hard rules — strict AS-IS, no Flyway, ...>
+Constraints: <hard rules: strict AS-IS, no Flyway, ...>
 \`\`\`
 
 ## Output
@@ -121,20 +125,20 @@ When to stop and ask the user; when to continue automatically.
 
 ---
 
-## Worked example — one wave
+## Worked example: one wave
 
-Below is a fully worked extracted doc for an imaginary `Phase 4 — Wave 1`.
+Below is a fully worked extracted doc for an imaginary Phase 4, Wave 1.
 Copy and adapt for each wave that gets extracted.
 
 ````markdown
-# Phase 4 — Wave 1: Bounded-context decomposition
+# Phase 4, Wave 1: Bounded-context decomposition
 
 > Reference doc for `refactoring-tobe-supervisor`. Read at runtime when W1
 > is about to start.
 
 ## Goal
 
-Produce the bounded-context map, the AS-IS↔TO-BE module map, and ADR-001 +
+Produce the bounded-context map, the AS-IS to TO-BE module map, and ADR-001 plus
 ADR-002. Without these, every downstream wave is blocked.
 
 ## Inputs
@@ -189,20 +193,23 @@ Constraints:
 
 1. Read the supervisor body. Identify section blocks ≥ 1 500 chars that match
    the per-phase / per-wave / per-template pattern.
-2. For each block, create `claude-catalog/docs/<topic>/<phase|wave>-<name>.md`
-   with the skeleton above. Copy the block content into "Goal", "Sub-agents to
-   dispatch", and "Output".
+2. For each block, create
+   `plugins/<plugin>/references/<topic>/<phase|wave>-<name>.md` with the skeleton
+   above. Copy the block content into "Goal", "Sub-agents to dispatch", and
+   "Output".
 3. In the supervisor body, replace the extracted block with one line:
-   `→ Read \`claude-catalog/docs/<topic>/<phase|wave>-<name>.md\` when this
-   wave starts.`
-4. Add the doc to the supervisor's `## Reference docs` table (create the section
-   if missing — it goes near the top of the body, right after `## When to
-   invoke`).
-5. Run `python3 .github/scripts/validate_catalog.py` — the body-length warning
-   for that supervisor should drop. The doc files themselves are not under
-   `claude-catalog/agents/` so they are not validated as agents.
-6. Run the affected supervisor in a real workflow once to confirm the agent
-   reads the doc on demand and produces the expected outputs.
+   ``Read `${CLAUDE_PLUGIN_ROOT}/references/<topic>/<phase|wave>-<name>.md` when
+   this wave starts.``
+4. Add the doc to the supervisor's `## Reference docs` table. Create the section
+   if it is missing; it goes near the top of the body, right after
+   `## When to invoke`.
+5. Run `python3 .github/scripts/validate_registry.py`. It resolves every
+   `${CLAUDE_PLUGIN_ROOT}` path against the owning plugin, so a typo in the new
+   path fails the build. Reference docs are not under `agents/`, so they are not
+   validated as agents.
+6. Run the affected supervisor in a real workflow once, from a project directory
+   rather than from the registry, to confirm the agent reads the doc on demand
+   and produces the expected outputs.
 
 ---
 
@@ -210,14 +217,15 @@ Constraints:
 
 After extraction the supervisor body should:
 
-- Stay under 10 000 chars (the rubric ceiling — validator warning gone).
+- Stay under 10 000 chars, the rubric ceiling.
 - Contain a `## Reference docs` table that points at every extracted file.
-- Still describe the **decision logic** (which wave runs when, escalation
-  rules, stop conditions) — only the *templates* moved out.
+- Still describe the **decision logic**: which wave runs when, escalation
+  rules, stop conditions. Only the *templates* moved out.
 
 The extracted docs should be:
 
 - Independently readable (no dangling pronouns, no implicit references back to
   the supervisor body).
 - Versioned in the same PR as the supervisor change.
-- Referenced from `CHANGELOG.md` `[Unreleased]` so the trail is visible.
+- Referenced from `docs/registry/CHANGELOG.md` under `[Unreleased]`, so the trail
+  is visible.

@@ -1,141 +1,156 @@
-# Quick Start — Consuming Capabilities from this Catalog
+# Quick start: using capabilities from this registry
 
-This guide is for developers who want to start using shared capabilities in their project.
+For developers who want the team's agents and skills in their own project. Authoring a new
+capability is a different job: see
+[registry/how-to-write-a-capability.md](registry/how-to-write-a-capability.md).
 
----
-
-## Step 1: Find the capability you need
-
-Browse `../claude-marketplace/catalog.json` or the `claude-marketplace/` directory.
-
-Common capabilities and when to use them:
-
-| Capability | Use when |
-|------------|---------|
-| `software-architect` | Designing or reviewing architecture, writing ADRs |
-| `functional-analyst` | Extracting requirements, writing use cases, mapping processes |
-| `developer-java` | Writing or reviewing Spring Boot code |
-| `technical-analyst` | Auditing technical debt, security posture, code quality |
-| `developer-python` | Writing or reviewing Python code |
-| `pr-review-toolkit:code-reviewer` | Reviewing a PR or set of changed files |
-| `registry-auditor` | Auditing a Claude Code agent/skill registry against Anthropic's official rubrics — produces grade, registry-wide patterns, top-10 files to rewrite, reference templates, and quick wins (read-only) |
-| `test-writer` | Writing tests for existing code |
-| `debugger` | Diagnosing a bug from error message + code |
-| `api-designer` | Designing or reviewing REST API contracts |
-| `documentation-writer` | Writing READMEs, runbooks, API guides |
-| `presentation-creator` | Creating Accenture-branded PowerPoint presentations |
-| `document-creator` | Creating Accenture-branded PDF or Word documents |
-| `indexing-supervisor` | Phase 0: indexing a legacy Python (+ Streamlit) codebase into `.indexing-kb/` |
-| `functional-analysis-supervisor` | Phase 1: AS-IS functional analysis from `.indexing-kb/` to `docs/analysis/01-functional/` (+ Accenture-branded PDF/PPTX exports; supports `exports-only` resume mode) |
-| `technical-analysis-supervisor` | Phase 2: AS-IS technical analysis to `docs/analysis/02-technical/` (+ PDF/PPTX exports; supports `exports-only` resume mode) |
-| `baseline-testing-supervisor` | Phase 3: AS-IS baseline regression suite at `tests/baseline/` (+ snapshots, benchmarks, optional Postman collection) |
-| `refactoring-tobe-supervisor` | **LEGACY (v2 only)** — big-bang Phase 4 approach; superseded by the incremental Phase 4 loop in `refactoring-supervisor` v3. Retained for backward compatibility. |
-| `tobe-testing-supervisor` | **LEGACY (v2 only)** — separate Phase 5 equivalence testing; absorbed into Phase 4 Step 6 of `refactoring-supervisor` v3. Retained for backward compatibility. |
-| `refactoring-supervisor` | End-to-end application replatforming workflow (Phases 0–4, with HITL between every phase and every Phase 4 step; Phase 4 absorbs the previous Phase 5 equivalence testing into Step 6) |
+The registry is a Claude Code plugin marketplace. You add the marketplace once, enable the
+plugins you need, and updates arrive in the background. There is no file to copy and no
+installer to run.
 
 ---
 
-## Step 2: Install with the setup script (recommended)
-
-The easiest way to install capabilities is the interactive setup script:
+## Step 1: add the marketplace
 
 ```bash
-./claude-catalog/scripts/setup-capabilities.sh /path/to/your-project
+/plugin marketplace add luketherose/claude-registry
 ```
 
-The script:
-- Shows the full capability list with tiers
-- Lets you select by number, or type `all` to install all stable capabilities
-- **Automatically installs skill dependencies** — if you select `developer-java`,
-  the script also copies `java-spring-standards`, `testing-standards`, and
-  `rest-api-standards` into your project's `.claude/agents/`
-- Updates your project's `.claude/settings.json` with the `Agent(name)` permission rules
-
-### What are skills?
-
-Skills are shared knowledge providers used by multiple agents. You do not invoke them
-directly — agents call them internally to load standards and conventions (e.g. Accenture
-branding, Java/Spring patterns, REST design rules). You do not need to think about skills
-when installing: the script handles them automatically.
-
----
-
-## Step 3: Manual copy (alternative)
-
-If you prefer to copy files manually, look up the file path in
-`claude-marketplace/catalog.json` (the `file` field is the single source of
-truth) — capabilities live in topic subfolders:
+To develop against a local clone instead:
 
 ```bash
-mkdir -p .claude/agents
-cp path/to/claude-marketplace/stable/architecture/software-architect.md .claude/agents/
+claude plugin marketplace add .
 ```
 
-Check `catalog.json` for any `"dependencies"` listed for the capability you install,
-and copy those skill files from `claude-marketplace/skills/<topic>/` as well.
+---
+
+## Step 2: enable the plugins you need
+
+```bash
+/plugin install dev-standards@claude-registry
+```
+
+Enable only what the project needs. Every enabled subagent description competes for the
+same 15000-token delegation budget, and a smaller enabled set produces sharper routing.
+
+| Situation | Enable |
+|---|---|
+| Day-to-day development | `dev-standards` |
+| Architecture and analysis work | `analysis-architecture` |
+| A legacy migration project | `replatforming`, plus `analysis-architecture` |
+| Producing client deliverables | `docs-branding` |
+| A hard, irreversible decision | `deliberation` |
+| Terse output for prose, commits and reviews | `caveman` |
 
 ---
 
-## Step 4: Verify it works
+## Step 3: find the capability you need
 
-Open Claude Code in your project. Type `/agents` to see the list of available subagents.
-Your newly added capabilities should appear there.
+Agents are delegated to by name. Skills are loaded by the agent that needs them, so you
+never invoke a skill directly.
 
-Alternatively, start a task that naturally triggers the capability. For example, ask
-"Can you review the architecture of this service?" — Claude Code should delegate to
-`software-architect` automatically based on its description.
+Commonly used agents, with the plugin that ships each one:
+
+| Agent | Plugin | Use when |
+|---|---|---|
+| `software-architect` | `analysis-architecture` | Designing or reviewing architecture, writing ADRs |
+| `functional-analyst` | `analysis-architecture` | Extracting requirements, writing use cases, mapping processes |
+| `technical-analyst` | `analysis-architecture` | Auditing technical debt, security posture, dependency vulnerabilities |
+| `orchestrator` | `analysis-architecture` | A task that spans several domains or is ambiguous in scope |
+| `registry-auditor` | `analysis-architecture` | Auditing a Claude Code agent or skill registry against Anthropic's rubrics, read-only |
+| `developer-java` | `dev-standards` | Writing or reviewing Java and Spring Boot code |
+| `developer-python` | `dev-standards` | Writing or reviewing Python code |
+| `developer-frontend` | `dev-standards` | Angular, React, Vue, Qwik or Vanilla JS/TS work |
+| `test-writer` | `dev-standards` | Writing tests for existing code |
+| `debugger` | `dev-standards` | Diagnosing a bug from an error message plus code |
+| `api-designer` | `dev-standards` | Designing or reviewing REST API contracts |
+| `documentation-writer` | `docs-branding` | Writing READMEs, runbooks, API guides |
+| `wiki-writer` | `docs-branding` | Authoring or restructuring a GitHub wiki |
+| `presentation-creator` | `docs-branding` | Accenture-branded PowerPoint |
+| `document-creator` | `docs-branding` | Accenture-branded PDF or Word documents |
+| `deliberative-decision-engine` | `deliberation` | Structured multi-agent debate on a high-stakes decision |
+
+`dev-standards` also ships `developer-csharp`, `developer-go`, `developer-kotlin`,
+`developer-php`, `developer-ruby` and `developer-rust`.
+
+Code review lives in Anthropic's own `pr-review-toolkit` plugin, not in this registry.
+Install it from the official marketplace and call `pr-review-toolkit:code-reviewer`.
+
+### The replatforming pipeline
+
+`replatforming` ships one entry point plus the phase supervisors it dispatches. Call
+`refactoring-supervisor` for the whole workflow, or a phase supervisor to run one phase
+standalone.
+
+| Agent | Runs |
+|---|---|
+| `refactoring-supervisor` | The end-to-end workflow, Phases 0 to 4, with a checkpoint between every phase and every Phase 4 step |
+| `indexing-supervisor` | Phase 0: indexing a legacy codebase into `.indexing-kb/` |
+| `functional-analysis-supervisor` | Phase 1: AS-IS functional analysis into `docs/analysis/01-functional/` |
+| `technical-analysis-supervisor` | Phase 2: AS-IS technical analysis into `docs/analysis/02-technical/` |
+| `baseline-testing-supervisor` | Phase 3: AS-IS baseline regression suite at `tests/baseline/` |
+
+Two further supervisors are deprecated in v3 of the workflow and retained only for the
+legacy flow. `refactoring-tobe-supervisor` was the big-bang Phase 4, superseded by the
+7-step incremental Phase 4 loop in `refactoring-supervisor`. `tobe-testing-supervisor` was
+a separate Phase 5, now absorbed into Phase 4 Step 6. Neither appears in the workflow DAG
+in `bmad/workflows.json`. Do not start new work on either.
+
+The full roster, with one line per capability, is in the
+[README](../README.md#available-capabilities).
 
 ---
 
-## Step 5: Configure settings (optional)
+## Step 4: verify it works
 
-To allow Claude Code to use subagents without prompting for permission each time,
-add explicit `Agent(name)` rules to your `.claude/settings.json`:
+Open Claude Code in your project and run `/plugin` to see the enabled plugins, or
+`/agents` to see the subagents they contribute.
+
+Then start a task that should trigger the capability. Ask "review the architecture of this
+service" and Claude Code should delegate to `software-architect` on its description alone.
+If it does not, the description is the thing to fix, not the prompt.
+
+---
+
+## Step 5: pin the marketplace for the whole team
+
+Commit this into the project's `.claude/settings.json` so every teammate gets the same
+marketplace and the same enabled set when they trust the project:
 
 ```json
 {
-  "permissions": {
-    "allow": [
-      "Agent(software-architect)",
-      "Agent(functional-analyst)",
-      "Agent(developer-java)"
-    ]
+  "extraKnownMarketplaces": {
+    "claude-registry": {
+      "source": { "source": "github", "repo": "luketherose/claude-registry" }
+    }
+  },
+  "enabledPlugins": {
+    "dev-standards@claude-registry": true,
+    "analysis-architecture@claude-registry": true
   }
 }
 ```
 
-The setup script does this automatically. If you copied files manually, add the rules
-yourself.
+To freeze a version, add a `ref` to the source pointing at a release tag, and say in the
+project's `CLAUDE.md` why it is frozen. Without a `ref` you track `main` and pick up
+changes in the background when the resolved version changes.
 
 ---
 
-## Step 6: Project-specific customization (optional)
+## Step 6: project-specific context (optional)
 
-If a capability needs project-specific context (your company's naming conventions,
-your specific frameworks, domain vocabulary), create a project-local override:
+When a capability needs project-specific context (naming conventions, domain vocabulary,
+an internal library), do not fork the agent. Put the context in the project's `CLAUDE.md`,
+where it applies to every capability at once:
 
-1. Copy the capability: `cp .claude/agents/developer-java.md .claude/agents/developer-java-payments.md`
-2. Change the `name` field: `name: developer-java-payments`
-3. Add project-specific context at the end of the system prompt:
-   ```
-   ## Project context (Payments Service)
-   - Package root: com.acme.payments
-   - Uses our internal audit library: com.acme.commons.audit.AuditLogger
-   - All monetary amounts use BigDecimal, never double or float
-   ```
+```markdown
+## Project context (Payments Service)
 
-Keep overrides thin. The purpose is to add project context, not rewrite the capability.
+- Package root: com.acme.payments
+- Audit logging goes through com.acme.commons.audit.AuditLogger
+- Monetary amounts are BigDecimal, never double or float
+```
 
----
-
-## Pinning to a specific version
-
-By default, you get whatever is in the marketplace at the time you install. If your
-project needs to stay on a specific version:
-
-1. Check `claude-marketplace/catalog.json` for the version you want
-2. Check out the git tag: `git checkout software-architect@1.0.0 -- claude-marketplace/stable/architecture/software-architect.md`
-3. Copy that version to your project
-
-Document the pinned version in your project's CLAUDE.md so the team knows why
-the version is frozen.
+A fork is a copy that stops receiving updates and drifts from the registry within a
+release or two. If the context is genuinely capability-specific and genuinely reusable,
+propose it back here as a change to the capability instead.

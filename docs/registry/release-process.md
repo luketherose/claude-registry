@@ -21,6 +21,11 @@ A release publishes a **plugin**, not an individual capability. Versioning is se
 activation, so changing them can silently break a consumer's routing. That is why they are
 a major bump.
 
+Removing or renaming a capability carries one more obligation: add the old name to the
+`RETIRED` dict in `.github/scripts/validate_registry.py`, with what to use instead. CI then
+fails on any reference left behind in `plugins/`, `wiki/`, `docs/`, `README.md` or
+`CLAUDE.md`, so a dangling dispatch instruction cannot survive the release.
+
 ## Step 2: update the manifest and the changelog
 
 Bump `"version"` in `plugins/<plugin>/.claude-plugin/plugin.json`, then add a
@@ -37,9 +42,17 @@ python3 .github/scripts/validate_registry.py
 claude plugin validate .
 ```
 
-Both gates run in CI on the pull request. The validator fails on schema errors, an
+```bash
+bash hooks/tests/test-pre-tool-safety.sh
+```
+
+All three run in CI on the pull request, split across the `Validate marketplace` and
+`Validate catalog` jobs. The validator fails on schema errors, frontmatter that does not
+parse as YAML, an agent that invokes a skill without holding the `Skill` tool, an
 oversized `SKILL.md`, a broken reference link, an unresolvable `${CLAUDE_PLUGIN_ROOT}`
-path, and a combined description budget over 12000 tokens.
+path, a reference to a retired capability, an unpinned MCP server spec, and a combined
+description budget over 15000 tokens. Over 13000 is a warning. The full gate table is in
+`how-to-write-a-capability.md` under "What CI enforces".
 
 ## Step 4: merge and tag
 

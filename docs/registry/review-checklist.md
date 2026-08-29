@@ -10,21 +10,29 @@ Use this checklist when reviewing a PR that adds or modifies a capability.
 - [ ] `name` value matches the filename exactly (without `.md`)
 - [ ] `name` is lowercase with hyphens only (no underscores, no spaces)
 - [ ] `description` field is present
-- [ ] `description` is specific enough to guide automatic delegation — not generic
+- [ ] `description` is specific enough to guide automatic delegation, not generic
 - [ ] `description` does not use vague phrases like "helps with" or "assists in"
+- [ ] A quote inside `description` is escaped, so the frontmatter still parses as YAML
 - [ ] `tools` list is explicit and minimal (no unnecessary tools granted)
-- [ ] If `model: opus` is specified, the PR description explains why sonnet is insufficient
-- [ ] No unrecognized frontmatter fields
+- [ ] `Skill` is in `tools` if the body mentions the `Skill` tool or tells the agent to
+      invoke a skill
+- [ ] `model` follows the policy in `how-to-write-a-capability.md`, or an HTML comment in
+      the body says why it does not
+- [ ] No unrecognized frontmatter fields. An unknown multi-line key corrupts the value of
+      the key above it
 - [ ] No secrets, tokens, API keys, or credentials
 
 ## 2. System prompt quality
 
 - [ ] The role is clearly defined in the opening section
 - [ ] At least one explicit output format is defined (tables, sections, templates)
-- [ ] The subagent's scope is bounded — it knows what it does NOT do
+- [ ] The subagent's scope is bounded. It knows what it does NOT do
 - [ ] Mandatory behaviors are listed (things that happen in every interaction)
 - [ ] Quality self-check is included (the subagent verifies its output before responding)
-- [ ] The prompt is opinionated — it has specific standards, not just general guidance
+- [ ] The prompt is opinionated, with specific standards rather than general guidance
+- [ ] Under `## What you never do`, no bullet joins a prohibition to its alternative with a
+      colon or a dash. The alternative is in its own sentence
+- [ ] Every capability the body names exists, under the flat name the runtime resolves
 - [ ] No contradictory instructions
 - [ ] No instructions that would conflict with Claude's safety guidelines
 
@@ -46,14 +54,21 @@ Use this checklist when reviewing a PR that adds or modifies a capability.
 
 ## 5. Supporting artifacts
 
-- [ ] At least one example file exists in `examples/capability-name-example.md`
-- [ ] At least two eval scenarios exist in `evals/capability-name-eval.md`
+- [ ] At least one example file exists in `plugins/<plugin>/examples/`
+- [ ] At least two scenarios in `plugins/<plugin>/evals/<name>/evals.json`, in the
+      `{agent, query, files, expected_behavior}` shape, with `agent` equal to the directory
+      name
+- [ ] `plugins/<plugin>/evals/<name>/triggers.json` exists, in the
+      `{query, should_trigger, description}` shape, with at least one negative case naming
+      the sibling that should handle it instead
 - [ ] CHANGELOG.md has an entry under `[Unreleased]`
 
 ## 6. Versioning
 
 - [ ] The plugin's `version` in `plugin.json` is bumped per `release-process.md`
-- [ ] A change to `name` or `description` is a MAJOR bump: both are routing contract
+- [ ] A change to `name` or `description` is a MAJOR bump. Both are routing contract
+- [ ] A capability this PR removes or renames is in the `RETIRED` dict, and no reference to
+      the old name survives in `plugins/`, `wiki/`, `docs/`, `README.md` or `CLAUDE.md`
 - [ ] If this modifies tools (removing one): this is a MAJOR version bump
 - [ ] If this adds new behavior: this is a MINOR version bump
 - [ ] If this is a prompt bug fix with no behavior change: this is a PATCH version bump
@@ -62,7 +77,7 @@ Use this checklist when reviewing a PR that adds or modifies a capability.
 
 - [ ] Filename follows `{role}.md` or `{role}-{specialization}.md` pattern
 - [ ] No version numbers in filename
-- [ ] No technology-first naming (e.g. `spring-developer.md` instead of `developer-java.md`)
+- [ ] No technology-first naming (`spring-developer.md` where `developer-java.md` is meant)
 
 ## 8. Common issues to watch for
 
@@ -85,37 +100,41 @@ Use this checklist when reviewing a PR that adds or modifies a capability.
 - [ ] If this PR deprecates an existing capability, an entry has been added to
       `ANTI-PATTERNS.md` in the same PR (per `GOVERNANCE.md` deprecation rule)
 
-
-## 11. Skill-specific checks (only when the PR adds or modifies a skill)
+## 10. Skill-specific checks (only when the PR adds or modifies a skill)
 
 - [ ] Skill lives at `plugins/<plugin>/skills/<name>/SKILL.md`, not under `agents/`
-- [ ] `model: haiku` (knowledge retrieval; justify if higher model needed)
-- [ ] `tools: Read` only — no Edit, Write, Bash, or Agent
-- [ ] No `## Skills` section (skills are leaf nodes; they cannot delegate further)
-- [ ] Content is purely declarative: standards, rules, templates — not workflow logic
-- [ ] Frontmatter has exactly `name` and `description`, nothing else
-- [ ] Each consuming agent loads it with the `Skill` tool, or preloads it via `skills:`
-      when it is needed on every run
-- [ ] Each dependent agent's system prompt has a `## Skills` section invoking this skill
+- [ ] Frontmatter has exactly `name` and `description`. `model`, `tools` and `color` are
+      not SKILL.md fields and CI rejects them
+- [ ] `name` equals the directory name, is kebab-case, is at most 64 characters, and
+      contains neither `anthropic` nor `claude`
+- [ ] `description` is at most 1024 characters, third person, and names the sibling skill
+      to use instead where confusion is likely
+- [ ] Body is under 500 lines. Overflow moved into `references/`, not compressed
+- [ ] Content is declarative: standards, rules, templates, not workflow logic
+- [ ] Each consuming agent loads it with the `Skill` tool and holds `Skill` in `tools`, or
+      preloads it via `skills:` when it is needed on every run
+- [ ] The skill lives in the same plugin as the agents that always need it. Any
+      cross-plugin dependency is stated in the agent body and degrades gracefully
 
 ### If the skill ships a `scripts/` directory
 
 - [ ] `scripts/README.md` exists and documents each script's **invocation, inputs,
       outputs, and exit codes** (so a consuming agent can call the script without
       reading the source)
-- [ ] Each script's logic is genuinely deterministic — `if X then Y` rules, parsing,
+- [ ] Each script's logic is genuinely deterministic: `if X then Y` rules, parsing,
       counting, regex checks. Judgment-bearing rules stay in the skill body
-- [ ] The skill body names each script explicitly with a Bash recipe — the agent
+- [ ] The skill body names each script explicitly with a Bash recipe. The agent
       that invokes the skill must know exactly when and how to run it
-- [ ] No script duplicates logic that already lives in another skill's `scripts/` —
-      if the same check appears twice, factor it into a single source of truth
+- [ ] No script duplicates logic that already lives in another skill's `scripts/`. If the
+      same check appears twice, factor it into a single source of truth
 
 ### If the skill ships a `references/` directory
 
-- [ ] The skill body crosses (or is approaching) the 3 000-word soft cap, justifying
-      the move to a directory layout
-- [ ] Each reference file is linked from the skill body with a plain markdown link —
-      the body must point the agent to the file when it needs that level of detail
+- [ ] The body has crossed the 500-line gate, or is close enough that the next edit will
+- [ ] Each reference file is linked from the skill body with a plain markdown link, one
+      line per file saying what is in it, and resolves one level deep from `SKILL.md`
+- [ ] A reference file over 100 lines opens with a `## Contents` table, so a partial read
+      still shows the full scope
 
 ## Approval criteria
 
@@ -128,7 +147,7 @@ Leave a comment for each failing item. Do not approve with unchecked mandatory i
 
 ## Automated gates
 
-Both run in CI; run them locally first.
+All three run in CI. Run them locally first.
 
 ```bash
 python3 .github/scripts/validate_registry.py
@@ -138,7 +157,12 @@ python3 .github/scripts/validate_registry.py
 claude plugin validate .
 ```
 
-- [ ] Combined subagent description budget under 12000 tokens
+```bash
+bash hooks/tests/test-pre-tool-safety.sh
+```
+
+- [ ] Every frontmatter under `plugins/` survives `yaml.safe_load`
+- [ ] Combined subagent description budget under 13000 tokens (hard ceiling 15000)
 - [ ] Every `SKILL.md` body under 500 lines
 - [ ] Skill `description` under 1024 characters, third person
 - [ ] `model`, `tools`, `color` absent from every `SKILL.md` frontmatter
@@ -146,3 +170,9 @@ claude plugin validate .
 - [ ] Every `${CLAUDE_PLUGIN_ROOT}` path resolves inside its own plugin
 - [ ] No repo-relative path to bundled material
 - [ ] Every agent body has `## When to invoke`
+- [ ] Every agent that talks about skills holds the `Skill` tool
+- [ ] No reference to a name in the `RETIRED` dict
+- [ ] Every MCP server spec names an exact version or commit SHA
+
+The full gate table, with the validator function behind each one, is in
+`how-to-write-a-capability.md` under "What CI enforces".

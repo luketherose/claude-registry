@@ -4,7 +4,7 @@
   "_comment_purpose": [
     "This file is a REFERENCE EXAMPLE, not a deployed settings file.",
     "Copy relevant sections to your project's .claude/settings.json.",
-    "Never copy this file as-is — review each section for your project's needs.",
+    "Never copy this file as-is. Review each section for your project needs.",
     "Do not commit secrets. Use environment variables for sensitive values."
   ],
 
@@ -40,7 +40,6 @@
       "Agent(developer-java)",
       "Agent(technical-analyst)",
       "Agent(developer-python)",
-      "Agent(code-reviewer)",
       "Agent(test-writer)",
       "Agent(debugger)",
       "Agent(api-designer)",
@@ -52,8 +51,15 @@
       "Write(**)",
       "Edit(**)"
     ],
+    "_comment_deny": [
+      "These are prefix patterns, not regex: Bash(rm -rf *) does not match",
+      "rm -fr or rm -r -f. The real gate is hooks/scripts/pre-tool-safety.sh,",
+      "which parses the command; see hooks/tests/test-pre-tool-safety.sh."
+    ],
     "deny": [
       "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
+      "Bash(rm -r -f *)",
       "Bash(DROP *)",
       "Bash(DELETE FROM *)",
       "Bash(curl * | bash)",
@@ -71,8 +77,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "claude-catalog/hooks/scripts/pre-tool-safety.sh",
-            "timeout": 5000
+            "command": "hooks/scripts/pre-tool-safety.sh",
+            "timeout": 5
           }
         ]
       }
@@ -84,8 +90,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "claude-catalog/hooks/scripts/post-session-log.sh",
-            "timeout": 3000
+            "command": "hooks/scripts/post-session-log.sh",
+            "timeout": 3
           }
         ]
       }

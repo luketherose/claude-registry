@@ -37,7 +37,7 @@ Each supervisor keeps in its `.md` body only:
 - `## When to invoke` — 2–4 bullets + `Do NOT use` line
 - `## Reference docs` table — the index of stage docs with `Read when` conditions
 
-All operational content moves to reference docs in `claude-catalog/docs/<phase>/`:
+All operational content moves to reference docs in `plugins/<plugin>/references/<phase>/`:
 
 | Reference doc | Contains |
 |---|---|
@@ -51,7 +51,7 @@ must be ≤ 10k chars and removed from `legacy-body-baseline.json`.
 
 ### Directory convention
 ```
-claude-catalog/docs/<phase>/
+plugins/<plugin>/references/<phase>/
 ├── supervisor-protocol.md    # decision rules + escalation + constraints
 ├── phase-plan.md             # bootstrap + per-wave + HITL + closing
 ├── sub-agents.md             # roster + wave map + output targets
@@ -187,7 +187,7 @@ The `bmad-help` skill reads these to present available capabilities contextually
         {"id": "phase-4", "name": "Application Replatforming", "supervisor": "refactoring-supervisor",       "output": "backend/, frontend/"}
       ],
       "prerequisites": [],
-      "shared_agents": ["developer-java", "developer-frontend", "test-writer", "debugger", "code-reviewer", "software-architect", "api-designer"]
+      "shared_agents": ["developer-java", "developer-frontend", "test-writer", "debugger", "software-architect", "api-designer"]
     }
   ]
 }
@@ -210,7 +210,7 @@ rubric — not via behavioral testing.
 - `evals.json`: tests skill execution against graded expectations.
 
 ### Implementation for this registry
-Directory: `claude-catalog/evals/<agent-name>/`
+Directory: `plugins/<plugin>/evals/<agent-name>/`
 
 #### triggers.json schema
 ```json
@@ -263,7 +263,7 @@ Build Process (BP) — 6-step guided skill creation. `Convert (CW)` — migrates
 existing capabilities to BMAD standard.
 
 ### Implementation for this registry
-`claude-catalog/templates/new-use-case/` scaffold:
+`templates/new-use-case/` scaffold:
 
 ```
 new-use-case/
@@ -280,10 +280,10 @@ new-use-case/
 
 `README.md` walks through the 7 steps to add a new use case:
 1. Define the use case ID, name, trigger phrases
-2. Copy supervisor-template.md → `claude-catalog/agents/orchestration/<use-case>-supervisor.md`
+2. Copy supervisor-template.md → `plugins/<plugin>/agents/<use-case>-supervisor.md`
 3. Identify workers — list which are shared (from shared_agents) vs new
 4. For each new worker: copy worker-template.md + fill body
-5. Create `claude-catalog/docs/<use-case>/` with reference docs
+5. Create `plugins/<plugin>/references/<use-case>/` with reference docs
 6. Add workflow entry to `bmad/workflows.json`
 7. Add catalog.json entries for supervisor + all new workers
 
@@ -294,14 +294,14 @@ new-use-case/
 | BMAD concept | Registry implementation |
 |---|---|
 | `SKILL.md` body | Single `.md` file frontmatter + `## Role` + `## When to invoke` + `## Reference docs` |
-| `prompts/stage-NN.md` | `claude-catalog/docs/<phase>/supervisor-protocol.md`, `phase-plan.md`, etc. |
-| `references/` directory | `claude-catalog/docs/<phase>/` companion docs (already exists) |
+| `prompts/stage-NN.md` | `plugins/<plugin>/references/<phase>/supervisor-protocol.md`, `phase-plan.md`, etc. |
+| `references/` directory | `plugins/<plugin>/references/<phase>/` companion docs (already exists) |
 | Progressive disclosure | `## Reference docs` table with `Read when` conditions — load on demand |
 | Document-as-cache | `_meta/pipeline-state.yaml` in each phase output directory |
 | `module-help.csv` `preceded_by`/`followed_by` | `preceded_by[]`/`followed_by[]` arrays in `catalog.json` entries |
 | Module registry / `assets/module.yaml` | `bmad/workflows.json` |
-| `triggers.json` + `evals.json` | `claude-catalog/evals/<name>/triggers.json` + `evals.json` |
-| Build Process (BP) scaffold | `claude-catalog/templates/new-use-case/` |
+| `triggers.json` + `evals.json` | `plugins/<plugin>/evals/<name>/triggers.json` + `evals.json` |
+| Build Process (BP) scaffold | `templates/new-use-case/` |
 | Three-layer `customize.toml` | Deferred — not needed for current use case count |
 | Sanctum memory | Out of scope — Claude Code is stateless by design |
 | `npm install` / headless mode | Out of scope — distribution via git + bash scripts |

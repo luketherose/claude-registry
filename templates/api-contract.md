@@ -1,4 +1,4 @@
-# API Contract — Template
+# API contract template
 
 Use this template to document a REST API contract before or after implementation.
 For machine-readable specs, use OpenAPI 3.1 YAML (the `api-designer` subagent can
@@ -90,7 +90,7 @@ Creates a new resource.
 
 Retrieves a single resource by ID.
 
-**Path parameters**: `id` — integer, required
+**Path parameters**: `id`, integer, required
 
 **Response 200 OK**
 **Response 404 Not Found**
@@ -131,6 +131,6 @@ Deletes a resource.
 
 - Adding new optional fields to responses: non-breaking
 - Adding new optional request fields: non-breaking
-- Removing fields: breaking — requires major version bump
-- Changing field types: breaking — requires major version bump
-- Changing URL structure: breaking — requires major version bump
+- Removing fields: breaking, requires a major version bump
+- Changing field types: breaking, requires a major version bump
+- Changing URL structure: breaking, requires a major version bump

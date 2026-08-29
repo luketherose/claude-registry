@@ -45,8 +45,11 @@ plugins/<plugin>/                 the distribution unit
   evals/ examples/                per-capability evaluations and worked examples
   .mcp.json                       optional MCP servers, wired via plugin.json
 docs/registry/                    governance and authoring documentation
-templates/ policies/ hooks/       scaffolding and shared configuration
+bmad/workflows.json               the phase DAG for the pipeline workflows
+templates/ policies/ settings/    scaffolding and shared configuration
+hooks/scripts/ hooks/tests/       session hooks and their regression matrix
 scripts/                          maintenance tooling
+wiki/                             the published GitHub wiki, mirrored here
 archive/                          superseded material kept for provenance
 ```
 
@@ -76,6 +79,21 @@ per-capability beta or stable flag. Versioning is semver on the plugin.
   path. A repo-relative path resolves against the user's project and silently returns
   nothing.
 - Every agent body has a `## When to invoke` section.
+- Every frontmatter under `plugins/` survives a real `yaml.safe_load`. An unescaped quote
+  in a `description` fails the build. Claude Code would otherwise load the agent with its
+  name taken from the filename and drop every other field without an error.
+- An agent whose body mentions the `Skill` tool, or tells itself to invoke a skill, has
+  `Skill` in its `tools` list. The gate reads the body, not a `## Skills` heading.
+- No file outside the exempt set names a retired capability. The `RETIRED` dict in
+  `.github/scripts/validate_registry.py` is the source; the scan covers `plugins/`,
+  `wiki/`, `docs/`, `README.md` and `CLAUDE.md`. Exempt: `docs/registry/CHANGELOG.md`,
+  `docs/language-agnostic-design.md` and `docs/modernization/`, which record past state.
+- Every MCP server spec names an exact version or commit SHA. `@latest` and a `git+` URL
+  with no ref both fail, in the root `.mcp.json` and in every `plugins/*/.mcp.json`.
+- `claude plugin validate .` is a real gate. A plugin the CLI rejects fails the build; a
+  CLI that cannot run at all is reported and not enforced.
+- `hooks/tests/test-pre-tool-safety.sh` passes. It is a 24-case matrix over the Bash
+  safety hook, run by the `Validate catalog` job.
 
 ## Model policy
 
@@ -112,6 +130,12 @@ Write evaluations before the capability. Three scenarios minimum in
 `plugins/<plugin>/evals/<name>/evals.json`, plus `triggers.json` covering both the prompts
 that must activate the capability and the near-miss prompts that must not. Trigger evals
 are what catch a description edit that quietly breaks routing.
+
+One schema each, and CI has no gate on it, so it is on the author to match:
+
+- `evals.json`: a list of `{agent, query, files, expected_behavior}`. `agent` equals the
+  eval directory name.
+- `triggers.json`: a list of `{query, should_trigger, description}`.
 
 ## Adding a new capability
 

@@ -1,24 +1,25 @@
 [
   {
-    "id": "eval-001",
-    "prompt": "REPLACE: the primary invocation phrase that triggers the full workflow",
-    "expectations": [
+    "agent": "REPLACE-ME-supervisor",
+    "query": "REPLACE: the primary invocation phrase that triggers the full workflow",
+    "files": [],
+    "expected_behavior": [
       "Reads supervisor-protocol.md before dispatching any worker",
-      "Dispatches Wave 1 workers (list them here)",
+      "Dispatches the Wave 1 workers (name them here)",
       "Writes _meta/pipeline-state.yaml after each wave",
-      "Asks user before overwriting existing outputs with status: complete",
-      "REPLACE: add 2-4 more specific verifiable behaviors"
-    ],
-    "timeout": 600
+      "Asks the user before overwriting existing outputs marked status: complete",
+      "REPLACE: add 2 to 4 more specific, checkable behaviours"
+    ]
   },
   {
-    "id": "eval-002",
-    "prompt": "REPLACE: a resume / partial-run scenario (e.g., existing outputs detected)",
-    "expectations": [
+    "agent": "REPLACE-ME-supervisor",
+    "query": "REPLACE: a resume or partial-run scenario, for example existing outputs detected",
+    "files": [],
+    "expected_behavior": [
       "Detects existing outputs before dispatching any worker",
-      "Asks the user explicitly: skip / re-run / revise (never auto-overwrites)",
-      "REPLACE: add the expected resume behavior for your workflow"
-    ],
-    "timeout": 120
+      "Asks the user explicitly: skip, re-run or revise, and never auto-overwrites",
+      "Resumes from the first incomplete wave rather than from the start",
+      "REPLACE: add the expected resume behaviour for your workflow"
+    ]
   }
 ]

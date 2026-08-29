@@ -1,0 +1,9 @@
+{
+  "_comment": "Template for one entry in the agents[] array of bmad/design/workflow-dag-draft.json. Copy, fill in every REPLACE-ME value, and remove this _comment key. There is no per-agent registry manifest: agents are discovered from plugins/<plugin>/agents/, and the only manifests are the plugin's plugin.json and the root marketplace.json.",
+  "name": "REPLACE-ME-supervisor",
+  "role": "workflow-supervisor",
+  "phase": null,
+  "wave": null,
+  "preceded_by": [],
+  "followed_by": ["REPLACE-ME-worker-1", "REPLACE-ME-worker-2"]
+}

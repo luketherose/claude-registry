@@ -1,4 +1,4 @@
-# Architecture Decision Record — Template
+# Architecture decision record template
 
 Copy this template when documenting a new architecture decision. Place the file in
 your project's `docs/adr/` directory as `ADR-NNN-short-title.md`.
@@ -22,7 +22,7 @@ Include:
 - The quality attributes that matter most for this decision (performance, security, etc.)
 - What will happen if no decision is made
 
-Keep this factual and concise. This is not the place for recommendations — just context.
+Keep this factual and concise. This is not the place for recommendations, only context.
 
 ### Decision
 
@@ -40,7 +40,7 @@ this conclusion? Reference any trade-off analysis, benchmarks, or experiments co
 
 | Option | Pros | Cons | Why Rejected |
 |--------|------|------|-------------|
-| {Option A — chosen} | ... | ... | N/A (selected) |
+| {Option A, chosen} | ... | ... | N/A (selected) |
 | {Option B} | ... | ... | {Specific reason} |
 | {Option C} | ... | ... | {Specific reason} |
 
@@ -64,7 +64,7 @@ this conclusion? Reference any trade-off analysis, benchmarks, or experiments co
 
 ### Review date
 
-{Date when this decision should be revisited, if relevant — e.g. when the technology
+{Date when this decision should be revisited, if relevant, for example when the technology
 reaches end of life, or after a specific milestone}
 
 ---
@@ -72,7 +72,7 @@ reaches end of life, or after a specific milestone}
 ## Usage notes
 
 - Number sequentially within your project: ADR-001, ADR-002, etc.
-- Never delete an ADR — if a decision is reversed, mark it "Superseded by ADR-NNN"
+- Never delete an ADR. If a decision is reversed, mark it "Superseded by ADR-NNN"
 - Keep ADRs short: 1–2 pages max
 - Link to this file from relevant CLAUDE.md or architecture overview docs
 - The `software-architect` subagent can produce a draft ADR when asked

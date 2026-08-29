@@ -3,559 +3,28 @@
   "workflow_id": "application-replatforming",
   "agents": [
     {
-      "name": "refactoring-supervisor",
-      "role": "workflow-supervisor",
-      "phase": null,
-      "wave": null,
-      "preceded_by": [],
-      "followed_by": ["indexing-supervisor", "functional-analysis-supervisor", "technical-analysis-supervisor", "baseline-testing-supervisor"]
-    },
-
-    {
-      "name": "indexing-supervisor",
-      "role": "phase-supervisor",
-      "phase": "phase-0",
-      "wave": null,
-      "preceded_by": [],
-      "followed_by": ["functional-analysis-supervisor"]
-    },
-    {
-      "name": "codebase-mapper",
-      "role": "worker",
-      "phase": "phase-0",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["dependency-analyzer", "streamlit-analyzer", "module-documenter", "data-flow-analyst", "business-logic-analyst"]
-    },
-    {
-      "name": "dependency-analyzer",
-      "role": "worker",
-      "phase": "phase-0",
-      "wave": "W1",
-      "preceded_by": ["codebase-mapper"],
-      "followed_by": ["module-documenter"]
-    },
-    {
-      "name": "streamlit-analyzer",
-      "role": "worker",
-      "phase": "phase-0",
-      "wave": "W1",
-      "conditional": "streamlit in stack.frameworks",
-      "preceded_by": ["codebase-mapper"],
-      "followed_by": ["module-documenter"]
-    },
-    {
-      "name": "module-documenter",
-      "role": "worker",
-      "phase": "phase-0",
-      "wave": "W2",
-      "fan_out": "one per top-level package",
-      "preceded_by": ["codebase-mapper", "dependency-analyzer"],
-      "followed_by": ["data-flow-analyst", "business-logic-analyst"]
-    },
-    {
-      "name": "data-flow-analyst",
-      "role": "worker",
-      "phase": "phase-0",
-      "wave": "W3",
-      "preceded_by": ["module-documenter"],
-      "followed_by": ["synthesizer"]
-    },
-    {
-      "name": "business-logic-analyst",
-      "role": "worker",
-      "phase": "phase-0",
-      "wave": "W3",
-      "preceded_by": ["module-documenter"],
-      "followed_by": ["synthesizer"]
-    },
-    {
-      "name": "synthesizer",
-      "role": "worker",
-      "phase": "phase-0",
-      "wave": "W4",
-      "preceded_by": ["data-flow-analyst", "business-logic-analyst"],
-      "followed_by": ["indexing-auditor"]
-    },
-    {
-      "name": "indexing-auditor",
-      "role": "challenger",
-      "phase": "phase-0",
-      "wave": "W4a",
-      "preceded_by": ["synthesizer"],
-      "followed_by": []
-    },
-
-    {
-      "name": "functional-analysis-supervisor",
-      "role": "phase-supervisor",
-      "phase": "phase-1",
-      "wave": null,
-      "preceded_by": ["indexing-supervisor"],
-      "followed_by": ["technical-analysis-supervisor"]
-    },
-    {
       "name": "actor-feature-mapper",
       "role": "worker",
       "phase": "phase-1",
       "wave": "W1",
       "preceded_by": [],
-      "followed_by": ["user-flow-analyst", "implicit-logic-analyst"]
-    },
-    {
-      "name": "ui-surface-analyst",
-      "role": "worker",
-      "phase": "phase-1",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["user-flow-analyst", "implicit-logic-analyst"]
-    },
-    {
-      "name": "io-catalog-analyst",
-      "role": "worker",
-      "phase": "phase-1",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["user-flow-analyst"]
-    },
-    {
-      "name": "user-flow-analyst",
-      "role": "worker",
-      "phase": "phase-1",
-      "wave": "W2",
-      "preceded_by": ["actor-feature-mapper", "ui-surface-analyst", "io-catalog-analyst"],
-      "followed_by": ["functional-analysis-challenger", "functional-traceability-auditor"]
-    },
-    {
-      "name": "implicit-logic-analyst",
-      "role": "worker",
-      "phase": "phase-1",
-      "wave": "W2",
-      "preceded_by": ["actor-feature-mapper", "ui-surface-analyst"],
-      "followed_by": ["functional-analysis-challenger", "functional-traceability-auditor"]
-    },
-    {
-      "name": "functional-analysis-challenger",
-      "role": "challenger",
-      "phase": "phase-1",
-      "wave": "W3",
-      "conditional": "Streamlit default ON; other stacks opt-in",
-      "preceded_by": ["user-flow-analyst", "implicit-logic-analyst"],
-      "followed_by": ["functional-traceability-auditor"]
-    },
-    {
-      "name": "functional-traceability-auditor",
-      "role": "auditor",
-      "phase": "phase-1",
-      "wave": "W3b",
-      "preceded_by": ["functional-analysis-challenger", "user-flow-analyst", "implicit-logic-analyst"],
-      "_note": "functional-analysis-challenger is conditional; when skipped the auditor's real predecessors are the W2 workers",
-      "followed_by": []
-    },
-
-    {
-      "name": "technical-analysis-supervisor",
-      "role": "phase-supervisor",
-      "phase": "phase-2",
-      "wave": null,
-      "preceded_by": ["functional-analysis-supervisor"],
-      "followed_by": ["baseline-testing-supervisor"]
-    },
-    {
-      "name": "code-quality-analyst",
-      "role": "worker",
-      "phase": "phase-2",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["risk-synthesizer"]
-    },
-    {
-      "name": "state-runtime-analyst",
-      "role": "worker",
-      "phase": "phase-2",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["risk-synthesizer"]
-    },
-    {
-      "name": "dependency-security-analyst",
-      "role": "worker",
-      "phase": "phase-2",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["risk-synthesizer"]
-    },
-    {
-      "name": "data-access-analyst",
-      "role": "worker",
-      "phase": "phase-2",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["risk-synthesizer"]
-    },
-    {
-      "name": "integration-analyst",
-      "role": "worker",
-      "phase": "phase-2",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["risk-synthesizer"]
-    },
-    {
-      "name": "performance-analyst",
-      "role": "worker",
-      "phase": "phase-2",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["risk-synthesizer"]
-    },
-    {
-      "name": "resilience-analyst",
-      "role": "worker",
-      "phase": "phase-2",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["risk-synthesizer"]
-    },
-    {
-      "name": "security-analyst",
-      "role": "worker",
-      "phase": "phase-2",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["risk-synthesizer"]
-    },
-    {
-      "name": "risk-synthesizer",
-      "role": "worker",
-      "phase": "phase-2",
-      "wave": "W2",
-      "preceded_by": ["code-quality-analyst", "state-runtime-analyst", "dependency-security-analyst", "data-access-analyst", "integration-analyst", "performance-analyst", "resilience-analyst", "security-analyst"],
-      "followed_by": ["technical-analysis-challenger"]
-    },
-    {
-      "name": "technical-analysis-challenger",
-      "role": "challenger",
-      "phase": "phase-2",
-      "wave": "W3",
-      "preceded_by": ["risk-synthesizer"],
-      "followed_by": ["technical-evidence-auditor"]
-    },
-    {
-      "name": "technical-evidence-auditor",
-      "role": "auditor",
-      "phase": "phase-2",
-      "wave": "W3b",
-      "preceded_by": ["technical-analysis-challenger"],
-      "followed_by": []
-    },
-
-    {
-      "name": "baseline-testing-supervisor",
-      "role": "phase-supervisor",
-      "phase": "phase-3",
-      "wave": null,
-      "preceded_by": ["technical-analysis-supervisor"],
-      "followed_by": []
-    },
-    {
-      "name": "fixture-builder",
-      "role": "worker",
-      "phase": "phase-3",
-      "wave": "W0",
-      "preceded_by": [],
-      "followed_by": ["usecase-test-writer", "integration-test-writer", "benchmark-writer", "service-collection-builder"]
-    },
-    {
-      "name": "usecase-test-writer",
-      "role": "worker",
-      "phase": "phase-3",
-      "wave": "W1",
-      "fan_out": "one per use case",
-      "preceded_by": ["fixture-builder"],
-      "followed_by": ["baseline-runner"]
-    },
-    {
-      "name": "integration-test-writer",
-      "role": "worker",
-      "phase": "phase-3",
-      "wave": "W1",
-      "preceded_by": ["fixture-builder"],
-      "followed_by": ["baseline-runner"]
-    },
-    {
-      "name": "benchmark-writer",
-      "role": "worker",
-      "phase": "phase-3",
-      "wave": "W1",
-      "preceded_by": ["fixture-builder"],
-      "followed_by": ["baseline-runner"]
-    },
-    {
-      "name": "service-collection-builder",
-      "role": "worker",
-      "phase": "phase-3",
-      "wave": "W1",
-      "conditional": "exposed services detected in Phase 2",
-      "preceded_by": ["fixture-builder"],
-      "followed_by": ["baseline-runner"]
-    },
-    {
-      "name": "baseline-runner",
-      "role": "worker",
-      "phase": "phase-3",
-      "wave": "W2",
-      "preceded_by": ["usecase-test-writer", "integration-test-writer", "benchmark-writer", "service-collection-builder"],
-      "_note": "service-collection-builder is conditional; when it runs baseline-runner must wait for it",
-      "followed_by": ["baseline-challenger"]
-    },
-    {
-      "name": "baseline-challenger",
-      "role": "challenger",
-      "phase": "phase-3",
-      "wave": "W3",
-      "preceded_by": ["baseline-runner"],
-      "followed_by": []
-    },
-
-    {
-      "name": "deliberative-decision-engine",
-      "role": "deliberation-supervisor",
-      "phase": "cross-cutting",
-      "wave": null,
-      "preceded_by": [],
-      "followed_by": ["debate-proposer", "debate-critic", "debate-risk-reviewer", "debate-replatforming-specialist", "debate-operations-reviewer", "debate-judge"]
-    },
-    {
-      "name": "debate-proposer",
-      "role": "debate-persona",
-      "phase": "deliberation",
-      "wave": "step-2",
-      "preceded_by": [],
-      "followed_by": ["debate-judge"]
-    },
-    {
-      "name": "debate-critic",
-      "role": "debate-persona",
-      "phase": "deliberation",
-      "wave": "step-2",
-      "preceded_by": [],
-      "followed_by": ["debate-judge"]
-    },
-    {
-      "name": "debate-risk-reviewer",
-      "role": "debate-persona",
-      "phase": "deliberation",
-      "wave": "step-2",
-      "preceded_by": [],
-      "followed_by": ["debate-judge"]
-    },
-    {
-      "name": "debate-replatforming-specialist",
-      "role": "debate-persona",
-      "phase": "deliberation",
-      "wave": "step-2",
-      "conditional": "5-persona mode only",
-      "preceded_by": [],
-      "followed_by": ["debate-judge"]
-    },
-    {
-      "name": "debate-operations-reviewer",
-      "role": "debate-persona",
-      "phase": "deliberation",
-      "wave": "step-2",
-      "conditional": "5-persona mode only",
-      "preceded_by": [],
-      "followed_by": ["debate-judge"]
-    },
-    {
-      "name": "debate-judge",
-      "role": "debate-judge",
-      "phase": "deliberation",
-      "wave": "step-3-and-6",
-      "preceded_by": ["debate-proposer", "debate-critic", "debate-risk-reviewer"],
-      "followed_by": []
-    },
-
-    {
-      "name": "decomposition-architect",
-      "role": "worker",
-      "phase": "phase-4-legacy",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["api-contract-designer"]
+      "followed_by": [
+        "user-flow-analyst",
+        "implicit-logic-analyst"
+      ]
     },
     {
       "name": "api-contract-designer",
       "role": "worker",
       "phase": "phase-4-legacy",
       "wave": "W2",
-      "preceded_by": ["decomposition-architect"],
-      "followed_by": ["backend-scaffolder", "frontend-scaffolder"]
-    },
-    {
-      "name": "backend-scaffolder",
-      "role": "worker",
-      "phase": "phase-4-legacy",
-      "wave": "W3",
-      "preceded_by": ["api-contract-designer"],
-      "followed_by": ["data-mapper"]
-    },
-    {
-      "name": "data-mapper",
-      "role": "worker",
-      "phase": "phase-4-legacy",
-      "wave": "W3",
-      "preceded_by": ["backend-scaffolder"],
-      "followed_by": ["logic-translator"]
-    },
-    {
-      "name": "logic-translator",
-      "role": "worker",
-      "phase": "phase-4-legacy",
-      "wave": "W3",
-      "fan_out": "one per use case",
-      "preceded_by": ["data-mapper"],
-      "followed_by": ["hardening-architect"]
-    },
-    {
-      "name": "frontend-scaffolder",
-      "role": "worker",
-      "phase": "phase-4-legacy",
-      "wave": "W3",
-      "preceded_by": ["api-contract-designer"],
-      "followed_by": ["hardening-architect"]
-    },
-    {
-      "name": "hardening-architect",
-      "role": "worker",
-      "phase": "phase-4-legacy",
-      "wave": "W4",
-      "preceded_by": ["logic-translator", "frontend-scaffolder"],
-      "followed_by": ["migration-roadmap-builder"]
-    },
-    {
-      "name": "migration-roadmap-builder",
-      "role": "worker",
-      "phase": "phase-4-legacy",
-      "wave": "W5",
-      "preceded_by": ["hardening-architect"],
-      "followed_by": ["phase4-challenger"]
-    },
-    {
-      "name": "phase4-challenger",
-      "role": "challenger",
-      "phase": "phase-4-legacy",
-      "wave": "W6",
-      "preceded_by": ["migration-roadmap-builder"],
-      "followed_by": []
-    },
-    {
-      "name": "test-data-seeder",
-      "role": "worker",
-      "phase": "phase-4",
-      "wave": "step-5.5",
-      "preceded_by": ["developer-java", "developer-frontend"],
-      "followed_by": []
-    },
-
-    {
-      "name": "equivalence-test-writer",
-      "role": "worker",
-      "phase": "phase-4-tobe-testing-legacy",
-      "wave": "W1",
-      "fan_out": "one per use case",
-      "preceded_by": [],
-      "followed_by": ["tobe-test-runner"]
-    },
-    {
-      "name": "backend-test-writer",
-      "role": "worker",
-      "phase": "phase-4-tobe-testing-legacy",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["tobe-test-runner"]
-    },
-    {
-      "name": "frontend-test-writer",
-      "role": "worker",
-      "phase": "phase-4-tobe-testing-legacy",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["tobe-test-runner"]
-    },
-    {
-      "name": "security-test-writer",
-      "role": "worker",
-      "phase": "phase-4-tobe-testing-legacy",
-      "wave": "W1",
-      "preceded_by": [],
-      "followed_by": ["tobe-test-runner"]
-    },
-    {
-      "name": "performance-comparator",
-      "role": "worker",
-      "phase": "phase-4-tobe-testing-legacy",
-      "wave": "W2",
-      "preceded_by": [],
-      "followed_by": ["tobe-test-runner"]
-    },
-    {
-      "name": "tobe-test-runner",
-      "role": "worker",
-      "phase": "phase-4-tobe-testing-legacy",
-      "wave": "W3",
-      "preceded_by": ["equivalence-test-writer", "backend-test-writer", "frontend-test-writer", "security-test-writer", "performance-comparator"],
-      "followed_by": ["equivalence-synthesizer"]
-    },
-    {
-      "name": "equivalence-synthesizer",
-      "role": "worker",
-      "phase": "phase-4-tobe-testing-legacy",
-      "wave": "W4",
-      "preceded_by": ["tobe-test-runner"],
-      "followed_by": ["tobe-testing-challenger"]
-    },
-    {
-      "name": "tobe-testing-challenger",
-      "role": "challenger",
-      "phase": "phase-4-tobe-testing-legacy",
-      "wave": "W5",
-      "preceded_by": ["equivalence-synthesizer"],
-      "followed_by": []
-    },
-
-    {
-      "name": "orchestrator",
-      "role": "standalone",
-      "phase": null,
-      "wave": null,
-      "preceded_by": [],
-      "followed_by": []
-    },
-    {
-      "name": "software-architect",
-      "role": "standalone",
-      "phase": null,
-      "wave": null,
-      "preceded_by": [],
-      "followed_by": []
-    },
-    {
-      "name": "functional-analyst",
-      "role": "standalone",
-      "phase": null,
-      "wave": null,
-      "preceded_by": [],
-      "followed_by": []
-    },
-    {
-      "name": "technical-analyst",
-      "role": "standalone",
-      "phase": null,
-      "wave": null,
-      "preceded_by": [],
-      "followed_by": []
+      "preceded_by": [
+        "decomposition-architect"
+      ],
+      "followed_by": [
+        "backend-scaffolder",
+        "frontend-scaffolder"
+      ]
     },
     {
       "name": "api-designer",
@@ -566,12 +35,208 @@
       "followed_by": []
     },
     {
-      "name": "code-reviewer",
-      "role": "standalone",
-      "phase": null,
-      "wave": null,
+      "name": "backend-scaffolder",
+      "role": "worker",
+      "phase": "phase-4-legacy",
+      "wave": "W3",
+      "preceded_by": [
+        "api-contract-designer"
+      ],
+      "followed_by": [
+        "data-mapper"
+      ]
+    },
+    {
+      "name": "backend-test-writer",
+      "role": "worker",
+      "phase": "phase-4-tobe-testing-legacy",
+      "wave": "W1",
       "preceded_by": [],
+      "followed_by": [
+        "tobe-test-runner"
+      ]
+    },
+    {
+      "name": "baseline-challenger",
+      "role": "challenger",
+      "phase": "phase-3",
+      "wave": "W3",
+      "preceded_by": [
+        "baseline-runner"
+      ],
       "followed_by": []
+    },
+    {
+      "name": "baseline-runner",
+      "role": "worker",
+      "phase": "phase-3",
+      "wave": "W2",
+      "preceded_by": [
+        "usecase-test-writer",
+        "integration-test-writer",
+        "benchmark-writer",
+        "service-collection-builder"
+      ],
+      "_note": "service-collection-builder is conditional; when it runs baseline-runner must wait for it",
+      "followed_by": [
+        "baseline-challenger"
+      ]
+    },
+    {
+      "name": "baseline-testing-supervisor",
+      "role": "phase-supervisor",
+      "phase": "phase-3",
+      "wave": null,
+      "preceded_by": [
+        "technical-analysis-supervisor"
+      ],
+      "followed_by": []
+    },
+    {
+      "name": "benchmark-writer",
+      "role": "worker",
+      "phase": "phase-3",
+      "wave": "W1",
+      "preceded_by": [
+        "fixture-builder"
+      ],
+      "followed_by": [
+        "baseline-runner"
+      ]
+    },
+    {
+      "name": "business-logic-analyst",
+      "role": "worker",
+      "phase": "phase-0",
+      "wave": "W3",
+      "preceded_by": [
+        "module-documenter"
+      ],
+      "followed_by": [
+        "synthesizer"
+      ]
+    },
+    {
+      "name": "code-quality-analyst",
+      "role": "worker",
+      "phase": "phase-2",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "risk-synthesizer"
+      ]
+    },
+    {
+      "name": "codebase-mapper",
+      "role": "worker",
+      "phase": "phase-0",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "dependency-analyzer",
+        "streamlit-analyzer",
+        "module-documenter",
+        "data-flow-analyst",
+        "business-logic-analyst"
+      ]
+    },
+    {
+      "name": "data-access-analyst",
+      "role": "worker",
+      "phase": "phase-2",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "risk-synthesizer"
+      ]
+    },
+    {
+      "name": "data-flow-analyst",
+      "role": "worker",
+      "phase": "phase-0",
+      "wave": "W3",
+      "preceded_by": [
+        "module-documenter"
+      ],
+      "followed_by": [
+        "synthesizer"
+      ]
+    },
+    {
+      "name": "data-mapper",
+      "role": "worker",
+      "phase": "phase-4-legacy",
+      "wave": "W3",
+      "preceded_by": [
+        "backend-scaffolder"
+      ],
+      "followed_by": [
+        "logic-translator"
+      ]
+    },
+    {
+      "name": "debate-critic",
+      "role": "debate-persona",
+      "phase": "deliberation",
+      "wave": "step-2",
+      "preceded_by": [],
+      "followed_by": [
+        "debate-judge"
+      ]
+    },
+    {
+      "name": "debate-judge",
+      "role": "debate-judge",
+      "phase": "deliberation",
+      "wave": "step-3-and-6",
+      "preceded_by": [
+        "debate-proposer",
+        "debate-critic",
+        "debate-risk-reviewer"
+      ],
+      "followed_by": []
+    },
+    {
+      "name": "debate-operations-reviewer",
+      "role": "debate-persona",
+      "phase": "deliberation",
+      "wave": "step-2",
+      "conditional": "5-persona mode only",
+      "preceded_by": [],
+      "followed_by": [
+        "debate-judge"
+      ]
+    },
+    {
+      "name": "debate-proposer",
+      "role": "debate-persona",
+      "phase": "deliberation",
+      "wave": "step-2",
+      "preceded_by": [],
+      "followed_by": [
+        "debate-judge"
+      ]
+    },
+    {
+      "name": "debate-replatforming-specialist",
+      "role": "debate-persona",
+      "phase": "deliberation",
+      "wave": "step-2",
+      "conditional": "5-persona mode only",
+      "preceded_by": [],
+      "followed_by": [
+        "debate-judge"
+      ]
+    },
+    {
+      "name": "debate-risk-reviewer",
+      "role": "debate-persona",
+      "phase": "deliberation",
+      "wave": "step-2",
+      "preceded_by": [],
+      "followed_by": [
+        "debate-judge"
+      ]
     },
     {
       "name": "debugger",
@@ -582,63 +247,54 @@
       "followed_by": []
     },
     {
-      "name": "test-writer",
-      "role": "standalone",
-      "phase": null,
+      "name": "decomposition-architect",
+      "role": "worker",
+      "phase": "phase-4-legacy",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "api-contract-designer"
+      ]
+    },
+    {
+      "name": "deliberative-decision-engine",
+      "role": "deliberation-supervisor",
+      "phase": "cross-cutting",
       "wave": null,
       "preceded_by": [],
-      "followed_by": []
+      "followed_by": [
+        "debate-proposer",
+        "debate-critic",
+        "debate-risk-reviewer",
+        "debate-replatforming-specialist",
+        "debate-operations-reviewer",
+        "debate-judge"
+      ]
     },
     {
-      "name": "documentation-writer",
-      "role": "standalone",
-      "phase": null,
-      "wave": null,
+      "name": "dependency-analyzer",
+      "role": "worker",
+      "phase": "phase-0",
+      "wave": "W1",
+      "preceded_by": [
+        "codebase-mapper"
+      ],
+      "followed_by": [
+        "module-documenter"
+      ]
+    },
+    {
+      "name": "dependency-security-analyst",
+      "role": "worker",
+      "phase": "phase-2",
+      "wave": "W1",
       "preceded_by": [],
-      "followed_by": []
+      "followed_by": [
+        "risk-synthesizer"
+      ]
     },
     {
-      "name": "document-creator",
-      "role": "export-worker",
-      "phase": "phase-1-or-2-export",
-      "wave": "export",
-      "preceded_by": ["functional-traceability-auditor", "technical-evidence-auditor"],
-      "followed_by": []
-    },
-    {
-      "name": "presentation-creator",
-      "role": "export-worker",
-      "phase": "phase-1-or-2-export",
-      "wave": "export",
-      "preceded_by": ["functional-traceability-auditor", "technical-evidence-auditor"],
-      "followed_by": []
-    },
-    {
-      "name": "wiki-writer",
-      "role": "standalone",
-      "phase": null,
-      "wave": null,
-      "preceded_by": [],
-      "followed_by": []
-    },
-    {
-      "name": "registry-auditor",
-      "role": "standalone",
-      "phase": null,
-      "wave": null,
-      "preceded_by": [],
-      "followed_by": []
-    },
-    {
-      "name": "developer-java",
-      "role": "standalone",
-      "phase": null,
-      "wave": null,
-      "preceded_by": [],
-      "followed_by": []
-    },
-    {
-      "name": "developer-java-spring",
+      "name": "developer-csharp",
       "role": "standalone",
       "phase": null,
       "wave": null,
@@ -654,23 +310,15 @@
       "followed_by": []
     },
     {
-      "name": "developer-python",
-      "role": "standalone",
-      "phase": null,
-      "wave": null,
-      "preceded_by": [],
-      "followed_by": []
-    },
-    {
-      "name": "developer-csharp",
-      "role": "standalone",
-      "phase": null,
-      "wave": null,
-      "preceded_by": [],
-      "followed_by": []
-    },
-    {
       "name": "developer-go",
+      "role": "standalone",
+      "phase": null,
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": []
+    },
+    {
+      "name": "developer-java",
       "role": "standalone",
       "phase": null,
       "wave": null,
@@ -694,6 +342,14 @@
       "followed_by": []
     },
     {
+      "name": "developer-python",
+      "role": "standalone",
+      "phase": null,
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": []
+    },
+    {
       "name": "developer-ruby",
       "role": "standalone",
       "phase": null,
@@ -703,6 +359,581 @@
     },
     {
       "name": "developer-rust",
+      "role": "standalone",
+      "phase": null,
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": []
+    },
+    {
+      "name": "document-creator",
+      "role": "export-worker",
+      "phase": "phase-1-or-2-export",
+      "wave": "export",
+      "preceded_by": [
+        "functional-traceability-auditor",
+        "technical-evidence-auditor"
+      ],
+      "followed_by": []
+    },
+    {
+      "name": "documentation-writer",
+      "role": "standalone",
+      "phase": null,
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": []
+    },
+    {
+      "name": "equivalence-synthesizer",
+      "role": "worker",
+      "phase": "phase-4-tobe-testing-legacy",
+      "wave": "W4",
+      "preceded_by": [
+        "tobe-test-runner"
+      ],
+      "followed_by": [
+        "tobe-testing-challenger"
+      ]
+    },
+    {
+      "name": "equivalence-test-writer",
+      "role": "worker",
+      "phase": "phase-4-tobe-testing-legacy",
+      "wave": "W1",
+      "fan_out": "one per use case",
+      "preceded_by": [],
+      "followed_by": [
+        "tobe-test-runner"
+      ]
+    },
+    {
+      "name": "fixture-builder",
+      "role": "worker",
+      "phase": "phase-3",
+      "wave": "W0",
+      "preceded_by": [],
+      "followed_by": [
+        "usecase-test-writer",
+        "integration-test-writer",
+        "benchmark-writer",
+        "service-collection-builder"
+      ]
+    },
+    {
+      "name": "frontend-scaffolder",
+      "role": "worker",
+      "phase": "phase-4-legacy",
+      "wave": "W3",
+      "preceded_by": [
+        "api-contract-designer"
+      ],
+      "followed_by": [
+        "hardening-architect"
+      ]
+    },
+    {
+      "name": "frontend-test-writer",
+      "role": "worker",
+      "phase": "phase-4-tobe-testing-legacy",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "tobe-test-runner"
+      ]
+    },
+    {
+      "name": "functional-analysis-challenger",
+      "role": "challenger",
+      "phase": "phase-1",
+      "wave": "W3",
+      "conditional": "Streamlit default ON; other stacks opt-in",
+      "preceded_by": [
+        "user-flow-analyst",
+        "implicit-logic-analyst"
+      ],
+      "followed_by": [
+        "functional-traceability-auditor"
+      ]
+    },
+    {
+      "name": "functional-analysis-supervisor",
+      "role": "phase-supervisor",
+      "phase": "phase-1",
+      "wave": null,
+      "preceded_by": [
+        "indexing-supervisor"
+      ],
+      "followed_by": [
+        "technical-analysis-supervisor"
+      ]
+    },
+    {
+      "name": "functional-analyst",
+      "role": "standalone",
+      "phase": null,
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": []
+    },
+    {
+      "name": "functional-traceability-auditor",
+      "role": "auditor",
+      "phase": "phase-1",
+      "wave": "W3b",
+      "preceded_by": [
+        "functional-analysis-challenger",
+        "user-flow-analyst",
+        "implicit-logic-analyst"
+      ],
+      "_note": "functional-analysis-challenger is conditional; when skipped the auditor's real predecessors are the W2 workers",
+      "followed_by": []
+    },
+    {
+      "name": "hardening-architect",
+      "role": "worker",
+      "phase": "phase-4-legacy",
+      "wave": "W4",
+      "preceded_by": [
+        "logic-translator",
+        "frontend-scaffolder"
+      ],
+      "followed_by": [
+        "migration-roadmap-builder"
+      ]
+    },
+    {
+      "name": "implicit-logic-analyst",
+      "role": "worker",
+      "phase": "phase-1",
+      "wave": "W2",
+      "preceded_by": [
+        "actor-feature-mapper",
+        "ui-surface-analyst"
+      ],
+      "followed_by": [
+        "functional-analysis-challenger",
+        "functional-traceability-auditor"
+      ]
+    },
+    {
+      "name": "indexing-auditor",
+      "role": "challenger",
+      "phase": "phase-0",
+      "wave": "W4a",
+      "preceded_by": [
+        "synthesizer"
+      ],
+      "followed_by": []
+    },
+    {
+      "name": "indexing-supervisor",
+      "role": "phase-supervisor",
+      "phase": "phase-0",
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": [
+        "functional-analysis-supervisor"
+      ]
+    },
+    {
+      "name": "integration-analyst",
+      "role": "worker",
+      "phase": "phase-2",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "risk-synthesizer"
+      ]
+    },
+    {
+      "name": "integration-test-writer",
+      "role": "worker",
+      "phase": "phase-3",
+      "wave": "W1",
+      "preceded_by": [
+        "fixture-builder"
+      ],
+      "followed_by": [
+        "baseline-runner"
+      ]
+    },
+    {
+      "name": "io-catalog-analyst",
+      "role": "worker",
+      "phase": "phase-1",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "user-flow-analyst"
+      ]
+    },
+    {
+      "name": "logic-translator",
+      "role": "worker",
+      "phase": "phase-4-legacy",
+      "wave": "W3",
+      "fan_out": "one per use case",
+      "preceded_by": [
+        "data-mapper"
+      ],
+      "followed_by": [
+        "hardening-architect"
+      ]
+    },
+    {
+      "name": "migration-roadmap-builder",
+      "role": "worker",
+      "phase": "phase-4-legacy",
+      "wave": "W5",
+      "preceded_by": [
+        "hardening-architect"
+      ],
+      "followed_by": [
+        "phase4-challenger"
+      ]
+    },
+    {
+      "name": "module-documenter",
+      "role": "worker",
+      "phase": "phase-0",
+      "wave": "W2",
+      "fan_out": "one per top-level package",
+      "preceded_by": [
+        "codebase-mapper",
+        "dependency-analyzer"
+      ],
+      "followed_by": [
+        "data-flow-analyst",
+        "business-logic-analyst"
+      ]
+    },
+    {
+      "name": "orchestrator",
+      "role": "standalone",
+      "phase": null,
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": []
+    },
+    {
+      "name": "performance-analyst",
+      "role": "worker",
+      "phase": "phase-2",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "risk-synthesizer"
+      ]
+    },
+    {
+      "name": "performance-comparator",
+      "role": "worker",
+      "phase": "phase-4-tobe-testing-legacy",
+      "wave": "W2",
+      "preceded_by": [],
+      "followed_by": [
+        "tobe-test-runner"
+      ]
+    },
+    {
+      "name": "phase4-challenger",
+      "role": "challenger",
+      "phase": "phase-4-legacy",
+      "wave": "W6",
+      "preceded_by": [
+        "migration-roadmap-builder"
+      ],
+      "followed_by": []
+    },
+    {
+      "name": "presentation-creator",
+      "role": "export-worker",
+      "phase": "phase-1-or-2-export",
+      "wave": "export",
+      "preceded_by": [
+        "functional-traceability-auditor",
+        "technical-evidence-auditor"
+      ],
+      "followed_by": []
+    },
+    {
+      "name": "refactoring-supervisor",
+      "role": "workflow-supervisor",
+      "phase": null,
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": [
+        "indexing-supervisor",
+        "functional-analysis-supervisor",
+        "technical-analysis-supervisor",
+        "baseline-testing-supervisor"
+      ]
+    },
+    {
+      "name": "refactoring-tobe-supervisor",
+      "role": "phase-supervisor",
+      "phase": "phase-4",
+      "wave": null,
+      "preceded_by": [
+        "baseline-testing-supervisor"
+      ],
+      "followed_by": [],
+      "superseded_by": "refactoring-supervisor"
+    },
+    {
+      "name": "registry-auditor",
+      "role": "standalone",
+      "phase": null,
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": []
+    },
+    {
+      "name": "resilience-analyst",
+      "role": "worker",
+      "phase": "phase-2",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "risk-synthesizer"
+      ]
+    },
+    {
+      "name": "risk-synthesizer",
+      "role": "worker",
+      "phase": "phase-2",
+      "wave": "W2",
+      "preceded_by": [
+        "code-quality-analyst",
+        "state-runtime-analyst",
+        "dependency-security-analyst",
+        "data-access-analyst",
+        "integration-analyst",
+        "performance-analyst",
+        "resilience-analyst",
+        "security-analyst"
+      ],
+      "followed_by": [
+        "technical-analysis-challenger"
+      ]
+    },
+    {
+      "name": "security-analyst",
+      "role": "worker",
+      "phase": "phase-2",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "risk-synthesizer"
+      ]
+    },
+    {
+      "name": "security-test-writer",
+      "role": "worker",
+      "phase": "phase-4-tobe-testing-legacy",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "tobe-test-runner"
+      ]
+    },
+    {
+      "name": "service-collection-builder",
+      "role": "worker",
+      "phase": "phase-3",
+      "wave": "W1",
+      "conditional": "exposed services detected in Phase 2",
+      "preceded_by": [
+        "fixture-builder"
+      ],
+      "followed_by": [
+        "baseline-runner"
+      ]
+    },
+    {
+      "name": "software-architect",
+      "role": "standalone",
+      "phase": null,
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": []
+    },
+    {
+      "name": "state-runtime-analyst",
+      "role": "worker",
+      "phase": "phase-2",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "risk-synthesizer"
+      ]
+    },
+    {
+      "name": "streamlit-analyzer",
+      "role": "worker",
+      "phase": "phase-0",
+      "wave": "W1",
+      "conditional": "streamlit in stack.frameworks",
+      "preceded_by": [
+        "codebase-mapper"
+      ],
+      "followed_by": [
+        "module-documenter"
+      ]
+    },
+    {
+      "name": "synthesizer",
+      "role": "worker",
+      "phase": "phase-0",
+      "wave": "W4",
+      "preceded_by": [
+        "data-flow-analyst",
+        "business-logic-analyst"
+      ],
+      "followed_by": [
+        "indexing-auditor"
+      ]
+    },
+    {
+      "name": "technical-analysis-challenger",
+      "role": "challenger",
+      "phase": "phase-2",
+      "wave": "W3",
+      "preceded_by": [
+        "risk-synthesizer"
+      ],
+      "followed_by": [
+        "technical-evidence-auditor"
+      ]
+    },
+    {
+      "name": "technical-analysis-supervisor",
+      "role": "phase-supervisor",
+      "phase": "phase-2",
+      "wave": null,
+      "preceded_by": [
+        "functional-analysis-supervisor"
+      ],
+      "followed_by": [
+        "baseline-testing-supervisor"
+      ]
+    },
+    {
+      "name": "technical-analyst",
+      "role": "standalone",
+      "phase": null,
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": []
+    },
+    {
+      "name": "technical-evidence-auditor",
+      "role": "auditor",
+      "phase": "phase-2",
+      "wave": "W3b",
+      "preceded_by": [
+        "technical-analysis-challenger"
+      ],
+      "followed_by": []
+    },
+    {
+      "name": "test-data-seeder",
+      "role": "worker",
+      "phase": "phase-4",
+      "wave": "step-5.5",
+      "preceded_by": [
+        "developer-java",
+        "developer-frontend"
+      ],
+      "followed_by": []
+    },
+    {
+      "name": "test-writer",
+      "role": "standalone",
+      "phase": null,
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": []
+    },
+    {
+      "name": "tobe-test-runner",
+      "role": "worker",
+      "phase": "phase-4-tobe-testing-legacy",
+      "wave": "W3",
+      "preceded_by": [
+        "equivalence-test-writer",
+        "backend-test-writer",
+        "frontend-test-writer",
+        "security-test-writer",
+        "performance-comparator"
+      ],
+      "followed_by": [
+        "equivalence-synthesizer"
+      ]
+    },
+    {
+      "name": "tobe-testing-challenger",
+      "role": "challenger",
+      "phase": "phase-4-tobe-testing-legacy",
+      "wave": "W5",
+      "preceded_by": [
+        "equivalence-synthesizer"
+      ],
+      "followed_by": []
+    },
+    {
+      "name": "tobe-testing-supervisor",
+      "role": "phase-supervisor",
+      "phase": "phase-5",
+      "wave": null,
+      "preceded_by": [
+        "refactoring-tobe-supervisor"
+      ],
+      "followed_by": [],
+      "superseded_by": "refactoring-supervisor"
+    },
+    {
+      "name": "ui-surface-analyst",
+      "role": "worker",
+      "phase": "phase-1",
+      "wave": "W1",
+      "preceded_by": [],
+      "followed_by": [
+        "user-flow-analyst",
+        "implicit-logic-analyst"
+      ]
+    },
+    {
+      "name": "usecase-test-writer",
+      "role": "worker",
+      "phase": "phase-3",
+      "wave": "W1",
+      "fan_out": "one per use case",
+      "preceded_by": [
+        "fixture-builder"
+      ],
+      "followed_by": [
+        "baseline-runner"
+      ]
+    },
+    {
+      "name": "user-flow-analyst",
+      "role": "worker",
+      "phase": "phase-1",
+      "wave": "W2",
+      "preceded_by": [
+        "actor-feature-mapper",
+        "ui-surface-analyst",
+        "io-catalog-analyst"
+      ],
+      "followed_by": [
+        "functional-analysis-challenger",
+        "functional-traceability-auditor"
+      ]
+    },
+    {
+      "name": "wiki-writer",
       "role": "standalone",
       "phase": null,
       "wave": null,

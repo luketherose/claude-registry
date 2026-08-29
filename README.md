@@ -52,6 +52,7 @@ same 15000-token delegation budget, and a smaller enabled set produces sharper r
 | A legacy migration project | `replatforming`, plus `analysis-architecture` |
 | Producing client deliverables | `docs-branding` |
 | A hard, irreversible decision | `deliberation` |
+| Terse output for prose, commits and reviews | `caveman` |
 
 ## Repository structure
 
@@ -65,8 +66,11 @@ plugins/<plugin>/                 the distribution unit
   evals/ examples/                evaluations and worked examples
   .mcp.json                       optional MCP servers
 docs/registry/                    governance and authoring documentation
-templates/ policies/ hooks/       scaffolding and shared configuration
+bmad/workflows.json               the phase DAG for the pipeline workflows
+templates/ policies/ settings/    scaffolding and shared configuration
+hooks/scripts/ hooks/tests/       session hooks and their regression matrix
 scripts/                          maintenance tooling
+wiki/                             the published GitHub wiki, mirrored here
 archive/                          superseded material kept for provenance
 ```
 
@@ -79,11 +83,15 @@ what you are building is an agent, a skill or a command.
 ```bash
 python3 .github/scripts/validate_registry.py
 claude plugin validate .
+bash hooks/tests/test-pre-tool-safety.sh
 ```
 
-Both run in CI on every pull request. The validator gates the subagent description budget,
-`SKILL.md` body length, frontmatter correctness, reference link resolution and
-`${CLAUDE_PLUGIN_ROOT}` path resolution.
+All three run in CI on every pull request, and all three can fail the build. The validator
+gates manifest schema, frontmatter that parses as real YAML, the subagent description
+budget, `SKILL.md` body length, reference link resolution, `${CLAUDE_PLUGIN_ROOT}` path
+resolution, agents that invoke a skill without holding the `Skill` tool, references to
+retired capabilities, and unpinned MCP server specs. The full gate table is in
+[how-to-write-a-capability.md](docs/registry/how-to-write-a-capability.md#5-what-ci-enforces).
 
 ## Available capabilities
 
@@ -101,7 +109,7 @@ AS-IS to TO-BE application replatforming pipeline: codebase indexing, functional
 |---|---|---|
 | `baseline-challenger` | opus | Use this agent to perform an adversarial review of Phase 3 Baseline Testing outputs. Reads all worker outputs (fixtures, test files, benchmarks,... |
 | `baseline-runner` | sonnet | Use this agent to execute the AS-IS baseline regression suite produced in Wave 1 and capture the oracle artifacts: snapshots, benchmark JSON,... |
-| `baseline-testing-supervisor` | opus | Use this agent when running Phase 3 — AS-IS Baseline Testing — of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/`,... |
+| `baseline-testing-supervisor` | opus | Use this agent when running Phase 3 (AS-IS Baseline Testing) of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/`,... |
 | `benchmark-writer` | sonnet | Use this agent to write the baseline performance benchmarks for the AS-IS codebase: per-UC pytest-benchmark scripts, memory profiling probes, and... |
 | `fixture-builder` | sonnet | Use this agent to produce the test data layer of the AS-IS baseline regression suite: minimal, realistic, and edge fixtures for use cases plus a... |
 | `integration-test-writer` | sonnet | Use this agent to write the baseline integration tests for the AS-IS codebase: DB access, file system I/O, external API consumption (mocked), cache... |
@@ -109,18 +117,18 @@ AS-IS to TO-BE application replatforming pipeline: codebase indexing, functional
 | `usecase-test-writer` | sonnet | Use this agent to write the baseline pytest module for ONE use case from Phase 1 AS-IS. Each invocation handles one UC: produces... |
 | `actor-feature-mapper` | sonnet | Use this agent to extract actors, roles, personas, and the full feature map of an application AS-IS from an existing knowledge base at .indexing-kb/.... |
 | `functional-analysis-challenger` | opus | Use this agent to cross-validate the full set of Phase 1 outputs by looking for gaps, contradictions, unverified claims, and AS-IS violations.... |
-| `functional-analysis-supervisor` | opus | Use this agent when running Phase 1 — AS-IS Functional Analysis — of a refactoring or migration workflow. Single entrypoint that reads an existing... |
+| `functional-analysis-supervisor` | opus | Use this agent when running Phase 1 (AS-IS Functional Analysis) of a refactoring or migration workflow. Single entrypoint that reads an existing... |
 | `functional-traceability-auditor` | opus | Use this agent when validating evidence traceability, negative space, and AS-IS purity in Phase 1 functional analysis outputs. Reads... |
-| `implicit-logic-analyst` | sonnet | Use this agent to extract IMPLICIT business and validation logic that is not surfaced in the explicit business rules — embedded in widget parameters,... |
+| `implicit-logic-analyst` | sonnet | Use this agent to extract IMPLICIT business and validation logic that is not surfaced in the explicit business rules, embedded in widget parameters,... |
 | `io-catalog-analyst` | sonnet | Use this agent to inventory all functional inputs, outputs, and the transformation matrix between them in an application AS-IS. Functional... |
-| `ui-surface-analyst` | sonnet | Use this agent to inventory the UI surface of an application AS-IS: screens, navigation map, component tree. Strong Streamlit awareness — treats each... |
+| `ui-surface-analyst` | sonnet | Use this agent to inventory the UI surface of an application AS-IS: screens, navigation map, component tree. Strong Streamlit awareness: treats each... |
 | `user-flow-analyst` | sonnet | Use this agent to derive use cases, user flows, and Mermaid sequence diagrams from already-extracted actors, features, UI surface, and I/O catalog.... |
 | `business-logic-analyst` | sonnet | Use this agent to extract business rules, validation logic, and domain concepts from a codebase in any language. Produces a domain-level view... |
 | `codebase-mapper` | sonnet | Use this agent to produce a structural inventory of any codebase: directory tree, file counts, language statistics, top-level package map,... |
 | `data-flow-analyst` | sonnet | Use this agent to identify all data crossings between the application and the outside world: database access, external API calls, file I/O,... |
 | `dependency-analyzer` | sonnet | Use this agent to extract external dependencies and build the internal module dependency graph for a codebase in any language. Reads the project's... |
 | `indexing-auditor` | opus | Use this agent when auditing Phase 0 indexing output quality after the indexing pipeline completes. Reads bronze/, silver/, gold/, graph/, and... |
-| `indexing-supervisor` | opus | Use this agent when indexing any legacy codebase into a markdown knowledge base inside the repository. Language-agnostic — autodetects the AS-IS... |
+| `indexing-supervisor` | opus | Use this agent when indexing any legacy codebase into a markdown knowledge base inside the repository. Language-agnostic: autodetects the AS-IS stack... |
 | `module-documenter` | sonnet | Use this agent to document one package or module of a codebase end-to-end at the API level: purpose, public interface (exported classes/functions),... |
 | `streamlit-analyzer` | sonnet | Use this agent to analyze Streamlit-specific concerns: pages, session_state usage, widgets, caching, navigation, custom components, and... |
 | `synthesizer` | sonnet | Use this agent to consolidate all prior phase outputs as the final step of the indexing-supervisor pipeline. Reads all prior phase outputs from the... |
@@ -134,7 +142,7 @@ AS-IS to TO-BE application replatforming pipeline: codebase indexing, functional
 | `logic-translator` | sonnet | Use this agent to translate the AS-IS Python business logic for ONE use case into Java/Spring code in the TO-BE backend. Reads the Phase 1 UC spec,... |
 | `migration-roadmap-builder` | sonnet | Use this agent to produce the migration roadmap for the TO-BE rollout: strangler fig plan with milestones (one per bounded context or grouping),... |
 | `phase4-challenger` | opus | Use this agent to perform an adversarial review of all Phase 4 outputs. Produces the AS-IS↔TO-BE traceability matrix and ten adversarial checks:... |
-| `refactoring-tobe-supervisor` | opus | Use this agent when running Phase 4 — TO-BE Refactoring — of a refactoring or migration workflow. First phase in which target technologies (Spring... |
+| `refactoring-tobe-supervisor` | opus | Use this agent when running Phase 4 (TO-BE Refactoring) of a refactoring or migration workflow. First phase in which target technologies (Spring Boot... |
 | `test-data-seeder` | sonnet | Use this agent when a TO-BE application has been built and tests are green, but the runtime database is empty and the UI cannot be meaningfully... |
 | `code-quality-analyst` | sonnet | Use this agent to analyze code quality of a codebase AS-IS: structural map of the codebase (entrypoints, packages, modules, naming conventions),... |
 | `data-access-analyst` | sonnet | Use this agent to analyze data flow and data access patterns of a codebase AS-IS: origin of data (sources), transformations, validations, sinks; how... |
@@ -146,7 +154,7 @@ AS-IS to TO-BE application replatforming pipeline: codebase indexing, functional
 | `security-analyst` | sonnet | Use this agent to analyze code-level security posture of a codebase AS-IS: OWASP Top 10 coverage (injection, broken auth, sensitive data exposure,... |
 | `state-runtime-analyst` | sonnet | Use this agent to analyze application state and runtime behavior of a codebase AS-IS: session state, module-level globals, side effects, execution... |
 | `technical-analysis-challenger` | opus | Use this agent to perform an adversarial review of Phase 2 Technical Analysis outputs. Reads all Wave 1 artifacts plus the synthesized risk register... |
-| `technical-analysis-supervisor` | opus | Use this agent when running Phase 2 — AS-IS Technical Analysis — of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/`... |
+| `technical-analysis-supervisor` | opus | Use this agent when running Phase 2 (AS-IS Technical Analysis) of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/`... |
 | `technical-evidence-auditor` | opus | Use this agent when validating that Phase 2 technical findings are evidence-grounded and free of AS-IS purity violations. Reads... |
 | `backend-test-writer` | sonnet | Use this agent to write the TO-BE backend test suite for a Spring Boot 3 codebase scaffolded in Phase 4. Sub-agent of tobe-testing-supervisor (Wave... |
 | `equivalence-synthesizer` | sonnet | Use this agent to synthesize the deliverable equivalence report (Phase 5). Sub-agent of tobe-testing-supervisor (Wave 4, sequential). Reads all Phase... |
@@ -156,7 +164,7 @@ AS-IS to TO-BE application replatforming pipeline: codebase indexing, functional
 | `security-test-writer` | sonnet | Use this agent to write the TO-BE security test suite covering OWASP Top 10 and the security baseline established by Phase 4 hardening. Sub-agent of... |
 | `tobe-test-runner` | sonnet | Use this agent to execute the TO-BE test suites authored in Wave 1 and the load scenarios from Wave 2, capture coverage and contract verifier... |
 | `tobe-testing-challenger` | opus | Use this agent to perform an adversarial review of Phase 5 outputs and surface gaps the test writers missed. Sub-agent of tobe-testing-supervisor... |
-| `tobe-testing-supervisor` | opus | Use this agent when running Phase 5 — TO-BE Testing & Equivalence Verification — of a refactoring or migration workflow. Single entrypoint that reads... |
+| `tobe-testing-supervisor` | opus | Use this agent when running Phase 5 (TO-BE Testing & Equivalence Verification) of a refactoring or migration workflow. Single entrypoint that reads... |
 
 **Skills (4)**
 
@@ -196,35 +204,35 @@ Production code standards, developer agents and test authoring for Java/Spring, 
 
 | Skill | Provides |
 |---|---|
-| `angular-expert` | This skill should be used when the user works on Angular 17+ code — writing or reviewing components, applying the smart/dumb split, configuring... |
-| `backend-orchestrator` | ALWAYS use this skill when a backend task spans more than one Java/Spring layer — the user asks to add a new endpoint end-to-end, design a module... |
-| `browser-automation` | This skill should be used when controlling a real browser — navigating pages, taking screenshots, clicking elements, filling forms, switching tabs,... |
-| `css-expert` | This skill should be used when writing, refactoring, or reviewing CSS/SCSS — design tokens, BEM naming, specificity rules, modularity, mobile-first... |
-| `dependency-resolver` | This skill should be used when a dependency conflict blocks progress — the user reports `NoSuchMethodError`, \"works locally fails in CI\",... |
+| `angular-expert` | This skill should be used when the user works on Angular 17+ code: writing or reviewing components, applying the smart/dumb split, configuring... |
+| `backend-orchestrator` | ALWAYS use this skill when a backend task spans more than one Java/Spring layer: the user asks to add a new endpoint end-to-end, design a module from... |
+| `browser-automation` | This skill should be used when controlling a real browser: navigating pages, taking screenshots, clicking elements, filling forms, switching tabs,... |
+| `css-expert` | This skill should be used when writing, refactoring, or reviewing CSS/SCSS: design tokens, BEM naming, specificity rules, modularity, mobile-first... |
+| `dependency-resolver` | This skill should be used when a dependency conflict blocks progress: the user reports `NoSuchMethodError`, \"works locally fails in CI\",... |
 | `design-expert` | This skill should be used when designing layouts, mockups, or style specifications BEFORE implementing a new frontend component. Trigger phrases:... |
-| `frontend-orchestrator` | ALWAYS use this skill when a frontend task spans multiple concerns — the user asks to design a feature mixing routing, state management, styling, and... |
-| `java-expert` | This skill should be used when working with Java 17+ language features outside the Spring layer — records, sealed classes, Optional, Stream API,... |
+| `frontend-orchestrator` | ALWAYS use this skill when a frontend task spans multiple concerns: the user asks to design a feature mixing routing, state management, styling, and... |
+| `java-expert` | This skill should be used when working with Java 17+ language features outside the Spring layer: records, sealed classes, Optional, Stream API,... |
 | `java-spring-standards` | This skill should be used when an agent (developer-java, code-reviewer, test-writer) needs the canonical Java/Spring Boot standards: package... |
-| `nextjs` | This skill should be used when working with Next.js 14+ App Router — React Server Components, Server Actions, file-based routing, metadata API,... |
-| `ngrx-expert` | This skill should be used when the user designs, reviews, or refactors NgRx state management — store design, event-driven actions, pure reducers,... |
-| `postgresql-expert` | This skill should be used when the user works with PostgreSQL — designing tables, writing or reviewing SQL, picking indices, tuning queries,... |
-| `python-expert` | This skill should be used when writing, reviewing, or refactoring Python code outside Streamlit — mandatory type hints, project structure, Pydantic... |
-| `qwik-expert` | This skill should be used when working on a Qwik or Qwik City app — resumability, lazy components, signals, server-side loaders/actions, file-based... |
-| `react-expert` | This skill should be used when working with React 18+ — component architecture, hooks, TypeScript prop typing, performance optimisation... |
+| `nextjs` | This skill should be used when working with Next.js 14+ App Router: React Server Components, Server Actions, file-based routing, metadata API,... |
+| `ngrx-expert` | This skill should be used when the user designs, reviews, or refactors NgRx state management: store design, event-driven actions, pure reducers,... |
+| `postgresql-expert` | This skill should be used when the user works with PostgreSQL: designing tables, writing or reviewing SQL, picking indices, tuning queries, authoring... |
+| `python-expert` | This skill should be used when writing, reviewing, or refactoring Python code outside Streamlit: mandatory type hints, project structure, Pydantic... |
+| `qwik-expert` | This skill should be used when working on a Qwik or Qwik City app: resumability, lazy components, signals, server-side loaders/actions, file-based... |
+| `react-expert` | This skill should be used when working with React 18+: component architecture, hooks, TypeScript prop typing, performance optimisation... |
 | `refactoring-expert` | This skill should be used when refactoring code in any language to improve internal structure without changing behaviour. Trigger phrases: \"refactor... |
 | `rest-api-standards` | This skill should be used when an agent (api-designer, developer, code-reviewer) needs the canonical REST API design standards: resource modeling,... |
-| `rxjs-expert` | This skill should be used when working with RxJS in an Angular project — naming conventions, flattening strategies... |
-| `spring-architecture` | This skill should be used when designing or reviewing the LAYERING of a Spring Boot module — Controller/Service/Repository/Entity boundaries,... |
-| `spring-data-jpa` | This skill should be used when working with JPA/Hibernate inside a Spring project — entity design, relations, fetch strategies, N+1 fixes,... |
-| `spring-expert` | This skill should be used when working with Spring Boot 3.x configuration and runtime concerns — IoC/DI, auto-configuration, profiles,... |
-| `streamlit-expert` | This skill should be used when developing or maintaining a Streamlit web app — page structure, session_state management, caching (`@st.cache_data`,... |
-| `tanstack-query` | This skill should be used when working with TanStack Query v5 in a React app — useQuery, useMutation, useInfiniteQuery, QueryClient configuration,... |
-| `tanstack-start` | This skill should be used when building a full-stack React application with TanStack Start — SSR, Server Functions, streaming, file-based routing,... |
-| `tanstack` | This skill should be used when adding type-safe routing to a React app with TanStack Router — file-based routes, route definitions, loaders, search... |
+| `rxjs-expert` | This skill should be used when working with RxJS in an Angular project: naming conventions, flattening strategies... |
+| `spring-architecture` | This skill should be used when designing or reviewing the LAYERING of a Spring Boot module: Controller/Service/Repository/Entity boundaries,... |
+| `spring-data-jpa` | This skill should be used when working with JPA/Hibernate inside a Spring project: entity design, relations, fetch strategies, N+1 fixes, transaction... |
+| `spring-expert` | This skill should be used when working with Spring Boot 3.x configuration and runtime concerns: IoC/DI, auto-configuration, profiles,... |
+| `streamlit-expert` | This skill should be used when developing or maintaining a Streamlit web app: page structure, session_state management, caching (`@st.cache_data`,... |
+| `tanstack-query` | This skill should be used when working with TanStack Query v5 in a React app: useQuery, useMutation, useInfiniteQuery, QueryClient configuration,... |
+| `tanstack-start` | This skill should be used when building a full-stack React application with TanStack Start: SSR, Server Functions, streaming, file-based routing,... |
+| `tanstack` | This skill should be used when adding type-safe routing to a React app with TanStack Router: file-based routes, route definitions, loaders, search... |
 | `testing-standards` | This skill should be used when an agent (test-writer, developer, code-reviewer) needs the canonical testing standards: principles, scenario taxonomy,... |
 | `unicredit-design-system` | ALWAYS use this skill when the project end client is UniCredit (UC banking group, including UniCredit Bank Italy/Germany/Austria/CEE). Trigger... |
-| `vanilla-expert` | This skill should be used when building independent widgets, reusable libraries, or projects where a framework would be overkill — Web Components, ES... |
-| `vue-expert` | This skill should be used when working with Vue 3 Composition API — components, composables, Pinia state management, Vue Router 4, TypeScript... |
+| `vanilla-expert` | This skill should be used when building independent widgets, reusable libraries, or projects where a framework would be overkill: Web Components, ES... |
+| `vue-expert` | This skill should be used when working with Vue 3 Composition API: components, composables, Pinia state management, Vue Router 4, TypeScript... |
 
 ### `deliberation`
 
@@ -239,7 +247,7 @@ Multi-agent deliberative decision engine: structured debate with independent per
 | Agent | Model | Use when |
 |---|---|---|
 | `debate-critic` | opus | Use this agent when the `deliberative-decision-engine` dispatches the Skeptical Critic persona in Step 2 of a multi-agent debate. Reads the decision... |
-| `debate-judge` | opus | Use this agent when the `deliberative-decision-engine` dispatches the neutral judge persona — in Step 3 (summarisation mode, no decision) or Step 6... |
+| `debate-judge` | opus | Use this agent when the `deliberative-decision-engine` dispatches the neutral judge persona, in Step 3 (summarisation mode, no decision) or Step 6... |
 | `debate-operations-reviewer` | opus | Use this agent when the `deliberative-decision-engine` dispatches the Operations / Reliability Reviewer persona in Step 2 of a multi-agent debate.... |
 | `debate-proposer` | opus | Use this agent when the `deliberative-decision-engine` dispatches the Primary Architect / Proposer persona in Step 2 of a multi-agent debate. Reads... |
 | `debate-replatforming-specialist` | opus | Use this agent when the `deliberative-decision-engine` dispatches the Migration / Replatforming Specialist persona in Step 2 of a multi-agent debate.... |
@@ -270,7 +278,7 @@ Technical documentation authoring and Accenture-branded deliverable generation: 
 | `accenture-branding` | This skill should be used when an agent (presentation-creator, document-creator) generates an Accenture-branded deliverable and needs the brand... |
 | `backend-documentation` | This skill should be used when generating enterprise technical documentation for a Java/Spring Boot backend, typically as part of a... |
 | `doc-expert` | This skill should be used when producing technical or functional documentation for a Python/Streamlit, Java/Spring Boot, or Angular project. Trigger... |
-| `documentation-orchestrator` | ALWAYS use this skill when generating enterprise technical documentation for a full-stack project — it interprets a Word template, coordinates... |
+| `documentation-orchestrator` | ALWAYS use this skill when generating enterprise technical documentation for a full-stack project: it interprets a Word template, coordinates... |
 | `frontend-documentation` | This skill should be used when generating enterprise technical documentation for an Angular frontend, typically as part of a... |
 | `functional-document-generator` | This skill should be used when converting existing functional documentation into an enterprise LaTeX deliverable for stakeholders. Trigger phrases:... |
 | `uml-diagram-generator` | This skill should be used when producing UML diagrams for documentation, architecture design, system modeling, or code-structure explanation. Trigger... |
@@ -293,11 +301,12 @@ System architecture design, ADR authoring, functional requirement extraction, te
 | `software-architect` | inherit | Use this agent when analyzing or designing system architecture, evaluating technology choices, reviewing integration patterns, writing Architecture... |
 | `technical-analyst` | inherit | Use this agent when producing a technical analysis of an existing system: technology stack assessment, technical debt inventory, security posture... |
 
-**Skills (2)**
+**Skills (3)**
 
 | Skill | Provides |
 |---|---|
 | `functional-reconstruction` | This skill should be used when the user asks to reconstruct, document, or describe the existing functional behaviour of a codebase before a... |
+| `graphify-code-graph` | This skill should be used when an agent needs to understand, navigate, or reason about a codebase through a persistent code knowledge graph instead... |
 | `tech-analyst` | This skill should be used when an analysis, migration, or architecture-understanding pipeline starts and the codebase needs a structural map first.... |
 
 ### `caveman`
@@ -312,15 +321,16 @@ Token-efficient communication mode: terse, direct output with no filler, applied
 
 | Skill | Provides |
 |---|---|
-| `caveman-commit` | This skill should be used when the user asks for a commit message — triggers include \"write a commit\", \"commit message for this\", \"conventional... |
-| `caveman-review` | This skill should be used when the user asks for code-review comments or PR review — triggers include \"review this PR\", \"review the diff\",... |
-| `caveman` | This skill should be used when the user asks for terser, more direct output — explicit triggers include \"caveman mode\", \"caveman... |
+| `caveman-commit` | This skill should be used when the user asks for a commit message. Triggers include \"write a commit\", \"commit message for this\", \"conventional... |
+| `caveman-review` | This skill should be used when the user asks for code-review comments or PR review. Triggers include \"review this PR\", \"review the diff\",... |
+| `caveman` | This skill should be used when the user asks for terser, more direct output. Explicit triggers include \"caveman mode\", \"caveman lite|full|ultra\",... |
 
 ## Governance
 
 | Document | Covers |
 |---|---|
-| [how-to-write-a-capability.md](docs/registry/how-to-write-a-capability.md) | Authoring agents, skills, commands and plugins |
+| [quick-start.md](docs/quick-start.md) | Using capabilities from this registry in your own project |
+| [how-to-write-a-capability.md](docs/registry/how-to-write-a-capability.md) | Authoring agents, skills, commands and plugins, and what CI enforces |
 | [CONTRIBUTING.md](docs/registry/CONTRIBUTING.md) | Branching, review and merge process |
 | [GOVERNANCE.md](docs/registry/GOVERNANCE.md) | Ownership and decision rights |
 | [NAMING-CONVENTIONS.md](docs/registry/NAMING-CONVENTIONS.md) | Naming rules |
@@ -328,6 +338,7 @@ Token-efficient communication mode: terse, direct output with no filler, applied
 | [release-process.md](docs/registry/release-process.md) | Versioning and publishing |
 | [review-checklist.md](docs/registry/review-checklist.md) | What a reviewer checks |
 | [evals-guide.md](docs/registry/evals-guide.md) | Writing evaluations |
+| [version-requirements.md](docs/registry/version-requirements.md) | The Claude Code version floor, and the pins outside the frontmatter |
 | [CHANGELOG.md](docs/registry/CHANGELOG.md) | History |
 
 ## Useful links

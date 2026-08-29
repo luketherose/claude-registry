@@ -1,4 +1,4 @@
-# Analysis Report — Template
+# Analysis report template
 
 Use this template for structured analysis outputs: technical analysis, functional
 analysis, risk assessments, or feasibility studies.
@@ -13,7 +13,7 @@ analysis, risk assessments, or feasibility studies.
 **Version**: 1.0
 **Status**: Draft | Under Review | Final
 
-**Subject**: {What is being analyzed — system name, feature, process}
+**Subject**: {What is being analyzed: system name, feature, process}
 **Scope**: {What is included and explicitly excluded from this analysis}
 
 ---
@@ -67,7 +67,7 @@ and allows the reader to assess the completeness of the analysis.
 
 Ordered by priority (highest business impact first):
 
-1. **{Recommendation title}** — {Description. What to do, why, expected outcome.}
+1. **{Recommendation title}**: {Description. What to do, why, expected outcome.}
 2. ...
 
 ---
@@ -90,5 +90,5 @@ Ordered by priority (highest business impact first):
 
 ### Appendix
 
-{Supporting data, full output of tools, raw metrics — referenced from findings but
+{Supporting data, full output of tools, raw metrics, referenced from findings but
 not cluttering the main body}

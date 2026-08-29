@@ -32,7 +32,9 @@
           "supervisor": "functional-analysis-supervisor",
           "output_dir": "docs/analysis/01-functional/",
           "state_file": "docs/analysis/01-functional/_meta/pipeline-state.yaml",
-          "requires": ["phase-0"],
+          "requires": [
+            "phase-0"
+          ],
           "can_run_standalone": true
         },
         {
@@ -41,7 +43,9 @@
           "supervisor": "technical-analysis-supervisor",
           "output_dir": "docs/analysis/02-technical/",
           "state_file": "docs/analysis/02-technical/_meta/pipeline-state.yaml",
-          "requires": ["phase-0"],
+          "requires": [
+            "phase-0"
+          ],
           "can_run_standalone": true
         },
         {
@@ -50,26 +54,63 @@
           "supervisor": "baseline-testing-supervisor",
           "output_dir": "tests/baseline/",
           "state_file": "tests/baseline/_meta/pipeline-state.yaml",
-          "requires": ["phase-0", "phase-1"],
+          "requires": [
+            "phase-0",
+            "phase-1"
+          ],
           "can_run_standalone": true
         },
         {
           "id": "phase-4",
           "name": "Application Replatforming",
           "supervisor": "refactoring-supervisor",
-          "output_dirs": ["backend/", "frontend/", "docs/refactoring/", "e2e/"],
+          "output_dirs": [
+            "backend/",
+            "frontend/",
+            "docs/refactoring/",
+            "e2e/"
+          ],
           "state_file": ".refactoring-kb/pipeline-state.yaml",
-          "requires": ["phase-0", "phase-1", "phase-2", "phase-3"],
+          "requires": [
+            "phase-0",
+            "phase-1",
+            "phase-2",
+            "phase-3"
+          ],
           "can_run_standalone": false,
           "steps": [
-            {"id": "step-0", "name": "Bootstrap hard gate"},
-            {"id": "step-1", "name": "Minimal runnable skeleton"},
-            {"id": "step-2", "name": "Incremental feature loop"},
-            {"id": "step-3", "name": "Mandatory validation loop"},
-            {"id": "step-4", "name": "Progressive system construction"},
-            {"id": "step-5", "name": "Hardening"},
-            {"id": "step-5.5", "name": "Test data seeding"},
-            {"id": "step-6", "name": "Final validation"}
+            {
+              "id": "step-0",
+              "name": "Bootstrap hard gate"
+            },
+            {
+              "id": "step-1",
+              "name": "Minimal runnable skeleton"
+            },
+            {
+              "id": "step-2",
+              "name": "Incremental feature loop"
+            },
+            {
+              "id": "step-3",
+              "name": "Mandatory validation loop"
+            },
+            {
+              "id": "step-4",
+              "name": "Progressive system construction"
+            },
+            {
+              "id": "step-5",
+              "name": "Hardening"
+            },
+            {
+              "id": "step-5.5",
+              "name": "Test data seeding"
+            },
+            {
+              "id": "step-6",
+              "name": "Final validation"
+            }
           ]
         },
         {
@@ -80,8 +121,13 @@
           "output_dir": "docs/refactoring/",
           "output_file": "docs/refactoring/retrospective.md",
           "state_file": "docs/refactoring/workflow-manifest.json",
-          "triggers": ["after-phase-4-sign-off", "explicit-user-request"],
-          "requires": ["phase-4"],
+          "triggers": [
+            "after-phase-4-sign-off",
+            "explicit-user-request"
+          ],
+          "requires": [
+            "phase-4"
+          ],
           "can_run_standalone": false,
           "can_trigger_cross_phase_iteration": true,
           "cross_phase_iteration_reentry": "phase-1"
@@ -89,12 +135,11 @@
       ],
       "shared_agents": [
         "developer-java",
-        "developer-java-spring",
         "developer-frontend",
         "developer-python",
         "test-writer",
         "debugger",
-        "code-reviewer",
+        "pr-review-toolkit:code-reviewer",
         "software-architect",
         "api-designer",
         "document-creator",
@@ -110,5 +155,5 @@
       }
     }
   ],
-  "how_to_add_new_use_case": "See claude-catalog/templates/new-use-case/README.md for the 7-step guide."
+  "how_to_add_new_use_case": "See templates/new-use-case/README.md for the 7-step guide."
 }

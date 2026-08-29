@@ -1,7 +1,7 @@
-# Dispatch Prompt Template — REPLACE-ME Workflow
+# Dispatch prompt template: REPLACE-ME workflow
 
-Use this boilerplate when invoking workers via the Agent tool. Replace
-`{{PLACEHOLDER}}` values with the actual values for each dispatch.
+Use this boilerplate when invoking workers via the Agent tool. Replace every
+`{{PLACEHOLDER}}` with the actual value for that dispatch.
 
 ---
 
@@ -23,8 +23,8 @@ Read from:
 Write ALL your outputs under `{{OUTPUT-TARGET-PATH}}/`. Do NOT write anywhere else.
 
 ## Hard constraints
-- All file writes must use the Write tool — never Bash heredoc / echo redirect /
-  tee / printf > file. This is non-negotiable.
+- All file writes must use the Write tool. Never a Bash heredoc, an echo redirect,
+  tee, or printf into a file. This is non-negotiable.
 - Redact all credentials in any output or error message.
 - Do not modify files outside your output target.
 - Do not invoke sub-agents.

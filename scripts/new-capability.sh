@@ -120,10 +120,13 @@ fi
 
 EVALS="plugins/$PLUGIN/evals/$NAME"
 mkdir -p "$EVALS"
+# Schema must match the 79 scenarios already in the repo: agent, query, files,
+# expected_behavior. Each expectation has to be markable pass or fail from the
+# produced artefact alone, so "keeps the flow readable" is not one.
 cat > "$EVALS/evals.json" <<EOF
 [
   {
-    "skills": ["$NAME"],
+    "agent": "$NAME",
     "query": "<a real task a user would ask>",
     "files": [],
     "expected_behavior": [
@@ -134,17 +137,23 @@ cat > "$EVALS/evals.json" <<EOF
   }
 ]
 EOF
-cat > "$EVALS/triggers.json" <<EOF
-{
-  "should_trigger": [
-    "<prompt that must activate $NAME>",
-    "<another one, phrased differently>"
-  ],
-  "should_not_trigger": [
-    "<near-miss prompt that must NOT activate $NAME>"
-  ]
-}
-EOF
+# Flat array, matching Anthropic's own trigger_eval.json convention. Keep the
+# description free of the winning capability's name: an earlier version ended
+# every negative with a parenthesis naming the right answer, which let a trivial
+# keyword classifier score 232 out of 232.
+python3 - "$EVALS/triggers.json" "$NAME" <<'PY'
+import json, sys
+path, name = sys.argv[1], sys.argv[2]
+json.dump([
+    {"query": "<prompt that must activate %s>" % name, "should_trigger": True,
+     "description": "<why this is squarely in scope>"},
+    {"query": "<the same need, phrased as a user would say it>", "should_trigger": True,
+     "description": "<why this is squarely in scope>"},
+    {"query": "<near-miss that belongs to a different capability>", "should_trigger": False,
+     "description": "<what makes it out of scope, without naming the winner>"},
+], open(path, "w"), indent=2)
+open(path, "a").write("\n")
+PY
 
 echo
 echo -e "${GREEN}Created${RESET} $DEST"

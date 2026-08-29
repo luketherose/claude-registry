@@ -6,6 +6,117 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 
+### Fixed (retired names, eval schema, MCP pinning, 2026-08-30)
+
+**The retired-capability gate scans the pages a teammate reads first.**
+`validate_agent_references()` globbed `plugins/**/*.md` only, so the wiki catalog still
+listed `developer-java-spring` and `code-reviewer` as available capabilities, and
+`docs/quick-start.md` and `docs/pitch-claude-registry.md` repeated the second one. 19
+`developer-java-spring` references renamed to `developer-java` and 6 bare `code-reviewer`
+references repointed, across 7 wiki pages and 2 docs pages. The scan set is now
+`plugins/**/*.md`, `wiki/*.md`, `docs/**/*.md`, `README.md` and `CLAUDE.md`. Exempt:
+`docs/registry/CHANGELOG.md`, `docs/language-agnostic-design.md` and
+`docs/modernization/`, because recording a removal necessarily names the thing removed.
+`archive/` is not globbed at all. Consequence for contributors: removing or renaming a
+capability means adding it to the `RETIRED` dict in
+`.github/scripts/validate_registry.py` and updating every reference in the docs and the
+wiki in the same pull request, or CI fails.
+
+**`code-reviewer` resolves to where the capability actually lives.** References now read
+`pr-review-toolkit:code-reviewer`, the plugin from the official Anthropic marketplace.
+The bare name matches the `RETIRED` pattern and fails the build.
+
+**One eval scenario schema.** `evals.json` carried two incompatible shapes: 16 scenarios
+as `{id, prompt, expectations, timeout}` and 63 as `{agent, query, files,
+expected_behavior}`. All 79 scenarios across 27 eval directories now use the second.
+`agent` equals the eval directory name. `triggers.json` is unchanged: a flat list of
+`{query, should_trigger, description}`, 365 entries across 73 files.
+
+**`software-architect` negative trigger corrected.** "What are the security risks in this
+codebase?" was listed as a prompt that must not activate `software-architect`, whose own
+description names security among the non-functional requirements it assesses. It is now
+a dependency-CVE query, which belongs to `technical-analyst`.
+
+**MCP server specs must be pinned.** The root `.mcp.json` ran `@playwright/mcp@latest`
+and `uvx --from git+https://github.com/antoinebou12/uml-mcp` with no ref, executing
+whatever upstream published at launch, while the two plugin-level configs for the same
+servers were already pinned. Root now matches: `@playwright/mcp@0.0.79` and
+`uml-mcp@78137bd66bfeb9754d0d5de0be1016f4dc053cc6`. New `validate_mcp_pins()` gate reads
+`.mcp.json` and every `plugins/*/.mcp.json`, and fails on an argument ending in `@latest`
+or on a `git+` URL with no ref after the host. Consequence for contributors: adding an
+MCP server means naming an exact version or commit SHA.
+
+### Fixed (52 capability paths left pointing at the old catalog categories, 2026-08-29)
+
+**Capability references addressed directories that no longer exist.** The plugin
+migration flattened skills and agents out of their category directories, but 52 in-body
+references across 15 files still addressed them as `backend/`, `frontend/`, `react/`,
+`api/`, `testing/` and siblings. An agent told to invoke `api/rest-api-standards`, or a
+reference block routing to `frontend/angular/angular-expert`, named something the runtime
+cannot resolve. `api-designer` carried one as Quality self-check item 1. Some references
+nested two levels deep, so the substitution needed a second pass to reach a fixpoint; the
+sweep now reports zero. Capability names are flat: a skill is `<name>`, resolved inside
+its own plugin.
+
+**ASCII decision blocks realigned** after the category prefixes came off, including the
+continuation lines under the entries, which had stayed indented to the width of the old
+longer names.
+
+**Prohibitions no longer swallow their own alternative.** Under `## What you never do`,
+four bullets joined a prohibition to its recommended alternative with a colon, so "never
+use Thread.sleep to wait for async operations: use CompletableFuture" reads as forbidding
+`CompletableFuture` too. The alternative now goes in its own sentence. Convention for
+authors: under a negative heading, never join a prohibition and its alternative with a
+colon or a dash. Put the alternative in a separate sentence.
+
+**`doc-expert` description repaired.** It had lost the `backend-documentation` half of a
+"backend/frontend-documentation" shorthand, so only one of the two skills was named. Both
+are named explicitly now.
+
+### Fixed (frontmatter regression, inverted safety hook, two non-gating CI gates, 2026-08-29)
+
+**Broken frontmatter now fails the build instead of failing silently at load time.** An
+unescaped quote in the `description` of `technical-analyst` and `wiki-writer`, left by
+the trigger-restoration pass in 15f4749, stopped both frontmatters parsing as YAML. Claude
+Code loads such an agent with its name taken from the filename and silently drops every
+other field, which cost both agents their description, model, colour and their whole
+`tools` list, including the `Skill` entry the same commit had just added. The validator
+did not catch it: `split_frontmatter()` returns raw text and `field()` reads it line by
+line, so broken quoting still yields a plausible value. New `validate_frontmatter_yaml()`
+gate runs `yaml.safe_load` over every `plugins/**/*.md` and reports the parse error.
+Consequence for contributors: a `description:` containing an unescaped `"` fails CI. The
+gate needs PyYAML, and reports an error rather than passing quietly when the import
+fails.
+
+**The Skill-tool gate no longer keys on a literal `## Skills` heading.** An agent whose
+body tells it to load a skill must hold the `Skill` tool, or the instruction is inert and
+the agent substitutes its own priors for the team standard with nothing surfaced. The
+gate matched the heading spelling and so missed `developer-frontend`, whose body says
+"Invoke the framework skill set" while its `tools` list had no `Skill` entry. It now
+matches how a body actually refers to skills: `` `Skill` ``, "Skill tool", or "invoke the
+... skill". Both the gate and `developer-frontend` fixed. Consequence for authors: writing
+any of those phrasings without adding `Skill` to `tools` fails CI.
+
+**`claude plugin validate` can fail the build.** The step wrapped the CLI in `|| echo`
+under `continue-on-error`, and the failure step keyed only on the Python validator, so a
+plugin Claude Code itself rejects still produced a green check. The step now propagates
+its exit code and the failure step keys on both. A CLI that cannot run, as opposed to one
+reporting a validation failure, is still reported rather than enforced, so an
+authentication or install problem does not block unrelated pull requests.
+
+**The safety hook's `rm` check parses the command instead of substring-matching.**
+`hooks/scripts/pre-tool-safety.sh` matched the literal string `rm -rf /`, which gave it
+an inverted profile, measured: `rm -fr /`, `rm -r -f /` and `rm --no-preserve-root -rf /`
+all passed, while `rm -rf /tmp/scratch` was blocked. It now splits the command into
+segments, unwraps `sudo`, `env`, `nohup` and similar wrappers, reads short and long flags
+in any order, and compares each target against `/`, `~`, `$HOME` and a system-root list.
+`/tmp` is deliberately not on that list. A 24-case regression matrix at
+`hooks/tests/test-pre-tool-safety.sh` asserts both directions and runs in CI as the
+"Safety hook regression matrix" step of the `Validate catalog` job.
+
+**Description budget corrected in `CLAUDE.md`.** It documented a 12000-token gate. The
+gate is `BUDGET_WARN = 13000`, under a `BUDGET_FAIL = 15000` platform ceiling.
+
 ### Changed (plugin migration, 2026-08-29)
 
 **Distribution.** The registry is now an official Claude Code plugin marketplace.

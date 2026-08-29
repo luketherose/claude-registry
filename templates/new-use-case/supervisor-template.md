@@ -1,10 +1,30 @@
 ---
 name: REPLACE-ME-supervisor
-description: "Use this agent when running the REPLACE-ME workflow. DESCRIBE THE WORKFLOW IN ONE SENTENCE. Single entrypoint that reads DESCRIBE-INPUTS and orchestrates DESCRIBE-WORKERS to produce DESCRIBE-OUTPUT. Typical triggers include \"TRIGGER PHRASE 1\", \"TRIGGER PHRASE 2\", and \"TRIGGER PHRASE 3\". See \"When to invoke\" in the agent body for worked scenarios."
+description: "Use this agent when running the REPLACE-ME workflow. DESCRIBE THE WORKFLOW IN ONE SENTENCE. Single entrypoint that reads DESCRIBE-INPUTS and orchestrates DESCRIBE-WORKERS to produce DESCRIBE-OUTPUT. Typical triggers include \"TRIGGER PHRASE 1\", \"TRIGGER PHRASE 2\" and \"TRIGGER PHRASE 3\". Do not use it for ADJACENT-CASE (use ALTERNATIVE-AGENT instead)."
 tools: Read, Glob, Bash, Agent
-model: sonnet
+model: opus
+effort: high
 color: blue
+experimental:
+  cacheTtl: 1h
 ---
+
+<!--
+Model rationale: supervisors run cross-cutting reasoning over a whole pipeline, where a
+missed failure mode costs a full re-run. Per the model policy in
+docs/registry/how-to-write-a-capability.md, that is opus plus effort: high.
+Replace this comment with the rationale for any deviation, or delete it if you follow
+the policy.
+
+Description rules, enforced or checked at review:
+- Escape every quote. Unescaped quoting stops the frontmatter parsing as YAML, and
+  Claude Code then loads the agent with its name taken from the filename and drops
+  every other field. CI fails on this.
+- Do not end the description with a pointer to the body. Claude cannot follow it at
+  delegation time, because the body is not loaded yet.
+- Keep it short. Every enabled agent's description competes for the same 15000-token
+  delegation budget.
+-->
 
 ## Role
 
@@ -34,8 +54,9 @@ Do NOT use this agent for: SCOPE-OUT-DESCRIPTION. Use ALTERNATIVE-AGENT instead.
 
 ## Reference docs
 
-All reference docs live in `claude-catalog/docs/REPLACE-ME/` (read on demand —
-not preemptively).
+All reference docs live in `${CLAUDE_PLUGIN_ROOT}/references/REPLACE-ME/` and are read on
+demand, not preemptively. `${CLAUDE_PLUGIN_ROOT}` is mandatory here. A repo-relative path
+resolves against the consumer's project, silently returns nothing, and fails CI.
 
 | Doc | Read when |
 |---|---|
@@ -48,9 +69,21 @@ not preemptively).
 
 | Wave | Agent | Role | Conditional |
 |---|---|---|---|
-| W1 | `WORKER-NAME` | DESCRIBE-ROLE | — |
-| W2 | `WORKER-NAME` | DESCRIBE-ROLE | — |
-| W3 | `CHALLENGER-NAME` | Adversarial review of all prior outputs | always ON |
+| W1 | `WORKER-NAME` | DESCRIBE-ROLE | always |
+| W2 | `WORKER-NAME` | DESCRIBE-ROLE | always |
+| W3 | `CHALLENGER-NAME` | Adversarial review of all prior outputs | always |
+
+Name every sub-agent by the flat name the runtime resolves. There are no category
+directories: write `WORKER-NAME`, never `some-topic/WORKER-NAME`.
+
+---
+
+## Skills
+
+Delete this section if the supervisor loads no skills. If you keep it, `Skill` must be in
+the `tools` list above. CI reads the body for `Skill`, "Skill tool" or "invoke the ...
+skill" and fails when the tool is missing, because without it the instruction is inert and
+the agent silently substitutes its own priors for the team standard.
 
 ---
 
@@ -58,7 +91,7 @@ not preemptively).
 
 After each wave, post a concise update:
 ```
-Wave <N>: <name> — <status>
+Wave <N>: <name>, <status>
 Outputs: <list of files written>
 Issues: <count> open questions
 Next: <next wave or "awaiting confirmation">

@@ -9,9 +9,9 @@ decision rules, escalation triggers, constraints, and state schema.
 
 On every invocation:
 1. Check for `_meta/pipeline-state.yaml`:
-   - If absent → first run; ask user to confirm inputs are ready; create state file.
-   - If `status: complete` → ask: skip / re-run / revise.
-   - If `status: in-progress` or `status: partial` → resume from first incomplete wave.
+   - If absent, this is the first run. Ask the user to confirm inputs are ready, then create the state file.
+   - If `status: complete`, ask: skip, re-run or revise.
+   - If `status: in-progress` or `status: partial`, resume from the first incomplete wave.
 2. Verify required inputs exist (list them here).
 3. Post the pre-phase brief to the user (what the workflow will do, expected outputs).
 
@@ -29,7 +29,7 @@ On every invocation:
 
 ---
 
-## Escalation triggers — always ask the user
+## Escalation triggers: always ask the user
 
 - DESCRIBE-ESCALATION-TRIGGER-1
 - DESCRIBE-ESCALATION-TRIGGER-2
@@ -65,5 +65,5 @@ waves:
 - Never invoke yourself recursively.
 - Always read sub-agent outputs from disk after dispatch (not from Agent tool result).
 - Always update `_meta/pipeline-state.yaml` after each wave.
-- All file content output via `Write` tool — never via Bash heredoc / echo redirect.
+- All file content output via the `Write` tool. Never via a Bash heredoc or echo redirect.
 - Redact credentials in any output or error message.

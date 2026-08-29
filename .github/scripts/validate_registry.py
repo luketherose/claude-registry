@@ -269,6 +269,53 @@ def validate_cross_plugin_references():
                     % (path, i, rel, plugin_root))
 
 
+
+def validate_evals():
+    """Eval files must keep one shape, and negatives must not leak the answer.
+
+    Two schemas coexisted here once (16 scenarios as id/prompt/expectations vs
+    63 as agent/query/files/expected_behavior). Separately, the `description`
+    field named the routing winner on 364 of 365 cases, which let a nine-line
+    keyword table score 232 out of 232 without reading anything.
+    """
+    verdict = re.compile(r"primary invocation|should not activate|should activate"
+                         r"|route[sd]? to|belongs to|use \w+ instead", re.I)
+    for path in sorted(glob.glob("plugins/*/evals/*/triggers.json")):
+        try:
+            cases = json.load(open(path, encoding="utf-8"))
+        except Exception as exc:
+            err("%s: not valid JSON (%s)" % (path, exc))
+            continue
+        if not isinstance(cases, list):
+            err("%s: must be a flat list of cases, matching Anthropic's "
+                "trigger_eval.json convention" % path)
+            continue
+        for i, case in enumerate(cases):
+            if set(case) != {"query", "should_trigger", "description"}:
+                err("%s[%d]: keys are %s, expected query, should_trigger, "
+                    "description" % (path, i, sorted(case)))
+            elif verdict.search(case["description"]):
+                err("%s[%d]: the description states the verdict (%r). It must "
+                    "describe the query only, or the case grades itself."
+                    % (path, i, case["description"][:60]))
+
+    for path in sorted(glob.glob("plugins/*/evals/*/evals.json")):
+        try:
+            scenarios = json.load(open(path, encoding="utf-8"))
+        except Exception as exc:
+            err("%s: not valid JSON (%s)" % (path, exc))
+            continue
+        for i, sc in enumerate(scenarios):
+            if set(sc) != {"agent", "query", "files", "expected_behavior"}:
+                err("%s[%d]: keys are %s, expected agent, query, files, "
+                    "expected_behavior" % (path, i, sorted(sc)))
+                continue
+            # Fixture paths are relative to the eval directory, not the root.
+            for f in sc["files"]:
+                if not os.path.exists(os.path.join(os.path.dirname(path), f)):
+                    err("%s[%d]: fixture %s does not exist" % (path, i, f))
+
+
 def validate_skills():
     seen = {}
     for path in sorted(glob.glob("plugins/*/skills/*/SKILL.md")):
@@ -354,6 +401,8 @@ def validate_agent_references():
     # removal necessarily names the thing removed.
     scanned = (glob.glob("plugins/**/*.md", recursive=True)
                + glob.glob("wiki/*.md")
+               + glob.glob("bmad/**/*.json", recursive=True)
+               + glob.glob("bmad/**/*.md", recursive=True)
                + glob.glob("docs/**/*.md", recursive=True)
                + ["README.md", "CLAUDE.md"])
     exempt = ("docs/registry/CHANGELOG.md", "docs/language-agnostic-design.md",
@@ -361,7 +410,10 @@ def validate_agent_references():
     scanned = [p for p in scanned
                if os.path.exists(p) and not any(x in p for x in exempt)]
     for name, guidance in RETIRED.items():
-        pattern = re.compile(r"`%s`" % re.escape(name))
+        # Backticks in prose, double quotes in JSON. bmad/workflows.json listed
+        # two retired agents for weeks because the gate only looked for the
+        # markdown spelling.
+        pattern = re.compile(r'[`"]%s[`"]' % re.escape(name))
         for path in sorted(scanned):
             text = open(path, encoding="utf-8").read()
             for i, line in enumerate(text.splitlines(), 1):
@@ -430,6 +482,7 @@ if __name__ == "__main__":
         validate_mcp_pins()
     if args.only in (None, "capabilities"):
         validate_frontmatter_yaml()
+        validate_evals()
         validate_cross_plugin_references()
         budget = validate_agents()
         validate_skills()

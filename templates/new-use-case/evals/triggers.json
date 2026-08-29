@@ -10,13 +10,13 @@
     "description": "Alternate phrasing"
   },
   {
-    "query": "REPLACE: a query that should NOT trigger this supervisor (confusable with a sibling agent)",
+    "query": "REPLACE: a query that should NOT trigger this supervisor, confusable with a sibling",
     "should_trigger": false,
-    "description": "Confusable query — should route to SIBLING-AGENT instead"
+    "description": "Confusable query, should route to `SIBLING-AGENT` instead"
   },
   {
     "query": "What does this code do?",
     "should_trigger": false,
-    "description": "Generic code question — should not activate any supervisor"
+    "description": "Generic code question, should not activate any supervisor"
   }
 ]
