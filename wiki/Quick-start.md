@@ -1,142 +1,117 @@
 <!--
 audience: end-user
 diataxis: tutorial
-last-verified: 2026-04-28
-verified-against: 1e9445a
+last-verified: 2026-08-30
+verified-against: 8670a63
 -->
 
 # Quick start
 
-Install the registry's capabilities into your project and verify Claude
-delegates to one of them. Five minutes, four commands.
+Install one plugin, confirm Claude loaded it, and use it. Five minutes.
+
+If your Claude Code configuration blocks adding marketplaces, skip to
+[Installation](Installation#path-2-local-install-without-the-marketplace); the rest of
+this page assumes the marketplace path works for you.
 
 ## Prerequisites
 
-- **Claude Code** installed and working in a project (Mac, Linux, Windows
-  with WSL/Git Bash). If `claude` doesn't run yet, follow the official
-  Claude Code install guide first.
-- **git** and **bash** (the install script is plain bash; no other build
-  tooling is needed).
-- **Read access** to this repository.
+- **Claude Code**, recent enough for the frontmatter fields this registry uses. The
+  current floor is **2.1.248**, set by `experimental.cacheTtl` on the supervisors. Check
+  with `claude --version` and compare against
+  [`docs/registry/version-requirements.md`](https://github.com/luketherose/claude-registry/blob/main/docs/registry/version-requirements.md).
+- **Read access** to `github.com/luketherose/claude-registry`.
 
-You don't need Python, Node, or any package manager. The registry has no
-build step.
+Nothing else. The registry has no build step. Individual agents need their own runtimes
+(`developer-java` is only useful where Maven and a JDK exist), but installing costs
+nothing beyond Claude Code itself.
 
-## 1. Clone the registry
+## 1. Add the marketplace
 
-```bash
-git clone https://github.com/luketherose/claude-registry.git
-cd claude-registry
+In Claude Code:
+
+```
+/plugin marketplace add luketherose/claude-registry
 ```
 
-Pull updates the same way you would for any other repo:
+You add the marketplace once per machine.
 
-```bash
-git pull origin main
+## 2. Install a plugin
+
+Start with the day-to-day one:
+
+```
+/plugin install dev-standards@claude-registry
 ```
 
-## 2. Install the capabilities
+That gives you 12 developer, test and API agents plus 29 standards skills. See
+[Capability catalog](Capability-catalog#dev-standards) for the full list.
 
-Two common modes — pick one.
+Install more only as a project needs them. Every enabled subagent description competes
+for the same 15000-token delegation budget, and a smaller enabled set routes better.
 
-### Project-scoped (recommended for most projects)
+| Situation | Install |
+|---|---|
+| Day-to-day development | `dev-standards` |
+| Architecture and analysis work | `analysis-architecture` |
+| A legacy migration project | `replatforming` plus `analysis-architecture` |
+| Producing client deliverables | `docs-branding` |
+| A hard, irreversible decision | `deliberation` |
+| Terser output | `caveman` |
 
-```bash
-./claude-catalog/scripts/setup-capabilities.sh /path/to/your-project
-```
+## 3. Confirm it loaded
 
-The script:
-- reads `claude-marketplace/catalog.json` (the source of truth for what is
-  installable)
-- prompts you to choose `all`, a tier (`stable` / `beta`), or specific
-  capabilities by name
-- copies the selected `.md` files into `<project>/.claude/agents/`
-- auto-installs every skill listed in the chosen agents'
-  `dependencies`
-- creates `<project>/.claude/agents/` if it doesn't exist
-
-To install everything non-interactively:
-
-```bash
-./claude-catalog/scripts/setup-capabilities.sh /path/to/your-project all
-```
-
-### Global (every Claude Code session)
-
-```bash
-./claude-catalog/scripts/setup-capabilities.sh --global
-```
-
-This installs into `~/.claude/agents/`. Use this when you want the
-catalog available in any Claude Code session, not just inside a specific
-project.
-
-## 3. Verify the install
-
-```bash
-ls /path/to/your-project/.claude/agents/ | head
-```
-
-You should see files like `software-architect.md`, `developer-frontend.md`,
-`code-reviewer.md`, plus skills.
-
-Open Claude Code in the project and run:
+Restart the session, then run:
 
 ```
 /agents
 ```
 
-You should see the installed agents listed.
+You should see `developer-java`, `developer-python`, `developer-frontend`, `test-writer`,
+`debugger` and `api-designer` among the listed agents.
 
 ## 4. Use one
 
-Ask Claude something that matches an agent's `description`. For example:
+Ask something that matches an agent's `description` and let Claude route:
 
-> "Review the authentication flow in `src/auth/` for security issues."
+> Add a REST controller for the `/orders` endpoint following our Spring conventions.
 
-Claude will delegate to `security-analyst` (or `pr-review-toolkit:code-reviewer` plus the
-`security-analyst` if you ask broadly). You can also invoke an agent
-directly:
+Claude delegates to `developer-java`, which loads the `java-spring-standards` and
+`spring-architecture` skills with the `Skill` tool as the task touches their domains.
+
+To pick the agent yourself, name it:
 
 ```
-@code-reviewer please review the changes on this branch
+@debugger here is a stack trace, find the root cause: <paste>
 ```
 
-## 5. Update later
+## 5. Keep it current
 
-The registry evolves; pull updates when you want them:
+Plugins update in the background when the resolved version changes. There is no sync
+command and no script to re-run.
 
-```bash
-cd claude-registry
-git pull origin main
-./claude-catalog/scripts/setup-capabilities.sh /path/to/your-project all
-```
-
-The setup script overwrites previously installed `.md` files with the
-newer versions from `claude-marketplace/`. Project-specific overlays you
-created (any agent with a name not in the catalog) are left untouched.
+To pin a version instead of tracking `main`, use a `ref` in the marketplace source in
+your `settings.json`. Release tags follow `<plugin>@<version>`, for example
+`dev-standards@1.0.0`. See [Governance](Governance#releases).
 
 ## Common pitfalls
 
-- **You ran `setup-capabilities.sh` from outside the registry root.** The
-  script resolves paths relative to its own location, so running it from
-  the registry root is safest. If you got "catalog.json not found", check
-  your `pwd`.
-- **Capability not appearing in `/agents`.** The agent's `name` in the
-  frontmatter must be unique across the project's `.claude/agents/`
-  directory. If two files declare the same `name`, only one wins.
-- **You see "Agent not found" when invoking by `@name`.** The agent file
-  exists but Claude hasn't loaded it yet — restart the Claude Code
-  session.
-- **You're on Windows and saw a long list of garbage files appear.** This
-  was a known incident with one specific agent (Phase 2
-  state-runtime-analyst, fixed in 2026-04-28). Update the registry to
-  pull in the fix; see [Changelog](Changelog) for the entry.
+- **Nothing appears in `/agents`.** Restart the session. Plugin components are resolved
+  at session start.
+- **Adding the marketplace is refused.** Your configuration restricts marketplace sources
+  (`strictKnownMarketplaces`). Use
+  [the local install path](Installation#path-2-local-install-without-the-marketplace).
+- **Routing feels vague and picks the wrong specialist.** You probably enabled every
+  plugin. Disable what the project does not need; the combined description budget is the
+  constraint that degrades first.
+- **An agent reports it cannot read a bundled reference.** That path is written as
+  `${CLAUDE_PLUGIN_ROOT}/references/...` and only expands inside an installed plugin. If
+  you copied a single agent file by hand instead of installing the plugin, the reference
+  cannot resolve. Install the plugin, or use `scripts/install-local.sh`, which rewrites
+  those paths to absolute ones.
 
 ## Next steps
 
-- Read [Usage](Usage) for the day-to-day patterns (delegation, direct
-  invocation, the orchestrator agent for multi-domain tasks).
-- Read [Capability catalog](Capability-catalog) for what each agent does.
-- If you want to write your own capability, jump to
-  [Contributing](Contributing).
+- [Usage](Usage) for the day-to-day patterns: delegation, direct invocation, the
+  orchestrator, and the replatforming pipeline.
+- [Capability catalog](Capability-catalog) for what each agent and skill does.
+- [Contributing](Contributing) to write your own.

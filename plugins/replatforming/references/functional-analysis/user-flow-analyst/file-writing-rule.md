@@ -1,4 +1,4 @@
-# File-writing rule — `user-flow-analyst`
+# File-writing rule: `user-flow-analyst`
 
 > Reference doc for `user-flow-analyst`. Read once at session start; the
 > rule is non-negotiable for every file emitted.
@@ -11,7 +11,7 @@ written through the `Write` tool. Never use `Bash` heredocs
 Mermaid syntax (`A[label]`, `B{cond?}`, `A --> B`,
 `Actor->>System: msg`) contains shell metacharacters (`[`, `{`, `}`,
 `>`, `<`, `*`, `&`) that the shell interprets as redirection, glob
-expansion, or word splitting — even inside quotes (Git Bash / MSYS2 on
+expansion, or word splitting, even inside quotes (Git Bash / MSYS2 on
 Windows is especially fragile). A malformed heredoc produced 48 garbage
 files in a repo root in the Phase 2 incident of 2026-04-28.
 

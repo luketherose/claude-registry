@@ -1,4 +1,4 @@
-# Detection patterns and output schemas — `dependency-analyzer`
+# Detection patterns and output schemas: `dependency-analyzer`
 
 > Reference doc for `dependency-analyzer`. Read at runtime when extracting
 > external dependencies, parsing imports, or composing the two output files.
@@ -12,7 +12,7 @@ holds the decision logic; this doc holds the lookup tables.
 
 ---
 
-## External dependencies — manifests by language
+## External dependencies: manifests by language
 
 For each language in `stack.languages[]`, read these manifests and extract
 declared dependencies.
@@ -36,43 +36,43 @@ optional), **language** (when polyglot).
 
 ---
 
-## External dependencies — categorization heuristic
+## External dependencies: categorization heuristic
 
 Classify each dependency name into one category (heuristic, name-based,
 language-aware):
 
-- **Web framework** — flask, fastapi, django, streamlit, dash (Python);
+- **Web framework**: flask, fastapi, django, streamlit, dash (Python);
   spring-boot-starter-web, micronaut-http (JVM); axum, actix-web (Rust);
   gin, chi (Go); aspnetcore (C#); rails, sinatra (Ruby); laravel,
   symfony (PHP); express, fastify, nestjs, next, nuxt (JS/TS).
-- **ORM / database driver** — sqlalchemy, peewee, psycopg2, pymongo
+- **ORM / database driver**: sqlalchemy, peewee, psycopg2, pymongo
   (Python); spring-data-jpa, hibernate, jdbc, jdbi (JVM); diesel, sqlx,
   sea-orm (Rust); database/sql, gorm (Go); ef-core, dapper (C#);
   activerecord, sequel (Ruby); doctrine, eloquent (PHP); prisma,
   typeorm, drizzle, mongoose (JS/TS).
-- **HTTP client** — requests, httpx, aiohttp (Python); WebClient,
+- **HTTP client**: requests, httpx, aiohttp (Python); WebClient,
   RestTemplate, OkHttp (JVM); reqwest (Rust); net/http (Go); HttpClient
   (C#); httparty, faraday (Ruby); guzzle (PHP); axios, fetch, ky (JS/TS).
-- **Data / numerics / ML** — pandas, numpy, polars, scikit-learn, torch,
+- **Data / numerics / ML**: pandas, numpy, polars, scikit-learn, torch,
   tensorflow, transformers (Python); breeze, smile (JVM); polars-rs
   (Rust); gonum (Go); ml.net (C#); etc.
-- **Testing** — pytest, unittest, hypothesis (Python); junit, testng,
+- **Testing**: pytest, unittest, hypothesis (Python); junit, testng,
   mockito, testcontainers (JVM); rstest, proptest (Rust); testify (Go);
   xunit, nunit, mstest, fluentassertions (C#); rspec, minitest (Ruby);
   phpunit, pest (PHP); jest, vitest, playwright, cypress (JS/TS).
-- **Dev tooling / linters** — black, ruff, mypy (Python); checkstyle,
-  spotbugs, errorprone (JVM); rustfmt, clippy (Rust — toolchain
+- **Dev tooling / linters**: black, ruff, mypy (Python); checkstyle,
+  spotbugs, errorprone (JVM); rustfmt, clippy (Rust, toolchain
   components, not deps); golangci-lint (Go); roslyn analyzers (C#);
   rubocop (Ruby); php-cs-fixer, phpstan, psalm (PHP); eslint, prettier,
   biome (JS/TS).
-- **Observability** — loguru, structlog, sentry-sdk (Python); micrometer,
+- **Observability**: loguru, structlog, sentry-sdk (Python); micrometer,
   opentelemetry (JVM); tracing (Rust); slog (Go); serilog (C#); etc.
-- **Other** — anything not matching above; preserve the name and let the
+- **Other**: anything not matching above; preserve the name and let the
   synthesizer interpret.
 
 ---
 
-## Internal dependencies — import grep patterns
+## Internal dependencies: import grep patterns
 
 Parse imports line-based (no full-AST parse needed for graph purposes).
 

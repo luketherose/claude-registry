@@ -1,4 +1,4 @@
-# Deliberation — final-decision strategy selection
+# Deliberation: final-decision strategy selection
 
 Authoritative rules for `deliberative-decision-engine` Step 6. Maps
 `(decisionType, riskLevel, residualDisagreement, criticalObjections)` to
@@ -10,7 +10,7 @@ a `finalDecisionStrategy`.
   knowledge-heavy | compliance | security | risk | operational |
   unknown`.
 - `riskLevel` from Step 0: `low | medium | high | irreversible`.
-- `residualDisagreement`: `none | minor | material | split` —
+- `residualDisagreement`: `none | minor | material | split`,
   computed from final positions in `04-rebuttals/*.json`. `split` ⇒
   no clear majority option after rebuttals.
 - `unresolvedHighSeverity`: count of challenges with `severity: high |
@@ -108,7 +108,7 @@ The engine produces a `pending_human_approval` final artefact with:
 - the pointer to the audit trail (`auditTrailId` and full path tree).
 
 The engine does not commit a decision. The user-facing report
-explicitly states "Pending human approval — see audit trail".
+explicitly states "Pending human approval, see audit trail".
 
 ## Commit-protocol selection
 

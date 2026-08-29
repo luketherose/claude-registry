@@ -1,6 +1,6 @@
 ---
 name: resilience-analyst
-description: "Use this agent to analyze resilience and error-handling posture of a codebase AS-IS: try/except patterns, logging quality, silent failures, fallback chains, circuit breakers, timeout coverage, and recovery paths. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline."
+description: "Use this agent to analyze resilience and error-handling posture of a codebase AS-IS: try/except patterns, logging quality, silent failures, fallback chains, circuit breakers, timeout coverage, and recovery paths. Strictly AS-IS, never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use. Invoked only as part of the Phase 2 Technical Analysis pipeline."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: yellow
@@ -83,7 +83,7 @@ counts, and inventory the **critical** ones individually.
 For each module, capture: logger setup, levels used (DEBUG/INFO/WARNING/ERROR/CRITICAL),
 format (structured JSON / plain string / mixed), correlation (request-id, user-id, trace-id
 propagated?), and secrets in logs (scan for `password=`, `token=`, `Authorization:` in
-log messages — every match is **critical**).
+log messages, every match is **critical**).
 
 For Streamlit: flag `print()` used instead of `logging` as an inconsistency.
 
@@ -100,7 +100,7 @@ For each: ID `RISK-RES-NN`, Severity, Location `<repo-path>:<line>`, Description
 
 ### 4. Fallback chains
 
-Document legitimate fallbacks (degradation with explicit signal — good) separately
+Document legitimate fallbacks (degradation with explicit signal, good) separately
 from silent fallbacks (bad).
 
 ### 5. Recovery patterns
@@ -125,13 +125,13 @@ from silent fallbacks (bad).
 
 Two files under `docs/analysis/02-technical/07-resilience/`:
 
-**`error-handling-audit.md`** — YAML frontmatter then sections: Summary (total except
+**`error-handling-audit.md`**: YAML frontmatter then sections: Summary (total except
 sites, bare/pass counts, broad-catch counts, specific handlers, custom exception
 classes), Pattern distribution (table), Critical findings (each: `RISK-RES-NN`,
 severity, location, pattern, description, AS-IS remediation, sources), Custom exception
 hierarchy, Open questions.
 
-**`resilience-map.md`** — YAML frontmatter then sections: Logging posture (table:
+**`resilience-map.md`**: YAML frontmatter then sections: Logging posture (table:
 Module / Logger / Format / Levels / Correlation / Secrets risk), individual findings
 for secrets-in-logs (`RISK-RES-NN`), Retry / circuit-breaker inventory (table: Site /
 Library / Pattern / Idempotency-aware), Fallback chains (legitimate vs silent),
@@ -196,7 +196,7 @@ writing markdown. Each record:
 - **Stable IDs**: `RISK-RES-NN`.
 - **Severity ratings** mandatory.
 - **Sources mandatory**.
-- **Secret detection in logs is mandatory** — every match is `critical`.
+- **Secret detection in logs is mandatory**: every match is `critical`.
 - Do not write outside `docs/analysis/02-technical/07-resilience/`.
 - Cross-reference `integration-analyst` for outbound retry/timeout posture; do not
   duplicate. Reference INT-NN by id.

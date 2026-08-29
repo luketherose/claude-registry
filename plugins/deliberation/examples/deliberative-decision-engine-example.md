@@ -88,7 +88,7 @@ detects an irreversible cutover decision and self-escalates.
 
 ---
 
-## Scenario 3: False positive — casual mention of "debate"
+## Scenario 3: False positive, casual mention of "debate"
 
 **User prompt**:
 > The team is critical of monoliths and we should debate this later.
@@ -117,7 +117,7 @@ detects an irreversible cutover decision and self-escalates.
 
 ---
 
-## Scenario 5: Failure — only 2 personas respond
+## Scenario 5: Failure, only 2 personas respond
 
 **Setup**: simulate persona dispatch failures (e.g., a persona
 returns an empty artefact twice).

@@ -1,11 +1,11 @@
-# Codebase mapper — output templates
+# Codebase mapper: output templates
 
 > Reference doc for `codebase-mapper`. Read at runtime when emitting
 > primary deliverable files under `.indexing-kb/bronze/` and the
 > backward-compatible copies under `.indexing-kb/02-structure/`.
 
 All files are mandatory on every run. Write each through the `Write`
-tool — never via Bash heredoc/redirect.
+tool, never via Bash heredoc/redirect.
 
 ---
 
@@ -16,13 +16,13 @@ tool — never via Bash heredoc/redirect.
 ```
 
 `category` values:
-- `source` — production source code
-- `test` — test files (detected by naming convention or framework markers)
-- `config` — configuration files (.env, .yaml, .toml, .ini, etc.)
-- `docs` — documentation files (.md, .rst, .txt, etc.)
-- `generated` — auto-generated files (build artifacts, proto outputs, etc.)
-- `vendor` — vendored third-party code
-- `build_artifact` — compiled outputs, lock files with binary content
+- `source`: production source code
+- `test`: test files (detected by naming convention or framework markers)
+- `config`: configuration files (.env, .yaml, .toml, .ini, etc.)
+- `docs`: documentation files (.md, .rst, .txt, etc.)
+- `generated`: auto-generated files (build artifacts, proto outputs, etc.)
+- `vendor`: vendored third-party code
+- `build_artifact`: compiled outputs, lock files with binary content
 
 ---
 
@@ -33,21 +33,21 @@ tool — never via Bash heredoc/redirect.
 ```
 
 `classification` values:
-- `large` — >800 lines or >150 KB
-- `huge` — >2000 lines or >500 KB
-- `giant` — >5000 lines or >1 MB
-- `generated` — auto-generated (may be excluded)
-- `minified` — minified JS/CSS (excluded from symbol indexing)
-- `data` — data file (CSV, JSON fixture, etc.) — data profile only
-- `vendor` — vendored code — excluded from analysis
-- `source` — large but genuine source code
+- `large`: >800 lines or >150 KB
+- `huge`: >2000 lines or >500 KB
+- `giant`: >5000 lines or >1 MB
+- `generated`: auto-generated (may be excluded)
+- `minified`: minified JS/CSS (excluded from symbol indexing)
+- `data`: data file (CSV, JSON fixture, etc.): data profile only
+- `vendor`: vendored code, excluded from analysis
+- `source`: large but genuine source code
 
 `parse_strategy` values:
-- `ast_symbols` — Python AST used to create per-class/function chunks
-- `regex_symbols` — regex-based symbol extraction for non-Python
-- `line_chunks` — 200-line windows (fallback)
-- `data_profile` — row count, column names sample only
-- `excluded_generated` — excluded because auto-generated
+- `ast_symbols`: Python AST used to create per-class/function chunks
+- `regex_symbols`: regex-based symbol extraction for non-Python
+- `line_chunks`: 200-line windows (fallback)
+- `data_profile`: row count, column names sample only
+- `excluded_generated`: excluded because auto-generated
 
 ---
 

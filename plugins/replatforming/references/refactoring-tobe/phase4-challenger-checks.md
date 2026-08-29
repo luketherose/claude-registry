@@ -1,16 +1,16 @@
-# Method — ten checks — `phase4-challenger`
+# Method: ten checks (`phase4-challenger`)
 
 > Reference doc for `phase4-challenger`. Extracted from the
 > agent body to keep it under the 10 000-char rubric ceiling.
 > Read at runtime when the agent is dispatched.
 
-## Method — ten checks
+## Method: ten checks
 
 For each check, list every finding using the common shape (`Type`,
 `Where`, `Description`, `Suggested fix`, `Severity`). See
 `checklist-templates.md` → "Finding shape" for the enumerations.
 
-### Check 1 — AS-IS↔TO-BE traceability
+### Check 1: AS-IS↔TO-BE traceability
 
 This is the BIG one. Build the matrix that connects every Phase 1 UC to
 its TO-BE manifestation across the four layers (openapi operation →
@@ -22,7 +22,7 @@ Tag each UC as `fully covered`, `partial` (with documented exception in
 → See `checklist-templates.md` → Check 1 for the layer hierarchy and the
 JSON schema written to `.refactoring-kb/02-traceability/as-is-to-be-matrix.json`.
 
-### Check 2 — OpenAPI↔code drift
+### Check 2: OpenAPI↔code drift
 
 Cross-check:
 - every operation in openapi.yaml has a matching method in a Java
@@ -35,7 +35,7 @@ Cross-check:
 
 Drift here is a `blocking` issue (the contract is the contract).
 
-### Check 3 — ADR completeness
+### Check 3: ADR completeness
 
 Check that:
 - every major decision documented:
@@ -56,7 +56,7 @@ Severity:
 - ADR missing a Nygard section: `needs-review`
 - orphan ADR: `nice-to-have`
 
-### Check 4 — AS-IS bug carry-over consistency
+### Check 4: AS-IS bug carry-over consistency
 
 For each entry in Phase 3 `_meta/as-is-bugs-found.md` with status
 `deferred` or `escalated`:
@@ -66,14 +66,14 @@ For each entry in Phase 3 `_meta/as-is-bugs-found.md` with status
   document-as-limitation, descope-with-rationale)
 - if disposition is `fix-in-flight`: the corresponding logic-translator
   output for the relevant UC has implemented the fix (verify by reading
-  the service method body — should not have an
+  the service method body, should not have an
   `UnsupportedOperationException` for that branch)
 
 Severity:
 - deferred bug not in roadmap: `blocking`
 - bug disposition unclear: `needs-review`
 
-### Check 5 — Performance hypothesis sanity
+### Check 5: Performance hypothesis sanity
 
 Phase 2 `06-performance/performance-bottleneck-report.md` lists
 hypothesized perf hotspots. For each:
@@ -92,7 +92,7 @@ Severity:
 - TO-BE design introduces new perf risk: `needs-review` to
   `blocking` depending on impact
 
-### Check 6 — Security regression
+### Check 6: Security regression
 
 Phase 2 `08-security/owasp-top10-coverage.md` lists per-category
 status. For each category that was `missing` or `partial` in AS-IS:
@@ -109,7 +109,7 @@ Severity:
 - AS-IS security gap not addressed in TO-BE: `blocking`
 - new security gap introduced: `blocking`
 
-### Check 7 — Equivalence claims integrity
+### Check 7: Equivalence claims integrity
 
 The roadmap and milestones state equivalence targets ("100% UCs vs
 Phase 3 oracle", "p95 ≤ 110% of baseline"). Verify:
@@ -124,7 +124,7 @@ Severity:
 - equivalence promise without baseline: `blocking`
 - threshold mismatch: `needs-review`
 
-### Check 8 — AS-IS-only leak in TO-BE (inverse drift)
+### Check 8: AS-IS-only leak in TO-BE (inverse drift)
 
 Scan TO-BE outputs for AS-IS-only token leaks using the regex in
 `checklist-templates.md` → Check 8. That doc also enumerates the
@@ -135,7 +135,7 @@ Severity:
 - leak in code: `blocking`
 - leak in design doc without ADR ref: `needs-review`
 
-### Check 9 — AS-IS source modification (forbidden)
+### Check 9: AS-IS source modification (forbidden)
 
 Run `git status` (Bash) and verify no AS-IS source files (anything
 outside `<backend-dir>/`, `<frontend-dir>/`, `docs/refactoring/`,
@@ -147,7 +147,7 @@ workers have Edit access for some scaffolds; mistakes can leak.
 Severity:
 - AS-IS source modified: `blocking` (revert immediately)
 
-### Check 10 — Frontend navigation reachability
+### Check 10: Frontend navigation reachability
 
 Verify the user can actually reach every protected route from the UI,
 not just by typing the URL. Source of truth: `<frontend-dir>/src/app/app.routes.ts`.
@@ -157,12 +157,12 @@ public routes, and pure redirects like `{ path: '', redirectTo: ... }`):
 
 1. The path must appear in at least one `[routerLink]` / `routerLink="..."`
    / `router.navigate(['/...'])` reachable from `app.component.html`
-   transitively (the app shell — usually a `LayoutComponent` under
+   transitively (the app shell, usually a `LayoutComponent` under
    `core/layout/`).
 2. `app.component.html` must NOT contain the Angular CLI default
    placeholder strings (`Hello, {{ title }}`, `Congratulations! Your app
    is running`, `Explore the Docs`, `Learn with Tutorials`). If it does,
-   record FINDING-NAV-PLACEHOLDER as `blocking` — the app is unusable
+   record FINDING-NAV-PLACEHOLDER as `blocking`: the app is unusable
    regardless of test counts.
 3. The shell must reference the user's permissions to gate admin-only
    routes (grep `AuthService` or `hasPermission` in `layout.component.ts`).
@@ -186,7 +186,7 @@ Severity:
 - placeholder strings present → `blocking` (FINDING-NAV-PLACEHOLDER)
 - shell file absent → `blocking` (FINDING-NAV-NO-SHELL)
 - route present in `app.routes.ts` but unreferenced anywhere in
-  the UI tree → `high` (FINDING-NAV-ORPHAN-ROUTE-<slug>) — one finding
+  the UI tree → `high` (FINDING-NAV-ORPHAN-ROUTE-<slug>): one finding
   per orphan route.
 
 > Rationale: the InfoSync 2026-05 retrospective found that Phase 4

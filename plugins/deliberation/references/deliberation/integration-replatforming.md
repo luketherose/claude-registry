@@ -1,4 +1,4 @@
-# Deliberation — integration with the Replatforming Agent
+# Deliberation: integration with the Replatforming Agent
 
 How `deliberative-decision-engine` plugs into `refactoring-supervisor`
 (capability name: "Application Replatforming") at decision points
@@ -50,7 +50,7 @@ The decision points eligible for deliberation in Phases 1–3:
 | Phase 2 | Is performance hotspot P-NN a real bottleneck or a benign hot path? | Affects whether Phase 4 must replace or simply rehost |
 | Phase 3 | Should test failure F-NN be marked xfail with AS-IS bug note, or escalated as a blocking baseline failure? | Affects Phase 4 equivalence reference; xfail can mask real bugs |
 | Phase 3 | Is integration I-NN in scope for the regression baseline? | Coverage decision; out-of-scope integrations skip oracle capture |
-| Phase 1–3 | Scope-of-iteration disputes — when the user's adjustments are broad ("redo the actor map") and may invalidate downstream work, the supervisor may route the scope question itself to the engine | Avoids cascading re-dispatch that overshoots user intent |
+| Phase 1–3 | Scope-of-iteration disputes: when the user's adjustments are broad ("redo the actor map") and may invalidate downstream work, the supervisor may route the scope question itself to the engine | Avoids cascading re-dispatch that overshoots user intent |
 
 For each routed Phase 1–3 decision, the supervisor builds a brief that
 includes:
@@ -167,7 +167,7 @@ and waits for confirmation before proceeding.
 
 ## Example user invocations (recipes)
 
-### Italian — explicit prose trigger
+### Italian: explicit prose trigger
 
 > Decidi con dibattito quale strategia di migrazione usare tra
 > lift-and-shift e refactoring per il backend Spring.
@@ -177,7 +177,7 @@ Supervisor detects (`decidi con dibattito` exact match → confidence
 with default policy → engine runs the 7-step pipeline → returns a
 final decision artefact. Supervisor renders the user-facing report.
 
-### Italian — programmatic trigger from a calling tool
+### Italian: programmatic trigger from a calling tool
 
 ```json
 {
@@ -194,7 +194,7 @@ final decision artefact. Supervisor renders the user-facing report.
 Supervisor reads the JSON, routes to the engine, the engine runs with
 2 challenge rounds.
 
-### English — explicit prose trigger
+### English: explicit prose trigger
 
 > Use multi-agent debate before selecting the target architecture.
 

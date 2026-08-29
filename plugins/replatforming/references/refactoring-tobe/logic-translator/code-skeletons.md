@@ -1,4 +1,4 @@
-# Logic-translator — code skeletons
+# Logic-translator: code skeletons
 
 > Reference doc for `logic-translator`. Read at runtime when translating
 > the AS-IS Python implementation of a UC into Java service / domain code.
@@ -9,12 +9,12 @@
 The three skeletons map 1:1 to the `code scope` modes the supervisor
 passes in: `full`, `scaffold-todo` (DEFAULT), `structural`. Pick the
 matching skeleton, then fill it with the AS-IS-derived names, fields,
-and references. A fourth skeleton — state-machine method on a domain
-entity — applies in any mode when the UC involves a state transition.
+and references. A fourth skeleton: state-machine method on a domain
+entity: applies in any mode when the UC involves a state transition.
 
 ---
 
-## `full` mode — complete service implementation
+## `full` mode: complete service implementation
 
 Produce a complete service implementation:
 
@@ -88,7 +88,7 @@ public class UserService {
 
 ---
 
-## `scaffold-todo` mode (DEFAULT) — happy path + TODO markers
+## `scaffold-todo` mode (DEFAULT): happy path + TODO markers
 
 Happy path implementation + explicit TODO markers for complex branches:
 
@@ -118,12 +118,12 @@ public UserDto registerUser(String idempotencyKey, CreateUserRequest request) {
 
 The happy path runs (compiles, returns a result) but the TODOs flag
 where production-grade behavior is still missing. Phase 5 tests will
-xfail for these incomplete UCs — the same xfail pattern as Phase 3
+xfail for these incomplete UCs: the same xfail pattern as Phase 3
 AS-IS bugs.
 
 ---
 
-## `structural` mode — method signatures only
+## `structural` mode: method signatures only
 
 ```java
 public UserDto registerUser(String idempotencyKey, CreateUserRequest request) {

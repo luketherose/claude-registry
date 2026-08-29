@@ -1,7 +1,7 @@
 # Code skeletons
 
 > Reference doc for `backend-scaffolder`. Read at runtime when generating
-> Java sources (Method steps 3–5 — controllers, DTOs, services).
+> Java sources (Method steps 3–5, controllers, DTOs, services).
 
 ## Controllers
 
@@ -145,7 +145,7 @@ public class <Aggregate>Service {
 }
 ```
 
-`UnsupportedOperationException` is intentional — calling these methods in a
+`UnsupportedOperationException` is intentional: calling these methods in a
 test would fail loudly, signaling unfilled translation. Phase 5 tests will
 be xfailed for unfilled UCs (mirroring Phase 3 policy).
 

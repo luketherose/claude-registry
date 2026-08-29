@@ -1,4 +1,4 @@
-# Deliberation — commit-protocol abstraction
+# Deliberation: commit-protocol abstraction
 
 The decision committer is the final stage of Step 6. It records the
 decision artefact in a manner appropriate to the calling environment.

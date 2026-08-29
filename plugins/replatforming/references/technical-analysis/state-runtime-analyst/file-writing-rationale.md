@@ -1,4 +1,4 @@
-# File-writing rule — rationale
+# File-writing rule: rationale
 
 > Reference doc for `state-runtime-analyst`. Read on demand if a contributor
 > questions why the agent forbids `Bash` heredocs / redirects for file output.
@@ -10,13 +10,13 @@
 Content with Mermaid syntax (`A[label]`, `B{cond?}`, `A --> B`), fenced code
 blocks, or YAML/JSON with special characters contains shell metacharacters
 (`[`, `{`, `}`, `>`, `<`, `*`, `;`, `&`, `|`) that the shell interprets as
-redirection, glob expansion, or word splitting — even inside quotes when the
+redirection, glob expansion, or word splitting, even inside quotes when the
 quoting is fragile (Git Bash / MSYS2 on Windows is especially prone).
 
 A malformed heredoc produced 48 garbage files in a repo root in the Phase 2
 incident of 2026-04-28; one of them captured the output of an unrelated
 `store` command found on `$PATH`. The `state-flow-diagram.md` Mermaid output
-is the highest-risk artifact in this agent — write it via `Write`, never via
+is the highest-risk artifact in this agent: write it via `Write`, never via
 `Bash`.
 
 ## Allowed vs forbidden Bash usage

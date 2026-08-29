@@ -1,4 +1,4 @@
-# Method details — `io-catalog-analyst`
+# Method details: `io-catalog-analyst`
 
 > Reference doc for `io-catalog-analyst`. Read at runtime when first building
 > the inputs / outputs / transformations catalogs. Holds the category lists,
@@ -7,14 +7,14 @@
 
 ---
 
-## 1. Inputs catalog — categories
+## 1. Inputs catalog: categories
 
 An **input** is any data the application receives that is functionally
 meaningful (not infrastructure). Categories:
 
 - **User-supplied at the UI**:
   - Streamlit: widget values (`st.text_input`, `st.selectbox`,
-    `st.file_uploader`, `st.number_input`, `st.date_input`, ...) — every
+    `st.file_uploader`, `st.number_input`, `st.date_input`, ...): every
     widget with a `key` is a discrete input
   - Generic web: form fields, query parameters, route parameters
   - CLI: arguments, options, flags
@@ -23,11 +23,11 @@ meaningful (not infrastructure). Categories:
 - **External system pushes**: webhooks received, message queue consumers
 - **Scheduled-trigger inputs**: cron-fed parameters, batch input feeds
 - **Configuration as functional input**: feature flags, business
-  parameters in config (NOT infra config like DB host — that is
+  parameters in config (NOT infra config like DB host, that is
   infrastructure)
 
 Do NOT catalog as functional inputs:
-- DB queries (those are internal data access — see `data-flow-analyst`'s
+- DB queries (those are internal data access, see `data-flow-analyst`'s
   output, not yours)
 - HTTP outbound calls to external APIs (these are part of transformations,
   not user inputs)
@@ -35,7 +35,7 @@ Do NOT catalog as functional inputs:
 
 ---
 
-## 2. Outputs catalog — categories
+## 2. Outputs catalog: categories
 
 An **output** is any data the application emits that is functionally
 meaningful. Categories:
@@ -61,7 +61,7 @@ Do NOT catalog as functional outputs:
 
 ---
 
-## 3. Transformation matrix — what to capture
+## 3. Transformation matrix: what to capture
 
 A **transformation** is a documented mapping from one or more inputs to
 one or more outputs. For each transformation, capture:
@@ -71,10 +71,10 @@ one or more outputs. For each transformation, capture:
 - **Inputs consumed**: list of IN-IDs
 - **Outputs produced**: list of OUT-IDs
 - **Business rules applied** (high-level): "validates email format",
-  "converts currency to EUR", "aggregates by month" — reference
+  "converts currency to EUR", "aggregates by month": reference
   `.indexing-kb/07-business-logic/business-rules.md` where possible
 - **Side effects** (mention but do not detail): "writes to DB",
-  "sends email" — these are noted because they affect the user's
+  "sends email": these are noted because they affect the user's
   observation of output completion
 
 Common patterns:
@@ -94,7 +94,7 @@ If stack mode is `streamlit`:
 - `st.cache_data`-decorated functions: their **arguments** are inputs to
   the cached transformation; their **return value** is an output (often
   re-rendered downstream).
-- `st.session_state` is **not an input or output by itself** — it is
+- `st.session_state` is **not an input or output by itself**: it is
   internal state. But session_state keys that are SET from widget inputs
   on one screen and READ as inputs to transformations on another screen
   represent a **cross-screen input flow**: capture this in the

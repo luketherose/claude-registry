@@ -1,9 +1,9 @@
-# Codebase mapper — stack detection markers
+# Codebase mapper: stack detection markers
 
 > Reference doc for `codebase-mapper`. Read at runtime during the
 > stack-detection step (populating `stack.json`).
 
-Apply the markers below in order. Multiple markers can match — emit them
+Apply the markers below in order. Multiple markers can match: emit them
 all in `languages[]` and `frameworks[]`. Pick `primary_language` as the one
 with most LOC (ties broken by alphabetic order).
 

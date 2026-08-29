@@ -17,7 +17,7 @@ docker run --rm -v "$(pwd)/zap:/zap/wrk" \
 ```
 
 Document expected scan duration and run instructions in the report.
-The supervisor will not run the scan automatically — it's an opt-in
+The supervisor will not run the scan automatically. It's an opt-in
 gate for the user.
 
 ## Output layout addendum

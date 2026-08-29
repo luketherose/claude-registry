@@ -1,4 +1,4 @@
-# Logic-translator — output / reporting templates
+# Logic-translator: output / reporting templates
 
 > Reference doc for `logic-translator`. Read at runtime when assembling
 > the supervisor-facing report. The agent body keeps the canonical list

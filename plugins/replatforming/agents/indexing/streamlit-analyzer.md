@@ -1,6 +1,6 @@
 ---
 name: streamlit-analyzer
-description: "Use this agent to analyze Streamlit-specific concerns: pages, session_state usage, widgets, caching, navigation, custom components, and migration-relevant anti-patterns. Framework-specific analyzer invoked **only** when `streamlit` is detected in `stack.frameworks` (the canonical AS-IS stack manifest produced by `codebase-mapper`); otherwise the indexing-supervisor skips this agent entirely. Critical for migration since Streamlit's reactive script-as-page model has no direct equivalent in conventional web frameworks (the migration target decided in Phase 4 — typically Angular/React/Vue/Qwik via `developer-frontend` — must explicitly reproduce the rerun semantics)."
+description: "Use this agent to analyze Streamlit-specific concerns: pages, session_state usage, widgets, caching, navigation, custom components, and migration-relevant anti-patterns. Framework-specific analyzer invoked **only** when `streamlit` is detected in `stack.frameworks` (the canonical AS-IS stack manifest produced by `codebase-mapper`); otherwise the indexing-supervisor skips this agent entirely. Critical for migration since Streamlit's reactive script-as-page model has no direct equivalent in conventional web frameworks (the migration target decided in Phase 4, typically Angular/React/Vue/Qwik via `developer-frontend`, must explicitly reproduce the rerun semantics)."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -33,7 +33,7 @@ Do NOT use this agent for: non-Streamlit Python apps (the supervisor skips this 
 - Streamlit detection signal (so you know it's confirmed)
 
 If you find no actual Streamlit usage in the source, write `status: needs-review`
-and stop — do not invent content.
+and stop. Do not invent content.
 
 ## Method
 
@@ -108,7 +108,7 @@ Flag these explicitly because they make migration harder:
 | Artifact | Path | Tier |
 |---|---|---|
 | Framework findings (JSONL) | `.indexing-kb/silver/framework-findings.jsonl` | Silver |
-| UI surfaces (JSON) | `.indexing-kb/bronze/ui-surfaces.json` | Bronze — deterministic |
+| UI surfaces (JSON) | `.indexing-kb/bronze/ui-surfaces.json` | Bronze: deterministic |
 | Human-readable docs | `.indexing-kb/05-streamlit/` | Human |
 
 ## Evidence and grounding
@@ -244,7 +244,7 @@ heredocs (`cat <<EOF > file`), echo redirects (`echo ... > file`),
 generation. Mermaid navigation-graph syntax (`A[page]`, `B{cond?}`,
 `A --> B`) and code blocks contain shell metacharacters (`[`, `{`,
 `}`, `>`, `<`, `*`) that the shell interprets as redirection, glob
-expansion, or word splitting — even inside quotes (Git Bash / MSYS2 on
+expansion, or word splitting, even inside quotes (Git Bash / MSYS2 on
 Windows is especially fragile). A malformed heredoc produced 48 garbage
 files in a repo root in the Phase 2 incident of 2026-04-28. Bash is
 allowed only for read-only inspection. No third path.
@@ -257,7 +257,7 @@ allowed only for read-only inspection. No third path.
 - Do not modify any source file.
 - Do not write outside `.indexing-kb/` (allowed paths:
   `05-streamlit/`, `silver/`, `bronze/`, and `evidence-ledger.jsonl`).
-- Truncate inline HTML/JS snippets to 80 chars in the KB — full content stays
+- Truncate inline HTML/JS snippets to 80 chars in the KB: full content stays
   in source.
 - **All file output via `Write`**, never via `Bash` heredoc/redirect.
   See § File-writing rule above.

@@ -1,4 +1,4 @@
-# Component & service test patterns — frontend-test-writer
+# Component & service test patterns: frontend-test-writer
 
 > Reference doc for `frontend-test-writer`. Read at runtime when authoring
 > component or service unit tests for the Angular 17+ TO-BE workspace.

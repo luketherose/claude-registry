@@ -1,4 +1,4 @@
-# `01-equivalence-report.md` — template
+# `01-equivalence-report.md`: template
 
 > Reference doc for `equivalence-synthesizer`. Read at runtime when assembling
 > the deliverable equivalence report (W4 of Phase 5).

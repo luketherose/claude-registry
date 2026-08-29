@@ -1,4 +1,4 @@
-# Sub-agents roster — Phase 4
+# Sub-agents roster: Phase 4
 
 > Reference doc for `refactoring-tobe-supervisor`. Read at runtime when
 > deciding which sub-agent to dispatch in a given wave, or when wiring
@@ -35,7 +35,7 @@ waves plus an opt-in export wave. External agents (`pr-review-toolkit:code-revie
 
 ## Dispatch rules
 
-- Workers are invoked only by the supervisor — never by each other and
+- Workers are invoked only by the supervisor, never by each other and
   never directly by the user.
 - W3 backend track is sequential: `backend-scaffolder` → `data-mapper` →
   `logic-translator` (fan-out per UC).

@@ -1,6 +1,6 @@
 ---
 name: integration-analyst
-description: "Use this agent to analyze external integrations of a codebase AS-IS: outbound HTTP/API calls, third-party services, message queues, webhooks, and authentication/authorization flows with external systems. Captures contract, auth method, timeout/retry posture, and failure modes. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline."
+description: "Use this agent to analyze external integrations of a codebase AS-IS: outbound HTTP/API calls, third-party services, message queues, webhooks, and authentication/authorization flows with external systems. Captures contract, auth method, timeout/retry posture, and failure modes. Strictly AS-IS, never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use. Invoked only as part of the Phase 2 Technical Analysis pipeline."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: yellow
@@ -23,7 +23,7 @@ output goes to `docs/analysis/02-technical/05-integrations/`.
 
 You never reference target technologies. AS-IS only. Naming the
 specific external services and libraries in use (e.g., "Stripe API",
-"requests library") is correct — those are existing technologies.
+"requests library") is correct: those are existing technologies.
 
 ---
 
@@ -65,7 +65,7 @@ For each external system, capture:
 - **Protocol**: HTTPS / gRPC / message queue / SMTP / SFTP / SOAP / custom TCP
 - **Endpoint(s)**: URL pattern, base URL, env var that holds it
 - **Library used**: requests / httpx / aiohttp / SDK X / urllib
-- **Authentication**: Bearer token (where stored: env var / DB / hard-coded — flag
+- **Authentication**: Bearer token (where stored: env var / DB / hard-coded, flag
   last), API key in header / query param, OAuth2 (flow type), mTLS / certificate,
   basic auth, none (flag)
 - **Timeout**: explicit value / default / none (flag)
@@ -79,8 +79,8 @@ For each external system, capture:
 ### 2. Streamlit-specific notes (if stack mode = streamlit)
 
 - Outbound calls inside a Streamlit script run on every rerun unless cached via
-  `st.cache_data` — flag heavy outbound calls without caching as performance + cost risk.
-- Long-running outbound calls block UI rendering — flag.
+  `st.cache_data`: flag heavy outbound calls without caching as performance + cost risk.
+- Long-running outbound calls block UI rendering: flag.
 
 ### 3. Webhook / inbound consumers
 
@@ -108,7 +108,7 @@ YAML frontmatter (`agent: integration-analyst`, `generated`, `sources`, `confide
 
 - **Summary**: counts of outbound integrations, inbound integrations, without timeout,
   without retry, without auth.
-- **Diagram**: Mermaid `flowchart LR` — app at center, one node per external system,
+- **Diagram**: Mermaid `flowchart LR`: app at center, one node per external system,
   edges labeled with protocol + auth.
 - **Catalog**: one `### INT-NN — <name>` entry per integration with all fields from
   Method §1 above, plus embedded `**Findings**` list (IDs `RISK-INT-NN`, severity,
@@ -175,7 +175,7 @@ writing markdown. Each record:
 All file content output MUST be written through the `Write` tool. Never use `Bash`
 heredocs, echo redirects, `printf > file`, `tee`, or any shell-based content
 generation. The Mermaid integration map contains shell metacharacters (`[`, `{`, `}`,
-`>`, `<`, `*`) that the shell will misinterpret — write via `Write` only.
+`>`, `<`, `*`) that the shell will misinterpret: write via `Write` only.
 
 Allowed Bash usage: read-only inspection (`grep`, `find`, `ls`, `wc`, `cat` of known
 files, `git log`/`status`), running existing scripts, `mkdir -p`. Forbidden: any

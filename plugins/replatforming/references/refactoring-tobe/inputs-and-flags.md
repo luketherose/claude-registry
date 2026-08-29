@@ -1,4 +1,4 @@
-# Inputs and bootstrap flags — Phase 4
+# Inputs and bootstrap flags: Phase 4
 
 > Reference doc for `refactoring-tobe-supervisor`. Read at runtime
 > during Phase 0 bootstrap to validate inputs and parse user-supplied

@@ -1,10 +1,10 @@
-# Mermaid sequence-diagram templates — `user-flow-analyst`
+# Mermaid sequence-diagram templates: `user-flow-analyst`
 
 > Reference doc for `user-flow-analyst`. Read at runtime when drawing
 > sequence diagrams per UC.
 
 Use these skeletons as the starting point for every UC diagram. Streamlit
-mode reruns are first-class — never hide them.
+mode reruns are first-class, never hide them.
 
 ---
 
@@ -59,11 +59,11 @@ sequenceDiagram
 
 For each non-trivial UC, the diagram MUST show:
 
-- **actor lanes** — every primary and secondary actor referenced in the UC
-- **screen / component lanes** — every S-NN involved in the flow
-- **state lane** — `session_state` for Streamlit, omitted for generic
-- **transformation lanes** — every TR-NN invoked
-- **input/output annotations** — IN-NN and OUT-NN as message payloads
+- **actor lanes**: every primary and secondary actor referenced in the UC
+- **screen / component lanes**: every S-NN involved in the flow
+- **state lane**: `session_state` for Streamlit, omitted for generic
+- **transformation lanes**: every TR-NN invoked
+- **input/output annotations**: IN-NN and OUT-NN as message payloads
 
 ---
 
@@ -73,11 +73,11 @@ When the same shape repeats across UCs, lift it into
 `08-sequence-diagrams.md` under "Cross-cutting patterns" and reference it
 from each UC instead of redrawing. Typical reusable patterns:
 
-- **Filter → rerun → render** (Streamlit-specific) — shared across any UC
+- **Filter → rerun → render** (Streamlit-specific): shared across any UC
   that mutates a filter widget.
-- **Wizard step transition** — page that branches on
+- **Wizard step transition**: page that branches on
   `st.session_state.step` and reruns to render the next step.
-- **Callback chain** — `on_change`/`on_click` mutates state and cascades
+- **Callback chain**: `on_change`/`on_click` mutates state and cascades
   into further reruns.
-- **Forced rerun** — `st.rerun()` invoked explicitly; flag the UC as "uses
+- **Forced rerun**: `st.rerun()` invoked explicitly; flag the UC as "uses
   forced rerun" in Notes.

@@ -1,6 +1,6 @@
-# Phase 5 — Sub-agents catalogue
+# Phase 5: Sub-agents catalogue
 
-> Reference doc for `tobe-testing-supervisor`. Read at runtime when planning a wave's dispatch — confirms which sub-agent owns which output target and which wave it belongs to.
+> Reference doc for `tobe-testing-supervisor`. Read at runtime when planning a wave's dispatch: confirms which sub-agent owns which output target and which wave it belongs to.
 
 ## Sub-agents available (Sonnet)
 
@@ -15,7 +15,7 @@
 | `equivalence-synthesizer` | W4 | `01-equivalence-report.md`, `README.md`, `00-context.md` |
 | `tobe-testing-challenger` | W5 (always ON) | `_meta/challenger-report.md`, appends to `14-unresolved-questions.md` |
 
-## External agents (follow-up only — not dispatched inline)
+## External agents (follow-up only, not dispatched inline)
 
-- `pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed) — invoked separately on PRs touching TO-BE test code.
-- `debugger` — invoked separately when an equivalence failure has unclear root cause (e.g., snapshot diff that doesn't match any known bug).
+- `pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed): invoked separately on PRs touching TO-BE test code.
+- `debugger`: invoked separately when an equivalence failure has unclear root cause (e.g., snapshot diff that doesn't match any known bug).

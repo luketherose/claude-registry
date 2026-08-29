@@ -1,9 +1,9 @@
-# Deliberative Decision Engine — Supervisor Protocol
+# Deliberative Decision Engine: Supervisor Protocol
 
 Read this document when executing any step of the 7-step deliberative
 pipeline. It contains: inputs contract, default policy, full per-step
 execution rules, final-report schema, failure-handling rules, and hard
-constraints. Do not preemptively load — read on demand per step.
+constraints. Do not preemptively load. Read on demand per step.
 
 ---
 
@@ -71,8 +71,8 @@ require_human_approval: false
 - **Context** (string, required): the situation and what you have read.
 - **Options** (list, optional): if pre-enumerated; otherwise the proposer enumerates.
 - **Constraints** (list, optional): hard limits on viable options.
-- **Risk level** (`low | medium | high | irreversible`, optional — inferred otherwise).
-- **`deliberationPolicy`** (object, optional — see schema below; defaults applied if omitted).
+- **Risk level** (`low | medium | high | irreversible`, optional, inferred otherwise).
+- **`deliberationPolicy`** (object, optional; see schema below; defaults applied if omitted).
 
 Read all available repository state relevant to the decision before framing:
 `.indexing-kb/`, `docs/analysis/01-functional/`, `docs/analysis/02-technical/`,
@@ -102,7 +102,7 @@ Document any override in the audit manifest.
 
 ---
 
-## Step 0 — Trigger detection and task classification
+## Step 0: Trigger detection and task classification
 
 When invoked from raw user prose, run the trigger detector before anything
 else. Match against the IT/EN trigger lexicon in
@@ -122,7 +122,7 @@ Refuse to over-trigger on casual mentions ("we should debate this later",
 "the team is critical of X"). Trigger only when the user is clearly asking
 the system to use deliberation, debate, critique, red-team review,
 multi-agent decision-making, or a robust decision process. If unsure, state
-the ambiguity and proceed standard — do not auto-deliberate.
+the ambiguity and proceed standard. Do not auto-deliberate.
 
 If `decisionMode: deliberative` is set in the dispatch JSON, skip prose
 detection and treat the request as confirmed.
@@ -153,7 +153,7 @@ and always for `high` / `irreversible`) and `debateRounds` (1 default; 2 for
 
 ---
 
-## Step 1 — Decision framing (decision brief)
+## Step 1: Decision framing (decision brief)
 
 Produce the structured brief at
 `<repo>/.deliberation-kb/<trace-id>/00-decision-brief.json`. Schema in
@@ -169,7 +169,7 @@ drafting; you never let them anchor on each other's output.
 
 ---
 
-## Step 2 — Independent persona drafts (anti-anchoring)
+## Step 2: Independent persona drafts (anti-anchoring)
 
 Dispatch 3 or 5 personas **in a single message with multiple Agent calls in
 parallel**. Each persona receives only the decision brief, never any other
@@ -177,11 +177,11 @@ persona's output. Personas are dispatched as separate `Agent` calls so they
 cannot see each other's running context.
 
 5-persona default roster:
-- `debate-proposer` — Primary Architect / Proposer
-- `debate-critic` — Skeptical Critic
-- `debate-replatforming-specialist` — Migration / Replatforming Specialist
-- `debate-risk-reviewer` — Security / Compliance / Risk Reviewer
-- `debate-operations-reviewer` — Operations / Reliability Reviewer
+- `debate-proposer`: Primary Architect / Proposer
+- `debate-critic`: Skeptical Critic
+- `debate-replatforming-specialist`: Migration / Replatforming Specialist
+- `debate-risk-reviewer`: Security / Compliance / Risk Reviewer
+- `debate-operations-reviewer`: Operations / Reliability Reviewer
 
 3-persona reduced roster (only when policy `agentCount: 3`):
 - `debate-proposer`
@@ -200,18 +200,18 @@ with a failure artefact (never silently proceed with fewer than 3 drafts).
 
 ---
 
-## Step 3 — Neutral structured evidence summary
+## Step 3: Neutral structured evidence summary
 
 Dispatch `debate-judge` in summariser mode. It reads all drafts and produces
 `02-evidence-summary.json` per the schema. The judge does **not** decide at
-this stage — it only structures areas of agreement, disagreement, strongest /
+this stage. It only structures areas of agreement, disagreement, strongest /
 weakest evidence, unsupported claims, critical risks, decision-criteria matrix,
 options still viable, options rejected, and missing information. Refuse a judge
 output that contains a recommendation in this step; reject and retry.
 
 ---
 
-## Step 4 — Challenge round
+## Step 4: Challenge round
 
 Dispatch all personas in parallel again, this time giving each one (a) the
 decision brief, (b) the evidence summary, (c) every other persona's draft. Each
@@ -225,7 +225,7 @@ personas can challenge the rebuttals. Both rounds are stored under
 
 ---
 
-## Step 5 — Rebuttal round
+## Step 5: Rebuttal round
 
 Dispatch all personas again, in parallel. Each receives the challenges addressed
 at it and produces a rebuttal artefact at `04-rebuttals/<role>.json` per the
@@ -234,7 +234,7 @@ on the recommendation, the final position, and the final confidence.
 
 ---
 
-## Step 6 — Convergence and final decision
+## Step 6: Convergence and final decision
 
 Pick the final-decision strategy according to the rules in
 `docs/deliberation/strategy-selection.md`. Hard rules:
@@ -255,7 +255,7 @@ Pick the final-decision strategy according to the rules in
 
 For `judge_arbitration`, dispatch `debate-judge` in arbitration mode with all
 artefacts. The judge produces a synthesis that explicitly addresses each
-unresolved high-severity objection — refuse a judge output that silently drops
+unresolved high-severity objection. Refuse a judge output that silently drops
 one.
 
 For `human_arbitration`, produce the final artefact in `pending_human_approval`
@@ -268,7 +268,7 @@ schema. Required fields: `decision`, `decisionType`, `selectedOption`,
 `dissentingOpinions`, `riskAssessment`, `confidence`, `confidenceRationale`,
 `requiredHumanApproval`, `validationPlan`, `rollbackPlan`, `implementationPlan`,
 `commitProtocol`, `auditTrailId`. Dissent is **mandatory** when any persona's
-final position differs from the selected option — never claim consensus when it
+final position differs from the selected option. Never claim consensus when it
 does not exist.
 
 Then run the **decision committer** for the chosen `commitProtocol`. The
@@ -287,18 +287,18 @@ failure events, and the path to every artefact.
 After Step 6, output a Markdown report to the user with these sections, in this
 order:
 
-1. **Decision** — what was decided (one-liner).
-2. **Why** — rationale, evidence summary.
-3. **Alternatives considered** — option-by-option with why-rejected.
-4. **Objections raised** — by severity, who raised them, what happened.
-5. **Objections that changed the decision** — explicit list (or "none").
-6. **Dissenting opinions** — preserved verbatim, with persona identity.
-7. **Residual risks** — what remains after the decision.
-8. **Validation plan** — how we will know it worked.
-9. **Rollback plan** — how we revert if it didn't.
-10. **Human approval** — required (yes/no) and why; if pending, the explicit
+1. **Decision**: what was decided (one-liner).
+2. **Why**: rationale, evidence summary.
+3. **Alternatives considered**: option-by-option with why-rejected.
+4. **Objections raised**: by severity, who raised them, what happened.
+5. **Objections that changed the decision**: explicit list (or "none").
+6. **Dissenting opinions**: preserved verbatim, with persona identity.
+7. **Residual risks**: what remains after the decision.
+8. **Validation plan**: how we will know it worked.
+9. **Rollback plan**: how we revert if it didn't.
+10. **Human approval**: required (yes/no) and why; if pending, the explicit
     question for the human.
-11. **Audit trail** — the trace ID and the path tree.
+11. **Audit trail**: the trace ID and the path tree.
 
 Never compress this report on grounds of cost / latency.
 

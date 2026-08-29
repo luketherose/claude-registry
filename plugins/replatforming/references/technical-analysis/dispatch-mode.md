@@ -1,4 +1,4 @@
-# Phase 2 — Dispatch-mode decision (parallel / batched / sequential)
+# Phase 2: Dispatch-mode decision (parallel / batched / sequential)
 
 > Reference doc for `technical-analysis-supervisor`. Read at runtime when deciding the W1 dispatch mode.
 

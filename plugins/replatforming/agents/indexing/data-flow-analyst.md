@@ -1,6 +1,6 @@
 ---
 name: data-flow-analyst
-description: "Use this agent to identify all data crossings between the application and the outside world: database access, external API calls, file I/O, environment variables, and configuration sources. Language-agnostic — reads `02-structure/stack.json` to know which language and ORM/HTTP/I/O libraries' patterns to grep for. Does not interpret what the data means — only where it crosses the system boundary."
+description: "Use this agent to identify all data crossings between the application and the outside world: database access, external API calls, file I/O, environment variables, and configuration sources. Language-agnostic: reads `02-structure/stack.json` to know which language and ORM/HTTP/I/O libraries' patterns to grep for. Does not interpret what the data means. Only where it crosses the system boundary."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -23,7 +23,7 @@ to `.indexing-kb/06-data-flow/`.
 
 ## When to invoke
 
-- **Phase 0 boundary inventory.** Identifies every place where data crosses the application boundary: database access, external API calls, file I/O, environment variables, configuration sources. Does not interpret what the data means — only WHERE it crosses. Output at `.indexing-kb/06-data-flow/`.
+- **Phase 0 boundary inventory.** Identifies every place where data crosses the application boundary: database access, external API calls, file I/O, environment variables, configuration sources. Does not interpret what the data means. Only WHERE it crosses. Output at `.indexing-kb/06-data-flow/`.
 - **Pre-migration data audit.** When the team needs the full external-touchpoint inventory before designing Phase 4's TO-BE persistence and integration layers.
 
 Do NOT use this agent for: business semantics of the data (use `business-logic-analyst`), per-module API documentation (use `module-documenter`), or implicit logic embedded in UI.
@@ -32,12 +32,12 @@ Do NOT use this agent for: business semantics of the data (use `business-logic-a
 
 Pattern catalogues and on-disk output schemas live in
 `${CLAUDE_PLUGIN_ROOT}/references/indexing/data-flow-analyst/` and are read on demand.
-Read each doc only at the matching step — not preemptively.
+Read each doc only at the matching step, not preemptively.
 
 | Doc | Read when |
 |---|---|
-| `detection-patterns.md` | starting any of the five detection passes (DB, HTTP, file I/O, env vars, config) — provides the per-language/library grep patterns |
-| `output-schemas.md` | about to `Write` one of the four output files under `.indexing-kb/06-data-flow/` — provides the frontmatter and section skeletons |
+| `detection-patterns.md` | starting any of the five detection passes (DB, HTTP, file I/O, env vars, config): provides the per-language/library grep patterns |
+| `output-schemas.md` | about to `Write` one of the four output files under `.indexing-kb/06-data-flow/`: provides the frontmatter and section skeletons |
 
 ---
 
@@ -45,7 +45,7 @@ Read each doc only at the matching step — not preemptively.
 
 - Repo root
 - List of top-level packages (in scope)
-- `02-structure/stack.json` — must be consulted for language-aware
+- `02-structure/stack.json`: must be consulted for language-aware
   pattern selection
 
 ## Method
@@ -87,13 +87,13 @@ format, what loads it, where the loaded values are used.
 
 | Artifact | Path | Tier |
 |---|---|---|
-| I/O boundaries (JSONL) | `.indexing-kb/bronze/io-boundaries.jsonl` | Bronze — deterministic |
-| Config/env index (JSONL) | `.indexing-kb/bronze/config-env-index.jsonl` | Bronze — deterministic |
-| Data flows (JSONL) | `.indexing-kb/silver/data-flows.jsonl` | Silver — agentic |
-| Integration points (JSONL) | `.indexing-kb/silver/integration-points.jsonl` | Silver — agentic |
+| I/O boundaries (JSONL) | `.indexing-kb/bronze/io-boundaries.jsonl` | Bronze: deterministic |
+| Config/env index (JSONL) | `.indexing-kb/bronze/config-env-index.jsonl` | Bronze: deterministic |
+| Data flows (JSONL) | `.indexing-kb/silver/data-flows.jsonl` | Silver: agentic |
+| Integration points (JSONL) | `.indexing-kb/silver/integration-points.jsonl` | Silver: agentic |
 | Human-readable docs | `.indexing-kb/06-data-flow/` | Human |
 
-JSONL schemas with `evidence_ids` are in `output-schemas.md` — read that
+JSONL schemas with `evidence_ids` are in `output-schemas.md`: read that
 doc before writing any bronze or silver file.
 
 ## Evidence and grounding
@@ -131,7 +131,7 @@ following the schemas in `output-schemas.md`:
 | `configuration.md` | env vars used, config files, settings/configuration classes |
 
 All four files share the standard frontmatter (`agent`, `generated`,
-`source_files`, `confidence`, `status`) — see `output-schemas.md`.
+`source_files`, `confidence`, `status`), see `output-schemas.md`.
 
 ## Open questions
 
@@ -164,7 +164,7 @@ variable, template, heredoc, or piped input.
   with `<redacted>`.
 - **Do not interpret what the data means semantically** (that is
   `business-logic-analyst`).
-- **Do not classify operations as "should migrate to X"** — that is a
+- **Do not classify operations as "should migrate to X"**. That is a
   later phase.
 - **Do not write outside `.indexing-kb/`** (allowed paths:
   `06-data-flow/`, `bronze/`, `silver/`, and `evidence-ledger.jsonl`).

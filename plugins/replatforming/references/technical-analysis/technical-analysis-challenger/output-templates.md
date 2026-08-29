@@ -1,4 +1,4 @@
-# Technical-analysis-challenger — output templates
+# Technical-analysis-challenger: output templates
 
 > Reference doc for `technical-analysis-challenger`. Read at runtime when about
 > to write the challenger report and append findings to the unresolved-questions
@@ -24,7 +24,7 @@ underlying finding's severity.
 
 ---
 
-## File 1 — `_meta/challenger-report.md`
+## File 1: `_meta/challenger-report.md`
 
 ```markdown
 ---
@@ -125,7 +125,7 @@ complete and must escalate.
 
 ---
 
-## File 2 — appended section in `14-unresolved-questions.md`
+## File 2: appended section in `14-unresolved-questions.md`
 
 You **append** (not overwrite) a section:
 
@@ -159,7 +159,7 @@ addressed somewhere in the analysis:
   documented? Streamlit DOES isolate session_state per browser
   session, but this is often misunderstood and worth confirming.
 - **Multipage state leaks**: keys read on page B but written on
-  page A — do they have proper init? Should be in `state-runtime`.
+  page A: do they have proper init? Should be in `state-runtime`.
 - **`st.cache_resource` mutation**: cached resources (DB connections,
   models) returned and mutated by callers? Subtle bug.
 - **No native auth**: Streamlit has no built-in login. Is there a

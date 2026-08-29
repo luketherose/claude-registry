@@ -1,4 +1,4 @@
-# Output rules — file-writing and push policy
+# Output rules: file-writing and push policy
 
 > Reference doc for `wiki-writer`. Read at runtime when about to write
 > Markdown files or push to the wiki remote. These rules are
@@ -14,7 +14,7 @@ All Markdown content output MUST be written through the `Write` tool
 generation. Markdown content with code fences, sidebars, and tables
 contains shell metacharacters (`[`, `{`, `}`, `>`, `<`, `*`, `;`, `&`,
 `|`) that the shell interprets as redirection, glob expansion, or
-word splitting — even inside quotes (Git Bash / MSYS2 on Windows is
+word splitting, even inside quotes (Git Bash / MSYS2 on Windows is
 especially fragile).
 
 Allowed Bash usage: read-only inspection (`grep`, `find`, `ls`, `wc`,
@@ -39,7 +39,7 @@ The intended flow is:
    sync command in the final summary.
 
 If the user explicitly says "push the wiki now", you may run the
-clone-copy-commit-push sequence — but only after re-stating the
+clone-copy-commit-push sequence, but only after re-stating the
 target URL and getting one final confirmation.
 
 ## Quality-gate checklist

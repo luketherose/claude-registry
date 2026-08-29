@@ -1,4 +1,4 @@
-# Orchestrator — dispatch templates and synthesis schema
+# Orchestrator: dispatch templates and synthesis schema
 
 > Reference doc for `orchestrator`. Read at runtime when the agent is about to
 > dispatch sub-agents (Step 5) or compose the final response (Step 6 + Output
@@ -20,7 +20,7 @@ degrades into a dump of raw agent outputs.
 | The phase plan produced in Step 3 | Phase number, mode (parallel/sequential), subtasks | yes |
 | The outputs of completed phases | File paths, summaries, decisions made | yes (for Step 6) |
 
-## Sub-agent dispatch prompt — template
+## Sub-agent dispatch prompt: template
 
 Every Agent invocation prompt the orchestrator sends must follow this shape:
 
@@ -57,7 +57,7 @@ Rules:
 - **Bounded.** State clearly what is in scope and what is not. Specialists
   expand scope if you don't constrain them.
 
-## Parallel vs sequential dispatch — mechanics
+## Parallel vs sequential dispatch: mechanics
 
 - **Parallel phases**: launch all agents in that phase **in a single message
   with multiple Agent tool calls**. This is the only way they actually run in
@@ -73,10 +73,10 @@ Use it when:
 - Long-running parallel work should not contaminate the main branch.
 - Agents produce PRs independently.
 
-Skip it for read-only or non-conflicting parallel work — the worktree overhead
+Skip it for read-only or non-conflicting parallel work. The worktree overhead
 is not free.
 
-## Output — final response skeleton
+## Output: final response skeleton
 
 For non-trivial orchestrations, structure the final response like this:
 
@@ -101,18 +101,18 @@ followed by the synthesis section only.
 
 ## Synthesis rules (Step 6 expanded)
 
-1. **Collect every agent's output** — record what each one produced (file
+1. **Collect every agent's output**: record what each one produced (file
    paths created/modified, content summaries, decisions made).
 2. **Detect conflicts**: did two agents produce contradictory recommendations?
    Inconsistent type names? Misaligned API contracts? Different naming
-   conventions? Address each conflict explicitly — either resolve it (one
+   conventions? Address each conflict explicitly: either resolve it (one
    wins) or surface it to the user with a recommendation.
 3. **Detect gaps**: did anything fall between agents? Cross-cutting concerns
    that no single agent owned (logging, error handling, security,
    observability)? Either dispatch a follow-up agent or note the gap in the
    synthesis.
 4. **Produce the unified response**: organise the synthesis by **deliverable**,
-   not by agent. The user does not care which agent produced what — they care
+   not by agent. The user does not care which agent produced what. They care
    what was delivered, what changed, and what remains.
 
 Synthesis is the part that distinguishes orchestration from delegation. Without

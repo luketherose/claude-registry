@@ -65,7 +65,7 @@ session expired)
 
 **Rule for the framework agent**: pick the closest Bricks component
 before designing anything custom. If a custom component is unavoidable,
-flag the gap with `// TODO: bricks-gap — confirm with WeAreDesign before
+flag the gap with `// TODO: bricks-gap, confirm with WeAreDesign before
 go-live`.
 
 ---

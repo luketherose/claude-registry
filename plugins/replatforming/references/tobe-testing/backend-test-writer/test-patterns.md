@@ -3,7 +3,7 @@
 > Reference doc for `backend-test-writer`. Read at runtime when authoring
 > the JUnit 5 + Mockito + Testcontainers + Spring Cloud Contract suite.
 > Decision logic (coverage policy, constraints, bug carry-over) stays in
-> the agent body — this doc only carries the verbatim test-class
+> the agent body: this doc only carries the verbatim test-class
 > skeletons and Groovy DSL templates.
 
 ## Goal
@@ -11,7 +11,7 @@
 Provide copy-and-adapt templates for the four canonical test layers
 authored by `backend-test-writer`:
 
-1. Unit test (service) — JUnit 5 + Mockito, no Spring context.
+1. Unit test (service): JUnit 5 + Mockito, no Spring context.
 2. Integration test (full Spring + Testcontainers).
 3. Contract test (Spring Cloud Contract producer DSL).
 4. Error contract test (RFC 7807 ProblemDetail).

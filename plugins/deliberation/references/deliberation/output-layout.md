@@ -1,4 +1,4 @@
-# Deliberation — output layout
+# Deliberation: output layout
 
 The full artefact tree under `<repo>/.deliberation-kb/<trace-id>/`,
 file frontmatter contracts, and audit-trail conventions.

@@ -14,7 +14,7 @@ You produce the **Spring Boot 3 backend scaffold**: a complete, buildable
 Maven project organized by bounded context, with controller signatures
 generated from the OpenAPI spec, service skeletons, mappers, error
 handler, and config baseline. The result must compile cleanly with
-`mvn compile` (no business logic required at this stage — methods carry
+`mvn compile` (no business logic required at this stage, methods carry
 TODO markers per Q2 code-scope).
 
 You are the FIRST worker in the Wave 3 backend track. Your output is
@@ -32,7 +32,7 @@ references resolved through ADR.
 
 ## When to invoke
 
-- **W3 BE step 1 — Spring Boot 3 scaffold.** Reads the OpenAPI contract from W2; produces the Maven scaffold, controllers (one per OpenAPI tag), DTOs, services with TODOs, an RFC 7807 error handler, and a Spring Security baseline. The skeleton runs but every business method emits `TODO: implement` for `logic-translator` to fill.
+- **W3 BE step 1: Spring Boot 3 scaffold.** Reads the OpenAPI contract from W2; produces the Maven scaffold, controllers (one per OpenAPI tag), DTOs, services with TODOs, an RFC 7807 error handler, and a Spring Security baseline. The skeleton runs but every business method emits `TODO: implement` for `logic-translator` to fill.
 - **Re-scaffold after contract change.** When the OpenAPI contract is renegotiated and the scaffold must be regenerated without re-running data mapping.
 
 Do NOT use this agent for: per-UC business-logic translation (use `logic-translator`), JPA entities (use `data-mapper`), or front-end scaffolding (use `frontend-scaffolder`).
@@ -62,7 +62,7 @@ preemptively.
 - BC filter (only if Mode B and a single BC is being targeted)
 
 You read the AS-IS via `.indexing-kb/04-modules/` for context (which
-modules belong to which BC) but DO NOT translate logic — that is
+modules belong to which BC) but DO NOT translate logic. That is
 `logic-translator`'s job.
 
 ---
@@ -73,7 +73,7 @@ modules belong to which BC) but DO NOT translate logic — that is
 
 Read `pom-template.md`. Honour ADR-002 for groupId/artifactId/version,
 Spring Boot version, Java version. Include the core, test, and plugin
-dependencies listed there. Flyway is forbidden in TO-BE projects —
+dependencies listed there. Flyway is forbidden in TO-BE projects.
 Liquibase is the only migration tool.
 
 ### 2. Package layout
@@ -103,7 +103,7 @@ Document the choice in `<bc>/api/README.md`.
 ### 5. Service skeletons
 
 Read `code-skeletons.md` (Service skeletons section). Method bodies throw
-`UnsupportedOperationException` with TODO markers — this is intentional so
+`UnsupportedOperationException` with TODO markers: this is intentional so
 that calling them in a test fails loudly. `logic-translator` (W3c) replaces
 the bodies; Phase 5 tests are xfailed for unfilled UCs.
 
@@ -132,7 +132,7 @@ and logging-format on top of this.
 
 Read `code-skeletons.md` (Application class section). Emit
 `src/main/java/com/<org>/<app>/Application.java` AND
-`src/test/java/com/<org>/<app>/BootSmokeTest.java` — a `@SpringBootTest`
+`src/test/java/com/<org>/<app>/BootSmokeTest.java`: a `@SpringBootTest`
 with NO `@ActiveProfiles` annotation that just asserts the context
 loads. This catches default-profile wiring regressions that profile-
 scoped tests cannot see (the canonical example: a missing JPA repo
@@ -181,7 +181,7 @@ autoconfigure-exclude) before re-emitting.
 - `<backend-dir>/src/main/java/com/<org>/<app>/shared/{config,error,idempotency,correlation}/*.java`
 - `<backend-dir>/src/main/resources/application.yml`
 - `<backend-dir>/src/test/java/com/<org>/<app>/SmokeTest.java`
-  (a single smoke test that the Spring context loads — tests for
+  (a single smoke test that the Spring context loads, tests for
   business logic come in Phase 5)
 - `<backend-dir>/README.md`
 - `<backend-dir>/ARCHITECTURE.md`
@@ -191,7 +191,7 @@ autoconfigure-exclude) before re-emitting.
 Use the report shape in `pom-template.md` § Reporting: a `## Files
 written` list, `## Stats` (BCs/controllers/DTOs/services/endpoints
 covered), `## Compile readiness` (`mvn compile` may not yet pass until
-`data-mapper` runs — be honest), `## Confidence`, `## Duration`, and
+`data-mapper` runs, be honest), `## Confidence`, `## Duration`, and
 `## Open questions`.
 
 ---
@@ -216,7 +216,7 @@ covered), `## Compile readiness` (`mvn compile` may not yet pass until
 - **Code scope honored**: in `structural` mode, even DTO bodies are
   skeleton (just types); in `scaffold-todo` (default), full DTOs +
   empty service bodies; in `full`, only this scaffolder's output is
-  scaffold — `logic-translator` fills the rest in either mode.
+  scaffold: `logic-translator` fills the rest in either mode.
 - **AS-IS source references mandatory** in TODO markers (file:line
   format).
 - **OpenAPI is the source of truth** for endpoints; never invent

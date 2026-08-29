@@ -1,4 +1,4 @@
-# Method — `frontend-scaffolder`
+# Method: `frontend-scaffolder`
 
 > Reference doc for `frontend-scaffolder`. Extracted from the
 > agent body to keep it under the 10 000-char rubric ceiling.
@@ -18,7 +18,7 @@ ADR-003, and dev deps (`@angular/cli`, `karma`, `jest`, `playwright`,
 ### 2. OpenAPI typed client
 
 Read `workspace-config.md` (OpenAPI typed client section). Default to
-**Strategy A** — generate at build time via
+**Strategy A**: generate at build time via
 `@openapitools/openapi-generator-cli` with `prebuild` hook. Use Strategy
 B (hand-written models) only if the team rejects code generation;
 document drift risk. Record the choice in `<frontend-dir>/README.md`.
@@ -85,12 +85,12 @@ Read `app-shell.md` (README.md section). Emit
 overview, BC → feature module mapping, environment configuration, and
 links to `docs/refactoring/4.6-api/openapi.yaml` and ADRs.
 
-### 10. Self-check gate (HARD GATE — must pass before reporting `status: ok`)
+### 10. Self-check gate (HARD GATE, must pass before reporting `status: ok`)
 
 A scaffold that compiles is NOT necessarily a scaffold a user can use.
 The single most common failure mode of this agent is to leave the
 default `ng new` placeholder template intact and forget to write any
-navigation — the app then builds green but is unusable. The following
+navigation: the app then builds green but is unusable. The following
 checks MUST all pass; if any fails, fix and re-emit before reporting.
 
 ```bash

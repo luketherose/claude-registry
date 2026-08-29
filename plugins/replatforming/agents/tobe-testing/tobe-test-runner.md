@@ -40,7 +40,7 @@ do NOT propose fixes.
 - **W3 TO-BE execution wave.** When all Phase-5 W1+W2 tests are authored; this agent executes the full suite against the deployed TO-BE, captures snapshots, compares against the Phase-3 AS-IS oracle, and applies the failure policy (critical/high → escalate; medium/low → TBUG registry with `xfail`).
 - **Iterative re-run on failures.** When the supervisor dispatches with `Resume mode: iterate, Iteration scope: failures-only`, re-run only the failing tests.
 
-Do NOT use this agent standalone — it is invoked only as part of the `tobe-testing-supervisor` pipeline (Wave 3). Do not use for: writing tests, fixing the failures (the agent only reports), or AS-IS execution (use `baseline-runner` inside `baseline-testing-supervisor`).
+Do NOT use this agent standalone. It is invoked only as part of the `tobe-testing-supervisor` pipeline (Wave 3). Do not use for: writing tests, fixing the failures (the agent only reports), or AS-IS execution (use `baseline-runner` inside `baseline-testing-supervisor`).
 
 ---
 
@@ -59,16 +59,16 @@ demand. Read each doc only when the matching step is about to run.
 
 ## Inputs (passed by supervisor)
 
-- `repo_root` — absolute path
-- `to_be_backend_root` — `<repo>/backend/`
-- `to_be_frontend_root` — `<repo>/frontend/`
-- `e2e_root` — `<repo>/e2e/`
-- `equivalence_root` — `<repo>/tests/equivalence/`
-- `output_root_reports` — `<repo>/docs/analysis/05-tobe-tests/`
-- `execute_policy` — on | backend-only | frontend-only | off
-- `as_is_bug_carry_over` — list of BUG-NN
-- `phase3_oracle_root` — `<repo>/tests/baseline/`
-- `openapi_path` — `<repo>/docs/refactoring/api/openapi.yaml`
+- `repo_root`: absolute path
+- `to_be_backend_root`: `<repo>/backend/`
+- `to_be_frontend_root`: `<repo>/frontend/`
+- `e2e_root`: `<repo>/e2e/`
+- `equivalence_root`: `<repo>/tests/equivalence/`
+- `output_root_reports`: `<repo>/docs/analysis/05-tobe-tests/`
+- `execute_policy`: on | backend-only | frontend-only | off
+- `as_is_bug_carry_over`: list of BUG-NN
+- `phase3_oracle_root`: `<repo>/tests/baseline/`
+- `openapi_path`: `<repo>/docs/refactoring/api/openapi.yaml`
 
 ---
 
@@ -97,8 +97,8 @@ Frontmatter, per-report body, and final-report skeletons live in
 
 ## Method
 
-Execute the 5 suites in order — each gated on the previous succeeding
-or its failure being non-blocking — then classify every failure and
+Execute the 5 suites in order, each gated on the previous succeeding
+or its failure being non-blocking, then classify every failure and
 write the consolidated reports.
 
 | # | Suite | Tool |
@@ -128,7 +128,7 @@ Failure policy (summary):
 - **Escalate** on any `critical` / `high` regression, contract drift
   vs OpenAPI, p95 regression > +25% baseline, missing SCC contract for
   an OpenAPI `operationId`, or unexpected AS-IS bug carry-over.
-- **Continue** otherwise — record in TBUG, add marker, move on.
+- **Continue** otherwise: record in TBUG, add marker, move on.
 - **Stop and ask the user** before auto-accepting any
   `pytest-regressions` or Playwright snapshot diff.
 
@@ -137,7 +137,7 @@ Failure policy (summary):
 ## Constraints
 
 - **Never modify production code.** Test markers only.
-- **Never re-author tests.** If a test seems wrong, escalate — don't
+- **Never re-author tests.** If a test seems wrong, escalate, don't
   rewrite. The Wave 1 workers own test code.
 - **Never auto-accept snapshot updates.** If pytest-regressions or
   Playwright shows snapshot diffs, flag them; the user decides.

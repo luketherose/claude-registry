@@ -1,4 +1,4 @@
-# Deliberation — artefact schemas
+# Deliberation: artefact schemas
 
 Authoritative JSON schemas for every artefact under
 `<repo>/.deliberation-kb/<trace-id>/`. The engine and personas validate

@@ -1,10 +1,10 @@
-# Phase 1 — Phase plan (Phase 0 bootstrap + Wave 1–3 + Wave 3c narrative + Wave 3d verification + Export Wave)
+# Phase 1: Phase plan (Phase 0 bootstrap + Wave 1–3 + Wave 3c narrative + Wave 3d verification + Export Wave)
 
 > Reference doc for `functional-analysis-supervisor`. Read at runtime to drive the bootstrap dialog, dispatch each wave, produce the human-readable feature narrative, write the phase verification report, and (on `approve`) regenerate the exports.
 >
-> **Iteration loop.** Phase 1 ends with the HITL iteration loop documented in [`refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md). The functional analysis is the most delicate part of the workflow — a misunderstanding here propagates everywhere downstream — so the loop allows unbounded iterations until the user picks `approve`. See § "Wave 4 — Iteration handling" below.
+> **Iteration loop.** Phase 1 ends with the HITL iteration loop documented in [`refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md). The functional analysis is the most delicate part of the workflow, a misunderstanding here propagates everywhere downstream, so the loop allows unbounded iterations until the user picks `approve`. See § "Wave 4: Iteration handling" below.
 
-## Phase 0 — Bootstrap (supervisor only, no sub-agents)
+## Phase 0: Bootstrap (supervisor only, no sub-agents)
 
 1. Verify `.indexing-kb/` exists and contains at minimum:
    - `00-index.md` or `01-overview.md`
@@ -14,9 +14,9 @@
    If any of these is missing, stop and ask the user.
 2. Read `.indexing-kb/00-index.md`, `01-overview.md`, `08-synthesis/bounded-contexts.md` (if present) to build a mental map.
 3. **Detect stack mode** by reading the canonical AS-IS stack manifest at `.indexing-kb/bronze/stack.json` (produced by Phase 0 `codebase-mapper`). The supervisor uses these fields:
-   - `stack.primary_language` — drives language-specific guidance (Python/Java/Kotlin/Go/Rust/C#/Ruby/PHP/TypeScript/JavaScript/...)
-   - `stack.frameworks` — drives framework-conditional adjustments (e.g. `streamlit` → page-as-screen + reactive-rerun guidance; `rails`/`laravel`/`django`/`spring-mvc` → request-per-screen + MVC conventions; `angular`/`react`/`vue`/`qwik`/`nextjs`/`tanstack-start` → SPA / file-based-routing screens)
-   - `stack.confidence` — if `low`, surface to the user before proceeding
+   - `stack.primary_language`: drives language-specific guidance (Python/Java/Kotlin/Go/Rust/C#/Ruby/PHP/TypeScript/JavaScript/...)
+   - `stack.frameworks`: drives framework-conditional adjustments (e.g. `streamlit` → page-as-screen + reactive-rerun guidance; `rails`/`laravel`/`django`/`spring-mvc` → request-per-screen + MVC conventions; `angular`/`react`/`vue`/`qwik`/`nextjs`/`tanstack-start` → SPA / file-based-routing screens)
+   - `stack.confidence`: if `low`, surface to the user before proceeding
 
    If `.indexing-kb/bronze/stack.json` is missing (Phase 0 from a pre-PR-02 run): fall back to a quick check of `.indexing-kb/05-streamlit/` (legacy Streamlit detection) and `01-overview.md` hints (CLI? web service? batch? library?). If still unclear, ask the user. The framework-conditional block already handles "no framework" gracefully.
 4. Read `docs/analysis/01-functional/_meta/manifest.json` if it exists (resume support).
@@ -27,7 +27,7 @@
    | No `docs/analysis/01-functional/` | `fresh` |
    | Manifest reports `partial` / `failed` / missing while output dir exists | `resume-incomplete` |
    | Manifest reports `complete` AND **both** `_exports/01-functional-report.pdf` AND `_exports/01-functional-deck.pptx` exist | `complete` (default = nothing to do; ask user whether to refresh) |
-   | Manifest reports `complete` AND **at least one of** the export files is missing | `exports-only-eligible` — offer the user the option to dispatch ONLY the export wave |
+   | Manifest reports `complete` AND **at least one of** the export files is missing | `exports-only-eligible`: offer the user the option to dispatch ONLY the export wave |
    | Manifest reports `complete` AND user explicitly asked for a refresh | `full-rerun` |
 
    When `exports-only-eligible` triggers, ask the user verbatim:
@@ -55,7 +55,7 @@
      - `streamlit` (script-as-page reactive rerun model)
      - any future stack flagged in `docs/language-agnostic-design.md` as implicit-logic-heavy
    - Other stacks → challenger OFF unless user opts in with `--challenger` or "include challenger pass"
-   (Skipped in `exports-only` mode — the challenger has already run in the original pipeline if it was enabled then.)
+   (Skipped in `exports-only` mode, the challenger has already run in the original pipeline if it was enabled then.)
 7. Check exports:
    - If resume mode is `exports-only`: skip this step; the export wave itself will overwrite only the missing file(s) (existing files are kept untouched).
    - Else if `_exports/01-functional-report.pdf` or `_exports/01-functional-deck.pptx` already exist → **ask the user explicitly** whether to overwrite. Do not silently overwrite. Choices: `overwrite`, `keep` (skip export wave), `rename` (append timestamp suffix).
@@ -67,16 +67,16 @@
    - Resume mode
    - Challenger setting
    - Export overwrite decision
-   In `exports-only` mode, do NOT overwrite an existing `00-context.md` from the prior run — append a `## Re-run note` block at the bottom that records the date and which files were regenerated.
+   In `exports-only` mode, do NOT overwrite an existing `00-context.md` from the prior run. Append a `## Re-run note` block at the bottom that records the date and which files were regenerated.
 9. **Present the plan to the user**:
    - resume mode, scope, stack mode, challenger setting, export policy, expected outputs
    - ask for confirmation before dispatching any sub-agent
 
-Skip Phase 0 confirmation only if the user has explicitly said "go ahead, do the whole pipeline" in the same conversation — and even then, post the plan and wait at least one turn before dispatch unless the user repeats "proceed".
+Skip Phase 0 confirmation only if the user has explicitly said "go ahead, do the whole pipeline" in the same conversation, and even then, post the plan and wait at least one turn before dispatch unless the user repeats "proceed".
 
-> **Resume-mode shortcut**: if bootstrap chose `exports-only`, skip Waves 1, 1.5, 2, and 3 entirely. Jump directly to the Export Wave below — that is the whole point of `exports-only`. The existing analysis in `docs/analysis/01-functional/` is treated as the source of truth and is not modified.
+> **Resume-mode shortcut**: if bootstrap chose `exports-only`, skip Waves 1, 1.5, 2, and 3 entirely. Jump directly to the Export Wave below: that is the whole point of `exports-only`. The existing analysis in `docs/analysis/01-functional/` is treated as the source of truth and is not modified.
 
-## Wave 1 — Discovery (parallel, single message with multiple Agent calls)
+## Wave 1: Discovery (parallel, single message with multiple Agent calls)
 
 Dispatch in parallel:
 - `actor-feature-mapper`
@@ -90,7 +90,7 @@ After dispatch, read all outputs from disk. Verify:
 
 If any sub-agent reports `status: needs-review` or `confidence: low` on a foundational deliverable (actors, features, UI map): surface to the user **before Wave 2**. Wave 2 depends on these.
 
-## Wave 1.5 — Human-in-the-loop checkpoint
+## Wave 1.5: Human-in-the-loop checkpoint
 
 Present to the user:
 - list of identified actors (with confidence)
@@ -102,7 +102,7 @@ Ask: "Proceed to Wave 2 (use cases, flows, implicit logic), revise Wave 1 output
 
 This checkpoint is non-negotiable when Wave 1 produced ≥ 1 `blocked` item or ≥ 3 `low` confidence items. Otherwise it is recommended but skippable if the user has set `--no-checkpoint`.
 
-## Wave 2 — Behavior (parallel, single message)
+## Wave 2: Behavior (parallel, single message)
 
 Dispatch in parallel:
 - `user-flow-analyst` (depends on actors + features + UI map from W1)
@@ -112,26 +112,26 @@ Both sub-agents are passed the paths of the W1 outputs they depend on, plus the 
 
 After dispatch, read outputs. Aggregate `## Open questions` sections from all sub-agents (W1 + W2) into `14-unresolved-questions.md`.
 
-## Wave 3 — Synthesis (sequential, supervisor only)
+## Wave 3: Synthesis (sequential, supervisor only)
 
 The supervisor produces three artifacts directly (no sub-agent):
 
-1. **`13-traceability.md`** — generated mechanically:
+1. **`13-traceability.md`**: generated mechanically:
    - parse all per-item frontmatter from W1+W2 outputs
    - build matrices: Actor × Feature, Feature × Screen, Feature × UC, UC × Input/Output, Screen × ImplicitLogic
    - flag orphans (e.g., feature without UC, input without transformation)
 
-2. **`14-unresolved-questions.md`** — final aggregation, grouped by source sub-agent and severity (blocking / needs-review / nice-to-have).
+2. **`14-unresolved-questions.md`**: final aggregation, grouped by source sub-agent and severity (blocking / needs-review / nice-to-have).
 
-3. **`README.md`** — entry point with navigation links and reading order.
+3. **`README.md`**: entry point with navigation links and reading order.
 
 If `00-context.md` says challenger is ON → dispatch `functional-analysis-challenger` after the three artifacts above are written. The challenger reads the full set of outputs and produces `_meta/challenger-report.md` plus appends entries to `14-unresolved-questions.md` under a `## Challenger findings` section.
 
-**Wave 3b — functional-traceability-auditor (always ON)**
+**Wave 3b: functional-traceability-auditor (always ON)**
 Dispatch after Wave 3 (challenger) completes (or after Wave 2 if challenger is disabled).
-The auditor runs three passes: (1) traceability audit — every confirmed UC has evidence_ids; (2) negative space audit — UI files without UC, routes without feature; (3) AS-IS purity audit — no TO-BE references in outputs.
+The auditor runs three passes: (1) traceability audit, every confirmed UC has evidence_ids; (2) negative space audit, UI files without UC, routes without feature; (3) AS-IS purity audit, no TO-BE references in outputs.
 Read outputs from disk: `normalized/functional-traceability-audit.json` and `_meta/functional-traceability-report.md`.
-If verdict is FAIL, do NOT declare Phase 1 complete — escalate to user.
+If verdict is FAIL, do NOT declare Phase 1 complete. Escalate to user.
 
 **Gap closure loop (before HITL)**
 1. Check if `validate_functional_analysis.py` exists in `.github/scripts/`; if so, run it.
@@ -139,7 +139,7 @@ If verdict is FAIL, do NOT declare Phase 1 complete — escalate to user.
 3. If FAIL: identify which gaps are auto-fixable (e.g., missing `status` field on a UC can be set to `requires_human_confirmation`); attempt fix via targeted sub-agent re-dispatch.
 4. Surface all residual gaps to the user in the HITL summary.
 
-## Export Wave — Always ON (parallel, single message)
+## Export Wave: Always ON (parallel, single message)
 
 After Wave 3 completes (and the challenger, if it ran), dispatch in parallel:
 - `document-creator` → `_exports/01-functional-report.pdf`
@@ -167,39 +167,39 @@ If either generator fails: do not block Phase 1 completion; mark the export as f
 
 After the export wave, verify both files exist on disk under `_exports/`. Do not trust the Agent tool result text alone.
 
-## Wave 3c — Feature narrative (supervisor only)
+## Wave 3c: Feature narrative (supervisor only)
 
 After Wave 3b and before the Export Wave, the supervisor writes the
 human-readable feature narrative at `00b-feature-narrative.md`. This
 is the entry-point document for human review. Canonical structure
-and hard rules in [`output-layout.md`](./output-layout.md#the-feature-narrative--00b-feature-narrativemd).
+and hard rules in [`output-layout.md`](./output-layout.md#the-feature-narrative-00b-feature-narrativemd).
 
 Inputs the supervisor reads:
 
-- `00-context.md` — for the headline paragraph.
-- `02-features.md` — for the F-NN list and feature titles.
-- `06-use-cases/UC-NN-<slug>.md` — for the per-feature flows.
-- `03-ui-map.md` and `04-screens/` — for the "What the user sees"
+- `00-context.md`: for the headline paragraph.
+- `02-features.md`: for the F-NN list and feature titles.
+- `06-use-cases/UC-NN-<slug>.md`: for the per-feature flows.
+- `03-ui-map.md` and `04-screens/`: for the "What the user sees"
   subsection of each chapter.
-- `09-inputs.md`, `10-outputs.md`, `11-transformations.md` — for the
+- `09-inputs.md`, `10-outputs.md`, `11-transformations.md`: for the
   "Outputs and side effects" subsection.
-- `12-implicit-logic.md` — for unusual rules visible inside a
+- `12-implicit-logic.md`: for unusual rules visible inside a
   feature's flow.
-- `14-unresolved-questions.md` — to surface inline per-feature.
+- `14-unresolved-questions.md`: to surface inline per-feature.
 
 Output: `00b-feature-narrative.md`, written by the supervisor in a
 single `Write` call. The supervisor must:
 
 - write one chapter per F-NN (or one chapter per group of thin F-NNs,
   see hard rules in output-layout);
-- keep prose plain — no class names, no code, no Mermaid;
+- keep prose plain, no class names, no code, no Mermaid;
 - reference every UC, S, A, IN, OUT, TR by stable ID;
 - surface open questions inline in each affected feature chapter.
 
 This wave is mandatory. Skipping it produces a partial Phase 1 (and
 the verification report flags the omission).
 
-## Wave 3d — Phase verification report (supervisor only)
+## Wave 3d: Phase verification report (supervisor only)
 
 After Wave 3c, the supervisor writes the verification report at
 `_meta/phase-verification-report.md` per the canonical structure in
@@ -219,9 +219,9 @@ The Phase-1 customization of the canonical structure:
 | 8. Recommendation | `approve` only if all verdicts PASS and no blocking issues; `iterate` otherwise. |
 
 The verification report is the document presented to the user before
-the iteration-loop prompt (§ "Wave 4 — Iteration handling" below).
+the iteration-loop prompt (§ "Wave 4: Iteration handling" below).
 
-## Export Wave — gated on `approve`
+## Export Wave: gated on `approve`
 
 The Export Wave (PDF + PPTX via `document-creator` + `presentation-creator`)
 no longer runs unconditionally at the end of every iteration. It runs:
@@ -236,10 +236,10 @@ During iterations 1..N-1 (before approval) the exports are not
 regenerated. This avoids the cost and risk of producing a deliverable
 PDF that does not reflect the final user-approved state.
 
-The wave itself is unchanged — same dispatchers, same inputs, same
+The wave itself is unchanged: same dispatchers, same inputs, same
 Accenture branding. The only change is its trigger.
 
-## Wave 4 — Iteration handling (supervisor only)
+## Wave 4: Iteration handling (supervisor only)
 
 After Wave 3d the supervisor returns control to `refactoring-supervisor`
 for the HITL iteration prompt (per-phase protocol Step F). The
@@ -301,7 +301,7 @@ Every iteration appends a new entry to `manifest.json` `runs[]`:
 }
 ```
 
-The `approved_at` field is set only when the user picks `approve` —
+The `approved_at` field is set only when the user picks `approve`,
 not on individual iteration completion. This is the signal that the
 phase is locked from further iteration.
 
@@ -310,4 +310,4 @@ phase is locked from further iteration.
 The closing summary block that older callers expect is now produced as
 part of the verification report's section 1 ("Executive summary"). The
 old free-text "Phase 1 completed" block is no longer emitted by the
-supervisor — the verification report supersedes it.
+supervisor. The verification report supersedes it.

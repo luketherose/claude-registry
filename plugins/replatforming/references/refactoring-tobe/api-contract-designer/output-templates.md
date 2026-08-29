@@ -1,4 +1,4 @@
-# API contract designer — output / reporting templates
+# API contract designer: output / reporting templates
 
 > Reference doc for `api-contract-designer`. Read at runtime when assembling
 > the design-rationale document and the supervisor-facing report. The agent

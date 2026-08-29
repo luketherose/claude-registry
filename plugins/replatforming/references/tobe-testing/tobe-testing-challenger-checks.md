@@ -1,4 +1,4 @@
-# The 8 checks — `tobe-testing-challenger`
+# The 8 checks: `tobe-testing-challenger`
 
 > Reference doc for `tobe-testing-challenger`. Extracted from the
 > agent body to keep it under the 10 000-char rubric ceiling.
@@ -15,7 +15,7 @@ Run all checks. Each finding gets a stable ID `CHL-NN` and a severity:
 | medium | Defect in test or report; should be fixed before next run | Note |
 | low | Cosmetic / nice-to-have | Note |
 
-### Check 1 — UC coverage gap
+### Check 1: UC coverage gap
 
 For each UC in `phase1_uc_root`:
 - Is there a corresponding equivalence test under
@@ -27,7 +27,7 @@ For each UC in `phase1_uc_root`:
   → CHL with severity `high` (unless explicitly `not-tested-with-reason`
   in the report).
 
-### Check 2 — OpenAPI ↔ TO-BE drift
+### Check 2: OpenAPI ↔ TO-BE drift
 
 For each `operationId` in OpenAPI:
 - Is there a Spring Cloud Contract verifier test in
@@ -45,7 +45,7 @@ For each backend controller method:
   → CHL with severity `high` (unless explicitly internal-only in
   Phase 4 hardening config).
 
-### Check 3 — AS-IS source modifications (forbidden)
+### Check 3: AS-IS source modifications (forbidden)
 
 ```bash
 git status --porcelain
@@ -71,7 +71,7 @@ modification of AS-IS source code (Python/Streamlit), which is
 - Other unexpected modification (e.g., docs outside Phase 5 root):
   `high`
 
-### Check 4 — Mocked-when-shouldn't
+### Check 4: Mocked-when-shouldn't
 
 Grep through Phase 5 tests for prohibited mock patterns:
 
@@ -89,7 +89,7 @@ For each match:
   scoped to a specific test that justifies it (e.g., webhook
   callback simulation).
 
-### Check 5 — Equivalence claim integrity
+### Check 5: Equivalence claim integrity
 
 For each UC marked `equivalent` in `01-equivalence-report.md`:
 - Read the corresponding pytest module under
@@ -102,7 +102,7 @@ A UC marked `equivalent` whose test does NOT compare to the snapshot
 is a false claim:
 → CHL severity `blocking`.
 
-### Check 6 — AS-IS-bug-carry-over consistency
+### Check 6: AS-IS-bug-carry-over consistency
 
 For each BUG-NN in `as_is_bug_carry_over`:
 - Is there at least one test that explicitly references the BUG-NN?
@@ -112,7 +112,7 @@ A carry-over bug not exercised by any test means we have no proof
 the behaviour is preserved (which matters for users who rely on it):
 → CHL severity `medium`.
 
-### Check 7 — PO sign-off completeness
+### Check 7: PO sign-off completeness
 
 In `01-equivalence-report.md`:
 - Are sign-off slots present (engineering lead, PO, security review)?
@@ -124,7 +124,7 @@ In `01-equivalence-report.md`:
 A report that ships to PO with missing sign-off slots:
 → CHL severity `high` (UX of approval breaks).
 
-### Check 8 — Performance gate compliance
+### Check 8: Performance gate compliance
 
 In `04-performance-comparison.md`:
 - For every UC marked `regression-soft` (>+10%): is there a PO sign-off
@@ -139,17 +139,17 @@ A perf delta > +25% without explicit blocking-regression listing:
 A perf delta > +10% without env caveats:
 → CHL severity `medium` (numbers might be unreliable).
 
-### Check 9 — Shell coverage in E2E
+### Check 9: Shell coverage in E2E
 
 Verify that the FE test suite includes an end-to-end smoke spec that
-actually drives the application as a user — not just isolated component
+actually drives the application as a user, not just isolated component
 tests. Read `<frontend-dir>/tests/e2e/smoke.spec.ts` (or equivalent).
 
 Required properties of the smoke spec:
 
 1. It iterates over **every protected route in `app.routes.ts`** (or has
    a hard-coded list that the challenger can diff against the routes
-   file — any orphan route generates one CHL per orphan).
+   file, any orphan route generates one CHL per orphan).
 2. It asserts the page does NOT contain Angular CLI placeholder strings
    (`Hello, infosync-frontend`, `Congratulations! Your app is running`,
    `Explore the Docs`, `Learn with Tutorials`).

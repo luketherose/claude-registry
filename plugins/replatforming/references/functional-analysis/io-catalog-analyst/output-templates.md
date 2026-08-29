@@ -1,4 +1,4 @@
-# Output file shapes — `io-catalog-analyst`
+# Output file shapes: `io-catalog-analyst`
 
 > Reference doc for `io-catalog-analyst`. Read at runtime when writing the
 > three output files in Wave 1.
@@ -9,7 +9,7 @@ agent body is by ID convention only (IN-NN, OUT-NN, TR-NN, IL-NN).
 
 ---
 
-## File 1 — `docs/analysis/01-functional/09-inputs.md`
+## File 1: `docs/analysis/01-functional/09-inputs.md`
 
 ```markdown
 ---
@@ -57,7 +57,7 @@ status: <complete|partial|needs-review|blocked>
 
 ---
 
-## File 2 — `docs/analysis/01-functional/10-outputs.md`
+## File 2: `docs/analysis/01-functional/10-outputs.md`
 
 ```markdown
 ---
@@ -102,7 +102,7 @@ status: <complete|partial|needs-review|blocked>
 
 ---
 
-## File 3 — `docs/analysis/01-functional/11-transformations.md`
+## File 3: `docs/analysis/01-functional/11-transformations.md`
 
 ```markdown
 ---

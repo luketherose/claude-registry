@@ -2,7 +2,7 @@
 
 > Reference doc for `wiki-writer`. Read at runtime when authoring the
 > canonical page set, the global navigation files, or the per-page front
-> matter. Contains boilerplate only — decision logic on which pages to
+> matter. Contains boilerplate only. Decision logic on which pages to
 > author lives in the agent body (`## Method`).
 
 ## Diataxis quadrants
@@ -11,7 +11,7 @@ Organize pages around the **Diataxis framework**:
 
 | Quadrant | Goal | Examples |
 |---|---|---|
-| **Tutorials** | Learn by doing — hand-holding | "Your first capability", "Set up the registry locally" |
+| **Tutorials** | Learn by doing, hand-holding | "Your first capability", "Set up the registry locally" |
 | **How-to guides** | Solve a specific problem | "How to publish a capability", "How to write a skill" |
 | **Reference** | Look up facts | "Capability schema", "CLI reference", "Catalog manifest format" |
 | **Explanation** | Understand the design | "Why catalog vs marketplace", "Versioning policy", "Subagent dispatch model" |

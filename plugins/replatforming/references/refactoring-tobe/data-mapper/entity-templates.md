@@ -1,4 +1,4 @@
-# Data-mapper — entity / value-object / repository / mapper templates
+# Data-mapper: entity / value-object / repository / mapper templates
 
 > Reference doc for `data-mapper`. Read at runtime when about to emit JPA
 > classes. The decision rules (when to use UUID vs composite keys, when to

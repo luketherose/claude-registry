@@ -1,4 +1,4 @@
-# Phase 4 challenger — output report templates
+# Phase 4 challenger: output report templates
 
 > Reference doc for `phase4-challenger`. Read at runtime when emitting
 > the three deliverables: the challenger report, the traceability matrix,
@@ -12,7 +12,7 @@ report.
 
 ---
 
-## File 1 — `docs/refactoring/_meta/challenger-report.md`
+## File 1: `docs/refactoring/_meta/challenger-report.md`
 
 ```markdown
 ---
@@ -116,13 +116,13 @@ complete and must escalate.
 
 ---
 
-## File 2 — `.refactoring-kb/02-traceability/as-is-to-be-matrix.json`
+## File 2: `.refactoring-kb/02-traceability/as-is-to-be-matrix.json`
 
 Per the schema in `checklist-templates.md` (Check 1).
 
 ---
 
-## File 3 — appended section in `.refactoring-kb/_meta/unresolved-tobe.md`
+## File 3: appended section in `.refactoring-kb/_meta/unresolved-tobe.md`
 
 ```markdown
 ## Challenger findings

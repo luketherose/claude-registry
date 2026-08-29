@@ -1,10 +1,10 @@
-# Grounding Policy — No Evidence, No Claim
+# Grounding Policy: No Evidence, No Claim
 
 ## Purpose
 
 Agents in the Phase 0 indexing pipeline must not invent, infer, or speculate about codebase behavior without traceable evidence. Every claim about what the codebase does, how it behaves, or what business logic it implements must be grounded in observed source artifacts.
 
-Framework knowledge is NOT evidence. Knowing that Flask routes are defined with `@app.route` does not prove a particular route exists in this codebase — that must be observed in the source. Naming plausibility is NOT evidence. A class named `ApprovalManager` does not prove an approval workflow exists — the behavior must be verified in the code body.
+Framework knowledge is NOT evidence. Knowing that Flask routes are defined with `@app.route` does not prove a particular route exists in this codebase. That must be observed in the source. Naming plausibility is NOT evidence. A class named `ApprovalManager` does not prove an approval workflow exists. The behavior must be verified in the code body.
 
 Violations of this policy produce unreliable knowledge bases that mislead downstream phases and cause replatforming decisions to be made on hallucinated foundations.
 
@@ -16,7 +16,7 @@ Rules:
 
 - Cite the specific file path and line range where the evidence was observed, not just the file name.
 - For large files: cite the `chunk_id` from `bronze/large-file-chunks.jsonl` plus the line range of the relevant chunk. Do not cite the whole file as evidence for a specific behavior.
-- Never write "from the code it emerges that..." — write the evidence_id instead. Example: `evidence_ids: ["EV-000042"]`.
+- Never write "from the code it emerges that...". Write the evidence_id instead. Example: `evidence_ids: ["EV-000042"]`.
 - A claim without at least one `evidence_id` is a gap, not a finding.
 - Multiple evidence_ids are allowed and encouraged when a claim is supported by several observations.
 
@@ -35,7 +35,7 @@ If no evidence exists to support a claim at even `low` confidence, do not create
 ## What you MUST NOT do
 
 - Use framework knowledge to promote a claim to fact without direct code evidence. Knowing a framework's conventions does not substitute for reading the actual code.
-- Use naming plausibility as proof of business behavior. A class named `ApprovalManager` does not prove an approval workflow exists. A function named `send_notification` does not prove a notification is sent — it must be observed.
+- Use naming plausibility as proof of business behavior. A class named `ApprovalManager` does not prove an approval workflow exists. A function named `send_notification` does not prove a notification is sent. It must be observed.
 - Claim a feature exists because of a function name, file name, or import alias alone.
 - Skip reading a chunk and still claim knowledge of its content. If you have not read chunk `CHUNK-foo-0003`, you have no evidence for claims about lines 600–800 of `foo.py`.
 - Attribute behavior to a large file you haven't chunked. A file classified as large/huge/giant must be chunked before any claims are drawn from it.

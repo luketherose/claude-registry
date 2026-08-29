@@ -1,4 +1,4 @@
-# Deliberation — trigger lexicon
+# Deliberation: trigger lexicon
 
 Authoritative lexicon used by `deliberative-decision-engine` Step 0 to
 detect whether the user is explicitly asking for multi-agent
@@ -47,7 +47,7 @@ Match the **stem** as a whole word; match exact phrase where listed.
 | `debate mode` | exact phrase | Strongest. |
 | `multi-agent debate` / `multi agent debate` | substring | Strongest. |
 | `deliberative decision` | substring | Strong. |
-| `critic` (with decision verb) | substring | Medium — must co-occur with "decision" / "choice" / "recommendation". |
+| `critic` (with decision verb) | substring | Medium: must co-occur with "decision" / "choice" / "recommendation". |
 | `challenge` / `rebuttal` (with decision verb) | substring | Medium-strong. |
 | `red team` / `red-team` (with decision verb) | substring | Strong. |
 | `decision review` | substring | Strong. |

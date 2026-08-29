@@ -22,7 +22,7 @@ All three classifications are treated as large files for policy purposes. The cl
 
 Processing a large file must follow these four steps in order. Steps must not be skipped or reordered.
 
-### Step 1 — Outline
+### Step 1: Outline
 
 Before reading any line-range chunk, produce a structural outline of the file. Use AST parsing for Python files. Use regex heuristics for other languages.
 
@@ -41,7 +41,7 @@ The outline must list:
 
 The outline is stored in `bronze/large-file-outlines.jsonl` with the file path, classification, and the structured symbol list.
 
-### Step 2 — Chunk
+### Step 2: Chunk
 
 Divide the file into semantic chunks based on the outline. Rules:
 
@@ -55,7 +55,7 @@ Divide the file into semantic chunks based on the outline. Rules:
 
 Chunks are stored in `bronze/large-file-chunks.jsonl`.
 
-### Step 3 — Evidence
+### Step 3: Evidence
 
 Every chunk that contains behavior relevant to the knowledge base must produce an evidence record in `evidence-ledger.jsonl` with `kind: source_chunk`.
 
@@ -63,7 +63,7 @@ The evidence record's `summary` must describe what was observed in that chunk in
 
 Not every chunk must become evidence. Chunks classified as `support_code`, `generated`, `vendor`, or `dead_or_unreferenced` (see symbol classification below) may be skipped, but the skip decision must be recorded in `bronze/large-file-chunks.jsonl` as `analyzed: false` with a `skip_reason`.
 
-### Step 4 — Summary
+### Step 4: Summary
 
 Only after chunk-level evidence is established, produce a file-level summary. The summary must aggregate chunk summaries. It must not introduce claims that are not already present in the chunk-level evidence records.
 

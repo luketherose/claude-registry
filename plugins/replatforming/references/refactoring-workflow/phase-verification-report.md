@@ -1,4 +1,4 @@
-# Phase verification report — canonical spec
+# Phase verification report: canonical spec
 
 > Reference doc for `refactoring-supervisor` and every analysis-phase
 > supervisor (Phases 1, 2, 3). Read at runtime when the phase's worker
@@ -210,7 +210,7 @@ specifics.
 ## Iteration on the verification report itself
 
 The verification report is regenerated at the end of every iteration.
-The supervisor MUST NOT incrementally edit the previous report — it
+The supervisor MUST NOT incrementally edit the previous report. It
 generates the next version from scratch from the manifest + audit
 files + iteration log. The "what changed" section is the only place
 the prior iteration is referenced.

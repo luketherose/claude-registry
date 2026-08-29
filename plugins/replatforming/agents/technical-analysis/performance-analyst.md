@@ -1,6 +1,6 @@
 ---
 name: performance-analyst
-description: "Use this agent to analyze performance posture of a codebase AS-IS via static analysis: hot loops, N+1 query patterns, blocking I/O on critical paths, missing or misconfigured caching, memory-heavy operations, Streamlit rerun-cost issues. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline."
+description: "Use this agent to analyze performance posture of a codebase AS-IS via static analysis: hot loops, N+1 query patterns, blocking I/O on critical paths, missing or misconfigured caching, memory-heavy operations, Streamlit rerun-cost issues. Strictly AS-IS, never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use. Invoked only as part of the Phase 2 Technical Analysis pipeline."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: yellow
@@ -22,7 +22,7 @@ identify:
 - Streamlit rerun cost (operations that re-execute on every widget
   interaction without caching)
 
-You do not run benchmarks. You do not produce performance metrics —
+You do not run benchmarks. You do not produce performance metrics.
 you produce **hypotheses with severity** based on code patterns. The
 runtime baseline is the responsibility of Phase 3 (`test-writer`,
 `tests/baseline/`).
@@ -114,7 +114,7 @@ Find operations that:
 
 ### 5. Memory-heavy operations
 
-- `pandas.read_sql(<unbounded query>)` — risk of OOM
+- `pandas.read_sql(<unbounded query>)`: risk of OOM
 - `json.load(open(path))` on multi-GB files (use streaming)
 - repeated DataFrame copies (`df.copy()` in loops, chained
   `df.assign(...)` without inplace)
@@ -280,7 +280,7 @@ Each record in the raw JSONL file:
 - **Stable IDs**: `PERF-NN`.
 - **Severity ratings** mandatory.
 - **Sources mandatory**.
-- **Static analysis only** — never invoke profilers, never run code,
+- **Static analysis only**, never invoke profilers, never run code,
   never generate benchmarks.
 - Do not write outside `docs/analysis/02-technical/06-performance/`.
 - **Acknowledge uncertainty**: this is a hypothesis report. Phase 3

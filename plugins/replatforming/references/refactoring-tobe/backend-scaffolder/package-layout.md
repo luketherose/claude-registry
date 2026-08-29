@@ -1,7 +1,7 @@
 # Package layout
 
 > Reference doc for `backend-scaffolder`. Read at runtime when laying out
-> the source tree (Method step 2 — Package layout).
+> the source tree (Method step 2, Package layout).
 
 ## Top-level package
 

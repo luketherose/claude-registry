@@ -1,16 +1,16 @@
-# Phase 4 — Iteration model, code-generation scope, verification & review policies
+# Phase 4: Iteration model, code-generation scope, verification & review policies
 
 > Reference doc for `refactoring-tobe-supervisor`. Read at runtime when answering Q1 (iteration model), Q2 (code generation scope), Q3 (verification policy), or Q4 (code review policy).
 
-## Q1 — Iteration model (default `A`)
+## Q1: Iteration model (default `A`)
 
 Two valid models:
 
-### Model A — One-shot (default)
+### Model A: One-shot (default)
 
 Phase 4 produces the entire TO-BE in a single supervisor pass. All bounded contexts handled together. Faster, simpler. Risk: if the challenger finds problems late, the scope to fix is large.
 
-### Model B — Per-bounded-context milestone
+### Model B: Per-bounded-context milestone
 
 The supervisor iterates over bounded contexts identified in W1. For each BC: full backend (4.2/4.4/4.5) + frontend (4.3) + hardening for that BC. After all BCs done, single 4.7 (full hardening) and 4.8 (full roadmap).
 
@@ -21,21 +21,21 @@ Use Model B when:
 
 Bootstrap presents the BC count and recommends a model. User confirms.
 
-## Q2 — Code generation scope (default `scaffold-todo`)
+## Q2: Code generation scope (default `scaffold-todo`)
 
 Three modes:
 
-### Mode `full` — Scaffold + data layer + COMPLETE business logic translation
+### Mode `full`: Scaffold + data layer + COMPLETE business logic translation
 
 Workers translate every UC into runnable Java code. Most ambitious. Token-heavy. Risk: incorrect translation that compiles but is semantically wrong.
 
-### Mode `scaffold-todo` — DEFAULT
+### Mode `scaffold-todo`: DEFAULT
 
 Workers produce:
 - complete project scaffold (pom.xml, package structure, controllers, services, repositories, DTOs, mappers, error handlers, security config, Angular workspace + modules + components + services + guards)
 - complete data layer (JPA entities, Liquibase YAML changelogs, repository signatures)
 - complete API contract implementation (OpenAPI-generated controller signatures, DTO from schema)
-- **TODO markers** for complex business logic — each TODO carries:
+- **TODO markers** for complex business logic, each TODO carries:
   - the UC-NN being implemented
   - the AS-IS source ref (`<repo>/<file>:<line>`)
   - a one-line summary of what to translate
@@ -43,11 +43,11 @@ Workers produce:
 
 This is the sweet spot: mechanical work done by agent; complex semantic translation reserved for human review with full context.
 
-### Mode `structural` — Scaffold only
+### Mode `structural`: Scaffold only
 
 No translation, no data layer beyond entity skeletons. Just the project skeleton. For users who want Phase 4 as a "preparation" step and will do all coding manually.
 
-## Q3 — Verification policy (default `auto`)
+## Q3: Verification policy (default `auto`)
 
 After W3 completes, the supervisor attempts to verify the scaffolds build. Adaptive:
 
@@ -74,7 +74,7 @@ After W3 completes, the supervisor attempts to verify the scaffolds build. Adapt
 
 `mvn compile` is intentional (not `mvn package`): we want to verify the code is syntactically and structurally correct, not run tests (Phase 5 territory).
 
-## Q4 — Code review policy (default `background`)
+## Q4: Code review policy (default `background`)
 
 After each major output (decomposition, API contract, backend scaffold, frontend scaffold), the supervisor MAY dispatch `pr-review-toolkit:code-reviewer` (official Anthropic marketplace, optional: skip this step when the plugin is not installed) in parallel without blocking the next wave. Findings accumulate in `docs/refactoring/_meta/code-review-findings.md` and surface in the final recap.
 

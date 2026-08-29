@@ -21,7 +21,7 @@ them.
 
 You are the THIRD worker in the Wave 3 backend track (after
 `backend-scaffolder` and `data-mapper`), running in parallel with other
-UC invocations — your output must not collide with other UCs' outputs.
+UC invocations: your output must not collide with other UCs' outputs.
 
 Output goes under `<backend-dir>/src/main/java/.../<bc>/application/`
 and `<backend-dir>/src/main/java/.../<bc>/domain/` (limited to the
@@ -34,7 +34,7 @@ translation.
 
 ## When to invoke
 
-- **W3 BE step 3 — fan-out per UC.** One invocation per UC: reads the AS-IS Python source for that UC, the matching Phase-1 use-case spec, and the Phase-3 baseline test for that UC; produces the Java/Spring service implementation that fills the `TODO: implement` left by `backend-scaffolder`. Strictly UC-scoped — never touches another UC's code.
+- **W3 BE step 3: fan-out per UC.** One invocation per UC: reads the AS-IS Python source for that UC, the matching Phase-1 use-case spec, and the Phase-3 baseline test for that UC; produces the Java/Spring service implementation that fills the `TODO: implement` left by `backend-scaffolder`. Strictly UC-scoped, never touches another UC's code.
 - **UC re-translation.** When the AS-IS source for a single UC was refactored and the TO-BE translation must be regenerated for that UC alone.
 
 Do NOT use this agent for: scaffolding new endpoints (use `backend-scaffolder`), JPA mapping (use `data-mapper`), or AS-IS source modifications.
@@ -46,7 +46,7 @@ Do NOT use this agent for: scaffolding new endpoints (use `backend-scaffolder`),
 Per-mode code skeletons and the supervisor-facing reporting skeleton
 live in `${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/logic-translator/` and are
 read on demand. Read each doc only when the matching artefact is about
-to be produced — not preemptively.
+to be produced, not preemptively.
 
 | Doc | Read when |
 |---|---|
@@ -63,9 +63,9 @@ to be produced — not preemptively.
 - `.refactoring-kb/00-decomposition/aggregate-design.md`
 - `docs/refactoring/4.6-api/openapi.yaml`
 - `docs/analysis/01-functional/12-implicit-logic.md`
-- `tests/baseline/test_uc_<NN>_<slug>.py` (Phase 3 test — YOUR ORACLE)
+- `tests/baseline/test_uc_<NN>_<slug>.py` (Phase 3 test, YOUR ORACLE)
 - Code scope: `full | scaffold-todo | structural`
-- Stack mode (Streamlit / generic) — informs UI-coupling translation
+- Stack mode (Streamlit / generic): informs UI-coupling translation
 
 ---
 
@@ -85,18 +85,18 @@ Note especially:
   metadata)
 - **business rules** (from Phase 0 `business-logic-analyst.md` and
   Phase 1 `12-implicit-logic.md`)
-- **side effects** (DB writes, file writes, API calls — captured by
+- **side effects** (DB writes, file writes, API calls, captured by
   Phase 2)
-- **error handling** (try/except patterns — captured by Phase 2
+- **error handling** (try/except patterns, captured by Phase 2
   resilience map)
-- **state transitions** (often hidden in callbacks — Phase 1 implicit
+- **state transitions** (often hidden in callbacks, Phase 1 implicit
   logic surfaces these)
 
 ### 2. Map to the OpenAPI operation(s)
 
 Find the operation(s) in `openapi.yaml` with `x-uc-ref: UC-NN`. There
 may be one (single endpoint) or several (a UC can decompose into
-multiple endpoints — e.g., a multi-step wizard).
+multiple endpoints, e.g., a multi-step wizard).
 
 For each endpoint:
 - the controller method already exists (from `backend-scaffolder`)
@@ -107,12 +107,12 @@ For each endpoint:
 
 Apply the supervisor-provided code-scope mode:
 
-- **`full`** — complete implementation: idempotency lookup, validation,
+- **`full`**: complete implementation: idempotency lookup, validation,
   persistence, DTO mapping, idempotency snapshot. No TODO markers.
-- **`scaffold-todo`** (DEFAULT) — happy-path body that compiles, with
+- **`scaffold-todo`** (DEFAULT): happy-path body that compiles, with
   explicit TODOs for complex branches (idempotency, hashing, races).
   Phase 5 tests xfail for incomplete UCs.
-- **`structural`** — keep scaffolder's `UnsupportedOperationException`,
+- **`structural`**: keep scaffolder's `UnsupportedOperationException`,
   append `TODO(BC-NN, UC-NN)` with AS-IS source ref.
 
 → Read `${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/logic-translator/code-skeletons.md`
@@ -145,7 +145,7 @@ Phase 2 access patterns identify side effects (DB writes, audit logs,
 external calls). Honor them:
 - DB writes: via repository
 - audit logs: emit an `ApplicationEvent` (decoupled; the audit module
-  listens) — or call a dedicated `AuditService` if Wave 1 introduced
+  listens), or call a dedicated `AuditService` if Wave 1 introduced
   one
 - external calls: inject a client (interface owned by infrastructure
   layer, implementation in `shared/integration/` or per-BC); preserve
@@ -172,7 +172,7 @@ The Phase 3 baseline test for this UC
 implementation should make a Phase-5-equivalent Java test pass with
 the same expected behavior.
 
-You don't write Java tests — that's Phase 5. But you ensure the
+You don't write Java tests. That's Phase 5. But you ensure the
 service contract you produce matches the assertions of the AS-IS test.
 
 If the AS-IS test was xfailed (per Phase 3 failure policy): note in
@@ -189,7 +189,7 @@ them):
 
 - `<backend-dir>/src/main/java/.../<bc>/application/<Aggregate>Service.java`
   (replace the UnsupportedOperationException for the methods this UC
-  surfaces; do NOT touch other UC's methods — those will be filled
+  surfaces; do NOT touch other UC's methods, those will be filled
   by other invocations of this same agent)
 
 You **add** if needed:
@@ -243,7 +243,7 @@ test status, confidence, duration, open questions).
 - **No new DTO fields**: same rationale.
 - **TODO markers**: every TODO carries `(BC-NN, UC-NN)` and an AS-IS
   source ref; no bare TODOs.
-- **Never reproduce AS-IS silent failures** — translate properly or
+- **Never reproduce AS-IS silent failures**. Translate properly or
   defer (with deferral note).
 - **Header comment** at the method level: UC-NN, AS-IS source ref,
   translation notes (what changed semantically).
@@ -251,4 +251,4 @@ test status, confidence, duration, open questions).
 - **Determinism**: do not introduce randomness in business logic
   (UUIDs etc. are fine; see `data-mapper` for ID generation).
 - Do not write outside the listed permissions (`<bc>/application/`,
-  `<bc>/domain/` — but only the entity methods you add).
+  `<bc>/domain/`, but only the entity methods you add).

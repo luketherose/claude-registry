@@ -1,4 +1,4 @@
-# Phase 4 Step 6 — UI smoke gate
+# Phase 4 Step 6: UI smoke gate
 
 > Reference doc for `refactoring-supervisor`. Read at runtime before
 > requesting PO sign-off at the end of Phase 4 Step 6. The smoke gate is
@@ -12,7 +12,7 @@ run below the level at which the user perceives "the app is broken"**.
 The UI smoke gate forces the supervisor to validate the app **the way
 a human would** before sign-off.
 
-## Precondition: Step 5.5 — Test Data Seeding
+## Precondition: Step 5.5 Test Data Seeding
 
 The UI smoke gate is a **human-visual** judgment, so an empty
 database produces a false negative (empty grid vs. broken grid look
@@ -23,7 +23,7 @@ identical to a reviewer). Before this gate can run, the manifest at
 table.
 
 If Step 5.5 has not run (or was deferred with
-`execute_policy: off`), do NOT skip ahead — route back to
+`execute_policy: off`), do NOT skip ahead. Route back to
 `test-data-seeder` first. See
 [`phase-4-step-5-5-test-data-seeding.md`](phase-4-step-5-5-test-data-seeding.md)
 for the per-step protocol. The credentials captured by Step 5.5 are
@@ -37,7 +37,7 @@ also the credentials this gate logs in with.
 2. Bring the frontend dev server up (`ng serve` or `npm start`) and
    wait for the bundle-ready message.
 3. Run the Playwright `smoke.spec.ts` produced by `frontend-test-writer`
-   (mandatory spec — see `agents/tobe-testing/frontend-test-writer.md` →
+   (mandatory spec, see `agents/tobe-testing/frontend-test-writer.md` →
    "Mandatory: smoke.spec.ts"). The spec MUST cover every protected
    route from `app.routes.ts` and assert:
    - no Angular CLI placeholder strings on any page;

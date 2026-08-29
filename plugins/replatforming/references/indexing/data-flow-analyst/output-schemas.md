@@ -1,18 +1,18 @@
-# Data-flow analyst — output schemas
+# Data-flow analyst: output schemas
 
 > Reference doc for `data-flow-analyst`. Read at runtime when about to
 > emit output files under `.indexing-kb/06-data-flow/`, `.indexing-kb/bronze/`,
 > or `.indexing-kb/silver/`.
 
 The agent body owns when to write each file and what content qualifies.
-This doc is the on-disk shape only — frontmatter, JSONL record schemas, and
+This doc is the on-disk shape only: frontmatter, JSONL record schemas, and
 section skeletons to copy into the `Write` call.
 
 ---
 
 ## Bronze JSONL schemas
 
-### `bronze/io-boundaries.jsonl` — one record per I/O call site, append-only
+### `bronze/io-boundaries.jsonl`: one record per I/O call site, append-only
 
 ```json
 {
@@ -27,7 +27,7 @@ section skeletons to copy into the `Write` call.
 }
 ```
 
-### `bronze/config-env-index.jsonl` — one record per env var / config key, append-only
+### `bronze/config-env-index.jsonl`: one record per env var / config key, append-only
 
 ```json
 {
@@ -45,7 +45,7 @@ section skeletons to copy into the `Write` call.
 
 ## Silver JSONL schemas
 
-### `silver/data-flows.jsonl` — agentic: described data flows with evidence
+### `silver/data-flows.jsonl`: agentic: described data flows with evidence
 
 ```json
 {
@@ -61,7 +61,7 @@ section skeletons to copy into the `Write` call.
 }
 ```
 
-### `silver/integration-points.jsonl` — agentic: third-party / service integrations
+### `silver/integration-points.jsonl`: agentic: third-party / service integrations
 
 ```json
 {
@@ -93,7 +93,7 @@ status: complete
 
 ---
 
-## File 1 — `.indexing-kb/06-data-flow/database.md`
+## File 1: `.indexing-kb/06-data-flow/database.md`
 
 ```markdown
 ---
@@ -131,7 +131,7 @@ status: complete
 
 ---
 
-## File 2 — `.indexing-kb/06-data-flow/external-apis.md`
+## File 2: `.indexing-kb/06-data-flow/external-apis.md`
 
 ```markdown
 ---
@@ -155,7 +155,7 @@ status: complete
 
 ---
 
-## File 3 — `.indexing-kb/06-data-flow/file-io.md`
+## File 3: `.indexing-kb/06-data-flow/file-io.md`
 
 ```markdown
 ---
@@ -180,7 +180,7 @@ status: complete
 
 ---
 
-## File 4 — `.indexing-kb/06-data-flow/configuration.md`
+## File 4: `.indexing-kb/06-data-flow/configuration.md`
 
 ```markdown
 ---

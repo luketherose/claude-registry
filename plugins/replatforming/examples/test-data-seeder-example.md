@@ -1,12 +1,12 @@
 # Example: test-data-seeder
 
-The agent is invoked by `refactoring-supervisor` as **Phase 4 — Step 5.5
+The agent is invoked by `refactoring-supervisor` as **Phase 4: Step 5.5
 Test Data Seeding**, immediately after Step 5 (Hardening) and immediately
 before Step 6 (Final Validation / UI smoke gate). Its job is to make the
 freshly-built TO-BE application demoable: the database is empty, every UI
 page shows "0 records", and the UI smoke gate cannot meaningfully run.
 
-## Scenario 1 — Spring Boot + Liquibase (the typical Java replatform)
+## Scenario 1: Spring Boot + Liquibase (the typical Java replatform)
 
 **Setup**: A TO-BE backend produced by `developer-java` over Phase 4
 Steps 0–5. Stack: Spring Boot 3 + Liquibase + H2 (test profile) /
@@ -17,7 +17,7 @@ gate.
 
 **Supervisor's dispatch prompt** (abbreviated):
 
-> Run Phase 4 — Step 5.5 Test Data Seeding. Repo at
+> Run Phase 4: Step 5.5 Test Data Seeding. Repo at
 > `<repo>`. Functional spec at `<repo>/docs/analysis/01-functional/`.
 > TO-BE under `<repo>/backend/` (Spring Boot 3) and `<repo>/frontend/`
 > (Angular). Execution policy: `auto`. UI smoke routes:
@@ -131,7 +131,7 @@ to Step 6.
 
 ---
 
-## Scenario 2 — Django + fixtures (Python replatform)
+## Scenario 2: Django + fixtures (Python replatform)
 
 **Setup**: A TO-BE backend produced by `developer-python` for a Django
 + DRF stack. Frontend: Vue. Tests green; `manage.py runserver`
@@ -156,14 +156,14 @@ returns empty grids.
    python manage.py loaddata test_seed --settings=project.settings.dev`.
 8. Smoke-tests via curl against the DRF endpoints.
 
-The recap follows the same format — only the "Migration tool
+The recap follows the same format, only the "Migration tool
 detected" and "Seed files written" sections differ. Everything else
 (pivot anchor table, credential table, smoke verification, next gate)
 is identical because the design principles are stack-agnostic.
 
 ---
 
-## Scenario 3 — Resume mode after a failed UI smoke
+## Scenario 3: Resume mode after a failed UI smoke
 
 **Setup**: A previous Phase 4 Step 6 run failed the UI smoke gate.
 The user reported "every page is empty". The supervisor inspects the
@@ -171,7 +171,7 @@ manifest, sees `Step 5.5 = skipped`, and redispatches this agent.
 
 **What the agent does**:
 
-1. Detects the existing seed files (if any) — none in this case.
+1. Detects the existing seed files (if any): none in this case.
 2. Runs the full Method (Steps 1–7).
 3. Returns the recap.
 
@@ -179,7 +179,7 @@ The supervisor then redispatches the UI smoke gate.
 
 ---
 
-## Scenario 4 — Schema-change refresh
+## Scenario 4: Schema-change refresh
 
 **Setup**: A Phase 4 feature loop added a new table
 `notification_preferences` after the seed was already written. The
@@ -191,7 +191,7 @@ flag `--mode refresh`.
 1. Reads the existing seed files and the current schema.
 2. Computes the diff: `notification_preferences` is unseeded.
 3. Writes a new changeset `99f-test-seed-notifications.yaml` (does
-   NOT modify the existing changesets — Liquibase tracks them).
+   NOT modify the existing changesets, Liquibase tracks them).
 4. Restarts and re-verifies.
 
 The recap surfaces only the delta.

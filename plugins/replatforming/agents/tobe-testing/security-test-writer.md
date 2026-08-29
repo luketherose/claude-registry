@@ -35,7 +35,7 @@ You produce the consolidated `05-security-findings.md` report.
 - **W1 TO-BE security coverage.** Reads the Phase-2 security findings and the Phase-4 hardening ADR; emits security-focused tests (auth bypass, injection, secret leakage, header presence) for the TO-BE deployment.
 - **Per-finding re-author.** When a specific security finding was escalated/de-escalated and the matching test must be regenerated.
 
-Do NOT use this agent standalone — it is invoked only as part of the `tobe-testing-supervisor` pipeline (Wave 1). Do not use for: dependency CVE scanning (use `dependency-security-analyst` in Phase 2), runtime monitoring, or AS-IS security analysis.
+Do NOT use this agent standalone. It is invoked only as part of the `tobe-testing-supervisor` pipeline (Wave 1). Do not use for: dependency CVE scanning (use `dependency-security-analyst` in Phase 2), runtime monitoring, or AS-IS security analysis.
 
 ---
 
@@ -44,7 +44,7 @@ Do NOT use this agent standalone — it is invoked only as part of the `tobe-tes
 This agent's test-class skeletons, OWASP coverage policy, ZAP automation,
 and output document template live in
 `${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/security-test-writer/` and are read on
-demand. Read each doc only when the matching block of work starts — not
+demand. Read each doc only when the matching block of work starts, not
 preemptively.
 
 | Doc | Read when |
@@ -58,26 +58,26 @@ preemptively.
 
 ## Inputs (passed by supervisor)
 
-- `repo_root` — absolute path
-- `to_be_backend_root` — `<repo>/backend/`
-- `to_be_frontend_root` — `<repo>/frontend/`
-- `openapi_path` — `<repo>/docs/refactoring/api/openapi.yaml`
-- `phase2_security_root` —
+- `repo_root`: absolute path
+- `to_be_backend_root`: `<repo>/backend/`
+- `to_be_frontend_root`: `<repo>/frontend/`
+- `openapi_path`: `<repo>/docs/refactoring/api/openapi.yaml`
+- `phase2_security_root`:
   `<repo>/docs/analysis/02-technical/08-security/`
-- `phase2_dependencies_root` —
+- `phase2_dependencies_root`:
   `<repo>/docs/analysis/02-technical/03-dependencies-security/`
-- `phase4_hardening_root` — `<repo>/docs/refactoring/4.7-hardening/`
+- `phase4_hardening_root`: `<repo>/docs/refactoring/4.7-hardening/`
   or `<repo>/.refactoring-kb/04-hardening/`
-- `output_root_reports` — `<repo>/docs/analysis/05-tobe-tests/`
-- `output_root_be_tests` — `<repo>/backend/src/test/java/.../security/`
-- `output_root_e2e` — `<repo>/e2e/security/`
+- `output_root_reports`: `<repo>/docs/analysis/05-tobe-tests/`
+- `output_root_be_tests`: `<repo>/backend/src/test/java/.../security/`
+- `output_root_e2e`: `<repo>/e2e/security/`
 
 Read Phase 2 security findings to know which AS-IS issues were
-previously identified — every one must be re-tested in TO-BE
+previously identified: every one must be re-tested in TO-BE
 (regression-prevention list).
 
 Read Phase 4 hardening to know what the TO-BE security baseline is
-(OAuth2 flow, JWT issuer, scopes, CSP policy, CORS allowlist) — your
+(OAuth2 flow, JWT issuer, scopes, CSP policy, CORS allowlist): your
 tests verify that the baseline is actually enforced by the running
 code, not just documented in ADRs.
 
@@ -92,7 +92,7 @@ code, not just documented in ADRs.
 2. Plan the OWASP Top 10 coverage. Read
    `${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/security-test-writer/owasp-matrix.md`
    for the per-category approach and decide which categories are
-   non-applicable (and why — must be documented).
+   non-applicable (and why, must be documented).
 3. Author the per-area test classes. Read
    `${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/security-test-writer/test-templates.md`
    for skeletons (auth flow, role × endpoint authorisation, A03
@@ -139,11 +139,11 @@ e2e/security/
 └── session-fixation.spec.ts            (post-login session ID rotation)
 ```
 
-ZAP layout (only when opted in) — see
+ZAP layout (only when opted in), see
 `${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/security-test-writer/zap-baseline.md`.
 
-Consolidated report: `docs/analysis/05-tobe-tests/05-security-findings.md`
-— shape and frontmatter in
+Consolidated report: `docs/analysis/05-tobe-tests/05-security-findings.md`,
+shape and frontmatter in
 `${CLAUDE_PLUGIN_ROOT}/references/tobe-testing/security-test-writer/output-doc-template.md`.
 
 ---
@@ -151,13 +151,13 @@ Consolidated report: `docs/analysis/05-tobe-tests/05-security-findings.md`
 ## Stop conditions
 
 - **Stop and ask the user** if Phase 2 security findings or Phase 4
-  hardening artefacts are missing or empty — without them you cannot
+  hardening artefacts are missing or empty, without them you cannot
   build the regression list or the baseline checklist.
 - **Stop and ask the user** if an OWASP category is being marked
   non-applicable but the rationale is not unambiguous from the
   artefacts (e.g., A10 SSRF in a system that does call external
   URLs).
-- **Stop** before opting in to a live ZAP scan against any URL — the
+- **Stop** before opting in to a live ZAP scan against any URL: the
   scan is opt-in and never run automatically.
 - Otherwise continue and finalise the consolidated report.
 
@@ -166,7 +166,7 @@ Consolidated report: `docs/analysis/05-tobe-tests/05-security-findings.md`
 ## Constraints
 
 - **Never modify production code.** If a test exposes a misconfig,
-  the test fails — fixes go to a Phase 4 hardening loop.
+  the test fails. Fixes go to a Phase 4 hardening loop.
 - **Never include real credentials in tests.** Use a
   `JwtTestFactory` that signs with a test-only key.
 - **Never run a live ZAP scan against production.** ZAP scripts are
@@ -177,5 +177,5 @@ Consolidated report: `docs/analysis/05-tobe-tests/05-security-findings.md`
   cross-tenant access (for multi-tenant systems).
 - **Document non-applicability.** If A03 (Injection) doesn't apply
   to a given endpoint because it has no string input, say so
-  explicitly — don't silently skip.
+  explicitly, don't silently skip.
 - **Idempotent tests.** No leftover state.

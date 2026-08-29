@@ -1,15 +1,15 @@
-# Phase 4 — Step 5.5 — Test Data Seeding
+# Phase 4, Step 5.5: Test Data Seeding
 
 > Reference doc for `refactoring-supervisor`. Read at runtime when the
 > manifest reports Step 5 (Hardening) complete and Step 6 (Final
 > Validation / UI smoke gate) is about to start. This step is the
-> bridge that makes Step 6 actually meaningful — the UI smoke gate
+> bridge that makes Step 6 actually meaningful: the UI smoke gate
 > cannot judge an app whose every screen is empty.
 
 ## Why this step exists
 
 Phases 4.0 through 4.5 produce a fully-built, fully-tested TO-BE
-application — but the runtime database after migrations is empty.
+application, but the runtime database after migrations is empty.
 Every UI page shows "0 records", every dashboard reads "No data",
 every list is blank. From a human visual standpoint, an empty app
 looks identical to a broken app:
@@ -22,13 +22,13 @@ The Step 6 UI smoke gate's job is to catch precisely these
 **human-perceived** failures, but the gate is meaningless if the
 data layer is empty. Step 5.5 produces the small, coherent,
 cross-module dataset that turns an empty shell into a navigable
-application — without contaminating production and without
+application, without contaminating production and without
 introducing logic the test suite hasn't already exercised.
 
 ## Sub-agent
 
 This step is driven by exactly one sub-agent: `test-data-seeder`. It
-is not orchestrated by a wave model — Step 5.5 is a single
+is not orchestrated by a wave model: Step 5.5 is a single
 dispatch, single recap, single gate.
 
 ## Inputs to the sub-agent
@@ -36,15 +36,15 @@ dispatch, single recap, single gate.
 The supervisor passes:
 
 - repo root path
-- `<repo>/docs/analysis/01-functional/` — actors, use cases, bounded
+- `<repo>/docs/analysis/01-functional/`: actors, use cases, bounded
   contexts, enum values, lifecycle states (the dataset's *shape*
   comes from here)
-- `<repo>/docs/refactoring/` — bounded-context decomposition, ADRs,
+- `<repo>/docs/refactoring/`: bounded-context decomposition, ADRs,
   OpenAPI contract (drives which endpoints to smoke-test)
-- `<repo>/<backend-dir>/` — backend source (drives migration-tool
+- `<repo>/<backend-dir>/`: backend source (drives migration-tool
   detection, schema extraction, optional in-memory auth-store
   extension)
-- `<repo>/<frontend-dir>/` — frontend source (only to learn which
+- `<repo>/<frontend-dir>/`: frontend source (only to learn which
   routes Step 6 will exercise)
 - the list of UI smoke routes Step 6 will visit
 - execution policy: `auto` (default) | `on` | `off`
@@ -120,7 +120,7 @@ UI smoke routes Step 6 will visit: <list from manifest>.
 ```
 
 If the user picks `defer`, dispatch the agent with
-`execute_policy: off` — the recap will list the files and the
+`execute_policy: off`: the recap will list the files and the
 invocation command without restarting the backend.
 
 ## Post-Step-5.5 supervisor recap (mandatory user message)
@@ -172,7 +172,7 @@ After a successful Step 5.5, write to
 
 The credentials block is captured to enable Step 6 to log in
 without re-asking the user. **Important**: the manifest is also
-gated — `_meta/manifest.json` is a project-local file and is not
+gated: `_meta/manifest.json` is a project-local file and is not
 intended to ship to production.
 
 ## What this step is NOT
@@ -182,7 +182,7 @@ intended to ship to production.
   Step 5.5 produces **runtime** data for a running application.
 - It is NOT a production seed. The non-production gate is
   non-negotiable.
-- It is NOT a load-generator. Volume is intentionally small —
+- It is NOT a load-generator. Volume is intentionally small:
   coverage over cardinality.
 - It is NOT a schema-design step. The seed conforms to whatever
   schema Step 2 / Step 5 produced.

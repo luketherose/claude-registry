@@ -1,8 +1,8 @@
-# Phase 5 — Phase plan (Phase 0 bootstrap + Wave 1–5 + final report)
+# Phase 5: Phase plan (Phase 0 bootstrap + Wave 1–5 + final report)
 
 > Reference doc for `tobe-testing-supervisor`. Read at runtime to drive the bootstrap dialog, dispatch each wave, and produce the closing report.
 
-## Phase 0 — Bootstrap (supervisor only, no sub-agents)
+## Phase 0: Bootstrap (supervisor only, no sub-agents)
 
 1. **Detect resume mode**. Inspect what is on disk and pick one of:
 
@@ -10,7 +10,7 @@
    |---|---|
    | No `docs/analysis/05-tobe-tests/` AND no `tests/equivalence/` AND no test files under `backend/src/test/` or `frontend/src/app/**/*.spec.ts` | `fresh` |
    | Either dir exists but `docs/analysis/05-tobe-tests/_meta/manifest.json` reports `partial` / `failed` / missing | `resume-incomplete` |
-   | Reports exist AND manifest reports `complete` | `complete-eligible` — ask the user before doing anything |
+   | Reports exist AND manifest reports `complete` | `complete-eligible`: ask the user before doing anything |
 
    When `complete-eligible` triggers, ask the user verbatim:
 
@@ -65,14 +65,14 @@
     - Failure policy reminder
 13. **Present the plan to the user** (use the dispatch plan template). Wait for confirmation.
 
-Skip Phase 0 confirmation only if the user has explicitly said "go ahead with the whole pipeline" — and even then, post the plan and wait at least one turn unless the user repeats "proceed".
+Skip Phase 0 confirmation only if the user has explicitly said "go ahead with the whole pipeline", and even then, post the plan and wait at least one turn unless the user repeats "proceed".
 
-## Wave 1 — Test authoring (mode-dependent dispatch of 4 workers)
+## Wave 1: Test authoring (mode-dependent dispatch of 4 workers)
 
 Per chosen mode:
 
-- **parallel**: single message with 4 Agent calls in parallel (the per-UC fan-out for `equivalence-test-writer` happens inside the worker's own dispatch — it batches at 4 concurrent internally if invoked once per UC; alternatively the supervisor can fan out by invoking `equivalence-test-writer` N times directly and batching at 4 concurrent. Choose based on UC count: <= 20 → fan out from supervisor; > 20 → invoke once and let the worker chunk).
-- **batched**: three messages — batch 1 (equivalence + backend), batch 2 (frontend), batch 3 (security).
+- **parallel**: single message with 4 Agent calls in parallel (the per-UC fan-out for `equivalence-test-writer` happens inside the worker's own dispatch, it batches at 4 concurrent internally if invoked once per UC; alternatively the supervisor can fan out by invoking `equivalence-test-writer` N times directly and batching at 4 concurrent. Choose based on UC count: <= 20 → fan out from supervisor; > 20 → invoke once and let the worker chunk).
+- **batched**: three messages, batch 1 (equivalence + backend), batch 2 (frontend), batch 3 (security).
 - **sequential**: 4 messages, one per worker, in domain order (equivalence → backend → frontend → security).
 
 After each batch (or worker), read outputs from disk. Verify:
@@ -82,7 +82,7 @@ After each batch (or worker), read outputs from disk. Verify:
 
 If any worker reports `status: blocked` or `confidence: low` on a foundational deliverable: surface to the user **before Wave 2**.
 
-## Wave 1.5 — Human-in-the-loop checkpoint
+## Wave 1.5: Human-in-the-loop checkpoint
 
 Present to the user after all Wave 1 workers complete:
 - counts: UCs tested / total, backend test files, frontend test files, E2E specs, security tests
@@ -93,7 +93,7 @@ Ask: "Proceed to Wave 2 (performance comparison), revise a specific worker outpu
 
 Non-negotiable when Wave 1 produced ≥ 1 `blocked` item or ≥ 5 `low` confidence sections. Otherwise recommended but skippable with `--no-checkpoint`.
 
-## Wave 2 — Performance comparison (sequential, single Agent call)
+## Wave 2: Performance comparison (sequential, single Agent call)
 
 Dispatch `performance-comparator`. It reads:
 - Phase 3 `benchmark-baseline.json` (AS-IS reference)
@@ -101,40 +101,40 @@ Dispatch `performance-comparator`. It reads:
 - Wave 1 backend tests (to identify which BC scenarios to load-test)
 
 Produces:
-- `e2e/perf/` — Gatling or k6 scenarios (one per critical UC and per high-traffic endpoint)
-- `04-performance-comparison.md` — markdown report with deltas, p95 comparison table, regression flags
-- `_meta/benchmark-comparison.json` — machine-readable
+- `e2e/perf/`: Gatling or k6 scenarios (one per critical UC and per high-traffic endpoint)
+- `04-performance-comparison.md`: markdown report with deltas, p95 comparison table, regression flags
+- `_meta/benchmark-comparison.json`: machine-readable
 
 If `execute_policy` permits, runs the load tests and captures real deltas. Else writes scenarios and marks the report `status: partial — pending execution`.
 
 After dispatch, read outputs. Aggregate `## Open questions` into `14-unresolved-questions.md`.
 
-## Wave 3 — Execution & oracle capture (sequential, single Agent call)
+## Wave 3: Execution & oracle capture (sequential, single Agent call)
 
 Dispatch `tobe-test-runner`. It reads all Wave 1 + Wave 2 outputs and:
-1. Runs `mvn test` for backend (if execute_policy permits) — captures JUnit XML, JaCoCo coverage, Spring Cloud Contract verifier results.
-2. Runs `ng test --watch=false` for frontend (if execute_policy permits) — captures Karma/Jest coverage.
-3. Runs `npx playwright test` (if execute_policy permits) — captures Playwright traces.
+1. Runs `mvn test` for backend (if execute_policy permits): captures JUnit XML, JaCoCo coverage, Spring Cloud Contract verifier results.
+2. Runs `ng test --watch=false` for frontend (if execute_policy permits): captures Karma/Jest coverage.
+3. Runs `npx playwright test` (if execute_policy permits): captures Playwright traces.
 4. Runs `tests/equivalence/` Python harness against TO-BE deployment (or stubs out the diff if execute_policy is off).
 5. Applies the failure policy: critical/high → escalate; medium/low → tag in `06-tobe-bug-registry.md` with `xfail`/`skip` markers.
 
 Produces:
-- `02-coverage-report.md` — line/branch coverage per BC, per layer
-- `03-contract-tests-report.md` — pact / Spring Cloud Contract verdicts per OpenAPI operationId
-- `06-tobe-bug-registry.md` — TBUG-NN entries
-- `_meta/coverage.json` — machine-readable
+- `02-coverage-report.md`: line/branch coverage per BC, per layer
+- `03-contract-tests-report.md`: pact / Spring Cloud Contract verdicts per OpenAPI operationId
+- `06-tobe-bug-registry.md`: TBUG-NN entries
+- `_meta/coverage.json`: machine-readable
 
 After dispatch, read outputs. If the runner reports any `critical` or `high` finding without a documented disposition: **stop, do not declare Phase 5 complete; escalate** with a focused summary.
 
-## Wave 4 — Equivalence synthesis (sequential, single Agent call)
+## Wave 4: Equivalence synthesis (sequential, single Agent call)
 
 Dispatch `equivalence-synthesizer`. It reads everything in `docs/analysis/05-tobe-tests/` plus the TO-BE codebase manifests and produces:
-- `01-equivalence-report.md` — UC-by-UC table (AS-IS oracle vs TO-BE result), accepted-differences register (each requires PO sign-off), go-live verdict
-- `README.md` — entry point with navigation links and reading order
+- `01-equivalence-report.md`: UC-by-UC table (AS-IS oracle vs TO-BE result), accepted-differences register (each requires PO sign-off), go-live verdict
+- `README.md`: entry point with navigation links and reading order
 
 After dispatch, read outputs. The equivalence report MUST list every UC from Phase 1 with one of: `equivalent`, `accepted-difference`, `regression-blocking`, `regression-accepted`, `not-tested-with-reason`. If any UC is missing or has no disposition, escalate.
 
-## Wave 5 — Challenger (always ON)
+## Wave 5: Challenger (always ON)
 
 Dispatch `tobe-testing-challenger`. Adversarial review of all W1–W4 outputs. Produces:
 - `_meta/challenger-report.md`

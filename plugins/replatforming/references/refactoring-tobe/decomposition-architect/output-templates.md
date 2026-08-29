@@ -1,8 +1,8 @@
-# Decomposition-architect — output templates
+# Decomposition-architect: output templates
 
 > Reference doc for `decomposition-architect`. Read at runtime when writing the
 > Phase 4 Wave 1 outputs (bounded contexts, aggregate design, AS-IS↔TO-BE
-> mapping). Schemas only — decision logic stays in the agent body.
+> mapping). Schemas only: decision logic stays in the agent body.
 
 ---
 
@@ -98,7 +98,7 @@ For each BC, the aggregates that anchor data + behavior consistency.
 
 ## File 3: `.refactoring-kb/00-decomposition/module-decomposition.md`
 
-Authoritative AS-IS → TO-BE table — see Method §2 in the agent body. Same
+Authoritative AS-IS → TO-BE table, see Method §2 in the agent body. Same
 column shape as the mapping table in File 1, scoped to the full module
 inventory (every module appears exactly once).
 

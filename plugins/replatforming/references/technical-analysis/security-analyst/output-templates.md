@@ -1,4 +1,4 @@
-# Security-analyst — output templates
+# Security-analyst: output templates
 
 > Reference doc for `security-analyst`. Read at runtime when about to write the
 > three security deliverables under `docs/analysis/02-technical/08-security/`.
@@ -9,7 +9,7 @@ across Phase 2 outputs (`agent`, `generated`, `sources`, `confidence`,
 
 ---
 
-## File 1 — `security-findings.md`
+## File 1: `security-findings.md`
 
 ```markdown
 ---
@@ -70,7 +70,7 @@ status: <complete|partial|needs-review|blocked>
 
 ---
 
-## File 2 — `owasp-top10-coverage.md`
+## File 2: `owasp-top10-coverage.md`
 
 ```markdown
 ---
@@ -106,7 +106,7 @@ status: <complete|partial|needs-review|blocked>
 
 ---
 
-## File 3 — `threat-model.md`
+## File 3: `threat-model.md`
 
 ```markdown
 ---

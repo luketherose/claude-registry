@@ -1,4 +1,4 @@
-# API contract designer — OpenAPI 3.1 template
+# API contract designer: OpenAPI 3.1 template
 
 > Reference doc for `api-contract-designer`. Read at runtime when authoring
 > `docs/refactoring/4.6-api/openapi.yaml`. The agent body keeps the decision
@@ -129,8 +129,8 @@ Per Phase 2 security findings, ensure no internal information leaks in
 ## Key authoring rules
 
 - every endpoint has an `operationId` (drives generated client method names)
-- every endpoint has `x-uc-ref` (custom extension referencing the Phase 1 UC)
-  — supports challenger traceability
+- every endpoint has `x-uc-ref` (custom extension referencing the Phase 1 UC),
+  supports challenger traceability
 - every endpoint has at least one error response using ProblemDetail
 - schemas reused via `$ref: '#/components/schemas/...'` (no duplicates)
 - examples for at least one happy and one error path per endpoint
@@ -139,7 +139,7 @@ Per Phase 2 security findings, ensure no internal information leaks in
 
 After writing, validate:
 
-- Bash: `which spectral` — if available, run
+- Bash: `which spectral`: if available, run
   `spectral lint docs/refactoring/4.6-api/openapi.yaml`
 - if spectral unavailable: do a manual structural check (parse YAML;
   every `$ref` resolves; every `operationId` is unique; every schema is

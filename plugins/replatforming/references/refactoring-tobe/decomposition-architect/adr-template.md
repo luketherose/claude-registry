@@ -1,4 +1,4 @@
-# Decomposition-architect — ADR templates
+# Decomposition-architect: ADR templates
 
 > Reference doc for `decomposition-architect`. Nygard-format ADR skeletons for
 > ADR-001 (architecture style) and ADR-002 (target stack). Decision logic and

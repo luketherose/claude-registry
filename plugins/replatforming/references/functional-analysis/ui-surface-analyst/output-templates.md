@@ -1,4 +1,4 @@
-# Output file shapes — `ui-surface-analyst`
+# Output file shapes: `ui-surface-analyst`
 
 > Reference doc for `ui-surface-analyst`. Read at runtime when writing the
 > four output files in Wave 1.
@@ -13,7 +13,7 @@ through the `Write` tool. See § File-writing rule in the agent body.
 
 ---
 
-## File 1 — `docs/analysis/01-functional/03-ui-map.md`
+## File 1: `docs/analysis/01-functional/03-ui-map.md`
 
 ```markdown
 ---
@@ -68,7 +68,7 @@ Legend:
 
 ---
 
-## File 2 — `docs/analysis/01-functional/04-screens/README.md`
+## File 2: `docs/analysis/01-functional/04-screens/README.md`
 
 ```markdown
 # Screens index
@@ -82,7 +82,7 @@ Legend:
 
 ---
 
-## File 3 (per screen) — `docs/analysis/01-functional/04-screens/S-NN-<slug>.md`
+## File 3 (per screen): `docs/analysis/01-functional/04-screens/S-NN-<slug>.md`
 
 ```markdown
 ---
@@ -148,7 +148,7 @@ Page: Dashboard
 
 ---
 
-## File 4 — `docs/analysis/01-functional/05-component-tree.md`
+## File 4: `docs/analysis/01-functional/05-component-tree.md`
 
 ```markdown
 ---

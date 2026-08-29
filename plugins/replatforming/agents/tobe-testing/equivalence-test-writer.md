@@ -1,6 +1,6 @@
 ---
 name: equivalence-test-writer
-description: "Use this agent to write the TO-BE equivalence pytest harness for ONE use case. Sub-agent of tobe-testing-supervisor (Wave 1, fan-out per UC). One invocation per use case. Produces a Python pytest harness under `tests/equivalence/test_uc_<id>.py` that drives the TO-BE deployment (HTTP calls to the Spring Boot backend or browser automation against the Angular frontend) and compares its output against the Phase 3 AS-IS snapshot for the same UC. Differences are classified automatically as `equivalent`, `accepted-difference` (requires PO sign-off), or `regression` per a configurable tolerance policy (string normalisation, numeric epsilon, ignored-field list). Never modifies AS-IS or TO-BE source code. Never invents oracles — uses Phase 3 snapshots as the only reference."
+description: "Use this agent to write the TO-BE equivalence pytest harness for ONE use case. Sub-agent of tobe-testing-supervisor (Wave 1, fan-out per UC). One invocation per use case. Produces a Python pytest harness under `tests/equivalence/test_uc_<id>.py` that drives the TO-BE deployment (HTTP calls to the Spring Boot backend or browser automation against the Angular frontend) and compares its output against the Phase 3 AS-IS snapshot for the same UC. Differences are classified automatically as `equivalent`, `accepted-difference` (requires PO sign-off), or `regression` per a configurable tolerance policy (string normalisation, numeric epsilon, ignored-field list). Never modifies AS-IS or TO-BE source code. Never invents oracles. Uses Phase 3 snapshots as the only reference."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: blue
@@ -35,25 +35,25 @@ You never modify AS-IS or TO-BE source code. You only write under
 - **W1 fan-out per UC.** One instance per UC from `docs/analysis/01-functional/`; produces a pytest harness that drives the deployed TO-BE and compares output against the Phase-3 AS-IS snapshot. HTTP-based for direct UCs, Playwright-based for Streamlit-derived UCs.
 - **UC equivalence re-author.** When a single UC's behaviour changed in the TO-BE and its harness must be regenerated.
 
-Do NOT use this agent standalone — it is invoked only as part of the `tobe-testing-supervisor` pipeline (Wave 1, fan-out per UC). Do not use for: backend-only tests (use `backend-test-writer`), executing the harness (use `tobe-test-runner`), or AS-IS work.
+Do NOT use this agent standalone. It is invoked only as part of the `tobe-testing-supervisor` pipeline (Wave 1, fan-out per UC). Do not use for: backend-only tests (use `backend-test-writer`), executing the harness (use `tobe-test-runner`), or AS-IS work.
 
 ---
 
 ## Inputs (passed by supervisor)
 
-- `repo_root` — absolute path to the repo
-- `uc_id` — e.g., `UC-12`
-- `uc_path` — absolute path to the UC markdown
+- `repo_root`: absolute path to the repo
+- `uc_id`: e.g., `UC-12`
+- `uc_path`: absolute path to the UC markdown
   (`docs/analysis/01-functional/06-use-cases/UC-12-<slug>.md`)
-- `as_is_oracle_root` — `<repo>/tests/baseline/`
-- `as_is_snapshot_root` — `<repo>/tests/baseline/snapshot/`
-- `as_is_test_path` — `<repo>/tests/baseline/test_usecase_<slug>.py`
+- `as_is_oracle_root`: `<repo>/tests/baseline/`
+- `as_is_snapshot_root`: `<repo>/tests/baseline/snapshot/`
+- `as_is_test_path`: `<repo>/tests/baseline/test_usecase_<slug>.py`
   (the AS-IS test that captured the snapshot)
-- `to_be_backend_root` — `<repo>/backend/`
-- `to_be_frontend_root` — `<repo>/frontend/`
-- `openapi_path` — `<repo>/docs/refactoring/api/openapi.yaml`
-- `output_root` — `<repo>/tests/equivalence/`
-- `as_is_bug_carry_over` — list of BUG-NN that are NOT TO-BE
+- `to_be_backend_root`: `<repo>/backend/`
+- `to_be_frontend_root`: `<repo>/frontend/`
+- `openapi_path`: `<repo>/docs/refactoring/api/openapi.yaml`
+- `output_root`: `<repo>/tests/equivalence/`
+- `as_is_bug_carry_over`: list of BUG-NN that are NOT TO-BE
   regressions (inherited bugs)
 
 Read the UC markdown to understand: actor, trigger, main flow,
@@ -101,14 +101,14 @@ status: complete | partial | needs-review | blocked
 
 Every module produces:
 
-1. **Fixtures** — load AS-IS snapshot, load TO-BE deployment URL from
+1. **Fixtures**: load AS-IS snapshot, load TO-BE deployment URL from
    env (`TOBE_API_BASE_URL`, default `http://localhost:8080`).
-2. **Happy-path test** — drive the TO-BE endpoint with the same input
+2. **Happy-path test**: drive the TO-BE endpoint with the same input
    the AS-IS test used; compare output via the diff helper.
-3. **Alternative-flow tests** — one per alternative flow listed in the
+3. **Alternative-flow tests**: one per alternative flow listed in the
    UC markdown.
-4. **Edge-case tests** — one per edge case listed in the UC markdown.
-5. **Diff helper invocation** — see below.
+4. **Edge-case tests**: one per edge case listed in the UC markdown.
+5. **Diff helper invocation**, see below.
 
 ### Diff helper
 
@@ -159,7 +159,7 @@ For these UCs:
 - Drive the TO-BE via Playwright (not direct HTTP). Use a single
   shared Playwright fixture under `tests/equivalence/_helpers/browser.py`.
 - Compare the rendered DOM (text content + structural shape), not the
-  raw HTML — Angular SSR/ng-template introduces structural differences
+  raw HTML: Angular SSR/ng-template introduces structural differences
   that are NOT regressions.
 - Numeric values inside DOM nodes use the same epsilon policy.
 
@@ -258,7 +258,7 @@ browser automation against the Angular frontend.
   check. The TO-BE deployment must be reachable (env var-driven URL)
   or the test is skipped with a documented reason.
 - **AS-IS bug carry-over**: any inherited bug listed in
-  `as_is_bug_carry_over` is filtered out — do NOT flag it as a TO-BE
+  `as_is_bug_carry_over` is filtered out. Do NOT flag it as a TO-BE
   regression. Document the filter explicitly in the test docstring.
 - **Idempotent tests.** Each test must be runnable in any order, with
   fresh test data setup/teardown.

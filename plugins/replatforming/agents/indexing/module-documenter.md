@@ -1,6 +1,6 @@
 ---
 name: module-documenter
-description: "Use this agent to document one package or module of a codebase end-to-end at the API level: purpose, public interface (exported classes/functions), key data structures, internal organization. Language-agnostic — adapts to the package conventions of the detected language (Python packages via `__init__.py`, Java/Kotlin packages via `src/main/{java,kotlin}/`, Go modules under `cmd/`/`internal/`, Rust crates declared in `Cargo.toml`, .NET projects via `*.csproj`, Ruby `app/`/`lib/` directories, PHP namespaces from `composer.json` autoload, JS/TS packages under `src/`/`app/`/`packages/`). Reads `02-structure/stack.json` to know which conventions apply. One invocation per top-level package — runs in parallel with other module-documenter invocations targeting different packages."
+description: "Use this agent to document one package or module of a codebase end-to-end at the API level: purpose, public interface (exported classes/functions), key data structures, internal organization. Language-agnostic: adapts to the package conventions of the detected language (Python packages via `__init__.py`, Java/Kotlin packages via `src/main/{java,kotlin}/`, Go modules under `cmd/`/`internal/`, Rust crates declared in `Cargo.toml`, .NET projects via `*.csproj`, Ruby `app/`/`lib/` directories, PHP namespaces from `composer.json` autoload, JS/TS packages under `src/`/`app/`/`packages/`). Reads `02-structure/stack.json` to know which conventions apply. One invocation per top-level package: runs in parallel with other module-documenter invocations targeting different packages."
 tools: Read, Glob, Bash, Write
 model: sonnet
 color: magenta
@@ -34,7 +34,7 @@ Do NOT use this agent for: cross-module synthesis (use `synthesizer`), business-
 
 - Package path (e.g., `src/myapp/billing/` for Python; `src/main/kotlin/com/acme/orders/` for Kotlin; `cmd/server/` for Go; `crates/orders/` for Rust)
 - Package name (used as filename, kebab-case if multi-word)
-- `02-structure/stack.json` — the canonical AS-IS stack manifest;
+- `02-structure/stack.json`: the canonical AS-IS stack manifest;
   you MUST consult it for language-aware behaviour
 
 ## Method
@@ -64,7 +64,7 @@ Per language:
 | swift | top-level `public class`/`public struct`/`public enum`/`public protocol`/`public func` |
 
 Use language-appropriate grep patterns to enumerate top-level
-definitions. Do not parse ASTs — line-based grep is sufficient.
+definitions. Do not parse ASTs. Line-based grep is sufficient.
 
 ### 3. Extract signatures and doc comments
 
@@ -79,7 +79,7 @@ For each definition, capture:
 
 ### 4. Side-effect classification
 
-Classify functions/methods by side-effect heuristics — keywords vary
+Classify functions/methods by side-effect heuristics: keywords vary
 per language:
 
 | Language | I/O / side-effect markers (heuristic grep) |
@@ -94,7 +94,7 @@ per language:
 | typescript / javascript | `fetch(`, `axios.`, `fs.`, `process.`, `console.`, `Date.now`, `db.` |
 
 A function with **no** side-effect markers is "pure"; otherwise
-"side-effectful". This is a heuristic — note ambiguity in Open
+"side-effectful". This is a heuristic: note ambiguity in Open
 questions if a function calls another function whose body you didn't
 inspect.
 
@@ -106,7 +106,7 @@ are imported from outside the package (cross-reference with
 
 ### 6. Tech-debt markers
 
-Identify TODO/FIXME/HACK/XXX comments — record file:line, do not
+Identify TODO/FIXME/HACK/XXX comments: record file:line, do not
 interpret. Comment syntax varies by language; common ones:
 - C-style: `// TODO`, `/* TODO */` (Java, Kotlin, Rust, Go, C#, JS,
   PHP, Swift)
@@ -122,7 +122,7 @@ the Markdown file template, and the output target table.
 ## Evidence and grounding
 
 Before documenting any module:
-1. Check `bronze/large-files.jsonl` — if the module file is listed as large/huge/giant, read chunks from `bronze/large-file-chunks.jsonl` instead of the raw file.
+1. Check `bronze/large-files.jsonl`: if the module file is listed as large/huge/giant, read chunks from `bronze/large-file-chunks.jsonl` instead of the raw file.
 2. For every claim in `silver/module-summaries.jsonl`, include `evidence_ids` citing the source file + line range.
 3. If a large file's purpose cannot be fully determined from available chunks, write to `silver/assumptions.jsonl` and `silver/gaps.jsonl`.
 
@@ -175,7 +175,7 @@ from a string, variable, template, heredoc, or piped input.
   questions).
 - **Do not document test files** (those are excluded by supervisor's
   skip list).
-- **Do not extract business rules** — refer to "domain operations" but
+- **Do not extract business rules**. Refer to "domain operations" but
   defer semantic interpretation to `business-logic-analyst`.
 - **Do not modify any source file.**
 - **Do not write outside `.indexing-kb/`** (allowed paths:

@@ -1,4 +1,4 @@
-# Use-case file shape — `user-flow-analyst`
+# Use-case file shape: `user-flow-analyst`
 
 > Reference doc for `user-flow-analyst`. Read at runtime when writing UC files
 > in Wave 2.
@@ -9,7 +9,7 @@ agent body is by ID convention only.
 
 ---
 
-## File 1 — `docs/analysis/01-functional/06-use-cases/README.md`
+## File 1: `docs/analysis/01-functional/06-use-cases/README.md`
 
 ```markdown
 # Use cases index
@@ -23,7 +23,7 @@ agent body is by ID convention only.
 
 ---
 
-## File 2 (per UC) — `docs/analysis/01-functional/06-use-cases/UC-NN-<slug>.md`
+## File 2 (per UC): `docs/analysis/01-functional/06-use-cases/UC-NN-<slug>.md`
 
 ```markdown
 ---
@@ -110,7 +110,7 @@ sequenceDiagram
 
 ---
 
-## File 3 — `docs/analysis/01-functional/07-user-flows.md`
+## File 3: `docs/analysis/01-functional/07-user-flows.md`
 
 ```markdown
 ---
@@ -142,7 +142,7 @@ High-level narratives chaining multiple UCs into typical journeys.
 
 ---
 
-## File 4 — `docs/analysis/01-functional/08-sequence-diagrams.md`
+## File 4: `docs/analysis/01-functional/08-sequence-diagrams.md`
 
 ```markdown
 ---

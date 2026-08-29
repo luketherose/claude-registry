@@ -1,30 +1,30 @@
-# `test-data-seeder` — Method
+# `test-data-seeder`: Method
 
 > Reference doc for `test-data-seeder`. The agent body keeps the role,
 > when-to-invoke, inputs, output format, and quality criteria. The
 > detailed 7-step method lives here and is read on demand at the start
 > of an invocation.
 
-## Step 1 — Detect the migration tool and the seed-injection point
+## Step 1: Detect the migration tool and the seed-injection point
 
 Probe the backend in this order; stop at the first match.
 
 | Detect | If found |
 |---|---|
-| `src/main/resources/db/changelog/db.changelog-master.yaml` (or `.xml`) | **Liquibase** — write a YAML changeset file gated `context: test` (or whatever non-prod context the project already uses), register it in `db.changelog-master.{yaml,xml}`. |
-| `src/main/resources/db/migration/V*.sql` | **Flyway** — write a versioned migration `V<next>__seed_test_data.sql`; use a profile-gated SQL guard if Flyway placeholders are configured, otherwise emit it under a `db/migration/test/` location wired only in the test/dev profile. |
-| `manage.py` + `fixtures/` | **Django fixtures** — write a JSON / YAML fixture loaded by `loaddata` in the dev/test settings. |
-| `db/seeds.rb` or `db/seeds/development.rb` | **Rails seeds** — append idempotent `find_or_create_by!` blocks. |
-| `Migrations/` with `*.Designer.cs` or `dbContext.HasData()` | **EF Core Data Seeding** — extend `OnModelCreating` with `modelBuilder.Entity<…>().HasData(…)` gated by environment, or write a new migration with seed `InsertData` ops. |
-| `knexfile.{js,ts}` + `seeds/` | **Knex seeds** — write `<NN>_<topic>.{js,ts}` with `knex(...).insert(...)` patterns. |
+| `src/main/resources/db/changelog/db.changelog-master.yaml` (or `.xml`) | **Liquibase**: write a YAML changeset file gated `context: test` (or whatever non-prod context the project already uses), register it in `db.changelog-master.{yaml,xml}`. |
+| `src/main/resources/db/migration/V*.sql` | **Flyway**: write a versioned migration `V<next>__seed_test_data.sql`; use a profile-gated SQL guard if Flyway placeholders are configured, otherwise emit it under a `db/migration/test/` location wired only in the test/dev profile. |
+| `manage.py` + `fixtures/` | **Django fixtures**: write a JSON / YAML fixture loaded by `loaddata` in the dev/test settings. |
+| `db/seeds.rb` or `db/seeds/development.rb` | **Rails seeds**: append idempotent `find_or_create_by!` blocks. |
+| `Migrations/` with `*.Designer.cs` or `dbContext.HasData()` | **EF Core Data Seeding**: extend `OnModelCreating` with `modelBuilder.Entity<…>().HasData(…)` gated by environment, or write a new migration with seed `InsertData` ops. |
+| `knexfile.{js,ts}` + `seeds/` | **Knex seeds**: write `<NN>_<topic>.{js,ts}` with `knex(...).insert(...)` patterns. |
 | `data-source.ts` with TypeORM | **TypeORM seeders** (or `typeorm-seeding` if installed). |
-| `migrations/*.sql` only (no tool) | **Raw SQL fallback** — write `<NN>__seed_test_data.sql` next to existing migrations and document how to invoke it. |
+| `migrations/*.sql` only (no tool) | **Raw SQL fallback**: write `<NN>__seed_test_data.sql` next to existing migrations and document how to invoke it. |
 | None of the above | Halt and ask the supervisor which seed mechanism to use; do not invent one. |
 
 Record the chosen tool in the dataset plan (see Step 3) so the
 restart command in Step 6 can be picked correctly.
 
-## Step 2 — Discover the schema and the dataset envelope
+## Step 2: Discover the schema and the dataset envelope
 
 Read the schema, not the README. From the migration files and the
 ORM entity classes / model files, extract for every table that will
@@ -52,13 +52,13 @@ mapping, fill it with a sentinel that is valid for the column type
 (empty string, `null` if nullable, `false`, `0`) and document the
 deviation in the dataset-plan output.
 
-## Step 3 — Design the dataset (call the design skill)
+## Step 3: Design the dataset (call the design skill)
 
 Invoke `test-data-seeding-standards` and apply its rules. Produce, as
 an internal artifact, a **dataset plan** containing:
 
 1. **Pivot entities (5 by default).** A small set of core domain
-   entities (customers, orders, users, accounts — whatever the
+   entities (customers, orders, users, accounts, whatever the
    bounded contexts are about) used as anchors across every module.
    Every other table that has a FK to one of these tables references
    one of these IDs.
@@ -87,7 +87,7 @@ Validate the plan against the **constraints**:
 - Every CHECK constraint is satisfied.
 - Composite PKs do not collide with other rows.
 
-## Step 4 — Write the seed file(s)
+## Step 4: Write the seed file(s)
 
 Generate the seed in the tool's native format (call
 `test-data-seeding-standards` for the exact templates). Apply these
@@ -122,9 +122,9 @@ discipline rules regardless of tool:
   has a one-file convention, follow it.
 
 Write the file(s) into the project's existing seed / migration
-directory tree — never invent a new location.
+directory tree, never invent a new location.
 
-## Step 5 — Wire any required auth-store extensions
+## Step 5: Wire any required auth-store extensions
 
 If the backend has an in-memory auth / user store (common in
 test / dev profiles for Spring Boot + Spring Security demo apps,
@@ -134,7 +134,7 @@ the user can actually log in and click around.
 
 This is the **only** TO-BE source edit you may perform. Rules:
 
-- Add users only — never remove or change existing ones.
+- Add users only, never remove or change existing ones.
 - Match passwords to a documented test value (e.g. `password ==
   username`) so the supervisor's recap can publish credentials.
 - Use the project's existing hashing function (do not introduce a
@@ -146,13 +146,13 @@ This is the **only** TO-BE source edit you may perform. Rules:
 If the project uses a real user table (DB-backed auth, OAuth, SSO),
 seed the user rows in the seed file instead and skip this step.
 
-## Step 6 — Restart and verify (when execution policy allows)
+## Step 6: Restart and verify (when execution policy allows)
 
 When `execute_policy` is `auto` (and the tooling is reachable) or
 `on`:
 
 1. Stop any currently-running instance of the backend that holds the
-   migration lock (`ps` / `netstat` / `lsof` / `Get-Process` —
+   migration lock (`ps` / `netstat` / `lsof` / `Get-Process`,
    whichever is appropriate for the OS).
 2. Restart the backend with the test / dev profile that activates
    the seed (the tool detected in Step 1 dictates the command).
@@ -170,7 +170,7 @@ When `execute_policy` is `off`, skip Step 6 and emit a Step 6
 checklist in the recap so the supervisor can run it manually or
 defer to Step 6.1 of the UI smoke gate.
 
-## Step 7 — Recap to the supervisor
+## Step 7: Recap to the supervisor
 
 Return a single recap message in the format defined under "Output
 format" in the agent body. The supervisor uses it to decide whether

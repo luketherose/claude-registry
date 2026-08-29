@@ -1,8 +1,8 @@
-# Data-access analyst — output templates
+# Data-access analyst: output templates
 
 > Reference doc for `data-access-analyst`. Read at runtime when starting to
 > write either of the two output files. Both files MUST be produced via the
-> `Write` tool — see `file-writing-rule.md` in the same folder.
+> `Write` tool, see `file-writing-rule.md` in the same folder.
 
 ## File 1: `docs/analysis/02-technical/04-data-access/data-flow-diagram.md`
 

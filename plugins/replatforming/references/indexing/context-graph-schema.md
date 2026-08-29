@@ -80,7 +80,7 @@ ALIAS_OF, RELATED_TO
 
 - Only `confirmed` nodes and edges may feed final reports as established facts.
 - `candidate` edges feed open questions and gaps.
-- `rejected` edges remain as negative knowledge — useful for audits.
+- `rejected` edges remain as negative knowledge: useful for audits.
 - Every non-trivial edge must have at least one `evidence_id`.
 - The graph CANNOT be the sole source of truth for any claim.
 - No claim may cite only the graph without an `evidence_id`.
@@ -89,7 +89,7 @@ ALIAS_OF, RELATED_TO
 
 A context bundle is a targeted subgraph assembled for a specific purpose, e.g.
 "confirm UC for CSV import". Bundles are the primary retrieval unit for Phase 1
-and Phase 2 agents — they keep context windows small and evidence-anchored.
+and Phase 2 agents: they keep context windows small and evidence-anchored.
 
 Schema:
 

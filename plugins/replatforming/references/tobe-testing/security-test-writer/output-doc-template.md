@@ -1,4 +1,4 @@
-# `05-security-findings.md` — output document template
+# `05-security-findings.md`: output document template
 
 > Reference doc for `security-test-writer`. Read at runtime when
 > authoring the consolidated security output document.

@@ -1,4 +1,4 @@
-# Data-mapper — Liquibase changelog templates
+# Data-mapper: Liquibase changelog templates
 
 > Reference doc for `data-mapper`. Read at runtime when emitting Liquibase
 > YAML changelogs. The decision rules (Case A vs Case B, immutability,
@@ -19,7 +19,7 @@ under `<backend-dir>/src/main/resources/db/changelog/`:
   zz__seed-data.yaml            ← optional, gated on context: local
 ```
 
-## `db.changelog-master.yaml` — option A (includeAll)
+## `db.changelog-master.yaml`: option A (includeAll)
 
 ```yaml
 databaseChangeLog:
@@ -29,7 +29,7 @@ databaseChangeLog:
       relativeToChangelogFile: false
 ```
 
-## `db.changelog-master.yaml` — option B (explicit ordering)
+## `db.changelog-master.yaml`: option B (explicit ordering)
 
 If you prefer explicit ordering over `includeAll`, list every changelog in
 order:
@@ -104,10 +104,10 @@ databaseChangeLog:
 ## Rules
 
 - one changeSet per logical change (avoid mega-changesets)
-- **never edit a deployed changeSet** — its checksum is recorded in
+- **never edit a deployed changeSet**. Its checksum is recorded in
   `DATABASECHANGELOG`; always add a new one with the next id
 - author = `data-mapper` (or the human author when hand-edited)
-- prefer YAML over SQL/XML formats — diffs and conditional logic are
+- prefer YAML over SQL/XML formats: diffs and conditional logic are
   cleaner; raw SQL is allowed only inside a `sql:` change when YAML
   cannot express the operation (e.g., DB-specific functions)
 - always include a `rollback:` block (Liquibase needs it for
@@ -116,9 +116,9 @@ databaseChangeLog:
 - explicit constraint names (forward-compatible)
 - indexes on common query patterns from Phase 2
 - contexts: tag environment-specific changesets with `context: local`
-  (e.g., seed data) — production changelogs run unconditionally
+  (e.g., seed data): production changelogs run unconditionally
 
-## Case B — existing-schema migration
+## Case B: existing-schema migration
 
 For Case B (existing schema migration), the first changelog is
 `01__baseline_existing.yaml` that captures the AS-IS schema (typically from

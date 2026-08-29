@@ -1,4 +1,4 @@
-# Baseline runner — failure policy
+# Baseline runner: failure policy
 
 > Reference doc for `baseline-runner`. Read at runtime when classifying
 > a failing test (severity inference) and applying the policy
@@ -57,7 +57,7 @@ def test_uc_03_alt_partial_refund(...):
 ```
 
 `strict=True` means the test reports XPASS (and fails the suite) if it
-unexpectedly passes — this catches AS-IS bugs that get fixed out-of-band
+unexpectedly passes: this catches AS-IS bugs that get fixed out-of-band
 so the test doesn't silently lie.
 
 ## Strictness rules

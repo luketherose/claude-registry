@@ -1,7 +1,7 @@
 # Maven POM template
 
 > Reference doc for `backend-scaffolder`. Read at runtime when generating
-> `<backend-dir>/pom.xml` (Method step 1 — Project skeleton).
+> `<backend-dir>/pom.xml` (Method step 1, Project skeleton).
 
 ## Goal
 
@@ -39,5 +39,5 @@ version per ADR-002, build with `mvn compile` after `data-mapper` runs.
 
 - `spring-boot-maven-plugin`
 - `org.openapitools:openapi-generator-maven-plugin` configured to read
-  `../docs/refactoring/4.6-api/openapi.yaml` and generate API interfaces —
+  `../docs/refactoring/4.6-api/openapi.yaml` and generate API interfaces:
   the controller `implements` these. No client generation for BE.

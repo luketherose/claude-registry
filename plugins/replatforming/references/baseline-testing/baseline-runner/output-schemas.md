@@ -1,10 +1,10 @@
-# Baseline runner — output schemas
+# Baseline runner: output schemas
 
 > Reference doc for `baseline-runner`. Read at runtime when writing the
 > AS-IS bugs registry, the baseline report, the oracle JSON files, or the
 > reporting block returned to the supervisor.
 
-## File 1 — `docs/analysis/03-baseline/_meta/as-is-bugs-found.md`
+## File 1: `docs/analysis/03-baseline/_meta/as-is-bugs-found.md`
 
 ```markdown
 ---
@@ -52,7 +52,7 @@ note ("no bugs surfaced" or "deferred to manual execution") and an empty
 
 ---
 
-## File 2 — `docs/analysis/03-baseline/baseline-report.md`
+## File 2: `docs/analysis/03-baseline/baseline-report.md`
 
 ```markdown
 ---
@@ -133,16 +133,16 @@ for Phase 5; any blocking items requiring user attention>
 
 ---
 
-## Files 3 & 4 — oracle JSON files
+## Files 3 & 4: oracle JSON files
 
 | Path | Generator | Write-only-mode shape |
 |---|---|---|
 | `docs/analysis/03-baseline/_meta/benchmark-baseline.json` | `pytest-benchmark --benchmark-json=<path>` | `{ "benchmarks": [], "note": "to be populated by manual run" }` |
 | `docs/analysis/03-baseline/_meta/test-coverage.json` | `pytest-cov --cov-report=json:<path>` | `{ "totals": null, "files": {}, "note": "to be populated by manual run" }` |
 
-## File 5 — snapshot directory
+## File 5: snapshot directory
 
-`tests/baseline/snapshot/` — populated automatically by `pytest-regressions`
+`tests/baseline/snapshot/`: populated automatically by `pytest-regressions`
 on first run. The runner does not write here directly; it only verifies the
 directory exists with the expected file count after the run.
 

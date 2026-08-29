@@ -1,7 +1,7 @@
-# Phase 0 — Bootstrap protocol (workflow supervisor's own bootstrap)
+# Phase 0: Bootstrap protocol (workflow supervisor's own bootstrap)
 
 > Reference doc for `refactoring-supervisor`. Read at runtime when starting
-> the workflow — before the first delegated phase. This is the supervisor's
+> the workflow: before the first delegated phase. This is the supervisor's
 > OWN bootstrap (Phase 0 of YOUR workflow), not the indexing-supervisor's
 > Phase 0.
 
@@ -11,7 +11,7 @@ Before the first delegated phase, follow this exact sequence.
 
 If not, ask the user.
 
-## 2. Detect existing state — per-phase
+## 2. Detect existing state: per-phase
 
 For each phase 0..4, set
 `detected = (output root exists) AND (manifest reports complete)`,
@@ -33,7 +33,7 @@ For each phase, if the output root exists but the manifest reports
 `partial`, `failed`, `in-progress`, or is missing/unreadable: classify
 as `inconsistent` (NOT a skip candidate) and surface this in step 4.
 
-### Sub-state — exports-missing (Phases 1 and 2 only)
+### Sub-state: exports-missing (Phases 1 and 2 only)
 
 For phases 1 and 2, additionally check whether the Accenture-branded exports are
 present on disk:
@@ -88,7 +88,7 @@ Recommendations:
 ## 5. Ask explicitly, per phase that is not `absent`, what to do
 
 This is the HITL prompt the user requires. Do not proceed with
-"skip what's complete" silently — ask for every detected phase. Use
+"skip what's complete" silently. Ask for every detected phase. Use
 this exact shape:
 
 ```
@@ -173,7 +173,7 @@ Wait before delegating the first phase marked `run` or `re-run`.
 
 Bootstrap confirmation is non-negotiable, even if the user has said
 "do everything". The per-phase prompt in step 5 is also non-negotiable
-when at least one phase is detected as `complete` or `inconsistent` —
+when at least one phase is detected as `complete` or `inconsistent`:
 the user has explicitly required visibility on what is being skipped.
 
 If the user requests `--no-resume-prompt` or "just start fresh from

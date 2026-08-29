@@ -1,18 +1,18 @@
-# Business-logic analyst — output schemas
+# Business-logic analyst: output schemas
 
 > Reference doc for `business-logic-analyst`. Read at runtime when about to
 > emit output files under `.indexing-kb/07-business-logic/` or
 > `.indexing-kb/silver/`.
 
 The agent body owns when to write each file and what content qualifies.
-This doc is the on-disk shape only — frontmatter, JSONL record schemas, and
+This doc is the on-disk shape only: frontmatter, JSONL record schemas, and
 section skeletons to copy into the `Write` call.
 
 ---
 
 ## Silver JSONL schemas
 
-### `silver/business-rules.jsonl` — one record per rule, append-only
+### `silver/business-rules.jsonl`: one record per rule, append-only
 
 ```json
 {
@@ -26,7 +26,7 @@ section skeletons to copy into the `Write` call.
 }
 ```
 
-### `silver/validation-rules.jsonl` — one record per validation rule
+### `silver/validation-rules.jsonl`: one record per validation rule
 
 ```json
 {
@@ -42,7 +42,7 @@ section skeletons to copy into the `Write` call.
 }
 ```
 
-### `silver/state-machines.jsonl` — one record per state machine
+### `silver/state-machines.jsonl`: one record per state machine
 
 ```json
 {
@@ -61,7 +61,7 @@ section skeletons to copy into the `Write` call.
 }
 ```
 
-### `silver/assumptions.jsonl` — rules that could not be code-grounded
+### `silver/assumptions.jsonl`: rules that could not be code-grounded
 
 ```json
 {
@@ -90,7 +90,7 @@ status: complete
 
 ---
 
-## File 1 — `.indexing-kb/07-business-logic/domain-concepts.md`
+## File 1: `.indexing-kb/07-business-logic/domain-concepts.md`
 
 ```markdown
 ---
@@ -124,7 +124,7 @@ Example:
 
 ---
 
-## File 2 — `.indexing-kb/07-business-logic/validation-rules.md`
+## File 2: `.indexing-kb/07-business-logic/validation-rules.md`
 
 ```markdown
 ---
@@ -149,7 +149,7 @@ status: complete
 
 ---
 
-## File 3 — `.indexing-kb/07-business-logic/business-rules.md`
+## File 3: `.indexing-kb/07-business-logic/business-rules.md`
 
 ```markdown
 ---

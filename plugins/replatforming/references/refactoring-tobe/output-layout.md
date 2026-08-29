@@ -1,10 +1,10 @@
-# Phase 4 — Output layout & frontmatter contract
+# Phase 4: Output layout & frontmatter contract
 
 > Reference doc for `refactoring-tobe-supervisor`. Read at runtime when planning where workers write their outputs and what frontmatter / header comments every artefact must carry.
 
 ## Output roots
 
-Two roots: `<repo>/.refactoring-kb/` (TO-BE knowledge base — distinct from `.indexing-kb/` which holds AS-IS) and `<repo>/docs/refactoring/` (stakeholder docs and ADRs). Plus the actual codebase under `backend/` and `frontend/` (paths configurable).
+Two roots: `<repo>/.refactoring-kb/` (TO-BE knowledge base, distinct from `.indexing-kb/` which holds AS-IS) and `<repo>/docs/refactoring/` (stakeholder docs and ADRs). Plus the actual codebase under `backend/` and `frontend/` (paths configurable).
 
 ```
 .refactoring-kb/                                ← TO-BE KB (NEVER mix with .indexing-kb/)

@@ -1,7 +1,7 @@
 # Security test templates
 
 > Reference doc for `security-test-writer`. Read at runtime when authoring
-> the corresponding test class. Templates are skeletons — adapt the
+> the corresponding test class. Templates are skeletons: adapt the
 > resource path, role names, and payloads to the project under test.
 
 ## Authentication flow
@@ -55,7 +55,7 @@ void roleEndpointMatrix(String role, String method, String path, int expectedSta
 }
 ```
 
-## OWASP A03 — Injection
+## OWASP A03: Injection
 
 For every endpoint that accepts string input, fire a battery of
 injection payloads and verify the response is either 400 (validation
@@ -79,7 +79,7 @@ void injectionPayloads_areSafelyHandled(String payload) throws Exception {
 }
 ```
 
-## OWASP A09 — Logging & monitoring
+## OWASP A09: Logging & monitoring
 
 Verify that critical operations produce audit logs with correlation
 IDs and that the log shape matches the JSON schema established by

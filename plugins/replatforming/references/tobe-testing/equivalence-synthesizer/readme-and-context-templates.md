@@ -1,4 +1,4 @@
-# Phase 5 `README.md` and `00-context.md` — templates
+# Phase 5 `README.md` and `00-context.md`: templates
 
 > Reference doc for `equivalence-synthesizer`. Read at runtime when writing the
 > Phase 5 entry-point README and supplementing the bootstrap context file.

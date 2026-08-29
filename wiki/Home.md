@@ -1,59 +1,67 @@
 <!--
 audience: mixed
 diataxis: explanation
-last-verified: 2026-04-28
-verified-against: 1e9445a
+last-verified: 2026-08-30
+verified-against: 8670a63
 -->
 
 # Claude Registry
 
-Governance infrastructure for shared Claude Code capabilities across a team.
-
-The registry lets you define, review, version, and distribute specialised
-subagents — exactly like a shared code library, but for Claude's behaviour.
-Teams write capabilities once and consume them everywhere their projects run
-Claude Code.
+The team's Claude Code **plugin marketplace**. Agents, skills and their supporting
+reference material are published as plugins that install and update themselves.
 
 ## TL;DR
 
-- **What it is** — a catalog of versioned, reviewed Claude Code subagents
-  (agents and skills) that any project on the team can install with a
-  single command.
-- **What it gives you** — consistent expert behaviour (Java/Spring,
-  Angular, Python, refactoring pipelines, documentation, security review,
-  …) without each project re-inventing prompts.
-- **How you use it** — run `setup-capabilities.sh` from your project to
-  install agents into `.claude/agents/`, or `--global` to install them
-  for every Claude Code session.
-- **How you contribute** — open a PR adding a `.md` file under
-  `claude-catalog/`, pass two CI gates (catalog + marketplace), get one
-  reviewer approval, merge.
+- **What it is.** A marketplace manifest at `.claude-plugin/marketplace.json` plus six
+  plugins under `plugins/`, holding 86 subagents and 46 Agent Skills.
+- **What it gives you.** Consistent expert behaviour across projects (Java/Spring,
+  Python, Go, Rust, Kotlin, C#, PHP, Ruby, Angular, React, Vue, Qwik, PostgreSQL,
+  REST design, testing, documentation, replatforming pipelines) without every project
+  re-inventing prompts.
+- **How you install it.** `/plugin marketplace add luketherose/claude-registry`, then
+  `/plugin install <plugin>@claude-registry`. Where enterprise policy blocks adding
+  marketplaces, `scripts/install-local.sh` copies the same material into `~/.claude/`.
+- **How you contribute.** Branch, write the evaluations first, add the capability under
+  `plugins/<plugin>/`, run `python3 .github/scripts/validate_registry.py`, open a PR.
+
+## Plugins
+
+| Plugin | Agents | Skills | Scope |
+|---|---:|---:|---|
+| [`replatforming`](Capability-catalog#replatforming) | 58 | 4 | Five-phase AS-IS to TO-BE replatforming pipeline |
+| [`dev-standards`](Capability-catalog#dev-standards) | 12 | 29 | Language and framework standards, developer agents, tests, debugging |
+| [`deliberation`](Capability-catalog#deliberation) | 7 | 0 | Multi-agent debate engine for high-stakes decisions |
+| [`docs-branding`](Capability-catalog#docs-branding) | 4 | 7 | Documentation authoring and Accenture-branded deliverables |
+| [`analysis-architecture`](Capability-catalog#analysis-architecture) | 5 | 3 | Architecture, requirements, technical analysis, orchestration |
+| [`caveman`](Capability-catalog#caveman) | 0 | 3 | Terse output style for prose, commits and reviews |
+
+Enable only what a project needs. Every enabled subagent description competes for the
+same 15000-token delegation budget, and a smaller enabled set produces sharper routing.
 
 ## Where to go next
 
-| You want to… | Read |
+| You want to... | Read |
 |---|---|
-| Install capabilities in your project right now | [Quick start](Quick-start) |
+| Install a plugin right now | [Quick start](Quick-start) |
+| Install without the marketplace, under enterprise policy | [Installation](Installation) |
 | Understand what this thing actually is | [What is Claude Registry](What-is-Claude-Registry) |
-| See the full list of available capabilities | [Capability catalog](Capability-catalog) |
+| See every agent and skill that ships today | [Capability catalog](Capability-catalog) |
 | Add your own capability | [Contributing](Contributing) |
-| Understand the architecture | [Architecture](Architecture) |
-| Look up a specific concept or field | [Reference](Reference) |
-| Read about the review and release process | [Governance](Governance) |
+| Understand how the pieces fit | [Architecture](Architecture) |
+| Look up a field, a gate or a path | [Reference](Reference) |
+| Read the review and release rules | [Governance](Governance) |
 | Find out why something works the way it does | [FAQ](FAQ) |
 
 ## Status
 
-Beta capabilities are production-usable today; promotion to `stable` requires
-two projects in active use and 30 days without critical issues
-([Governance](Governance)). The catalog ships with **59 agents** and a
-catalogue of skills covering backend (Java/Spring, Python), frontend (Angular,
-React, Vue, Qwik, Vanilla), database (PostgreSQL), and cross-cutting concerns
-(testing, REST API design, refactoring, branded documentation).
+The registry migrated to the official Claude Code plugin marketplace format on
+2026-08-29. Versioning is semver on each plugin, declared in
+`plugins/<plugin>/.claude-plugin/plugin.json`. There are no per-capability tiers.
+See [Changelog](Changelog) for what the migration changed.
 
 ## Quick links
 
-- Source repository — [github.com/luketherose/claude-registry](https://github.com/luketherose/claude-registry)
-- Operational guide (PDF) — `guida-operativa.pdf` in repo root
-- Catalog development docs — [`claude-catalog/`](https://github.com/luketherose/claude-registry/tree/main/claude-catalog)
-- Distribution manifest — [`claude-marketplace/catalog.json`](https://github.com/luketherose/claude-registry/blob/main/claude-marketplace/catalog.json)
+- Source repository: [github.com/luketherose/claude-registry](https://github.com/luketherose/claude-registry)
+- Authoring guide: [`docs/registry/how-to-write-a-capability.md`](https://github.com/luketherose/claude-registry/blob/main/docs/registry/how-to-write-a-capability.md)
+- Version floors per feature: [`docs/registry/version-requirements.md`](https://github.com/luketherose/claude-registry/blob/main/docs/registry/version-requirements.md)
+- Operational guide (Italian, PDF): `guida-operativa.pdf` in the repository root

@@ -1,4 +1,4 @@
-# Benchmark templates — time, memory, throughput, README
+# Benchmark templates: time, memory, throughput, README
 
 > Reference doc for `benchmark-writer`. Read at runtime when authoring the
 > per-UC time / memory / throughput benchmark modules and the suite README
@@ -8,10 +8,10 @@
 
 Provide the canonical shape of every benchmark file the writer emits under
 `tests/baseline/benchmark/`, plus the per-suite `README.md`. Selection logic,
-determinism rules, and stop conditions stay in the agent body — only the
+determinism rules, and stop conditions stay in the agent body, only the
 fenced-block templates live here.
 
-## Time benchmark module — `bench_uc_<NN>.py`
+## Time benchmark module: `bench_uc_<NN>.py`
 
 ```python
 """
@@ -50,9 +50,9 @@ def test_bench_uc_NN_minimal(benchmark, minimal_input):
 Conventions:
 - Use the **realistic** fixture for the primary p95 number; this is what
   Phase 5 will gate against.
-- Use the **minimal** fixture for an "overhead floor" — useful to detect
+- Use the **minimal** fixture for an "overhead floor": useful to detect
   regressions in cold-path / startup costs.
-- Do NOT benchmark with the **edge** fixture — edge cases are not
+- Do NOT benchmark with the **edge** fixture. Edge cases are not
   representative of normal performance.
 - pytest-benchmark groups: tag each benchmark with
   `@pytest.mark.benchmark(group="uc-NN")` so reports cluster cleanly.
@@ -60,7 +60,7 @@ Conventions:
   `--benchmark-json=docs/analysis/03-baseline/_meta/benchmark-baseline.json`
   (the supervisor's W2 baseline-runner does this).
 
-## Memory benchmark module — `bench_memory.py`
+## Memory benchmark module: `bench_memory.py`
 
 ```python
 """
@@ -98,7 +98,7 @@ Alternative: if the project already pins `memory-profiler`, prefer its
 `@profile` decorator and run with `python -m memory_profiler`. Document
 the choice in the module docstring.
 
-## Throughput benchmark module — `bench_throughput.py` (optional)
+## Throughput benchmark module: `bench_throughput.py` (optional)
 
 ```python
 def test_throughput_uc_NN(benchmark):

@@ -1,4 +1,4 @@
-# Decomposition-architect — bounded-context worked examples
+# Decomposition-architect: bounded-context worked examples
 
 > Reference doc for `decomposition-architect`. Worked entry shapes for the
 > `Bounded contexts` section of `bounded-contexts.md` and the per-BC sections
@@ -8,7 +8,7 @@
 
 ## Bounded-context entry (used in `bounded-contexts.md`)
 
-### BC-01 — Identity & Access
+### BC-01: Identity & Access
 
 - **Purpose**: authentication, authorization, user profile
 - **Use cases owned**: UC-01, UC-04, UC-09
@@ -19,7 +19,7 @@
 - **Downstream of**: none
 - **Domain events emitted**: UserRegistered, SessionExpired
 
-### BC-02 — Payments
+### BC-02: Payments
 
 - ...
 

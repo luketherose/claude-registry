@@ -1,11 +1,11 @@
-# Phase 5 — Output layout & frontmatter contract
+# Phase 5: Output layout & frontmatter contract
 
 > Reference doc for `tobe-testing-supervisor`. Read at runtime when planning where workers write their outputs and what frontmatter every artefact must carry.
 
 ## Output roots
 
 All outputs go under multiple roots, but the writable contract is split:
-- **Test code** under `<repo>/backend/src/test/...`, `<repo>/frontend/src/app/.../*.spec.ts`, `<repo>/e2e/`, and `<repo>/tests/equivalence/` — only the test-writer workers touch these.
+- **Test code** under `<repo>/backend/src/test/...`, `<repo>/frontend/src/app/.../*.spec.ts`, `<repo>/e2e/`, and `<repo>/tests/equivalence/`: only the test-writer workers touch these.
 - **Reports and oracle** under `<repo>/docs/analysis/05-tobe-tests/`.
 
 ```
@@ -32,7 +32,7 @@ docs/analysis/05-tobe-tests/
     └── challenger-report.md           (tobe-testing-challenger)
 ```
 
-Sub-agents must not write outside their permitted roots above. Verify after each dispatch. AS-IS source code (Python/Streamlit) is **read-only**. TO-BE source code (`backend/`, `frontend/` non-test files) is **read-only** in this phase — fixes belong to a Phase 4 hardening loop.
+Sub-agents must not write outside their permitted roots above. Verify after each dispatch. AS-IS source code (Python/Streamlit) is **read-only**. TO-BE source code (`backend/`, `frontend/` non-test files) is **read-only** in this phase: fixes belong to a Phase 4 hardening loop.
 
 ## Frontmatter contract (every report)
 
@@ -125,4 +125,4 @@ After every wave the supervisor updates `docs/analysis/05-tobe-tests/_meta/manif
 }
 ```
 
-If the file does not exist, create it. Append to `runs` for resumed sessions. Per-agent timing is mandatory — the workflow supervisor surfaces it in its post-phase recap.
+If the file does not exist, create it. Append to `runs` for resumed sessions. Per-agent timing is mandatory: the workflow supervisor surfaces it in its post-phase recap.

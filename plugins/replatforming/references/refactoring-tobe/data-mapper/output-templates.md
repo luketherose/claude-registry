@@ -1,4 +1,4 @@
-# Data-mapper — output / reporting templates
+# Data-mapper: output / reporting templates
 
 > Reference doc for `data-mapper`. Read at runtime when assembling the
 > deliverable file list and the supervisor-facing report. The agent body

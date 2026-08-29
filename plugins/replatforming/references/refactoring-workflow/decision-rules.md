@@ -1,4 +1,4 @@
-# refactoring-supervisor — decision rules
+# refactoring-supervisor: decision rules
 
 Reference doc. Read on demand when classifying a situation in the
 workflow. Each row maps a situation to the supervisor's decision.
@@ -15,9 +15,9 @@ workflow. Each row maps a situation to the supervisor's decision.
 
 | Situation | Decision |
 |---|---|
-| Phase 0 complete — pre-advancement gate | Read `gold/indexing-audit.json` verdict; if FAIL, escalate — do not advance to Phase 1 silently |
-| Phase 1 complete — pre-advancement gate | Read `normalized/functional-traceability-audit.json` verdict; if FAIL, escalate — do not advance to Phase 2 silently |
-| Phase 2 complete — pre-advancement gate | Read `normalized/technical-evidence-audit.json` verdict; if FAIL, escalate — do not advance to Phase 3 silently |
+| Phase 0 complete: pre-advancement gate | Read `gold/indexing-audit.json` verdict; if FAIL, escalate. Do not advance to Phase 1 silently |
+| Phase 1 complete: pre-advancement gate | Read `normalized/functional-traceability-audit.json` verdict; if FAIL, escalate. Do not advance to Phase 2 silently |
+| Phase 2 complete: pre-advancement gate | Read `normalized/technical-evidence-audit.json` verdict; if FAIL, escalate. Do not advance to Phase 3 silently |
 | Any pre-advancement auditor verdict is FAIL | Show user the blocking gaps; offer `re-run phase` or `override with explicit acknowledgment`; never silently advance |
 
 ## Phase reporting (Phases 0–3)
@@ -51,7 +51,7 @@ workflow. Each row maps a situation to the supervisor's decision.
 | Existing output but manifest partial / failed / missing | Classify `inconsistent`; recommend `re-run`; never auto-resume from broken state |
 | Phase 1 or 2 complete but ≥ 1 export file missing | Classify `complete-but-exports-missing`; recommend `regenerate-exports` as a fourth choice |
 | User answers `skip` for a phase | Treat as `complete` for downstream dependencies; do not dispatch its supervisor |
-| User answers `regenerate-exports` for Phase 1 or 2 | Dispatch with `Resume mode: exports-only` — skip W1/W2/W3, run only the export wave |
+| User answers `regenerate-exports` for Phase 1 or 2 | Dispatch with `Resume mode: exports-only`: skip W1/W2/W3, run only the export wave |
 | User answers `re-run` for a phase | Dispatch normally; the phase supervisor handles its own overwrite confirmation |
 | User selects `regenerate-exports` for Phase 0, 3, or 4 | Refuse: option only available for Phases 1 and 2 (the only phases with PDF/PPTX exports) |
 | Conflict between manifest and disk state | Trust disk; flag inconsistency in recap |
@@ -63,16 +63,16 @@ workflow. Each row maps a situation to the supervisor's decision.
 | Step 0 build fails | Do NOT advance; trigger Step 3 sub-loop; iterate until build green; never skip |
 | Step 0 application fails to start | Do NOT advance; trigger Step 3 sub-loop with debugger on startup logs; iterate until app starts |
 | Step 1 fails after Step 0 succeeded | Regression; trigger Step 3 sub-loop and converge before re-attempting |
-| Step 2 — feature gate fails (build/tests/startup/behavior) | Do NOT advance; trigger Step 3 sub-loop; resume the failing sub-step (2.4/2.5/2.6/2.7) |
-| Step 2 — feature iteration finishes implementation but app no longer starts | Treat exactly like Step 0 startup failure: trigger Step 3 sub-loop; never advance to the next feature until the app starts again |
+| Step 2: feature gate fails (build/tests/startup/behavior) | Do NOT advance; trigger Step 3 sub-loop; resume the failing sub-step (2.4/2.5/2.6/2.7) |
+| Step 2: feature iteration finishes implementation but app no longer starts | Treat exactly like Step 0 startup failure: trigger Step 3 sub-loop; never advance to the next feature until the app starts again |
 | Step 3 sub-loop fails to converge after 3 attempts | Stop; surface partial fix + context; ask for guidance; never silently abandon |
-| Step 4 — invariant broken (build red / app not running / tests red between features) | Halt forward progress; trigger Step 3 sub-loop |
-| Step 5 — hardening change introduces a regression | Trigger Step 3 sub-loop; revert+fix at root cause; do NOT proceed to next hardening concern until green |
-| Step 6 — full test suite has failures | Do NOT capture PO sign-off; trigger Step 3 sub-loop; re-run from the failing sub-step until 100% pass (or user accepts residual delta with no critical/high failures) |
-| Step 6 — pending TODOs in delivered code | Refuse PO sign-off; either resolve via Step 4/5 or escalate via ADR with explicit user acknowledgment |
-| Step 6 — UI smoke gate fails | Run the gate per `ui-smoke-gate.md` BEFORE asking for sign-off. If it fails (CLI placeholder / no nav / blank shell / unreachable route), route back to the offending wave (frontend-scaffolder / hardening-architect / logic-translator) |
-| PO sign-off requested while critical or high failures remain | Refuse — sign-off BLOCKED; offer `iterate Step 6` or `stop` |
-| User asks to skip a Phase 4 step | Refuse — steps are sequential with hard gates; only `resume from Step N` is valid |
+| Step 4: invariant broken (build red / app not running / tests red between features) | Halt forward progress; trigger Step 3 sub-loop |
+| Step 5: hardening change introduces a regression | Trigger Step 3 sub-loop; revert+fix at root cause; do NOT proceed to next hardening concern until green |
+| Step 6: full test suite has failures | Do NOT capture PO sign-off; trigger Step 3 sub-loop; re-run from the failing sub-step until 100% pass (or user accepts residual delta with no critical/high failures) |
+| Step 6: pending TODOs in delivered code | Refuse PO sign-off; either resolve via Step 4/5 or escalate via ADR with explicit user acknowledgment |
+| Step 6: UI smoke gate fails | Run the gate per `ui-smoke-gate.md` BEFORE asking for sign-off. If it fails (CLI placeholder / no nav / blank shell / unreachable route), route back to the offending wave (frontend-scaffolder / hardening-architect / logic-translator) |
+| PO sign-off requested while critical or high failures remain | Refuse. Sign-off BLOCKED; offer `iterate Step 6` or `stop` |
+| User asks to skip a Phase 4 step | Refuse. Steps are sequential with hard gates; only `resume from Step N` is valid |
 
 ## Per-iteration startup check (Phase 4 Step 2)
 
@@ -109,7 +109,7 @@ required a bean of type 'UserRepository' that could not be found`.
 | Cross-phase iteration: delta is empty for all phases | Warn: "No actionable adjustments found. Re-running would produce identical outputs. Proceed anyway?" |
 | Phase 4 re-run scope after Phase 1/2 change | Full Phase 4 re-run from Step 0 (archive existing backend/ frontend/). |
 | Phase 4 re-run scope after Phase 3-only change | Phase 4 from Step 6 only (existing code preserved; re-validate against new baseline). |
-| Retrospective loop exceeds 3 cross-phase iterations | Surface: "3 iterations completed. Consider deliberation or scope reduction." User remains in control — no hard cap. |
+| Retrospective loop exceeds 3 cross-phase iterations | Surface: "3 iterations completed. Consider deliberation or scope reduction." User remains in control, no hard cap. |
 
 ## Deliberation routing
 

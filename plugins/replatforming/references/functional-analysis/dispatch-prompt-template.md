@@ -1,4 +1,4 @@
-# Phase 1 — Sub-agent dispatch prompt template
+# Phase 1: Sub-agent dispatch prompt template
 
 > Reference doc for `functional-analysis-supervisor`. Read at runtime when assembling the prompt for any sub-agent invocation. Includes the framework-conditional adjustment blocks (inject only the blocks whose framework appears in `stack.frameworks`).
 
@@ -109,7 +109,7 @@ open questions in a `## Open questions` section. Do not write outside
 docs/analysis/01-functional/.
 ```
 
-Pass each agent only the context it needs. Do not paste large KB sections into the prompt — sub-agents read from disk via Read/Glob.
+Pass each agent only the context it needs. Do not paste large KB sections into the prompt. Sub-agents read from disk via Read/Glob.
 
 ## Streamlit instructions block (inject when stack mode = streamlit)
 

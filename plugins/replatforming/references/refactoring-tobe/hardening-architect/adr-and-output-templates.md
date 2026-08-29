@@ -10,7 +10,7 @@ the hardening summary README, and the agent's reporting block.
 
 ---
 
-## 8. ADR-004 — Observability
+## 8. ADR-004: Observability
 
 `docs/adr/ADR-004-observability.md`:
 
@@ -79,7 +79,7 @@ tracing as a baseline.
 
 ---
 
-## 9. ADR-005 — Security baseline
+## 9. ADR-005: Security baseline
 
 `docs/adr/ADR-005-security-baseline.md`:
 

@@ -1,4 +1,4 @@
-# refactoring-supervisor — Phase 4 Step 6 UI smoke gate
+# refactoring-supervisor: Phase 4 Step 6 UI smoke gate
 
 Component tests, contract tests, and HTTP equivalence harnesses **all
 run below the level at which the user perceives "the app is broken"**.

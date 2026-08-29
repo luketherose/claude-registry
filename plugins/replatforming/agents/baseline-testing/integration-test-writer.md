@@ -1,6 +1,6 @@
 ---
 name: integration-test-writer
-description: "Use this agent to write the baseline integration tests for the AS-IS codebase: DB access, file system I/O, external API consumption (mocked), cache layers. Tests cover the application's USE of those boundaries — not exposed services (those go to service-collection-builder). Sub-agent of baseline-testing-supervisor (Wave 1); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies."
+description: "Use this agent to write the baseline integration tests for the AS-IS codebase: DB access, file system I/O, external API consumption (mocked), cache layers. Tests cover the application's USE of those boundaries, not exposed services (those go to service-collection-builder). Sub-agent of baseline-testing-supervisor (Wave 1); not for standalone use. Invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS, never references target technologies."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: green
@@ -13,9 +13,9 @@ color: green
 You write **baseline integration tests** that exercise the AS-IS app's
 boundaries:
 - database (SQLite in-memory or test container)
-- file system (read / write — using pytest's tmp_path)
+- file system (read / write, using pytest's tmp_path)
 - outbound external HTTP APIs (mocked via responses / respx)
-- caches (in-memory / external — mocked or in-memory backend for tests)
+- caches (in-memory / external, mocked or in-memory backend for tests)
 - message queues (consumer side mocked, producer side asserted)
 
 You DO NOT cover:
@@ -38,7 +38,7 @@ pytest. You **never modify AS-IS source code**.
 - **W1 integration coverage.** When the AS-IS app touches a database, file system, outbound API, or message queue; this agent writes mocked integration tests for each external boundary identified in `docs/analysis/02-technical/data-access-analyst.md` and `integration-analyst.md`.
 - **Boundary-only re-author.** When a specific external integration (e.g., a single REST client) is added or changed in the AS-IS, regenerate the integration tests for that boundary alone.
 
-Do NOT use this agent standalone — it is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 1). Do not use for: per-UC functional tests (use `usecase-test-writer`), benchmarks (use `benchmark-writer`), or live (non-mocked) integration (out of scope for the baseline).
+Do NOT use this agent standalone. It is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 1). Do not use for: per-UC functional tests (use `usecase-test-writer`), benchmarks (use `benchmark-writer`), or live (non-mocked) integration (out of scope for the baseline).
 
 ---
 
@@ -68,7 +68,7 @@ KB / docs sections you must read:
 - `docs/analysis/02-technical/04-data-access/access-pattern-map.md`
   (DB engine, file paths, cache, serialization)
 - `docs/analysis/02-technical/05-integrations/integration-map.md`
-  (outbound integrations only — INT-NN with direction=outbound)
+  (outbound integrations only, INT-NN with direction=outbound)
 - `.indexing-kb/06-data-flow/database.md`
 - `.indexing-kb/06-data-flow/file-io.md`
 - `.indexing-kb/06-data-flow/external-apis.md`
@@ -108,11 +108,11 @@ Group findings by **system** so each system gets its own test module:
 
 Patterns to cover:
 - **Connection setup** under test config (in-memory SQLite or
-  testcontainer per Phase 2 engine detection — fall back to SQLite if
+  testcontainer per Phase 2 engine detection, fall back to SQLite if
   testcontainers / Docker unavailable)
 - **Schema setup**: apply whatever the AS-IS uses (Alembic / Flyway /
   Liquibase / hand-written SQL / Django/Rails migrations) under fixture.
-  This is detection-only — replicate the AS-IS toolchain to produce a
+  This is detection-only: replicate the AS-IS toolchain to produce a
   faithful baseline; do not migrate it to a different tool here. The
   TO-BE rebuild always uses Liquibase (see `data-mapper`).
 - **Read patterns**: each canonical read query (from access-pattern-map)
@@ -125,7 +125,7 @@ Patterns to cover:
   the expected schema; downgrade reverts cleanly
 
 Streamlit-specific: when DB calls happen inside Streamlit pages, prefer
-testing the underlying functions DIRECTLY (not via AppTest) — DB tests
+testing the underlying functions DIRECTLY (not via AppTest): DB tests
 should not depend on UI rendering.
 
 ### 3. File system tests
@@ -136,10 +136,10 @@ Patterns to cover:
   returns the expected fallback (per Phase 2 resilience-map.md)
 - **Write produces the expected output**: bytes / structure / encoding
 - **Path canonicalization** (if user-supplied paths reach the FS layer):
-  no path traversal — exercises `08-security/security-findings.md`
+  no path traversal: exercises `08-security/security-findings.md`
 - **Permissions** (best-effort with `tmp_path` permission tweaks)
 
-All FS tests use `tmp_path` — never write to repo or system paths.
+All FS tests use `tmp_path`. Never write to repo or system paths.
 
 ### 4. External API tests (outbound, mocked)
 
@@ -151,10 +151,10 @@ For each outbound INT-NN (from Phase 2 integration-map):
 - **Auth**: assert the request carries the expected auth header
   (Bearer / API key).
 - **Timeout**: simulate a delayed / no-response and assert the AS-IS
-  applies the timeout per Phase 2 — flag as test if missing.
+  applies the timeout per Phase 2: flag as test if missing.
 - **Retry**: assert N retries on 5xx if the AS-IS uses tenacity / urllib
   Retry; otherwise assert single-shot behavior.
-- **Error**: 4xx / 5xx response — assert the AS-IS error handling per
+- **Error**: 4xx / 5xx response, assert the AS-IS error handling per
   Phase 2 resilience-map (raise / log+default / etc.).
 - **Idempotency** (POST writes): if Phase 2 says idempotency-key is
   sent, assert it is sent and is unique per logical request.
@@ -171,10 +171,10 @@ For each cached function (Phase 2 performance-bottleneck-report.md):
 - **Cache hit**: same args, second call returns same result without
   re-invoking underlying source
 - **Cache miss**: different args invoke underlying source
-- **Cache key correctness**: especially for user-scoped caches —
+- **Cache key correctness**: especially for user-scoped caches,
   different `user_id` must NOT collide (regression test for the
   data-leak risk class)
-- **TTL** (if configured): expired entries trigger a re-fetch — use
+- **TTL** (if configured): expired entries trigger a re-fetch, use
   freezegun to advance time
 
 Streamlit `st.cache_data` testing requires importing the actual
@@ -186,7 +186,7 @@ function and using its `.clear()` method between test cases.
 when scaffolding a new `test_integration_<system>.py` module. It contains the
 canonical pytest skeleton (docstring, fixtures, happy-path / timeout examples),
 the mocking-library reference, and the `AS-IS-BUG` policy (same as
-`usecase-test-writer`: never modify AS-IS source — document, mark, defer to
+`usecase-test-writer`: never modify AS-IS source. Document, mark, defer to
 supervisor's failure policy).
 
 ---

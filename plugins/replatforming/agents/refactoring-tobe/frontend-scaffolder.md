@@ -32,7 +32,7 @@ You **never modify AS-IS source code**.
 
 ## When to invoke
 
-- **W3 FE — Angular 17+ workspace.** Reads the OpenAPI contract from W2 and the UI surface from Phase 1; produces a standalone-component Angular workspace with lazy modules per bounded context, an OpenAPI-typed client, plus translations of any Streamlit page surfaces into Angular routes/components.
+- **W3 FE: Angular 17+ workspace.** Reads the OpenAPI contract from W2 and the UI surface from Phase 1; produces a standalone-component Angular workspace with lazy modules per bounded context, an OpenAPI-typed client, plus translations of any Streamlit page surfaces into Angular routes/components.
 - **FE re-scaffold after contract change.** When the OpenAPI contract changed and the typed client + module skeleton need regenerating.
 
 Do NOT use this agent for: actual TS business logic per component (handled in implementation, not scaffold), backend work (use `backend-scaffolder`), or design-system theming (use the `design-expert` skill).
@@ -43,15 +43,15 @@ Do NOT use this agent for: actual TS business logic per component (handled in im
 
 This agent's deliverable templates live in
 `${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/frontend-scaffolder/` and are read on
-demand. Read each doc only when the matching Method step is about to run —
+demand. Read each doc only when the matching Method step is about to run,
 not preemptively.
 
 | Doc | Read when |
 |---|---|
-| `workspace-config.md`        | Method steps 1–2 — workspace skeleton + OpenAPI typed client |
-| `code-skeletons.md`          | Method steps 3–5 — core layer, shared layer, feature modules |
-| `streamlit-translations.md`  | Method step 7 — only when AS-IS is Streamlit-based |
-| `app-shell.md`               | Method steps 8–9 — main.ts + app.config.ts + README |
+| `workspace-config.md`        | Method steps 1–2: workspace skeleton + OpenAPI typed client |
+| `code-skeletons.md`          | Method steps 3–5: core layer, shared layer, feature modules |
+| `streamlit-translations.md`  | Method step 7, only when AS-IS is Streamlit-based |
+| `app-shell.md`               | Method steps 8–9: main.ts + app.config.ts + README |
 
 ---
 
@@ -90,7 +90,7 @@ ADR-003, and dev deps (`@angular/cli`, `karma`, `jest`, `playwright`,
 ### 2. OpenAPI typed client
 
 Read `workspace-config.md` (OpenAPI typed client section). Default to
-**Strategy A** — generate at build time via
+**Strategy A**: generate at build time via
 `@openapitools/openapi-generator-cli` with `prebuild` hook. Use Strategy
 B (hand-written models) only if the team rejects code generation;
 document drift risk. Record the choice in `<frontend-dir>/README.md`.
@@ -160,7 +160,7 @@ links to `docs/refactoring/4.6-api/openapi.yaml` and ADRs.
 ### 10. Self-check gate (HARD)
 
 Before reporting `status: ok`, run the 6-check gate in `app-shell.md`
-§ Self-check — placeholder strings, app.component.html shell delegation,
+§ Self-check: placeholder strings, app.component.html shell delegation,
 layout component existence with routerLinks, every protected route
 referenced, interceptors actually written, no per-service Authorization
 header. Report each result; do NOT claim `status: ok` if any failed.

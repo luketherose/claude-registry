@@ -18,7 +18,7 @@
 
 For each phase N you are about to run, follow this protocol exactly.
 
-## Step A — Pre-phase brief (you to user)
+## Step A: Pre-phase brief (you to user)
 
 Post a brief in this exact shape:
 
@@ -46,13 +46,13 @@ Confirm: proceed with Phase <N>? [yes / revise / stop]
 Wait for the user response. Do not dispatch without explicit "yes" (or
 equivalent: "go", "procedi", "ok", "start").
 
-## Step B — Pre-flight checks (you only)
+## Step B: Pre-flight checks (you only)
 
 Before dispatching the phase supervisor:
 
 - Verify all inputs listed in the brief actually exist on disk.
 - Verify the supervisor agent is available (Agent tool will return an
-  error if not — surface it clearly).
+  error if not, surface it clearly).
 - Update `workflow-manifest.json`: mark phase N as `in-progress`,
   set `current_phase: N`, write `started: <ISO-8601>`.
 - Record the dispatch start timestamp in memory (you'll need it for the
@@ -60,7 +60,7 @@ Before dispatching the phase supervisor:
 
 If any check fails: do NOT dispatch. Surface to the user and stop.
 
-## Step C — Dispatch (single Agent call) — Phases 0–3 only
+## Step C: Dispatch (single Agent call), Phases 0–3 only
 
 Invoke the phase supervisor via the Agent tool. The prompt to the
 phase supervisor must include:
@@ -87,7 +87,7 @@ report and the manifest is updated.
 Pass paths and options, not contents. The phase supervisor reads from
 disk.
 
-## Step C (Phase 4) — Driving model (NO single-supervisor dispatch)
+## Step C (Phase 4): Driving model (NO single-supervisor dispatch)
 
 Phase 4 (Application Replatforming) is **NOT dispatched as a single
 Agent call**. Unlike Phases 0–3, Phase 4 is driven directly by the
@@ -195,7 +195,7 @@ scoped Agent call** with full context (UC reference, oracle path,
 output path, prior-step manifest excerpt). Never dispatch a
 "do everything" Phase 4 call.
 
-## Step D — Read outputs (verify, do not synthesize)
+## Step D: Read outputs (verify, do not synthesize)
 
 After dispatch returns:
 
@@ -219,7 +219,7 @@ After dispatch returns:
 The Agent tool's text result is a summary, not the source of truth.
 Trust the manifest and the files on disk.
 
-## Step E — Post-phase recap (you to user) — Phases 0–3
+## Step E: Post-phase recap (you to user), Phases 0–3
 
 Post a recap in this exact shape:
 
@@ -267,13 +267,13 @@ Cumulative workflow time so far:
 - Total:     <sum>
 ```
 
-The timing block is mandatory — added in v0.3.0 per user request to
+The timing block is mandatory: added in v0.3.0 per user request to
 expose per-step execution times after every phase. Surface the finest
 granularity the phase manifest exposes.
 
 For Phases 1–3, the next decision is taken via the iteration loop
 (Step F). The schematic of the next phase is shown in Step F's
-`approve` branch — not in the recap — because the user may still
+`approve` branch, not in the recap, because the user may still
 choose to iterate before moving on.
 
 For Phase 0, the iteration loop does NOT apply. Re-running Phase 0 is
@@ -284,7 +284,7 @@ without Step E.5.
 If the phase reported `failed` or `≥ 1 blocking issue`: do NOT propose
 `approve`. Offer only `iterate` or `stop` in Step F.
 
-## Step E.5 — Phase verification report (mandatory for Phases 1–3)
+## Step E.5: Phase verification report (mandatory for Phases 1–3)
 
 After Step E and before Step F, write the **phase verification report**
 to:
@@ -303,13 +303,13 @@ every iteration, with the prior version snapshotted under
 
 The verification report is the document the user reads to decide
 between `approve`, `iterate`, `stop`. The deliverable PDF / PPTX is
-NOT a substitute — it targets external stakeholders, not the human
+NOT a substitute. It targets external stakeholders, not the human
 running the workflow.
 
 This step is skipped for Phase 0 (no iteration loop) and for Phase 4
 (per-step recaps replace the verification report).
 
-## Step F — Iteration loop (HITL) — Phases 1–3
+## Step F: Iteration loop (HITL), Phases 1–3
 
 Default deny. Do not auto-proceed. After Step E.5, present the
 verification report path and ask the user to pick one of three
@@ -349,7 +349,7 @@ that spec.
    iteration's state (compare timestamps with the iteration log).
    For Phases 1 and 2 this means dispatching `document-creator` and
    `presentation-creator` in `Resume mode: exports-only`. For
-   Phase 3 there is no PDF export — skip.
+   Phase 3 there is no PDF export: skip.
 3. Post the next-phase schematic (from `schematics.md`) and ask:
    `Confirm: proceed to Phase <N+1>? [yes / stop]`. This is the
    workflow-level confirmation between phases (existing behaviour).
@@ -386,7 +386,7 @@ that spec.
    own phase plan).
 7. After re-dispatch returns, re-enter the protocol at Step D
    (Read outputs) → Step E (Recap) → Step E.5 (regenerate
-   verification report — section 3 "What changed" is populated
+   verification report, section 3 "What changed" is populated
    this time) → Step F (loop again).
 
 **If `stop`**
@@ -403,7 +403,7 @@ that spec.
   the user's explicit answer.
 - If any pre-advancement auditor verdict is FAIL (see
   `refactoring-supervisor.md` § "Decision rules"), the supervisor
-  MUST NOT propose `approve` — offer only `iterate` or `stop`.
+  MUST NOT propose `approve`. Offer only `iterate` or `stop`.
 - If the user picks `approve` while critical/high open questions
   exist in the verification report's blocking list, the supervisor
   re-asks once: "There are blocking items unresolved. Approve
@@ -414,19 +414,19 @@ that spec.
 - The verification report is regenerated from scratch at every
   iteration. Never edit it incrementally.
 - Exports are regenerated only on `approve` (so the deliverable
-  always reflects the approved state — never an intermediate
+  always reflects the approved state, never an intermediate
   iteration).
 
-## Step F (Phase 0) — Simple confirm
+## Step F (Phase 0): Simple confirm
 
 Phase 0 (indexing) does not use the iteration loop. After Step E
 post the next-phase schematic and ask:
 `Confirm: proceed to Phase 1? [yes / revise / stop]`. `revise` for
 Phase 0 means re-running with adjusted scope (not a structured
-delta) — the user describes a new scope and the supervisor
+delta): the user describes a new scope and the supervisor
 re-dispatches `indexing-supervisor`.
 
-## Step E.4 — Phase 4 per-step recap (Application Replatforming)
+## Step E.4: Phase 4 per-step recap (Application Replatforming)
 
 Phase 4 does not have a single end-of-phase recap because it runs
 through 7 steps with hard gates. Instead, you produce a recap **after
@@ -520,7 +520,7 @@ Resuming Step <calling-step> at sub-step <X>.
 ```
 
 Failed sub-loop convergence (after N attempts, default N=3) escalates
-to the user with the current partial fix and asks for guidance —
+to the user with the current partial fix and asks for guidance.
 NEVER silently abandon the failure.
 
 ### End-of-Phase-4 recap (Step 6 done + PO sign-off)
@@ -553,7 +553,7 @@ The application is fully built, fully runnable, fully tested.
 No further phases are implemented in this workflow.
 ```
 
-## Step F (Phase 4) — End-of-phase handling
+## Step F (Phase 4): End-of-phase handling
 
 **If PO sign-off captured (state `complete`)**: do NOT end the workflow.
 Enter Step G (Workflow Retrospective) automatically.
@@ -562,23 +562,23 @@ Enter Step G (Workflow Retrospective) automatically.
 `current_phase: 4, status: partial`, write a final status note, end
 gracefully. The user may re-enter Phase 4 in a future workflow run
 with `Resume Phase 4 from Step <N>`. The retrospective is skipped when
-Phase 4 is partial — it requires a complete deliverable to assess.
+Phase 4 is partial: it requires a complete deliverable to assess.
 
-## Step G — Workflow Retrospective
+## Step G: Workflow Retrospective
 
 Step G runs automatically after Step F captures PO sign-off. Read
 [`retrospective.md`](./retrospective.md) for the full protocol. Summary:
 
-1. Announce: "Phase 4 is complete — entering Workflow Retrospective."
+1. Announce: "Phase 4 is complete, entering Workflow Retrospective."
 2. Read the five per-phase artifacts listed in `retrospective.md` § "Review
    dimensions" (do not dispatch sub-agents).
 3. Write `docs/refactoring/retrospective.md` with the structured findings.
 4. Present the post-retrospective HITL:
-   - `[close]` — workflow complete; all issues accepted/deferred.
-   - `[iterate]` — re-run from the earliest affected phase with adjustments.
+   - `[close]`: workflow complete; all issues accepted/deferred.
+   - `[iterate]`: re-run from the earliest affected phase with adjustments.
      Read `cross-phase-iteration.md` and execute the cross-phase iteration
      protocol. After all phases re-run, re-enter Step G on the new outputs.
-   - `[defer-and-close]` — mark open issues as deferred; close workflow.
+   - `[defer-and-close]`: mark open issues as deferred; close workflow.
 
 `close` is NEVER auto-selected. The supervisor waits for the user's explicit
 choice.
@@ -589,6 +589,6 @@ When the user picks `iterate`:
 - On confirmation, execute cross-phase iteration (N phases re-run in sequence).
 - After Phase 4 re-completes and PO signs off, re-enter Step G.
 
-The retrospective loop has no cap — it terminates when the user picks `close`
+The retrospective loop has no cap: it terminates when the user picks `close`
 or `defer-and-close`. Each iteration produces a new retrospective file at
 `docs/refactoring/retrospective-iter<N>.md` appended to the original report.

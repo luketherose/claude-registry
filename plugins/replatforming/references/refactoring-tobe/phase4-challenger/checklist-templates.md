@@ -1,4 +1,4 @@
-# Phase 4 challenger — checklist templates
+# Phase 4 challenger: checklist templates
 
 > Reference doc for `phase4-challenger`. Read at runtime when running the
 > nine adversarial checks defined in the agent's `## Method` section.
@@ -11,7 +11,7 @@ check*; this doc carries the *shapes* of the artifacts produced.
 
 ---
 
-## Check 1 — AS-IS↔TO-BE traceability matrix
+## Check 1: AS-IS↔TO-BE traceability matrix
 
 The traceability matrix connects every Phase 1 UC to its TO-BE
 manifestation. Build it by following this hierarchy:
@@ -78,7 +78,7 @@ Output the matrix at `.refactoring-kb/02-traceability/as-is-to-be-matrix.json`:
 
 ---
 
-## Check 8 — AS-IS-only token regex
+## Check 8: AS-IS-only token regex
 
 Scan TO-BE outputs (Java / TS / markdown under `<backend-dir>/`,
 `<frontend-dir>/`, `docs/refactoring/`) for AS-IS-only token leaks:
@@ -92,7 +92,7 @@ Tokens may legitimately appear in:
 - comments referencing AS-IS source (e.g., "AS-IS source ref:
   <repo>/.../streamlit/...")
 - ADR resolution notes (e.g., "AS-IS used st.session_state; TO-BE
-  uses Spring Session — see ADR-003")
+  uses Spring Session, see ADR-003")
 
 But NOT in:
 - runtime code (Java method bodies, TS components without resolution
@@ -117,7 +117,7 @@ Stable IDs use the prefix `CHL-NN` for challenger meta-findings.
 
 ---
 
-## Check 10 — Frontend navigation reachability
+## Check 10: Frontend navigation reachability
 
 Verify the user can actually reach every protected route from the UI,
 not just by typing the URL. Source of truth:
@@ -128,11 +128,11 @@ routes, and pure redirects):
 
 1. The path must appear in at least one `[routerLink]` / `routerLink="..."`
    / `router.navigate(['/...'])` reachable from `app.component.html`
-   transitively (the app shell — usually a `LayoutComponent` under
+   transitively (the app shell, usually a `LayoutComponent` under
    `core/layout/`).
 2. `app.component.html` must NOT contain the Angular CLI default
    placeholder strings. If it does, record FINDING-NAV-PLACEHOLDER as
-   `blocking` — the app is unusable regardless of test counts.
+   `blocking`: the app is unusable regardless of test counts.
 3. The shell must reference the user's permissions to gate admin-only
    routes (grep `AuthService` or `hasPermission` in `layout.component.ts`).
 
@@ -165,7 +165,7 @@ Severity:
 
 ---
 
-## Check 11 — Backend boots on default profile
+## Check 11: Backend boots on default profile
 
 Verify the backend can start with `java -jar` and no extra args (i.e.,
 the default profile). Test-profile-only smoke tests do not catch
@@ -187,4 +187,4 @@ Severity:
 - BootSmokeTest missing → `blocking` (FINDING-BOOT-SMOKE-MISSING)
 - BootSmokeTest fails (NoSuchBeanDefinitionException /
   UnsatisfiedDependencyException) → `blocking`
-  (FINDING-BOOT-SMOKE-FAILS) — the app cannot be run.
+  (FINDING-BOOT-SMOKE-FAILS): the app cannot be run.

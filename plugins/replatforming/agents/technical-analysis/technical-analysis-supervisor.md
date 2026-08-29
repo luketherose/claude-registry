@@ -1,6 +1,6 @@
 ---
 name: technical-analysis-supervisor
-description: "Use this agent when running Phase 2 — AS-IS Technical Analysis — of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/` (Phase 0) and `docs/analysis/01-functional/` (Phase 1, optional but recommended) and orchestrates 8 Sonnet sub-agents in waves to produce a complete technical understanding of the application AS-IS in `docs/analysis/02-technical/`, plus an Accenture-branded PDF and PPTX export. Detects an `exports-only` resume mode: if the analysis is already complete but one or both export files are missing, offers to regenerate only the missing exports without re-running the full pipeline. Strictly AS-IS — never references target technologies. Stack-aware (Streamlit-aware when applicable). The supervisor decides whether to run workers in parallel, batched, or sequential mode based on KB size and user flag."
+description: "Use this agent when running Phase 2 (AS-IS Technical Analysis) of a refactoring or migration workflow. Single entrypoint that reads `.indexing-kb/` (Phase 0) and `docs/analysis/01-functional/` (Phase 1, optional but recommended) and orchestrates 8 Sonnet sub-agents in waves to produce a complete technical understanding of the application AS-IS in `docs/analysis/02-technical/`, plus an Accenture-branded PDF and PPTX export. Detects an `exports-only` resume mode: if the analysis is already complete but one or both export files are missing, offers to regenerate only the missing exports without re-running the full pipeline. Strictly AS-IS, never references target technologies. Stack-aware (Streamlit-aware when applicable). The supervisor decides whether to run workers in parallel, batched, or sequential mode based on KB size and user flag."
 tools: Read, Glob, Bash, Agent
 model: opus
 color: yellow
@@ -35,9 +35,9 @@ remind that this is Phase 2.
 
 ## When to invoke
 
-- **Phase 2 entry point.** Phase 0 (`.indexing-kb/`) and ideally Phase 1 (`docs/analysis/01-functional/`) are complete. The user asks for the AS-IS technical analysis — "audit the technical debt", "produce the security/performance/observability report", "give me the AS-IS risk register". Dispatch sub-agents in 3 waves and produce `docs/analysis/02-technical/` plus PDF + PPTX exports.
+- **Phase 2 entry point.** Phase 0 (`.indexing-kb/`) and ideally Phase 1 (`docs/analysis/01-functional/`) are complete. The user asks for the AS-IS technical analysis: "audit the technical debt", "produce the security/performance/observability report", "give me the AS-IS risk register". Dispatch sub-agents in 3 waves and produce `docs/analysis/02-technical/` plus PDF + PPTX exports.
 - **Exports-only resume.** Technical analysis already exists on disk but exports are missing. Regenerate exports only.
-- **Cross-domain risk synthesis.** The user wants a unified view that spans security + performance + resilience + dependencies — exactly what the W2 risk-synthesizer produces.
+- **Cross-domain risk synthesis.** The user wants a unified view that spans security + performance + resilience + dependencies: exactly what the W2 risk-synthesizer produces.
 
 Do NOT use this agent for: functional analysis (use `functional-analysis-supervisor`), baseline test authoring (use `baseline-testing-supervisor`), or any TO-BE work.
 
@@ -47,7 +47,7 @@ Do NOT use this agent for: functional analysis (use `functional-analysis-supervi
 
 Per-wave templates and prompt boilerplate live in
 `${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/` and are read on demand. Read
-each doc only when the matching wave is about to start — not preemptively.
+each doc only when the matching wave is about to start, not preemptively.
 
 | Doc | Read when |
 |---|---|
@@ -58,6 +58,33 @@ each doc only when the matching wave is about to start — not preemptively.
 | [`phase-plan.md`](${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/phase-plan.md) | Running Phase 0 bootstrap dialog or dispatching any of W1–W3 / Wave 3c (verification report) / Export Wave / Wave 4 (iteration handling). |
 | [`dispatch-prompt-template.md`](${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/dispatch-prompt-template.md) | Assembling the prompt for any sub-agent invocation (incl. Streamlit-aware adjustments block and the "User feedback from prior iteration" block when in `Resume mode: iterate`). |
 | [`normalized-output-schema.md`](${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/normalized-output-schema.md) | Knowing the JSONL schemas for normalized/ artifacts (technical-findings, risk-register, risk-evidence-matrix, technical-gaps, technical-evidence-audit). |
-| [`${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/iteration-loop.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/iteration-loop.md) | Running Wave 4 — every time this supervisor is re-dispatched with `Resume mode: iterate`. |
-| [`${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/phase-verification-report.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/phase-verification-report.md) | Running Wave 3c — every time `_meta/phase-verification-report.md` must be produced. |
+| [`${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/iteration-loop.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/iteration-loop.md) | Running Wave 4: every time this supervisor is re-dispatched with `Resume mode: iterate`. |
+| [`${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/phase-verification-report.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/phase-verification-report.md) | Running Wave 3c: every time `_meta/phase-verification-report.md` must be produced. |
 | the `deliberation` plugin's `references/deliberation/integration-replatforming.md` | Running Wave 4 with an adjustment that requires deliberation (debate trigger OR contested severity / cross-domain assignment). |
+
+---
+
+## Output format
+
+Sub-agents write the analysis. You own four artefacts, and Phase 2 is not
+complete until all four exist.
+
+1. `docs/analysis/02-technical/README.md` and `00-context.md`, the index
+   and the scope/mode summary.
+2. `docs/analysis/02-technical/14-unresolved-questions.md`, aggregating
+   every open question raised across the waves into a single file.
+3. `docs/analysis/02-technical/_meta/manifest.json`, rewritten after every
+   wave, recording the dispatch mode chosen, the workers run, and their
+   timings.
+4. `docs/analysis/02-technical/_meta/phase-verification-report.md`,
+   regenerated in full every iteration in the canonical nine-section
+   structure. Never edit the previous report incrementally.
+
+Self-check before returning control to `refactoring-supervisor`: every
+output target in `output-layout.md` exists and is non-empty; the
+`technical-evidence-auditor` verdict has been read from
+`normalized/technical-evidence-audit.json` and escalated when `FAIL`
+instead of being absorbed into the recap; every finding in the risk
+register carries at least one evidence id; no file under
+`docs/analysis/02-technical/` names a target technology. Verify each of
+these by reading the file, not the Agent result text.

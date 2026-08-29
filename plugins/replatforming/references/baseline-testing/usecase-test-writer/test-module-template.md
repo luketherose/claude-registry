@@ -1,4 +1,4 @@
-# Usecase test module — template & Streamlit patterns
+# Usecase test module: template & Streamlit patterns
 
 > Reference doc for `usecase-test-writer`. Read at runtime when writing the
 > per-UC pytest module (Method §4 and §6).

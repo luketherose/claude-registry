@@ -1,7 +1,7 @@
 # Code skeletons
 
 > Reference doc for `frontend-scaffolder`. Read at runtime when generating
-> TypeScript/HTML sources (Method steps 3–5 — core layer, shared layer,
+> TypeScript/HTML sources (Method steps 3–5, core layer, shared layer,
 > feature modules).
 
 ## Core layer
@@ -199,7 +199,7 @@ features/
 
 Each feature module:
 
-- `<feature>.routes.ts` exports a `Routes` array — lazy entry
+- `<feature>.routes.ts` exports a `Routes` array: lazy entry
 - `pages/` contains screens identified by Phase 1 (one component per
   screen S-NN); the screen → BC mapping is per the decomposition
 - `services/<feature>.service.ts` is the orchestration layer; it
@@ -263,6 +263,6 @@ interactions.
 From Phase 1 `07-user-flows.md`, derive:
 
 - top-level routing (which screen is the entry per UC)
-- guards (which routes require auth — most do; some are public per
+- guards (which routes require auth, most do; some are public per
   ADR-003)
 - redirects (e.g., post-login → dashboard)

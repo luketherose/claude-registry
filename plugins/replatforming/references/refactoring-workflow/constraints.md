@@ -1,7 +1,7 @@
-# Workflow-level constraints — `refactoring-supervisor`
+# Workflow-level constraints: `refactoring-supervisor`
 
 > Reference doc for `refactoring-supervisor`. Read at runtime whenever
-> the supervisor is about to take an action — these are hard
+> the supervisor is about to take an action: these are hard
 > invariants checked on every step. Kept here (not in the agent body)
 > to keep the body under the rubric ceiling; the body contains a
 > single pointer to this file.
@@ -16,7 +16,7 @@
   said "go ahead, do everything".
 - **Per-phase resume prompt is non-negotiable** when prior phase
   outputs are detected. Show the detection table and ask explicitly
-  for each phase (skip / re-run / revise — plus `regenerate-exports`
+  for each phase (skip / re-run / revise, plus `regenerate-exports`
   for Phases 1 and 2 when in sub-state `complete-but-exports-missing`).
   Never auto-skip a complete phase silently.
 - **For Phases 0–3, do not invoke a phase supervisor's sub-agents
@@ -40,14 +40,14 @@
 - **Surface execution timings in every post-phase recap.** Read the
   phase manifest, compute per-step durations, and present them in the
   recap block.
-- **Always read phase outputs from disk** for the recap — Agent tool
+- **Always read phase outputs from disk** for the recap: Agent tool
   result text is a summary, not the source of truth.
 - **Always update `workflow-manifest.json`** at every state transition,
   including every Phase 4 step transition and every Step 2 feature
   completion.
 - **Schematic of the upcoming phase is mandatory** in pre-phase brief
   and in post-phase recap (next-phase preview).
-- **Refuse unimplemented phases** — currently only Phases 0–4.
+- **Refuse unimplemented phases**. Currently only Phases 0–4.
 - **Redact secrets** in any echoed error or output.
 
 ## Phase 4 invariants
@@ -67,22 +67,22 @@
   exist in delivered code without ADR resolution. The deliverable
   `01-replatforming-report.md` replaces the old separate
   `01-equivalence-report.md`.
-- **Phase 4 Step 5.5 — Test Data Seeding is a non-skippable
+- **Phase 4 Step 5.5: Test Data Seeding is a non-skippable
   precondition of Step 6.** A green test suite over an empty database
   produces an empty UI, which is visually indistinguishable from a
   broken UI. Before the Step 6 UI smoke gate runs, the supervisor
   dispatches `test-data-seeder` to load a coherent cross-module
   dataset and verify via API smoke calls that the data is queryable.
   See [`phase-4-step-5-5-test-data-seeding.md`](./phase-4-step-5-5-test-data-seeding.md).
-  Step 5.5 may be deferred only with `execute_policy: off` — in that
+  Step 5.5 may be deferred only with `execute_policy: off`: in that
   case the seed files exist but the supervisor MUST apply them and
   rerun the smoke verification before Step 6.
-- **Phase 4 Step 6 — UI smoke gate is non-negotiable.** Before asking
+- **Phase 4 Step 6: UI smoke gate is non-negotiable.** Before asking
   for PO sign-off, the supervisor runs the Playwright `smoke.spec.ts`
   and the visual-confirmation user prompt documented in
   [`phase-4-step-6-ui-smoke-gate.md`](./phase-4-step-6-ui-smoke-gate.md).
   No green numeric recap (mvn / ng test / equivalence) can substitute
-  for the visual confirmation — the InfoSync 2026-05 retrospective
+  for the visual confirmation: the InfoSync 2026-05 retrospective
   proved that all three can be green while the FE shows the Angular CLI
   welcome card on every route.
 - **There is NO separate Phase 5.** The previous Phase 5 has been

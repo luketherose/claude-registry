@@ -1,4 +1,4 @@
-# User-Flow Analyst — JSONL Output Specification
+# User-Flow Analyst: JSONL Output Specification
 
 This document defines the JSONL output schemas for `user-flow-analyst`. Read it before writing any JSONL file. Write raw JSONL to `docs/analysis/01-functional/raw/` BEFORE writing narrative markdown.
 
@@ -6,7 +6,7 @@ This document defines the JSONL output schemas for `user-flow-analyst`. Read it 
 
 ## `docs/analysis/01-functional/raw/user-flow-findings.jsonl`
 
-Raw UC findings before normalization — one record per candidate UC, as derived from the cross-product of Wave 1 outputs.
+Raw UC findings before normalization: one record per candidate UC, as derived from the cross-product of Wave 1 outputs.
 
 ---
 

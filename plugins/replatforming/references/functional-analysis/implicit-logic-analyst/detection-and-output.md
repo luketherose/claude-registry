@@ -1,4 +1,4 @@
-# Detection patterns and output schema — `implicit-logic-analyst`
+# Detection patterns and output schema: `implicit-logic-analyst`
 
 > Reference doc for `implicit-logic-analyst`. Read at runtime when scanning
 > for implicit logic and when writing `12-implicit-logic.md`. Holds the
@@ -16,7 +16,7 @@ widget parameters that encode validation:
 
 - `st.number_input(min_value=, max_value=, step=, format=)`
 - `st.text_input(max_chars=, placeholder=, type='password')`
-- `st.selectbox(options=...)` — implicit "must be one of"
+- `st.selectbox(options=...)`: implicit "must be one of"
 - `st.date_input(min_value=, max_value=)`
 - `st.file_uploader(type=[...], accept_multiple_files=)`
 - `st.slider(min_value=, max_value=, step=)`
@@ -30,7 +30,7 @@ For each constraint, capture:
 
 Cross-check `.indexing-kb/07-business-logic/validation-rules.md`:
 
-- if the rule is already there, do NOT re-document — just reference it
+- if the rule is already there, do NOT re-document. Just reference it
 - if it's missing, capture it as new implicit logic
 
 ### 2. Conditional rendering branches
@@ -73,7 +73,7 @@ trigger downstream effects on rerun. Document the chain:
 - next rerun, state Y triggers a different render
 
 This is implicit logic because the cascade is not visible in any single
-function — it emerges from the rerun model.
+function: it emerges from the rerun model.
 
 ### 5. Magic numbers and hardcoded thresholds
 
@@ -88,15 +88,15 @@ For each, capture:
 
 - the constant value
 - where it is (file:line)
-- the apparent business meaning (or "unknown — see Open questions")
+- the apparent business meaning (or "unknown, see Open questions")
 
 ### 6. Silent fallbacks and defaults
 
 Look for `or`, `||`, `.get(key, default)`, `try/except` swallowing:
 
-- `name = data.get("name") or "Unknown"` — silent default
-- `try: convert(); except: pass` — silent failure
-- `value = config.get("rate", 0.05)` — implicit business default
+- `name = data.get("name") or "Unknown"`: silent default
+- `try: convert(); except: pass`: silent failure
+- `value = config.get("rate", 0.05)`: implicit business default
 
 Each is an implicit decision point with business meaning that the user
 never sees.
@@ -125,7 +125,7 @@ You MAY read source code directly when:
 You MAY NOT:
 
 - re-do work already in `.indexing-kb/07-business-logic/`
-- read whole modules — only narrowly scoped grep + targeted Read of
+- read whole modules, only narrowly scoped grep + targeted Read of
   specific lines
 - write source code, modify files, or refactor
 
@@ -133,7 +133,7 @@ When you read source, cite `<repo>/<path>:<line>` in `sources:`.
 
 ---
 
-## Output schema — `docs/analysis/01-functional/12-implicit-logic.md`
+## Output schema: `docs/analysis/01-functional/12-implicit-logic.md`
 
 ```markdown
 ---

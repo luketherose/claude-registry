@@ -1,106 +1,130 @@
 <!--
 audience: end-user
 diataxis: how-to
-last-verified: 2026-04-28
-verified-against: 1e9445a
+last-verified: 2026-08-30
+verified-against: 8670a63
 -->
 
 # Usage
 
-Common patterns once the capabilities are installed. This page assumes you
-have already followed [Installation](Installation).
+Day-to-day patterns once a plugin is installed. This page assumes you have followed
+[Installation](Installation).
 
 ## How Claude picks a capability
 
-Each capability is a `.md` file with a `description` field. Claude Code
-reads those descriptions and decides automatically which subagent to
-delegate to based on what you ask. You can also invoke an agent
-explicitly.
+**Agents** are chosen by their `description`. Claude reads the description of every
+enabled subagent at session start and delegates on what you ask.
 
-**Automatic delegation:**
+> Review the authentication flow in `src/auth/` and tell me what an attacker gets.
 
-> "Review this PR for security issues"
-
-Claude reads the descriptions of installed agents, sees that
-`pr-review-toolkit:code-reviewer` matches "review … PR" and `security-analyst` matches
-"security issues", and dispatches both (in parallel where independent).
-
-**Explicit invocation:**
+You can also name the agent, which bypasses the routing decision:
 
 ```
 @developer-java add a controller for the /orders endpoint
 ```
 
-The `@<name>` form invokes a specific agent regardless of what
-description Claude thought matched.
-
-**Listing what's available:**
-
 ```
 /agents
 ```
 
-Lists every agent currently loaded in the session.
+lists the subagents available in the session.
+
+**Skills** are loaded by whoever is already working, using the `Skill` tool, when the task
+touches their domain. They do not appear in `/agents` and you rarely invoke one by hand.
+An agent that needs a skill on every run preloads it through the `skills:` frontmatter
+field instead. Four agents do this today: `api-designer` preloads `rest-api-standards`,
+`document-creator` and `presentation-creator` preload `accenture-branding`, and
+`test-data-seeder` preloads `test-data-seeding-standards`.
 
 ## Patterns
 
 ### One specialist for one task
 
 ```
-@code-reviewer review the changes on this branch
-```
-
-```
-@api-designer propose an OpenAPI spec for /products with pagination
+@api-designer propose an OpenAPI 3.1 spec for /products with cursor pagination
 ```
 
 ```
 @debugger here is a stack trace, find the root cause: <paste>
 ```
 
-Use this when the task is clearly within one specialist's domain.
-
-### Multi-domain tasks via the orchestrator
-
-When a task spans multiple specialists ("design a feature", "review the
-whole architecture"), invoke `orchestrator`:
-
 ```
-@orchestrator I want to add OAuth2 to our Spring Boot service.
-Recommend an architecture, design the API, and produce a code skeleton.
+@test-writer add JUnit 5 tests for the payment service
 ```
 
-The orchestrator agent (model `opus`) discovers which specialists are
-installed, decomposes the task into subtasks, dispatches them in parallel
-where independent, and synthesises the result.
+Use this when the task sits inside one specialist's domain.
 
-### Multi-phase refactoring pipelines
+### Multi-domain tasks
 
-For end-to-end legacy modernisation (Python → Java/Spring + Angular)
-the registry ships a six-phase pipeline. The single entrypoint is
-`refactoring-supervisor`:
+When a task spans several specialists, or its scope is unclear, use the orchestrator from
+`analysis-architecture`:
+
+```
+@orchestrator I want to add OAuth2 to our Spring Boot service. Recommend an
+architecture, design the API, and produce a code skeleton.
+```
+
+It discovers which agents are available, decomposes the task, dispatches independent
+subtasks in parallel and synthesises the result.
+
+### A hard, irreversible decision
+
+`deliberation` runs a structured debate instead of a single opinion:
+
+```
+@deliberative-decision-engine should we replace our Kafka consumer group with
+a pull-based scheduler? Constraints: 40 services, 6-month window.
+```
+
+The engine dispatches independent personas (`debate-proposer`, `debate-critic`,
+`debate-risk-reviewer`, `debate-operations-reviewer`,
+`debate-replatforming-specialist`), runs challenge and rebuttal rounds, and has
+`debate-judge` produce an auditable decision record. Reserve it for decisions that are
+expensive to reverse; a full debate is not cheap.
+
+### The replatforming pipeline
+
+`replatforming` implements an end-to-end AS-IS to TO-BE migration in five phases. The
+single entrypoint is `refactoring-supervisor`:
 
 ```
 @refactoring-supervisor migrate the code at ~/dev/legacy-streamlit-app
 ```
 
-It runs phases sequentially with explicit human-in-the-loop checkpoints
-between each:
+It runs phases in order with a human-in-the-loop gate between each one.
 
-| Phase | Supervisor | Output | Read more |
+| Phase | Supervisor | Writes | Read more |
 |---|---|---|---|
-| 0 — Indexing | `indexing-supervisor` | `.indexing-kb/` | [Architecture](Architecture#phase-0-indexing) |
-| 1 — Functional analysis | `functional-analysis-supervisor` | `docs/analysis/01-functional/` | [Architecture](Architecture#phase-1-functional-analysis) |
-| 2 — Technical analysis | `technical-analysis-supervisor` | `docs/analysis/02-technical/` | [Architecture](Architecture#phase-2-technical-analysis) |
-| 3 — Baseline testing | `baseline-testing-supervisor` | `tests/baseline/` + report | [Architecture](Architecture#phase-3-baseline-testing) |
-| 4 — TO-BE refactoring | `refactoring-tobe-supervisor` | `backend/`, `frontend/`, ADRs | [Architecture](Architecture#phase-4-to-be-refactoring) |
-| 5 — TO-BE testing & equivalence | `tobe-testing-supervisor` | `01-equivalence-report.md` (PO sign-off) | [Architecture](Architecture#phase-5-to-be-testing) |
+| 0, Codebase indexing | `indexing-supervisor` | `.indexing-kb/` | [Architecture](Architecture#phase-0-codebase-indexing) |
+| 1, Functional analysis | `functional-analysis-supervisor` | `docs/analysis/01-functional/` | [Architecture](Architecture#phase-1-functional-analysis) |
+| 2, Technical analysis | `technical-analysis-supervisor` | `docs/analysis/02-technical/` | [Architecture](Architecture#phase-2-technical-analysis) |
+| 3, Baseline testing | `baseline-testing-supervisor` | `tests/baseline/` | [Architecture](Architecture#phase-3-baseline-testing) |
+| 4, Application replatforming | `refactoring-supervisor` drives it directly | `backend/`, `frontend/`, `docs/refactoring/`, `e2e/` | [Architecture](Architecture#phase-4-application-replatforming) |
 
-You can also run a single phase directly by invoking its supervisor.
+Phases 0 to 3 are strictly AS-IS and never modify the legacy source. Phase 4 introduces
+the target stack and runs as a seven-step loop (Step 0 through Step 6, with a Step 5.5 for
+test-data seeding) where every feature iteration must leave the application in a working
+state.
 
-### Document and presentation generation
+Each of Phases 0 to 3 also runs standalone:
 
-Two agents produce Accenture-branded deliverables from project files:
+```
+@indexing-supervisor index this codebase
+```
+
+```
+@technical-analysis-supervisor run Phase 2
+```
+
+Phase 4 does not run standalone; it requires Phases 0 to 3 complete.
+
+On invocation the supervisor detects existing outputs per phase and asks what to do with
+each: skip, re-run, revise, or regenerate exports only. The `exports-only` mode covers
+the case where the analysis is complete but the Accenture-branded PDF or PPTX is missing.
+
+### Documents and presentations
+
+From inside a session:
 
 ```
 @document-creator generate a PDF from docs/analysis/02-technical/ at /tmp/report.pdf
@@ -108,77 +132,80 @@ Two agents produce Accenture-branded deliverables from project files:
 
 ```
 @presentation-creator generate an executive deck from docs/analysis/02-technical/
-at /tmp/deck.pptx
 ```
 
-Both are read-only on the source files; they only write the export.
+Both read the source material and write only the export.
+
+From a shell, `scripts/present.sh` wraps the same agents through `claude -p`:
+
+```bash
+./scripts/present.sh ./estimation/
+./scripts/present.sh --type pdf --audience tech ./docs/
+./scripts/present.sh --type pptx --audience biz --project "Portal Modernization" \
+  --output ~/Desktop/deck.pptx ./docs/
+```
+
+`--type` accepts `pptx`, `pdf` or `docx`; `--audience` accepts `biz` or `tech`. The
+default output path is `./output/<project>.<type>`.
+
+### Documentation
+
+```
+@documentation-writer write a runbook for the deployment procedure
+```
+
+```
+@wiki-writer refresh the wiki after the new endpoint landed
+```
+
+`wiki-writer` writes Markdown into `wiki/` for review and never pushes to a wiki remote
+on its own.
 
 ## Project-specific overlays
 
-Sometimes a global capability needs project-specific knowledge — your
-internal logging library, an in-house naming convention, a domain glossary.
-Put a thin overlay in your project:
+When a shared agent needs project knowledge such as an internal logging library or a
+domain glossary, add an overlay in the project's own `.claude/agents/`:
 
 ```
 your-project/.claude/agents/developer-java-payments.md
 ```
 
-Patterns:
+- **Give it a distinct name.** Two files declaring the same `name` collide and only one
+  wins.
+- **Add, do not restate.** Reference the shared agent's behaviour and state only the
+  delta.
+- **Promote what generalises.** When an overlay proves useful beyond one project, open a
+  PR. See [Contributing](Contributing).
 
-- **Rename**, don't shadow. Use a distinct `name` so both files coexist
-  in the directory.
-- **Add, don't rewrite.** Reference the catalog capability by behaviour:
-  "Follow `developer-java` conventions but additionally use our
-  internal `com.acme.logging` library and never persist a `User` record
-  without the `tenantId` field."
-- **Promote when stable.** When your overlay proves widely useful, open
-  a PR to promote the addition to the catalog. See
-  [Contributing](Contributing).
+## Updating
 
-## Updating capabilities
+Under the marketplace path, plugins update in the background when the resolved version
+changes. Nothing to run.
 
-Pull and re-run setup:
+Under the local install path:
 
 ```bash
 cd /path/to/claude-registry
 git pull origin main
-./claude-catalog/scripts/setup-capabilities.sh /path/to/your-project all
+./scripts/install-local.sh dev-standards analysis-architecture
 ```
 
-The script overwrites previously installed catalog files but leaves
-project overlays untouched. Restart Claude Code to pick up the new
-versions.
-
-## Listing dependencies
-
-If you want to know what skills an agent depends on, look at its entry
-in `claude-marketplace/catalog.json`:
-
-```bash
-jq '.capabilities[] | select(.name == "developer-java") | .dependencies' \
-  claude-marketplace/catalog.json
-```
-
-The setup script uses this same field to auto-install skill
-dependencies.
+Then restart Claude Code.
 
 ## When something goes wrong
 
-- **Wrong agent picked.** Be more specific in your prompt, or invoke
-  explicitly with `@name`.
-- **Agent says it can't find a file.** Either the path is wrong, or you
-  installed globally and are running in a project with a different
-  directory layout. Provide the path explicitly.
-- **An agent's behaviour changed unexpectedly.** Check
-  [Changelog](Changelog) — the registry releases minor versions for
-  behaviour changes and major versions for breaking ones.
-- **Generated file with weird syntax in the repo root.** This was a
-  past incident (Mermaid shell-injection in Phase 2, fixed 2026-04-28).
-  Pull the registry to get the hardening; see [Changelog](Changelog).
+- **The wrong agent was picked.** Be more specific, or name the agent with `@`. If it
+  keeps happening, you probably have too many plugins enabled and the descriptions are
+  competing.
+- **An agent says a reference file is missing.** Its bundled paths did not resolve. See
+  [Installation](Installation#troubleshooting).
+- **An agent's behaviour changed unexpectedly.** Check [Changelog](Changelog). A change
+  to a `name` or a `description` is a major bump precisely because it changes routing.
+- **A phase supervisor asks about outputs you do not recognise.** It found artefacts from
+  an earlier run. Read the state file it names before choosing re-run over skip.
 
 ## Related
 
-- [Capability catalog](Capability-catalog) — the full list of what is
-  installable, with descriptions
-- [Reference](Reference) — fields, schemas, and conventions
-- [FAQ](FAQ) — common questions
+- [Capability catalog](Capability-catalog): every agent and skill, with what it does
+- [Reference](Reference): frontmatter fields, CI gates, paths
+- [FAQ](FAQ): common questions

@@ -1,4 +1,4 @@
-# Indexing Supervisor — Protocol Reference
+# Indexing Supervisor: Protocol Reference
 
 Operational rules consulted by `indexing-supervisor` during a run.
 Read this doc at bootstrap, before any escalation or decision, before
@@ -18,7 +18,7 @@ updating the manifest, and on any unclear situation.
 2. Read `waves` map to determine which waves completed. Skip completed waves; restart from the first non-complete wave.
 
 ### Update protocol
-After each wave completes, write the updated `pipeline-state.yaml` immediately before proceeding to the next wave. Never skip this step — it is the resume checkpoint.
+After each wave completes, write the updated `pipeline-state.yaml` immediately before proceeding to the next wave. Never skip this step. It is the resume checkpoint.
 
 ### Schema
 ```yaml
@@ -76,7 +76,7 @@ waves:
 ## Inputs
 
 - **Source**: the repository path provided by the user (or current working directory).
-- There are no prior-phase inputs — Phase 0 is the first phase.
+- There are no prior-phase inputs: Phase 0 is the first phase.
 - Output root: `.indexing-kb/` (Bronze/Silver/Gold layout).
 - The manifest at `.indexing-kb/_meta/manifest.json` is the authoritative phase state; update it after every wave using the schema in `manifest-spec.md`.
 
@@ -90,16 +90,16 @@ See `sub-agents-catalog.md` for the full roster (wave assignment, output targets
 
 | Wave | Agent | Conditional |
 |---|---|---|
-| W1 | `codebase-mapper`, `dependency-analyzer` | — |
+| W1 | `codebase-mapper`, `dependency-analyzer` | n/a |
 | W1 | `streamlit-analyzer` | only when `streamlit` ∈ stack.frameworks |
 | W2 | `module-documenter` × N | one per top-level package |
-| W3 | `data-flow-analyst`, `business-logic-analyst` | — |
-| W4 | `synthesizer` | — |
+| W3 | `data-flow-analyst`, `business-logic-analyst` | n/a |
+| W4 | `synthesizer` | n/a |
 | W4a | `indexing-auditor` | always ON |
 
 ---
 
-## Escalation triggers — always ask the user
+## Escalation triggers: always ask the user
 
 Stop and ask the user before proceeding when:
 
@@ -111,7 +111,7 @@ Stop and ask the user before proceeding when:
 - **Scope expansion mid-run**: a sub-agent discovers significant code outside
   the initially confirmed scope (e.g., a vendored framework, a generated
   module). Confirm whether to extend.
-- **Sub-agent fails twice on the same input**: do not retry a third time —
+- **Sub-agent fails twice on the same input**: do not retry a third time;
   escalate.
 - **Conflict between two sub-agent outputs** you cannot resolve from the
   source code (e.g., dependency-analyzer says module X depends on Y;
@@ -137,7 +137,7 @@ Stop and ask the user before proceeding when:
 | Sub-agent retried once already | Do not retry again; escalate |
 | Bronze KB missing or empty | Cannot proceed to Phase 2 (module docs) or beyond; run codebase-mapper first |
 | Large files exist without classification | Run large file index before dispatching semantic sub-agents |
-| evidence-ledger.jsonl has 0 entries after Phase 1 | Escalate — codebase-mapper may have failed silently |
+| evidence-ledger.jsonl has 0 entries after Phase 1 | Escalate: codebase-mapper may have failed silently |
 | indexing-auditor verdict is FAIL | Stop; surface unresolved gaps to user before proceeding |
 
 ---
@@ -192,12 +192,12 @@ Available decisions:
 - **Never invoke yourself recursively.**
 - **Never let a sub-agent write outside `.indexing-kb/`.** Verify after each
   dispatch by listing modified files in the repo.
-- **Always read sub-agent outputs from disk** after dispatch — the Agent
+- **Always read sub-agent outputs from disk** after dispatch: the Agent
   tool result text is a summary, not the source of truth. The KB markdown is.
 - **Always update `.indexing-kb/_meta/manifest.json`** after each phase
   (schema in `${CLAUDE_PLUGIN_ROOT}/references/indexing/manifest-spec.md`).
 - **Never skip Phase 0 confirmation**, even if the user says "go ahead, do
-  everything". Confirmation in Phase 0 is non-negotiable — it sets scope.
+  everything". Confirmation in Phase 0 is non-negotiable: it sets scope.
 - **Aggregate open questions** from all sub-agent outputs into
   `_meta/unresolved.md` after Phase 3 and again after Phase 4.
 - **Redact credentials** in any output you produce or any error you echo
@@ -209,4 +209,4 @@ Available decisions:
   (48 accidental files, executed `store` command via redirect).
   This rule MUST be propagated to every sub-agent dispatch prompt
   (template in `${CLAUDE_PLUGIN_ROOT}/references/indexing/dispatch-prompt-template.md`
-  already includes it — verify on every dispatch).
+  already includes it, verify on every dispatch).

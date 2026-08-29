@@ -33,25 +33,25 @@ measure and compare.
 - **W2 perf delta vs AS-IS baseline.** Reads the Phase-3 benchmark JSON and runs the same operations against the deployed TO-BE; emits a per-operation delta report (latency, throughput, memory). Required for the equivalence report's perf section.
 - **Targeted operation comparison.** When a single hot path was optimised and the team wants the perf delta for that operation alone.
 
-Do NOT use this agent standalone — invoked only as part of `tobe-testing-supervisor` (Wave 2). Do not use for: AS-IS benchmarks (use `benchmark-writer` in `baseline-testing-supervisor`), authoring functional tests, or AS-IS analysis.
+Do NOT use this agent standalone. Invoked only as part of `tobe-testing-supervisor` (Wave 2). Do not use for: AS-IS benchmarks (use `benchmark-writer` in `baseline-testing-supervisor`), authoring functional tests, or AS-IS analysis.
 
 ---
 
 ## Inputs (passed by supervisor)
 
-- `repo_root` — absolute path
-- `to_be_backend_root` — `<repo>/backend/`
-- `phase3_benchmark_path` —
+- `repo_root`: absolute path
+- `to_be_backend_root`: `<repo>/backend/`
+- `phase3_benchmark_path`:
   `<repo>/tests/baseline/_meta/benchmark-baseline.json` (or wherever
   Phase 3 wrote it; supervisor passes the canonical path)
-- `openapi_path` — `<repo>/docs/refactoring/api/openapi.yaml`
-- `uc_root` — `<repo>/docs/analysis/01-functional/06-use-cases/`
-- `phase2_perf_root` —
+- `openapi_path`: `<repo>/docs/refactoring/api/openapi.yaml`
+- `uc_root`: `<repo>/docs/analysis/01-functional/06-use-cases/`
+- `phase2_perf_root`:
   `<repo>/docs/analysis/02-technical/06-performance/` (AS-IS hotspots)
-- `output_root_reports` — `<repo>/docs/analysis/05-tobe-tests/`
-- `output_root_perf` — `<repo>/e2e/perf/`
-- `execute_policy` — on | backend-only | off
-- `tobe_api_base_url` — env-overridable, default `http://localhost:8080`
+- `output_root_reports`: `<repo>/docs/analysis/05-tobe-tests/`
+- `output_root_perf`: `<repo>/e2e/perf/`
+- `execute_policy`: on | backend-only | off
+- `tobe_api_base_url`: env-overridable, default `http://localhost:8080`
 
 Read the AS-IS benchmark to identify which UCs / endpoints have a
 recorded baseline (no comparison without one). Read Phase 2 perf
@@ -202,10 +202,10 @@ For each UC scenario:
 3. Run (or have the user run) the scenario.
 4. Compute deltas.
 5. Classify:
-   - `improved` — TO-BE p95 < AS-IS p95
-   - `equivalent` — TO-BE p95 ≤ threshold_p95
-   - `regression-soft` — TO-BE p95 > threshold_p95 but ≤ +25%
-   - `regression-hard` — TO-BE p95 > AS-IS p95 + 25% (escalate)
+   - `improved`: TO-BE p95 < AS-IS p95
+   - `equivalent`: TO-BE p95 ≤ threshold_p95
+   - `regression-soft`: TO-BE p95 > threshold_p95 but ≤ +25%
+   - `regression-hard`: TO-BE p95 > AS-IS p95 + 25% (escalate)
 
 Capture all of these in `_meta/benchmark-comparison.json`:
 
@@ -236,7 +236,7 @@ Performance numbers depend on the environment. Capture and surface:
 - CPU model, core count
 - RAM
 - Java version, JIT warmup time
-- Database container size (Testcontainers default is small — flag if
+- Database container size (Testcontainers default is small, flag if
   AS-IS was measured on a beefier env)
 - Network latency between load generator and SUT (in-process vs
   cross-host)
@@ -251,7 +251,7 @@ and downgrade confidence to `medium` or `low` accordingly.
 
 AS-IS Streamlit apps had non-trivial baseline latency (full-script
 reruns, `st.cache_data` warmup, single-process execution). The TO-BE
-Spring Boot backend is a different execution model — naive comparison
+Spring Boot backend is a different execution model: naive comparison
 misleads. A Streamlit "click → table refresh" cycle includes UI render
 time; the TO-BE equivalent is just the HTTP round-trip (Angular owns
 the render). For these UCs, compare **end-to-end** (Playwright-driven
@@ -272,7 +272,7 @@ methodology` and produce the E2E scenario in
 | `frontend-only` | Don't run anything (load testing requires a running backend); partial report |
 | `off` | Scaffold scenarios, document run instructions; report `status: partial — pending execution` |
 
-In any case, write `04-performance-comparison.md` — even a "pending"
+In any case, write `04-performance-comparison.md`: even a "pending"
 report has value (it states what will be measured and the gate).
 
 ---
@@ -291,7 +291,7 @@ report has value (it states what will be measured and the gate).
 - **AS-IS-bug-carry-over filter**: if a UC was measured AS-IS but
   was inheriting a known bug that's not yet fixed in TO-BE, flag
   the comparison `not-applicable` and explain why.
-- **No secrets** in scenarios — use env vars for tokens.
+- **No secrets** in scenarios: use env vars for tokens.
 
 ---
 

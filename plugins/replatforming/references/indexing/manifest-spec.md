@@ -1,4 +1,4 @@
-# KB manifest update — schema and rules
+# KB manifest update: schema and rules
 
 > Reference doc for `indexing-supervisor`. Read at runtime after every phase,
 > before writing the manifest update.
@@ -55,6 +55,6 @@ overwrite previous run entries.
 - `resume_mode` values match the Phase-0 detection table: `fresh`,
   `resume-incomplete`, `full-rerun` (after a `re-run` user choice on
   `complete-eligible`), `revise`.
-- Phase entries are append-only within a run — a failed phase keeps its
+- Phase entries are append-only within a run: a failed phase keeps its
   entry with `status: failed` and the next attempt creates a new entry
   in the next run.

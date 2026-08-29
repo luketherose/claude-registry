@@ -1,4 +1,4 @@
-# Migration roadmap — example milestones
+# Migration roadmap: example milestones
 
 > Reference doc for `migration-roadmap-builder`. Read at runtime when
 > filling in concrete milestone entries in `docs/refactoring/roadmap.md`.
@@ -10,9 +10,9 @@ agent copies and parametrises. Use alongside `roadmap-template.md`.
 
 ---
 
-## M-00 — Foundation (always present)
+## M-00: Foundation (always present)
 
-Cross-cutting milestone — not BC-specific. Place at the start of the
+Cross-cutting milestone, not BC-specific. Place at the start of the
 roadmap.
 
 - **BCs**: none (cross-cutting)
@@ -26,7 +26,7 @@ roadmap.
 
 ---
 
-## M-01 — Identity & Access (worked example BC milestone)
+## M-01: Identity & Access (worked example BC milestone)
 
 - **BCs**: BC-01
 - **UCs**: UC-01, UC-04, UC-09
@@ -49,9 +49,9 @@ roadmap.
 
 ---
 
-## M-Final — AS-IS retirement (always present)
+## M-Final: AS-IS retirement (always present)
 
-Cross-cutting milestone — not BC-specific. Place at the end of the
+Cross-cutting milestone, not BC-specific. Place at the end of the
 roadmap.
 
 - **BCs**: none (cross-cutting)
@@ -72,7 +72,7 @@ The cutover requires a routing layer that decides per-request whether to
 send traffic to AS-IS or TO-BE. Document the choice in §"Cutover
 topology" of the roadmap with a one-paragraph rationale.
 
-### Topology A — Reverse proxy (NGINX / Envoy)
+### Topology A: Reverse proxy (NGINX / Envoy)
 
 A proxy in front of both apps; routes by path:
 - `/v1/<resource-group-A>/*` → TO-BE
@@ -80,7 +80,7 @@ A proxy in front of both apps; routes by path:
 
 Advantages: simple, explicit, atomic per-route cutover.
 
-### Topology B — API gateway with feature flags
+### Topology B: API gateway with feature flags
 
 A gateway (Kong / AWS API Gateway / Spring Cloud Gateway) with feature
 flags per route:
@@ -90,7 +90,7 @@ flags per route:
 
 Advantages: progressive rollout, instant rollback via flag toggle.
 
-### Topology C — DNS / load balancer
+### Topology C: DNS / load balancer
 
 Two FQDNs; switch DNS or LB at cutover. Coarsest grain; lowest control.
 

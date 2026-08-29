@@ -1,4 +1,4 @@
-# Baseline challenger — output report template
+# Baseline challenger: output report template
 
 > Reference doc for `baseline-challenger`. Read at runtime when writing
 > the challenger report deliverables.
@@ -109,7 +109,7 @@ duration_seconds: <int>
 
 ```
 Blocking issues:  <N>
-Phase 3 ready:    <yes | no — see blocking issues above>
+Phase 3 ready:    <yes | no, see blocking issues above>
 ```
 
 If `Phase 3 ready: no`: the supervisor must NOT declare Phase 3

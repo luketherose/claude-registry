@@ -1,4 +1,4 @@
-# Module Documenter — Output Specification
+# Module Documenter: Output Specification
 
 Reference doc for `module-documenter`. Read before writing any output file.
 
@@ -8,9 +8,9 @@ Reference doc for `module-documenter`. Read before writing any output file.
 
 | Artifact | Path | Tier |
 |---|---|---|
-| Module summary (JSONL) | `.indexing-kb/silver/module-summaries.jsonl` | Silver — one record per package |
-| Large-file summary (JSONL) | `.indexing-kb/silver/large-file-summaries.jsonl` | Silver — for packages with large files |
-| Assumptions (JSONL) | `.indexing-kb/silver/assumptions.jsonl` | Silver — assumptions made during analysis |
+| Module summary (JSONL) | `.indexing-kb/silver/module-summaries.jsonl` | Silver: one record per package |
+| Large-file summary (JSONL) | `.indexing-kb/silver/large-file-summaries.jsonl` | Silver: for packages with large files |
+| Assumptions (JSONL) | `.indexing-kb/silver/assumptions.jsonl` | Silver: assumptions made during analysis |
 | Human-readable doc | `.indexing-kb/04-modules/<package-name>.md` | Human |
 
 ---

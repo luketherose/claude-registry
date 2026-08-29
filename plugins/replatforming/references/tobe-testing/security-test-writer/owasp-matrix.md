@@ -1,4 +1,4 @@
-# OWASP Top 10 — coverage policy
+# OWASP Top 10: coverage policy
 
 > Reference doc for `security-test-writer`. Read at runtime when planning
 > the OWASP coverage and authoring the per-category tests.

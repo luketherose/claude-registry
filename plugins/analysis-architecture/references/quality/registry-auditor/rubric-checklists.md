@@ -1,4 +1,4 @@
-# Rubric checklists — embedded fallback
+# Rubric checklists: embedded fallback
 
 > Reference doc for `registry-auditor`. Read at runtime when the official
 > Anthropic rubric skills (`agent-development`, `skill-development`,
@@ -15,7 +15,7 @@ number when reporting findings (e.g., "agent-development §6").
    per its CLAUDE.md).
 2. **`name`:** 3–50 chars, lowercase + hyphens, must start/end alphanumeric.
 3. **`model`:** `inherit` | `sonnet` | `opus` | `haiku`. Spec recommends
-   `inherit`. This registry uses `sonnet`/`opus` deliberately — flag once, not
+   `inherit`. This registry uses `sonnet`/`opus` deliberately: flag once, not
    per-file.
 4. **`color`:** `blue` | `cyan` | `green` | `yellow` | `magenta` | `red`. Flag
    missing or non-spec values (`purple`, `orange`).
@@ -54,7 +54,7 @@ number when reporting findings (e.g., "agent-development §6").
 6. **Length:** 1500–2000 words ideal, 5000-word hard ceiling. Body >2500 words =
    candidate for splitting into `references/`.
 7. **Bundled resources** referenced from SKILL.md. N/A for flat single-file
-   registries — note in summary.
+   registries: note in summary.
 
 ## CLAUDE.md (per `claude-md-improver`)
 

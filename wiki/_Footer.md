@@ -1,5 +1,6 @@
 [Repo](https://github.com/luketherose/claude-registry) ·
-[License](https://github.com/luketherose/claude-registry/blob/main/LICENSE) ·
-[Catalog source](https://github.com/luketherose/claude-registry/tree/main/claude-catalog) ·
-[Marketplace](https://github.com/luketherose/claude-registry/tree/main/claude-marketplace) ·
-[Changelog](https://github.com/luketherose/claude-registry/blob/main/claude-catalog/CHANGELOG.md)
+[README](https://github.com/luketherose/claude-registry/blob/main/README.md) ·
+[Marketplace manifest](https://github.com/luketherose/claude-registry/blob/main/.claude-plugin/marketplace.json) ·
+[Plugins](https://github.com/luketherose/claude-registry/tree/main/plugins) ·
+[Registry docs](https://github.com/luketherose/claude-registry/tree/main/docs/registry) ·
+[Changelog](https://github.com/luketherose/claude-registry/blob/main/docs/registry/CHANGELOG.md)

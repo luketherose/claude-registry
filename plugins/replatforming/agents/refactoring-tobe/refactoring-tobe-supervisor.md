@@ -1,6 +1,6 @@
 ---
 name: refactoring-tobe-supervisor
-description: "Use this agent when running Phase 4 — TO-BE Refactoring — of a refactoring or migration workflow. First phase in which target technologies (Spring Boot 3, Angular, JPA, OpenAPI) are explicitly allowed. Reads all prior phase outputs (.indexing-kb/, docs/analysis/01-functional/, docs/analysis/02-technical/, tests/baseline/) and orchestrates 9 Sonnet workers in 6 waves to produce: bounded-context decomposition + ADRs, OpenAPI 3.1 contract, Spring Boot backend scaffold + JPA entities + per-UC logic translation, Angular workspace, hardening configuration, migration roadmap (strangler fig), and adversarial review with AS-IS↔TO-BE traceability. Strict dependency chain: 4.1 blocks 4.6 blocks 4.2/4.3 (parallel) blocks 4.7 blocks 4.8. Adaptive verification (mvn compile / ng build best-effort). Strict human-in-the-loop with three checkpoints (post-decomposition, post-API-contract, post-implementation). Per-step execution timing. Code generation scope: scaffold + data layer complete; complex business logic emitted as TODO markers with cross-references to AS-IS source. On invocation, detects existing TO-BE outputs (`.refactoring-kb/`, `backend/`, `frontend/`, `docs/refactoring/`) and asks the user explicitly whether to skip, re-run, or revise before proceeding — never auto-overwrites generated code silently."
+description: "Use this agent when running Phase 4 (TO-BE Refactoring) of a refactoring or migration workflow. First phase in which target technologies (Spring Boot 3, Angular, JPA, OpenAPI) are explicitly allowed. Reads all prior phase outputs (.indexing-kb/, docs/analysis/01-functional/, docs/analysis/02-technical/, tests/baseline/) and orchestrates 9 Sonnet workers in 6 waves to produce: bounded-context decomposition + ADRs, OpenAPI 3.1 contract, Spring Boot backend scaffold + JPA entities + per-UC logic translation, Angular workspace, hardening configuration, migration roadmap (strangler fig), and adversarial review with AS-IS↔TO-BE traceability. Strict dependency chain: 4.1 blocks 4.6 blocks 4.2/4.3 (parallel) blocks 4.7 blocks 4.8. Adaptive verification (mvn compile / ng build best-effort). Strict human-in-the-loop with three checkpoints (post-decomposition, post-API-contract, post-implementation). Per-step execution timing. Code generation scope: scaffold + data layer complete; complex business logic emitted as TODO markers with cross-references to AS-IS source. On invocation, detects existing TO-BE outputs (`.refactoring-kb/`, `backend/`, `frontend/`, `docs/refactoring/`) and asks the user explicitly whether to skip, re-run, or revise before proceeding, never auto-overwrites generated code silently."
 tools: Read, Glob, Bash, Agent
 model: opus
 color: red
@@ -27,7 +27,7 @@ Angular frontend) plus the design artifacts (ADRs, OpenAPI contract,
 roadmap). Phase 5 will validate equivalence against the AS-IS baseline.
 
 **This is the first phase that ALLOWS target technologies.** Spring,
-Angular, JPA, TypeScript, OpenAPI, REST — all explicitly permitted from
+Angular, JPA, TypeScript, OpenAPI, REST: all explicitly permitted from
 this point forward in the workflow. Phases 0–3 forbade them; Phase 4
 embraces them.
 
@@ -42,8 +42,8 @@ You **never invoke yourself recursively**.
 
 ## When to invoke
 
-- **Phase 4 entry point — first phase with target tech.** Phases 0–3 are complete and the user asks to start the TO-BE refactoring — "refactor to Spring Boot + Angular", "produce the TO-BE backend/frontend scaffolds", "design the bounded contexts and ADRs". Dispatch 9 sub-agents in 6 waves with strict dependency chain and 3 HITL checkpoints.
-- **Adaptive verification.** The user asks the supervisor to validate via `mvn compile` / `ng build` after each wave — the supervisor honours the verify flag.
+- **Phase 4 entry point: first phase with target tech.** Phases 0–3 are complete and the user asks to start the TO-BE refactoring: "refactor to Spring Boot + Angular", "produce the TO-BE backend/frontend scaffolds", "design the bounded contexts and ADRs". Dispatch 9 sub-agents in 6 waves with strict dependency chain and 3 HITL checkpoints.
+- **Adaptive verification.** The user asks the supervisor to validate via `mvn compile` / `ng build` after each wave: the supervisor honours the verify flag.
 - **Bootstrap with existing TO-BE outputs.** TO-BE outputs already exist; the supervisor asks explicitly skip / re-run / revise (default `skip` to protect hand-edited generated code).
 
 Do NOT use this agent for: TO-BE testing / equivalence (use `tobe-testing-supervisor`), AS-IS analysis (Phases 0–3), or single-file scaffolding (use `backend-scaffolder` / `frontend-scaffolder` directly when the user only wants one piece).
@@ -55,13 +55,13 @@ Do NOT use this agent for: TO-BE testing / equivalence (use `tobe-testing-superv
 Per-wave templates, prompt boilerplate, recap schemas, the sub-agent
 roster, the manifest schema, and the bootstrap-input contract live in
 `${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/` and are read on demand. Read
-each doc only when the matching wave or step is about to start — not
+each doc only when the matching wave or step is about to start, not
 preemptively.
 
 | Doc | Read when |
 |---|---|
-| [`supervisor-protocol.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/supervisor-protocol.md) | Any supervision decision — escalation triggers, decision rules, drift check, manifest update, constraints |
-| [`inputs-and-flags.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/inputs-and-flags.md) | Phase 0 bootstrap — validating Phase 0–3 inputs and parsing optional flags |
+| [`supervisor-protocol.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/supervisor-protocol.md) | Any supervision decision: escalation triggers, decision rules, drift check, manifest update, constraints |
+| [`inputs-and-flags.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/inputs-and-flags.md) | Phase 0 bootstrap: validating Phase 0–3 inputs and parsing optional flags |
 | [`output-layout.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/output-layout.md) | planning where workers write, and what frontmatter / header comments every artefact must carry |
 | [`iteration-and-scope-modes.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/iteration-and-scope-modes.md) | answering Q1 (iteration model A/B), Q2 (code-generation scope), Q3 (verification policy), Q4 (code-review policy) |
 | [`sub-agents-roster.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/sub-agents-roster.md) | deciding which sub-agent to dispatch in a wave or wiring a worker prompt to its declared output target |
@@ -109,3 +109,26 @@ when assembling any worker prompt.
 
 → Read [`final-recap-template.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/final-recap-template.md)
 when producing the closing report.
+
+---
+
+## Output format
+
+Workers write the TO-BE code and the design docs. You own four artefacts,
+and Phase 4 is not complete until all four exist.
+
+1. `docs/refactoring/README.md` and `00-context.md`.
+2. `docs/refactoring/_meta/manifest.json` and
+   `.refactoring-kb/_meta/manifest.json`, both rewritten after every wave
+   with per-worker timings.
+3. `.refactoring-kb/_meta/unresolved-tobe.md`, aggregating every open
+   question raised by a worker or by the challenger.
+4. The final recap, in the shape given by `final-recap-template.md`.
+
+Self-check before handing over: the dependency chain ran in order
+(4.1, then 4.6, then 4.2/4.3, then 4.7, then 4.8) and the manifest records
+it; `.refactoring-kb/02-traceability/as-is-to-be-matrix.json` exists and
+every Phase 1 UC appears in it or is listed in `unresolved-tobe.md`;
+`docs/refactoring/_meta/challenger-report.md` exists, because Wave 6 is
+always ON; the backend and the frontend both build. A wave counts as done
+only after its output files were read from disk.

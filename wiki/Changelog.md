@@ -1,101 +1,136 @@
 <!--
 audience: end-user
 diataxis: reference
-last-verified: 2026-04-28
-verified-against: 1e9445a
+last-verified: 2026-08-30
+verified-against: 8670a63
 -->
 
 # Changelog
 
-The authoritative changelog lives in
-[`claude-catalog/CHANGELOG.md`](https://github.com/luketherose/claude-registry/blob/main/claude-catalog/CHANGELOG.md).
-This page summarises the format and links to recent highlights.
+The authoritative changelog is
+[`docs/registry/CHANGELOG.md`](https://github.com/luketherose/claude-registry/blob/main/docs/registry/CHANGELOG.md).
+This page explains the format and summarises what changed recently.
 
 ## Format
 
 ```
-[name@version] - YYYY-MM-DD   for releases
-[Unreleased]                  for pending changes
+[<plugin>@<version>] - YYYY-MM-DD   a release
+[Unreleased]                        pending work
 ```
 
-Each PR adds an entry under `[Unreleased]` before merging. Subsections:
+Every pull request adds an entry under `[Unreleased]` before merging, in one of the usual
+subsections: `Added`, `Changed`, `Fixed`, `Deprecated`, `Removed`.
 
-- `### Added` — new capabilities, new behaviours
-- `### Changed` — modifications to existing capabilities (with version bump)
-- `### Fixed` — bug fixes
-- `### Deprecated` — capabilities marked for removal in 90 days
-- `### Removed` — capabilities removed (after the 90-day window)
-
-## How to read entries
-
-Each entry typically includes:
-
-- the capability name and new version
-- a one-sentence summary of the change
-- the model
-- key tools or behaviour
-- (for fixes) a reference to the incident or PR
-
-Example:
-
-```markdown
-- **`wiki-writer@0.1.0` (beta)** — sonnet, authors GitHub wikis
-  organised around the Diataxis framework. Tools: Read, Grep, Glob,
-  Bash, Write, Edit, WebFetch.
-```
+Entries are written for the next contributor rather than for a release announcement. A
+good one states what broke, why it was not caught, what the fix is, and what the
+consequence is for authors. Several recent entries end with an explicit "Consequence for
+contributors" sentence, which is the part worth reading.
 
 ## Recent highlights
 
-For the actual rolling list, read
-[`CHANGELOG.md`](https://github.com/luketherose/claude-registry/blob/main/claude-catalog/CHANGELOG.md).
-A few notable recent entries at the time of writing:
+### The plugin migration, 2026-08-29
 
-- **`wiki-writer@0.1.0`** — new agent for Diataxis-organised GitHub wikis
-  with strict push-policy and File-writing rule safety rails.
-- **Mermaid shell-injection hardening (2026-04-28)** — non-negotiable
-  File-writing rule added across all phase pipelines after a Phase 2
-  incident: 48 accidental files were created in a repo root by a
-  sub-agent passing Mermaid syntax through a `Bash` heredoc. Now all
-  content output goes through `Write`/`Edit` only.
-- **TO-BE Testing pipeline (Phase 5)** — 9 new agents; the workflow now
-  covers the full AS-IS → TO-BE → equivalence-validation cycle (Phases
-  0–5). Final go-live gate produces `01-equivalence-report.md` for PO
-  sign-off.
-- **`exports-only` resume mode for Phases 1 and 2** — when the analysis
-  is complete but the PDF/PPTX export is missing, the supervisor offers
-  to regenerate just the missing exports without re-running the
-  analysis pipeline.
-- **Explicit skip / re-run / revise prompt at bootstrap** — extended to
-  Phases 0, 3, and 4 (after originally landing in 1 and 2). When prior
-  outputs are detected, the supervisor classifies the on-disk state and
-  asks the user before doing anything.
+The single largest change. The registry became an official Claude Code plugin
+marketplace.
 
-## Versioning policy
+- **Distribution.** The two-directory layout collapsed into `plugins/`, with
+  `.claude-plugin/marketplace.json` at the root and a `plugin.json` per plugin.
+  Installation moved to `/plugin marketplace add` and `/plugin install`, and updates now
+  arrive in the background.
+- **Skills.** All skills converted from `haiku` subagents to Agent Skills at
+  `plugins/<plugin>/skills/<name>/SKILL.md`. `model`, `tools` and `color` were removed
+  from skill frontmatter. Six oversized skills were split into `references/`, putting
+  every body under the 500-line guidance. Agents load skills with the `Skill` tool, and
+  four agents preload one via the `skills:` frontmatter field.
+- **Bundled references.** 123 references across 62 files were rewritten to
+  `${CLAUDE_PLUGIN_ROOT}/references/**`. Those paths had not resolved at runtime, because
+  the previous installer copied only agent files.
+- **Description budget.** Combined subagent descriptions dropped from about 14200 tokens
+  to about 10200, against the 15000-token platform ceiling. Enabling per plugin means a
+  typical development session now loads roughly 1900 tokens of descriptions instead of
+  all of them.
+- **Frontmatter.** `model: inherit` for user-facing agents, `opus` plus `effort: high`
+  for supervisors, challengers, auditors and deliberation personas, `sonnet` retained for
+  fan-out workers. Supervisors gained `experimental.cacheTtl: 1h`.
+- **Validator.** One `validate_registry.py` replaced the two previous scripts, adding
+  gates on the description budget, `SKILL.md` length, frontmatter correctness, reference
+  link resolution and `${CLAUDE_PLUGIN_ROOT}` resolution.
+- **Removed.** Per-capability tiers, the in-house code reviewer (superseded by
+  `pr-review-toolkit` from the official Anthropic marketplace), the old distribution
+  directory in full, and the one-off bulk-edit scripts, which moved to `archive/`.
 
-See [Reference § Versioning](Reference#versioning) and
-[Governance](Governance) for the rules. TL;DR:
+### Post-migration corrections, 2026-08-29 and 2026-08-30
 
-| Change | Version bump |
+- **52 capability paths still addressed the old category directories.** The migration
+  flattened skills and agents out of their category folders, but in-body references across
+  15 files still named them. A reference the runtime cannot resolve is a silent failure,
+  so the sweep now reports zero. Capability names are flat.
+- **Broken frontmatter now fails the build.** An unescaped quote in two descriptions
+  stopped their frontmatter parsing as YAML. Claude Code loads such an agent with only the
+  filename-derived name and drops every other field without an error. A new gate runs
+  `yaml.safe_load` over every capability file.
+- **The `Skill` tool gate stopped keying on a heading.** It matched a literal `## Skills`
+  heading and so missed an agent that routes to skills in different words. It now matches
+  how a body actually refers to skills.
+- **`claude plugin validate` became a real gate.** The step had swallowed its exit code,
+  so a plugin Claude Code itself rejects still produced a green check.
+- **The safety hook's recursive-delete check was inverted.** It substring-matched one
+  exact spelling, so several genuinely destructive forms passed while a harmless scratch
+  delete was blocked. It now parses the command. A 24-case regression matrix runs in CI.
+- **The retired-name gate widened to the pages people read first.** It scanned only
+  `plugins/`, so the wiki and parts of `docs/` still listed capabilities that no longer
+  exist. The scan now covers `plugins/`, `wiki/`, `docs/`, `README.md` and `CLAUDE.md`.
+- **One evaluation scenario schema.** Two incompatible shapes had accumulated in
+  `evals.json`. All scenarios now use `{agent, query, files, expected_behavior}`, with
+  `agent` equal to the eval directory name.
+- **MCP server specs must be pinned.** The root config pulled `@latest` and an unpinned
+  Git ref while the plugin-level configs for the same servers were pinned, so the same
+  server ran a different build depending on which config won. A new gate fails on either
+  form.
+- **A prohibition no longer swallows its own alternative.** Four bullets under
+  `## What you never do` joined a prohibition to its recommended alternative with a colon,
+  which reads as forbidding the alternative too. The convention for authors: under a
+  negative heading, put the alternative in its own sentence.
+
+## Versioning
+
+A release publishes a plugin. See [Governance](Governance#releases) for the procedure.
+
+| Change | Bump |
 |---|---|
-| Fix, no behaviour change | PATCH |
-| New behaviour, compatible | MINOR |
-| `name` or `description` field change | MAJOR |
-| Tool list expansion | MINOR |
-| Tool list reduction | MAJOR |
+| A capability's `name` or `description` changes | major |
+| A capability is removed or moved to another plugin | major |
+| An output format a consumer parses changes | major |
+| A new capability is added to the plugin | minor |
+| A capability gains behaviour without changing its contract | minor |
+| Prose, examples, evaluations, reference material | patch |
 
-A `description` change is **always** breaking because Claude uses it
-for delegation routing.
+A `name` or `description` change is always breaking, because both drive delegation and
+skill activation.
 
-## Why this page is just a pointer
+## Historical note: the pre-migration vocabulary
 
-The wiki page mirrors the format and links to the source. The
-authoritative changelog stays in `claude-catalog/CHANGELOG.md` — that
-file is the one CI validates (every PR must add an `[Unreleased]`
-entry) and the one tied to git history. Duplicating the full changelog
-in two places would inevitably drift.
+Terms you may still find in old branches, old pull requests or an outdated local
+checkout. None of these exist on `main`.
+
+| Old term | What replaced it |
+|---|---|
+| `claude-catalog/`, the development source directory | `plugins/<plugin>/`, a single tier |
+| `claude-marketplace/`, the distribution directory | The same, published through the plugin marketplace |
+| `claude-marketplace/catalog.json`, the hand-maintained manifest | `.claude-plugin/marketplace.json` plus one `plugin.json` per plugin |
+| `setup-capabilities.sh`, the bash installer | `/plugin install`, or `scripts/install-local.sh` under a restrictive policy |
+| Per-capability `beta` and `stable` tiers | Semver on the plugin |
+| `validate_catalog.py` and `validate_marketplace.py` | One `.github/scripts/validate_registry.py` |
+| Skills as `haiku` subagents invoked through the `Agent` tool | Agent Skills loaded with the `Skill` tool |
+
+## Why this page is a summary
+
+The rolling list stays in `docs/registry/CHANGELOG.md`, because that file is the one tied
+to git history and the one a pull request must update. Mirroring it here in full would
+guarantee drift.
 
 ## Related
 
-- [`claude-catalog/CHANGELOG.md`](https://github.com/luketherose/claude-registry/blob/main/claude-catalog/CHANGELOG.md) — authoritative source
-- [Governance](Governance) — versioning rules
-- [Reference](Reference) — schemas and field definitions
+- [`docs/registry/CHANGELOG.md`](https://github.com/luketherose/claude-registry/blob/main/docs/registry/CHANGELOG.md): the authoritative source
+- [Governance](Governance): versioning and release rules
+- [Reference](Reference): schemas and gates

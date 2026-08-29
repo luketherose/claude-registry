@@ -7,7 +7,7 @@
 > The retrospective is the BMAD-mandated quality gate that closes the workflow loop:
 > it surfaces what was learned across all five phases, classifies issues by scope and
 > severity, and determines whether the workflow should close or re-iterate from an
-> earlier phase. It does NOT run any sub-agents — it synthesizes from artifacts
+> earlier phase. It does NOT run any sub-agents. It synthesizes from artifacts
 > already on disk.
 
 ## When it runs
@@ -17,11 +17,11 @@
 | **Auto** | Immediately after Phase 4 Step 6 PO sign-off is captured |
 | **Manual** | User explicitly requests it at any point after Phase 4 |
 
-In Auto mode the supervisor announces: "Phase 4 is complete — entering Workflow
+In Auto mode the supervisor announces: "Phase 4 is complete, entering Workflow
 Retrospective." In Manual mode it confirms: "Run the workflow retrospective now? [yes /
 stop]"
 
-## Review dimensions — one per phase
+## Review dimensions: one per phase
 
 The supervisor reads these artifacts (do not re-read source code):
 
@@ -67,7 +67,7 @@ actual cascade is computed by `cross-phase-iteration.md`.
 | Severity | Criteria |
 |---|---|
 | `blocking` | Delivered TO-BE does NOT faithfully replicate AS-IS for ≥ 1 confirmed UC. Must re-iterate. |
-| `high` | Analysis was materially wrong (e.g., key actor missing, UC scope incorrect), but delivered code is correct — likely due to corrections during Phase 4. Should re-iterate; user may override with explicit `accept`. |
+| `high` | Analysis was materially wrong (e.g., key actor missing, UC scope incorrect), but delivered code is correct: likely due to corrections during Phase 4. Should re-iterate; user may override with explicit `accept`. |
 | `medium` | Analysis was incomplete or partially incorrect; delivered code is correct. Document and defer. |
 | `low` | Minor gaps, notes for a future run. Document and close. |
 
@@ -164,7 +164,7 @@ When the user picks `iterate`:
 1. Collect all `blocking` and `high` issues with `status: open`.
 2. Union all their `downstream_impact` phase IDs. Add the issue's own phase.
 3. The **earliest phase** in the union (Phase 1 < 2 < 3 < 4) is the re-entry point.
-   Phase 0 is never a re-entry point — Phase 0 re-runs are a separate scope change.
+   Phase 0 is never a re-entry point. Phase 0 re-runs are a separate scope change.
 4. Build the cross-phase delta (see `cross-phase-iteration.md` § "Delta schema").
 5. Confirm re-run scope with the user:
    ```
@@ -197,6 +197,6 @@ decision loop. The cycle repeats until the user picks `close` or `defer-and-clos
 ## Idempotency
 
 Re-running the retrospective with the same disk artifacts MUST produce the same
-`issues[]` list (same IDs, same severity). The supervisor reads from disk only —
+`issues[]` list (same IDs, same severity). The supervisor reads from disk only:
 it must not re-infer severity from conversation context. If the artifacts have
 changed (a new cross-phase iteration ran), different outputs are expected and correct.

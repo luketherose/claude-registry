@@ -1,13 +1,13 @@
-# Manifest schema — Phase 4
+# Manifest schema: Phase 4
 
 > Reference doc for `refactoring-tobe-supervisor`. Read at runtime when
 > updating the run manifests after each wave.
 
 After every wave the supervisor updates **both** manifests:
 
-- `.refactoring-kb/_meta/manifest.json` — TO-BE KB run history with
+- `.refactoring-kb/_meta/manifest.json`: TO-BE KB run history with
   per-worker timing.
-- `docs/refactoring/_meta/manifest.json` — workflow-level summary.
+- `docs/refactoring/_meta/manifest.json`: workflow-level summary.
 
 ## Common fields (mirrors prior phases)
 
@@ -35,7 +35,7 @@ After every wave the supervisor updates **both** manifests:
 ## Update rules
 
 - Write both files in the same wave-completion step (no half-updates).
-- Never delete prior wave entries — append.
+- Never delete prior wave entries. Append.
 - On `failed` status, still write the manifest entry (do not skip).
 - On `resume-incomplete`, mark the resumed wave with the new
   `started_at` but preserve the prior partial outputs in `outputs`.

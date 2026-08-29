@@ -1,13 +1,13 @@
-# Phase 3 — Phase plan
+# Phase 3: Phase plan
 
 > Reference doc for `baseline-testing-supervisor`. Read at runtime to drive the bootstrap dialog, dispatch each wave, write the phase verification report, and (on `iterate`) re-dispatch affected test writers.
 >
-> **Iteration loop.** Phase 3 ends with the HITL iteration loop documented in [`../refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md). After Wave 3b the supervisor returns control to `refactoring-supervisor`, which presents `approve / iterate / stop`. On `iterate`, this supervisor is re-dispatched with `Resume mode: iterate` and a structured delta — see § "Wave 4 — Iteration handling" below.
+> **Iteration loop.** Phase 3 ends with the HITL iteration loop documented in [`../refactoring-workflow/iteration-loop.md`](../refactoring-workflow/iteration-loop.md). After Wave 3b the supervisor returns control to `refactoring-supervisor`, which presents `approve / iterate / stop`. On `iterate`, this supervisor is re-dispatched with `Resume mode: iterate` and a structured delta, see § "Wave 4: Iteration handling" below.
  (Phase 0 bootstrap + Wave 0–3)
 
 > Reference doc for `baseline-testing-supervisor`. Read at runtime to drive the bootstrap dialog and dispatch each wave. The supervisor body keeps only the wave dependency chain and HITL checkpoints; the per-wave details live here.
 
-## Phase 0 — Bootstrap (supervisor only)
+## Phase 0: Bootstrap (supervisor only)
 
 1. **Detect resume mode**. Inspect what is on disk and pick one of:
 
@@ -15,7 +15,7 @@
    |---|---|
    | No `tests/baseline/` AND no `docs/analysis/03-baseline/` | `fresh` |
    | Either dir exists but `docs/analysis/03-baseline/_meta/manifest.json` reports `partial` / `failed` / missing | `resume-incomplete` |
-   | Both dirs exist AND manifest reports `complete` | `complete-eligible` — ask the user before doing anything |
+   | Both dirs exist AND manifest reports `complete` | `complete-eligible`: ask the user before doing anything |
 
    When `complete-eligible` triggers, ask the user verbatim:
 
@@ -38,7 +38,7 @@
                regenerate only one UC test, refresh benchmarks only).
    ```
 
-   Default deny: do not proceed without an explicit answer. Default recommendation: `skip` (the oracle is precious — re-running it without reason will reset the equivalence reference for Phase 5).
+   Default deny: do not proceed without an explicit answer. Default recommendation: `skip` (the oracle is precious, re-running it without reason will reset the equivalence reference for Phase 5).
    If the user answers `skip`, post a short recap pointing to `docs/analysis/03-baseline/README.md` and exit cleanly. If `revise`, ask which section(s) to refresh and dispatch only those workers. If `re-run`, continue with the remaining bootstrap steps.
 
    In `resume-incomplete` mode, surface the manifest status to the user and recommend `re-run` (do not auto-resume from broken state); the user may override with `revise`.
@@ -68,17 +68,17 @@
     - Failure policy reminder (Q2)
 11. **Present the plan to the user** (use the dispatch plan template). Wait for confirmation.
 
-Skip Phase 0 confirmation only if the user has explicitly said "go ahead with the whole pipeline" — and even then, post the plan and wait at least one turn unless the user repeats "proceed".
+Skip Phase 0 confirmation only if the user has explicitly said "go ahead with the whole pipeline", and even then, post the plan and wait at least one turn unless the user repeats "proceed".
 
-## Wave 0 — Fixture preparation (sequential, one agent)
+## Wave 0: Fixture preparation (sequential, one agent)
 
 Dispatch `fixture-builder`. Records `started_at` / `completed_at` in manifest. After completion, read the produced fixtures + conftest.py. Verify they exist and the conftest.py defines the expected pytest plugins (seed fix, time mock, network mock).
 
 If the user passed `--execute on`, install the test deps before proceeding (Bash: `pip install pytest pytest-benchmark pytest-regressions pytest-cov`). If the install fails, fall back to `--execute off` and warn.
 
-**Mini-recap (you to user)** — see `recap-templates.md`.
+**Mini-recap (you to user)**, see `recap-templates.md`.
 
-## Wave 1 — Test authoring (mode-dependent dispatch)
+## Wave 1: Test authoring (mode-dependent dispatch)
 
 Per chosen mode:
 - **parallel**: single message with all Agent calls
@@ -101,7 +101,7 @@ If any worker reports `status: blocked`: surface to user before W2.
 
 **Mini-recap after Wave 1** with per-worker durations.
 
-## Wave 2 — Execution & oracle capture (sequential)
+## Wave 2: Execution & oracle capture (sequential)
 
 Dispatch `baseline-runner`. Pass:
 - the execution policy (`on` / `off`)
@@ -121,7 +121,7 @@ If `--execute off`:
 
 If runner reports `critical` or `high` failures unresolved by the failure policy: STOP. Do not proceed to W3. Escalate.
 
-## Wave 3 — Challenger (always ON, sequential)
+## Wave 3: Challenger (always ON, sequential)
 
 Dispatch `baseline-challenger`. It performs adversarial review of all W0/W1/W2 outputs. Output: `_meta/challenger-report.md` plus appends to `unresolved-baseline.md`.
 
@@ -129,7 +129,7 @@ If challenger reports `≥ 1 blocking` issue: do not declare Phase 3 complete; e
 
 **Mini-recap after Wave 3.**
 
-## Wave 3b — Phase verification report (supervisor only)
+## Wave 3b: Phase verification report (supervisor only)
 
 After Wave 3 (challenger) and before the iteration loop, the
 supervisor writes `_meta/phase-verification-report.md` per the
@@ -152,7 +152,7 @@ Phase-3 customization of the canonical structure:
 The verification report is mandatory. The iteration loop cannot start
 without this file on disk.
 
-## Wave 4 — Iteration handling (supervisor only)
+## Wave 4: Iteration handling (supervisor only)
 
 After Wave 3b the supervisor returns control to
 `refactoring-supervisor` for the HITL prompt. On user choice:
@@ -197,12 +197,12 @@ Every iteration appends to `_meta/manifest.json` `runs[]`:
 }
 ```
 
-`approved_at` is set only on `approve` — it is the lock signal that
+`approved_at` is set only on `approve`: it is the lock signal that
 the baseline is final and ready to serve as the Phase 4 oracle.
 
 ## Final report (legacy compatibility)
 
-The "Phase 3 — complete" free-text closing block is superseded by the
+The "Phase 3: complete" free-text closing block is superseded by the
 verification report's section 1 ("Executive summary"). The
 recap-templates.md final-report block is retained only for backward
 compatibility with the older recap pipeline and is no longer the

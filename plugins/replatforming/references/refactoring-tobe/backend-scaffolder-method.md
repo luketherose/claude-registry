@@ -1,4 +1,4 @@
-# Method — `backend-scaffolder`
+# Method: `backend-scaffolder`
 
 > Reference doc for `backend-scaffolder`. Extracted from the
 > agent body to keep it under the 10 000-char rubric ceiling.
@@ -10,7 +10,7 @@
 
 Read `pom-template.md`. Honour ADR-002 for groupId/artifactId/version,
 Spring Boot version, Java version. Include the core, test, and plugin
-dependencies listed there. Flyway is forbidden in TO-BE projects —
+dependencies listed there. Flyway is forbidden in TO-BE projects.
 Liquibase is the only migration tool.
 
 ### 2. Package layout
@@ -40,7 +40,7 @@ Document the choice in `<bc>/api/README.md`.
 ### 5. Service skeletons
 
 Read `code-skeletons.md` (Service skeletons section). Method bodies throw
-`UnsupportedOperationException` with TODO markers — this is intentional so
+`UnsupportedOperationException` with TODO markers: this is intentional so
 that calling them in a test fails loudly. `logic-translator` (W3c) replaces
 the bodies; Phase 5 tests are xfailed for unfilled UCs.
 
@@ -58,7 +58,7 @@ that extends `ResponseEntityExceptionHandler`. Required handlers:
   `handleHttpMediaTypeNotAcceptable` (→ 406),
   `handleMethodArgumentNotValid` (→ 400 with per-field details). These
   exceptions are produced by `DispatcherServlet` before any
-  `@ExceptionHandler` can claim them — only the protected overrides on
+  `@ExceptionHandler` can claim them, only the protected overrides on
   `ResponseEntityExceptionHandler` integrate them into RFC 7807. Skipping
   the 405 override is the canonical bug that turns `GET` on a `POST`-only
   endpoint into HTTP 500.
@@ -75,7 +75,7 @@ bean fed by `app.cors.allowed-origin-patterns`). `hardening-architect`
 
 **Hard rule on CORS**: the `CorsConfigurationSource` bean is the **only**
 place CORS is configured. The agent must NOT add `@CrossOrigin` on
-individual controllers — duplicating the origin list on every controller
+individual controllers. Duplicating the origin list on every controller
 defeats the purpose of the centralised bean and was the cause of GAP-005
 (127.0.0.1 vs localhost) in the InfoSync 2026-05 retrospective. Required
 self-check at the end of step 7:

@@ -25,9 +25,9 @@ that crosses an I/O boundary.
 
 ## When to invoke
 
-- **Writing a new Go service or package** — user asks "create a REST handler for order creation with context propagation, slog logging, and chi routing": the agent scaffolds handler, service, repository, errors, and table-driven tests.
-- **Reviewing or refactoring Go code** — user provides a Go file or PR and asks "is this concurrency-safe?" or "what idiomatic issues do you see?": the agent checks goroutine lifecycle, error wrapping, context propagation, and golangci-lint violations.
-- **Writing table-driven tests** — user provides a function or package and asks for test coverage: the agent produces the full `_test.go` file using the standard `testing` package pattern with Testcontainers for I/O-bound paths.
+- **Writing a new Go service or package** (user asks "create a REST handler for order creation with context propagation, slog logging, and chi routing"): the agent scaffolds handler, service, repository, errors, and table-driven tests.
+- **Reviewing or refactoring Go code** (user provides a Go file or PR and asks "is this concurrency-safe?" or "what idiomatic issues do you see?"): the agent checks goroutine lifecycle, error wrapping, context propagation, and golangci-lint violations.
+- **Writing table-driven tests** (user provides a function or package and asks for test coverage): the agent produces the full `_test.go` file using the standard `testing` package pattern with Testcontainers for I/O-bound paths.
 
 Do NOT use this agent for: Java, Python, Rust, or other-language projects (use the relevant `developer-*`), or pure architecture decisions (use `software-architect`).
 
@@ -76,7 +76,7 @@ to be imported by other modules.
   `ineffassign`, `unused`, `gofmt`, `revive`. Configure in `.golangci.yml`
   at repo root.
 - Package names are lowercase, single-word, no underscores.
-- Acronyms preserve case in identifiers (`URL`, `ID`, `HTTP` — `userID`, not
+- Acronyms preserve case in identifiers (`URL`, `ID`, `HTTP`): `userID`, not
   `userId`).
 - Prefer short names within short scopes (`r` for `*http.Request` inside a
   handler) and descriptive names for package-level identifiers.
@@ -91,7 +91,7 @@ to be imported by other modules.
   errors.
 - Custom error types with structured fields when the caller needs context
   (HTTP status, retry hint, request ID). Do not embed the message in the
-  type name — embed the cause.
+  type name. Embed the cause.
 - Never `panic` in library code. `panic` is for programmer errors that
   cannot continue (nil dereference of a value the type system guarantees
   non-nil); use `log.Fatal` only in `main` and only on startup failure.
@@ -197,7 +197,7 @@ heredocs (`cat <<EOF > file`), echo redirects (`echo ... > file`),
 Reason: code with type parameters, generics, struct literals, or interface
 definitions contains shell metacharacters (`[`, `{`, `}`, `>`, `<`, `*`,
 `;`, `&`, `|`) that the shell interprets as redirection, glob expansion, or
-word splitting — even inside quotes (Git Bash / MSYS2 on Windows is
+word splitting, even inside quotes (Git Bash / MSYS2 on Windows is
 especially fragile). A malformed heredoc produced 48 garbage files in a
 repo root in the 2026-04-28 incident.
 
@@ -228,5 +228,27 @@ variable, template, heredoc, or piped input.
 
 ---
 
-> **Status**: beta — promote to v1.0 once the `go-standards` skill ships
+## Output format
+
+For each file you produce or modify:
+
+```
+### internal/order/service.go
+
+[Complete file content, package clause and all imports, no placeholder comments]
+
+**Why**: {One sentence explaining the key decisions made}
+**Tests**: {`_test.go` file name and the table cases it covers}
+```
+
+Report the outcome of `gofmt -l`, `go vet ./...`, `golangci-lint run`, and `go test ./...`
+for the package you touched. If you could not run them, say so explicitly instead of
+implying they passed.
+
+If you cannot complete the task without missing information (e.g. an existing interface,
+the router in use, the module path), state exactly what you need before proceeding.
+
+---
+
+> **Status**: beta. Promote to v1.0 once the `go-standards` skill ships
 > and a project has used this agent for two iterations without changes.

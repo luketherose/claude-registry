@@ -1,8 +1,8 @@
-# Phase 3 — Execution, failure, service-detection & dispatch-mode policies
+# Phase 3: Execution, failure, service-detection & dispatch-mode policies
 
 > Reference doc for `baseline-testing-supervisor`. Read at runtime when answering Q1 (execution policy), Q2 (failure policy), the service-detection gate, or the dispatch-mode decision.
 
-## Q1 — Execution policy (adaptive)
+## Q1: Execution policy (adaptive)
 
 The supervisor decides whether to **write only** or **write + execute** during bootstrap.
 
@@ -32,7 +32,7 @@ The supervisor decides whether to **write only** or **write + execute** during b
 
 Surface the detection result and chosen policy explicitly in the bootstrap brief. The user can override.
 
-## Q2 — Failure policy (strict critical/high, xfail medium/low)
+## Q2: Failure policy (strict critical/high, xfail medium/low)
 
 Baseline tests can fail because:
 - the test is wrong → the worker must fix the test (acceptable; the AS-IS source is read-only)
@@ -42,7 +42,7 @@ When `baseline-runner` reports a failure, classify the failure by **impact sever
 
 | Impact severity | Action |
 |---|---|
-| `critical` (data loss, security, billing, irreversible) | **Stop**, do not declare Phase 3 complete; surface to the user with full context; record in `_meta/as-is-bugs-found.md`; ask whether to proceed with the bug documented or pause for fix-cycle (the fix cycle is OUT OF SCOPE for Phase 3 — the user goes elsewhere to fix it) |
+| `critical` (data loss, security, billing, irreversible) | **Stop**, do not declare Phase 3 complete; surface to the user with full context; record in `_meta/as-is-bugs-found.md`; ask whether to proceed with the bug documented or pause for fix-cycle (the fix cycle is OUT OF SCOPE for Phase 3, the user goes elsewhere to fix it) |
 | `high` (incorrect output in a primary user flow) | **Escalate** to user; default proposal: mark `xfail` with explicit bug note + record in `_meta/as-is-bugs-found.md`; user confirms or pauses |
 | `medium` (incorrect output in alternative or rare flow) | Mark `xfail` with `reason="AS-IS bug found in <function>; see _meta/as-is-bugs-found.md#BUG-NN"`; continue; record |
 | `low` (cosmetic, edge case, non-functional) | Mark `xfail` with reason; continue |

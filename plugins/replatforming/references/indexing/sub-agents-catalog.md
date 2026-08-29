@@ -1,7 +1,7 @@
 # Sub-agents catalogue (Sonnet)
 
 > Reference doc for `indexing-supervisor`. Read at runtime when planning a
-> dispatch — confirms which sub-agent owns which output target.
+> dispatch: confirms which sub-agent owns which output target.
 
 ---
 
@@ -100,9 +100,9 @@ waits for each wave to complete before advancing.
 
 | Wave | Sub-agent(s) | Notes |
 |---|---|---|
-| 1 | `codebase-mapper` | Always first — produces stack.json used by all later agents |
+| 1 | `codebase-mapper` | Always first: produces stack.json used by all later agents |
 | 2 | `dependency-analyzer`, `streamlit-analyzer` (conditional) | Run in parallel |
 | 3 | `module-documenter` (one per package), `data-flow-analyst`, `business-logic-analyst` | Run in parallel |
 | 4 | `synthesizer` | Requires Waves 1–3 complete |
-| 4a | `indexing-auditor` | Run after synthesizer completes. Read-only audit pass — produces gold/indexing-audit.md and gold/indexing-audit.json. Must complete before HITL checkpoint. |
-| HITL | — | Supervisor presents summary to user; user confirms or requests gap closure |
+| 4a | `indexing-auditor` | Run after synthesizer completes. Read-only audit pass: produces gold/indexing-audit.md and gold/indexing-audit.json. Must complete before HITL checkpoint. |
+| HITL | n/a | Supervisor presents summary to user; user confirms or requests gap closure |

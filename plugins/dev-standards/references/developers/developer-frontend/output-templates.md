@@ -1,4 +1,4 @@
-# Output templates — developer-frontend
+# Output templates: developer-frontend
 
 > Reference doc for `developer-frontend`. Read when producing files to apply
 > the per-framework file family rules and the per-file output envelope.
@@ -19,7 +19,7 @@ For each file produced or modified:
 ```
 
 If the task requires multiple files (component + styles + test), produce all of
-them before summarizing — do not stop after the first file.
+them before summarizing. Do not stop after the first file.
 
 ---
 
@@ -29,7 +29,7 @@ them before summarizing — do not stop after the first file.
 |---|---|
 | **Angular** | `.component.ts` + `.component.html` + `.component.scss` + `.component.spec.ts` (4 files, always) |
 | React (TSX) | `.tsx` + `.module.scss` (or styled equivalent) + `.test.tsx` |
-| Vue 3 | `.vue` (SFC — template/script/style co-located) + `.spec.ts` |
+| Vue 3 | `.vue` (SFC: template/script/style co-located) + `.spec.ts` |
 | Qwik | `.tsx` + `.css` (if styles) + `.spec.tsx` |
 | Vanilla | `.ts` + `.css` (if styles) + `.spec.ts` |
 

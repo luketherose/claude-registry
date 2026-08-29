@@ -1,4 +1,4 @@
-# Phase 2 — Normalized output schemas
+# Phase 2: Normalized output schemas
 
 > Reference doc for `technical-analysis-supervisor` and Phase 2 sub-agents. Read at runtime when writing JSONL artifacts to `docs/analysis/02-technical/normalized/` or `raw/`.
 
@@ -58,7 +58,7 @@ Merged by risk-synthesizer from all W1 raw JSONL. One record per finding.
 
 **Rules:**
 - `severity: high` or `critical`: `evidence_ids` MUST be non-empty; `validation.status` MUST be `verified` or `requires_validation`.
-- `statement` must be AS-IS — no "should", "must", "migrate to", "replace with".
+- `statement` must be AS-IS, no "should", "must", "migrate to", "replace with".
 - Risk-synthesizer CANNOT introduce findings; it merges from W1 JSONL only.
 
 ---

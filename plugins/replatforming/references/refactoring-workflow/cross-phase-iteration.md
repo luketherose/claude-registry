@@ -1,7 +1,7 @@
 # Cross-phase iteration
 
 > Reference doc for `refactoring-supervisor`. Read when the Workflow Retrospective
-> routes to `iterate` — i.e., when issues at one or more analysis phases require
+> routes to `iterate`: i.e., when issues at one or more analysis phases require
 > re-running those phases and all downstream phases through Phase 4.
 >
 > Cross-phase iteration is the workflow-level analog of the per-phase iteration loop
@@ -25,7 +25,7 @@ earliest_phase = min(
 
 Phase 0 is excluded from cross-phase re-entry. If Phase 0 indexing is identified
 as the root cause, the supervisor escalates to the user: "This requires re-running
-Phase 0 (re-indexing). That is a separate workflow invocation — confirm?" Phase 0
+Phase 0 (re-indexing). That is a separate workflow invocation: confirm?" Phase 0
 re-indexing wipes the KB and is irreversible without git history.
 
 **Re-entry mapping to Phase 4 scope:**
@@ -92,7 +92,7 @@ Archives are NOT deleted. They serve as rollback targets if the user wants to re
 to a prior state. The workflow manifest records the archive paths in its `phases[]`
 entries.
 
-Do NOT archive `.indexing-kb/` — it is Phase 0's artifact and is not re-run.
+Do NOT archive `.indexing-kb/`. It is Phase 0's artifact and is not re-run.
 
 ## Execution protocol
 
@@ -120,7 +120,7 @@ For each phase P from reentry_phase to phase-4 (inclusive):
 inputs appear unchanged. Each phase must re-validate its outputs given the new
 upstream artifacts.
 
-## Phase 4 re-run — artifact reuse
+## Phase 4 re-run: artifact reuse
 
 When `phase_4_rerun_scope` is `step-6-only` (Phase 3 change only):
 - The existing `backend/` and `frontend/` code is preserved.
@@ -130,8 +130,8 @@ When `phase_4_rerun_scope` is `step-6-only` (Phase 3 change only):
 
 When `phase_4_rerun_scope` is `full` (Phase 1 or 2 change):
 - Existing `backend/` and `frontend/` are archived (see Archive policy above).
-- Phase 4 runs from Step 0 — the architecture may be different.
-- Exception: if the user confirms "the existing code is still valid — only update the
+- Phase 4 runs from Step 0: the architecture may be different.
+- Exception: if the user confirms "the existing code is still valid, only update the
   documentation artifacts", the supervisor accepts and runs Phase 4 Step 6 only,
   plus updates the replatforming report.
 

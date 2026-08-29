@@ -1,4 +1,4 @@
-# Output templates — severity matrix and remediation priority
+# Output templates: severity matrix and remediation priority
 
 > Reference doc for `risk-synthesizer`. Read at runtime when writing the
 > severity matrix and the ordered remediation backlog. Defines the markdown
@@ -8,14 +8,14 @@
 
 Provide the canonical markdown templates for:
 
-- `09-synthesis/severity-matrix.md` — likelihood × impact heatmap
-- `09-synthesis/remediation-priority.md` — tiered AS-IS backlog
+- `09-synthesis/severity-matrix.md`: likelihood × impact heatmap
+- `09-synthesis/remediation-priority.md`: tiered AS-IS backlog
 
 The risk-register itself (MD/JSON/CSV) lives in `risk-register-schemas.md`.
 
 ---
 
-## Severity matrix — `09-synthesis/severity-matrix.md`
+## Severity matrix: `09-synthesis/severity-matrix.md`
 
 ```markdown
 ---
@@ -55,7 +55,7 @@ not a substitute for stakeholder review.
 - <items where the matrix placement is debatable>
 ```
 
-### Likelihood × impact — inference rules to apply (in order)
+### Likelihood × impact: inference rules to apply (in order)
 
 Likelihood:
 
@@ -76,7 +76,7 @@ Document the rules actually applied at the top of the matrix file.
 
 ---
 
-## Remediation priority — `09-synthesis/remediation-priority.md`
+## Remediation priority: `09-synthesis/remediation-priority.md`
 
 ```markdown
 ---
@@ -131,7 +131,7 @@ lives in Phase 4 of the workflow.
 
 1. severity (critical > high > medium > low)
 2. likelihood (certain > likely > possible > unlikely > rare)
-3. estimated effort (small / medium / large — your inference)
+3. estimated effort (small / medium / large, your inference)
 4. cross-feature impact (more features touched → higher priority)
 
 Group output as the four tiers above (`Fix immediately`, `Address in next

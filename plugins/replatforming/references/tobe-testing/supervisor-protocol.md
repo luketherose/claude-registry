@@ -1,12 +1,12 @@
-# TO-BE Testing Supervisor — Protocol
+# TO-BE Testing Supervisor: Protocol
 
-> **LEGACY — this supervisor is deprecated in v3 of the replatforming workflow.**
+> **LEGACY: this supervisor is deprecated in v3 of the replatforming workflow.**
 > Equivalence verification is now absorbed into Phase 4 Step 6 of `refactoring-supervisor` v3.
 > This document applies only when running the legacy separate Phase 5 flow.
 
 Read this document during supervision steps. It contains: escalation triggers,
 decision rules, AS-IS source preservation check, manifest update rules, and
-hard constraints. Do not preemptively load — read on demand when a supervision
+hard constraints. Do not preemptively load. Read on demand when a supervision
 decision is needed.
 
 ---
@@ -64,14 +64,14 @@ waves:
 
 ---
 
-## Escalation triggers — always ask the user
+## Escalation triggers: always ask the user
 
 Stop and ask before proceeding when:
 
 - **Any prior phase incomplete**: never bypass.
 - **OpenAPI not spectral-valid**: contract drift will cascade.
 - **Existing test files with unclear authorship** (no agent frontmatter): ask
-  the user before overwriting — they may have hand-written tests to preserve.
+  the user before overwriting: they may have hand-written tests to preserve.
 - **`tobe-test-runner` reports critical regression**: surface immediately,
   before Wave 4, with a focused summary.
 - **Performance p95 delta > +10%**: surface immediately at Wave 2; recommend
@@ -81,7 +81,7 @@ Stop and ask before proceeding when:
   blocking, never proceed.
 - **TO-BE source-code modification detected** (forbidden in this phase): block,
   flag as blocking, never proceed.
-- **Sub-agent fails twice on the same input**: do not retry a third time —
+- **Sub-agent fails twice on the same input**: do not retry a third time;
   escalate.
 - **Conflict between sub-agent outputs** that you cannot resolve from Phase
   1/3/4 evidence.
@@ -106,7 +106,7 @@ Stop and ask before proceeding when:
 | Challenger reports ≥ 1 blocking contradiction | Stop, do not declare Phase 5 complete; escalate |
 | Resume requested | Read manifest, skip waves with `status: complete`, ask if refresh wanted |
 | > 100 UCs detected | Ask user for prioritization (critical vs nice-to-have); default to all |
-| Contract test fails vs OpenAPI | Critical — escalate; root cause is either Phase 4 drift or OpenAPI spec error |
+| Contract test fails vs OpenAPI | Critical: escalate; root cause is either Phase 4 drift or OpenAPI spec error |
 
 ---
 
@@ -134,7 +134,7 @@ code is not.
 
 After every wave, update `docs/analysis/05-tobe-tests/_meta/manifest.json`. If
 the file does not exist, create it; append to `runs` for resumed sessions.
-Per-agent timing is mandatory — the workflow supervisor surfaces it in its
+Per-agent timing is mandatory: the workflow supervisor surfaces it in its
 post-phase recap.
 
 → Read [`output-layout.md`](output-layout.md) "Manifest schema" section for the
@@ -151,22 +151,22 @@ full JSON schema.
 - **`docs/refactoring/api/openapi.yaml` is the contract**, immutable in this
   phase. Drift between OpenAPI and TO-BE backend is a critical finding, not a
   fix target.
-- **AS-IS-bug-carry-over** — bugs deferred from Phase 3 are NOT TO-BE
+- **AS-IS-bug-carry-over**: bugs deferred from Phase 3 are NOT TO-BE
   regressions; do not flag them. Pass the list to every worker.
 - **Never invent baselines**. If Phase 3 is incomplete, stop.
 - **Never invoke yourself recursively.**
 - **Never let a sub-agent write outside its permitted roots.** Verify after each
   dispatch.
-- **Always read sub-agent outputs from disk** after dispatch — the Agent tool
+- **Always read sub-agent outputs from disk** after dispatch: the Agent tool
   result text is a summary, not the source of truth.
 - **Always update `_meta/manifest.json`** after each wave.
 - **Never skip Phase 0 confirmation** unless the user has explicitly authorized
   full-pipeline execution in the same conversation.
 - **Aggregate open questions** into `14-unresolved-questions.md` after each wave.
-- **Never silently overwrite authored test files** — explicit user confirmation
+- **Never silently overwrite authored test files**. Explicit user confirmation
   is required.
-- **Never commit AS-IS source modifications** — abort and flag.
-- **Never commit TO-BE production code modifications** — abort and flag (fixes
+- **Never commit AS-IS source modifications**. Abort and flag.
+- **Never commit TO-BE production code modifications**. Abort and flag (fixes
   belong to a Phase 4 hardening loop).
 - **Redact secrets** in any output you produce or any error you echo to the
   user. Never quote a connection string with real password.

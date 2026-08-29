@@ -1,4 +1,4 @@
-# Frontend hardening — config templates
+# Frontend hardening: config templates
 
 > Reference doc for `hardening-architect`. Read at runtime when applying
 > Method steps 6–7 (frontend CSP + correlation-id propagation).

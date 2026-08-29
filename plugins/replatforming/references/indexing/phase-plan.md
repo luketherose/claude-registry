@@ -1,13 +1,13 @@
-# Indexing pipeline — phase plan (default)
+# Indexing pipeline: phase plan (default)
 
 > Reference doc for `indexing-supervisor`. Read at runtime when starting a
 > fresh indexing run, resuming an incomplete one, or revising a single phase.
 > Decision logic (escalation, stop conditions, retry rules) stays in the
-> supervisor body — only the per-phase mechanics live here.
+> supervisor body, only the per-phase mechanics live here.
 
 ---
 
-## Phase 0 — Bootstrap (supervisor only, no sub-agents)
+## Phase 0: Bootstrap (supervisor only, no sub-agents)
 
 1. **Detect resume mode**. Inspect what is on disk and pick one of:
 
@@ -15,7 +15,7 @@
    |---|---|
    | No `.indexing-kb/` directory | `fresh` |
    | `.indexing-kb/` exists but `_meta/manifest.json` reports `partial` / `failed` / missing / unreadable | `resume-incomplete` |
-   | `.indexing-kb/` exists AND `_meta/manifest.json` last run reports `complete` | `complete-eligible` — ask the user before doing anything |
+   | `.indexing-kb/` exists AND `_meta/manifest.json` last run reports `complete` | `complete-eligible`: ask the user before doing anything |
 
    When `complete-eligible` triggers, ask the user verbatim:
 
@@ -64,7 +64,7 @@
      for each major language extension, to identify the primary
      language. Skip the default skip list below.
    - **Framework signals** (gates dispatch of framework-specific
-     analyzers — currently only `streamlit-analyzer`):
+     analyzers, currently only `streamlit-analyzer`):
      - Streamlit: `import streamlit` in any `.py`, OR `.streamlit/`
        directory, OR `streamlit` in dependency files. 2 of 3 → confirmed.
      - (Future framework-specific analyzers will gate similarly. The
@@ -102,20 +102,20 @@
 
 ---
 
-## Phase 1 — Structural (parallel, single message with multiple Agent calls)
+## Phase 1: Structural (parallel, single message with multiple Agent calls)
 
 Dispatch in parallel:
-- `codebase-mapper` — produces `stack.json` (the authoritative AS-IS
+- `codebase-mapper`: produces `stack.json` (the authoritative AS-IS
   stack manifest) plus `codebase-map.md` and `language-stats.md`
 - `dependency-analyzer`
-- **framework-specific analyzers** — gated on `stack.frameworks` from
+- **framework-specific analyzers**: gated on `stack.frameworks` from
   the Phase-0 lightweight pre-detection. Currently:
   - `streamlit-analyzer` if `streamlit` is among the detected
     frameworks
   - (future framework-specific analyzers slot in here following the
     same gate-by-detection pattern)
 
-After dispatch, **read `bronze/stack.json` first** — it is the
+After dispatch, **read `bronze/stack.json` first**: it is the
 canonical AS-IS stack and supersedes the Phase-0 pre-detection. Cross-
 check that the analyzers dispatched (e.g., streamlit-analyzer) match
 `stack.frameworks` from the authoritative output. If there is a
@@ -132,7 +132,7 @@ location.
 
 ---
 
-## Phase 2 — Module documentation (parallel fan-out)
+## Phase 2: Module documentation (parallel fan-out)
 
 For each top-level package identified in Phase 0:
 - Dispatch one `module-documenter` invocation, scoped to that package.
@@ -145,7 +145,7 @@ If `dependency-analyzer` reported circular imports between packages, run
 
 ---
 
-## Phase 3 — Cross-cutting (parallel)
+## Phase 3: Cross-cutting (parallel)
 
 Dispatch in a single message:
 - `data-flow-analyst`
@@ -153,7 +153,7 @@ Dispatch in a single message:
 
 ---
 
-## Phase 4 — Synthesis (sequential, single agent)
+## Phase 4: Synthesis (sequential, single agent)
 
 Dispatch `synthesizer`. It reads everything in `.indexing-kb/` produced by
 prior phases and writes the final consolidated views.
@@ -165,7 +165,7 @@ After synthesis, post a final report to the user with:
 
 ---
 
-### Wave 4a — indexing-auditor (always ON)
+### Wave 4a: indexing-auditor (always ON)
 
 Dispatch `indexing-auditor` after `synthesizer` completes.
 
@@ -181,7 +181,7 @@ If verdict is FAIL, do NOT proceed to HITL. Run the gap closure loop:
 
 ---
 
-## HITL gate — user confirmation
+## HITL gate: user confirmation
 
 After Phase 4a completes (PASS or PASS_WITH_GAPS), present the final summary to the user:
 

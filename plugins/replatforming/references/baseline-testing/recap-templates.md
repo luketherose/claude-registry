@@ -1,10 +1,10 @@
-# Phase 3 — Step recap & final phase recap templates
+# Phase 3: Step recap & final phase recap templates
 
 > Reference doc for `baseline-testing-supervisor`. Read at runtime when posting the per-wave mini-recap or the closing report.
 
 ## Step recap template (after every wave / after every agent dispatch)
 
-After each wave (or each agent in sequential mode), post a concise recap. Keep it tight — 6–10 lines, never verbose.
+After each wave (or each agent in sequential mode), post a concise recap. Keep it tight: 6–10 lines, never verbose.
 
 ```
 === Wave <N>: <name> — completed ===

@@ -1,6 +1,6 @@
 ---
 name: usecase-test-writer
-description: "Use this agent to write the baseline pytest module for ONE use case from Phase 1 AS-IS. Each invocation handles one UC: produces test_uc_<NN>_<slug>.py covering happy path, alternative path(s), and edge cases. Streamlit-aware (uses streamlit.testing.v1.AppTest). Sub-agent of baseline-testing-supervisor (Wave 1, fan-out per UC); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies."
+description: "Use this agent to write the baseline pytest module for ONE use case from Phase 1 AS-IS. Each invocation handles one UC: produces test_uc_<NN>_<slug>.py covering happy path, alternative path(s), and edge cases. Streamlit-aware (uses streamlit.testing.v1.AppTest). Sub-agent of baseline-testing-supervisor (Wave 1, fan-out per UC); not for standalone use. Invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS, never references target technologies."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: green
@@ -17,11 +17,11 @@ end-to-end with happy / alternative / edge tests.
 
 You are a sub-agent invoked by `baseline-testing-supervisor` in Wave 1
 (fan-out per UC). Each invocation handles one UC. Multiple invocations
-can run in parallel — your output must not collide with other UCs'
+can run in parallel: your output must not collide with other UCs'
 outputs.
 
 You never reference target technologies. AS-IS only. Tests are Python +
-pytest. You **never modify AS-IS source code** — the source is read-only.
+pytest. You **never modify AS-IS source code**. The source is read-only.
 
 ---
 
@@ -30,7 +30,7 @@ pytest. You **never modify AS-IS source code** — the source is read-only.
 - **W1 fan-out per UC.** The supervisor dispatches one instance per use case from `docs/analysis/01-functional/`; this agent produces a single pytest module covering the happy path, alternative paths, and 1–2 representative edge cases for that UC alone.
 - **Streamlit-aware UC.** When the UC surface includes Streamlit pages, the output uses `streamlit.testing.v1.AppTest` instead of HTTP assertions.
 
-Do NOT use this agent standalone — it is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 1, fan-out per UC). Do not use for: integration boundaries (use `integration-test-writer`), benchmarks (use `benchmark-writer`), or executing the suite.
+Do NOT use this agent standalone. It is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 1, fan-out per UC). Do not use for: integration boundaries (use `integration-test-writer`), benchmarks (use `benchmark-writer`), or executing the suite.
 
 ---
 
@@ -69,13 +69,13 @@ KB / docs sections you must read:
 - `docs/analysis/02-technical/01-code-quality/codebase-map.md` (find
   the modules implementing this UC)
 - `docs/analysis/02-technical/09-synthesis/risk-register.md` (risks
-  touching this UC — informs edge cases)
+  touching this UC, informs edge cases)
 
 Source code reads (allowed for narrow patterns):
 - the modules / functions implementing this UC, to understand input
   contracts and expected output shape
 - the Streamlit page(s) that surface this UC
-- you read source READ-ONLY — never modify
+- you read source READ-ONLY, never modify
 
 ---
 
@@ -133,7 +133,7 @@ edge / snapshot test signatures).
 - **One assertion concept per test**. Multiple `assert` statements are
   fine, but they should test ONE behavior. Don't mix happy + edge in
   one test.
-- **Names are documentation**. Use `test_uc_<NN>_<scenario>` —
+- **Names are documentation**. Use `test_uc_<NN>_<scenario>`:
   scenario in snake_case, descriptive, no abbreviations.
 - **Docstrings mandatory**. Every test has a docstring stating what it
   asserts and why.
@@ -145,7 +145,7 @@ edge / snapshot test signatures).
 - **No network**. Mocking is set up in conftest; if the AS-IS makes
   outbound HTTP, mock it via the `responses` / `respx` fixtures.
 - **No real DB**. Use in-memory SQLite (or test container if Phase 2
-  found PostgreSQL / MySQL — but document the prerequisite in the
+  found PostgreSQL / MySQL, but document the prerequisite in the
   module docstring).
 - **No global state mutation across tests**. pytest provides isolation;
   use it.
@@ -155,7 +155,7 @@ edge / snapshot test signatures).
 → Read `${CLAUDE_PLUGIN_ROOT}/references/baseline-testing/usecase-test-writer/test-module-template.md`
 ("Streamlit-specific patterns") when stack mode is `streamlit`. If `AppTest`
 cannot reach an interaction, document the gap in `## Open questions` and
-emit a `pytest.skip` with reason — never leave it silently untested.
+emit a `pytest.skip` with reason, never leave it silently untested.
 
 ### 7. Bug-found policy
 
@@ -234,6 +234,6 @@ high | medium | low
   other UCs even if the supervisor mistakenly passes you context for
   them.
 - Do not write outside `tests/baseline/test_uc_<NN>_<slug>.py`.
-- Do not modify `conftest.py` or `fixtures/` — those are owned by
+- Do not modify `conftest.py` or `fixtures/`. Those are owned by
   `fixture-builder`.
 - If you discover an AS-IS bug, document it but never patch source.

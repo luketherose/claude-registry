@@ -1,4 +1,4 @@
-# Synthesizer — Output Specification
+# Synthesizer: Output Specification
 
 Reference doc for `synthesizer`. Read before writing any output file.
 

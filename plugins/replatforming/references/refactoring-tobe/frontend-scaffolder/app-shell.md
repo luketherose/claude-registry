@@ -1,8 +1,8 @@
 # App shell
 
 > Reference doc for `frontend-scaffolder`. Read at runtime when generating
-> the Angular bootstrap files (Method step 8 — main.ts + app.config.ts,
-> and Method step 9 — README.md).
+> the Angular bootstrap files (Method step 8, main.ts + app.config.ts,
+> and Method step 9: README.md).
 
 ## main.ts
 
@@ -59,7 +59,7 @@ export class AppComponent {}
 
 > **HARD RULE.** The `ng new` scaffold emits a 300+ line "Hello / Congratulations" placeholder. **You MUST overwrite this file completely.** No `<h1>Hello, {{ title }}</h1>`, no `Congratulations! Your app is running 🎉`, no "Explore the Docs" / "Learn with Tutorials" cards may survive in the emitted file.
 >
-> The emitted `app.component.html` is exactly the shell delegation below — three lines. The actual layout (header, sidenav, content area) lives in `core/layout/layout.component.html` (see `code-skeletons.md > Core layer > Layout`).
+> The emitted `app.component.html` is exactly the shell delegation below: three lines. The actual layout (header, sidenav, content area) lives in `core/layout/layout.component.html` (see `code-skeletons.md > Core layer > Layout`).
 
 ```html
 <app-layout>
@@ -73,7 +73,7 @@ The `<app-layout>` component is responsible for:
 - emitting one nav entry per bounded context, gated on permissions from `AuthService`;
 - providing the main content area that the `<router-outlet />` projects into.
 
-### Self-check (HARD GATE) — run before reporting `status: ok`
+### Self-check (HARD GATE): run before reporting `status: ok`
 
 A scaffold that compiles is NOT necessarily a scaffold a user can use.
 The two most common failure modes are: (a) leaving the `ng new`

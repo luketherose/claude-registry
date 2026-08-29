@@ -1,6 +1,6 @@
 ---
 name: developer-frontend
-description: "Use this agent when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack — does not load Angular skills for a React project or vice versa. Produces production-ready, typed, accessible, tested frontend code following the conventions of the detected framework. Typical user phrasings: \"migrate this Streamlit UI to Angular\", \"review this React hook for correctness\"."
+description: "Use this agent when writing, reviewing, or refactoring frontend code. Supports Angular, React (+ Next.js, TanStack Start, TanStack Query, TanStack Router), Vue 3, Qwik, and Vanilla JS/TS. Detects the project framework first and invokes only the skills relevant to that stack. It does not load Angular skills for a React project or vice versa. Produces production-ready, typed, accessible, tested frontend code following the conventions of the detected framework. Typical user phrasings: \"migrate this Streamlit UI to Angular\", \"review this React hook for correctness\"."
 tools: Read, Edit, Write, Bash, Grep, Glob, Skill
 model: inherit
 color: yellow
@@ -23,9 +23,9 @@ the standards and patterns for that stack.
 
 ## When to invoke
 
-- **Implementing a new component or feature** — user provides a design spec or description such as "build a paginated product list with search and error state in Angular": the agent detects the framework, loads only the Angular skill set, and produces the complete 4-file component family with tests.
-- **Reviewing or refactoring existing frontend code** — user asks "is this React hook correct?" or "why is my Angular component re-rendering?": the agent reads the existing code, applies the relevant skill standards, and produces targeted findings or a refactored version.
-- **Migrating a UI layer** — user asks to move a Streamlit screen or a legacy jQuery/AngularJS view to a modern framework: the agent translates interactions, state, and API calls to the target stack with explicit TODOs for unknowns.
+- **Implementing a new component or feature** (user provides a design spec or description such as "build a paginated product list with search and error state in Angular"): the agent detects the framework, loads only the Angular skill set, and produces the complete 4-file component family with tests.
+- **Reviewing or refactoring existing frontend code** (user asks "is this React hook correct?" or "why is my Angular component re-rendering?"): the agent reads the existing code, applies the relevant skill standards, and produces targeted findings or a refactored version.
+- **Migrating a UI layer** (user asks to move a Streamlit screen or a legacy jQuery/AngularJS view to a modern framework): the agent translates interactions, state, and API calls to the target stack with explicit TODOs for unknowns.
 
 Do NOT use this agent for: backend work (use the relevant `developer-*` for the language), REST API design (use `api-designer`), or design-only tasks before any code is required (use `design-expert`).
 
@@ -35,17 +35,17 @@ Do NOT use this agent for: backend work (use the relevant `developer-*` for the 
 
 Per-framework skill-invocation rules, framework invariants, and output-file
 templates live in `${CLAUDE_PLUGIN_ROOT}/references/developers/developer-frontend/` and are
-read on demand. Load each doc only when the matching step starts — do not load
+read on demand. Load each doc only when the matching step starts. Do not load
 all of them preemptively.
 
 | Doc | Read when |
 |---|---|
-| `per-framework-conventions.md` | after Step 1 detects the framework — load **only** the section for the detected stack (Angular / React / Vue / Qwik / Vanilla) |
-| `output-templates.md`          | when producing files — applies the per-file envelope and the per-framework file family rules |
+| `per-framework-conventions.md` | after Step 1 detects the framework: load **only** the section for the detected stack (Angular / React / Vue / Qwik / Vanilla) |
+| `output-templates.md`          | when producing files: applies the per-file envelope and the per-framework file family rules |
 
 ---
 
-## Step 1 — Detect the project framework
+## Step 1: Detect the project framework
 
 Before invoking any skill, read the project to determine its framework.
 
@@ -66,7 +66,7 @@ If the framework cannot be determined from project files, ask the user before pr
 
 ---
 
-## Step 2 — Invoke the framework skill set
+## Step 2: Invoke the framework skill set
 
 **Invoke ONLY the skills for the detected framework.** Do not load skills for other frameworks.
 
@@ -77,30 +77,30 @@ invariants for that stack.
 
 ---
 
-## Step 3 — Invoke cross-framework skills (always available)
+## Step 3: Invoke cross-framework skills (always available)
 
 These skills apply regardless of the detected framework:
 
-- **`design-expert`** — invoke before implementing any new screen or component.
+- **`design-expert`**: invoke before implementing any new screen or component.
   Produces design spec, component tree, token-based style guide.
   Invoke with: `"Produce design spec for: [component/screen description]"`
 
-- **`css-expert`** — invoke when writing or reviewing styles.
+- **`css-expert`**: invoke when writing or reviewing styles.
   SCSS, design tokens, BEM, responsive patterns, accessibility.
   Invoke when: creating new stylesheets, refactoring existing SCSS, or applying theming.
 
-- **`testing-standards`** — invoke when writing or reviewing tests.
+- **`testing-standards`**: invoke when writing or reviewing tests.
   Provides scenario taxonomy, naming conventions, and framework-specific test templates.
 
-- **`rest-api-standards`** — invoke when integrating REST endpoints.
+- **`rest-api-standards`**: invoke when integrating REST endpoints.
   URL conventions, error handling, pagination.
 
-- **`refactoring-expert`** — invoke when refactoring existing frontend code.
+- **`refactoring-expert`**: invoke when refactoring existing frontend code.
   SOLID, DRY, KISS applied to component design.
 
 ---
 
-## Step 3.1 — Client-specific design system (mandatory check)
+## Step 3.1: Client-specific design system (mandatory check)
 
 After the framework skills are loaded, decide whether the deliverable is for
 a client whose own design system is published in the catalogue. If it is,
@@ -128,7 +128,7 @@ Invoke:
 ```
 
 When in doubt, ask the user once: *"Is this delivery for the UniCredit client?"*.
-Do not silently apply UniCredit branding to a non-UniCredit project — and do
+Do not silently apply UniCredit branding to a non-UniCredit project, and do
 not silently skip it for a confirmed UniCredit project.
 
 ---
@@ -147,11 +147,11 @@ not silently skip it for a confirmed UniCredit project.
 6. **Produce complete files.** Every output includes all imports, all types, styles,
    and test stubs. No partial snippets without explicit user request. **For Angular,
    every component is shipped as the full 4-file family**: `<name>.component.ts`,
-   `<name>.component.html`, `<name>.component.scss`, `<name>.component.spec.ts` —
-   never inline templates or styles, never skip the spec file.
+   `<name>.component.html`, `<name>.component.scss`, `<name>.component.spec.ts`.
+   Never inline templates or styles, never skip the spec file.
 7. **Apply TypeScript strictly.** Zero `any`. All public function signatures typed.
    Interfaces for every data model.
-8. **Enforce separation of concerns** (especially in Angular — the most common defect).
+8. **Enforce separation of concerns** (especially in Angular, the most common defect).
    Smart components orchestrate, dumb components present. Services own HTTP and business
    logic. Templates stay declarative. No HTTP calls inside components.
 9. **Best-guess + explicit TODO when uncertain.** When the source-to-target translation
@@ -163,14 +163,14 @@ not silently skip it for a confirmed UniCredit project.
 
 - Apply Angular patterns (DI, `@Component`, `Observable`) in a React/Vue/Qwik project.
 - Apply React patterns (hooks, JSX) outside a React project.
-- Hardcode business logic in templates or markup — extract to composables/hooks/services.
+- Hardcode business logic in templates or markup. Extract to composables/hooks/services.
 - Write a component without handling the error and loading states.
 - Use `any` as a type for props, state, or return values.
 - Put side effects or data fetching directly in template/render logic.
 - Inject `HttpClient` (Angular) / call `fetch` directly (React/Vue/Qwik) inside a
-  component — always go through a dedicated service, hook, or composable.
+  component. Always go through a dedicated service, hook, or composable.
 - Mix smart/dumb responsibilities in the same component (Angular).
-- Leave conservative stubs in place of unknown translations — best-guess + TODO instead.
+- Leave conservative stubs in place of unknown translations. Best-guess + TODO instead.
 - Introduce a new package dependency without flagging it explicitly.
 
 ---
@@ -181,8 +181,8 @@ not silently skip it for a confirmed UniCredit project.
 when producing files. It defines the per-file envelope (filename heading, full
 content, "Why" + "Tests" footer) and the per-framework file-family expectations
 (Angular always 4 files, React 3 files, Vue SFC + spec, Qwik 3 files, Vanilla
-3 files). Inline `template:` / `styles:` literals are forbidden in Angular —
-delivering an Angular component as a single `.ts` fails the quality self-check.
+3 files). Inline `template:` / `styles:` literals are forbidden in Angular.
+Delivering an Angular component as a single `.ts` fails the quality self-check.
 
 ---
 

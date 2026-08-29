@@ -1,4 +1,4 @@
-# Phase 1 — Normalized output schemas
+# Phase 1: Normalized output schemas
 
 > Reference doc for `functional-analysis-supervisor` and Phase 1 sub-agents. Read at runtime when writing JSONL artifacts to `docs/analysis/01-functional/normalized/` or `raw/`.
 
@@ -53,8 +53,8 @@ One JSON object per line. Each object represents a single use case candidate.
 
 **Status rules:**
 - `status: confirmed` requires at least one `evidence_id`.
-- `candidate_not_confirmed` — identified but insufficient evidence; must include at least one `unknown`.
-- `requires_human_confirmation` — conflicting signals; present to user in HITL. Blocks further pipeline progress until resolved.
+- `candidate_not_confirmed`: identified but insufficient evidence; must include at least one `unknown`.
+- `requires_human_confirmation`: conflicting signals; present to user in HITL. Blocks further pipeline progress until resolved.
 
 Only `confirmed` UCs can be consumed by Phase 3 as test targets; `candidate_not_confirmed` must not be treated as requirements by Phase 4.
 
@@ -152,11 +152,11 @@ One JSON object per line. Each object represents an unresolved gap or open quest
 
 One JSONL per sub-agent (pre-normalization):
 
-- `raw/actor-feature-findings.jsonl` — actor-feature-mapper raw output
-- `raw/ui-surface-findings.jsonl` — ui-surface-analyst raw output
-- `raw/io-catalog-findings.jsonl` — io-catalog-analyst raw output
-- `raw/user-flow-findings.jsonl` — user-flow-analyst raw output
-- `raw/implicit-logic-findings.jsonl` — implicit-logic-analyst raw output
+- `raw/actor-feature-findings.jsonl`: actor-feature-mapper raw output
+- `raw/ui-surface-findings.jsonl`: ui-surface-analyst raw output
+- `raw/io-catalog-findings.jsonl`: io-catalog-analyst raw output
+- `raw/user-flow-findings.jsonl`: user-flow-analyst raw output
+- `raw/implicit-logic-findings.jsonl`: implicit-logic-analyst raw output
 
 Each raw file: one record per finding, same fields as the normalized equivalent plus a `raw_text` field for the agent's original description.
 
@@ -168,10 +168,10 @@ Each raw file: one record per finding, same fields as the normalized equivalent 
 
 One JSONL per sub-agent (pre-normalization):
 
-- `raw/ui-surface-findings.jsonl` — ui-surface-analyst raw output
-- `raw/io-catalog-findings.jsonl` — io-catalog-analyst raw output
-- `raw/user-flow-findings.jsonl` — user-flow-analyst raw output
-- `raw/implicit-logic-findings.jsonl` — implicit-logic-analyst raw output
+- `raw/ui-surface-findings.jsonl`: ui-surface-analyst raw output
+- `raw/io-catalog-findings.jsonl`: io-catalog-analyst raw output
+- `raw/user-flow-findings.jsonl`: user-flow-analyst raw output
+- `raw/implicit-logic-findings.jsonl`: implicit-logic-analyst raw output
 
 ---
 
@@ -189,7 +189,7 @@ One row per use case. Produced by functional-traceability-auditor.
 
 ## `normalized/functional-traceability-audit.json`
 
-Schema (see `functional-traceability-auditor` for the full spec — this is the output it produces):
+Schema (see `functional-traceability-auditor` for the full spec, this is the output it produces):
 
 ```json
 {

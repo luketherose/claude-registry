@@ -1,8 +1,8 @@
-# Phase 2 — Sub-agent dispatch prompt template
+# Phase 2: Sub-agent dispatch prompt template
 
 > Reference doc for `technical-analysis-supervisor`. Read at runtime when assembling the prompt for any sub-agent invocation. Includes the Streamlit-aware adjustments block (inject only when stack mode = streamlit).
 
-## Grounding policy — no evidence, no claim
+## Grounding policy: no evidence, no claim
 
 Prepend this block to every W1 sub-agent dispatch prompt:
 
@@ -85,7 +85,7 @@ open questions in a `## Open questions` section. Do not write outside
 docs/analysis/02-technical/.
 ```
 
-Pass each agent only the context it needs. Do not paste large KB sections into the prompt — sub-agents read from disk via Read/Glob.
+Pass each agent only the context it needs. Do not paste large KB sections into the prompt. Sub-agents read from disk via Read/Glob.
 
 ## Streamlit instructions block (inject when stack mode = streamlit)
 

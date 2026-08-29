@@ -42,7 +42,7 @@ Field rules:
 - `hash`: optional but recommended. SHA-256 hash of the observed lines, prefixed `sha256:`. Enables change detection on re-runs.
 - `summary`: required. One or two sentences describing what was observed in verifiable terms. Must describe the observation, not the interpretation.
 - `detected_by`: required. Name of the sub-agent or script that produced this record (e.g., `codebase-mapper`, `business-logic-analyst`, `dependency-analyzer`).
-- `verified_by`: nullable. Set when a confirming agent appends its `tool_output` record — the original record retains `verified_by: null` (ledger is append-only); the confirmation is carried in the appended record's `summary`.
+- `verified_by`: nullable. Set when a confirming agent appends its `tool_output` record: the original record retains `verified_by: null` (ledger is append-only); the confirmation is carried in the appended record's `summary`.
 
 ## Kind values
 
@@ -69,14 +69,14 @@ The sequence restarts at `EV-000001` for each new run. Evidence from different r
 
 ## Uniqueness rule
 
-`evidence_id` must be unique per run. Never reuse an id within a run, even if the underlying evidence is identical. Duplicate evidence for the same file+lines+kind is allowed (a second agent may independently observe the same symbol) but must receive a distinct evidence_id. The `verified_by` field is the mechanism for cross-agent confirmation — not ID reuse.
+`evidence_id` must be unique per run. Never reuse an id within a run, even if the underlying evidence is identical. Duplicate evidence for the same file+lines+kind is allowed (a second agent may independently observe the same symbol) but must receive a distinct evidence_id. The `verified_by` field is the mechanism for cross-agent confirmation, not ID reuse.
 
 ## How sub-agents emit evidence
 
 When a sub-agent observes a symbol, file, chunk, route, or pattern, it must:
 
 1. Read the current tail of `evidence-ledger.jsonl` to determine the next sequence number and to check whether the same `file` + `lines` + `kind` combination already exists.
-2. If the combination already exists, append a `tool_output` record that references the original `evidence_id` in its `summary` (e.g., `"Independently confirmed EV-000042"`) and sets `detected_by` to the confirming agent. Do not modify the original record — the ledger is append-only.
+2. If the combination already exists, append a `tool_output` record that references the original `evidence_id` in its `summary` (e.g., `"Independently confirmed EV-000042"`) and sets `detected_by` to the confirming agent. Do not modify the original record. The ledger is append-only.
 3. If the combination is new, append a new record with the next available `evidence_id`.
 4. Always set `detected_by` to the sub-agent's canonical name as declared in the catalog.
 
@@ -88,5 +88,5 @@ For files classified as `large`, `huge`, or `giant` in `bronze/large-files.jsonl
 
 - Evidence must point to a `chunk_id` and `lines` range, never to the whole file.
 - Use `kind: source_chunk` with the chunk's line range.
-- The only exception is a `source_file` record that captures the file's existence and metadata (size, line count, classification) — this is not a behavioral claim.
+- The only exception is a `source_file` record that captures the file's existence and metadata (size, line count, classification): this is not a behavioral claim.
 - Never write a behavioral summary that cites only the file path without a chunk_id. Downstream consumers cannot verify which lines support the claim.

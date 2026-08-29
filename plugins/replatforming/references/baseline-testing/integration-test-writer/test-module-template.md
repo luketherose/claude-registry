@@ -1,4 +1,4 @@
-# Integration test module — Python skeleton
+# Integration test module: Python skeleton
 
 > Reference doc for `integration-test-writer`. Read at runtime when scaffolding
 > a new `tests/baseline/test_integration_<system>.py` module.
@@ -81,8 +81,8 @@ def test_external_api_timeout(monkeypatch):
 
 ## Mocking libraries reference
 
-- `responses` — for `requests`-based clients
-- `respx` — for `httpx`-based clients
+- `responses`: for `requests`-based clients
+- `respx`: for `httpx`-based clients
 - ad-hoc `monkeypatch` for SDK-specific clients (`boto3` → moto;
   `google.cloud` → google-cloud-testutils; etc.)
 

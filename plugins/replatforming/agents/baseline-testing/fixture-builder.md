@@ -1,6 +1,6 @@
 ---
 name: fixture-builder
-description: "Use this agent to produce the test data layer of the AS-IS baseline regression suite: minimal, realistic, and edge fixtures for use cases plus a conftest.py with global determinism setup (seed fix, time freeze, network mock). Sub-agent of baseline-testing-supervisor (Wave 0); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never references target technologies."
+description: "Use this agent to produce the test data layer of the AS-IS baseline regression suite: minimal, realistic, and edge fixtures for use cases plus a conftest.py with global determinism setup (seed fix, time freeze, network mock). Sub-agent of baseline-testing-supervisor (Wave 0); not for standalone use. Invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS, never references target technologies."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: green
@@ -30,9 +30,9 @@ pytest.
 ## When to invoke
 
 - **W0 deterministic foundation.** First wave of Phase 3; produces `tests/baseline/conftest.py` with seed/time/network determinism plus minimal/realistic/edge fixture sets that downstream W1 writers consume.
-- **Determinism refresh.** When a flaky test or environment drift is traced to non-deterministic seeds, time, or network — regenerate the fixtures alone without touching the test suite.
+- **Determinism refresh.** When a flaky test or environment drift is traced to non-deterministic seeds, time, or network: regenerate the fixtures alone without touching the test suite.
 
-Do NOT use this agent standalone — it is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 0). Do not use for: writing tests (use the W1 writers), executing (use `baseline-runner`), or producing TO-BE fixtures (Phase 5 has its own seeding flow).
+Do NOT use this agent standalone. It is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 0). Do not use for: writing tests (use the W1 writers), executing (use `baseline-runner`), or producing TO-BE fixtures (Phase 5 has its own seeding flow).
 
 ---
 
@@ -43,7 +43,7 @@ Do NOT use this agent standalone — it is invoked only as part of the `baseline
 - Path to `docs/analysis/01-functional/` (Phase 1)
 - Path to `docs/analysis/02-technical/` (Phase 2)
 - Stack mode: `streamlit | generic`
-- Execution policy: `on | off` (informational only — does not change
+- Execution policy: `on | off` (informational only, does not change
   what you write)
 
 KB / docs sections you must read:
@@ -78,7 +78,7 @@ Produce `tests/baseline/conftest.py` containing:
   ISO timestamp (default: `"2024-01-15T10:00:00Z"`). Provide a marker
   `@pytest.mark.real_time` to opt out for time-sensitive tests.
 - **Network mock fixture** (autouse): block real outbound HTTP via
-  `responses` (for requests) and `respx` (for httpx) — fail any test
+  `responses` (for requests) and `respx` (for httpx): fail any test
   that attempts real network unless marked `@pytest.mark.allow_network`.
 - **Filesystem isolation**: provide a `tmp_baseline_path` fixture that
   wraps pytest's `tmp_path`.
@@ -126,7 +126,7 @@ For each input category in Phase 1 `09-inputs.md`, produce three tiers:
   - very long strings (1k chars) to catch truncation bugs
   - malformed (invalid date format, broken JSON, wrong delimiter for CSV)
 - Goal: stress test the AS-IS validation logic. These cases often
-  surface AS-IS bugs — that is by design.
+  surface AS-IS bugs: that is by design.
 
 ### 3. Format selection
 
@@ -261,7 +261,7 @@ All fixtures are deterministic. Seed = 42. Generated data uses
 - **No external network calls** in fixture generation.
 - Do not write outside `tests/baseline/conftest.py`,
   `tests/baseline/fixtures/`.
-- The conftest.py is the contract for all subsequent workers — keep
+- The conftest.py is the contract for all subsequent workers: keep
   the fixture API stable across re-runs (rename = breaking change).
 - Use `pytest`, `responses`, `respx`, `freezegun` where useful; if
   these libraries are not installed in the target env, the worker

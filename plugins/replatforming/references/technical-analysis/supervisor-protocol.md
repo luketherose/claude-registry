@@ -3,7 +3,7 @@ doc: supervisor-protocol
 scope: technical-analysis-supervisor
 ---
 
-# Technical Analysis Supervisor — Protocol Reference
+# Technical Analysis Supervisor: Protocol Reference
 
 Read this document: at Phase 0 bootstrap start; before any escalation decision; before
 applying any decision rule; as constraints reference throughout execution.
@@ -65,9 +65,9 @@ exports:
 
 - **Required source of truth**: `<repo>/.indexing-kb/` (Phase 0 output).
 - **Recommended cross-reference**: `<repo>/docs/analysis/01-functional/`
-  (Phase 1 output) — used by `risk-synthesizer` to map technical risks
+  (Phase 1 output): used by `risk-synthesizer` to map technical risks
   back to features and use cases.
-- **Evidence layer**: `<repo>/.indexing-kb/evidence-ledger.jsonl` (central evidence registry), `<repo>/.indexing-kb/bronze/` (deterministic facts), `<repo>/.indexing-kb/silver/` (agentic extractions with evidence_ids) — primary evidence sources for all technical findings.
+- **Evidence layer**: `<repo>/.indexing-kb/evidence-ledger.jsonl` (central evidence registry), `<repo>/.indexing-kb/bronze/` (deterministic facts), `<repo>/.indexing-kb/silver/` (agentic extractions with evidence_ids): primary evidence sources for all technical findings.
 - Optional: user-provided scope filter (e.g., "skip the migrations folder").
 - Optional: prior partial outputs in `docs/analysis/02-technical/` (resume support).
 - Optional dispatch flag: `--mode parallel | batched | sequential | auto` (default `auto`).
@@ -77,7 +77,7 @@ If `.indexing-kb/` is missing or incomplete, **stop and ask the user**:
 - or proceed with whatever exists (degraded mode), clearly flagging gaps;
 - or abort.
 
-If `docs/analysis/01-functional/` is missing, proceed — flag in the recap that
+If `docs/analysis/01-functional/` is missing, proceed: flag in the recap that
 risk-to-feature traceability will be partial.
 
 Never invent a knowledge base. Sub-agents read from `.indexing-kb/`, optionally from
@@ -86,7 +86,7 @@ narrow patterns.
 
 ---
 
-## Escalation triggers — always ask the user
+## Escalation triggers: always ask the user
 
 Stop and ask before proceeding when:
 
@@ -98,7 +98,7 @@ Stop and ask before proceeding when:
 - **Sub-agent reports > 5 unresolved items in `## Open questions`**.
 - **Critical security finding** discovered by `security-analyst`: surface immediately,
   before Wave 2, with a focused summary.
-- **Sub-agent fails twice on the same input**: do not retry a third time — escalate.
+- **Sub-agent fails twice on the same input**: do not retry a third time; escalate.
 - **Conflict between sub-agent outputs** that you cannot resolve from the KB.
 - **Drift detected** (target-tech reference in any output): block the output, ask the
   responsible worker to revise, escalate if revision fails.
@@ -151,13 +151,13 @@ in [`output-layout.md`](output-layout.md#manifest-contract-_metamanifestjson). A
 - **Never invoke yourself recursively**.
 - **Never let a sub-agent write outside `docs/analysis/02-technical/`**. Verify after
   each dispatch.
-- **Always read sub-agent outputs from disk** after dispatch — the Agent tool result
+- **Always read sub-agent outputs from disk** after dispatch: the Agent tool result
   text is a summary, not the source of truth.
 - **Always update `_meta/manifest.json`** after each wave.
 - **Never skip Phase 0 confirmation** unless the user has explicitly authorized
   full-pipeline execution in the same conversation.
 - **Aggregate open questions** into `14-unresolved-questions.md` after each wave.
-- **Never silently overwrite exports** — explicit user confirmation is required.
+- **Never silently overwrite exports**. Explicit user confirmation is required.
 - **Redact secrets** in any output you produce or any error you echo to the user.
   Never quote a connection string with real password.
 - **All file content output via `Write`**, never via `Bash` heredoc / echo redirect /
@@ -165,7 +165,7 @@ in [`output-layout.md`](output-layout.md#manifest-contract-_metamanifestjson). A
   `>`, `<`, `*` are unsafe to pass through the shell. Reference: Phase 2 incident of
   2026-04-28 (48 accidental files, executed `store` command via redirect). This rule
   MUST be propagated to every sub-agent dispatch prompt (template above already includes
-  it — verify on every dispatch).
+  it, verify on every dispatch).
 - **Grounding policy**: All sub-agent prompts must include the grounding policy
   injection. Every technical finding must cite at least one evidence_id from
   evidence-ledger.jsonl. High/critical findings must have evidence_ids AND

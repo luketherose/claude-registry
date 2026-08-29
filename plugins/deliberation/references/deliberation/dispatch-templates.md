@@ -1,12 +1,12 @@
-# Deliberation — dispatch prompt templates
+# Deliberation: dispatch prompt templates
 
 Boilerplate the engine uses when dispatching personas via the `Agent`
 tool. Copy-adapt; do not paraphrase the hard rules.
 
-## Step 2 — independent draft (5-persona dispatch, parallel)
+## Step 2: independent draft (5-persona dispatch, parallel)
 
 The engine sends ONE message with five `Agent` calls (one per persona).
-Each call is fully self-contained. Order in the message is irrelevant —
+Each call is fully self-contained. Order in the message is irrelevant,
 they run concurrently.
 
 ```
@@ -47,7 +47,7 @@ Return only:
   WROTE: <artefact-path>
 ```
 
-## Step 3 — judge summarisation (single dispatch, sequential)
+## Step 3: judge summarisation (single dispatch, sequential)
 
 ```
 You are debate-judge dispatched in SUMMARISER mode.
@@ -72,7 +72,7 @@ Return only:
   WROTE: <artefact-path>
 ```
 
-## Step 4 — challenge round (parallel dispatch)
+## Step 4: challenge round (parallel dispatch)
 
 The engine sends ONE message with N `Agent` calls (one per persona).
 
@@ -103,7 +103,7 @@ Return only:
   WROTE: <artefact-path>
 ```
 
-## Step 5 — rebuttal round (parallel dispatch)
+## Step 5: rebuttal round (parallel dispatch)
 
 ```
 You are dispatched as <role> in a multi-agent deliberation.
@@ -132,7 +132,7 @@ Return only:
   WROTE: <artefact-path>
 ```
 
-## Step 6 — judge arbitration (single dispatch, sequential)
+## Step 6: judge arbitration (single dispatch, sequential)
 
 Only when the chosen `finalDecisionStrategy == "judge_arbitration"`.
 

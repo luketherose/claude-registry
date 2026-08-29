@@ -3,7 +3,7 @@
 > Reference doc for `registry-auditor`. Read at runtime when synthesising the
 > final Markdown report (Step 6 of the workflow).
 
-The audit produces a single Markdown document printed to stdout — never written
+The audit produces a single Markdown document printed to stdout, never written
 to disk. Be terse, use tables, cite file paths as absolute paths so the
 maintainer can navigate directly. Keep the full report under ~800 lines.
 
@@ -60,26 +60,26 @@ maintainer can navigate directly. Keep the full report under ~800 lines.
 
 ## Section requirements
 
-- **Methodology notes** — list every rubric file actually read (or "embedded
+- **Methodology notes**: list every rubric file actually read (or "embedded
   fallback" if missing). Record the inventory counts as resolved by `find`, not
   the user's estimate.
-- **Overall scores** — one row per area; the justification is one line, not a
+- **Overall scores**: one row per area; the justification is one line, not a
   paragraph.
-- **Registry-wide patterns** — defects shared across many files. Cite the rubric
+- **Registry-wide patterns**: defects shared across many files. Cite the rubric
   criterion behind each pattern. `Files affected` = count over total.
-- **Top 10 to rewrite** — per-file defects, ranked by ROI. Each row carries a
+- **Top 10 to rewrite**: per-file defects, ranked by ROI. Each row carries a
   concrete fix the maintainer can apply, not a generic recommendation.
-- **Reference templates** — at least 3 well-written agents and 3 well-written
+- **Reference templates**: at least 3 well-written agents and 3 well-written
   skills, with a one-line note on what makes them work. A top-10-to-rewrite list
   without "what good looks like" is not actionable.
-- **Word-count outliers** (skills only) — top 5 longest bodies and whether they
+- **Word-count outliers** (skills only): top 5 longest bodies and whether they
   warrant splitting into `references/`.
-- **CLAUDE.md score breakdown** — one row per dimension with one or two sentences
+- **CLAUDE.md score breakdown**: one row per dimension with one or two sentences
   of evidence each. Total /100.
-- **Quick wins** — only mechanical, script-able sweeps (sed/grep across the
+- **Quick wins**: only mechanical, script-able sweeps (sed/grep across the
   corpus). If a fix needs case-by-case judgement, it belongs in "top 10", not
   here.
-- **Top 5 actions ordered by ROI** — closing section. Do not append a final
+- **Top 5 actions ordered by ROI**: closing section. Do not append a final
   summary after it.
 
 ## Style invariants
@@ -88,7 +88,7 @@ maintainer can navigate directly. Keep the full report under ~800 lines.
   the maintainer can `cmd-click` to open them.
 - Cite the specific rubric criterion behind each finding (e.g.,
   "agent-development §6", "skill-development §2").
-- Distinguish corpus-wide patterns from per-file defects in the output structure
-  — never collapse them into one table.
+- Distinguish corpus-wide patterns from per-file defects in the output structure.
+  Never collapse them into one table.
 - Do NOT produce a per-file table for all 75+ agents. Aggregate first; surface
   outliers second.

@@ -1,4 +1,4 @@
-# Usecase-test-writer — AS-IS bug-found policy
+# Usecase-test-writer: AS-IS bug-found policy
 
 > Reference doc for `usecase-test-writer`. Read at runtime when the writer
 > detects a divergence between AS-IS behaviour and the UC spec (Method §7).
@@ -11,7 +11,7 @@ the broken behaviour.
 
 ## Procedure
 
-1. **Write the test against the SPEC** — assert what the UC says, not what
+1. **Write the test against the SPEC**: assert what the UC says, not what
    the source currently does.
 2. **Add a marker comment** above the test:
 

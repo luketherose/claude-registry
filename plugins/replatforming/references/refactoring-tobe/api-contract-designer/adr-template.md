@@ -1,4 +1,4 @@
-# API contract designer — ADR-003 (auth flow) template
+# API contract designer: ADR-003 (auth flow) template
 
 > Reference doc for `api-contract-designer`. Read at runtime when authoring
 > `docs/adr/ADR-003-auth-flow.md`. The agent body keeps the decision logic

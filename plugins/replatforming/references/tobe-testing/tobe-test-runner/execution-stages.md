@@ -20,14 +20,14 @@ This single command runs:
 - JUnit unit tests
 - Slice tests (`@WebMvcTest`, `@DataJpaTest`)
 - Integration tests with Testcontainers
-- Spring Cloud Contract `verify` goal — produces JUnit reports for
+- Spring Cloud Contract `verify` goal: produces JUnit reports for
   each contract
 
 Capture:
-- `backend/target/surefire-reports/*.xml` — unit results
-- `backend/target/failsafe-reports/*.xml` — integration results
-- `backend/target/site/jacoco/jacoco.xml` — coverage
-- `backend/target/generated-test-sources/contracts/` — SCC contracts
+- `backend/target/surefire-reports/*.xml`: unit results
+- `backend/target/failsafe-reports/*.xml`: integration results
+- `backend/target/site/jacoco/jacoco.xml`: coverage
+- `backend/target/generated-test-sources/contracts/`: SCC contracts
   exercised
 
 ## 2. Frontend component tests
@@ -67,7 +67,7 @@ pytest tests/equivalence -v --junitxml=tests/equivalence/junit.xml
 
 Capture:
 - `tests/equivalence/junit.xml`
-- updated snapshots (if any) — flag, don't auto-accept
+- updated snapshots (if any): flag, don't auto-accept
 
 ## 5. Performance scenarios
 
@@ -108,7 +108,7 @@ for failed_test in suite_results.failures:
 ### Severity classification
 
 Read the failed test's frontmatter or surrounding context to find:
-- `related_ucs` — which UC does it cover?
+- `related_ucs`: which UC does it cover?
 - The UC's `priority` from Phase 1 → maps to severity:
   - `critical` UC → `critical` regression
   - `high` UC → `high` regression

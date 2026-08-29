@@ -1,4 +1,4 @@
-# Functional Analysis Supervisor — Protocol Reference
+# Functional Analysis Supervisor: Protocol Reference
 
 This document holds the operational protocol for `functional-analysis-supervisor`. Read it at bootstrap start, before any escalation or decision, before manifest update, and for constraints reference.
 
@@ -69,7 +69,7 @@ exports:
 
 - **Single source of truth**: `<repo>/.indexing-kb/` (produced by Phase 0
   indexing pipeline).
-- **Evidence layer**: `<repo>/.indexing-kb/evidence-ledger.jsonl` (central evidence registry), `<repo>/.indexing-kb/bronze/` (deterministic facts), `<repo>/.indexing-kb/silver/` (agentic extractions with evidence_ids) — primary evidence sources for all sub-agent claims.
+- **Evidence layer**: `<repo>/.indexing-kb/evidence-ledger.jsonl` (central evidence registry), `<repo>/.indexing-kb/bronze/` (deterministic facts), `<repo>/.indexing-kb/silver/` (agentic extractions with evidence_ids): primary evidence sources for all sub-agent claims.
 - Optional: user-provided scope filter (e.g., "focus on the billing module").
 - Optional: prior partial outputs in `docs/analysis/01-functional/` (resume
   support).
@@ -80,13 +80,13 @@ If `.indexing-kb/` is missing or incomplete, **stop and ask the user**:
 - or abort.
 
 Never invent a knowledge base. Never read source code as a substitute for
-the KB at this stage — only the `implicit-logic-analyst` is allowed to
+the KB at this stage. Only the `implicit-logic-analyst` is allowed to
 descend into source code, and only for narrowly scoped patterns the KB
 cannot cover.
 
 ---
 
-## Escalation triggers — always ask the user
+## Escalation triggers: always ask the user
 
 Stop and ask before proceeding when:
 
@@ -99,14 +99,14 @@ Stop and ask before proceeding when:
 - **Existing `docs/analysis/01-functional/` with `status: complete` files**:
   ask whether to overwrite, augment (only missing sections), or abort.
 - **Existing exports** in `_exports/` (PDF or PPTX): explicit overwrite
-  confirmation required (this is non-negotiable — same policy as Phase 2).
+  confirmation required (this is non-negotiable, same policy as Phase 2).
 - **Sub-agent reports > 5 unresolved items in `## Open questions`**.
 - **Scope expansion mid-run**: a sub-agent identifies significant
   functional surface outside the initially confirmed scope (e.g., a
   hidden admin panel, a CLI not mentioned in the KB). Confirm whether
   to extend.
 - **Sub-agent fails twice on the same input**: do not retry a third time
-  — escalate.
+escalate.
 - **Conflict between sub-agent outputs** that you cannot resolve from
   the KB (e.g., actor list says only "user", but UC analysis discovers
   flows requiring an admin role).
@@ -160,14 +160,14 @@ After every wave, update `docs/analysis/01-functional/_meta/manifest.json`. For 
 - **Never invoke yourself recursively**.
 - **Never let a sub-agent write outside `docs/analysis/01-functional/`**.
   Verify after each dispatch.
-- **Always read sub-agent outputs from disk** after dispatch — the
+- **Always read sub-agent outputs from disk** after dispatch: the
   Agent tool result text is a summary, not the source of truth.
 - **Always update `_meta/manifest.json`** after each wave.
 - **Never skip Phase 0 confirmation** unless the user has explicitly
   authorized full-pipeline execution in the same conversation.
 - **Aggregate open questions** into `14-unresolved-questions.md` after
   Wave 2, then again after challenger (if run).
-- **Never silently overwrite exports** — explicit user confirmation is
+- **Never silently overwrite exports**. Explicit user confirmation is
   required (same policy as Phase 2).
 - **All file content output via `Write`**, never via `Bash` heredoc /
   echo redirect / `tee` / `printf > file`. Mermaid, code blocks, and
@@ -175,7 +175,7 @@ After every wave, update `docs/analysis/01-functional/_meta/manifest.json`. For 
   through the shell. Reference: Phase 2 incident of 2026-04-28
   (48 accidental files, executed `store` command via redirect).
   This rule MUST be propagated to every sub-agent dispatch prompt
-  (template above already includes it — verify on every dispatch).
+  (template above already includes it, verify on every dispatch).
 - **Redact secrets** in any output you produce or any error you echo to
   the user. Never quote a connection string with real password.
 - **Grounding policy**: All sub-agent prompts must include the grounding policy injection. Sub-agents must cite evidence_ids from evidence-ledger.jsonl for every claim. Never create a use case as "confirmed" without at least one evidence_id. If evidence is missing, create a gap/open question, not a hallucination. Reference: `grounding-policy.md` in docs/indexing/.

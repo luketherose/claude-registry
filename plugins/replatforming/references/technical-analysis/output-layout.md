@@ -1,4 +1,4 @@
-# Phase 2 — Output layout & frontmatter contract
+# Phase 2: Output layout & frontmatter contract
 
 > Reference doc for `technical-analysis-supervisor`. Read at runtime when planning where workers write their outputs and what frontmatter every artefact must carry (incl. finding-ID schema).
 
@@ -79,7 +79,7 @@ For full schemas, see [`normalized-output-schema.md`](${CLAUDE_PLUGIN_ROOT}/refe
 
 **technical-findings.jsonl** (merged by risk-synthesizer from all W1 raw JSONL):
 - `finding_id` (TECH-CATEG-NNN), `category`, `severity`, `confidence`
-- `evidence_ids` (required — must cite EV-NNNNNN from evidence-ledger.jsonl)
+- `evidence_ids` (required, must cite EV-NNNNNN from evidence-ledger.jsonl)
 - `validation.type`, `validation.status` (verified | not_verified | requires_validation)
 - `status` (confirmed | candidate | requires_validation | rejected)
 - `affected_components`, `affected_use_cases` (from Phase 1 if available)

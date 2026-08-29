@@ -1,251 +1,286 @@
 <!--
 audience: contributor
 diataxis: how-to
-last-verified: 2026-04-28
-verified-against: 1e9445a
+last-verified: 2026-08-30
+verified-against: 8670a63
 -->
 
 # Contributing
 
-How to add or modify a capability. This page covers the mechanical
-process. For depth on _what makes a good capability_ read
-[`how-to-write-a-capability.md`](https://github.com/luketherose/claude-registry/blob/main/claude-catalog/how-to-write-a-capability.md)
-in the repo.
+How to add or change a capability. This page is the mechanical process. For what makes a
+good capability, read
+[`docs/registry/how-to-write-a-capability.md`](https://github.com/luketherose/claude-registry/blob/main/docs/registry/how-to-write-a-capability.md),
+which is authoritative.
 
 ## TL;DR
 
-1. Branch off `main`.
-2. Add or modify a `.md` file under `claude-catalog/agents/` (or
-   `claude-catalog/skills/`).
-3. Add or update an entry in `claude-marketplace/catalog.json`. Mirror
-   the file to `claude-marketplace/{tier}/`.
-4. Add an `[Unreleased]` entry to `claude-catalog/CHANGELOG.md`.
-5. Run both validators locally — they're the same scripts CI runs.
-6. Open a PR. One approval merges.
+1. Branch.
+2. Write the evaluations first.
+3. Write the capability under `plugins/<plugin>/`.
+4. Add an example.
+5. Bump the plugin version and add a changelog entry.
+6. Run the validator and `claude plugin validate .`.
+7. Open a pull request. One approval merges.
 
 ## Setup
 
-Plain git, no build tools.
+Plain Git. No build tools, no package managers.
 
 ```bash
 git clone https://github.com/luketherose/claude-registry.git
 cd claude-registry
+pip install pyyaml
 ```
 
-Test a subagent locally before opening the PR:
+`pyyaml` is what the frontmatter parse gate needs. Install `tiktoken` too if you want
+exact token counts instead of an estimate.
+
+To test what you are writing, add this checkout as a marketplace:
 
 ```bash
-# Copy the file into the project where you'll test it
-cp claude-catalog/agents/your-new-thing.md /path/to/test-project/.claude/agents/
-# Or install everything globally
-./claude-catalog/scripts/setup-capabilities.sh --global
+claude plugin marketplace add .
 ```
 
-Then in Claude Code: `/agents` to see it listed, or use it implicitly
-by asking something its `description` should match.
+Then work **from a project directory rather than from the registry**, run `/agents` to
+confirm the agent is there, and walk through the scenarios in
+`plugins/<plugin>/evals/<name>/evals.json`. Testing from a project is what catches a
+`${CLAUDE_PLUGIN_ROOT}` path that resolves in the repository but not in an install.
 
-## Adding a new agent
+## Step 0: pick the type and the plugin
 
-### Use the scaffold script
+Does the work need its own context window and its own tools? That is an agent. Is it
+knowledge or a procedure the current agent should apply itself? That is a skill.
+
+Then pick the plugin that already owns the skills the capability needs.
+
+| Plugin | Scope |
+|---|---|
+| `replatforming` | The five-phase AS-IS to TO-BE pipeline and anything only useful inside it |
+| `dev-standards` | Language and framework standards, developer agents, test authoring, debugging |
+| `analysis-architecture` | Architecture, requirements, technical analysis, orchestration, registry auditing |
+| `deliberation` | The debate engine and its personas |
+| `docs-branding` | Documentation authoring and branded deliverables |
+| `caveman` | Output-style skills |
+
+A capability and the skills it always needs belong to the same plugin. Where a
+cross-plugin reference is unavoidable, say so in the agent body and describe what the
+agent does without it. Never make an agent hard-fail on a skill it does not own.
+
+## Step 1: scaffold
 
 ```bash
-./claude-catalog/scripts/new-capability.sh my-agent-name
+./scripts/new-capability.sh --plugin dev-standards my-agent
+./scripts/new-capability.sh --plugin dev-standards --type skill my-skill
 ```
 
-The script:
-- creates `claude-catalog/agents/my-agent-name.md` from a template
-- creates `claude-catalog/examples/my-agent-name-example.md`
-- creates `claude-catalog/evals/my-agent-name-eval.md`
-- creates the git branch `add/my-agent-name`
+Run it with no arguments to be prompted. It creates:
 
-### Or do it manually
+- the capability file, `plugins/<plugin>/agents/<name>.md` or
+  `plugins/<plugin>/skills/<name>/SKILL.md` with a `references/` directory
+- `plugins/<plugin>/evals/<name>/evals.json` and `triggers.json`
+- the branch `feat/agent-<name>` or `feat/skill-<name>`
 
-```bash
-git checkout -b add/my-agent-name
-```
+It refuses a name that is not lowercase alphanumeric with hyphens, and a name containing
+`anthropic` or `claude`, which are reserved.
 
-Create:
+> The scaffold's `evals.json` and `triggers.json` stubs still use an older shape. Replace
+> them with the schemas in [Reference](Reference#evaluations), which is what all 73
+> existing evaluation directories use.
 
-- `claude-catalog/agents/my-agent-name.md` (the agent itself; see
-  [Reference § Subagent file format](Reference#subagent-file-format))
-- `claude-catalog/examples/my-agent-name-example.md` (at least one
-  invocation example)
-- `claude-catalog/evals/my-agent-name-eval.md` (at least two scenarios)
+## Step 2: write the evaluations first
 
-Add an entry to `claude-marketplace/catalog.json`:
+Not after. Writing them afterwards documents an imagined problem.
 
-```json
-{
-  "name": "my-agent-name",
-  "version": "0.1.0",
-  "tier": "beta",
-  "type": "agent",
-  "status": "active",
-  "description": "Use when ...",
-  "file": "beta/<topic>/my-agent-name.md",
-  "dependencies": [],
-  "tools": ["Read", "Grep", "Glob", "Write"],
-  "model": "sonnet",
-  "tags": ["..."],
-  "published": "2026-04-28",
-  "changelog": "Initial release"
-}
-```
+1. Run Claude on a representative task with no capability installed. Record what it gets
+   wrong.
+2. Write three scenarios in `evals.json` covering those gaps.
+3. Write `triggers.json` covering both the prompts that must activate the capability and
+   the near-miss prompts that must not.
+4. Write the smallest capability that passes, then iterate against the evaluations rather
+   than against your intuition.
 
-Mirror the file (use the topic subfolder — see "Marketplace topics" in the
-project `CLAUDE.md` or the `claude-marketplace/README.md` for the full list):
+Trigger evaluations are what catch a description edit that quietly breaks routing.
 
-```bash
-mkdir -p claude-marketplace/beta/<topic>
-cp claude-catalog/agents/<topic>/my-agent-name.md claude-marketplace/beta/<topic>/my-agent-name.md
-```
+## Step 3: write the capability
 
-Add a `CHANGELOG.md` entry under `[Unreleased]`:
+### An agent
 
 ```markdown
-- **`my-agent-name@0.1.0` (beta)** — sonnet, [one-paragraph description].
-  Tools: Read, Grep, Glob, Write.
+---
+name: my-agent
+description: "Use this agent when <trigger>. <What it produces.> Do not use it for <adjacent case> (use <sibling> instead)."
+tools: Read, Grep, Glob
+model: inherit
+color: blue
+---
+
+## When to invoke
+## Role
+## What you always do
+## What you never do
+## Skills
+## Output format
+## Quality criteria
 ```
 
-Validate locally:
+`## When to invoke` is mandatory and CI warns without it. It carries the worked scenarios
+that would otherwise bloat the `description`.
 
-```bash
-python3 .github/scripts/validate_catalog.py
-python3 .github/scripts/validate_marketplace.py
+Rules that matter most:
+
+- **Be opinionated.** Name the frameworks, define the output format exactly, leave no
+  structure to interpretation.
+- **State what the agent delegates**, and to which named sibling.
+- **State when the agent escalates** to the user instead of guessing.
+- **Include a self-check** the agent runs before responding.
+- **Keep the tool list minimal.** An agent whose body invokes skills must carry `Skill`
+  in `tools`, or the instruction is inert and CI fails.
+- **Reference bundled material with `${CLAUDE_PLUGIN_ROOT}`.** A repository-relative path
+  resolves against the consumer's project and silently returns nothing.
+
+For the description: state the trigger condition and the boundary, not a summary of the
+system prompt. Worker agents that only ever run under a supervisor need the boundary and
+nothing else. User-facing agents benefit from two to four quoted user phrasings, because
+those match how people actually ask.
+
+### A skill
+
+```markdown
+---
+name: my-skill
+description: "This skill should be used when <situation>: <topics>. Do not use it for <adjacent case> (use <sibling> instead)."
+---
 ```
 
-Both must be green before pushing.
+Exactly those two frontmatter fields. `model`, `tools` and `color` are rejected by CI.
 
-```bash
-git add -A
-git commit -m "feat(agent): add my-agent-name"
-git push -u origin add/my-agent-name
-gh pr create --title "feat(agent): add my-agent-name" --body "..."
-```
+- Body under 500 lines. When you cross it, move detail into `references/`. Do not
+  compress the prose.
+- Assume Claude is already smart. Explain only what it does not already know.
+- One word per concept, used consistently.
+- No time-sensitive statements. Superseded guidance goes into an `## Old patterns`
+  section inside `<details>`.
+- Give a default and one escape hatch. Do not offer four options.
+- Link every reference file explicitly, one line each, saying what is in it. References
+  must be one level deep from `SKILL.md`.
+- A reference file longer than 100 lines starts with a `## Contents` table, so a partial
+  read still shows the full scope.
+- Deterministic work belongs in the skill's own `scripts/` directory. When that directory
+  exists it carries a mandatory `README.md` giving each script's invocation, inputs,
+  outputs and exit codes, so the consuming agent can call it without reading the source.
 
-## Adding a new skill
+## Step 4: wire the skill into the agents that use it
 
-Skills are atomic knowledge providers — `model: haiku`, `tools: Read`
-only. They are invoked by agents, not by users.
-
-### Constraints
-
-- `model: haiku` — knowledge retrieval, not reasoning.
-- `tools: Read` only — no `Edit`, `Write`, `Bash`, or `Agent`. The CI
-  catalog gate enforces this.
-- No `## Skills` section — skills are leaf nodes; they cannot delegate.
-
-### Workflow
-
-```bash
-git checkout -b add/my-skill-name
-# Write claude-catalog/skills/<topic>/my-skill-name.md
-# Mirror to claude-marketplace/skills/<topic>/my-skill-name.md
-# Add entry to catalog.json with "type": "skill", "tier": "skill",
-#   "file": "skills/<topic>/my-skill-name.md"
-# Add "my-skill-name" to the "dependencies" list of every agent that uses it
-# Add CHANGELOG.md entry under [Unreleased]
-# Validate, commit, push, PR
-```
-
-### How an agent invokes a skill
-
-Add a `## Skills` section to the agent's system prompt:
+On demand, which is the default:
 
 ```markdown
 ## Skills
 
-Before starting any task, invoke the following skills to load shared
-standards:
+Load the following skills with the `Skill` tool when the task touches their domain:
 
-- `java-spring-standards` — Java/Spring Boot conventions
-- `testing-standards` — testing principles and framework templates
+- `java-spring-standards` for package structure, layering, error handling and observability
+- `spring-data-jpa` when the change touches entities, repositories or transactions
 ```
 
-Then list each skill in the agent's `dependencies` field in
-`catalog.json` so the setup script auto-installs them.
+Preloaded, only for a skill an agent needs on **every single run**:
+
+```yaml
+skills:
+  - accenture-branding
+```
+
+Preloading five skills defeats progressive disclosure and costs the agent its context.
+Four agents preload today, each exactly one skill.
+
+## Step 5: version and changelog
+
+Bump `version` in `plugins/<plugin>/.claude-plugin/plugin.json` per the table in
+[Governance](Governance#releases), then add an entry to `docs/registry/CHANGELOG.md`
+under `[Unreleased]`.
+
+Also update `README.md` when the capability roster changes, and
+`how-to-write-a-capability.md` when a convention changes.
+
+## Step 6: validate locally
+
+```bash
+python3 .github/scripts/validate_registry.py
+claude plugin validate .
+bash hooks/tests/test-pre-tool-safety.sh
+```
+
+All three run in CI, split across the `Validate marketplace` and `Validate catalog` jobs.
+Exit code 0 with zero errors is the bar. Warnings do not block.
+
+Pre-flight checklist:
+
+- [ ] `name` matches the filename (agent) or the directory (skill)
+- [ ] `description` is third person, specific, and names the sibling to use instead
+- [ ] Agent body has `## When to invoke`
+- [ ] `SKILL.md` body is under 500 lines
+- [ ] Reference links resolve and are one level deep
+- [ ] Bundled paths use `${CLAUDE_PLUGIN_ROOT}`
+- [ ] `tools` is a minimal allowlist, and includes `Skill` if the body invokes skills
+- [ ] Model choice follows the policy, or is justified in an HTML comment
+- [ ] Cross-plugin skill dependencies are declared and degrade gracefully
+- [ ] Three evaluation scenarios plus `triggers.json`
+- [ ] One example in the plugin's `examples/`
+- [ ] Plugin version bumped and changelog entry added
+- [ ] No credentials, tokens or secrets anywhere
+
+## Step 7: open the pull request
+
+```bash
+git add -A
+git commit -m "feat(dev-standards): add my-agent"
+git push -u origin feat/agent-my-agent
+gh pr create --title "feat(dev-standards): add my-agent" --body "..."
+```
+
+Both CI jobs post their findings as a pull-request comment. One reviewer approval merges.
+Reviewers apply
+[`docs/registry/review-checklist.md`](https://github.com/luketherose/claude-registry/blob/main/docs/registry/review-checklist.md).
 
 ## Updating an existing capability
 
 ```bash
-git checkout -b update/capability-name
-# Edit the .md file in claude-catalog/
-# Mirror the change to claude-marketplace/{tier}/capability-name.md
-# Bump the version in catalog.json (PATCH for fixes, MINOR for new behaviour)
-# Add a CHANGELOG.md entry under [Unreleased]
-# Validate, commit, push, PR
+git checkout -b update/<name>
 ```
 
-See [Reference § Versioning](Reference#versioning) for when to bump
-which segment.
+Edit the files, bump the plugin version, add the changelog entry, validate, open the pull
+request. A change to a `name` or a `description` is a major bump and needs a migration
+note, because both drive routing.
 
-## Bug fixes
+## Removing or renaming a capability
 
-```bash
-git checkout -b fix/<topic>
-```
+Three things in one pull request, plus a fourth at removal:
 
-For fixes affecting multiple capabilities (e.g. the 2026-04-28 Mermaid
-shell-injection hardening), it is OK to bump every affected file's PATCH
-version in a single PR, with a single `CHANGELOG.md` `[Unreleased] ###
-Fixed` block listing each.
+1. Deprecation notice in the capability's `description`.
+2. An `ANTI-PATTERNS.md` entry recording what was tried, why it failed, what replaced it,
+   and under which conditions a retry would be valid.
+3. The file stays for 90 days so teams can migrate.
+4. At removal, add the old name to the `RETIRED` dict in
+   `.github/scripts/validate_registry.py`. CI then fails on any leftover reference in
+   `plugins/`, `wiki/`, `docs/`, `README.md` or `CLAUDE.md`.
 
-## What gets reviewed
+## What not to do
 
-Reviewers apply
-[`claude-catalog/review-checklist.md`](https://github.com/luketherose/claude-registry/blob/main/claude-catalog/review-checklist.md).
-Common asks:
-
-- Is the `description` precise enough that Claude will delegate
-  correctly? "Use when …" + concrete trigger conditions.
-- Is the tool list minimal? Default to read-only; expand only when
-  necessary.
-- Is the system prompt **opinionated**? Generic prompts produce generic
-  output.
-- Are output formats explicitly defined? "Produce a Markdown report"
-  isn't enough — define the sections.
-- Are completeness checks declared? "Before responding, verify X, Y, Z."
-- Is escalation defined? When should the agent ask for context rather
-  than guess?
-- For skills: `model: haiku`, `tools: Read` only, no `## Skills`
-  section.
-- For agents that produce file content: include the **File-writing rule**
-  block (mandates `Write`/`Edit`, forbids `Bash` heredoc/redirect; this
-  was added repo-wide after the 2026-04-28 incident — see
-  [Changelog](Changelog)).
-
-## What NOT to do
-
-- Do not put credentials, API keys, or secrets anywhere in this
-  repository.
-- Do not modify files in `claude-marketplace/` directly without also
-  updating `catalog.json` and the matching `claude-catalog/` source.
-- Do not bypass the review process for "small" fixes — a one-line prompt
-  change can significantly alter behaviour.
-- Do not version capabilities in their filenames (use git tags).
-- Do not add knowledge that belongs in a skill directly into an agent
-  system prompt if that same knowledge is already defined in a skill.
-
-## Local validation cheat sheet
-
-```bash
-# CI gate 1
-python3 .github/scripts/validate_catalog.py
-
-# CI gate 2
-python3 .github/scripts/validate_marketplace.py
-
-# Scaffold a new capability + branch
-./claude-catalog/scripts/new-capability.sh --type agent my-agent
-./claude-catalog/scripts/new-capability.sh --type skill my-skill
-
-# Install your in-progress capability for testing
-./claude-catalog/scripts/setup-capabilities.sh --global
-```
+- Do not put credentials, API keys or secrets anywhere in this repository.
+- Do not invent frontmatter fields. An unrecognised multi-line key corrupts the value of
+  the key above it. Record a model rationale in an HTML comment in the body instead.
+- Do not use a repository-relative path for bundled material. Use
+  `${CLAUDE_PLUGIN_ROOT}`.
+- Do not put knowledge in an agent body when a skill already defines it. Load the skill.
+- Do not version a capability in its filename. Versions live in `plugin.json` and in git
+  tags.
+- Do not bypass review for a small fix. A one-line prompt change can move behaviour a
+  long way.
+- Do not rename a CI job. The branch ruleset requires the current job names, and a
+  required status context that never reports blocks every pull request. Change the
+  ruleset first.
 
 ## Related
 
-- [Reference](Reference) — schemas, fields, conventions
-- [Governance](Governance) — lifecycle, versioning, SLAs
-- [`how-to-write-a-capability.md`](https://github.com/luketherose/claude-registry/blob/main/claude-catalog/how-to-write-a-capability.md) — depth on writing good prompts
-- [`review-checklist.md`](https://github.com/luketherose/claude-registry/blob/main/claude-catalog/review-checklist.md) — what reviewers check
+- [Reference](Reference): fields, schemas, gates
+- [Governance](Governance): review, versioning, deprecation
+- [Architecture](Architecture): how the CI flow and the pipeline fit together

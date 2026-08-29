@@ -1,4 +1,4 @@
-# Phase 5 — Execution, failure & dispatch-mode policies
+# Phase 5: Execution, failure & dispatch-mode policies
 
 > Reference doc for `tobe-testing-supervisor`. Read at runtime when answering the execution policy, applying the failure-severity matrix, or deciding the W1 dispatch mode.
 
@@ -47,7 +47,7 @@ When tests are executed (W3) and fail, apply this matrix:
 
 ## Dispatch mode decision (parallel / batched / sequential)
 
-The supervisor decides the dispatch mode for **Wave 1 only** (4 workers — note the fan-out for `equivalence-test-writer` is per-UC and is its own concurrency story). Wave 2 onward is sequential by design.
+The supervisor decides the dispatch mode for **Wave 1 only** (4 workers, note the fan-out for `equivalence-test-writer` is per-UC and is its own concurrency story). Wave 2 onward is sequential by design.
 
 ### Decision tree
 

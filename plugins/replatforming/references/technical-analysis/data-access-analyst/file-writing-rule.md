@@ -1,4 +1,4 @@
-# Data-access analyst — file-writing rule (non-negotiable)
+# Data-access analyst: file-writing rule (non-negotiable)
 
 > Reference doc for `data-access-analyst`. Read once before producing any
 > output file. The rule is non-negotiable: the agent body summarises it
@@ -16,13 +16,13 @@ written through the `Write` tool. Never use `Bash` heredocs
 Content with Mermaid syntax (`A[label]`, `B{cond?}`, `A --> B`),
 fenced code blocks, or YAML/JSON with special characters contains shell
 metacharacters (`[`, `{`, `}`, `>`, `<`, `*`, `;`, `&`, `|`) that the
-shell interprets as redirection, glob expansion, or word splitting — even
+shell interprets as redirection, glob expansion, or word splitting, even
 inside quotes when the quoting is fragile (Git Bash / MSYS2 on Windows is
 especially prone). A malformed heredoc produced 48 garbage files in a
 repo root in the Phase 2 incident of 2026-04-28; one of them captured the
 output of an unrelated `store` command found on `$PATH`. The
 `data-flow-diagram.md` Mermaid output is the highest-risk artifact in
-this agent — write it via `Write`, never via `Bash`.
+this agent: write it via `Write`, never via `Bash`.
 
 ## Allowed Bash usage
 

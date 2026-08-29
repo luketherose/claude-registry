@@ -9,7 +9,7 @@
 Provide the verbatim Postman 2.1 JSON shape, the environment-file shape,
 and the pre-request script policy used by the agent when emitting
 `tests/baseline/postman/<service>.postman_collection.json` and the matching
-environment file. Strict AS-IS — no target-tech references in any value.
+environment file. Strict AS-IS, no target-tech references in any value.
 
 ## Collection skeleton (Postman 2.1.0 schema)
 
@@ -88,12 +88,12 @@ Each endpoint MUST have at minimum:
 - **1 edge / error request** demonstrating a documented 4xx response.
 - **Auth assertion**: a separate "negative" request without auth (or with
   bad auth) demonstrating the AS-IS auth gate (often surfaces an AS-IS bug
-  if auth is missing — flag in Open questions).
+  if auth is missing, flag in Open questions).
 
 Endpoints with side effects (POST / PUT / DELETE) get an additional:
 
 - **Idempotency request**: same idempotency-key, expect duplicate to
-  return the original response (per Phase 2 finding) — or document that
+  return the original response (per Phase 2 finding), or document that
   idempotency is not enforced AS-IS.
 
 ## Environment file
@@ -115,7 +115,7 @@ Produce `tests/baseline/postman/<service>.postman_environment.json`:
 
 Variable rules:
 
-- `base_url`: parameterizable (local / staging — never production).
+- `base_url`: parameterizable (local / staging, never production).
 - secrets (`access_token`, `api_key`): empty placeholders with a warning
   in the description. Never commit a real token.
 

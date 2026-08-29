@@ -1,7 +1,7 @@
-# Business-logic analyst — detection patterns
+# Business-logic analyst: detection patterns
 
 > Reference doc for `business-logic-analyst`. Read at runtime when starting
-> domain-concept extraction or the validation-rules pass — provides the
+> domain-concept extraction or the validation-rules pass: provides the
 > per-language type-definition markers and validation grep patterns.
 
 The agent body owns the decision logic (which pass runs when, what to skip,
@@ -63,9 +63,9 @@ finding record: condition, error message, file:line, language.
 
 Look for conditional branches with **business** semantics (not technical):
 
-- `if customer.tier == "premium":` — tier-based logic
-- `if amount > <number>:` — threshold logic (especially with magic numbers)
-- `if order.status in {"PENDING", "DRAFT"}:` — state-based behaviour
+- `if customer.tier == "premium":`, tier-based logic
+- `if amount > <number>:`, threshold logic (especially with magic numbers)
+- `if order.status in {"PENDING", "DRAFT"}:`, state-based behaviour
 - Switch-like patterns: `if/elif` chains on enum or string values
 
 Look for hardcoded constants used in conditions: thresholds (e.g.,

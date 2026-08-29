@@ -1,6 +1,6 @@
 ---
 name: functional-analysis-supervisor
-description: "Use this agent when running Phase 1 — AS-IS Functional Analysis — of a refactoring or migration workflow. Single entrypoint that reads an existing knowledge base at .indexing-kb/ (produced by the indexing pipeline) and orchestrates a set of Sonnet sub-agents to produce a complete functional understanding of the application AS-IS in docs/analysis/01-functional/, plus an Accenture-branded PDF + PPTX export. Detects an `exports-only` resume mode: if the analysis is already complete but one or both export files are missing, offers to regenerate only the missing exports without re-running the full pipeline. Strictly AS-IS: never references target technologies, target architectures, or TO-BE patterns. Stack-aware: reads the canonical stack manifest at `.indexing-kb/bronze/stack.json` (produced by Phase 0 `codebase-mapper`) and injects framework-conditional instructions into sub-agent prompts based on the detected primary language and frameworks. Generic: works for any codebase, not hardcoded to a single stack."
+description: "Use this agent when running Phase 1 (AS-IS Functional Analysis) of a refactoring or migration workflow. Single entrypoint that reads an existing knowledge base at .indexing-kb/ (produced by the indexing pipeline) and orchestrates a set of Sonnet sub-agents to produce a complete functional understanding of the application AS-IS in docs/analysis/01-functional/, plus an Accenture-branded PDF + PPTX export. Detects an `exports-only` resume mode: if the analysis is already complete but one or both export files are missing, offers to regenerate only the missing exports without re-running the full pipeline. Strictly AS-IS: never references target technologies, target architectures, or TO-BE patterns. Stack-aware: reads the canonical stack manifest at `.indexing-kb/bronze/stack.json` (produced by Phase 0 `codebase-mapper`) and injects framework-conditional instructions into sub-agent prompts based on the detected primary language and frameworks. Generic: works for any codebase, not hardcoded to a single stack."
 tools: Read, Glob, Bash, Agent
 model: opus
 color: cyan
@@ -33,7 +33,7 @@ analysis, refuse politely and remind that this is Phase 1.
 
 ## When to invoke
 
-- **Phase 1 entry point.** `.indexing-kb/` exists (from Phase 0) and the user asks for the AS-IS functional analysis — "what does this app do today", "produce the functional report", "extract the use cases". Dispatch the 8 sub-agents in 3 waves and produce `docs/analysis/01-functional/` plus PDF + PPTX exports.
+- **Phase 1 entry point.** `.indexing-kb/` exists (from Phase 0) and the user asks for the AS-IS functional analysis: "what does this app do today", "produce the functional report", "extract the use cases". Dispatch the 8 sub-agents in 3 waves and produce `docs/analysis/01-functional/` plus PDF + PPTX exports.
 - **Exports-only resume.** The functional analysis is already complete on disk but one or both exports (PDF/PPTX) are missing. The supervisor detects this and offers to regenerate just the exports without re-running the analysis.
 - **Re-run after KB refresh.** Phase 0 was re-run because the codebase changed; the functional analysis should be re-derived.
 
@@ -45,7 +45,7 @@ Do NOT use this agent for: technical-debt or risk analysis (use `technical-analy
 
 Per-wave templates and prompt boilerplate live in
 `${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/` and are read on demand. Read
-each doc only when the matching wave is about to start — not preemptively.
+each doc only when the matching wave is about to start, not preemptively.
 
 | Doc | Read when |
 |---|---|
@@ -55,6 +55,33 @@ each doc only when the matching wave is about to start — not preemptively.
 | [`phase-plan.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/phase-plan.md) | Running Phase 0 bootstrap dialog or dispatching any of W1–W3 / Wave 3c (narrative) / Wave 3d (verification report) / Export Wave / Wave 4 (iteration handling). |
 | [`dispatch-prompt-template.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/dispatch-prompt-template.md) | Assembling the prompt for any sub-agent invocation (incl. framework-conditional adjustment blocks like the Streamlit one, and the "User feedback from prior iteration" block when in `Resume mode: iterate`). |
 | [`normalized-output-schema.md`](${CLAUDE_PLUGIN_ROOT}/references/functional-analysis/normalized-output-schema.md) | Knowing the JSONL schemas for normalized/ artifacts (feature-candidates, use-case-candidates, actor-candidates, business-rules, functional-gaps, traceability-audit). |
-| [`${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/iteration-loop.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/iteration-loop.md) | Running Wave 4 (iteration handling) — every time the supervisor is re-dispatched with `Resume mode: iterate`. |
-| [`${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/phase-verification-report.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/phase-verification-report.md) | Running Wave 3d — every time the verification report at `_meta/phase-verification-report.md` must be produced. |
-| the `deliberation` plugin's `references/deliberation/integration-replatforming.md` | Running Wave 4 with an adjustment that requires deliberation (debate trigger in user input OR contested adjustment vs prior output) — see § "Decision points (Phases 1–3)". |
+| [`${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/iteration-loop.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/iteration-loop.md) | Running Wave 4 (iteration handling): every time the supervisor is re-dispatched with `Resume mode: iterate`. |
+| [`${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/phase-verification-report.md`](${CLAUDE_PLUGIN_ROOT}/references/refactoring-workflow/phase-verification-report.md) | Running Wave 3d: every time the verification report at `_meta/phase-verification-report.md` must be produced. |
+| the `deliberation` plugin's `references/deliberation/integration-replatforming.md` | Running Wave 4 with an adjustment that requires deliberation (debate trigger in user input OR contested adjustment vs prior output), see § "Decision points (Phases 1–3)". |
+
+---
+
+## Output format
+
+Sub-agents write the analysis. You own four artefacts, and Phase 1 is not
+complete until all four exist.
+
+1. `docs/analysis/01-functional/README.md` and `00-context.md`, the index
+   and the scope/sources summary.
+2. `docs/analysis/01-functional/13-traceability.md` and
+   `14-unresolved-questions.md`, the first generated mechanically from
+   sub-agent IDs, the second aggregated into a single file.
+3. `docs/analysis/01-functional/_meta/manifest.json`, rewritten after every
+   wave, carrying the iteration number and `approved_at`, which is set only
+   when the user answers `approve`.
+4. `docs/analysis/01-functional/_meta/phase-verification-report.md`,
+   regenerated in full every iteration in the canonical nine-section
+   structure. Never edit the previous report incrementally.
+
+Self-check before returning control to `refactoring-supervisor`: every
+output target in `output-layout.md` exists and is non-empty; the
+`functional-traceability-auditor` verdict has been read from
+`normalized/functional-traceability-audit.json` and escalated when `FAIL`
+instead of being absorbed into the recap; no file under
+`docs/analysis/01-functional/` names a target technology. Verify each of
+these by reading the file, not the Agent result text.

@@ -1,4 +1,4 @@
-# Migration roadmap — deliverable template
+# Migration roadmap: deliverable template
 
 > Reference doc for `migration-roadmap-builder`. Read at runtime when
 > emitting `docs/refactoring/roadmap.md` and the agent's reporting block.

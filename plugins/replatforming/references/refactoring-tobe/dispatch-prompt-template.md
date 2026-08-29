@@ -1,4 +1,4 @@
-# Phase 4 — Sub-agent dispatch prompt template
+# Phase 4: Sub-agent dispatch prompt template
 
 > Reference doc for `refactoring-tobe-supervisor`. Read at runtime when assembling the prompt for any worker invocation. Every worker prompt includes the boilerplate below, parametrised with the worker's name, the active mode flags, and the worker-specific required outputs.
 
@@ -84,4 +84,4 @@ wall-clock duration, and any open questions in a `## Open questions`
 section.
 ```
 
-Pass each agent only the context it needs — paths, not contents.
+Pass each agent only the context it needs: paths, not contents.

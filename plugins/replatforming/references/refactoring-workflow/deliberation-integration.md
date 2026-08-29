@@ -1,4 +1,4 @@
-# Deliberation integration — `refactoring-supervisor`
+# Deliberation integration: `refactoring-supervisor`
 
 > Reference doc for `refactoring-supervisor`. Read at runtime when a
 > decision point may need to be routed to `deliberative-decision-engine`
@@ -29,7 +29,7 @@ three paths:
    deliberation applies for the whole workflow.
 3. **Self-escalation** by the supervisor when the inferred risk level
    is `irreversible`, the decision is production-impacting, or it is
-   compliance-/security-sensitive — even without an explicit trigger.
+   compliance-/security-sensitive, even without an explicit trigger.
    Self-escalation also applies for Phases 1–3 when an iteration
    adjustment conflicts with a prior sub-agent output and resolution
    is subjective (e.g., "is admin one actor or two?", "is this
@@ -40,7 +40,7 @@ three paths:
 For each routed decision:
 
 1. Build a self-contained decision brief per the schema at
-   the `deliberation` plugin's `references/deliberation/schemas.md` § "00-decision-brief.json" — include
+   the `deliberation` plugin's `references/deliberation/schemas.md` § "00-decision-brief.json": include
    the migration-criteria block when relevant.
 2. Dispatch `deliberative-decision-engine` via the `Agent` tool.
 3. The engine writes its full audit trail under
@@ -86,13 +86,13 @@ task is highly ambiguous.
   conditions.
 - **Decision points eligible for deliberation** are listed in
   the `deliberation` plugin's `references/deliberation/integration-replatforming.md`. The doc has two
-  sections: § "Decision points (Phase 4)" — target architecture,
+  sections: § "Decision points (Phase 4)", target architecture,
   migration approach (lift-and-shift vs refactor vs rearchitect vs
   rebuild vs replace), target cloud / runtime / platform, sequencing
   of migration waves, dependency conflicts, data-migration strategy,
   cutover, rollback, conflicting modernization recommendations, risky
   automated changes, security/compliance-sensitive changes. §
-  "Decision points (Phases 1–3)" — contested actor/feature/use-case
+  "Decision points (Phases 1–3)": contested actor/feature/use-case
   definitions, contested risk severity, contested test scope,
   scope-of-iteration disputes when the user's adjustments require
   interpretation.

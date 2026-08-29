@@ -1,4 +1,4 @@
-# Phase 3 — Sub-agent dispatch prompt template
+# Phase 3: Sub-agent dispatch prompt template
 
 > Reference doc for `baseline-testing-supervisor`. Read at runtime when assembling the prompt for any worker invocation.
 
@@ -68,4 +68,4 @@ wall-clock duration, and any open questions in a `## Open questions`
 section. Do not write outside the two output roots.
 ```
 
-Pass each agent only the context it needs — paths, not contents.
+Pass each agent only the context it needs: paths, not contents.

@@ -1,6 +1,6 @@
 ---
 name: code-quality-analyst
-description: "Use this agent to analyze code quality of a codebase AS-IS: structural map of the codebase (entrypoints, packages, modules, naming conventions), duplication and dead-code detection, complexity hotspots, and monolith smells. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline."
+description: "Use this agent to analyze code quality of a codebase AS-IS: structural map of the codebase (entrypoints, packages, modules, naming conventions), duplication and dead-code detection, complexity hotspots, and monolith smells. Strictly AS-IS, never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use. Invoked only as part of the Phase 2 Technical Analysis pipeline."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: yellow
@@ -85,7 +85,7 @@ From `04-modules/*.md`, classify each module by role:
 - **Test**: test code (do not include in main inventory)
 
 Flag modules that mix multiple roles (e.g., a Streamlit page that
-contains domain logic AND DB access — a common smell).
+contains domain logic AND DB access, a common smell).
 
 ### 3. Duplication
 
@@ -129,16 +129,16 @@ function fan-out, branching depth).
 
 Three files under `docs/analysis/02-technical/01-code-quality/`:
 
-**`codebase-map.md`** — YAML frontmatter (`agent`, `generated`, `sources`, `confidence`,
+**`codebase-map.md`**: YAML frontmatter (`agent`, `generated`, `sources`, `confidence`,
 `status`) then sections: Entrypoints, Top-level packages (table: Package / Purpose /
 Module count / Role), Naming conventions, Configuration files, Folder layout, Open
 questions.
 
-**`duplication-report.md`** — YAML frontmatter then sections: Summary (count +
+**`duplication-report.md`**: YAML frontmatter then sections: Summary (count +
 estimated affected LOC), Findings (each finding: ID `RISK-CQ-NN`, Severity, Type,
 Locations, Description, Sources), Open questions.
 
-**`complexity-hotspots.md`** — YAML frontmatter then sections: Summary (files ≥ 500
+**`complexity-hotspots.md`**: YAML frontmatter then sections: Summary (files ≥ 500
 LOC, functions ≥ 50 LOC, modules with ≥ 3 mixed roles), Hotspot inventory (each entry:
 ID `RISK-CQ-NN`, Severity, LOC, Roles mixed, Top function, Description, Sources),
 Logical-component classification (table: Module / Role / Notes), Open questions.

@@ -1,12 +1,12 @@
-# TO-BE Refactoring Supervisor — Protocol
+# TO-BE Refactoring Supervisor: Protocol
 
-> **LEGACY — this supervisor is deprecated in v3 of the replatforming workflow.**
+> **LEGACY: this supervisor is deprecated in v3 of the replatforming workflow.**
 > Use `refactoring-supervisor` instead, which drives Phase 4 directly via a 7-step incremental loop.
 > This document applies only when running the legacy big-bang Phase 4 flow.
 
 Read this document during supervision steps. It contains: escalation triggers,
 decision rules, inverse drift check, manifest update rules, and hard constraints.
-Do not preemptively load — read on demand when a supervision decision is needed.
+Do not preemptively load. Read on demand when a supervision decision is needed.
 
 ---
 
@@ -65,7 +65,7 @@ waves:
 
 ---
 
-## Escalation triggers — always ask the user
+## Escalation triggers: always ask the user
 
 - Any of Phase 0–3 missing or `failed`
 - Phase 3 has unresolved `critical` AS-IS bugs (Phase 4 cannot proceed
@@ -92,8 +92,8 @@ waves:
 | Phase 0 confirmation not given | Do not dispatch any worker |
 | Phase 0/1/2/3 missing | Stop; ask user to run them first |
 | Phase 3 has critical AS-IS bugs unresolved | Stop; ask deferral or pause |
-| User asks to skip W1 | Refuse — decomposition is non-negotiable |
-| User asks to skip W2 (OpenAPI) | Refuse — contract drives W3 |
+| User asks to skip W1 | Refuse. Decomposition is non-negotiable |
+| User asks to skip W2 (OpenAPI) | Refuse. Contract drives W3 |
 | TO-BE refactoring already complete (manifest=complete on disk) | Detect as `complete-eligible`; ask user explicitly: skip / re-run / revise. Default recommendation: `skip` (re-running overwrites generated code that may have been hand-edited). |
 | TO-BE outputs exist but manifest=partial/failed/in-progress/missing | Detect as `resume-incomplete`; recommend `re-run`; user may override with `revise` |
 | Existing TO-BE artifacts | Ask: overwrite / rename / abort |
@@ -109,7 +109,7 @@ waves:
 
 ---
 
-## Drift check — INVERSE direction
+## Drift check: INVERSE direction
 
 In Phases 0–3 the drift check forbade target-tech tokens. **In Phase 4 this
 rule is inverted.** Target tech is now expected. The new drift to prevent is:
@@ -138,7 +138,7 @@ The challenger runs all three checks formally. Workers also self-check via the
 
 After every wave, update **both** manifests
 (`.refactoring-kb/_meta/manifest.json` and
-`docs/refactoring/_meta/manifest.json`) — never half-update, never delete prior
+`docs/refactoring/_meta/manifest.json`), never half-update, never delete prior
 entries. Write the entry even on `failed` status.
 
 → Read [`manifest-schema.md`](manifest-schema.md) for the full schema (common

@@ -1,4 +1,4 @@
-# E2E Playwright patterns — frontend-test-writer
+# E2E Playwright patterns: frontend-test-writer
 
 > Reference doc for `frontend-test-writer`. Read at runtime when authoring
 > Playwright E2E specs derived from Phase 1 user flows.
@@ -71,7 +71,7 @@ For each UC whose AS-IS implementation was a Streamlit page:
   that explicitly.
 
 The Phase 4 frontend-scaffolder produced a Streamlit -> Angular translation
-table — read it to understand which constructs were mapped where.
+table: read it to understand which constructs were mapped where.
 
 ## AS-IS bug carry-over filter
 

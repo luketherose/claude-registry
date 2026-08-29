@@ -1,4 +1,4 @@
-# Phase 1 — Output layout & frontmatter contract
+# Phase 1: Output layout & frontmatter contract
 
 > Reference doc for `functional-analysis-supervisor`. Read at runtime when planning where workers write their outputs and what frontmatter / per-item ID schema every artefact must carry.
 
@@ -58,14 +58,14 @@ docs/analysis/01-functional/
 ```
 
 > **Layout note (v3)**. The narrative file is added at slot
-> `00b-feature-narrative.md` — between `00-context.md` and `01-actors.md`
-> — so the existing numbering of all downstream artifacts is preserved.
+> `00b-feature-narrative.md`, between `00-context.md` and `01-actors.md`,
+> so the existing numbering of all downstream artifacts is preserved.
 > Other agents (baseline-testing, refactoring-tobe, ...) that reference
 > the Phase 1 outputs by file name keep working unchanged. The README
 > always lists the narrative as the first technical document to read,
 > regardless of its file-system position.
 
-## The feature narrative — `00b-feature-narrative.md`
+## The feature narrative: `00b-feature-narrative.md`
 
 This file is written by the supervisor in Wave 3c (synthesis, supervisor
 only). It is the **first technical document a human reviewer reads**.
@@ -161,7 +161,7 @@ Hard rules on the narrative:
   structured artifacts. The narrative tells the story; the
   structured artifacts hold the detail.
 - **Open questions are visible inline.** A feature with unresolved
-  questions makes those questions visible in its own chapter — the
+  questions makes those questions visible in its own chapter: the
   reviewer must not have to cross-read `14-unresolved-questions.md`
   to discover them.
 - **Audience is "engaged business stakeholder" or "incoming dev".**
@@ -183,14 +183,14 @@ For full schemas of the JSONL files in `normalized/` and `raw/`, see [`normalize
 
 Key schemas in brief:
 
-**use-case-candidates.jsonl** — one record per use case:
+**use-case-candidates.jsonl**: one record per use case:
 - `uc_id`, `title`, `status` (confirmed | candidate_not_confirmed | requires_human_confirmation)
 - `actors`, `trigger`, `main_flow`, `alternative_flows`, `business_rules`
-- `evidence_ids` (required — must cite EV-NNNNNN from evidence-ledger.jsonl)
+- `evidence_ids` (required, must cite EV-NNNNNN from evidence-ledger.jsonl)
 - `source_confidence` (high | medium | low), `inference_level` (direct | derived | speculative)
 - `unknowns` (open questions)
 
-**functional-gaps.jsonl** — one record per gap:
+**functional-gaps.jsonl**: one record per gap:
 - `gap_id`, `category`, `description`, `blocking` (bool), `source_agent`
 
 ## Frontmatter contract (every output)

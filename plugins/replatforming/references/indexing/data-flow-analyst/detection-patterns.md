@@ -1,4 +1,4 @@
-# Data-flow analyst — detection patterns
+# Data-flow analyst: detection patterns
 
 > Reference doc for `data-flow-analyst`. Read at runtime once `stack.json`
 > has been consulted, to know which language/library patterns to grep for

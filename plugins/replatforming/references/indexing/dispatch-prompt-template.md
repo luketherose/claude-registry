@@ -1,4 +1,4 @@
-# Sub-agent dispatch — prompt template
+# Sub-agent dispatch: prompt template
 
 > Reference doc for `indexing-supervisor`. Read at runtime each time a
 > sub-agent is about to be dispatched. The supervisor copies the template
@@ -56,4 +56,4 @@ open questions. Do not write outside .indexing-kb/.
 ```
 
 Pass each agent only the context it needs. Do not paste large source files
-into the prompt — sub-agents read from disk via Read/Glob.
+into the prompt. Sub-agents read from disk via Read/Glob.

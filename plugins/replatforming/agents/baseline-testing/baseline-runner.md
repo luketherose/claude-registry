@@ -1,6 +1,6 @@
 ---
 name: baseline-runner
-description: "Use this agent to execute the AS-IS baseline regression suite produced in Wave 1 and capture the oracle artifacts: snapshots, benchmark JSON, coverage JSON. Applies the failure policy: critical/high failures escalate; medium/low get xfail with AS-IS bug record. Honors the execution policy from the supervisor (write-only mode skips pytest invocation and only validates structure). Sub-agent of baseline-testing-supervisor (Wave 2); not for standalone use — invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS — never modifies source code."
+description: "Use this agent to execute the AS-IS baseline regression suite produced in Wave 1 and capture the oracle artifacts: snapshots, benchmark JSON, coverage JSON. Applies the failure policy: critical/high failures escalate; medium/low get xfail with AS-IS bug record. Honors the execution policy from the supervisor (write-only mode skips pytest invocation and only validates structure). Sub-agent of baseline-testing-supervisor (Wave 2); not for standalone use. Invoked only as part of the Phase 3 Baseline Testing pipeline. Strictly AS-IS, never modifies source code."
 tools: Read, Glob, Grep, Bash, Write, Edit
 model: sonnet
 color: green
@@ -41,7 +41,7 @@ technologies.
 - **W2 execution wave.** When fixtures (W0) and tests (W1) are in place and the suite must be executed to capture the AS-IS oracle: snapshots, benchmark JSON, coverage report. Applies the failure policy (`xfail` / `skip` / `escalate`).
 - **Re-run after fixture refresh.** When `tests/baseline/conftest.py` was regenerated (DB seed change, time-freeze update) and the oracle must be re-captured without re-authoring the tests.
 
-Do NOT use this agent standalone — it is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 2). Do not use for: writing tests (use the W1 writers), running the TO-BE suite (use `tobe-test-runner`), or debugging individual failures (use `debugger`).
+Do NOT use this agent standalone. It is invoked only as part of the `baseline-testing-supervisor` pipeline (Wave 2). Do not use for: writing tests (use the W1 writers), running the TO-BE suite (use `tobe-test-runner`), or debugging individual failures (use `debugger`).
 
 ---
 
@@ -49,7 +49,7 @@ Do NOT use this agent standalone — it is invoked only as part of the `baseline
 
 This worker's templates and policy matrices live in
 `${CLAUDE_PLUGIN_ROOT}/references/baseline-testing/baseline-runner/` and are read on
-demand. Read each doc only when the matching step is about to start —
+demand. Read each doc only when the matching step is about to start,
 not preemptively.
 
 | Doc | Read when |
@@ -110,7 +110,7 @@ The full severity rule list, the policy matrix, and the `xfail` marker
 pattern (with `strict=True`) live in `failure-policy.md`. Read it before
 editing any test file.
 
-Hard rules — do not negotiate:
+Hard rules. Do not negotiate:
 - Severity must NEVER be downgraded to dodge escalation.
 - The runner is the ONLY worker that may modify test files (and only to
   add `xfail` / `skip` markers).
@@ -149,7 +149,7 @@ anyway, surface to the supervisor.
 ### 7. Return the reporting block to the supervisor
 
 Use the reporting template in `output-schemas.md`. Be explicit about
-every escalated critical/high bug — without that, the supervisor cannot
+every escalated critical/high bug, without that, the supervisor cannot
 declare Phase 3 complete.
 
 ---

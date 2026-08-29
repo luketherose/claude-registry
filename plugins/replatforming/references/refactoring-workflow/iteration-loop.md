@@ -1,4 +1,4 @@
-# Iteration loop — canonical HITL pattern for analysis phases
+# Iteration loop: canonical HITL pattern for analysis phases
 
 > Reference doc for `refactoring-supervisor` and for every analysis-phase
 > supervisor (Phase 1 `functional-analysis-supervisor`, Phase 2
@@ -6,8 +6,8 @@
 > Read at runtime when reaching the end of an analysis phase, or when the
 > user answers `iterate` to a post-phase prompt.
 >
-> The premise is the user-stated principle: **the analysis phases — and
-> Phase 1 in particular — are the most delicate part of the workflow.**
+> The premise is the user-stated principle: **the analysis phases, and
+> Phase 1 in particular: are the most delicate part of the workflow.**
 > A misunderstanding captured there propagates through every later phase
 > and is expensive to undo. Therefore each analysis phase ends with a
 > human-in-the-loop iteration loop, not a one-shot proceed/stop choice.
@@ -15,9 +15,9 @@
 ## Scope
 
 The iteration loop applies to Phases 1–3 (analysis phases). It does NOT
-apply to Phase 0 (indexing — the KB is a deterministic artifact; revise
+apply to Phase 0 (indexing, the KB is a deterministic artifact; revise
 by re-running with adjusted scope) and it does NOT apply to Phase 4
-(replatforming — Phase 4 has its own per-step HITL with the Step 3
+(replatforming, Phase 4 has its own per-step HITL with the Step 3
 sub-loop). Within Phase 4, decision-point debate is governed by
 `integration-replatforming.md`.
 
@@ -66,7 +66,7 @@ is offered exactly three options:
 The `approve` option must NEVER be auto-selected. The supervisor (workflow
 or phase) must explicitly wait for the user's choice.
 
-## Iteration delta — what the user provides
+## Iteration delta: what the user provides
 
 When the user picks `iterate`, the supervisor asks for the adjustments
 to apply. The user response is captured verbatim AND structured. The
@@ -74,7 +74,7 @@ supervisor should accept any of the following input shapes and normalize
 internally:
 
 - **Free prose**: "Actually the admin panel is a separate actor; please
-  re-extract the actor map. Also, UC-07 is wrong — it doesn't trigger
+  re-extract the actor map. Also, UC-07 is wrong: it doesn't trigger
   on save, it triggers on form submit."
 - **Bulleted list**: short items targeting specific outputs.
 - **File-and-line callouts**: "In `02-features.md`, F-04 is mis-titled
@@ -108,7 +108,7 @@ delta schema below (written to `_meta/iteration-log.jsonl`):
 
 When the user input is unstructured prose, the supervisor must produce
 at least one `adjustment` per distinct intent it can identify. If the
-input contains a debate trigger (lexicon match — see
+input contains a debate trigger (lexicon match, see
 the `deliberation` plugin's `references/deliberation/trigger-lexicon.md`), set
 `debate_requested: true` and route the contested adjustment through
 deliberation (see § "Optional deliberation" below).
@@ -118,7 +118,7 @@ identify any target artifact: **stop and ask one focused clarifying
 question** before launching the iteration. Never start an iteration
 with an empty or unparseable delta.
 
-## Re-dispatch policy — what runs in iteration N+1
+## Re-dispatch policy: what runs in iteration N+1
 
 Iteration N+1 is NOT a full re-run. The supervisor picks which
 sub-agents to re-dispatch based on the `target_artifacts` and
@@ -132,7 +132,7 @@ Cross-cutting rules:
 
 - Re-dispatch is always preceded by a confirmation summary to the user:
   "I am about to re-run <list of sub-agents> with these adjustments
-  applied. Proceed?" — except when the user has already pre-confirmed
+  applied. Proceed?": except when the user has already pre-confirmed
   in the iteration request.
 - Sub-agents are re-dispatched with the adjustments injected into their
   prompt as a "User feedback from prior iteration" block. The prompt
@@ -146,7 +146,7 @@ Cross-cutting rules:
 - Manifest update is mandatory: append a new entry to `runs[]` with
   `iteration: N+1`, the dispatched sub-agents, and the per-wave outcomes.
 
-## Optional deliberation — when adjustments are contested
+## Optional deliberation: when adjustments are contested
 
 If the user's iteration request contains a debate trigger (lexicon
 match at confidence ≥ 0.7), OR if the supervisor detects that an
@@ -209,7 +209,7 @@ same outputs (idempotent re-dispatch). To achieve this the supervisor:
 - Passes the delta as a stable JSON block in the sub-agent prompt.
 - Does not inject conversation context that varies between turns.
 - Snapshots the prior iteration's outputs before overwriting (the
-  phase plan documents the per-phase snapshot policy — usually a
+  phase plan documents the per-phase snapshot policy, usually a
   rename to `<file>.iter-N.bak` or a copy under `_meta/snapshots/`).
 
 The snapshot serves both as a rollback target if the user picks

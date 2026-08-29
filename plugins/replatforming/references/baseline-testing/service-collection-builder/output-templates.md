@@ -1,4 +1,4 @@
-# Output templates — README and bug-found policy
+# Output templates: README and bug-found policy
 
 > Reference doc for `service-collection-builder`. Read at runtime when
 > writing `tests/baseline/postman/README.md` and when handling AS-IS

@@ -1,4 +1,4 @@
-# Baseline Testing Supervisor — Protocol Reference
+# Baseline Testing Supervisor: Protocol Reference
 
 Operational content extracted from the supervisor body.
 Read this doc at bootstrap start, before any escalation or decision, and when consulting constraints.
@@ -55,9 +55,9 @@ waves:
 ## Inputs
 
 - **Required source of truth (KB)**: `<repo>/.indexing-kb/` (Phase 0)
-- **Required Phase 1**: `<repo>/docs/analysis/01-functional/` — use cases
+- **Required Phase 1**: `<repo>/docs/analysis/01-functional/`: use cases
   drive the test fan-out (one worker per UC)
-- **Required Phase 2**: `<repo>/docs/analysis/02-technical/` —
+- **Required Phase 2**: `<repo>/docs/analysis/02-technical/`:
   integrations, performance hotspots, service inventory
 - Optional: prior partial outputs in `tests/baseline/` and
   `docs/analysis/03-baseline/` (resume support)
@@ -75,7 +75,7 @@ Never invent a knowledge base. Workers read from disk via Read/Glob.
 
 ---
 
-## Escalation triggers — always ask the user
+## Escalation triggers: always ask the user
 
 - Phase 1 or Phase 2 outputs missing or `failed`
 - Existing `tests/baseline/` or oracle artifacts (`snapshot/`, benchmark
@@ -103,7 +103,7 @@ Never invent a knowledge base. Workers read from disk via Read/Glob.
 | Phase 0 confirmation not given | Do not dispatch any worker |
 | Phase 1 / Phase 2 missing | Stop; ask user |
 | Streamlit detected | Inject AppTest hints in usecase-test-writer prompt |
-| Baseline already complete (manifest=complete on disk) | Detect as `complete-eligible`; ask user explicitly: skip / re-run / revise. Default recommendation: `skip` (oracle is precious — re-running resets the equivalence reference for Phase 5). |
+| Baseline already complete (manifest=complete on disk) | Detect as `complete-eligible`; ask user explicitly: skip / re-run / revise. Default recommendation: `skip` (oracle is precious, re-running resets the equivalence reference for Phase 5). |
 | Baseline outputs exist but manifest=partial/failed/missing | Detect as `resume-incomplete`; recommend `re-run`; user may override with `revise` |
 | Existing oracle artifacts | Ask: overwrite / keep / rename (timestamp suffix) |
 | `--execute auto` and env not ready | Switch to write-only with warning; ask user |
@@ -130,16 +130,16 @@ After every wave, update `docs/analysis/03-baseline/_meta/manifest.json`.
 For the full schema, field rules, timing computation, and update cadence,
 see [`manifest-schema.md`](manifest-schema.md).
 
-Hard rules — applied on every update:
+Hard rules: applied on every update:
 
 - Always populate `started_at` / `completed_at` / `duration_seconds` from
   ISO-8601 timestamps; never approximate.
 - After W2, populate `test_results.{passed, xfail, skipped, failed_unresolved}`
   and `as_is_bugs_{critical,high,medium,low}` from `as-is-bugs-found.md`.
-- `failed_unresolved` must be `0` at completion — non-zero means the
+- `failed_unresolved` must be `0` at completion: non-zero means the
   supervisor stopped on a critical/high failure pending user triage.
 - If a wave is partial or failed, still write the block with `status`
-  reflecting the outcome — never omit.
+  reflecting the outcome, never omit.
 
 ---
 
@@ -159,23 +159,23 @@ Hard rules — applied on every update:
 - **Never invoke yourself recursively**.
 - **Never let a worker write outside `tests/baseline/` or
   `docs/analysis/03-baseline/`**. Verify after each dispatch.
-- **Always read worker outputs from disk** — Agent tool result text is
+- **Always read worker outputs from disk**: Agent tool result text is
   a summary, not the source of truth.
 - **Always update `_meta/manifest.json`** after each wave with timing
   fields populated.
 - **Never silently overwrite oracle artifacts** (snapshots, benchmark
-  JSON) — explicit user confirmation required.
-- **Never skip the failure policy** — every red test gets a disposition
+  JSON). Explicit user confirmation required.
+- **Never skip the failure policy**. Every red test gets a disposition
   per Q2.
-- **Never auto-retry critical/high failures** — escalate to user.
+- **Never auto-retry critical/high failures**. Escalate to user.
 - **Redact secrets** in any output you produce or any error you echo.
 - **All file content output via `Write`** (or `Edit` for in-place
   changes), never via `Bash` heredoc / echo redirect / `tee` /
   `printf > file`. Markdown and Python text containing `[`, `{`, `}`,
   `>`, `<`, `*` are unsafe through the shell. Ref: Phase 2 incident
   2026-04-28. This rule MUST be propagated to every sub-agent dispatch
-  prompt (the template already includes it — verify on every dispatch).
+  prompt (the template already includes it, verify on every dispatch).
 - **Wave 3b (verification report) is always ON**: The supervisor writes `_meta/phase-verification-report.md` directly per the canonical structure in `../refactoring-workflow/phase-verification-report.md`. This is the document the human reads before the iteration-loop prompt. Skipping it is a hard error.
 - **Iteration loop is owned by `refactoring-supervisor`.** This supervisor does NOT prompt the user with `approve / iterate / stop`. After Wave 3b it returns control to the workflow supervisor, which presents the prompt and re-dispatches this supervisor with `Resume mode: iterate` when needed.
 - **Snapshot before overwrite on iterate.** When re-dispatched in `Resume mode: iterate`, snapshot every file that will be regenerated to `_meta/snapshots/iter-<K>/` BEFORE the workers run. Particular care for the oracle (`oracle/snapshot/`): never overwrite without snapshotting first.
-- **Oracle is the precious artifact.** When the user iterates on Phase 3, the supervisor must explicitly warn if a re-dispatch will regenerate the oracle snapshot — the oracle is the Phase 4 equivalence reference and silently regenerating it changes the meaning of equivalence. Require explicit user confirmation in the iteration delta if the adjustment touches oracle scope.
+- **Oracle is the precious artifact.** When the user iterates on Phase 3, the supervisor must explicitly warn if a re-dispatch will regenerate the oracle snapshot: the oracle is the Phase 4 equivalence reference and silently regenerating it changes the meaning of equivalence. Require explicit user confirmation in the iteration delta if the adjustment touches oracle scope.

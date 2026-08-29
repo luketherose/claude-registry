@@ -1,8 +1,8 @@
-# Phase 4 — Phase plan (Phase 0 bootstrap + Wave 1–6 + Export wave)
+# Phase 4: Phase plan (Phase 0 bootstrap + Wave 1–6 + Export wave)
 
 > Reference doc for `refactoring-tobe-supervisor`. Read at runtime to drive the bootstrap dialog, dispatch each wave, and produce the closing report. The supervisor body keeps only the wave dependency chain and HITL checkpoints; the per-wave details and dispatch instructions live here.
 
-## Phase 0 — Bootstrap (supervisor only)
+## Phase 0: Bootstrap (supervisor only)
 
 1. **Detect resume mode**. Inspect what is on disk and pick one of:
 
@@ -10,7 +10,7 @@
    |---|---|
    | No `.refactoring-kb/` AND no `docs/refactoring/` AND backend/frontend dirs absent | `fresh` |
    | Any of the above exist but `docs/refactoring/_meta/manifest.json` reports `partial` / `failed` / `in-progress` / missing | `resume-incomplete` |
-   | All TO-BE roots exist AND manifest reports `complete` | `complete-eligible` — ask the user before doing anything |
+   | All TO-BE roots exist AND manifest reports `complete` | `complete-eligible`: ask the user before doing anything |
 
    When `complete-eligible` triggers, ask the user verbatim:
 
@@ -66,40 +66,40 @@
     - **AS-IS bug carry-over list** (any unresolved Phase 3 critical bugs that the user agreed to defer to Phase 5)
 11. **Present the plan** to the user with the dispatch overview. Wait for confirmation.
 
-Skip Phase 0 confirmation only on explicit user authorization for the full pipeline — and even then, post the plan and wait at least one turn.
+Skip Phase 0 confirmation only on explicit user authorization for the full pipeline, and even then, post the plan and wait at least one turn.
 
-## Wave 1 — Decomposition (sequential, single agent, BLOCKS all)
+## Wave 1: Decomposition (sequential, single agent, BLOCKS all)
 
 Dispatch `decomposition-architect`. It produces:
 - `bounded-contexts.md` (DDD-style with context map)
-- `module-decomposition.md` — explicit AS-IS module → TO-BE BC mapping table (every Phase 0 module appears, every BC has at least one source module)
-- `aggregate-design.md` — aggregates per BC, invariants
-- `ADR-001-architecture-style.md` (modular monolith vs microservices — Nygard format)
+- `module-decomposition.md`: explicit AS-IS module → TO-BE BC mapping table (every Phase 0 module appears, every BC has at least one source module)
+- `aggregate-design.md`: aggregates per BC, invariants
+- `ADR-001-architecture-style.md` (modular monolith vs microservices, Nygard format)
 - `ADR-002-target-stack.md` (Spring Boot version, Java version, Angular version, target DB, build tool)
 
 **HITL CHECKPOINT 1**: present ADR-001 and ADR-002 to user with summary. User must confirm before W2.
 
 If user revises ADRs: re-run decomposition-architect with revision notes; do not silently apply user edits.
 
-## Wave 2 — API Contract (sequential, single agent, BLOCKS W3)
+## Wave 2: API Contract (sequential, single agent, BLOCKS W3)
 
 Dispatch `api-contract-designer`. It produces:
 - `openapi.yaml` (OpenAPI 3.1, validated with spectral if available)
 - `design-rationale.md`
-- `postman-tobe.json` (TO-BE Postman collection — mirror of Phase 3 AS-IS Postman collection if one exists)
-- `ADR-003-auth-flow.md` (OAuth2 / JWT / mTLS — depending on Phase 2 findings on AS-IS auth)
+- `postman-tobe.json` (TO-BE Postman collection, mirror of Phase 3 AS-IS Postman collection if one exists)
+- `ADR-003-auth-flow.md` (OAuth2 / JWT / mTLS, depending on Phase 2 findings on AS-IS auth)
 
 **HITL CHECKPOINT 2**: present OpenAPI summary (endpoint count, auth scheme, error format) to user. Both BE and FE must agree on the contract before W3 dispatches them in parallel.
 
-## Wave 3 — Implementation (parallel: BE track || FE track)
+## Wave 3: Implementation (parallel: BE track || FE track)
 
 Two parallel tracks dispatched in a single tool call:
 
 ### Backend track (sequential within)
 
-1. `backend-scaffolder` — Maven project, package structure (one package per BC from W1), controller skeletons (signatures from OpenAPI), service skeletons, error handler RFC 7807, security config baseline, Spring config files
-2. `data-mapper` — JPA entities for each aggregate from W1, Liquibase YAML changelogs from inferred schema, repository interfaces (Spring Data JPA), test fixtures via @TestEntityManager
-3. `logic-translator` (fan-out per UC) — for each UC-NN: translate the AS-IS Python module(s) into Java service methods. Per Q2 mode:
+1. `backend-scaffolder`: Maven project, package structure (one package per BC from W1), controller skeletons (signatures from OpenAPI), service skeletons, error handler RFC 7807, security config baseline, Spring config files
+2. `data-mapper`: JPA entities for each aggregate from W1, Liquibase YAML changelogs from inferred schema, repository interfaces (Spring Data JPA), test fixtures via @TestEntityManager
+3. `logic-translator` (fan-out per UC): for each UC-NN: translate the AS-IS Python module(s) into Java service methods. Per Q2 mode:
    - `full`: complete translation
    - `scaffold-todo` (default): method signature + happy-path skeleton + TODO markers with cross-references
    - `structural`: empty methods with TODOs only
@@ -110,11 +110,11 @@ Within the BE track, items 1→2→3 are sequential (data layer must exist befor
 
 ### Frontend track
 
-`frontend-scaffolder` — Angular workspace (single invocation):
+`frontend-scaffolder`: Angular workspace (single invocation):
 - `angular.json`, `package.json`, `tsconfig.json`
-- `src/app/core/` — HTTP interceptors (auth, error, correlation-id), guards, error handler, base API service
-- `src/app/shared/` — common components (loader, error display, table, form helpers), pipes, models from OpenAPI schema (use openapi-generator ng outputs)
-- `src/app/features/` — one lazy-loaded module per BC: routing, list + detail components, feature service consuming the OpenAPI client
+- `src/app/core/`: HTTP interceptors (auth, error, correlation-id), guards, error handler, base API service
+- `src/app/shared/`: common components (loader, error display, table, form helpers), pipes, models from OpenAPI schema (use openapi-generator ng outputs)
+- `src/app/features/`: one lazy-loaded module per BC: routing, list + detail components, feature service consuming the OpenAPI client
 - Per Q2 mode: full content vs scaffold-todo (TODO comments referencing UC-NN and AS-IS source) vs structural
 
 The frontend doesn't have a per-UC fan-out because Angular components are typically organized per-screen / per-feature, not per-UC. The single-invocation frontend-scaffolder reads all UCs and produces all modules in one pass.
@@ -126,7 +126,7 @@ After both tracks complete:
 
 **HITL CHECKPOINT 3**: present verification result + code review summary to user. User decides to proceed to W4 or revise.
 
-## Wave 4 — Hardening (sequential, single agent)
+## Wave 4: Hardening (sequential, single agent)
 
 Dispatch `hardening-architect`. It produces:
 - updates to `backend/src/main/resources/application.yml` (logging format JSON, correlation-id MDC, Micrometer + Prometheus actuator endpoints, OpenTelemetry config)
@@ -136,7 +136,7 @@ Dispatch `hardening-architect`. It produces:
 - `docs/adr/ADR-004-observability.md`
 - `docs/adr/ADR-005-security-baseline.md`
 
-## Wave 5 — Roadmap (sequential, single agent)
+## Wave 5: Roadmap (sequential, single agent)
 
 Dispatch `migration-roadmap-builder`. It produces:
 - `docs/refactoring/roadmap.md` with:
@@ -146,17 +146,17 @@ Dispatch `migration-roadmap-builder`. It produces:
   - go-live criteria: equivalence percent, performance delta, security sign-off, stakeholder approval
   - acceptance criteria for each BC
 
-## Wave 6 — Challenger (always ON, sequential)
+## Wave 6: Challenger (always ON, sequential)
 
 Dispatch `phase4-challenger`. It performs adversarial review and produces the AS-IS↔TO-BE traceability matrix:
 - 7+ checks (see challenger spec): coverage, OpenAPI↔code drift, ADR completeness, AS-IS bug carry-over, performance hypothesis, security regression, equivalence claims, AS-IS-only leak in TO-BE
-- `as-is-to-be-matrix.json`: every UC-NN → endpoint(s) → service(s) → Angular component(s) — gaps surfaced
+- `as-is-to-be-matrix.json`: every UC-NN → endpoint(s) → service(s) → Angular component(s): gaps surfaced
 
 **Output**: `docs/refactoring/_meta/challenger-report.md` and `.refactoring-kb/02-traceability/as-is-to-be-matrix.json`.
 
 If challenger reports `≥ 1 blocking` issue: do not declare Phase 4 complete; escalate.
 
-## Export Wave — Opt-in (parallel, two agents)
+## Export Wave: Opt-in (parallel, two agents)
 
 Only if `--with-exports` was set in bootstrap:
 - `document-creator` → `docs/refactoring/_exports/roadmap.pdf` (Accenture-branded)

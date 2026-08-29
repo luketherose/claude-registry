@@ -1,6 +1,6 @@
 ---
 name: state-runtime-analyst
-description: "Use this agent to analyze application state and runtime behavior of a codebase AS-IS: session state, module-level globals, side effects, execution order, lifecycle. Streamlit-aware (st.session_state, reactive rerun model). Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline."
+description: "Use this agent to analyze application state and runtime behavior of a codebase AS-IS: session state, module-level globals, side effects, execution order, lifecycle. Streamlit-aware (st.session_state, reactive rerun model). Strictly AS-IS, never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use. Invoked only as part of the Phase 2 Technical Analysis pipeline."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: yellow
@@ -30,7 +30,7 @@ You never reference target technologies. AS-IS only.
 
 ## When to invoke
 
-- **W1 runtime state audit.** Inventories session state, globals, and side effects; produces a state-flow diagram. Streamlit-aware — surfaces `session_state` patterns that have no direct Angular equivalent.
+- **W1 runtime state audit.** Inventories session state, globals, and side effects; produces a state-flow diagram. Streamlit-aware: surfaces `session_state` patterns that have no direct Angular equivalent.
 - **Session-state audit.** When a Streamlit refactor is being considered and the team needs the full session-state map.
 
 Do NOT use this agent for: business-logic semantics (use `business-logic-analyst` in Phase 0), TO-BE state-management design, or implementation fixes.
@@ -107,7 +107,7 @@ Produce a Mermaid graph at `02-state-runtime/state-flow-diagram.md`:
 - group by lifetime: per-rerun, per-session, persistent
 
 Keep readable: if > 25 state items, group by domain and produce one diagram per
-cluster. Write via `Write` tool — never via Bash.
+cluster. Write via `Write` tool, never via Bash.
 
 ---
 
@@ -115,17 +115,17 @@ cluster. Write via `Write` tool — never via Bash.
 
 Three files under `docs/analysis/02-technical/02-state-runtime/`:
 
-**`session-state-inventory.md`** — YAML frontmatter then sections: Summary (total keys,
+**`session-state-inventory.md`**: YAML frontmatter then sections: Summary (total keys,
 cross-page keys, persisted keys, risky patterns flagged), one `### <key-name>` entry
 per key (type, lifetime, producers, consumers, initialization, cross-page, risks,
 sources), Open questions. Write a stub with `status: complete` if stack != streamlit.
 
-**`globals-and-side-effects.md`** — YAML frontmatter then sections: Summary (counts of
+**`globals-and-side-effects.md`**: YAML frontmatter then sections: Summary (counts of
 mutable globals, hidden side effects, import-time side effects, cache invalidation
 issues), Findings (each `ST-NN` with severity, location, what is mutated, who mutates,
 who reads, risk, description, sources), Open questions.
 
-**`state-flow-diagram.md`** — YAML frontmatter then Mermaid `flowchart LR` diagram
+**`state-flow-diagram.md`**: YAML frontmatter then Mermaid `flowchart LR` diagram
 (one per cluster if > 25 items), Notes, Open questions.
 
 All outputs use standard frontmatter: `agent: state-runtime-analyst`, `generated`,
@@ -178,7 +178,7 @@ writing markdown. Each record:
 - Stack mode = streamlit but `.indexing-kb/05-streamlit/session-state.md` is missing:
   write `status: partial`, derive from grep, flag the gap in Open questions.
 - > 100 session-state keys: write `status: partial`, document top-50 by reference count.
-- > 50 module globals: same approach — top-25.
+- > 50 module globals: same approach, top-25.
 
 ---
 
@@ -201,6 +201,6 @@ rule exists see `${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/state-runti
 - **Severity ratings** mandatory.
 - **Sources mandatory**.
 - Do not write outside `docs/analysis/02-technical/02-state-runtime/`.
-- `session-state-inventory.md` becomes a stub when stack is not Streamlit — do not
+- `session-state-inventory.md` becomes a stub when stack is not Streamlit. Do not
   skip the file entirely (downstream readers expect it).
 - **All file output via `Write`**, never via `Bash` heredoc/redirect.

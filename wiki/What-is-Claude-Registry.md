@@ -1,134 +1,131 @@
 <!--
 audience: mixed
 diataxis: explanation
-last-verified: 2026-04-28
-verified-against: 1e9445a
+last-verified: 2026-08-30
+verified-against: 8670a63
 -->
 
 # What is Claude Registry
 
-This page explains what the Claude Registry is, what problem it solves, and
-how its pieces fit together. For installation steps see
-[Quick start](Quick-start); for the full file layout see
-[Architecture](Architecture).
+This page explains what the registry is, what problem it solves, and how its pieces fit
+together. For install steps see [Quick start](Quick-start). For the file layout and the
+runtime flows see [Architecture](Architecture).
 
 ## TL;DR
 
-The registry is a **versioned catalog of Claude Code subagents** — small
-Markdown files with a YAML front-matter that tell Claude how to behave for a
-specific role (architect, reviewer, developer, refactoring supervisor, …).
-Teams maintain it like a shared library: each capability is reviewed via PR,
-versioned, and distributed through a manifest (`catalog.json`).
+Claude Registry is a **Claude Code plugin marketplace** kept in one Git repository. The
+root manifest `.claude-plugin/marketplace.json` declares six plugins. Each plugin is a
+self-contained directory under `plugins/` holding subagents, Agent Skills, bundled
+reference material, evaluations and worked examples.
 
-A user installs the capabilities they want into their own project (or
-globally for every Claude Code session) and from then on Claude knows when
-to delegate to which specialist without further prompting.
+A consumer adds the marketplace once and enables the plugins the project needs. From then
+on Claude delegates to the right specialist without further prompting, and plugin updates
+arrive in the background when the resolved version changes.
 
 ## The problem it solves
 
-Without a shared catalog every project re-invents its prompts: the Java team
-on project A writes one Spring Boot prompt, project B writes another,
-they drift apart, and the prompt with the best ideas is never reused.
-Worse, prompts are usually buried inside individual chat threads, so
-nobody can review them, version them, or audit what changed.
+Without a shared marketplace every project re-invents its prompts. The Java team on
+project A writes one Spring Boot prompt, project B writes another, the two drift, and the
+better one is never reused. Worse, prompts usually live inside individual chat threads,
+so nobody reviews them, versions them, or audits what changed.
 
 The registry treats prompts as code:
 
-- A capability lives in a `.md` file checked into git.
-- A PR introduces or modifies it.
-- CI validates the file's structure (frontmatter, system prompt, tools).
+- A capability is a Markdown file committed to Git.
+- A pull request introduces or modifies it.
+- CI validates manifests, frontmatter, body length, reference links and the delegation
+  budget (see [Governance](Governance)).
 - A reviewer approves.
-- A `name@MAJOR.MINOR.PATCH` tag pins a release.
-- A separate "marketplace" tier (`stable` / `beta`) controls what gets
-  distributed.
-- A setup script installs and resolves dependencies (skills) for a project
-  or globally.
+- Merging to `main` publishes. Semver on the plugin records the change.
 
-## Two kinds of capability
+## The two capability types this registry ships
 
-| Type | Purpose | Model | Tools | Where it runs |
-|---|---|---|---|---|
-| **Agent** | Performs a role: analyses, writes code, designs, reviews. Has behaviour and tool access. | `sonnet` (default), `opus` for orchestrators | Role-appropriate set | `.claude/agents/` in the consuming project |
-| **Skill** | Provides knowledge: standards, conventions, brand rules. Read-only knowledge retrieval. | `haiku` | `Read` only | Same `.claude/agents/` directory; invoked by agents |
+| Type | What it is | Who invokes it | Lives in |
+|---|---|---|---|
+| **Agent** (subagent) | An autonomous worker with its own context window, tool set and system prompt | Claude delegates to it, or the user mentions it by name | `plugins/<plugin>/agents/**/*.md` |
+| **Skill** | Knowledge and procedure loaded into the current context on demand | Claude loads it with the `Skill` tool, or an agent preloads it via the `skills:` frontmatter field | `plugins/<plugin>/skills/<name>/SKILL.md` |
 
-Skills are not visible to end users directly — they are loaded by agents
-that depend on them. When you install an agent, the setup script
-auto-installs every skill it depends on.
+The plugin format also supports slash commands at `plugins/<plugin>/commands/*.md`. This
+registry ships none today.
 
-## Two repository areas
+**The decision rule** for authors: work that needs its own context window and its own
+tools is an agent. Knowledge or a procedure the current agent should apply itself is a
+skill. See
+[`docs/registry/how-to-write-a-capability.md`](https://github.com/luketherose/claude-registry/blob/main/docs/registry/how-to-write-a-capability.md).
 
-The repository has **two areas with distinct responsibilities**:
+## Skills follow the Anthropic Agent Skills standard
 
-| Area | Purpose | Who edits |
+A skill is a directory containing `SKILL.md`. Its frontmatter has exactly two fields,
+`name` and `description`. `model`, `tools` and `color` are rejected by CI, because they
+are not SKILL.md fields.
+
+Content loads progressively:
+
+| Level | Content | Loaded |
 |---|---|---|
-| `claude-catalog/` | Development source — capabilities are written, reviewed, and versioned here | Authors, in PRs |
-| `claude-marketplace/` | Distribution — contains only approved capabilities, copied from the catalog | The publish script, never by hand |
+| 1 | `name` and `description` | Always, at startup, for every installed skill |
+| 2 | The `SKILL.md` body (capped at 500 lines) | When Claude decides the skill is relevant |
+| 3 | `references/*.md` | Only when the body links to that specific file |
 
-The fundamental rule: **a capability is not "available" until it has been
-published from `claude-catalog/` to `claude-marketplace/`.** Modifying only
-the catalog does not affect consumers.
+That is why a `SKILL.md` body stays short. Detail moves into `references/`, one level
+deep from the body, rather than being compressed into denser prose.
+
+## The distribution unit is the plugin
+
+There is one tier. There is no separate development area and distribution area, and no
+per-capability beta or stable flag. A capability is available as soon as its plugin is
+installed and enabled.
 
 ```
-claude-catalog/agents/<topic>/foo.md       publish        claude-marketplace/beta/<topic>/foo.md
-                                        ─────────►       claude-marketplace/catalog.json (manifest)
+.claude-plugin/marketplace.json      declares the six plugins
+plugins/dev-standards/
+  .claude-plugin/plugin.json         name, description, version, author, MCP wiring
+  agents/                            12 subagents
+  skills/<name>/SKILL.md             29 Agent Skills
+  references/                        shared reference material for this plugin's agents
+  evals/ examples/                   evaluations and worked examples
+  .mcp.json                          optional MCP servers, wired from plugin.json
 ```
 
-## Two CI gates
+**Rule: a capability and the skills it always needs belong to the same plugin.** A skill
+in another plugin is only available when the consumer has that plugin enabled too. Where
+a cross-plugin reference is unavoidable, the agent body says so and describes what to do
+without it.
 
-Every PR goes through two gates in sequence — the second only starts if
-the first is green:
+## Two install paths
 
-1. **`validate-catalog`** — checks files in `claude-catalog/`:
-   - valid YAML frontmatter (`name`, `description`, `tools`, `model`)
-   - system prompt present with `## Role`
-   - skills do not include forbidden tools (`Edit`, `Write`, `Bash`, `Agent`)
-   - `CHANGELOG.md` has an `[Unreleased]` entry
-   - every catalog agent / skill has a corresponding entry in
-     `claude-marketplace/catalog.json` (this is what blocks PRs that add a
-     capability without publishing it)
+| Path | Command | Use when |
+|---|---|---|
+| Plugin marketplace | `/plugin marketplace add luketherose/claude-registry` | Your Claude Code configuration allows adding this marketplace |
+| Local copy | `./scripts/install-local.sh` | Enterprise policy (`strictKnownMarketplaces`) blocks the marketplace source |
 
-2. **`validate-marketplace`** — checks distribution:
-   - `catalog.json` is valid (semver, tier, status, required fields)
-   - every referenced file exists on disk
-   - file frontmatter `name` matches the catalog entry name
-   - path conventions enforced (`{tier}/{name}.md` or `skills/{name}.md`)
-   - no orphan files in `stable/`, `beta/`, `skills/`
-
-If a PR adds capabilities to the catalog without publishing them to the
-marketplace, the first gate blocks it before the second even starts. See
-[Governance](Governance) for the full lifecycle.
+Both paths deliver the same material. The differences are in how updates arrive and how
+bundled reference paths are resolved. [Installation](Installation) covers both in full.
 
 ## What it is not
 
-- **Not an LLM evaluation framework.** The `evals/` directory contains
-  scenario fixtures for human review of capability behaviour, not an
-  automated benchmark suite.
-- **Not a prompt-engineering playground.** Every prompt that lands here is
-  expected to be production-grade and reviewed.
-- **Not a replacement for project-specific subagents.** Project-specific
-  knowledge (data models, internal libraries, naming conventions) belongs in
-  the project's own `.claude/agents/`, optionally as a thin overlay on a
-  catalog capability.
-- **Not a vendor lock-in.** The `.md` + frontmatter format is the official
-  Claude Code standard; the registry just adds governance around it.
+- **Not an automated evaluation harness.** `plugins/<plugin>/evals/<name>/` holds
+  `evals.json` scenarios and `triggers.json` routing cases. They are run by hand.
+- **Not a prompt playground.** Everything merged here is expected to be production grade
+  and reviewed.
+- **Not a replacement for project-specific subagents.** Project knowledge such as data
+  models, internal libraries and local naming conventions belongs in the project's own
+  `.claude/agents/`.
+- **Not a proprietary format.** Plugins, subagents and Agent Skills are the official
+  Claude Code formats. The registry adds governance on top.
 
 ## Who it is for
 
-- **Engineering teams** that have multiple projects using Claude Code and
-  want consistent expert behaviour across them.
-- **Tech leads** who want to encode their architectural standards (Spring
-  Boot conventions, Angular smart/dumb pattern, REST API design) once and
-  see them applied everywhere.
-- **Architects** running large modernization or migration programmes who
-  need a coherent multi-phase pipeline (indexing, functional analysis,
-  technical analysis, baseline testing, refactoring, equivalence
-  verification — see [Architecture](Architecture)).
+- **Engineering teams** running Claude Code on more than one project who want the same
+  expert behaviour everywhere.
+- **Tech leads** who want their architectural standards encoded once and applied
+  consistently.
+- **Architects** running modernisation programmes who need the five-phase replatforming
+  pipeline described in [Architecture](Architecture).
 
 ## Related
 
-- [Quick start](Quick-start) — install the capabilities and try one
-- [Capability catalog](Capability-catalog) — the full list of agents and
-  skills currently shipped
-- [Architecture](Architecture) — how the catalog/marketplace separation
-  and the multi-phase refactoring pipelines fit together
-- [Governance](Governance) — versioning, lifecycle, decision rules
+- [Quick start](Quick-start): install a plugin and confirm it loaded
+- [Capability catalog](Capability-catalog): every agent and skill that ships today
+- [Architecture](Architecture): repository layout, CI flow, the replatforming pipeline
+- [Governance](Governance): review, versioning and release rules

@@ -24,7 +24,7 @@ scaffolded in Wave 3:
 
 You are the FOURTH worker in Phase 4. You run AFTER Wave 3 completes
 (both BE and FE tracks done + verification per Q3 passed). Your output
-must not break the build — verify compile/build still works after your
+must not break the build. Verify compile/build still works after your
 changes.
 
 You are a sub-agent invoked by `refactoring-tobe-supervisor`. Output
@@ -49,7 +49,7 @@ Do NOT use this agent for: feature-level code (W3 work), migration timing (use `
 The verbatim configuration blocks, ADR skeletons, and reporting templates
 live in `${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/hardening-architect/` and
 are read on demand. Read each doc only when the matching Method step is
-about to run — not preemptively.
+about to run, not preemptively.
 
 | Doc | Read when |
 |---|---|
@@ -78,7 +78,7 @@ about to run — not preemptively.
 Run the steps in order. Each step decides what to do; the matching ref
 doc carries the verbatim YAML/XML/Java/HTML output blocks.
 
-### 1. Backend logging — structured JSON with correlation-id
+### 1. Backend logging: structured JSON with correlation-id
 
 Decide the root + per-package log levels by reading the Phase 2
 resilience audit. Configure `application.yml` to point at
@@ -87,12 +87,12 @@ resilience audit. Configure `application.yml` to point at
 from `X-Request-Id` (or generates a UUID).
 
 Goal: every log line is JSON with `correlationId`, `app`, level,
-timestamp, message, MDC fields — parseable by ELK/Loki/Datadog.
+timestamp, message, MDC fields: parseable by ELK/Loki/Datadog.
 
 → See `backend-config-templates.md` §1 for the YAML, logback-spring.xml,
 and pom.xml additions.
 
-### 2. Backend metrics — Micrometer + Prometheus
+### 2. Backend metrics: Micrometer + Prometheus
 
 `backend-scaffolder` already added Actuator + Prometheus registry; here
 you (a) enable liveness/readiness probes and percentile histograms on
@@ -104,18 +104,18 @@ identified.
 → See `backend-config-templates.md` §2 for the YAML + DomainMetrics
 example.
 
-### 3. Backend tracing — OpenTelemetry
+### 3. Backend tracing: OpenTelemetry
 
 Add the OpenTelemetry Spring Boot starter and configure auto-
 instrumentation for spring-webmvc, spring-data, jdbc. Exporter target is
 env-driven (`OTEL_EXPORTER_OTLP_ENDPOINT`). Document `@WithSpan` as the
-hook for domain spans; do not invent business spans here — that is a
+hook for domain spans; do not invent business spans here. That is a
 follow-up for `logic-translator`.
 
 → See `backend-config-templates.md` §3 for the pom.xml dependency and
 YAML.
 
-### 4. Backend security — production baseline
+### 4. Backend security: production baseline
 
 Refine the `SecurityConfig` produced by `backend-scaffolder`:
 
@@ -131,7 +131,7 @@ Refine the `SecurityConfig` produced by `backend-scaffolder`:
 
 If the Spring Security version pinned in ADR-002 disagrees with the
 APIs above (e.g., a 5.x project still uses the deprecated lambda DSL
-form), surface the mismatch as an Open question — do not silently
+form), surface the mismatch as an Open question. Do not silently
 change ADR-002.
 
 → See `backend-config-templates.md` §4 for the full `SecurityConfig`.
@@ -141,13 +141,13 @@ change ADR-002.
 Audit `application.yml` for any literal credentials, replace with
 `${ENV_VAR}` placeholders. Provide `.env.example` (committed) and
 `.gitignore` entries for `.env`. Vault / AWS Secrets Manager / Azure
-Key Vault selection is a deployment-time decision — record as ADR-005
+Key Vault selection is a deployment-time decision: record as ADR-005
 follow-up, do not pick one here.
 
 → See `backend-config-templates.md` §5 for `.env.example` and
 `.gitignore` skeletons.
 
-### 6. Frontend hardening — CSP
+### 6. Frontend hardening: CSP
 
 Add a `Content-Security-Policy` meta tag to `src/index.html` whose
 `connect-src` allowlists exactly the API origins the Phase 4 contract
@@ -166,7 +166,7 @@ calls) and document the behaviour in the file's header comment.
 
 → See `frontend-config-templates.md` §7.
 
-### 8. ADR-004 — Observability
+### 8. ADR-004: Observability
 
 Write `docs/adr/ADR-004-observability.md` recording the logging, metrics,
 tracing, and correlation decisions made in steps 1–3, with explicit
@@ -175,7 +175,7 @@ and a `proposed | accepted` status.
 
 → See `adr-and-output-templates.md` §8 for the ADR skeleton.
 
-### 9. ADR-005 — Security baseline
+### 9. ADR-005: Security baseline
 
 Write `docs/adr/ADR-005-security-baseline.md` recording the OWASP header
 set, CSRF stance, `/actuator` gating, CORS allowlist, frontend CSP, token

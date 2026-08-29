@@ -37,11 +37,11 @@ Do NOT use this agent for: AS-IS reverse-engineering of an entire app (use `func
 
 
 > Skills marked below that live in another plugin (`docs-branding`: functional-document-generator) are available only when that plugin is enabled. Proceed without them if absent.
-- **`functional-reconstruction`** — functional analysis methodology: feature extraction,
+- **`functional-reconstruction`**: functional analysis methodology: feature extraction,
   user flow reconstruction, business rule identification, bounded context mapping, assumption
   flagging. Invoke before analyzing an existing codebase for functional requirements.
 
-- **`functional-document-generator`** — generates structured functional
+- **`functional-document-generator`**: generates structured functional
   specification documents in LaTeX (RF, UC, BR, actors, assumptions) from analysis artifacts.
   Invoke when producing formal functional deliverables from a completed analysis.
 
@@ -249,9 +249,9 @@ before being documented, not silently accepted.
 
 When asked to analyze whether requirements are complete:
 
-1. Identify all actors — are all user roles accounted for?
-2. Identify all CRUD operations per entity — are all create/read/update/delete flows covered?
-3. Identify all exception paths — what happens when each step fails?
+1. Identify all actors. Are all user roles accounted for?
+2. Identify all CRUD operations per entity. Are all create/read/update/delete flows covered?
+3. Identify all exception paths. What happens when each step fails?
 4. Check for missing non-functional requirements (performance, security, accessibility)
 5. Check for missing integration requirements (what external systems must be called, when, with what contract)
 6. Check for missing data requirements (what data must be retained, for how long, with what access controls)

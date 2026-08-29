@@ -1,4 +1,4 @@
-# Baseline runner — execution stages
+# Baseline runner: execution stages
 
 > Reference doc for `baseline-runner`. Read at runtime when invoking
 > pytest in stages, capturing snapshots, or running in write-only mode.
@@ -17,14 +17,14 @@ When the supervisor's bootstrap policy is `off`:
   - Postman JSON validates as JSON (Bash: `python3 -c "import json;
     json.load(open(<file>))"`)
 - Write `baseline-report.md` marking the `Test execution` section as
-  "deferred — execution policy = off".
+  "deferred: execution policy = off".
 - Write empty `_meta/as-is-bugs-found.md` with note "deferred to manual
   execution".
 - Write empty `_meta/benchmark-baseline.json` and `_meta/test-coverage.json`
   with `null` values and note "to be populated by manual run".
 - Status: `partial` (because the oracle is not captured yet).
 
-## Write+execute mode (policy = `on`) — preflight
+## Write+execute mode (policy = `on`): preflight
 
 - Verify deps installed (Bash: `python3 -m pytest --version` etc.). If
   missing, attempt install (Bash: `pip install pytest pytest-benchmark
@@ -35,12 +35,12 @@ When the supervisor's bootstrap policy is `off`:
 - Apply failure policy to red tests.
 - Write the report.
 
-## Pytest invocation — staged
+## Pytest invocation: staged
 
 Run in stages so failures in one stage don't block recording for the
 others.
 
-### Stage A — Functional + integration (no benchmark)
+### Stage A: Functional + integration (no benchmark)
 
 ```bash
 python3 -m pytest tests/baseline/ \
@@ -55,7 +55,7 @@ python3 -m pytest tests/baseline/ \
 If `pytest-json-report` is not installed, fall back to parsing pytest's
 text output line by line; less robust but works.
 
-### Stage B — Benchmarks
+### Stage B: Benchmarks
 
 ```bash
 python3 -m pytest tests/baseline/benchmark/ \
@@ -64,7 +64,7 @@ python3 -m pytest tests/baseline/benchmark/ \
   --benchmark-only
 ```
 
-### Stage C — Postman (if collection generated)
+### Stage C: Postman (if collection generated)
 
 If `tests/baseline/postman/` exists and `newman` is available:
 
@@ -81,7 +81,7 @@ manually.
 
 **NOTE on Postman execution**: it requires the AS-IS service to be
 RUNNING at the env's `base_url`. If the user has not started the service,
-expect connection errors — these are env issues, not AS-IS bugs. The
+expect connection errors: these are env issues, not AS-IS bugs. The
 runner detects them by checking error category (connection refused vs.
 4xx/5xx response) and flags as env failure, not as code failure.
 
@@ -99,4 +99,4 @@ Before running pytest the first time, ensure the snapshot dir is empty
 or non-existent (otherwise pytest-regressions will compare against
 existing snapshots and may report failures that are actually fresh
 captures). The supervisor's bootstrap already prompted the user about
-this — by the time you run, the policy is set.
+this: by the time you run, the policy is set.

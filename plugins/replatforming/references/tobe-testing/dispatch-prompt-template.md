@@ -1,4 +1,4 @@
-# Phase 5 — Sub-agent dispatch prompt template
+# Phase 5: Sub-agent dispatch prompt template
 
 > Reference doc for `tobe-testing-supervisor`. Read at runtime when assembling the prompt for any sub-agent invocation.
 
@@ -38,4 +38,4 @@ any open questions in a `## Open questions` section. Do not write
 outside your permitted roots.
 ```
 
-Pass each agent only the context it needs. Do not paste large file contents into the prompt — sub-agents read from disk via Read/Glob.
+Pass each agent only the context it needs. Do not paste large file contents into the prompt. Sub-agents read from disk via Read/Glob.

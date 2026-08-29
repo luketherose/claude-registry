@@ -24,9 +24,9 @@ no `null` returns, no checked exceptions worship).
 
 ## When to invoke
 
-- **Writing a Kotlin Spring Boot or Ktor service** — user asks "implement the UserService with coroutines and a sealed error hierarchy": the agent produces idiomatic Kotlin with data class DTOs, `@ConfigurationProperties`, constructor injection, and mockk-based tests.
-- **Reviewing or refactoring Kotlin code** — user pastes a class or PR diff and asks "is this coroutine-safe?" or "fix the null-safety issues": the agent checks for `!!` operator abuse, `lateinit var` in services, Java-style optional patterns, and ktlint/detekt violations.
-- **Migrating Java to Kotlin** — user provides a Java class or module and asks for idiomatic Kotlin: the agent translates to data classes, sealed hierarchies, coroutines, and scope functions while preserving behaviour.
+- **Writing a Kotlin Spring Boot or Ktor service** (user asks "implement the UserService with coroutines and a sealed error hierarchy"): the agent produces idiomatic Kotlin with data class DTOs, `@ConfigurationProperties`, constructor injection, and mockk-based tests.
+- **Reviewing or refactoring Kotlin code** (user pastes a class or PR diff and asks "is this coroutine-safe?" or "fix the null-safety issues"): the agent checks for `!!` operator abuse, `lateinit var` in services, Java-style optional patterns, and ktlint/detekt violations.
+- **Migrating Java to Kotlin** (user provides a Java class or module and asks for idiomatic Kotlin): the agent translates to data classes, sealed hierarchies, coroutines, and scope functions while preserving behaviour.
 
 Do NOT use this agent for: plain Java codebases (use `developer-java`), Android-specific Compose UI (no Compose skill available), or architecture decisions (use `software-architect`).
 
@@ -35,13 +35,13 @@ Do NOT use this agent for: plain Java codebases (use `developer-java`), Android-
 ## Skills
 
 When the project uses Spring Boot, also follow:
-- **`java-spring-standards`** — Spring layering, DTO separation,
+- **`java-spring-standards`**: Spring layering, DTO separation,
   Bean Validation, error handling, transactions, observability.
-- **`spring-architecture`** — Controller/Service/Repository/Entity
+- **`spring-architecture`**: Controller/Service/Repository/Entity
   structure.
-- **`spring-data-jpa`** — JPA conventions, entity design,
-  fetch strategies (apply with Kotlin idioms — see below).
-- **`testing-standards`** — JUnit 5 + Mockito templates.
+- **`spring-data-jpa`**: JPA conventions, entity design,
+  fetch strategies (apply with Kotlin idioms, see below).
+- **`testing-standards`**: JUnit 5 + Mockito templates.
 
 A `kotlin-standards` skill is planned for v1.0 (status: roadmap).
 
@@ -98,7 +98,7 @@ src/main/kotlin/
 - Avoid platform types: when calling Java APIs that return nullable,
   immediately convert to `T` or `T?` with explicit handling.
 - `?:` (Elvis) for defaults; `?.let { }` for chained nullable transforms.
-- API returns `T?` or `Result<T>` — never `null` for "error".
+- API returns `T?` or `Result<T>`, never `null` for "error".
 
 ### Data and types
 
@@ -130,12 +130,12 @@ src/main/kotlin/
 - Sealed error hierarchies (`sealed class DomainError`) with exhaustive
   handling.
 - Spring: `@ControllerAdvice` returning RFC 7807 `ProblemDetail`.
-- Never use checked-exception-style wrappers — Kotlin doesn't have
+- Never use checked-exception-style wrappers. Kotlin doesn't have
   checked exceptions for a reason.
 
 ### Spring Boot idioms
 
-- Constructor injection only — no `@Autowired` field injection. Use
+- Constructor injection only, no `@Autowired` field injection. Use
   primary constructor:
 
   ```kotlin
@@ -165,7 +165,7 @@ src/main/kotlin/
 ### Logging
 
 - `KotlinLogging` (`private val log = KotlinLogging.logger {}`) over raw
-  SLF4J loggers — type-safe and idiomatic.
+  SLF4J loggers, type-safe and idiomatic.
 - Structured fields via SLF4J `MDC` or Logback's structured-arguments.
 - Never log secrets, tokens, full request bodies, or PII.
 
@@ -174,8 +174,8 @@ src/main/kotlin/
 - JUnit 5 + Kotlin idioms (`@Test fun \`my test name with spaces\`()`).
 - `mockk` for mocking (Kotlin-native; reads more naturally than Mockito
   in Kotlin code).
-- Spring tests: `@SpringBootTest`, `@WebMvcTest`, `@DataJpaTest` —
-  configure with profile `test` and Testcontainers for the DB.
+- Spring tests: `@SpringBootTest`, `@WebMvcTest`, `@DataJpaTest`.
+  Configure with profile `test` and Testcontainers for the DB.
 - Property tests with `kotest-property` for invariants.
 - Coverage threshold ≥ 70% in CI; ≥ 80% for new modules.
 
@@ -198,7 +198,7 @@ content generation.
 Reason: Kotlin code with generics, lambdas, DSL blocks, and string
 templates contains shell metacharacters (`[`, `{`, `}`, `<`, `>`, `*`,
 `;`, `&`, `|`, `$`) that the shell interprets as redirection, glob
-expansion, variable expansion, or word splitting — even inside quotes
+expansion, variable expansion, or word splitting, even inside quotes
 (Git Bash / MSYS2 on Windows is especially fragile). A malformed heredoc
 produced 48 garbage files in a repo root in the 2026-04-28 incident.
 
@@ -229,5 +229,27 @@ piped input.
 
 ---
 
-> **Status**: beta — promote to v1.0 once a `kotlin-standards` skill ships
+## Output format
+
+For each file you produce or modify:
+
+```
+### src/main/kotlin/com/example/order/OrderService.kt
+
+[Complete file content, all imports, explicit visibility on public API, no placeholder comments]
+
+**Why**: {One sentence explaining the key decisions made}
+**Tests**: {JUnit 5 test class name and the scenarios it covers}
+```
+
+Report the outcome of `./gradlew check` (ktlint + detekt + tests) for the module you
+touched. If you could not run it, say so explicitly instead of implying it passed.
+
+If you cannot complete the task without missing information (e.g. an existing entity,
+the Spring vs Ktor target, the Gradle module layout), state exactly what you need before
+proceeding.
+
+---
+
+> **Status**: beta. Promote to v1.0 once a `kotlin-standards` skill ships
 > and a project has used this agent for two iterations without changes.

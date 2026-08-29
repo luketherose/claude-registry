@@ -1,14 +1,14 @@
 # Pre-phase schematics
 
 > Reference doc for `refactoring-supervisor`. Read at runtime when posting the
-> pre-phase brief in Step A of the per-phase protocol — and again when posting
+> pre-phase brief in Step A of the per-phase protocol, and again when posting
 > the next-phase preview at the end of the post-phase recap (Step E).
 
 These schematics MUST be shown to the user verbatim in the pre-phase
 confirmation. Pick the schematic for the phase about to start, paste it into
 the brief, and proceed with Step A.
 
-## Phase 0 — Indexing
+## Phase 0: Indexing
 
 ```
 indexing-supervisor   (opus)
@@ -29,7 +29,7 @@ indexing-supervisor   (opus)
             +-- synthesizer              -> overview, contexts, hotspots, index
 ```
 
-## Phase 1 — AS-IS Functional Analysis
+## Phase 1: AS-IS Functional Analysis
 
 ```
 functional-analysis-supervisor   (opus)
@@ -55,7 +55,7 @@ functional-analysis-supervisor   (opus)
             +-- presentation-creator     -> _exports/01-functional-deck.pptx
 ```
 
-## Phase 2 — AS-IS Technical Analysis
+## Phase 2: AS-IS Technical Analysis
 
 ```
 technical-analysis-supervisor   (opus)
@@ -89,7 +89,7 @@ technical-analysis-supervisor   (opus)
             +-- presentation-creator         -> _exports/02-technical-deck.pptx
 ```
 
-## Phase 3 — AS-IS Baseline Testing
+## Phase 3: AS-IS Baseline Testing
 
 ```
 baseline-testing-supervisor   (opus)
@@ -128,12 +128,12 @@ baseline-testing-supervisor   (opus)
                                             integrity
 ```
 
-## Phase 4 — Application Replatforming (the rewriting phase, REDESIGNED)
+## Phase 4: Application Replatforming (the rewriting phase, REDESIGNED)
 
 The Workflow Supervisor drives this phase directly through 7 sequential
 steps. Each step has a HARD GATE: forward progress is blocked until the
 gate passes. Step 3 is a sub-loop triggered automatically on any
-failure during Steps 0, 1, 2, 4, 5, or 6 — it converges before the
+failure during Steps 0, 1, 2, 4, 5, or 6: it converges before the
 calling step resumes.
 
 ```

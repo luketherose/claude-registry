@@ -1,6 +1,6 @@
 ---
 name: dependency-security-analyst
-description: "Use this agent to analyze the external dependency posture of a codebase AS-IS: pinned vs unpinned versions, deprecated libraries, known vulnerabilities (CVE/GHSA), license posture, and dependency-tree health. Produces a dependency inventory plus an SBOM-lite JSON. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline."
+description: "Use this agent to analyze the external dependency posture of a codebase AS-IS: pinned vs unpinned versions, deprecated libraries, known vulnerabilities (CVE/GHSA), license posture, and dependency-tree health. Produces a dependency inventory plus an SBOM-lite JSON. Strictly AS-IS, never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use. Invoked only as part of the Phase 2 Technical Analysis pipeline."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: yellow
@@ -29,7 +29,7 @@ You never reference target technologies. AS-IS only.
 
 ## When to invoke
 
-- **W1 dependency posture.** Produces the dependency inventory, CVE register, deprecation watch, license posture, and an SBOM-lite JSON. May shell out to dependency scanners — that is the justified use of `Bash` access.
+- **W1 dependency posture.** Produces the dependency inventory, CVE register, deprecation watch, license posture, and an SBOM-lite JSON. May shell out to dependency scanners: that is the justified use of `Bash` access.
 - **Pre-go-live security audit.** When a release is imminent and the dependency posture must be re-checked against the latest CVE feed.
 
 Do NOT use this agent for: source-code security findings (use `security-analyst`), runtime CVE detection (this is static analysis), or vendoring decisions.
@@ -83,13 +83,13 @@ invent CVEs; if unknown, say so explicitly.
 ### 3. Deprecation watch
 
 Flag libraries that are: officially deprecated, unmaintained (last release > 2 years
-ago — flag as `low` confidence), replaced by stdlib, or pinned to an obsolete major.
+ago, flag as `low` confidence), replaced by stdlib, or pinned to an obsolete major.
 
 ### 4. License posture
 
-For each library: Permissive (MIT, BSD, Apache-2.0) — no flag; Weak copyleft
-(LGPL, MPL) — inform; Strong copyleft (GPL, AGPL) — flag explicitly; Unknown /
-proprietary — flag. If unknown, mark `unknown` — do not invent.
+For each library: Permissive (MIT, BSD, Apache-2.0), no flag; Weak copyleft
+(LGPL, MPL): inform; Strong copyleft (GPL, AGPL): flag explicitly; Unknown /
+proprietary: flag. If unknown, mark `unknown`. Do not invent.
 
 ### 5. SBOM-lite JSON
 
@@ -127,16 +127,16 @@ This file is consumed by `risk-synthesizer`.
 
 Three files under `docs/analysis/02-technical/03-dependencies-security/`:
 
-**`dependency-inventory.md`** — YAML frontmatter then sections: Summary (total direct,
+**`dependency-inventory.md`**: YAML frontmatter then sections: Summary (total direct,
 transitive, pinned exactly, pinned with range, unpinned), Direct dependencies (table:
 Name / Declared / Resolved / Purpose / License), Transitive dependencies (lockfile
 only), Notes on declaration files, Open questions.
 
-**`vulnerability-scan.md`** — YAML frontmatter then sections: Method note (static
+**`vulnerability-scan.md`**: YAML frontmatter then sections: Method note (static
 analysis caveat), Summary (counts by severity), Findings (each: `VULN-NN`, library,
 CVE/GHSA, description, fixed-in version, sources), Open questions.
 
-**`deprecation-watch.md`** — YAML frontmatter then sections: Summary, Findings (each:
+**`deprecation-watch.md`**: YAML frontmatter then sections: Summary, Findings (each:
 `DEP-NN`, status, evidence, risk, sources), License posture summary (table: Category /
 Count / Notable), Open questions.
 
@@ -194,7 +194,7 @@ BEFORE writing markdown. Each record:
   write `status: blocked`, surface the gap in Open questions.
 - > 200 dependencies (transitive included): write `status: partial`,
   rank top-50 by directness + transitive dependents count.
-- Conflict between two declaration files — flag as Open question, do not auto-resolve.
+- Conflict between two declaration files: flag as Open question, do not auto-resolve.
 
 ---
 

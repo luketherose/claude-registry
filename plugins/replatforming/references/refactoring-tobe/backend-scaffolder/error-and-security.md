@@ -138,10 +138,10 @@ public class SecurityConfig {
 > ```bash
 > ! grep -rln "@CrossOrigin" src/main/java
 > ```
-> If the grep finds matches, remove them — the centralised bean already
+> If the grep finds matches, remove them: the centralised bean already
 > covers every endpoint via `/**`.
 
-This is a baseline — `hardening-architect` (W4) refines it with the final
+This is a baseline: `hardening-architect` (W4) refines it with the final
 security headers, CSP, etc.
 
 ## Boot smoke test (mandatory)
@@ -182,5 +182,5 @@ The default profile in `application.yml` should either (a) define a
 working datasource (H2 for dev, real DB for prod profiles), or (b) set
 `spring.profiles.default: test` so `java -jar` boots on an in-memory
 profile. Excluding `DataSourceAutoConfiguration` alone does NOT make
-repositories optional — `@Service` constructors still require them and
+repositories optional. `@Service` constructors still require them and
 the context fails. This was GAP-009 in the InfoSync 2026-05 retro.

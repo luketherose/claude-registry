@@ -1,8 +1,8 @@
-# Per-framework conventions — developer-frontend
+# Per-framework conventions: developer-frontend
 
 > Reference doc for `developer-frontend`. Read at runtime once the project's
 > framework has been detected (Step 1 of the agent body). Load only the section
-> matching the detected stack — never mix.
+> matching the detected stack. Never mix.
 
 ---
 
@@ -20,11 +20,11 @@ Invoke when RxJS streams are involved:
   rxjs-expert      — flattening operators, subscription cleanup, stream design
 ```
 
-**Angular — invariants (non-negotiable):**
-- **Every component is delivered as 4 co-located files**: `<name>.component.ts`, `<name>.component.html`, `<name>.component.scss` (or `.css`), `<name>.component.spec.ts`. The `.ts` references the template and styles via `templateUrl` and `styleUrls` — **inline `template:` and `styles:`/`styleUrls: []` literals in the `@Component` decorator are forbidden**. Allowed exception: trivial render-prop wrappers (≤ 5 markup lines, single binding, no logic) may inline the template — when in doubt, externalise. Never collapse the file family because the component is small or "obvious".
+**Angular invariants (non-negotiable):**
+- **Every component is delivered as 4 co-located files**: `<name>.component.ts`, `<name>.component.html`, `<name>.component.scss` (or `.css`), `<name>.component.spec.ts`. The `.ts` references the template and styles via `templateUrl` and `styleUrls`. **Inline `template:` and `styles:`/`styleUrls: []` literals in the `@Component` decorator are forbidden**. Allowed exception: trivial render-prop wrappers (≤ 5 markup lines, single binding, no logic) may inline the template. When in doubt, externalise. Never collapse the file family because the component is small or "obvious".
 - `ChangeDetectionStrategy.OnPush` on all presentational (dumb) components
 - Lazy loading on every feature module
-- Zero `any` in TypeScript — explicit interfaces for every model
+- Zero `any` in TypeScript: explicit interfaces for every model
 - `async` pipe preferred over manual subscribe
 - Every manual `subscribe()` has an explicit cleanup strategy
 - Dumb components have no service or store dependencies
@@ -53,12 +53,12 @@ Invoke when full-stack SSR is needed:
                                        use tanstack-start for TanStack-native stacks)
 ```
 
-**React — invariants (non-negotiable):**
-- All props typed with explicit TypeScript interfaces — never `any`
+**React invariants (non-negotiable):**
+- All props typed with explicit TypeScript interfaces, never `any`
 - `useEffect` only for synchronizing with external systems, never for derived state
 - `useCallback` / `useMemo` only where genuinely needed (not by default)
 - `key` in lists uses stable IDs, never array index for dynamic lists
-- Server state managed by TanStack Query — never `useState` + `useEffect` for fetch
+- Server state managed by TanStack Query, never `useState` + `useEffect` for fetch
 - Error boundaries wrap every major feature section
 
 ---
@@ -71,9 +71,9 @@ Always invoke:
                          composables, reactivity rules
 ```
 
-**Vue 3 — invariants (non-negotiable):**
-- `<script setup lang="ts">` — Options API not used in new code
-- Props typed with `defineProps<Interface>()` — never untyped
+**Vue 3 invariants (non-negotiable):**
+- `<script setup lang="ts">` (Options API not used in new code)
+- Props typed with `defineProps<Interface>()`, never untyped
 - `storeToRefs()` when destructuring Pinia stores
 - `watch` with specific sources; `deep: true` only when necessary
 - Emits typed with `defineEmits<Emits>()`
@@ -88,9 +88,9 @@ Always invoke:
                         routeLoader$, routeAction$, Qwik City routing
 ```
 
-**Qwik — invariants (non-negotiable):**
+**Qwik invariants (non-negotiable):**
 - All interactive handlers use `$` suffix (lazy boundary)
-- `useVisibleTask$` used sparingly — it breaks resumability
+- `useVisibleTask$` used sparingly (it breaks resumability)
 - Captured variables in `$` closures must be serializable
 - Server functions (`routeLoader$`, `routeAction$`) for all data access
 
@@ -104,8 +104,8 @@ Always invoke:
                      fetch wrapper, Custom Events, Intersection Observer
 ```
 
-**Vanilla — invariants (non-negotiable):**
-- TypeScript strict mode — no implicit `any`
+**Vanilla invariants (non-negotiable):**
+- TypeScript strict mode, no implicit `any`
 - Web Components preferred for reusable, isolated UI elements
 - `innerHTML` never used with unsanitized user input
 - Every event listener removed on cleanup

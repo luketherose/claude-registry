@@ -1,4 +1,4 @@
-# Backend hardening — config templates
+# Backend hardening: config templates
 
 > Reference doc for `hardening-architect`. Read at runtime when applying
 > Method steps 1–5 (backend logging, metrics, tracing, security, secrets).
@@ -11,7 +11,7 @@ output templates.
 
 ---
 
-## 1. Logging — structured JSON with correlation-id
+## 1. Logging: structured JSON with correlation-id
 
 Update `<backend-dir>/src/main/resources/application.yml`:
 
@@ -57,7 +57,7 @@ trivially.
 
 ---
 
-## 2. Metrics — Micrometer + Prometheus
+## 2. Metrics: Micrometer + Prometheus
 
 `backend-scaffolder` already added Spring Boot Actuator + Prometheus
 registry. Verify and extend:
@@ -87,7 +87,7 @@ management:
         http.server.requests: 50ms,100ms,200ms,500ms,1s,2s,5s
 ```
 
-Add custom metrics for domain KPIs (a tiny example — workers can extend):
+Add custom metrics for domain KPIs (a tiny example, workers can extend):
 
 ```java
 package com.<org>.<app>.shared.metrics;
@@ -122,7 +122,7 @@ note (logic-translator or a follow-up may wire it).
 
 ---
 
-## 3. Tracing — OpenTelemetry
+## 3. Tracing: OpenTelemetry
 
 Add to pom.xml:
 
@@ -161,7 +161,7 @@ example as TODO in a service.
 
 ---
 
-## 4. Security — production baseline
+## 4. Security: production baseline
 
 Refine `<backend-dir>/src/main/java/com/<org>/<app>/shared/config/SecurityConfig.java`
 (scaffolder created the baseline; you tighten it):
@@ -212,7 +212,7 @@ public class SecurityConfig {
 ```
 
 Headers per OWASP Secure Headers Project. CSP is set on the FE (HTML
-meta) — see frontend-config-templates.md.
+meta), see frontend-config-templates.md.
 
 ---
 

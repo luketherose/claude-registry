@@ -8,9 +8,9 @@
 
 Provide the canonical schemas for the three risk-register artifacts:
 
-- `09-synthesis/risk-register.md` — human-readable, sortable table
-- `_meta/risk-register.json` — machine-readable, schema-versioned
-- `_meta/risk-register.csv` — flat, tool-importable
+- `09-synthesis/risk-register.md`: human-readable, sortable table
+- `_meta/risk-register.json`: machine-readable, schema-versioned
+- `_meta/risk-register.csv`: flat, tool-importable
 
 Keep the same item set across all three. Only the encoding differs.
 
@@ -18,7 +18,7 @@ Keep the same item set across all three. Only the encoding differs.
 
 ## Stable finding-ID prefixes (per source agent)
 
-When parsing Wave 1 outputs preserve the prefixes verbatim — never renumber.
+When parsing Wave 1 outputs preserve the prefixes verbatim, never renumber.
 
 | Prefix | Source agent |
 |---|---|
@@ -37,7 +37,7 @@ location, AS-IS remediation hint, related finding IDs (when merged).
 
 ---
 
-## Markdown — `09-synthesis/risk-register.md`
+## Markdown: `09-synthesis/risk-register.md`
 
 ```markdown
 ---
@@ -104,7 +104,7 @@ clean code OR could be uncovered scope>
 
 ---
 
-## JSON — `_meta/risk-register.json`
+## JSON: `_meta/risk-register.json`
 
 ```json
 {
@@ -134,9 +134,9 @@ clean code OR could be uncovered scope>
 
 ---
 
-## CSV — `_meta/risk-register.csv`
+## CSV: `_meta/risk-register.csv`
 
-Stable column order (do not reorder — external tools rely on it):
+Stable column order (do not reorder, external tools rely on it):
 
 ```
 id, severity, source_agent, title, owasp, location,

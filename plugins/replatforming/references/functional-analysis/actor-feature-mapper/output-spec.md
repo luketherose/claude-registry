@@ -1,4 +1,4 @@
-# Actor-Feature Mapper — Output Specification
+# Actor-Feature Mapper: Output Specification
 
 This document defines the exact file formats, JSONL schemas, and output templates for `actor-feature-mapper`. Read it immediately before writing any output file.
 
@@ -121,7 +121,7 @@ Legend: full | read | restricted | — (no access)
 
 ### `docs/analysis/01-functional/raw/actor-candidates-raw.jsonl`
 
-Raw actor findings before normalization — one record per candidate actor.
+Raw actor findings before normalization: one record per candidate actor.
 
 ### `docs/analysis/01-functional/normalized/actor-candidates.jsonl`
 

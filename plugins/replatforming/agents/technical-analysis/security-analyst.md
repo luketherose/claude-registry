@@ -1,6 +1,6 @@
 ---
 name: security-analyst
-description: "Use this agent to analyze code-level security posture of a codebase AS-IS: OWASP Top 10 coverage (injection, broken auth, sensitive data exposure, XSS, CSRF, SSRF, insecure deserialization, secrets in code, missing access control), input validation, sanitization, and threat-model surface. Strictly AS-IS — never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use — invoked only as part of the Phase 2 Technical Analysis pipeline."
+description: "Use this agent to analyze code-level security posture of a codebase AS-IS: OWASP Top 10 coverage (injection, broken auth, sensitive data exposure, XSS, CSRF, SSRF, insecure deserialization, secrets in code, missing access control), input validation, sanitization, and threat-model surface. Strictly AS-IS, never references target technologies. Sub-agent of technical-analysis-supervisor; not for standalone use. Invoked only as part of the Phase 2 Technical Analysis pipeline."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: yellow
@@ -66,10 +66,10 @@ KB sections you must read:
 Source code reads (allowed for narrow patterns):
 - Grep for: `eval(`, `exec(`, `pickle.load`, `subprocess`, `os.system`,
   `shell=True`, raw SQL with f-strings, `Markup(`, `safe=True`
-- Grep for: hard-coded secrets — patterns like `password = "..."`,
+- Grep for: hard-coded secrets, patterns like `password = "..."`,
   `API_KEY = "..."`, AWS access key prefixes (`AKIA[0-9A-Z]{16}`),
   Bearer tokens hard-coded, `.pem` / `.key` paths
-- Grep for: redirect/SSRF candidates — `requests.get(user_input)`,
+- Grep for: redirect/SSRF candidates, `requests.get(user_input)`,
   `urlopen(user_input)`
 - Grep for: missing CSRF tokens (web frameworks; not directly
   applicable to Streamlit, but flag if Flask/FastAPI is co-located)
@@ -84,59 +84,59 @@ Source code reads (allowed for narrow patterns):
 For each category, report **status** (mitigated / partial / missing /
 not applicable) with evidence:
 
-#### A01:2021 — Broken Access Control
+#### A01:2021 Broken Access Control
 - Authorization checks per endpoint / page / use case (cross-ref
   Phase 1 actors if available)
 - Role/permission enforcement: explicit / implicit / absent
-- Streamlit-specific: typically NO built-in access control —
+- Streamlit-specific: typically NO built-in access control.
   who/what enforces it? (upstream proxy? in-code gate? nothing?)
 
-#### A02:2021 — Cryptographic Failures
+#### A02:2021 Cryptographic Failures
 - Sensitive data at rest: encrypted? what algorithm? key management?
 - Sensitive data in transit: TLS verified? `verify=False` anywhere?
 - Hashing: passwords stored hashed (bcrypt / argon2 / scrypt)? PBKDF2
   with sufficient iterations?
 
-#### A03:2021 — Injection
+#### A03:2021 Injection
 - SQL: parameterized vs string-concatenated (cross-ref data-access)
 - OS commands: `subprocess(shell=True, ...)` with user input
 - Template injection: Jinja2 with `Markup(user_input)` or `safe=True`
 - Code injection: `eval(user_input)`, `exec(user_input)`,
   `pickle.load(untrusted)`
 
-#### A04:2021 — Insecure Design
+#### A04:2021 Insecure Design
 - Authentication state: session cookie, JWT, server session, none
 - Multi-tenant data isolation: how enforced?
 
-#### A05:2021 — Security Misconfiguration
+#### A05:2021 Security Misconfiguration
 - Debug mode in production code paths
 - CORS wide open (`allow_origins=["*"]` for any web framework
   co-located)
 - Streamlit: `--server.enableXsrfProtection false` or weak config
 
-#### A06:2021 — Vulnerable and Outdated Components
+#### A06:2021 Vulnerable and Outdated Components
 - Defer to `dependency-security-analyst`. You cite cross-reference
   only ("see VULN-NN in 03-dependencies-security/").
 
-#### A07:2021 — Identification and Authentication Failures
+#### A07:2021 Identification and Authentication Failures
 - Password policy
 - Session timeout / refresh
 - Brute-force throttling on login
-- Streamlit: typically no native login — flag.
+- Streamlit: typically no native login, flag.
 
-#### A08:2021 — Software and Data Integrity Failures
+#### A08:2021 Software and Data Integrity Failures
 - Untrusted deserialization (`pickle.load`, `yaml.load` without
   SafeLoader, `marshmallow` without strict mode)
 - Update mechanism integrity (npm-style supply-chain not applicable
   to Python out of the box; check for runtime code download)
 
-#### A09:2021 — Security Logging and Monitoring Failures
+#### A09:2021 Security Logging and Monitoring Failures
 - Auth failures logged with attempt context?
 - Rate of access-denied events visible?
 - Alarms on critical paths?
 - Defer detailed log audit to `resilience-analyst`; you cite cross-ref.
 
-#### A10:2021 — Server-Side Request Forgery (SSRF)
+#### A10:2021 Server-Side Request Forgery (SSRF)
 - Outbound HTTP with user-controlled URL?
 - DNS rebinding protection?
 
@@ -164,7 +164,7 @@ Grep for hard-coded secrets. Every hit is **critical**:
 - AWS / Azure / GCP credentials (specific patterns)
 
 Distinguish from **placeholder examples** (e.g.,
-`API_KEY = "your-key-here"`) — those are not findings but document
+`API_KEY = "your-key-here"`): those are not findings but document
 them so reviewers know.
 
 ### 4. Threat model
@@ -178,7 +178,7 @@ note the relevant threat and current mitigation (or absence).
 
 Streamlit-specific assets:
 - session_state contents (per-browser, but one Streamlit instance
-  serves multiple users — what isolates them?)
+  serves multiple users, what isolates them?)
 
 ---
 
@@ -196,7 +196,7 @@ Every output file carries the standard Phase 2 frontmatter (`agent`,
 `generated`, `sources`, `confidence`, `status`).
 
 → Read `${CLAUDE_PLUGIN_ROOT}/references/technical-analysis/security-analyst/output-templates.md`
-when about to write any of the three files — it has the verbatim skeletons.
+when about to write any of the three files: it has the verbatim skeletons.
 
 ---
 
@@ -250,7 +250,7 @@ Each record in the raw JSONL file:
   KB sections expose, list gap.
 - > 50 candidate findings: write `status: partial`, document criticals
   + highs in detail; group medium/low in summary tables.
-- Every secret-in-code grep hit is `critical` — never `partial` for
+- Every secret-in-code grep hit is `critical`, never `partial` for
   secrets.
 
 ---
@@ -265,4 +265,4 @@ Each record in the raw JSONL file:
 - **Secrets in code**: every hit is `critical`; never downgrade.
 - Do not write outside `docs/analysis/02-technical/08-security/`.
 - **Do not duplicate `dependency-security-analyst`** (library CVEs)
-  or `resilience-analyst` (logging detail) — cross-reference by id.
+  or `resilience-analyst` (logging detail). Cross-reference by id.

@@ -1,4 +1,4 @@
-# Phase 3 — Output layout & frontmatter contract
+# Phase 3: Output layout & frontmatter contract
 
 > Reference doc for `baseline-testing-supervisor`. Read at runtime when planning where workers write their outputs and what frontmatter / docstring every artefact must carry.
 

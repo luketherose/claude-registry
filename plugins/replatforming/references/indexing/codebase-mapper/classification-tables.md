@@ -1,4 +1,4 @@
-# Codebase mapper — classification tables
+# Codebase mapper: classification tables
 
 > Reference doc for `codebase-mapper`. Read at runtime during the
 > classification, package-mapping, and entrypoint-identification steps
@@ -29,7 +29,7 @@ For each file, classify its language/role:
 | css / styling | `.css`, `.scss`, `.sass`, `.less` |
 | sql | `.sql` |
 | shell | `.sh`, `.bash`, `.zsh` |
-| config | `.toml`, `.yaml`, `.yml`, `.cfg`, `.ini`, `.json` (when config-like — e.g. tsconfig, package, jest, eslint) |
+| config | `.toml`, `.yaml`, `.yml`, `.cfg`, `.ini`, `.json` (when config-like, e.g. tsconfig, package, jest, eslint) |
 | data | `.csv`, `.parquet`, `.sqlite`, `.db` |
 | build manifest | `pom.xml`, `build.gradle*`, `Cargo.toml`, `go.mod`, `package.json`, `pyproject.toml`, `setup.py`, `requirements.txt`, `Pipfile`, `composer.json`, `Gemfile`, `*.csproj`, `*.sln`, `mix.exs`, `Package.swift` |
 | docs | `.md`, `.rst`, `.adoc` |

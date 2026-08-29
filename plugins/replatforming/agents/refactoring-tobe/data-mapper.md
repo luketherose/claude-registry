@@ -32,10 +32,10 @@ ADR-002. Flyway is forbidden, even when the AS-IS project uses it.
 
 ## When to invoke
 
-- **W3 BE step 2 — JPA + Liquibase.** Reads the AS-IS data model from `.indexing-kb/06-data-flow/` and the bounded contexts from W1; produces JPA entities, value objects, enums, Liquibase YAML changelogs, and Spring Data JPA repositories. DDD-honouring — aggregates and value objects respect the bounded-context boundaries.
+- **W3 BE step 2: JPA + Liquibase.** Reads the AS-IS data model from `.indexing-kb/06-data-flow/` and the bounded contexts from W1; produces JPA entities, value objects, enums, Liquibase YAML changelogs, and Spring Data JPA repositories. DDD-honouring: aggregates and value objects respect the bounded-context boundaries.
 - **Schema-only re-run.** When the AS-IS data model was re-indexed and the TO-BE persistence layer must be regenerated.
 
-Do NOT use this agent for: Flyway migrations (forbidden — Liquibase only), business-logic translation (use `logic-translator`), or REST DTO design (DTOs come from `backend-scaffolder` via the contract).
+Do NOT use this agent for: Flyway migrations (forbidden, Liquibase only), business-logic translation (use `logic-translator`), or REST DTO design (DTOs come from `backend-scaffolder` via the contract).
 
 ---
 
@@ -44,7 +44,7 @@ Do NOT use this agent for: Flyway migrations (forbidden — Liquibase only), bus
 Per-deliverable templates and reporting skeletons live in
 `${CLAUDE_PLUGIN_ROOT}/references/refactoring-tobe/data-mapper/` and are read on
 demand. Read each doc only when the matching artefact is about to be
-produced — not preemptively.
+produced, not preemptively.
 
 | Doc | Read when |
 |---|---|
@@ -61,7 +61,7 @@ produced — not preemptively.
 - Path to `.refactoring-kb/00-decomposition/aggregate-design.md` (the
   authoritative aggregate plan)
 - Path to `.refactoring-kb/00-decomposition/bounded-contexts.md` (BC list)
-- Path to `docs/refactoring/4.6-api/openapi.yaml` (DTO shapes — entities
+- Path to `docs/refactoring/4.6-api/openapi.yaml` (DTO shapes, entities
   must support DTO mapping)
 - Path to `docs/analysis/02-technical/04-data-access/access-pattern-map.md`
   (AS-IS DB engine, AS-IS schema if any, query patterns)
@@ -77,7 +77,7 @@ produced — not preemptively.
 
 Two cases:
 
-#### Case A — Greenfield (AS-IS uses no DB or different paradigm)
+#### Case A: Greenfield (AS-IS uses no DB or different paradigm)
 
 If Phase 2 shows AS-IS uses pickle / parquet / no DB / SQLite as cache:
 - design schema from scratch driven by aggregates from Wave 1
@@ -85,7 +85,7 @@ If Phase 2 shows AS-IS uses pickle / parquet / no DB / SQLite as cache:
 - no concept of "preserve AS-IS data"; data migration is a separate
   one-off ETL out of Phase 4 scope (note in roadmap)
 
-#### Case B — Existing schema migration
+#### Case B: Existing schema migration
 
 If Phase 2 shows AS-IS uses a real DB (PostgreSQL/MySQL/etc.) with a
 documented schema:
@@ -113,7 +113,7 @@ Decision rules:
   only when ADR-002 demands AS-IS preservation
 - value objects use `@Embeddable` (e.g., `Money`, `Address`,
   `EmailAddress`)
-- enums use `@Enumerated(EnumType.STRING)` (NOT ORDINAL — fragile)
+- enums use `@Enumerated(EnumType.STRING)` (NOT ORDINAL, fragile)
 - timestamps use `Instant` (UTC); `@Column(name = "created_at",
   updatable = false)` for immutable audit fields
 - optimistic locking via `@Version` on roots
@@ -155,7 +155,7 @@ aggregator (both `includeAll` and explicit-ordering variants), the
 
 Decision rules:
 - one changeSet per logical change (avoid mega-changesets)
-- **never edit a deployed changeSet** — checksum is recorded in
+- **never edit a deployed changeSet**. Checksum is recorded in
   `DATABASECHANGELOG`; always add a new one with the next id
 - author = `data-mapper` (or the human author when hand-edited)
 - prefer YAML over SQL/XML; raw SQL only inside a `sql:` change when YAML
@@ -164,7 +164,7 @@ Decision rules:
   `<empty />` rollback with a comment
 - explicit constraint names; indexes on Phase-2 query patterns
 - tag environment-specific changesets with `context: local` (e.g.,
-  seed data) — production changelogs run unconditionally
+  seed data): production changelogs run unconditionally
 
 ### 7. MapStruct mappers (optional)
 
@@ -224,7 +224,7 @@ questions).
 ## Constraints
 
 - **TO-BE persistence**: JPA, Liquibase (YAML changelogs), target DB
-  from ADR-002. Flyway is forbidden — never introduce it, even when the
+  from ADR-002. Flyway is forbidden, never introduce it, even when the
   AS-IS project uses it.
 - **DDD aggregates honored**: cross-aggregate references by ID only.
 - **No setters by default**: factory methods + state-changing

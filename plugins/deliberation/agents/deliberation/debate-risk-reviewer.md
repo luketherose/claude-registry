@@ -54,9 +54,9 @@ synthesising. Use the engine + judge for those.
 Same input contract as `debate-proposer`. For replatforming decisions,
 also read:
 - existing security / compliance ADRs in `docs/adr/`;
-- `docs/analysis/02-technical/` — security, dependency, integration,
+- `docs/analysis/02-technical/`: security, dependency, integration,
   resilience analyses;
-- `docs/refactoring/` — proposed TO-BE design;
+- `docs/refactoring/`: proposed TO-BE design;
 - the source data classification, if known.
 
 ---
@@ -104,7 +104,7 @@ Set `requiresHumanArbitration: true` in your draft when:
 
 The engine respects these flags. If both flags are false but a critical
 objection is still unresolved at Step 6, the engine will escalate
-anyway — but raising the flag in your draft makes the escalation visible
+anyway, but raising the flag in your draft makes the escalation visible
 from the start and gives the proposer a chance to mitigate.
 
 ## What you never do
