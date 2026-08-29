@@ -1,0 +1,132 @@
+{
+  "step": "evidence-summary",
+  "role": "debate-judge (summariser mode)",
+  "traceId": "del-20260531-070933-0f0044",
+  "summarisedAt": "2026-05-31T07:18:00Z",
+
+  "areasOfAgreement": [
+    "The existing auto-memory system (~/.claude/projects/*/memory/) is already functional and must be the starting point — not discarded",
+    "OmniMem adoption should be deferred — all three personas either rate it 'optional' or 'avoid' for Phase 1",
+    "BMAD principles (artifact-first, lifecycle states) are appropriate for memory discipline, but the full BMAD gate structure should not be cargo-culted",
+    "Memory files must remain human-readable Markdown at all times — no tool-only formats",
+    "Toxic memory (stale-as-authoritative) is the primary failure mode and must be designed for from day 1",
+    "External tooling should not be adopted before the manual discipline is proven to work",
+    "A Memory MCP server is the correct Phase 3 mechanism for reliable injection",
+    "Level 1 (raw session history) should point to existing ~/.claude/sessions/ rather than creating a parallel copy",
+    "Context-aware loading (personal always, project/client scoped by directory) is necessary to prevent cross-contamination"
+  ],
+
+  "areasOfDisagreement": [
+    {
+      "topic": "Recommended option (A vs C)",
+      "positions": {
+        "debate-proposer": "Option C — pragmatic hybrid with phased external tool adoption",
+        "debate-critic": "Option A — extend existing system only, no external tools",
+        "debate-operations-reviewer": "Option C — but only if lifecycle rules are treated as system invariants from day 1, not guidelines"
+      },
+      "severity": "medium",
+      "resolution": "Options A and C differ primarily in whether qmd-sessions and a more structured personal memory layer are worth the incremental investment. Given that the Critic's Option A is essentially Option C with the qmd-sessions/OmniMem phases removed (not the Phase 1 work), the actual disagreement is narrow."
+    },
+    {
+      "topic": "Staleness automation — Phase 1 vs Phase 4",
+      "positions": {
+        "debate-proposer": "Staleness automation in Phase 4",
+        "debate-operations-reviewer": "Staleness flagging must be in Phase 1 (even if manual)"
+      },
+      "severity": "high",
+      "resolution": "The Operations Reviewer's position is more conservative and more correct: the difference between 'automated staleness flagging' (Phase 4) and 'manual staleness review prompt in CLAUDE.md' (Phase 1) is minimal in effort but critical for safety. The CLAUDE.md staleness rule should be in Phase 1."
+    },
+    {
+      "topic": "OmniMem — 'optional' vs 'avoid'",
+      "positions": {
+        "debate-proposer": "optional (evaluate in Phase 3)",
+        "debate-critic": "avoid (unknown maturity, hard dependency risk)",
+        "debate-operations-reviewer": "optional (evaluate in Phase 3 with fallback plan)"
+      },
+      "severity": "low",
+      "resolution": "Both 'optional' positions and 'avoid' agree on the same Phase 1 action: do not adopt OmniMem now. The disagreement is only about whether to evaluate later."
+    }
+  ],
+
+  "strongestEvidence": [
+    {
+      "claim": "Existing auto-memory system is the foundation to build on",
+      "evidenceBasis": "Directly observable: ~/.claude/projects/-Users-luca-la-rosa-dev-claude-registry/memory/ has 5 documented memory files with confirmed content. This is working today.",
+      "supportedBy": ["debate-proposer", "debate-critic", "debate-operations-reviewer"]
+    },
+    {
+      "claim": "The injection mechanism is the hardest problem",
+      "evidenceBasis": "Claude Code's reading model is explicit: CLAUDE.md files, files passed as context, Read tool calls. Without an explicit injection mechanism, stored memories are invisible to Claude. This is a structural property of the tool.",
+      "supportedBy": ["debate-critic", "debate-operations-reviewer"]
+    },
+    {
+      "claim": "Toxic memory from stale entries is the primary operational failure mode",
+      "evidenceBasis": "Structural argument: AI models apply retrieved context without inherent skepticism about its freshness. Human knowledge management systems have the same failure mode — the difference is that humans have implicit staleness awareness that models lack.",
+      "supportedBy": ["debate-proposer", "debate-critic", "debate-operations-reviewer"]
+    }
+  ],
+
+  "weakestEvidence": [
+    {
+      "claim": "OmniMem has claimed features (contradiction detection, memory scoring, lifecycle management)",
+      "issue": "No independent verification of these claims. All three personas note this. The decision brief presents them as facts ('claimed features') which is appropriately hedged but the architecture treats them as reliable.",
+      "risk": "If OmniMem does not work as described, the Phase 3 plan needs an entirely different tool."
+    },
+    {
+      "claim": "qmd-sessions adds value beyond native ~/.claude/sessions/ JSONL",
+      "issue": "The sessions/ directory has only 2 files in the observed state. Whether JSONL is searchable without conversion is unknown. The value of qmd-sessions depends on this.",
+      "risk": "qmd-sessions adoption may be unnecessary if JSONL is directly parseable."
+    }
+  ],
+
+  "unsupportedClaims": [
+    "The specific 10-15 minute per session maintenance estimate — no basis given",
+    "The '60 days for personal, 30 days for project' staleness thresholds — arbitrary without usage data",
+    "Level 3 structure (decisions/, lessons/, patterns/, anti-patterns/) — no evidence these categories map to how Luca actually thinks about memory"
+  ],
+
+  "criticalRisks": [
+    {
+      "risk": "No injection mechanism specified for Phase 1",
+      "severity": "critical",
+      "description": "Both Option A and Option C rely on Claude reading memory files. Without a concrete mechanism (MCP, explicit CLAUDE.md read instructions, or session hook), the memory system will be invisible to Claude most of the time."
+    },
+    {
+      "risk": "Maintenance abandonment",
+      "severity": "high",
+      "description": "All three personas acknowledge this risk. The system must be designed to degrade gracefully (missing memories = safe fallback), not to require maintenance to remain safe."
+    },
+    {
+      "risk": "Cross-client contamination",
+      "severity": "critical",
+      "description": "Luca's work spans multiple Accenture clients. The isolation mechanism must be explicit and enforced at the project directory level, not reliant on Claude's judgment about scope."
+    }
+  ],
+
+  "decisionCriteriaMatrix": {
+    "criteria": ["Builds on existing system", "Addresses injection gap", "Prevents toxic memory", "Low maintenance burden", "Tool independence", "Scalable to multi-client"],
+    "optionA": ["yes", "partial", "partial", "high", "yes", "partial"],
+    "optionB": ["partial", "yes (OmniMem)", "partial", "low", "no", "partial"],
+    "optionC": ["yes", "partial (Phase 3)", "yes", "medium", "yes (Phase 1-2)", "yes"],
+    "optionD": ["yes", "no", "no", "high", "yes", "no"]
+  },
+
+  "optionsStillViable": ["A", "C"],
+  "optionsRejected": [
+    {
+      "option": "B",
+      "reason": "OmniMem is unverified, full stack is over-engineered for MVP, maintenance burden too high"
+    },
+    {
+      "option": "D",
+      "reason": "CLAUDE.md-only approach does not address the injection gap or provide lifecycle management"
+    }
+  ],
+
+  "missingInformation": [
+    "OmniMem's actual maintenance status, GitHub activity, and Claude Code compatibility confirmation",
+    "Whether ~/.claude/sessions/ JSONL files are directly searchable without conversion",
+    "Whether Claude Code has any hook mechanism (session-start, session-end) that can be leveraged for memory injection beyond CLAUDE.md",
+    "Luca's actual usage pattern of the existing auto-memory system — frequency, quality, abandonment risk"
+  ]
+}

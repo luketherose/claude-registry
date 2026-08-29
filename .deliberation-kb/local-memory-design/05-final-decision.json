@@ -1,0 +1,376 @@
+{
+  "traceId": "del-20260531-070933-0f0044",
+  "step": "final-decision",
+  "strategy": "judge_arbitration",
+  "decidedAt": "2026-05-31T07:30:00Z",
+  "status": "decided",
+  "requiredHumanApproval": false,
+
+  "decision": "Build a local persistent memory system for Claude Code using Option C (pragmatic hybrid), extending the existing auto-memory system with a formalised personal memory layer, lifecycle rules, and a phased roadmap. Do NOT adopt OmniMem or external tools in Phase 1.",
+
+  "decisionType": "architecture+operational",
+  "selectedOption": "C",
+  "selectedOptionName": "Pragmatic hybrid — extend existing + selective external tools (conditional)",
+
+  "rejectedOptions": [
+    {
+      "option": "A",
+      "reason": "Equivalent to Option C Phase 1 but without committing to the personal memory layer or roadmap. The Critic's final position updated to accept Option C, making Option A a subset of C."
+    },
+    {
+      "option": "B",
+      "reason": "Over-engineered for MVP. OmniMem is unverified. Full stack creates maintenance burden that risks abandonment. Unanimously rejected."
+    },
+    {
+      "option": "D",
+      "reason": "CLAUDE.md-only approach does not address lifecycle management or cross-project separation. Does not scale to Luca's multi-client workload."
+    }
+  ],
+
+  "finalDecisionDetails": {
+
+    "architecturePrinciples": [
+      "Build on the existing auto-memory system — do not create parallel infrastructure",
+      "Memory files are always human-readable Markdown with YAML frontmatter",
+      "Injection mechanism is PREREQUISITE-phrased in CLAUDE.md (not optional)",
+      "Staleness rules are in CLAUDE.md from Phase 1",
+      "Client isolation enforced via per-client CLAUDE.md template (deliverable, not convention)",
+      "External tools (OmniMem, qmd-sessions) are evaluated only after Phase 1 is validated",
+      "Memory absence is always safe — the system degrades gracefully",
+      "Experiments are never retrieved as decisions",
+      "Low-confidence memories require user confirmation before application"
+    ],
+
+    "memoryScopes": {
+      "personal": {
+        "location": "~/.claude/memory/personal/PERSONAL-MEMORY.md",
+        "description": "Cross-project patterns, delivery anti-patterns, workflow decisions, global preferences",
+        "loadRule": "Always load at session start (PREREQUISITE)",
+        "maxEntries": "10 files, each may contain multiple rules",
+        "staleness": "Review after 60 days"
+      },
+      "project": {
+        "location": "~/.claude/projects/<id>/memory/MEMORY.md (existing)",
+        "description": "Project-specific decisions, constraints, conventions, lessons",
+        "loadRule": "Load only when pwd is within project directory (PREREQUISITE)",
+        "maxEntries": "5 files per project",
+        "staleness": "Review after 30 days"
+      },
+      "client": {
+        "location": "~/.claude/memory/clients/<name>/CLIENT-MEMORY.md",
+        "description": "Client-specific conventions, tech constraints, naming, escalation rules",
+        "loadRule": "Load ONLY within client project directory, via per-client CLAUDE.md template",
+        "maxEntries": "3 files per client",
+        "staleness": "Review after 30 days",
+        "isolationMechanism": "Per-client project CLAUDE.md with explicit load instruction + explicit 'do not override client constraints with personal scope'"
+      },
+      "experiment": {
+        "location": "~/.claude/memory/experiments/<id>/",
+        "description": "What was tried, outcome, why abandoned/kept",
+        "loadRule": "NEVER retrieved as decisions. Retrieved only on-demand via search when explicitly asked about experiments.",
+        "lifecycle": "Requires terminal outcome field: abandoned | successful | ongoing | superseded. No auto-expiration."
+      },
+      "sessionHistory": {
+        "location": "~/.claude/sessions/ (existing, read-only)",
+        "description": "Raw session JSONL — not part of active memory, used only for retrieval on demand",
+        "note": "NOT duplicated. qmd-sessions evaluated in Phase 2."
+      }
+    },
+
+    "lifecycleStates": {
+      "draft": "Created in session, not yet validated across contexts",
+      "active": "Validated in 2+ contexts (personal) or 2+ tasks (project). Safe to inject.",
+      "stale": "last_verified exceeded threshold. Surfaced with warning, not injected silently.",
+      "superseded": "Replaced by a newer active entry. Kept for audit, excluded from retrieval.",
+      "deprecated": "No longer applicable. Excluded from retrieval.",
+      "experiment": "Special scope — never promoted to active decisions. Graduates to lessons/ with outcome field."
+    },
+
+    "toolingDecisions": {
+      "OmniMem": "optional — evaluate in Phase 3 after Phase 1 manual baseline is validated. Not in Phase 1.",
+      "qmdSessions": "secondary — evaluate in Phase 2. Evaluate whether ~/.claude/sessions/ JSONL is directly usable first.",
+      "lifecycleDiscipline": "primary — BMAD-inspired lifecycle states and artifact-first approach (terminology: 'lifecycle discipline', not 'BMAD methodology')",
+      "MemoryMCP": "primary for Phase 3 — filesystem or sqlite-based MCP server with propose-write-confirm pattern. Required for reliable injection.",
+      "CodebaseMemory": "avoid in Phase 1-3 — indexing-supervisor agent's .indexing-kb/ already covers codebase structural memory. Evaluate overlap before adding."
+    },
+
+    "criticalRequirementsFromOpsReviewer": [
+      {
+        "requirement": "Client isolation template is a Phase 1 deliverable",
+        "detail": "A reusable CLAUDE.md snippet that any client project includes. Contains: (1) explicit client memory load instruction, (2) 'do not override client constraints with personal scope' directive, (3) client project boundary confirmation.",
+        "status": "RESOLVED — added to Phase 1 deliverables"
+      },
+      {
+        "requirement": "CLAUDE.md injection validation is Phase 1 exit criterion",
+        "detail": "Validate that the PREREQUISITE directive causes Claude to read memory files in at least 3 consecutive test sessions before proceeding to Phase 2.",
+        "status": "RESOLVED — added to Phase 1 exit criterion",
+        "failurePath": "If injection validation fails, MCP evaluation is immediately escalated to Phase 1 (not Phase 3)"
+      }
+    ],
+
+    "roadmap": {
+      "phase0": {
+        "name": "Baseline audit",
+        "duration": "This week (days 1-3)",
+        "objective": "Audit existing memory files, establish conventions, write initial CLAUDE.md rules",
+        "activities": [
+          "Audit all 5 existing memory files in claude-registry — verify accuracy, add status/confidence/last_verified fields",
+          "Audit existing CLAUDE.md global — identify missing lifecycle rules",
+          "Define memory file naming and structure conventions",
+          "Write initial lifecycle rules for CLAUDE.md"
+        ],
+        "deliverables": ["Updated existing memory files with metadata", "CLAUDE.md lifecycle rules draft"],
+        "mainRisk": "Existing memory files are significantly stale — may require full rewrite",
+        "exitCriterion": "All existing memory files have status/confidence/last_verified fields. CLAUDE.md lifecycle rules drafted."
+      },
+      "phase1": {
+        "name": "Manual memory discipline",
+        "duration": "Week 1-4",
+        "objective": "Establish personal memory layer, inject reliably via CLAUDE.md, validate toxic memory prevention",
+        "activities": [
+          "Create ~/.claude/memory/personal/PERSONAL-MEMORY.md with 5-10 consolidated cross-project memories",
+          "Write CLAUDE.md PREREQUISITE injection directive",
+          "Write CLAUDE.md staleness rules (30/60-day thresholds)",
+          "Create per-client CLAUDE.md isolation template",
+          "Create /memory-review slash command",
+          "Validate injection mechanism: 3 consecutive sessions read memory before proceeding"
+        ],
+        "deliverables": [
+          "~/.claude/memory/personal/PERSONAL-MEMORY.md",
+          "Updated ~/.claude/CLAUDE.md with injection PREREQUISITE + staleness rules",
+          "Client isolation template (reusable CLAUDE.md snippet)",
+          "~/.claude/commands/memory-review.md",
+          "Injection validation test results"
+        ],
+        "mainRisk": "CLAUDE.md injection is unreliable in task-focused sessions",
+        "exitCriterion": "3 consecutive sessions confirm memory read before action. Staleness rules correctly surface stale entries. Client isolation works in at least 1 client project test.",
+        "failurePath": "If injection validation fails, escalate MCP evaluation immediately"
+      },
+      "phase2": {
+        "name": "Session indexing",
+        "duration": "Month 2",
+        "objective": "Add session retrieval capability for past context",
+        "activities": [
+          "Evaluate whether ~/.claude/sessions/ JSONL is directly searchable (jq, grep, ripgrep)",
+          "If JSONL is sufficient: create /search-sessions command using native tools",
+          "If not: evaluate qmd-sessions for JSONL→Markdown conversion",
+          "Create /summarize-session command for end-of-session memory proposals"
+        ],
+        "deliverables": ["Session search capability (native or qmd-sessions)", "/summarize-session command"],
+        "mainRisk": "qmd-sessions conversion creates inconsistent output formats",
+        "exitCriterion": "Can retrieve a past session decision in < 60 seconds using the search tool"
+      },
+      "phase3": {
+        "name": "Persistent memory via MCP",
+        "duration": "Month 3",
+        "objective": "Replace CLAUDE.md directive injection with reliable MCP-based injection",
+        "activities": [
+          "Evaluate Memory MCP server options (filesystem MCP, sqlite MCP, or OmniMem if confirmed compatible)",
+          "Implement propose-write-confirm pattern for MCP writes",
+          "Evaluate OmniMem as MCP layer if maintenance status is confirmed",
+          "Migrate from CLAUDE.md directive to MCP-based injection"
+        ],
+        "deliverables": ["Memory MCP server configured", "Propose-write-confirm workflow", "OmniMem evaluation report"],
+        "mainRisk": "MCP server introduces schema fragility",
+        "exitCriterion": "Memory injection is reliable across task-focused sessions without CLAUDE.md directive as primary mechanism"
+      },
+      "phase4": {
+        "name": "Lifecycle automation",
+        "duration": "Month 4-5",
+        "objective": "Automate staleness flagging, contradiction detection, and memory promotion workflows",
+        "activities": [
+          "Automate staleness detection (script that scans memory files and reports overdue entries)",
+          "Add contradiction detection (flag entries with conflicting recommendations)",
+          "/consolidate-memory command for promoting draft→active",
+          "/deprecate-memory command for archiving superseded entries"
+        ],
+        "deliverables": ["Staleness detection script", "/consolidate-memory command", "/deprecate-memory command"],
+        "mainRisk": "Automation creates false confidence in memory quality",
+        "exitCriterion": "Staleness detection runs weekly and surfaces overdue entries without manual review"
+      },
+      "phase5": {
+        "name": "Knowledge graph",
+        "duration": "Month 6+ (conditional)",
+        "objective": "Structural codebase memory — only if indexing-supervisor's .indexing-kb/ is confirmed insufficient",
+        "activities": [
+          "Audit whether .indexing-kb/ output covers structural codebase memory needs",
+          "If gap confirmed: evaluate knowledge graph options (neo4j local, sqlite graph, or custom)",
+          "If no gap: close phase, no action"
+        ],
+        "deliverables": ["Gap analysis vs indexing-supervisor output"],
+        "mainRisk": "Scope creep into a standalone tool that duplicates existing agents",
+        "exitCriterion": "Either confirmed gap + implemented solution, or confirmed no gap + phase closed"
+      }
+    },
+
+    "claudeMdRules": {
+      "injectionPrerequisite": "PREREQUISITE: Before taking any action in this environment, read the following memory files if they exist: (1) ~/.claude/memory/personal/PERSONAL-MEMORY.md; (2) if pwd is within a project directory that has memory/MEMORY.md, read it; (3) do not read client/* memory unless explicitly in a client project directory.",
+      "stalenessRule": "When reading a memory entry, check the last_verified field: if > 30 days ago for project/client scope, or > 60 days ago for personal scope, surface the entry with prefix [STALE — verify before applying] and do NOT apply it silently.",
+      "crossProjectRule": "Project-scoped and client-scoped memories apply ONLY within their designated project/client directory. Never apply a project-specific constraint to a different project.",
+      "experimentRule": "Entries with scope: experiment are NEVER applied as decisions. They are retrieved only when explicitly asked about past experiments.",
+      "lowConfidenceRule": "Entries with confidence: low require explicit user confirmation before application. Surface as [LOW CONFIDENCE — confirm before applying].",
+      "updateRule": "Propose memory updates at session end, not during the session. Do not create or modify memory entries without surfacing the proposed change for user review first.",
+      "neverUpdateRule": "Do NOT update memory with: single-session observations (need 2+ confirmations), experiment results (go to experiment scope), client-specific data in personal scope, raw session content."
+    },
+
+    "commands": {
+      "memoryReview": {
+        "description": "Lists all memory entries sorted by last_verified, flagging entries overdue for review",
+        "trigger": "/memory-review",
+        "input": "Optional: --scope personal|project|client|all",
+        "output": "Markdown table: entry name, scope, status, last_verified, staleness flag",
+        "automation": "manual — run when starting a new sprint or before a major decision"
+      },
+      "summarizeSession": {
+        "description": "At end of session, proposes memory updates based on decisions made in the session",
+        "trigger": "/summarize-session",
+        "input": "Session context (auto-provided by Claude)",
+        "output": "Proposed memory entries (draft status) with source: session-summary. User approves before creating.",
+        "automation": "semi-auto — Claude proposes, human approves"
+      },
+      "proposeMemoryUpdate": {
+        "description": "Proposes an update to an existing memory entry based on new evidence",
+        "trigger": "/propose-memory-update <entry-name>",
+        "input": "Entry name + proposed change",
+        "output": "Diff of proposed change vs current entry. User approves before applying.",
+        "automation": "semi-auto — Claude proposes, human approves"
+      },
+      "searchMemory": {
+        "description": "Searches all memory files for a term or pattern",
+        "trigger": "/search-memory <term>",
+        "input": "Search term",
+        "output": "Matching entries with scope, status, and confidence",
+        "automation": "automatic"
+      },
+      "searchSessionHistory": {
+        "description": "Searches past session JSONL for a topic or decision",
+        "trigger": "/search-sessions <term>",
+        "input": "Search term",
+        "output": "Matching session excerpts with timestamp",
+        "automation": "automatic (Phase 2)"
+      },
+      "consolidateMemory": {
+        "description": "Promotes a draft memory entry to active after cross-context validation",
+        "trigger": "/consolidate-memory <entry-name>",
+        "input": "Entry name + confirmation that validated in 2+ contexts",
+        "output": "Updated entry with status: active and last_verified: today",
+        "automation": "manual gate — human confirms validation before promotion"
+      },
+      "deprecateMemory": {
+        "description": "Archives a superseded or no-longer-applicable memory entry",
+        "trigger": "/deprecate-memory <entry-name>",
+        "input": "Entry name + optional superseding entry reference",
+        "output": "Entry updated to status: deprecated, moved to archive section",
+        "automation": "manual — human-initiated only"
+      }
+    }
+  },
+
+  "majorDisagreements": [
+    {
+      "topic": "When to add staleness flagging",
+      "resolved": true,
+      "resolution": "Phase 1 (CLAUDE.md rules) — Ops Reviewer's position accepted by all"
+    },
+    {
+      "topic": "OmniMem — optional vs avoid",
+      "resolved": true,
+      "resolution": "All personas agree: do not adopt in Phase 1. Evaluate in Phase 3. The 'avoid' vs 'optional' distinction only matters in Phase 3, not now."
+    }
+  ],
+
+  "dissentingOpinions": [
+    {
+      "persona": "debate-critic",
+      "finalPosition": "Option C with conditional later phases. No dissent on Phase 1. Dissent on approach: later phases (2-4) should only be committed after Phase 1 is proven stable for at least 4 weeks. Do not plan Phase 2 until Phase 1 exit criterion is met.",
+      "severity": "low",
+      "preserved": true
+    },
+    {
+      "persona": "debate-operations-reviewer",
+      "finalPosition": "Option C is accepted. Critical objection maintained: CLAUDE.md injection reliability is an unverified assumption. If Phase 1 injection validation fails, MCP must be escalated immediately, not deferred to Phase 3.",
+      "severity": "medium",
+      "preserved": true
+    }
+  ],
+
+  "riskAssessment": {
+    "residualRisks": [
+      {
+        "risk": "CLAUDE.md injection unreliability",
+        "severity": "high",
+        "mitigation": "Phase 1 validation test. MCP escalation path if test fails.",
+        "status": "open — requires Phase 1 validation"
+      },
+      {
+        "risk": "Maintenance abandonment",
+        "severity": "medium",
+        "mitigation": "System designed for graceful degradation. Absence of maintenance = increasing staleness warnings, not silent injection of stale data.",
+        "status": "mitigated by design"
+      },
+      {
+        "risk": "OmniMem immaturity",
+        "severity": "medium",
+        "mitigation": "Deferred to Phase 3. Fallback: filesystem MCP or sqlite MCP.",
+        "status": "deferred"
+      },
+      {
+        "risk": "Cross-client contamination",
+        "severity": "critical",
+        "mitigation": "Per-client CLAUDE.md template is Phase 1 deliverable.",
+        "status": "mitigated — deliverable specified"
+      }
+    ]
+  },
+
+  "confidence": "high",
+  "confidenceRationale": "Three personas converged on Option C after a productive challenge/rebuttal round. Critical gaps (injection mechanism, staleness rules, experiment lifecycle, client isolation) were resolved. One open risk remains (injection reliability) with a clear validation and escalation path.",
+
+  "validationPlan": [
+    "Phase 1 exit: 3 consecutive sessions confirm CLAUDE.md PREREQUISITE causes memory read before action",
+    "Phase 1 exit: Staleness rules correctly surface stale entries in at least 2 test scenarios",
+    "Phase 1 exit: Client isolation works — client memory does not load in personal session test",
+    "Ongoing: /memory-review run every 2 weeks to catch overdue entries",
+    "Phase 2 entry: Confirm Phase 1 has been stable for at least 3 weeks before proceeding"
+  ],
+
+  "rollbackPlan": {
+    "description": "The memory system is additive and never modifies the core Claude Code environment. Rollback = remove CLAUDE.md injection directive and archive memory files.",
+    "steps": [
+      "Remove PREREQUISITE injection directive from ~/.claude/CLAUDE.md",
+      "Archive ~/.claude/memory/ to ~/.claude/memory-archived-<date>/",
+      "Existing project MEMORY.md files remain in place — they are harmless without the injection directive",
+      "System returns to previous state with no data loss"
+    ],
+    "irreversible": false,
+    "dataLoss": "none — memory files are preserved in archive"
+  },
+
+  "implementationPlan": {
+    "thisWeek": [
+      "Day 1-2: Audit all 5 existing memory files in claude-registry. Add status/confidence/last_verified fields to each.",
+      "Day 2-3: Write CLAUDE.md PREREQUISITE injection directive + staleness rules + cross-project rules.",
+      "Day 3-4: Create ~/.claude/memory/personal/PERSONAL-MEMORY.md with 5-10 consolidated cross-project entries.",
+      "Day 4-5: Write client isolation template. Create /memory-review slash command.",
+      "Day 5: Run injection validation test (3 sessions). Record results."
+    ],
+    "nextTwoWeeks": [
+      "Operate Phase 1 for 2+ weeks before evaluating Phase 2",
+      "Run /memory-review at end of each week",
+      "Propose memory updates only via /summarize-session (do not create ad hoc)",
+      "If injection test fails: immediately evaluate MCP server options"
+    ]
+  },
+
+  "commitProtocol": "local_transactional",
+  "auditTrailId": "del-20260531-070933-0f0044",
+  "artefactPaths": {
+    "brief": ".deliberation-kb/local-memory-design/00-decision-brief.json",
+    "drafts": ".deliberation-kb/local-memory-design/01-drafts/",
+    "evidenceSummary": ".deliberation-kb/local-memory-design/02-evidence-summary.json",
+    "challenges": ".deliberation-kb/local-memory-design/03-challenges/",
+    "rebuttals": ".deliberation-kb/local-memory-design/04-rebuttals/",
+    "finalDecision": ".deliberation-kb/local-memory-design/05-final-decision.json",
+    "manifest": ".deliberation-kb/local-memory-design/_meta/manifest.json"
+  }
+}

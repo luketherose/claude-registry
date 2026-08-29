@@ -1,0 +1,63 @@
+{
+  "persona": "debate-critic",
+  "role": "Skeptical Critic",
+  "step": "rebuttal",
+  "traceId": "del-20260531-070933-0f0044",
+  "rebuttalAt": "2026-05-31T07:26:00Z",
+
+  "challengesAccepted": [
+    {
+      "challenge": "Option A and Option C converge in Phase 1 — the disagreement is sequencing, not architecture",
+      "source": "debate-proposer + evidence-summary",
+      "accepted": true,
+      "impact": "I withdraw my hard objection to Option C. My recommendation is now: adopt Option C's Phase 1 immediately, treat Phase 2-4 as conditional on Phase 1 success (not committed up front). This preserves the pragmatic concern while accepting the better structure.",
+      "updatedPosition": "Option C with conditional later phases."
+    },
+    {
+      "challenge": "Staleness rules must be Phase 1",
+      "source": "debate-operations-reviewer",
+      "accepted": true,
+      "impact": "Agree. This was a gap in my Option A recommendation as well."
+    },
+    {
+      "challenge": "Experiment outcome field (not calendar-based expiration)",
+      "source": "debate-operations-reviewer",
+      "accepted": true,
+      "impact": "The outcome field approach is more robust than time-based expiration. Accepted."
+    },
+    {
+      "challenge": "Cross-client contamination needs a concrete enforcement mechanism",
+      "source": "debate-operations-reviewer",
+      "accepted": true,
+      "impact": "A per-client CLAUDE.md (or per-client memory load rule in the project CLAUDE.md) is the correct enforcement mechanism. Not just a convention. This should be in Phase 1 for any client-scoped work."
+    }
+  ],
+
+  "challengesRejected": [
+    {
+      "challenge": "MCP should support propose-write-confirm (not read-only)",
+      "source": "debate-operations-reviewer",
+      "rejected": false,
+      "positionUpdate": "I accept the Ops Reviewer's position update: propose→approve→write is correct. My initial read-only recommendation was overcorrection. The safety gate is human approval, not technical restriction."
+    }
+  ],
+
+  "maintainedConcerns": [
+    {
+      "concern": "CLAUDE.md injection reliability is unproven and must be validated in Phase 1",
+      "severity": "high",
+      "detail": "The Ops Reviewer's point stands: CLAUDE.md standing directives are not guaranteed to be followed in task-focused sessions. Phase 1 must include explicit validation of the injection mechanism before declaring Phase 1 complete. If the injection is unreliable, Phase 3 (MCP) becomes Phase 1 priority.",
+      "requiredInFinalDecision": true
+    },
+    {
+      "concern": "Maintenance burden must be designed for from day 1",
+      "severity": "medium",
+      "detail": "The /memory-review command and staleness rules must make it easy to NOT maintain the system (graceful degradation) rather than making maintenance mandatory. The absence of maintenance should result in increasing staleness warnings, not silent stale injection."
+    }
+  ],
+
+  "finalPosition": "Option C with conditional later phases. Phase 1 must include injection validation as an explicit exit criterion. If injection is unreliable, escalate MCP to Phase 1. Memory system must be designed to degrade safely, not to require maintenance to remain safe.",
+
+  "finalConfidence": "medium-high",
+  "confidenceRationale": "The critical gaps have been resolved in the challenge round. Remaining uncertainty is about CLAUDE.md injection reliability — a known unknown that Phase 1 validation will resolve."
+}

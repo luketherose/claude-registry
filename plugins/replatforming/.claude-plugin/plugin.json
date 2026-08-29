@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "replatforming",
+  "description": "AS-IS to TO-BE application replatforming pipeline: codebase indexing, functional and technical analysis, baseline testing, TO-BE scaffolding, and equivalence verification.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Luca La Rosa",
+    "email": "luca.la.rosa@accenture.com"
+  },
+  "repository": "https://github.com/luketherose/claude-registry",
+  "license": "UNLICENSED",
+  "keywords": [
+    "replatforming",
+    "migration",
+    "legacy",
+    "refactoring",
+    "as-is",
+    "to-be",
+    "equivalence"
+  ],
+  "category": "development"
+}

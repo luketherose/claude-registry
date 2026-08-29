@@ -1,3 +1,0 @@
-{
-  "_comment": "Legacy body-length baseline for validate_catalog.py. Each entry caps the body length (chars, stripped) of an agent that was already over the 10 000-char rubric ceiling when the ratchet rule was introduced. A legacy agent that EXCEEDS its baseline is emitted as an ERROR (the body must shrink — never grow). Agents NOT listed must stay under 10 000 chars unconditionally. When a legacy agent is extracted below 10 000 chars, REMOVE its entry from this file (so a future regrowth is caught immediately). See claude-catalog/docs/supervisor-extraction-template.md for the extraction recipe."
-}

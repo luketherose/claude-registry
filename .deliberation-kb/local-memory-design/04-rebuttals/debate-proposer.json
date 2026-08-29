@@ -1,0 +1,61 @@
+{
+  "persona": "debate-proposer",
+  "role": "Primary Architect / Proposer",
+  "step": "rebuttal",
+  "traceId": "del-20260531-070933-0f0044",
+  "rebuttalAt": "2026-05-31T07:25:00Z",
+
+  "challengesAccepted": [
+    {
+      "challenge": "Injection mechanism must be specified in Phase 1",
+      "source": "debate-critic + evidence-summary",
+      "accepted": true,
+      "impact": "Phase 1 now explicitly includes CLAUDE.md injection directive phrased as a PREREQUISITE (per Ops Reviewer's refinement): 'Before taking any action, read these memory files.' This is a material improvement to the Phase 1 plan.",
+      "updatedDeliverable": "CLAUDE.md global rule: 'PREREQUISITE before any session action: (1) read ~/.claude/memory/personal/PERSONAL-MEMORY.md if it exists; (2) if pwd is within a project directory with memory/MEMORY.md, read it; (3) never read client/* memory outside the designated client project directory.'"
+    },
+    {
+      "challenge": "Staleness rules in CLAUDE.md must be Phase 1, not Phase 4",
+      "source": "debate-operations-reviewer",
+      "accepted": true,
+      "impact": "Phase 1 now includes CLAUDE.md staleness rules: entries with last_verified > 30 days (project/client) or > 60 days (personal) are surfaced as [STALE — verify before applying], not silently injected."
+    },
+    {
+      "challenge": "Phase 0 should be 'establish baseline', not 'evaluate tools'",
+      "source": "debate-critic",
+      "accepted": true,
+      "impact": "Phase 0 restructured: audit existing memory files, establish conventions, write CLAUDE.md rules. Tool evaluation moves to end of Phase 1."
+    },
+    {
+      "challenge": "Experiment outcomes require explicit terminal states",
+      "source": "debate-operations-reviewer",
+      "accepted": true,
+      "impact": "Experiment lifecycle rule updated: experiments require outcome field (abandoned | successful | ongoing | superseded). Calendar-based expiration removed. Promotion requires outcome: successful AND cross-context validation."
+    },
+    {
+      "challenge": "3-level framing adds complexity for Phase 1 MVP",
+      "source": "debate-critic",
+      "accepted": "partial",
+      "impact": "Phase 1 uses flat directory with typed files. 3-level framing is retained as a conceptual model for Phase 2+ documentation only."
+    }
+  ],
+
+  "challengesRejected": [
+    {
+      "challenge": "BMAD as 'methodological backbone' is overreach",
+      "source": "debate-critic",
+      "rejected": true,
+      "rationale": "I accept the reframing to 'lifecycle discipline' in the final document, but the substance — artifact-first, explicit lifecycle states, gate before promotion — is structurally derived from BMAD patterns that Luca already knows and uses. The label change is appropriate; the substance remains."
+    },
+    {
+      "challenge": "Cap should apply to files not entries",
+      "source": "debate-critic",
+      "rejected": false,
+      "positionUpdate": "Actually accept this: the cap on injected context should be in files/topics (5 personal, 5 project, 3 client), not individual rule entries. Each file may contain multiple rules."
+    }
+  ],
+
+  "finalPosition": "Option C, with Phase 1 strengthened to include: (1) CLAUDE.md prerequisite injection directive, (2) staleness rules in CLAUDE.md from day 1, (3) explicit experiment lifecycle with terminal outcome states, (4) context-aware loading with client isolation via per-client CLAUDE.md. Phase 0 restructured as baseline audit.",
+
+  "finalConfidence": "high",
+  "confidenceRationale": "The challenge round has strengthened the Phase 1 plan significantly. The critical gaps (injection mechanism, staleness rules, experiment lifecycle) have been resolved. The remaining open question (CLAUDE.md injection reliability) is a known risk that can be validated in Phase 1."
+}

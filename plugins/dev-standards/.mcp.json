@@ -1,0 +1,12 @@
+{
+  "_comment": "Browser automation via @playwright/mcp. Requires Node.js 18+; npx pulls the package on first run. Optional args: --browser chromium|firefox|webkit, --headless, --viewport-size WxH, --isolated. Consumed by the browser-automation skill, test-writer and developer-frontend.",
+  "mcpServers": {
+    "browser": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@0.0.79"
+      ]
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "claude-registry",
+  "description": "Accenture team registry of Claude Code agents and skills: replatforming pipeline, development standards, deliberative decision engine, documentation generation.",
+  "version": "2.0.0",
+  "owner": {
+    "name": "Luca La Rosa",
+    "email": "luca.la.rosa@accenture.com"
+  },
+  "metadata": {
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "replatforming",
+      "source": "./plugins/replatforming",
+      "description": "AS-IS to TO-BE application replatforming pipeline: codebase indexing, functional and technical analysis, baseline testing, TO-BE scaffolding, and equivalence verification.",
+      "category": "development",
+      "tags": [
+        "replatforming",
+        "migration",
+        "legacy",
+        "refactoring",
+        "as-is",
+        "to-be",
+        "equivalence"
+      ]
+    },
+    {
+      "name": "dev-standards",
+      "source": "./plugins/dev-standards",
+      "description": "Production code standards, developer agents and test authoring for Java/Spring, Python, Go, Rust, Kotlin, C#, PHP, Ruby, Streamlit and frontend frameworks (Angular, React, Vue, Qwik, Vanilla), plus REST API design and bug diagnosis.",
+      "category": "development",
+      "tags": [
+        "java",
+        "spring",
+        "python",
+        "angular",
+        "react",
+        "vue",
+        "golang",
+        "rust",
+        "kotlin",
+        "standards",
+        "testing",
+        "debugging"
+      ]
+    },
+    {
+      "name": "deliberation",
+      "source": "./plugins/deliberation",
+      "description": "Multi-agent deliberative decision engine: structured debate with independent personas, challenge rounds, rebuttals, and auditable final-decision artefacts for high-stakes or irreversible decisions.",
+      "category": "development",
+      "tags": [
+        "decision",
+        "debate",
+        "multi-agent",
+        "adr",
+        "risk"
+      ]
+    },
+    {
+      "name": "docs-branding",
+      "source": "./plugins/docs-branding",
+      "description": "Technical documentation authoring and Accenture-branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, PDF/DOCX documents, and PowerPoint presentations.",
+      "category": "development",
+      "tags": [
+        "documentation",
+        "readme",
+        "wiki",
+        "pptx",
+        "pdf",
+        "accenture",
+        "branding"
+      ]
+    },
+    {
+      "name": "analysis-architecture",
+      "source": "./plugins/analysis-architecture",
+      "description": "System architecture design, ADR authoring, functional requirement extraction, technical debt assessment, capability-registry auditing, and multi-domain task orchestration.",
+      "category": "development",
+      "tags": [
+        "architecture",
+        "adr",
+        "requirements",
+        "technical-debt",
+        "orchestration"
+      ]
+    },
+    {
+      "name": "caveman",
+      "source": "./plugins/caveman",
+      "description": "Token-efficient communication mode: terse, direct output with no filler, applied to prose, commit messages, and code-review comments.",
+      "category": "development",
+      "tags": [
+        "terse",
+        "token-efficiency",
+        "output-style",
+        "commit-message"
+      ]
+    }
+  ]
+}

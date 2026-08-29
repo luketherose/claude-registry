@@ -1,0 +1,58 @@
+{
+  "persona": "debate-operations-reviewer",
+  "role": "Operations / Reliability Reviewer",
+  "step": "challenge",
+  "traceId": "del-20260531-070933-0f0044",
+  "challengedAt": "2026-05-31T07:22:00Z",
+
+  "challengesToProposer": [
+    {
+      "targetClaim": "Experiment scope memories expire after 90 days unless promoted",
+      "severity": "high",
+      "challenge": "Auto-expiration after 90 days is insufficient for experiments that involve tools (like OmniMem) which may be re-evaluated. A better model: experiments expire when explicitly concluded (with outcome recorded), not on a calendar basis. Time-based expiration creates false safety — a 91-day-old abandoned experiment is not automatically known to be abandoned, it may just be paused. The outcome field is what matters, not the age.",
+      "suggestedRefinement": "Experiments require an explicit outcome field: abandoned | successful | ongoing | superseded. Without a terminal outcome, the experiment is never eligible for promotion. With outcome: abandoned, the entry is automatically demoted to deprecated regardless of age."
+    },
+    {
+      "targetClaim": "Promote to active after 2+ session confirmation",
+      "severity": "high",
+      "challenge": "The Proposer's '2+ session confirmation' rule for promoting a memory from draft to active is too loose. Two sessions might both be in the same project context, confirming project-specific behavior rather than general patterns. The rule should specify: at least 2 confirmations in DIFFERENT project contexts (for personal scope), or 2 different tasks within the same project (for project scope).",
+      "suggestedRefinement": "Personal scope promotion rule: confirmed valid in 2+ distinct project contexts. Project scope promotion rule: confirmed valid in 2+ distinct tasks within the project. Experiment promotion: never — experiments graduate to lessons/, not to active decisions."
+    },
+    {
+      "targetClaim": "Concrete injection via CLAUDE.md standing directive",
+      "severity": "medium",
+      "challenge": "Relying on a CLAUDE.md standing directive to inject memory at session start creates a reliability gap: the directive only works if Claude reads the directive at the start of the session AND acts on it. If the session starts with a direct task ('fix this bug'), Claude may skip the memory read and proceed directly to the task. CLAUDE.md instructions have inconsistent compliance in task-focused sessions.",
+      "suggestedRefinement": "The injection rule must be phrased as a PREREQUISITE: 'Before taking any action in this environment, first read [memory files].' Not as a 'please also do'. The word order and framing matters for compliance."
+    }
+  ],
+
+  "challengesToCritic": [
+    {
+      "targetClaim": "Option A is sufficient — the existing auto-memory system should be extended only",
+      "severity": "medium",
+      "challenge": "The Critic correctly identifies that the existing system is functional, but the existing MEMORY.md files do not have status, confidence, or last_verified fields. Without these fields, the existing system cannot implement the toxic memory prevention rules that the Critic themselves endorses. Adding these fields is not 'extending' — it is a structural change that requires a migration of existing entries. This is effectively Option C's Phase 1 anyway.",
+      "conclusion": "The Critic's Option A and Option C converge in Phase 1. I agree with the evidence summary on this point."
+    },
+    {
+      "targetClaim": "MCP should support propose-write with human approval",
+      "severity": "low",
+      "challenge": "I partially update my position in response to the Critic's counter-challenge. The propose→approve→write flow is correct. My 'read-only' framing was too strict. The safety requirement is: NO writes without explicit human approval, even if the MCP protocol allows writes. The implementation: MCP write operations require a confirmation step that surfaces the proposed change to the user before committing.",
+      "positionUpdate": "Accept: MCP with propose-write-confirm pattern. Withdraw: strict read-only MCP."
+    }
+  ],
+
+  "criticalObjectionsMaintained": [
+    {
+      "objection": "Cross-client contamination prevention mechanism is unspecified",
+      "severity": "critical",
+      "detail": "Neither the Proposer's nor the Critic's Phase 1 plan specifies HOW client-scoped memories will be prevented from loading outside the client project directory. Saying 'memories are context-aware' is not a mechanism. The mechanism must be: per-client CLAUDE.md in the client project directory that explicitly loads client memory and explicitly BLOCKS global personal memory from overriding it. Without this per-client CLAUDE.md, there is no enforcement — just a convention that can be violated.",
+      "requiredResolution": "Phase 1 must include a concrete mechanism for client scope enforcement, not just a rule. Proposed: ~/.claude/memory/clients/<name>/CLAUDE-CLIENT.md with explicit load instructions that override personal scope for client-specific decisions."
+    },
+    {
+      "objection": "Memory injection reliability via CLAUDE.md is unproven",
+      "severity": "high",
+      "detail": "The core assumption that a CLAUDE.md standing directive reliably injects memory at session start has not been validated. If Claude Code skips the memory read (which it will in task-focused sessions), the entire Phase 1 system is silent. Phase 1 must include a validation test: start a session with the directive in place, verify Claude actually reads the memory files before proceeding.",
+      "requiredResolution": "Add a validation step to Phase 1 exit criterion: demonstrate Claude reads memory files when the CLAUDE.md directive is in place."
+    }
+  ]
+}

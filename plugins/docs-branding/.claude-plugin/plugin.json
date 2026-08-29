@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "docs-branding",
+  "description": "Technical documentation authoring and Accenture-branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, PDF/DOCX documents, and PowerPoint presentations.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Luca La Rosa",
+    "email": "luca.la.rosa@accenture.com"
+  },
+  "repository": "https://github.com/luketherose/claude-registry",
+  "license": "UNLICENSED",
+  "keywords": [
+    "documentation",
+    "readme",
+    "wiki",
+    "pptx",
+    "pdf",
+    "accenture",
+    "branding"
+  ],
+  "category": "development",
+  "mcpServers": "./.mcp.json"
+}

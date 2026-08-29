@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "dev-standards",
+  "description": "Production code standards, developer agents and test authoring for Java/Spring, Python, Go, Rust, Kotlin, C#, PHP, Ruby, Streamlit and frontend frameworks (Angular, React, Vue, Qwik, Vanilla), plus REST API design and bug diagnosis.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Luca La Rosa",
+    "email": "luca.la.rosa@accenture.com"
+  },
+  "repository": "https://github.com/luketherose/claude-registry",
+  "license": "UNLICENSED",
+  "keywords": [
+    "java",
+    "spring",
+    "python",
+    "angular",
+    "react",
+    "vue",
+    "golang",
+    "rust",
+    "kotlin",
+    "standards",
+    "testing",
+    "debugging"
+  ],
+  "category": "development",
+  "mcpServers": "./.mcp.json"
+}

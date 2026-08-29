@@ -71,6 +71,20 @@
             {"id": "step-5.5", "name": "Test data seeding"},
             {"id": "step-6", "name": "Final validation"}
           ]
+        },
+        {
+          "id": "retrospective",
+          "name": "Workflow Retrospective",
+          "type": "quality-gate",
+          "supervisor": "refactoring-supervisor",
+          "output_dir": "docs/refactoring/",
+          "output_file": "docs/refactoring/retrospective.md",
+          "state_file": "docs/refactoring/workflow-manifest.json",
+          "triggers": ["after-phase-4-sign-off", "explicit-user-request"],
+          "requires": ["phase-4"],
+          "can_run_standalone": false,
+          "can_trigger_cross_phase_iteration": true,
+          "cross_phase_iteration_reentry": "phase-1"
         }
       ],
       "shared_agents": [
