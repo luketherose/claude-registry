@@ -155,9 +155,10 @@ There is no separate registry manifest to update. Agents are discovered from
 root `.claude-plugin/marketplace.json`. Nothing needs publishing: merging to `main` is
 what ships the change, and consumers pick it up in the background.
 
-> `bmad/scripts/backfill-dag.py` still writes the DAG into `claude-marketplace/catalog.json`,
-> a file the plugin migration removed. It does not run. Edit
-> `workflow-dag-draft.json` by hand until the script is repointed.
+> There is no script for this step. `bmad/scripts/backfill-dag.py` used to write
+> the DAG into `claude-marketplace/catalog.json`, which the plugin migration
+> removed, so it was deleted. Edit `bmad/design/workflow-dag-draft.json` by hand;
+> the validator checks that its agent list matches the tree.
 
 ---
 

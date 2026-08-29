@@ -316,6 +316,32 @@ def validate_evals():
                     err("%s[%d]: fixture %s does not exist" % (path, i, f))
 
 
+
+def validate_workflow_dag():
+    """bmad/design/workflow-dag-draft.json must list exactly the agents on disk.
+
+    It drifted silently: two entries named capabilities removed months earlier
+    while the two superseded supervisors that do exist were absent, and the
+    totals matched by coincidence, so a count check would have passed.
+    """
+    path = "bmad/design/workflow-dag-draft.json"
+    if not os.path.exists(path):
+        return
+    try:
+        dag = json.load(open(path, encoding="utf-8"))
+    except Exception as exc:
+        err("%s: not valid JSON (%s)" % (path, exc))
+        return
+    listed = {a.get("name") for a in dag.get("agents", [])}
+    on_disk = {os.path.basename(p)[:-3]
+               for p in glob.glob("plugins/*/agents/**/*.md", recursive=True)}
+    for name in sorted(listed - on_disk):
+        err("%s: lists `%s`, which is not an agent in the tree" % (path, name))
+    for name in sorted(on_disk - listed):
+        err("%s: does not list `%s`, which is an agent in the tree"
+            % (path, name))
+
+
 def validate_skills():
     seen = {}
     for path in sorted(glob.glob("plugins/*/skills/*/SKILL.md")):
@@ -483,6 +509,7 @@ if __name__ == "__main__":
     if args.only in (None, "capabilities"):
         validate_frontmatter_yaml()
         validate_evals()
+        validate_workflow_dag()
         validate_cross_plugin_references()
         budget = validate_agents()
         validate_skills()
