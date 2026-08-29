@@ -242,6 +242,33 @@ def validate_mcp_pins():
                         "commit SHA or tag" % (path, name, arg))
 
 
+
+def validate_cross_plugin_references():
+    """A references/ path must resolve inside its own plugin, or name its owner.
+
+    Plugins are installed independently, so a relative path can never reach
+    another plugin's tree. Four replatforming supervisors point at a file owned
+    by `deliberation`; that is fine only because the line says so in words. A
+    bare path there would be unresolvable for both the agent and the reader.
+    """
+    owner = re.compile(r"the `[a-z0-9-]+` plugin")
+    link = re.compile(r"[`(]\.?/?(references/[A-Za-z0-9._/-]+\.md)[`)]")
+    for path in sorted(glob.glob("plugins/*/agents/**/*.md", recursive=True)
+                       + glob.glob("plugins/*/skills/*/SKILL.md")):
+        plugin_root = "/".join(path.split("/")[:2])
+        for i, line in enumerate(open(path, encoding="utf-8"), 1):
+            for m in link.finditer(line):
+                rel = m.group(1)
+                if os.path.exists(os.path.join(os.path.dirname(path), rel)) or \
+                        os.path.exists(os.path.join(plugin_root, rel)):
+                    continue
+                if owner.search(line):
+                    continue
+                err("%s:%d: `%s` resolves in neither this file's directory nor "
+                    "%s, and the line does not say which plugin owns it"
+                    % (path, i, rel, plugin_root))
+
+
 def validate_skills():
     seen = {}
     for path in sorted(glob.glob("plugins/*/skills/*/SKILL.md")):
@@ -403,6 +430,7 @@ if __name__ == "__main__":
         validate_mcp_pins()
     if args.only in (None, "capabilities"):
         validate_frontmatter_yaml()
+        validate_cross_plugin_references()
         budget = validate_agents()
         validate_skills()
         validate_plugin_root_refs()

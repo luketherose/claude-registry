@@ -146,6 +146,12 @@ jobs:
       - name: Safety hook regression matrix
         run: bash hooks/tests/test-pre-tool-safety.sh
 
+      # Installs every plugin into a throwaway CLAUDE_CONFIG_DIR and asserts the
+      # result is actually usable: frontmatter parses, ${CLAUDE_PLUGIN_ROOT} is
+      # gone, every reference path resolves, uninstall is clean.
+      - name: Clean-machine install check
+        run: bash scripts/test-clean-install.sh
+
       - name: Post or update comment
         uses: actions/github-script@v7
         with:
