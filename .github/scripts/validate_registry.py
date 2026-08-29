@@ -171,10 +171,48 @@ def validate_agents():
         # the instruction is inert and the agent silently substitutes its own priors
         # for the team standard, with no error surfaced anywhere.
         tools = field(fm, "tools")
-        if "## Skills" in body and tools and "Skill" not in [
+        # Keying this on a literal "## Skills" heading missed developer-frontend,
+        # which routes to skills from "Invoke the framework skill set" instead.
+        # Match how the body actually talks about skills, not one heading spelling.
+        invokes_skill = re.search(
+            r"`Skill`|Skill tool|[Ii]nvoke the [^\n]{0,40}skill", body)
+        if invokes_skill and tools and "Skill" not in [
                 x.strip() for x in tools.split(",")]:
-            err("%s: has a '## Skills' section but 'Skill' is missing from tools" % path)
+            err("%s: body invokes skills but 'Skill' is missing from tools" % path)
     return per_plugin
+
+
+
+def validate_frontmatter_yaml():
+    """Every frontmatter must survive a real YAML parse.
+
+    split_frontmatter() hands back raw text and field() reads it line by line,
+    so a description with broken quoting still yields a plausible value here
+    while Claude Code drops every field but the filename-derived name at load
+    time. Only an actual parse catches that.
+    """
+    try:
+        import yaml
+    except ImportError:
+        err("PyYAML is not installed: the frontmatter parse gate cannot run. "
+            "Add 'pip install pyyaml' to the workflow.")
+        return
+    for path in sorted(glob.glob("plugins/**/*.md", recursive=True)):
+        text = open(path, encoding="utf-8").read()
+        if not text.startswith("---"):
+            continue
+        end = text.find("\n---", 3)
+        if end == -1:
+            continue
+        try:
+            parsed = yaml.safe_load(text[3:end])
+        except Exception as exc:
+            err("%s: frontmatter is not valid YAML (%s). At load time every "
+                "field but the name is silently dropped."
+                % (path, str(exc).split("\n")[0]))
+            continue
+        if not isinstance(parsed, dict):
+            err("%s: frontmatter does not parse to a mapping" % path)
 
 
 def validate_skills():
@@ -324,6 +362,7 @@ if __name__ == "__main__":
     if args.only in (None, "manifests"):
         validate_manifests()
     if args.only in (None, "capabilities"):
+        validate_frontmatter_yaml()
         budget = validate_agents()
         validate_skills()
         validate_plugin_root_refs()

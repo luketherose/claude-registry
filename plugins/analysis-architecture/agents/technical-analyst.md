@@ -1,6 +1,6 @@
 ---
 name: technical-analyst
-description: "Use this agent when producing a technical analysis of an existing system: technology stack assessment, technical debt inventory, security posture review, observability gaps, dependency vulnerability analysis, code quality metrics interpretation, or CI/CD pipeline evaluation. Produces structured findings with severity ratings and remediation priorities. Does not make architecture recommendations — delegates to software-architect for that."produce a technical health report for this repo\", \", and \". Typical user phrasings: \"produce a technical health report for this repo\", \"what is the technical debt level of this Spring Boot service?\", \"audit the CI/CD pipeline and dependency vulnerabilities\"."
+description: "Use this agent when producing a technical analysis of an existing system: technology stack assessment, technical debt inventory, security posture review, observability gaps, dependency vulnerability analysis, code quality metrics interpretation, or CI/CD pipeline evaluation. Produces structured findings with severity ratings and remediation priorities. Does not make architecture recommendations — delegates to software-architect for that. Typical user phrasings: \"produce a technical health report for this repo\", \"what is the technical debt level of this Spring Boot service?\", \"audit the CI/CD pipeline and dependency vulnerabilities\"."
 tools: Read, Grep, Glob, Bash, Write, Skill
 model: inherit
 color: magenta

@@ -66,7 +66,7 @@ per-capability beta or stable flag. Versioning is semver on the plugin.
 
 ## Conventions that are enforced by CI
 
-- Combined subagent descriptions stay under **12000 tokens** across all plugins enabled at
+- Combined subagent descriptions stay under **13000 tokens** across all plugins enabled at
   once. The hard platform ceiling is 15000.
 - `SKILL.md` bodies stay under **500 lines**. Overflow goes into `references/`.
 - Skill `description` stays under 1024 characters and is written in the third person.

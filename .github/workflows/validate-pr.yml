@@ -27,6 +27,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install dependencies
+        run: pip install pyyaml
+
       - name: Validate marketplace.json and every plugin.json
         id: validate
         run: |
@@ -40,17 +43,37 @@ jobs:
         with:
           node-version: "20"
 
+      # A real gate. The previous version swallowed the exit code with `|| echo`
+      # and the failure step below keyed only on the Python validator, so a
+      # plugin that Claude Code itself rejects still produced a green check.
+      # A non-zero exit only blocks when the CLI actually reports a validation
+      # failure; an unavailable or unauthenticated CLI is reported, not enforced.
       - name: Run claude plugin validate
+        id: cli_validate
         run: |
           npm install -g @anthropic-ai/claude-code@latest
+          set +e
+          out=$(claude plugin validate . 2>&1)
+          rc=$?
+          set -e
+          verdict="passed"
+          if [ "$rc" -ne 0 ]; then
+            if echo "$out" | grep -qi "validation failed"; then
+              verdict="FAILED"
+            else
+              verdict="could not run (not a validation failure, not enforced)"
+              rc=0
+            fi
+          fi
           {
             echo ""
-            echo "### \`claude plugin validate\`"
+            echo "### \`claude plugin validate\` — $verdict"
             echo ""
             echo '```'
-            claude plugin validate . 2>&1 || echo "(unavailable in this environment)"
+            echo "$out"
             echo '```'
           } >> /tmp/marketplace-comment.md
+          exit $rc
         continue-on-error: true
 
       - name: Post or update comment
@@ -90,7 +113,7 @@ jobs:
             }
 
       - name: Fail if manifest errors found
-        if: steps.validate.outcome == 'failure'
+        if: steps.validate.outcome == 'failure' || steps.cli_validate.outcome == 'failure'
         run: |
           echo "Marketplace validation failed. See the PR comment for details."
           exit 1
@@ -109,6 +132,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install dependencies
+        run: pip install pyyaml
+
       - name: Validate agents, skills, references and the description budget
         id: validate
         run: |
@@ -116,6 +142,9 @@ jobs:
             --only capabilities \
             --output-file /tmp/catalog-comment.md
         continue-on-error: true
+
+      - name: Safety hook regression matrix
+        run: bash hooks/tests/test-pre-tool-safety.sh
 
       - name: Post or update comment
         uses: actions/github-script@v7
