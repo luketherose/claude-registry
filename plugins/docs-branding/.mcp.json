@@ -1,0 +1,18 @@
+{
+  "_comment": "UML diagram generation via antoinebou12/uml-mcp, pinned to a commit SHA. Requires 'uvx' (Astral uv) on PATH. PLANTUML_SERVER and UML_OUTPUT_DIR are overridable via environment. Consumed by the uml-diagram-generator skill and by documentation-writer, software-architect and technical-analyst.",
+  "mcpServers": {
+    "uml": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/antoinebou12/uml-mcp@78137bd66bfeb9754d0d5de0be1016f4dc053cc6",
+        "uml-mcp"
+      ],
+      "env": {
+        "PLANTUML_SERVER": "${PLANTUML_SERVER:-https://www.plantuml.com/plantuml}",
+        "UML_OUTPUT_DIR": "${UML_OUTPUT_DIR:-docs/diagrams}"
+      }
+    }
+  }
+}

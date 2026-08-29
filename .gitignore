@@ -9,6 +9,10 @@
 .claude/safety-warnings.log
 CLAUDE.local.md
 
+# Deliberation KB — regola:
+# - commit .deliberation-kb/<trace> se la decisione riguarda QUESTO repo
+# - ignora se la decisione è personale o cross-project (va in ~/dev/claude-config)
+
 # Python
 __pycache__/
 *.py[cod]
@@ -22,3 +26,5 @@ venv/
 .vscode/settings.json
 *.swp
 *.swo
+# Deliberation working KB (session artefacts, never published)
+**/.DS_Store

@@ -1,0 +1,143 @@
+{
+  "persona": "debate-operations-reviewer",
+  "role": "Operations / Reliability Reviewer",
+  "traceId": "del-20260531-070933-0f0044",
+  "draftedAt": "2026-05-31T07:15:00Z",
+  "recommendedOption": "C",
+  "confidence": "medium",
+  "confidenceRationale": "Option C is the best balance of value and operational safety, but only if the lifecycle rules are treated as non-negotiable system invariants, not guidelines. Medium confidence because the success of Option C depends entirely on the discipline of the lifecycle enforcement — without it, Option C degrades into Option B's complexity with none of its automation benefits.",
+
+  "operationalRiskAssessment": {
+    "primaryRisk": "Toxic memory is not a secondary concern — it is the primary failure mode and must be designed for from day 1",
+    "riskSeverity": "high",
+    "rationale": "In traditional software systems, a stale cache is recoverable — you flush it. Stale memory that Claude Code uses to inform decisions is not recoverable within the session where it causes harm. The damage (wrong architectural decision, using a deprecated pattern, applying client-A constraints to client-B work) happens silently and may not be detected until significant rework is required.",
+    "analogyContext": "This is the equivalent of a read-through cache without cache invalidation. Every system that has tried this eventually learns that invalidation is harder than storage."
+  },
+
+  "operationalRisks": [
+    {
+      "risk": "Stale memory as authoritative",
+      "severity": "critical",
+      "likelihood": "high",
+      "detail": "Any memory entry without a verified last_verified date will drift. Claude will treat a 6-month-old architectural decision as current. This is the most likely failure mode because verification requires discipline that degrades over time.",
+      "mitigation": "Hard rule: entries without last_verified within N days are NOT retrieved — they are surfaced separately as 'pending verification' and excluded from context injection. The system must be designed to fail safe: when in doubt, surface the memory with a warning rather than injecting it silently."
+    },
+    {
+      "risk": "Cross-project contamination",
+      "severity": "critical",
+      "likelihood": "medium",
+      "detail": "Luca works across multiple clients and projects simultaneously. A constraint from the Angelini/SPE project (e.g., 'never use X library due to compliance') must not bleed into the InfoSync or luke's apps projects. The proposed scope field is necessary but insufficient — the enforcement mechanism (which memories are loaded in which context) must be explicit and verifiable.",
+      "mitigation": "Memory loading must be context-aware and path-gated. Personal-scoped memories are always loaded. Project/client-scoped memories are ONLY loaded when operating in that project/client directory. This requires either MCP or explicit CLAUDE.md per-project load instructions — it cannot be left to Claude's judgment."
+    },
+    {
+      "risk": "Cross-client contamination",
+      "severity": "critical",
+      "likelihood": "medium",
+      "detail": "Client-specific decisions, naming conventions, or constraints must never appear in another client's context. This is both an operational and a potential contractual risk. If Accenture client A's architectural decisions are injected into client B's work, this is a professional confidentiality problem.",
+      "mitigation": "Client-scoped memory must live in isolation and NEVER be loaded globally. The only way to enforce this reliably is through the project-level CLAUDE.md, not through a global memory loader."
+    },
+    {
+      "risk": "Experiment-to-decision promotion without validation",
+      "severity": "high",
+      "likelihood": "high",
+      "detail": "The most dangerous memory state is an experiment that was partially successful being promoted to 'active' without a formal validation step. Pattern: Luca tries OmniMem for 2 sessions, notes it works, creates an active memory 'use OmniMem as primary layer'. Later OmniMem breaks. The memory remains active. Claude recommends OmniMem based on it. Time wasted.",
+      "mitigation": "Experiments require at least 3 verified successful applications before promotion to active. Draft state is the only valid state for a memory entry until it has been tested across multiple contexts."
+    },
+    {
+      "risk": "Over-retrieval and context pollution",
+      "severity": "high",
+      "likelihood": "medium",
+      "detail": "If the memory system grows to 50+ entries across personal/project/client scopes, loading all of them at session start will consume significant context window space and may introduce conflicting signals. Claude may receive contradictory memories from different scopes without the ability to resolve them.",
+      "mitigation": "Memory retrieval must be bounded. Maximum 10-15 active entries per context. Personal scope: max 10. Project scope: max 15. Client scope: max 10. Total injected: max 25 entries. Entries exceeding the cap are retrieved only on-demand via explicit search."
+    },
+    {
+      "risk": "Dependency on external tools (OmniMem, qmd-sessions) that may break",
+      "severity": "high",
+      "likelihood": "medium",
+      "detail": "Any tool that sits between Claude Code and the memory system is a point of failure. If OmniMem updates its schema, the memory files become unreadable. If qmd-sessions changes its output format, the session archive becomes inconsistent.",
+      "mitigation": "Memory files must be human-readable Markdown with YAML frontmatter at all times. Tool-generated formats are acceptable as supplementary indexes, never as the primary storage format. The canonical memory source must be readable without any tool."
+    },
+    {
+      "risk": "Maintenance abandonment",
+      "severity": "high",
+      "likelihood": "high",
+      "detail": "Personal memory systems for AI tools have a well-documented adoption curve: enthusiastic initial setup, gradual drift as maintenance competes with delivery work, eventual abandonment leaving a partially-stale corpus that is worse than no corpus at all because it creates false confidence.",
+      "mitigation": "The system must be designed for minimum viable maintenance: (1) no mandatory end-of-session rituals, (2) deprecation is easier than creation, (3) the absence of memory is always safe, (4) automation should handle the boring parts (staleness flagging) from Phase 1, not Phase 4."
+    },
+    {
+      "risk": "False confidence from low-quality memories",
+      "severity": "medium",
+      "likelihood": "high",
+      "detail": "If Claude is instructed to 'always search memory before making decisions', a memory with confidence: low will still be presented as a factor. The instruction creates anchoring on whatever memory is found, regardless of quality.",
+      "mitigation": "Retrieval instructions must distinguish by confidence: high-confidence memories are applied automatically; medium-confidence are surfaced for consideration; low-confidence are flagged with explicit warning and NOT applied without user confirmation."
+    }
+  ],
+
+  "toolingRecommendations": {
+    "OmniMem": {
+      "rating": "optional",
+      "rationale": "Risk exceeds early-adoption benefit. OmniMem's claimed features are appealing but the tool introduces a fragility point. Evaluate in Phase 3 as an optional automation layer — if it works reliably for 3 months, graduate to primary. If it breaks, the underlying Markdown files remain intact and usable."
+    },
+    "qmdSessions": {
+      "rating": "secondary",
+      "rationale": "Useful but not urgent. The native ~/.claude/sessions/ JSONL is probably sufficient for manual search in the near term. Add in Phase 2 once the consolidated memory layer is established and session retrieval frequency justifies the dependency."
+    },
+    "BMADStyle": {
+      "rating": "primary",
+      "rationale": "The BMAD artifact-first, gate-based discipline is the correct operational model for memory lifecycle management. Specifically: gate between draft and active (requires validation), gate between active and deprecated (requires superseding entry), explicit handoff on session closure."
+    },
+    "CodebaseMemory": {
+      "rating": "avoid",
+      "rationale": "Out of scope for Phase 1-3. The indexing-supervisor already handles codebase knowledge. Adding a parallel knowledge graph before the basic memory layer is stable is operational overreach."
+    },
+    "MemoryMCP": {
+      "rating": "primary",
+      "rationale": "The injection problem is real and critical. Without MCP, all memory is passive (must be manually triggered). With MCP, Claude Code can actively read/write memory within sessions. This is the correct Phase 3 investment — but must be designed with read-only safety guards to prevent uncontrolled writes."
+    }
+  },
+
+  "criticalRequirements": [
+    "Memory files are ALWAYS human-readable Markdown — no tool-only formats",
+    "Retrieval is context-aware and bounded (max entries per scope)",
+    "Experiment scope memories are never retrieved as decisions",
+    "Client-scoped memories load ONLY within the client project directory",
+    "Staleness flagging is automated from Phase 1, not Phase 4",
+    "Deletion is always safe — no memory is required for the system to function",
+    "Low-confidence memories require user confirmation before application"
+  ],
+
+  "minimumViableImplementation": {
+    "description": "Safety-first MVP: formalise existing system with hard operational rules",
+    "steps": [
+      "1. Establish CLAUDE.md rule: memory read is context-aware (personal always, project only in project dir, client only in client dir)",
+      "2. Add staleness metadata to all existing MEMORY.md entries — last_verified, status",
+      "3. Create ~/.claude/memory/personal/PERSONAL-MEMORY.md with max 10 validated entries",
+      "4. Write the 'toxic memory prevention' rules into CLAUDE.md as non-negotiable invariants",
+      "5. Create /memory-review command: lists entries by last_verified, flags entries > 30 days (project/client) or 60 days (personal) as stale"
+    ],
+    "hardRules": [
+      "No memory entry is created during a session without explicit user approval",
+      "No memory entry is promoted from draft to active within the same session it was created",
+      "Experiments are never promoted to active based on a single session",
+      "Client memory is never loaded outside the client project directory"
+    ]
+  },
+
+  "whatToDoThisWeek": [
+    "Audit all 5 existing memory files — verify each is still accurate, add status/last_verified fields",
+    "Write the toxic memory prevention rules into ~/.claude/CLAUDE.md",
+    "Create ~/claude/memory/personal/ with max 10 consolidated entries",
+    "Establish the context-aware loading rule (personal always, project/client scoped by directory)",
+    "Do not install external tools — prove the discipline works manually first"
+  ],
+
+  "dissent": {
+    "fromProposer": "I disagree with placing staleness automation in Phase 4. Staleness flagging must be in Phase 1 — even if it is a simple manual review prompt in CLAUDE.md, not an automated script. Without it, the system will produce false confidence from its first week."
+  },
+
+  "openQuestions": [
+    "What is the maximum number of memory entries across all scopes before context window impact becomes significant?",
+    "Does Claude Code have a hook point (e.g., session start) that can reliably trigger memory injection, or must it always be in CLAUDE.md as a standing instruction?",
+    "If OmniMem is evaluated in Phase 3, what is the fallback plan if it fails the evaluation? The proposal does not define the fallback clearly."
+  ]
+}

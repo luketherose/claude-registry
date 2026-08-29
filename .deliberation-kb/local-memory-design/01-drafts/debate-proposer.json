@@ -1,0 +1,125 @@
+{
+  "persona": "debate-proposer",
+  "role": "Primary Architect / Proposer",
+  "traceId": "del-20260531-070933-0f0044",
+  "draftedAt": "2026-05-31T07:12:00Z",
+  "recommendedOption": "C",
+  "confidence": "high",
+  "confidenceRationale": "Option C aligns with both the pragmatic constraints identified and the existing momentum of the auto-memory system. It avoids introducing unproven external dependencies (OmniMem maturity is unknown) while delivering 80% of the value.",
+
+  "architecturalAssessment": {
+    "conceptuallySound": true,
+    "rationale": "The three-level architecture (raw sessions → summaries → consolidated trusted memory) is a well-established pattern in information management systems. It mirrors how knowledge management systems handle the distinction between raw data, processed information, and actionable knowledge. The proposed metadata schema (status/scope/project/confidence/source) is minimal and sufficient. The key principle of avoiding toxic memory is correctly identified as the central risk.",
+    "strengths": [
+      "Explicit lifecycle states prevent the single biggest risk: stale-as-authoritative",
+      "Scope separation (personal/project/client/experiment) maps correctly to Luca's multi-context workload",
+      "The three-level hierarchy provides natural pruning boundaries — raw sessions can be dropped without losing consolidated knowledge",
+      "Already has an existing foundation to build on (auto-memory system)"
+    ],
+    "weaknesses": [
+      "Level 1 (raw session history) is already partially covered by ~/.claude/sessions/ — potential duplication",
+      "The 'codebase memory / knowledge graph' is scope creep that risks delaying MVP",
+      "OmniMem is an unknown quantity — no clear track record for Claude Code specifically"
+    ]
+  },
+
+  "toolingRecommendations": {
+    "OmniMem": {
+      "rating": "optional",
+      "rationale": "OmniMem's claimed features (contradiction detection, memory scoring, lifecycle management) are exactly what's needed, but it is an external dependency with unclear maturity for Claude Code. Evaluate in Phase 3 once the manual process has stabilised. If it works, it becomes the automation layer for Phase 4. Do not adopt in MVP."
+    },
+    "qmdSessions": {
+      "rating": "secondary",
+      "rationale": "Converting JSONL transcripts to searchable Markdown is genuinely useful for session retrieval but is not a day-1 requirement. Raw sessions already exist in ~/.claude/sessions/. Add in Phase 2 once the consolidated memory layer is established and the search need is confirmed."
+    },
+    "BMADStyle": {
+      "rating": "primary",
+      "rationale": "Luca already uses BMAD patterns in his registry. Using BMAD methodology principles (artifact-first, explicit state, decision logs, gates) as the structural discipline for the memory system itself is the correct approach. Not a tool, but the methodological backbone. It should govern when memories are created, when they are promoted from draft to active, and when they are deprecated."
+    },
+    "CodebaseMemory": {
+      "rating": "optional",
+      "rationale": "Structural codebase memory (modules, dependencies, ADRs) is valuable for large refactoring projects but is already partially served by the indexing-supervisor agent in the registry. Defer to Phase 5 and evaluate whether the indexing-supervisor's .indexing-kb/ output already covers this need."
+    },
+    "MemoryMCP": {
+      "rating": "secondary",
+      "rationale": "MCP memory server (e.g., sqlite-based or filesystem MCP) is the correct mechanism for Phase 3 — it gives Claude Code a native read/write interface to the memory layer without requiring custom tooling. This should be evaluated in Phase 3 alongside OmniMem."
+    }
+  },
+
+  "architectureRecommendation": {
+    "globalPersonalMemory": {
+      "location": "~/.claude/memory/personal/",
+      "contents": ["global preferences", "cross-project patterns", "delivery anti-patterns", "workflow decisions"],
+      "management": "Manual with structured template; promote to active only after 2+ session confirmation"
+    },
+    "projectMemory": {
+      "location": "~/.claude/projects/<project-id>/memory/",
+      "contents": ["project-specific decisions", "architectural choices", "constraints", "lessons"],
+      "management": "Already exists as auto-memory; formalise with metadata schema and lifecycle rules",
+      "note": "This is the EXISTING system — extend, do not replace"
+    },
+    "clientMemory": {
+      "location": "~/.claude/memory/clients/<client-name>/",
+      "contents": ["client preferences", "naming conventions", "tech constraints", "escalation rules"],
+      "management": "Manual; strict isolation — never bleeds into personal or other client memory"
+    },
+    "experimentMemory": {
+      "location": "~/.claude/memory/experiments/<exp-id>/",
+      "contents": ["what was tried", "outcome", "why abandoned/kept"],
+      "management": "Auto-expires after 90 days unless manually promoted to lessons/",
+      "note": "The most important isolation boundary — experiments are NOT decisions"
+    },
+    "sessionHistory": {
+      "location": "~/.claude/sessions/ (existing Claude Code native storage)",
+      "management": "Read-only; use qmd-sessions in Phase 2 to index if needed"
+    }
+  },
+
+  "minimumViableImplementation": {
+    "description": "Formalise the existing auto-memory system with lifecycle rules and add a personal global memory layer",
+    "steps": [
+      "1. Create ~/.claude/memory/personal/ with an initial PERSONAL-MEMORY.md index",
+      "2. Write 5-10 consolidated memories from existing sessions (patterns, anti-patterns, preferences already observed)",
+      "3. Add lifecycle rules to global CLAUDE.md: when to search, when to update, how to handle stale, cross-project rules",
+      "4. Formalise per-project MEMORY.md convention: require status/scope/confidence fields on every entry",
+      "5. Create /memory-review slash command: lists all active memories by last_verified date, flags overdue for review"
+    ],
+    "estimatedEffort": "4-6 hours for initial setup; 10-15 minutes per session for maintenance",
+    "deferTo": ["OmniMem adoption", "qmd-sessions session indexing", "codebase memory / knowledge graph", "MCP memory server", "full automation layer"]
+  },
+
+  "preventingToxicMemory": {
+    "rules": [
+      "Every memory entry has status: active|superseded|deprecated|draft — only 'active' is retrieved by default",
+      "Every memory entry has last_verified date — entries older than 60 days (personal) or 30 days (project) are auto-flagged as 'needs-review' in retrieval context",
+      "Experiment scope entries are NEVER retrieved as decisions — they are explicitly tagged and excluded from the active decision pool",
+      "Cross-project contamination: project-scoped memories are only retrieved when Claude is operating in that project context (CLAUDE.md path-based scoping)",
+      "When a contradiction is detected between two active memories, both are immediately set to 'draft' pending manual review — never auto-resolve",
+      "Low-confidence memories are retrieved with an explicit warning prefix: [LOW CONFIDENCE — verify before applying]"
+    ]
+  },
+
+  "roadmapOutline": {
+    "phase0": "Tool evaluation (2 weeks) — evaluate OmniMem and qmd-sessions in a sandbox",
+    "phase1": "Manual memory discipline (this week) — extend existing auto-memory system, write lifecycle rules into CLAUDE.md",
+    "phase2": "Session indexing (month 2) — add qmd-sessions for JSONL→Markdown conversion",
+    "phase3": "Persistent memory via MCP (month 3) — evaluate Memory MCP server integration",
+    "phase4": "Lifecycle automation (month 4-5) — automate deprecation, review triggers, contradiction detection",
+    "phase5": "Knowledge graph (month 6+) — structural codebase memory if need is confirmed"
+  },
+
+  "whatToDoThisWeek": [
+    "Create ~/.claude/memory/personal/ with PERSONAL-MEMORY.md index",
+    "Migrate 5-8 confirmed patterns/anti-patterns from recent sessions into the personal memory layer",
+    "Add CLAUDE.md lifecycle rules section (when to search, how to handle stale, cross-project rules)",
+    "Create /memory-review command that lists memories sorted by last_verified",
+    "Do NOT install OmniMem or qmd-sessions yet — evaluate them in week 3-4 before committing"
+  ],
+
+  "dissent": null,
+  "openQuestions": [
+    "Is OmniMem actively maintained and tested against Claude Code specifically, or is it a speculative tool?",
+    "Does ~/.claude/sessions/ already provide searchable JSONL that makes qmd-sessions redundant?",
+    "What is the actual retrieval mechanism? Claude Code reads CLAUDE.md automatically — but does it read arbitrary files in memory/? If not, MCP or explicit tool calls are needed even for Phase 1."
+  ]
+}

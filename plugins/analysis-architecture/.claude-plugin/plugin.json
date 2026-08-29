@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "analysis-architecture",
+  "description": "System architecture design, ADR authoring, functional requirement extraction, technical debt assessment, capability-registry auditing, and multi-domain task orchestration.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Luca La Rosa",
+    "email": "luca.la.rosa@accenture.com"
+  },
+  "repository": "https://github.com/luketherose/claude-registry",
+  "license": "UNLICENSED",
+  "keywords": [
+    "architecture",
+    "adr",
+    "requirements",
+    "technical-debt",
+    "orchestration"
+  ],
+  "category": "development"
+}

@@ -1,0 +1,118 @@
+{
+  "persona": "debate-critic",
+  "role": "Skeptical Critic",
+  "traceId": "del-20260531-070933-0f0044",
+  "draftedAt": "2026-05-31T07:13:30Z",
+  "recommendedOption": "A",
+  "confidence": "medium",
+  "confidenceRationale": "Option A (extend existing auto-memory) is the correct choice given the existing system's demonstrated functionality. The risk of building parallel infrastructure is high. Medium confidence because the auto-memory system's current quality is unclear — if it is already well-maintained, Option A is the answer; if it is neglected, Option C may be needed to impose discipline.",
+
+  "overallVerdict": "The proposal is architecturally sound in principle but risks being significantly over-engineered relative to the actual problem. The existing auto-memory system (MEMORY.md + per-type files) already solves the core problem. The proposal adds three new infrastructure layers (OmniMem, qmd-sessions, codebase memory) on top of a system that is not yet proven to be insufficient. This is a classic case of solving the second problem before the first one is confirmed to be broken.",
+
+  "criticalFindings": [
+    {
+      "severity": "high",
+      "finding": "The existing auto-memory system is already functional and partially solving the problem",
+      "detail": "~/.claude/projects/*/memory/MEMORY.md already stores cross-session memories for each project. The claude-registry project already has 5 memory files covering Java/Spring conventions, migration patterns, Angular conventions, and project structure. Before building a new layer, the question is: why is this existing system insufficient? The proposal does not answer this.",
+      "implication": "If the existing system is sufficient with better conventions, the entire 3-level architecture is unnecessary infrastructure."
+    },
+    {
+      "severity": "high",
+      "finding": "OmniMem is an unverified, potentially unmaintained third-party tool",
+      "detail": "The proposal claims OmniMem has 'cross-session/cross-project memory, lifecycle management, contradiction detection, memory scoring, warnings on abandoned/failed approaches'. These are exactly the features needed — but where is the evidence that OmniMem actually delivers them reliably for Claude Code? If OmniMem is a side-project or experimental tool, adopting it as 'primary memory layer' creates a hard dependency on something that may break with any Claude Code update.",
+      "implication": "Adopting OmniMem without a confirmed track record introduces a fragility point that could cascade into corrupted or inaccessible memory."
+    },
+    {
+      "severity": "high",
+      "finding": "The retrieval mechanism is unspecified — and it is the hardest problem",
+      "detail": "The entire architecture assumes that Claude Code will somehow 'retrieve' memories from ~/.claude-memory/. But Claude Code only reads: (1) CLAUDE.md files it encounters, (2) files explicitly passed as context, (3) files read via Read tool calls during a session. There is no automatic injection of arbitrary memory files. This means without MCP or explicit CLAUDE.md pointers, the entire Level 2/3 memory system is dark — Claude never sees it unless explicitly instructed to read it every session.",
+      "implication": "The architecture needs to specify the INJECTION mechanism, not just the storage mechanism. Without this, the proposal is a filing system, not a memory system."
+    },
+    {
+      "severity": "medium",
+      "finding": "Maintenance burden is systematically underestimated",
+      "detail": "The proposal says '10-15 minutes per session for maintenance'. For someone running 3-5 Claude Code sessions per day across 3-4 projects, this is 30-75 minutes/day of memory administration. Over a 5-day week: 2.5-6 hours. The proposal conflates 'low per-session cost' with 'low total cost'. The total cost is not low.",
+      "implication": "The system will be abandoned within 4-6 weeks if maintenance is manual and session-gated. Either automation must come in Phase 1 (not Phase 4), or the scope must be reduced dramatically."
+    },
+    {
+      "severity": "medium",
+      "finding": "qmd-sessions may be redundant with existing session storage",
+      "detail": "Claude Code already stores sessions at ~/.claude/sessions/ as JSONL. The question is whether these JSONL files are already readable/searchable, or whether they require qmd-sessions conversion. If jq or basic grep can extract relevant content from JSONL, qmd-sessions adds a maintenance dependency without unique value.",
+      "implication": "Evaluate whether ~/.claude/sessions/*.json is directly usable before adding the qmd-sessions dependency."
+    },
+    {
+      "severity": "medium",
+      "finding": "BMAD as 'primary methodological layer' conflates two different things",
+      "detail": "BMAD is a workflow methodology for AI-assisted delivery. Applying it to personal memory management is an analogy, not a direct mapping. The 'artifact-first, explicit state, decision logs, handoff, checklists, gates' discipline is appropriate inspiration but should not be cargo-culted verbatim into a personal memory system. The risk is ceremonial overhead without commensurate benefit.",
+      "implication": "Use BMAD principles selectively — specifically: artifact-first (write memory as structured file, not prose) and explicit lifecycle states. Do not adopt the full BMAD gate/handoff structure for personal memory."
+    },
+    {
+      "severity": "low",
+      "finding": "Level 1 (raw session history) is duplicative",
+      "detail": "Claude Code already stores session history in ~/.claude/sessions/. Creating a second copy under ~/.claude-memory/sessions/ doubles storage without adding value.",
+      "implication": "Drop Level 1 from the architecture. Point directly to ~/.claude/sessions/ as the raw history source."
+    }
+  ],
+
+  "toolingRecommendations": {
+    "OmniMem": {
+      "rating": "avoid",
+      "rationale": "Unknown maturity, unverified Claude Code compatibility, potential hard dependency. Avoid until the tool's maintenance status and Claude Code integration quality are confirmed through independent evaluation. If OmniMem disappears or breaks, so does the primary memory layer. Risk exceeds benefit."
+    },
+    "qmdSessions": {
+      "rating": "optional",
+      "rationale": "Potentially useful for session retrieval but likely redundant if ~/.claude/sessions/ JSONL is directly searchable. Evaluate before adopting. Low risk if used only as a converter, not as the retrieval mechanism."
+    },
+    "BMADStyle": {
+      "rating": "secondary",
+      "rationale": "Not a tool — a methodology. Use the artifact-first and lifecycle-state principles but do not impose the full BMAD gate structure on personal memory operations."
+    },
+    "CodebaseMemory": {
+      "rating": "avoid",
+      "rationale": "Scope creep. The indexing-supervisor agent already builds .indexing-kb/ for large codebases. Evaluate whether that output already covers the need before adding a separate knowledge graph layer."
+    },
+    "MemoryMCP": {
+      "rating": "primary",
+      "rationale": "This is actually the most important missing piece. The correct Phase 3 investment is a Memory MCP server (filesystem or sqlite-based) that gives Claude Code a native, structured read/write interface to the memory layer. Without MCP, the memory system has no reliable injection mechanism."
+    }
+  },
+
+  "recommendedArchitecture": {
+    "description": "Extend the existing auto-memory system rather than building parallel infrastructure",
+    "changes": [
+      "Keep ~/.claude/projects/*/memory/ as the project-scoped memory layer (already working)",
+      "Add ~/.claude/memory/personal/ for cross-project personal knowledge (new, minimal)",
+      "Add ~/.claude/memory/clients/<name>/ for client-specific isolation (new, minimal)",
+      "Formalise metadata schema on existing MEMORY.md entries",
+      "Add lifecycle rules to global CLAUDE.md",
+      "Drop Level 1 (raw sessions already in ~/.claude/sessions/)",
+      "Defer Level 3 structure changes until MCP is available for injection"
+    ]
+  },
+
+  "minimumViableImplementation": {
+    "description": "Discipline-first, tools-second",
+    "steps": [
+      "Add a CLAUDE.md section: 'Before starting work on any project, read ~/.claude/projects/<id>/memory/MEMORY.md and ~/.claude/memory/personal/PERSONAL-MEMORY.md if they exist'",
+      "Create ~/.claude/memory/personal/PERSONAL-MEMORY.md with 5 consolidated cross-project memories",
+      "Add lifecycle fields (status, confidence, last_verified) to existing MEMORY.md entries",
+      "Add a /memory-status command that reads all MEMORY.md files and reports overdue-for-review entries",
+      "Do not add any external tools in Phase 1"
+    ]
+  },
+
+  "whatToDoThisWeek": [
+    "Audit the 5 existing memory files in claude-registry — are they still accurate? Do they need updating?",
+    "Create ~/.claude/memory/personal/PERSONAL-MEMORY.md with cross-project patterns already confirmed",
+    "Add two CLAUDE.md rules: (1) read personal memory at session start, (2) lifecycle fields mandatory on all new memory entries",
+    "Write explicit rules for what NEVER goes into memory: experiment results, single-session observations, client-specific data in global files",
+    "Do NOT install any new tools this week"
+  ],
+
+  "dissent": null,
+  "openQuestions": [
+    "Has Luca actually used the existing ~/.claude/projects/*/memory/ system regularly? If it is being ignored, that is a discipline problem, not an architecture problem.",
+    "What specific memory gap has caused the most friction? The proposal does not cite a concrete pain point.",
+    "Is the existing MEMORY.md format being read by Claude Code automatically, or only when explicitly instructed? This is a critical question that determines whether any new architecture is needed at all."
+  ]
+}

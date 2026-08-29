@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "caveman",
+  "description": "Token-efficient communication mode: terse, direct output with no filler, applied to prose, commit messages, and code-review comments.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Luca La Rosa",
+    "email": "luca.la.rosa@accenture.com"
+  },
+  "repository": "https://github.com/luketherose/claude-registry",
+  "license": "UNLICENSED",
+  "keywords": [
+    "terse",
+    "token-efficiency",
+    "output-style",
+    "commit-message"
+  ],
+  "category": "development"
+}

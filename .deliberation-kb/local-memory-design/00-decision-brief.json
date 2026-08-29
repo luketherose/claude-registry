@@ -1,0 +1,119 @@
+{
+  "traceId": "del-20260531-070933-0f0044",
+  "title": "Should Luca build a local persistent memory system for Claude Code, and if so how?",
+  "decisionType": "architecture+operational",
+  "riskLevel": "medium",
+  "status": "open",
+  "createdAt": "2026-05-31T07:09:33Z",
+  "deliberationPolicy": {
+    "agentCount": 3,
+    "debateRounds": 1,
+    "requireIndependentDrafts": true,
+    "requireStructuredEvidenceSummary": true,
+    "requireDissentingOpinion": true,
+    "finalDecisionStrategy": "judge_arbitration",
+    "commitProtocol": "local_transactional",
+    "prioritizeQualityOverCost": true,
+    "preferredModelTier": "opus",
+    "requireHumanApprovalForHighRisk": false
+  },
+  "decisionQuestion": "Should Luca build a local persistent memory system for Claude Code, and if so which architecture, tooling, and implementation approach best serves his workflow without creating maintenance burden or toxic memory?",
+  "context": {
+    "user": "Luca La Rosa — senior AI-assisted delivery practitioner, uses Claude Code intensively for software development, agentic workflows, refactoring/replatforming, capability registry design, functional/technical analysis, prompt engineering, architecture, process automation",
+    "coreProblem": "Claude Code is stateless between sessions. Decisions, failed attempts, patterns, constraints, preferences, and lessons learned are scattered across conversations, local files, and implicit memory.",
+    "existingMemorySystem": {
+      "claudeMd": "~/.claude/CLAUDE.md — global instructions (already present, working)",
+      "projectClaudeMd": "Per-repo CLAUDE.md checked into each project (working)",
+      "autoMemory": "~/.claude/projects/*/memory/ — MEMORY.md index + per-type .md files — this IS the existing auto-memory system already in place",
+      "note": "The auto-memory system is already partially working. The question is whether to extend it vs build a separate parallel system."
+    },
+    "proposedSolution": {
+      "name": "Personal Claude Operating Memory",
+      "description": "Local, structured, searchable, maintainable persistent memory layer making the local environment stateful while Claude remains stateless",
+      "levels": {
+        "level1": "Raw session history (~/.claude-memory/sessions/)",
+        "level2": "Session summaries — structured, produced at end of relevant sessions",
+        "level3": "Consolidated trusted memory (decisions/, lessons/, patterns/, anti-patterns/, projects/<name>/)"
+      },
+      "candidateStack": {
+        "OmniMem": "Potential primary memory layer — cross-session/cross-project memory, lifecycle management, contradiction detection, memory scoring",
+        "qmdSessions": "Session archive/retrieval — converts Claude Code JSONL transcripts to readable/indexable Markdown",
+        "BMADStyle": "Artifact-first methodology — explicit state, decision logs, handoff, checklists, gates",
+        "CodebaseMemory": "Structural memory of large codebases — modules, dependencies, patterns, ADRs"
+      },
+      "memoryMetadataSchema": {
+        "status": "active | superseded | deprecated | draft",
+        "scope": "personal | project | client | experiment",
+        "project": "<name>",
+        "created": "YYYY-MM-DD",
+        "last_verified": "YYYY-MM-DD",
+        "confidence": "high | medium | low",
+        "source": "session-summary | manual | decision-log | codebase-analysis"
+      }
+    },
+    "keyRisk": "Toxic memory — retrieving stale, contradictory, or out-of-scope decisions as if still valid; mixing project-specific constraints with global preferences; treating experiments as consolidated decisions; failure to prune/deprecate"
+  },
+  "questionsToResolve": [
+    "1. Is this architecture conceptually sound?",
+    "2. Is it genuinely useful or risks being overengineering?",
+    "3. Which existing tools are most appropriate?",
+    "4. Is OmniMem a good choice as the primary memory layer for Claude Code?",
+    "5. Is qmd-sessions useful as a complementary session archive?",
+    "6. Should BMAD be the primary methodological layer or just a source of inspiration?",
+    "7. Does it make sense to add a knowledge graph / codebase memory, or better to defer?",
+    "8. What are the main risks of this approach?",
+    "9. How to prevent toxic memory?",
+    "10. What should be automated vs. manually approved?",
+    "11. How to correctly separate: global personal memory / project-specific memory / client-specific memory / experimental memory / raw session history?",
+    "12. What is the minimum viable implementation?",
+    "13. What should be deferred to a later phase?",
+    "14. What would you change in the design?",
+    "15. What approach would you recommend starting this week in a pragmatic way?"
+  ],
+  "constraints": [
+    "Must remain local — no cloud persistence of potentially client-sensitive context",
+    "Must not create excessive maintenance burden that displaces actual delivery work",
+    "Must not conflict with or duplicate the existing auto-memory system at ~/.claude/projects/*/memory/",
+    "Must handle multi-project, multi-client context isolation correctly",
+    "Must be gracefully degradable — if the memory system is ignored or stale, Claude Code must still function",
+    "Token cost must be managed — not every session should retrieve everything"
+  ],
+  "options": [
+    {
+      "id": "A",
+      "name": "Extend existing auto-memory system",
+      "description": "Formalise the existing ~/.claude/projects/*/memory/ system with explicit lifecycle rules, naming conventions, and a global personal memory layer. No new external tools."
+    },
+    {
+      "id": "B",
+      "name": "Full proposed architecture (3 levels + OmniMem + qmd-sessions + BMAD)",
+      "description": "Build all three levels as proposed, adopt OmniMem as primary layer, qmd-sessions for archival, BMAD methodology for discipline, codebase memory layer."
+    },
+    {
+      "id": "C",
+      "name": "Pragmatic hybrid — extend existing + selective external tools",
+      "description": "Extend the existing auto-memory system with a formalised personal memory layer and lifecycle rules. Add qmd-sessions for session indexing (Phase 2). Defer OmniMem and codebase memory. BMAD as methodology inspiration only."
+    },
+    {
+      "id": "D",
+      "name": "Minimal discipline — CLAUDE.md conventions only",
+      "description": "Rely purely on CLAUDE.md (global + per-project) with stricter conventions. No new infrastructure. Accept the statefulness limitation as-is."
+    }
+  ],
+  "personasDispatched": ["debate-proposer", "debate-critic", "debate-operations-reviewer"],
+  "outputFormat": {
+    "sections": [
+      "1. Valutazione executive",
+      "2. Architettura raccomandata",
+      "3. Raccomandazione tooling",
+      "4. Minimum viable setup",
+      "5. Regole di lifecycle della memoria",
+      "6. Regole da inserire nel CLAUDE.md",
+      "7. Comandi o hook da creare",
+      "8. Rischi e mitigazioni",
+      "9. Roadmap",
+      "10. Raccomandazione finale"
+    ],
+    "language": "Italian"
+  }
+}

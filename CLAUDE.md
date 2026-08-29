@@ -1,235 +1,123 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code when working in the `claude-registry` repository.
 
----
+This repo is a **Claude Code plugin marketplace**. It publishes the team's agents, skills
+and supporting material as plugins that teammates install with `/plugin install`.
 
 ## Common commands
 
 ```bash
-# Validate catalog locally (runs the same check as CI gate 1)
-python3 .github/scripts/validate_catalog.py
+# Validate the whole registry (same gate as CI)
+python3 .github/scripts/validate_registry.py
 
-# Validate marketplace locally (runs the same check as CI gate 2)
-python3 .github/scripts/validate_marketplace.py
+# Validate marketplace and plugin manifests with the official CLI
+claude plugin validate .
 
 # Scaffold a new agent or skill
-./claude-catalog/scripts/new-capability.sh --type agent my-agent-name
-./claude-catalog/scripts/new-capability.sh --type skill my-skill-name
+./scripts/new-capability.sh
 
-# Publish a capability from catalog to marketplace
-./claude-marketplace/scripts/publish.sh <name> <version> <tier>   # tier: stable | beta
-
-# Install all capabilities globally (updates ~/.claude/agents/)
-./claude-catalog/scripts/setup-capabilities.sh --global
-
-# Backfill BMAD DAG fields into catalog.json (run after adding new workflow agents)
-python3 bmad/scripts/backfill-dag.py
+# Install this marketplace locally for development
+claude plugin marketplace add .
 ```
-
----
 
 ## Primary rule: always update documentation
 
-**Every time you make a change to this repository, update the documentation too.**
+Any change to a capability updates, in the same commit:
 
-In practice:
+1. The capability file itself
+2. `docs/registry/CHANGELOG.md`
+3. The plugin's `version` in `plugins/<plugin>/.claude-plugin/plugin.json` when behaviour changes
+4. `README.md` when the capability roster changes
+5. `docs/registry/how-to-write-a-capability.md` when a convention changes
 
-| Type of change | What to update |
-|----------------|----------------|
-| New agent (`agents/*.md`) | `README.md` (capability table), `claude-catalog/docs/quick-start.md` (table), `CHANGELOG.md` ([Unreleased]), `catalog.json` |
-| New skill (`skills/*.md`) | `README.md` (skill table), `CHANGELOG.md` ([Unreleased]), `catalog.json` (skill entry + dependencies of agents that use it) |
-| Changed agent behaviour | `CHANGELOG.md` ([Unreleased] with version bump), `catalog.json` (version) |
-| Changed script (`scripts/`) | Header comment in the script (usage), `guida-operativa.pdf` if UX changes |
-| Changed governance or process | Corresponding `.md` file in `claude-catalog/` |
-| New workflow use case | `bmad/workflows.json` (new entry), `catalog.json` (bmad DAG fields), `claude-catalog/evals/<supervisor>/triggers.json` (new eval), `CHANGELOG.md` |
-| Changed supervisor body (extraction) | `claude-catalog/docs/<phase>/supervisor-protocol.md`, `legacy-body-baseline.json` (remove entry once ≤ 10k) |
-| Any significant change | `guida-operativa.pdf` and `pitch-claude-registry.pptx` if content becomes stale |
-
-**Rule for `CHANGELOG.md`**: every PR must have an entry under `[Unreleased]` before it is opened. If the entry is missing, add it before pushing.
-
-**Rule for `catalog.json`**: the file at `claude-marketplace/catalog.json` is the authoritative manifest. When a capability changes (version, dependencies, description), update `catalog.json` too.
-
----
-
-## How catalog and marketplace work together
-
-This repository has two areas with distinct responsibilities:
-
-| Area | Purpose | Who modifies it |
-|------|---------|-----------------|
-| `claude-catalog/` | Development source — capabilities are written, reviewed, and versioned here | Developers, PRs |
-| `claude-marketplace/` | Distribution — contains only approved capabilities, copied from the catalog | Publish script only, never by hand |
-
-**Fundamental rule**: a capability is not "available" until it is published to the marketplace. Modifying only the catalog is not enough.
-
-### Publish flow
-
-```
-claude-catalog/agents/<topic>/foo.md  ── publish script ──→  claude-marketplace/beta/<topic>/foo.md
-claude-catalog/skills/<topic>/bar.md  ── publish script ──→  claude-marketplace/skills/<topic>/bar.md
-                                                                claude-marketplace/catalog.json  ← manifest
-```
-
-To publish: `./claude-marketplace/scripts/publish.sh <name> <version> <tier> [--topic <topic>]`
-
-The publish script auto-resolves `<topic>` from (1) the `--topic` flag, (2) the
-existing `catalog.json` entry, (3) the catalog source path
-(`claude-catalog/agents/<topic>/<name>.md`), in that order. It also removes any
-stale copies of the capability under the same tier (e.g. left behind by a
-re-grouping) so no orphan file remains in the marketplace.
-
-### CI validation flow (sequential)
-
-PRs go through two gates in sequence — the second only starts if the first is green:
-
-```
-1. validate-catalog   — checks files in claude-catalog/
-   ├── valid YAML frontmatter (name, description, tools, model)
-   ├── system prompt present with ## Role section
-   ├── skills without forbidden tools (Edit, Write, Bash, Agent)
-   ├── CHANGELOG.md has an [Unreleased] entry
-   └── check_marketplace_sync: every agent/skill in the catalog
-       must have an entry in claude-marketplace/catalog.json  ← BLOCKS if missing
-
-2. validate-marketplace   — (only if validate-catalog is green)
-   ├── catalog.json valid (semver, tier, status, required fields)
-   ├── every referenced file exists on disk
-   ├── file frontmatter name matches the catalog entry name
-   ├── path convention: {tier}/<topic>/{name}.md or skills/<topic>/{name}.md
-   │     (flat {tier}/{name}.md and skills/{name}.md still accepted —
-   │      see "Marketplace directory layout" below)
-   └── no orphan files in stable/, beta/, skills/ (recursive)
-```
-
-**Practical consequence**: if you open a PR that adds capabilities to the catalog without publishing them to the marketplace, `validate-catalog` blocks the PR before `validate-marketplace` even starts.
-
----
+Never leave a convention change undocumented. The next author will not infer it.
 
 ## Repository structure
 
-- `claude-catalog/` — development source (agents, skills, governance documents)
-  - `docs/<phase>/` — reference docs loaded on demand by supervisors (progressive disclosure)
-  - `docs/<phase>/supervisor-protocol.md` — decision rules, escalation triggers, constraints per phase
-  - `evals/<agent-name>/triggers.json` — BMAD trigger eval suite per agent
-  - `evals/<agent-name>/evals.json` — BMAD artifact eval suite per agent
-  - `templates/new-use-case/` — scaffold for adding a new workflow use case
-- `claude-marketplace/` — distribution (approved files only; do not modify directly)
-- `bmad/` — BMAD methodology layer
-  - `workflows.json` — machine-readable registry of available workflow use cases
-  - `design/mapping.md` — canonical BMAD→Anthropic pattern mapping decisions
-  - `design/workflow-dag-draft.json` — dependency graph for all pipeline agents
-  - `scripts/backfill-dag.py` — populates `bmad` fields in `catalog.json` from the DAG
-- `guida-operativa.pdf` — Accenture-branded operational guide (regenerate with `document-creator`)
-- `pitch-claude-registry.pptx` — Accenture-branded pitch deck (regenerate with `presentation-creator`)
+```
+.claude-plugin/marketplace.json   the marketplace manifest, one entry per plugin
+plugins/<plugin>/                 the distribution unit
+  .claude-plugin/plugin.json      name, description, version, author, component wiring
+  agents/                         subagents, optionally nested by domain
+  skills/<name>/SKILL.md          Agent Skills, with references/ scripts/ assets/
+  references/                     shared reference material for the plugin's agents
+  evals/ examples/                per-capability evaluations and worked examples
+  .mcp.json                       optional MCP servers, wired via plugin.json
+docs/registry/                    governance and authoring documentation
+templates/ policies/ hooks/       scaffolding and shared configuration
+scripts/                          maintenance tooling
+archive/                          superseded material kept for provenance
+```
 
----
+There is a single tier. There is no `claude-catalog` and no `claude-marketplace`, and no
+per-capability beta or stable flag. Versioning is semver on the plugin.
 
-## Capabilities available in this project
+## Plugins
 
-The catalog currently holds **87 agents** and **42 skills**. The ones most useful while working on the registry itself:
-
-- `registry-auditor` — audits agents/skills/CLAUDE.md against Anthropic's official rubrics; produces a structured report with grade, registry-wide patterns, top files to rewrite, and quick wins. Read-only.
-- `code-reviewer` — for PR review on the registry source itself
-- `document-creator` — to regenerate `guida-operativa.pdf`
-- `presentation-creator` — to regenerate `pitch-claude-registry.pptx`
-- `software-architect` — for architectural decisions on the registry itself
-- `documentation-writer` — to update governance `.md` files and guides
-- `wiki-writer` — to keep the GitHub wiki in sync with capability changes
-
-The full catalog is in `claude-marketplace/catalog.json`; the README capability table is the human-readable index.
-
----
-
-## Capability quick reference (audit ↔ remediation loop)
-
-The two primary touch-points when working on the registry itself:
-
-| Action | Capability or doc |
+| Plugin | Scope |
 |---|---|
-| Audit the registry against Anthropic rubrics | invoke `registry-auditor` — read-only; produces grade per area + top files to rewrite + quick wins |
-| Extract per-phase content out of an oversized supervisor body | follow [`claude-catalog/docs/supervisor-extraction-template.md`](claude-catalog/docs/supervisor-extraction-template.md) — recipe + worked example |
-| Run the validator locally before opening a PR | `python3 .github/scripts/validate_catalog.py` (gate 1) and `python3 .github/scripts/validate_marketplace.py` (gate 2) |
-| Scaffold a new rubric-compliant agent or skill | `./claude-catalog/scripts/new-capability.sh --type {agent,skill} <name>` — templates ship with `## When to invoke` skeleton, rubric description prefix, `Typical triggers include …` placeholder, `Do not use…` clause, and the `See "When to invoke" in the agent body for worked scenarios.` pointer |
-| Publish an approved capability to the marketplace | `./claude-marketplace/scripts/publish.sh <name> <version> <tier>` — auto-resolves topic and removes orphan files |
-| Review a PR on this repo | invoke `code-reviewer` |
+| `replatforming` | Five-phase AS-IS to TO-BE pipeline: indexing, functional analysis, technical analysis, baseline testing, TO-BE construction, equivalence verification |
+| `dev-standards` | Language and framework standards, developer agents, test authoring, debugging |
+| `analysis-architecture` | Architecture design, requirement extraction, technical analysis, orchestration, registry auditing |
+| `deliberation` | Multi-agent debate engine and its personas |
+| `docs-branding` | Documentation authoring and Accenture-branded deliverables |
+| `caveman` | Output-style skills |
 
-The audit ↔ remediation loop is: run `registry-auditor` → read the top-10 list → fix one or more files → re-run validator → re-run `registry-auditor` to confirm the metric moved. The supervisor-extraction template is the canonical fix for body-length warnings on the 6 phase supervisors.
+## Conventions that are enforced by CI
 
----
+- Combined subagent descriptions stay under **12000 tokens** across all plugins enabled at
+  once. The hard platform ceiling is 15000.
+- `SKILL.md` bodies stay under **500 lines**. Overflow goes into `references/`.
+- Skill `description` stays under 1024 characters and is written in the third person.
+- Skill `name` equals its directory name. Agent `name` equals its filename.
+- `model`, `tools` and `color` are not SKILL.md frontmatter fields.
+- Bundled material is referenced with `${CLAUDE_PLUGIN_ROOT}`, never with a repo-relative
+  path. A repo-relative path resolves against the user's project and silently returns
+  nothing.
+- Every agent body has a `## When to invoke` section.
 
-## Conventions
+## Model policy
 
-- Language: English for all `.md` files and capability system prompts
-- Capability file names: `kebab-case`, no version in the name (`developer-java-spring.md`, not `developer-java-spring-v1.md`)
-- Versioning: SemVer with git tag `name@MAJOR.MINOR.PATCH`
-- Skills: `model: haiku`, `tools: Read` — do not add other tools without justification in the PR
-- Agents using `model: opus`: must either (a) be the meta-orchestrator (auto-allowed), or (b) carry a `model_justification:` frontmatter field of at least 40 chars explaining the reasoning-depth requirement. Without one, the validator emits a warning asking for justification in the PR description. Inline frontmatter is preferred — the rationale stays with the agent definition.
-- **Skill description rubric (Anthropic `skill-development`)**: every skill description must (a) start with `This skill should be used when…` (or the pushy variant `ALWAYS use this skill when…` for skills Claude tends to undertrigger), (b) include 2–3 verbatim trigger phrases between double quotes, (c) carry an explicit `Do not use…` (or equivalent) scope-out clause to disambiguate sibling skills. Enforced by `validate_catalog.py`.
-- **Agent rubric (Anthropic `agent-development`)**: every agent body should contain a `## When to invoke` section listing 2–4 worked scenarios as prose bullets and a `Do NOT use this agent for:` line. Body length: **warn above 10 000 chars (soft target), HARD ERROR above 12 000 chars** (`validate_catalog.py` blocks the PR). Pre-existing files over 12k are grandfathered via `HARD_CEILING_ALLOWLIST` in the validator — the goal is to drain the list, never extend it. Adding a new file to the allowlist requires a PR-description rationale. For the extraction recipe, see [`claude-catalog/docs/supervisor-extraction-template.md`](claude-catalog/docs/supervisor-extraction-template.md) — copy-adapt the worked example for each wave being extracted.
-- **Color frontmatter**: only `red`, `blue`, `green`, `yellow`, `magenta`, `cyan` are accepted (Anthropic spec). `purple`, `orange`, `pink` are not valid.
-- **Catalog directory layout**: agents and skills are grouped into thematic subdirectories (e.g., `agents/indexing/`, `agents/orchestration/`, `agents/quality/`, `skills/frontend/angular/`, `skills/orchestrators/`, `skills/documentation/`). Single-file root entries are tolerated for transitional states but should be moved into a topic folder when the topic gains a second sibling. Validation scans recursively (`rglob`).
-- **Marketplace directory layout**: mirrors the catalog grouping. Files live at `stable/<topic>/<name>.md`, `beta/<topic>/<name>.md`, or `skills/<topic>[/<sub>]/<name>.md`. The `file` field in `catalog.json` is the single source of truth — both the publish script and `setup-capabilities.sh` read it directly. Both flat paths (`<tier>/<name>.md`, `skills/<name>.md`) and nested paths are accepted by the validator, but new capabilities should always be published into a topic folder.
-- **Marketplace topics** (used as folder names): for agents — `analysis`, `api`, `architecture`, `baseline-testing`, `developers`, `documentation`, `functional-analysis`, `indexing`, `orchestration`, `quality`, `refactoring-tobe`, `technical-analysis`, `tobe-testing`. For skills — `analysis`, `api`, `backend`, `branding`, `database`, `documentation`, `frontend` (with framework subfolders `angular/`, `react/`, `qwik/`, `vue/`, `vanilla/`), `orchestrators`, `python`, `refactoring`, `testing`, `utils`. Add a new topic folder when a third capability of the same kind appears; until then place the capability in the closest existing folder rather than spawning a one-off topic.
+| Class | Model |
+|---|---|
+| Supervisors, challengers, auditors, deliberation personas | `opus` plus `effort: high` |
+| User-facing agents | `inherit` |
+| Pipeline workers dispatched in fan-out | `sonnet` |
 
----
+`inherit` is the platform default. Pinning a model is a deliberate act and is justified in
+an HTML comment in the agent body, never in a custom frontmatter field. A custom
+multi-line key corrupts the value of the key above it.
+
+## Skills
+
+A skill is knowledge loaded into the current context, not a subagent. Agents load skills
+on demand with the `Skill` tool. The `skills:` frontmatter field preloads full content at
+startup and is reserved for the one or two skills an agent needs on **every** run.
+
+A capability and the skills it always needs belong to the same plugin. When a cross-plugin
+reference is unavoidable, the agent body says so and describes what to do without it.
 
 ## BMAD patterns
 
-The registry follows [BMAD methodology](https://bmad-builder-docs.bmad-method.org) patterns
-adapted to the Anthropic single-file capability format. Full mapping in
-`bmad/design/mapping.md`. Summary of key conventions:
+- **Progressive disclosure.** Supervisor bodies stay under 10000 characters; the phase
+  protocol, dispatch templates and output schemas live in `references/`.
+- **Document as cache.** Pipeline state lives in files under `.indexing-kb/`,
+  `docs/analysis/` and `.refactoring-kb/`, never in conversation context.
+- **Workflow registry.** `bmad/workflows.json` holds the phase DAG.
 
-### Progressive disclosure (supervisor bodies ≤ 10k chars)
+## Evaluations
 
-Supervisor bodies must contain ONLY:
-- `## Role` — one paragraph
-- `## When to invoke` — 3–4 bullets + `Do NOT use` line
-- `## Reference docs` table with `Read when` conditions
+Write evaluations before the capability. Three scenarios minimum in
+`plugins/<plugin>/evals/<name>/evals.json`, plus `triggers.json` covering both the prompts
+that must activate the capability and the near-miss prompts that must not. Trigger evals
+are what catch a description edit that quietly breaks routing.
 
-All operational content (decision rules, escalation triggers, constraints,
-sub-agent roster, output format) lives in reference docs under
-`claude-catalog/docs/<phase>/`:
-- `supervisor-protocol.md` — decision rules + escalation + constraints
-- `phase-plan.md` — bootstrap dialog + per-wave dispatch + HITL + closing report
-- `sub-agents.md` — sub-agent roster, wave assignments, output targets
-- `dispatch-prompt-template.md` — Agent tool dispatch boilerplate
+## Adding a new capability
 
-When reducing a supervisor body below 10k, **remove its entry from**
-`legacy-body-baseline.json` immediately.
-
-### Document-as-cache (pipeline state)
-
-Every phase writes `_meta/pipeline-state.yaml` in its output directory.
-Supervisors read this on bootstrap to detect resume state. Schema in
-`bmad/design/mapping.md` § "Document-as-cache".
-
-### Workflow registry
-
-`bmad/workflows.json` is the authoritative registry of available workflow use
-cases. When adding a new use case, add an entry here before writing any agents.
-
-### DAG fields in catalog.json
-
-Every pipeline agent entry in `catalog.json` carries a `bmad` block:
-```json
-"bmad": {
-  "workflow": "application-replatforming",
-  "role": "worker",
-  "phase": "phase-1",
-  "wave": "W2",
-  "preceded_by": ["actor-feature-mapper", "ui-surface-analyst"],
-  "followed_by": ["functional-analysis-challenger"]
-}
-```
-Run `python3 bmad/scripts/backfill-dag.py` after updating the DAG draft.
-
-### Evals
-
-Every supervisor and key standalone agent has:
-- `claude-catalog/evals/<name>/triggers.json` — 2+ positive + 2+ negative trigger tests
-- `claude-catalog/evals/<name>/evals.json` — end-to-end artifact expectations (for supervisors)
-
-### Adding a new use case
-
-Follow the 8-step guide in `claude-catalog/templates/new-use-case/README.md`.
+1. Decide the type: agent, skill or command. See `docs/registry/how-to-write-a-capability.md`.
+2. Decide the plugin. Prefer the plugin that already owns the skills it needs.
+3. Write the evaluations.
+4. Write the capability.
+5. Run the validator, then `claude plugin validate .`.
+6. Update the CHANGELOG and bump the plugin version.
