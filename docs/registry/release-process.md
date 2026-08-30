@@ -46,13 +46,21 @@ claude plugin validate .
 bash hooks/tests/test-pre-tool-safety.sh
 ```
 
-All three run in CI on the pull request, split across the `Validate marketplace` and
+```bash
+bash scripts/test-clean-install.sh
+```
+
+All four run in CI on the pull request, split across the `Validate marketplace` and
 `Validate catalog` jobs. The validator fails on schema errors, frontmatter that does not
 parse as YAML, an agent that invokes a skill without holding the `Skill` tool, an
 oversized `SKILL.md`, a broken reference link, an unresolvable `${CLAUDE_PLUGIN_ROOT}`
-path, a reference to a retired capability, an unpinned MCP server spec, and a combined
-description budget over 15000 tokens. Over 13000 is a warning. The full gate table is in
-`how-to-write-a-capability.md` under "What CI enforces".
+path, a `references/...` path that neither resolves in its own plugin nor names its owner,
+an eval file whose key set does not match or whose fixture does not resolve, a
+`triggers.json` description that states the verdict or names a capability its query omits,
+a workflow DAG that disagrees with the tree, a reference to a retired capability, an
+unpinned MCP server spec, and a combined description budget over 15000 tokens. Over 13000
+is a warning. The full gate table is in `how-to-write-a-capability.md` under "What CI
+enforces".
 
 ## Step 4: merge and tag
 

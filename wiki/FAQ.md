@@ -2,7 +2,7 @@
 audience: mixed
 diataxis: reference
 last-verified: 2026-08-30
-verified-against: 8670a63
+verified-against: c6c780a
 -->
 
 # FAQ
@@ -120,11 +120,13 @@ Outside the pipeline, `dev-standards` covers nine languages and five frontend fr
 
 ## CI failed on a capability name I only mentioned in prose. Why?
 
-Because that name is retired. The validator scans `plugins/`, `wiki/`, `docs/`,
-`README.md` and `CLAUDE.md` for retired names in backticks and fails the build, so a
-removal cannot leave a dangling dispatch instruction behind. The exempt files are the
-changelog and the historical design notes, which necessarily name what they record. The
-list is in [Reference](Reference#retired-capability-names).
+Because that name is retired. The validator scans `plugins/`, `wiki/`, `docs/`, `bmad/`,
+`README.md` and `CLAUDE.md` for retired names and fails the build, so a removal cannot
+leave a dangling dispatch instruction behind. The match is on word boundaries rather than
+on backticks, which is exactly why prose counts: keying on the decorated spelling once let
+a dispatch instruction naming a removed agent survive several cleanup passes. The exempt
+files are the changelog and the historical design notes, which necessarily name what they
+record. The list is in [Reference](Reference#retired-capability-names).
 
 ## CI said my frontmatter is not valid YAML, but the agent looked fine. Why does it matter?
 

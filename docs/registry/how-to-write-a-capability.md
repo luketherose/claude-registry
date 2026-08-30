@@ -110,10 +110,12 @@ The combined descriptions of every enabled subagent share a **15000-token ceilin
 Past it, Claude Code warns at startup and delegation quality degrades because Claude has
 to discriminate between too many similar descriptions.
 
-The registry gates at **13000 tokens** in CI (`BUDGET_WARN`), measured across all plugins
-enabled at once, under a `BUDGET_FAIL` of 15000. The 2000-token gap is headroom for
-subagents the user enables from other marketplaces. Run the check locally before opening a
-PR:
+CI measures the total across all plugins enabled at once and reports it two ways. Above
+`BUDGET_WARN`, which is 13000 tokens, it warns and the build still passes. Above
+`BUDGET_FAIL`, which is 15000, it errors and the build fails. The 2000-token gap is
+headroom for subagents the user enables from other marketplaces. Counts come from tiktoken
+when it is installed and from a 4.67 characters-per-token estimate when it is not, and the
+report says which. Run the check locally before opening a PR:
 
 ```bash
 python3 .github/scripts/validate_registry.py
@@ -178,8 +180,11 @@ Writing rules that still hold, unchanged:
 
 ### Referencing bundled material
 
-Use `${CLAUDE_PLUGIN_ROOT}` for anything inside the plugin. It resolves to the installed
-plugin directory, so it works from any project.
+There are two forms, and which one is correct depends on the file you are writing in. Do
+not convert one into the other.
+
+**An agent body uses `${CLAUDE_PLUGIN_ROOT}`.** It resolves to the installed plugin
+directory, so it works from any project.
 
 ```markdown
 | Read this | When |
@@ -187,9 +192,24 @@ plugin directory, so it works from any project.
 | `${CLAUDE_PLUGIN_ROOT}/references/indexing/grounding-policy.md` | Before emitting any evidence claim |
 ```
 
-Never use a repository-relative path. It resolves against the user's project, not against
-the registry, and silently returns nothing. CI fails on a `${CLAUDE_PLUGIN_ROOT}` path that
-does not exist in the owning plugin.
+**A `SKILL.md` uses a plain relative link.** This is what the Agent Skills standard
+specifies, and `validate_skills()` resolves it from the directory the `SKILL.md` lives in.
+
+```markdown
+- **Custom exception hierarchy and RFC 7807 handling**: see [references/error-handling.md](references/error-handling.md)
+```
+
+Both forms are checked. `validate_plugin_root_refs()` fails on a `${CLAUDE_PLUGIN_ROOT}`
+path that does not exist in the owning plugin, `validate_skills()` fails on a `SKILL.md`
+link that does not resolve, and `validate_relative_links()` fails on a `../`-style link
+anywhere under `plugins/**` that does not resolve. `validate_cross_plugin_references()`
+adds one more rule for a bare `references/...` path in an agent body or a `SKILL.md`: it
+has to resolve inside its own plugin, or the same line has to name the plugin that owns it
+in words, and that plugin has to actually hold the file.
+
+A repository-relative path is never correct in a capability body. It resolves against the
+user's project rather than against the registry and silently returns nothing, which is how
+84 dangling read instructions survived the plugin migration.
 
 ---
 
@@ -216,8 +236,13 @@ description: "This skill should be used when working with JPA/Hibernate inside a
 
 ### Body
 
-- **Under 500 lines.** This is the Anthropic guidance and the CI gate. When you cross it,
-  move detail into `references/`, do not compress prose.
+- **Under 500 lines.** This is the Anthropic guidance and the CI error threshold. When you
+  cross it, move detail into `references/`, do not compress prose. CI also warns at 400
+  lines when the skill has no `references/` directory at all, because 500 is a ceiling
+  rather than a target.
+- **No `when to use` heading in the body.** Routing happens on the description alone, so a
+  trigger section in the body is unreachable at the moment it would matter and only
+  duplicates what the description already has to say. CI warns on the heading.
 - Assume Claude is already smart. Do not explain what a PDF is, what JPA is, or what a
   design token is. Only add context Claude does not already have.
 - Use consistent terminology. Pick one word per concept and keep it.
@@ -237,10 +262,12 @@ description: "This skill should be used when working with JPA/Hibernate inside a
 
 **References must be one level deep from SKILL.md.** Claude partially reads files reached
 through a chain of references, using `head` style previews, and ends up with incomplete
-information. Every reference file links directly from the body.
+information. Every reference file links directly from the body. A link that resolves but
+goes deeper than one level is a CI warning; a link that does not resolve is an error.
 
 Reference files longer than 100 lines start with a `## Contents` table of contents, so a
-partial read still shows the full scope.
+partial read still shows the full scope. CI warns on one that does not, across both
+`plugins/*/references/` and `plugins/*/skills/*/references/`.
 
 Link them explicitly, one line per file, saying what is in it:
 
@@ -302,50 +329,84 @@ Skills get `triggers.json` only, because a skill has no behaviour of its own to 
 is judged on whether the right prompt activates it.
 
 `evals.json` is a flat JSON list. One object per scenario, exactly these four keys, with
-`agent` equal to the directory name:
+`agent` equal to the directory name. Abridged from
+`plugins/dev-standards/evals/developer-java/evals.json`:
 
 ```json
 [
   {
     "agent": "developer-java",
-    "query": "This repository method triggers an N+1 on order lines. Fix it.",
-    "files": ["fixtures/OrderRepository.java"],
+    "query": "Review this Spring Boot controller",
+    "files": ["fixtures/OrderController.java"],
     "expected_behavior": [
-      "Identifies the lazy association responsible for the N+1",
-      "Applies a fetch join or an entity graph rather than switching to EAGER",
-      "Keeps the existing method signature and adds a regression test"
+      "Flags the discount computation inside create, and the @Autowired field injection into the controller, as layering violations, quoting the offending lines",
+      "Flags the empty catch (Exception) that returns null and requires an RFC 7807 ProblemDetail response in place of the RuntimeException",
+      "Reports the hardcoded STRIPE_KEY constant and the log statement that writes customer email and card number, each with its line"
     ]
   }
 ]
 ```
 
+Every path in `files` is resolved against the directory the `evals.json` lives in, and CI
+fails on one that does not exist.
+
 `triggers.json` covers the other half: which prompts must activate the capability, and
-which near-miss prompts must **not**. It is a flat JSON list of three-key objects. A
-negative case carries the sibling it should route to instead, in the `description`:
+which near-miss prompts must **not**. It is a flat JSON list of three-key objects. The
+`description` says what the query is about and never which capability wins. Two cases from
+`plugins/analysis-architecture/evals/software-architect/triggers.json`:
 
 ```json
 [
   {
-    "query": "Write an ADR for the decision to use event sourcing in the order service",
+    "query": "Write an ADR for the decision to use event sourcing in the order management system",
     "should_trigger": true,
-    "description": "Primary invocation"
+    "description": "ADR for adopting event sourcing"
   },
   {
     "query": "Produce a CVE inventory for our third-party dependencies",
     "should_trigger": false,
-    "description": "Dependency vulnerability audit, should route to `technical-analyst`"
+    "description": "CVE inventory for third-party dependencies"
   }
 ]
 ```
 
-Trigger evals are what catch a description edit that quietly breaks routing. Write a
-negative case for every sibling a reader could plausibly confuse with this capability, and
-make sure the negative case is genuinely out of scope: a prompt the capability's own
-description claims is a prompt it must handle.
+The second case is a negative for `software-architect`, and its description says so
+nowhere. That is the rule, and CI enforces it in both directions. `validate_evals()`
+rejects a description that matches a verdict phrasing (`primary invocation`,
+`should activate`, `should not activate`, `route to` in its `route`, `routes` and `routed`
+spellings, `belongs to`, `use <word> instead`), and it separately rejects a description
+naming any agent or skill in the registry that the case's own `query` does not mention.
+Repeating a subject the query already names is fine, because it tells a grader nothing it
+could not read off the query.
 
-Nothing in CI checks either schema, so a scenario written to the wrong shape passes review
-and then fails silently when the suite is run. Both shapes above are the ones in use across
-all 27 `evals.json` and all 73 `triggers.json` files in the repository.
+Use neutral topic labels, and give the identical query the identical description whether it
+appears as a positive in one file or a negative in another. The reason is measured: an
+earlier corpus named the winner in 364 of 365 descriptions, which let a nine-line keyword
+table with no semantics score 99.7 percent without reading a capability.
+
+Trigger evals are what catch a description edit that quietly breaks routing. Write a
+negative case for every sibling a reader could plausibly confuse with this capability. Pick
+that sibling when you choose the query, then keep it out of the description. Check the
+negative against the capability's own `description` before committing it. A prompt the
+description claims the capability handles cannot be a valid negative case, and that error
+once listed a security question as a must-not-trigger for an agent whose description names
+security among the concerns it assesses.
+
+`validate_evals()` in `.github/scripts/validate_registry.py` gates both files, so a
+scenario written to the wrong shape fails CI rather than passing review. It rejects a file
+that is not valid JSON, a `triggers.json` that is not a flat list, either file carrying a
+key set other than the one documented above, an `evals.json` fixture path that does not
+resolve, and a `triggers.json` description that leaks the verdict.
+
+Every agent and every skill carries a `triggers.json`. `evals.json` is for agents, and in
+practice for the ones a user invokes directly rather than the fan-out workers a supervisor
+dispatches. Count the corpus rather than trusting a figure in this document, because it
+moves with every capability added:
+
+```bash
+ls plugins/*/evals/*/triggers.json | wc -l
+ls plugins/*/evals/*/evals.json | wc -l
+```
 
 Test against Haiku, Sonnet and Opus. What reads as sufficient guidance on Opus is often
 too terse for Haiku.
@@ -357,9 +418,15 @@ too terse for Haiku.
 Two jobs run on every pull request against `main`, and both are required status checks.
 `Validate marketplace` runs `validate_registry.py --only manifests` and then
 `claude plugin validate .`. `Validate catalog` needs `Validate marketplace`, so a broken
-manifest stops it before it starts; it runs `validate_registry.py --only capabilities` and
-then the safety-hook regression matrix. Running the validator with no `--only` flag, as you
-would locally, covers both halves in one pass.
+manifest stops it before it starts; it runs `validate_registry.py --only capabilities`,
+then `hooks/tests/test-pre-tool-safety.sh`, then `scripts/test-clean-install.sh`. Running
+the validator with no `--only` flag, as you would locally, covers both halves in one pass.
+
+Every checking step in both jobs carries `continue-on-error: true`, and each job ends with
+a step that fails when any of them reported a failure. That ordering is deliberate. Failing
+a step outright would abort the job before the comment step, so a contributor would see a
+red check and no findings at all. A failure still fails the job, after the findings have
+been posted.
 
 The job names are load-bearing. The branch ruleset requires the contexts
 "Validate marketplace" and "Validate catalog", and a required context that never reports
@@ -370,6 +437,10 @@ stays pending forever. Change the ruleset before renaming a job.
 | Manifest schema | A missing or malformed `marketplace.json` or `plugin.json`, a name mismatch, a non-semver version, a source that escapes the root, a reserved marketplace name | `validate_manifests` |
 | MCP pinning | An MCP arg ending in `@latest`, or a `git+` URL with no ref after the host, in `.mcp.json` or any `plugins/*/.mcp.json` | `validate_mcp_pins` |
 | Frontmatter parses as YAML | Any `plugins/**/*.md` whose frontmatter does not survive `yaml.safe_load`, or does not parse to a mapping | `validate_frontmatter_yaml` |
+| Eval schemas | A key set other than `{agent, query, files, expected_behavior}` or `{query, should_trigger, description}`, invalid JSON, a `triggers.json` that is not a flat list, or an `evals.json` fixture that does not resolve | `validate_evals` |
+| Eval verdict leak | A `triggers.json` `description` matching a verdict phrasing, or naming an agent or skill the case's own `query` does not mention | `validate_evals` |
+| Workflow DAG | `bmad/design/workflow-dag-draft.json` listing an agent not in the tree, or missing one that is. The file being absent also fails | `validate_workflow_dag` |
+| Cross-plugin references | A `references/...` path that resolves neither beside the file nor at its plugin root while the line names no owner, or that names an owner the file is not in | `validate_cross_plugin_references` |
 | Agent frontmatter | A missing `name` or `description`, a `name` that does not match the filename, a duplicate name, an invalid `model` or `effort` | `validate_agents` |
 | Skill tool held | An agent body that mentions the `Skill` tool or tells itself to invoke a skill, while `Skill` is absent from `tools` | `validate_agents` |
 | Description budget | Combined agent descriptions over 15000 tokens. Over 13000 is a warning | `validate_agents` plus `report` |
@@ -378,11 +449,21 @@ stays pending forever. Change the ruleset before renaming a job.
 | Reference links | A link from a `SKILL.md` body that does not resolve. More than one level deep is a warning | `validate_skills` |
 | Plugin-root paths | A `${CLAUDE_PLUGIN_ROOT}/...` path that does not exist inside the owning plugin | `validate_plugin_root_refs` |
 | Relative links | A `../`-style markdown link inside a plugin that does not resolve | `validate_relative_links` |
-| Retired capabilities | A backticked reference to a name in the `RETIRED` dict, anywhere in `plugins/`, `wiki/`, `docs/`, `README.md` or `CLAUDE.md` | `validate_agent_references` |
+| Retired capabilities | Any word-boundary occurrence of a name in the `RETIRED` dict, backticked or in bare prose, anywhere in `plugins/`, `wiki/`, `docs/`, `bmad/`, `README.md` or `CLAUDE.md` | `validate_agent_references` |
 | Official CLI | `claude plugin validate .` reporting a validation failure. A CLI that cannot run at all is reported, not enforced | workflow step |
 | Safety hook | Any of the 24 cases in `hooks/tests/test-pre-tool-safety.sh` | workflow step |
+| Clean-machine install | `scripts/test-clean-install.sh`, which installs every plugin into a throwaway `CLAUDE_CONFIG_DIR` and asserts frontmatter parses, `${CLAUDE_PLUGIN_ROOT}` is gone, reference paths resolve, counts match the tree, and uninstall is clean | workflow step |
 
-Three of these deserve a note, because they change how you work rather than what you type.
+Five more rules are checked and reported as **warnings**, which never fail the build:
+a `SKILL.md` body over 400 lines with no `references/` directory, a `when to use` heading
+inside a `SKILL.md` body, a reference file over 100 lines with no `## Contents`, an agent
+body over 10 000 characters, and `model: opus` with no HTML comment in the body. All five
+live in `validate_substance`. Two further warnings sit elsewhere: a missing
+`## When to invoke` in an agent body, and a `SKILL.md` reference link more than one level
+deep. Treat all of them as review comments the machine wrote for you, not as optional.
+
+Three of the errors deserve a note, because they change how you work rather than what you
+type.
 
 **Frontmatter is parsed, not scanned.** `split_frontmatter()` returns raw text and
 `field()` reads it line by line, so an unescaped quote in a `description` still yields a
@@ -400,11 +481,15 @@ substituted its own priors for the team standard. The gate now matches `` `Skill
 fails the build.
 
 **Retiring a capability is a repository-wide edit.** Add the name to the `RETIRED` dict in
-`.github/scripts/validate_registry.py` with what to use instead, then fix every backticked
-reference in `plugins/`, `wiki/`, `docs/`, `README.md` and `CLAUDE.md` in the same pull
-request. `docs/registry/CHANGELOG.md`, `docs/language-agnostic-design.md` and
-`docs/modernization/` are exempt, because recording a removal necessarily names the thing
-removed. `archive/` is not scanned.
+`.github/scripts/validate_registry.py` with what to use instead, then fix every reference
+in `plugins/`, `wiki/`, `docs/`, `bmad/`, `README.md` and `CLAUDE.md` in the same pull
+request. The match is on word boundaries, not on backticks, so a mention in ordinary prose
+fails the build too. That is deliberate: keying on the decorated spelling once let a
+dispatch instruction naming a removed agent survive every cleanup pass. The lookbehind
+excludes a colon, so a plugin-qualified name such as `pr-review-toolkit:code-reviewer` is
+not flagged as the thing it replaces. `docs/registry/CHANGELOG.md`,
+`docs/language-agnostic-design.md` and `docs/modernization/` are exempt, because recording
+a removal necessarily names the thing removed. `archive/` is not scanned.
 
 ---
 
@@ -414,6 +499,7 @@ removed. `archive/` is not scanned.
 python3 .github/scripts/validate_registry.py
 claude plugin validate .
 bash hooks/tests/test-pre-tool-safety.sh
+bash scripts/test-clean-install.sh
 ```
 
 - [ ] `name` matches the filename (agents) or the directory (skills)

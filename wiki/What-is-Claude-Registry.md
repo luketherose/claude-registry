@@ -2,7 +2,7 @@
 audience: mixed
 diataxis: explanation
 last-verified: 2026-08-30
-verified-against: 8670a63
+verified-against: c6c780a
 -->
 
 # What is Claude Registry

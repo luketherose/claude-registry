@@ -147,7 +147,7 @@ Leave a comment for each failing item. Do not approve with unchecked mandatory i
 
 ## Automated gates
 
-All three run in CI. Run them locally first.
+All four run in CI. Run them locally first.
 
 ```bash
 python3 .github/scripts/validate_registry.py
@@ -161,6 +161,10 @@ claude plugin validate .
 bash hooks/tests/test-pre-tool-safety.sh
 ```
 
+```bash
+bash scripts/test-clean-install.sh
+```
+
 - [ ] Every frontmatter under `plugins/` survives `yaml.safe_load`
 - [ ] Combined subagent description budget under 13000 tokens (hard ceiling 15000)
 - [ ] Every `SKILL.md` body under 500 lines
@@ -169,10 +173,20 @@ bash hooks/tests/test-pre-tool-safety.sh
 - [ ] Reference links resolve and are one level deep
 - [ ] Every `${CLAUDE_PLUGIN_ROOT}` path resolves inside its own plugin
 - [ ] No repo-relative path to bundled material
+- [ ] Every `references/...` path resolves in its own plugin, or its line names the owner
 - [ ] Every agent body has `## When to invoke`
 - [ ] Every agent that talks about skills holds the `Skill` tool
 - [ ] No reference to a name in the `RETIRED` dict
 - [ ] Every MCP server spec names an exact version or commit SHA
+- [ ] `evals.json` and `triggers.json` key sets match, and every fixture path resolves
+- [ ] No `triggers.json` description states a verdict or names a capability its query omits
+- [ ] `bmad/design/workflow-dag-draft.json` lists exactly the agents in the tree
+
+The run also prints warnings, which do not block: an agent body over 10000 characters,
+`model: opus` with no HTML comment giving the reason, a `SKILL.md` over 400 lines with no
+`references/` directory, a `when to use` heading inside a `SKILL.md`, a reference file over
+100 lines with no `## Contents`, and a reference link deeper than one level. Read them
+before approving.
 
 The full gate table, with the validator function behind each one, is in
 `how-to-write-a-capability.md` under "What CI enforces".

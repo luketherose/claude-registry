@@ -2,7 +2,7 @@
 audience: end-user
 diataxis: reference
 last-verified: 2026-08-30
-verified-against: 8670a63
+verified-against: c6c780a
 -->
 
 # Changelog
@@ -79,10 +79,33 @@ marketplace.
   delete was blocked. It now parses the command. A 24-case regression matrix runs in CI.
 - **The retired-name gate widened to the pages people read first.** It scanned only
   `plugins/`, so the wiki and parts of `docs/` still listed capabilities that no longer
-  exist. The scan now covers `plugins/`, `wiki/`, `docs/`, `README.md` and `CLAUDE.md`.
+  exist. The scan now covers `plugins/`, `wiki/`, `docs/`, `bmad/`, `README.md` and
+  `CLAUDE.md`, and matches on word boundaries rather than on backticks, so a mention in
+  ordinary prose fails too.
 - **One evaluation scenario schema.** Two incompatible shapes had accumulated in
   `evals.json`. All scenarios now use `{agent, query, files, expected_behavior}`, with
-  `agent` equal to the eval directory name.
+  `agent` equal to the eval directory name. `validate_evals()` locks both key sets, checks
+  that every fixture path resolves, and fails on invalid JSON.
+- **The trigger suites stopped grading themselves.** Descriptions named the routing winner
+  in 364 of 365 cases, which let a nine-line keyword table with no semantics score 99.7
+  percent. Every description now states what the query is about and never the verdict, and
+  the same gate rejects a new one that names a capability its own query does not mention.
+- **The agent-level workflow DAG is compared against the tree.** `workflow-dag-draft.json`
+  had drifted with two removed capabilities listed and two existing supervisors missing.
+  Because those cancelled out, the totals matched and a count check would have passed. The
+  gate compares names.
+- **A cross-plugin reference has to name its owner.** A `references/...` path in an agent
+  body or a `SKILL.md` now has to resolve inside its own plugin, or the same line has to
+  say which plugin owns it, and that plugin has to hold the file. Plugins install
+  independently, so a relative path can never reach another one's tree.
+- **A clean-machine install check runs in CI.** `scripts/test-clean-install.sh` installs
+  every plugin into a throwaway config directory and asserts the result is usable, then
+  asserts that uninstall leaves nothing behind.
+- **Five substance rules are reported as warnings.** An oversized agent body, an
+  unjustified `opus` pin, a long `SKILL.md` with no `references/`, a `when to use` heading
+  inside a `SKILL.md`, and a long reference file with no `## Contents`. They do not fail
+  the build. The audit that added them found the gated surface clean and the ungated one
+  drifted.
 - **MCP server specs must be pinned.** The root config pulled `@latest` and an unpinned
   Git ref while the plugin-level configs for the same servers were pinned, so the same
   server ran a different build depending on which config won. A new gate fails on either

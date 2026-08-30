@@ -2,7 +2,7 @@
 audience: contributor
 diataxis: explanation
 last-verified: 2026-08-30
-verified-against: 8670a63
+verified-against: c6c780a
 -->
 
 # Governance
@@ -98,12 +98,16 @@ The procedure:
 1. Determine the bump from the table.
 2. Bump `version` in `plugins/<plugin>/.claude-plugin/plugin.json` and add a
    `docs/registry/CHANGELOG.md` entry as `[<plugin>@<version>] - YYYY-MM-DD`.
-3. Validate locally.
+3. Validate locally: `python3 .github/scripts/validate_registry.py`, then
+   `claude plugin validate .`, then `bash hooks/tests/test-pre-tool-safety.sh`, then
+   `bash scripts/test-clean-install.sh`.
 4. Merge, then tag: `git tag dev-standards@1.3.0 && git push origin dev-standards@1.3.0`.
 5. For a release that changes structure, install it from scratch and verify from a
    project directory rather than from the registry, that the skills appear under the
    `Skill` tool and that bundled paths resolve. A path that resolves in the repository but
-   not in an install is exactly what this step catches.
+   not in an install is exactly what this step catches. `scripts/test-clean-install.sh`
+   automates the mechanical half of it against a throwaway config directory; the human half
+   is confirming the capability behaves as intended once installed.
 
 Renaming or removing a plugin adds a `renames` entry to
 `.claude-plugin/marketplace.json`, mapping the old name to the new one, or to `null` for
@@ -113,11 +117,18 @@ removed, so existing installs migrate instead of breaking.
 
 The CI gates are the line.
 
-**Hard governance** is what the gates enforce: manifest schema, frontmatter correctness,
-`SKILL.md` length, reference resolution, retired names, MCP pinning, the description
-budget, the hook regression matrix. There is no override short of disabling CI, which is
-itself a governance decision and is never made silently. The full list is in
-[Reference](Reference#ci-gates).
+**Hard governance** is what the gates fail on: manifest schema, frontmatter correctness,
+`SKILL.md` length, reference resolution, cross-plugin reference ownership, eval schemas and
+the verdict leak, the workflow DAG, retired names, MCP pinning, the description budget, the
+hook regression matrix, and the clean-machine install check. There is no override short of
+disabling CI, which is itself a governance decision and is never made silently. The full
+list is in [Reference](Reference#ci-gates).
+
+**Warnings sit between the two.** Five substance rules are reported and do not block: an
+agent body over 10000 characters, `model: opus` with no recorded reason, a long `SKILL.md`
+with no `references/`, a `when to use` heading inside a `SKILL.md`, and a long reference
+file with no `## Contents`. They are a backlog the reviewer is expected to look at, not a
+list of optional rules.
 
 **Soft governance** is everything else, handled by `review-checklist.md` and reviewer
 judgment: whether a `description` is precise enough to route on, whether the tool list is
@@ -158,10 +169,10 @@ too.
 The authoritative source is `how-to-write-a-capability.md`. The tiebreaker is the
 validator, because it is what actually blocks a merge.
 
-One known gap at the verified commit: `evals-guide.md` still describes evaluations as
-`<capability-name>-eval.md` Markdown files. The shape actually in use, in all 73
-evaluation directories, is `evals.json` plus `triggers.json`. See
-[Reference](Reference#evaluations) for both schemas.
+The three documents agree at the verified commit. `evals-guide.md` used to describe
+evaluations as `<capability-name>-eval.md` Markdown files, a shape that exists nowhere in
+the tree; it now documents `evals.json` and `triggers.json`, which is what every evaluation
+directory holds. See [Reference](Reference#evaluations) for both schemas.
 
 ## Related
 

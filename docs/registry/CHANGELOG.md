@@ -6,6 +6,52 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 
+### Added (CI gates that landed without an entry, 2026-08-29 to 2026-08-30)
+
+Five validator gates, one CI step and one corpus rewrite reached `main` without a changelog
+entry. Recorded here, with the strength of each stated as the code states it.
+
+**`validate_evals()` locks both eval schemas and rejects a self-grading description.**
+Errors on a `triggers.json` that is not a flat list, on either file having a key set other
+than the documented one, on an `evals.json` fixture path that does not resolve against the
+eval directory, and on a `triggers.json` `description` that either matches a verdict
+phrasing (`primary invocation`, `should activate`, `should not activate`, `route to` in its
+`route`, `routes` and `routed` spellings, `belongs to`, `use <word> instead`) or names an
+agent or skill that the case's own `query` does not mention.
+
+**The trigger suites no longer grade themselves.** 364 of 365 descriptions named the
+routing winner, so a nine-line keyword table with no semantics scored 99.7 percent. Every
+description now states what the query is about and never the verdict, and the same query
+used as a positive in one file and a negative in another carries the same description. The
+keyword table now scores 53.0 percent against a 52.8 percent base rate. 27 same-language
+negatives were added so the negatives stop being cross-language flips any matcher catches.
+
+**`validate_workflow_dag()` compares `bmad/design/workflow-dag-draft.json` against the
+tree by name.** Errors on a listed agent that is not on disk and on an agent on disk that
+is not listed. It had drifted with two removed capabilities listed and two existing
+supervisors missing, and because those cancelled out a count check would have passed.
+
+**`validate_cross_plugin_references()` requires a `references/...` path to resolve or to
+name its owner.** Errors when the path resolves neither beside the file nor at the plugin
+root and the line does not say which plugin owns it, and errors again when the line does
+name an owner but the file is not in that plugin.
+
+**`scripts/test-clean-install.sh` runs in the `Validate catalog` job.** It installs every
+plugin into a throwaway `CLAUDE_CONFIG_DIR` and asserts the result is usable: frontmatter
+parses, `${CLAUDE_PLUGIN_ROOT}` is gone, every reference path resolves, the counts match
+the tree, and uninstall is clean. It runs under `continue-on-error` alongside
+`hooks/tests/test-pre-tool-safety.sh`, and both are re-checked by the job's final step, so
+a failure still fails the job after the findings comment has been posted.
+
+**Five substance rules are gated as warnings.** `validate_substance()` reports a `SKILL.md`
+body over 400 lines with no `references/` directory, a `when to use` heading inside a
+`SKILL.md` body, a reference file over 100 lines with no `## Contents`, an agent body over
+10 000 characters, and `model: opus` with no HTML comment in the body. All five call
+`warn()`, so none of them fails the build. Measured at the commit that added them, three of
+the five fire: 98 reference files with no `## Contents`, 23 opus agents with no recorded
+reason, and 5 agent bodies over the ceiling. The other two are clean. They are warnings
+because that backlog is real, not because the rules are optional.
+
 ### Fixed (retired names, eval schema, MCP pinning, 2026-08-30)
 
 **The retired-capability gate scans the pages a teammate reads first.**
@@ -29,8 +75,10 @@ The bare name matches the `RETIRED` pattern and fails the build.
 **One eval scenario schema.** `evals.json` carried two incompatible shapes: 16 scenarios
 as `{id, prompt, expectations, timeout}` and 63 as `{agent, query, files,
 expected_behavior}`. All 79 scenarios across 27 eval directories now use the second.
-`agent` equals the eval directory name. `triggers.json` is unchanged: a flat list of
-`{query, should_trigger, description}`, 365 entries across 73 files.
+`agent` equals the eval directory name. `triggers.json` keeps its shape, a flat list of
+`{query, should_trigger, description}`, and holds 411 entries across 73 files. Its
+contents did change, in the same batch: see "The trigger suites no longer grade
+themselves" below.
 
 **`software-architect` negative trigger corrected.** "What are the security risks in this
 codebase?" was listed as a prompt that must not activate `software-architect`, whose own
@@ -192,7 +240,7 @@ persona") but did not configure.
 - **Eval suites** at `claude-catalog/evals/<supervisor>/triggers.json` for all 6 phase supervisors + key standalone agents. Each suite has ≥2 positive and ≥2 negative trigger tests.
 
 ### Changed
-- **`legacy-body-baseline.json` cleared.** All 18 previously-over-limit agents are now under 10 000 chars after extraction. The baseline file now contains only the `_comment` key — no exceptions remain. Any future agent exceeding 10 000 chars is a hard CI error with no legacy exception.
+- **`legacy-body-baseline.json` cleared.** All 18 previously-over-limit agents were brought under 10 000 chars by extraction, leaving the baseline file holding only its `_comment` key. Superseded: neither that file nor the ratchet that read it exists today. The 10 000-character agent-body ceiling now lives in `AGENT_BODY_MAX_CHARS` in `.github/scripts/validate_registry.py`, where `validate_substance()` reports it with `warn()`. It does not fail the build.
 - **18 supervisors and workers body-reduced** via BMAD progressive disclosure extraction. Bodies now contain only Role + When to invoke + Reference docs. Operational content lives in the corresponding `supervisor-protocol.md` reference doc. Agents: `indexing-supervisor`, `module-documenter`, `synthesizer`, `functional-analysis-supervisor`, `actor-feature-mapper`, `user-flow-analyst`, `technical-analysis-supervisor`, `code-quality-analyst`, `dependency-security-analyst`, `integration-analyst`, `resilience-analyst`, `state-runtime-analyst`, `baseline-testing-supervisor`, `deliberative-decision-engine`, `refactoring-tobe-supervisor`, `tobe-testing-supervisor`, `decomposition-architect`, `logic-translator`.
 
 - **Document-as-cache operationalized in all 7 supervisor-protocol.md files.** Each file now includes a `## Pipeline state` section with: file path for `_meta/pipeline-state.yaml`, bootstrap protocol (read → detect state → decide skip/resume/rerun), update protocol (write after each wave), and the complete YAML schema for that phase (waves, agents, output targets, conditional fields). Covers: indexing, functional-analysis, technical-analysis, baseline-testing, deliberation (step-based schema), refactoring-tobe (legacy), tobe-testing (legacy).
@@ -203,7 +251,7 @@ persona") but did not configure.
 - **`test-data-seeder` agent (new, beta).** Phase 4 Step 5.5 sub-agent of `refactoring-supervisor`. Loads a coherent cross-module dataset into a freshly-built TO-BE app so the Step 6 UI smoke gate can judge the app visually (empty grid vs. broken grid look identical to a reviewer). Auto-detects the project's migration tool — Liquibase, Flyway, Django fixtures, Rails seeds, EF Migrations, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic, or raw SQL — and writes seeds in the tool's native idempotent format, gated to a non-production profile. Restarts the backend and verifies via API smoke calls. Strictly generic across stacks. Files: `claude-catalog/agents/refactoring-tobe/test-data-seeder.md`, `claude-catalog/examples/test-data-seeder-example.md`, `claude-catalog/evals/test-data-seeder-eval.md`.
 - **`test-data-seeding-standards` skill (new).** Merges the previously-separate `test-data-design-standards` and `database-migration-patterns` skills into a single co-invocable skill. Covers dataset design principles (pivot-entity model, lifecycle-state coverage, FK consistency rules, login-user spread, column-length safety checklist) and tool-specific injection patterns for 13 migration tools (Liquibase, Flyway, Django, Rails, EF Core, Knex, TypeORM, Prisma, sqlx, Diesel, goose, Alembic, raw SQL): auto-detection logic, idempotent insert templates, non-production profile gating, and FK-lookup patterns. Consumed by `test-data-seeder`. File: `claude-catalog/skills/testing/test-data-seeding-standards.md`.
 - **Phase 4 Step 5.5 — Test Data Seeding** integrated into the replatforming workflow as the post-testing macro step between Step 5 (Hardening) and Step 6 (Final Validation / UI smoke gate). New reference doc `claude-catalog/docs/refactoring-workflow/phase-4-step-5-5-test-data-seeding.md` (hard gate, pre-step brief, post-step recap, manifest schema). The Step 6 UI smoke gate now explicitly lists Step 5.5 as a non-skippable precondition — an empty UI is visually indistinguishable from a broken UI, so the human-visual gate cannot judge an empty app. Updated: `phase-4-replatforming.md` (Step 5.5 section + gate-table row + sub-agents list), `phase-4-step-6-ui-smoke-gate.md` (precondition section), `constraints.md` (Step 5.5 non-skippable invariant), `agents/orchestration/refactoring-supervisor.md` (reference-docs table row for the new doc).
-- **Body-length ratchet in `validate_catalog.py`.** The 10 000-char agent-body ceiling (Anthropic rubric §9) is now enforced as a HARD ERROR. Pre-existing offenders are listed in [`.github/scripts/legacy-body-baseline.json`](.github/scripts/legacy-body-baseline.json) with their current size as a per-file cap — they can shrink but not grow. New agents must stay below 10 000 chars unconditionally. The mechanism prevents future PRs from re-introducing body-length warnings on the agents we just extracted. See [`CLAUDE.md`](../CLAUDE.md) § "Agent rubric" for the rule.
+- **Body-length ratchet in `validate_catalog.py`.** The 10 000-char agent-body ceiling (Anthropic rubric §9) was made a hard error, with pre-existing offenders listed in `legacy-body-baseline.json` at their current size as a per-file cap, able to shrink but not grow. Superseded, and the strength of the gate was overstated even before that. `validate_catalog.py` and `legacy-body-baseline.json` were both removed in the plugin migration. What replaced them is `AGENT_BODY_MAX_CHARS = 10000` in `.github/scripts/validate_registry.py`, checked by `validate_substance()` against the agent body after frontmatter and raised through `warn()`. Warnings are printed in the pull-request comment and never set a non-zero exit code, so an oversized body is visible but not blocking. There is no per-file cap and no baseline file, so nothing stops an already-oversized body from growing further.
 - `claude-catalog/docs/refactoring-workflow/decision-rules.md` — authoritative `refactoring-supervisor` decision table extracted from the supervisor body (grouped by bootstrap and pre-phase gates, phase status and the iteration loop, skip/resume/re-run, Phase 4 gating, deliberation routing).
 - `claude-catalog/docs/refactoring-workflow/deliberation-integration.md` — activation paths, dispatch protocol, default policy and hard rules for routing decisions to `deliberative-decision-engine`, extracted from the supervisor body.
 - `claude-catalog/docs/refactoring-workflow/constraints.md` — workflow-level invariants of `refactoring-supervisor` (orchestration boundaries, AS-IS/TO-BE rule, recap discipline, Phase-4 invariants), extracted from the supervisor body.

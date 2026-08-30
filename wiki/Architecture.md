@@ -2,7 +2,7 @@
 audience: contributor
 diataxis: explanation
 last-verified: 2026-08-30
-verified-against: 8670a63
+verified-against: c6c780a
 -->
 
 # Architecture
@@ -36,8 +36,21 @@ archive/                          superseded material kept for provenance
 There is a single tier. Versioning is semver on the plugin, declared in each
 `plugin.json`. There is no per-capability version and no per-capability status flag.
 
-Bulk figures at the verified commit: 86 agents, 46 skills, 158 bundled reference files
-(143 of them in `replatforming`), 73 evaluation directories, 7 worked examples.
+Bulk figures at the verified commit: 6 plugins, 86 agents, 46 skills, 7 worked examples, no
+slash commands. Reference material and evaluations move with every capability added, so
+count them rather than trusting a figure here:
+
+```bash
+find plugins/*/agents -name '*.md' | wc -l                     # agents
+ls plugins/*/skills/*/SKILL.md | wc -l                         # skills
+find plugins/*/references plugins/*/skills/*/references \
+     -name '*.md' 2>/dev/null | wc -l                          # reference files
+ls -d plugins/*/evals/*/ | wc -l                               # evaluation directories
+```
+
+At the verified commit that came to 179 reference files, 158 of them shared at plugin level
+and 21 bundled inside a skill, with `replatforming` holding 143 of the 158, and to 73
+evaluation directories against 132 capabilities.
 
 ## How a plugin resolves at runtime
 
@@ -127,15 +140,29 @@ author opens a PR touching plugins/**
                  │
                  ▼
    job "Validate marketplace"
+     step 1  validate_registry.py --only manifests
         - marketplace.json and every plugin.json: schema, semver,
           source resolution, name agreement, mcpServers/hooks targets
         - every MCP server spec pins a version or a commit SHA
-        - claude plugin validate .   (a real gate; a CLI that cannot
-          run at all is reported, not enforced)
+     step 2  claude plugin validate .   (a real gate; a CLI that cannot
+             run at all is reported, not enforced)
+     step 3  post or update the pull-request comment
+     step 4  fail if step 1 or step 2 reported a failure
                  │
                  ▼
    job "Validate catalog"   (needs the job above)
+     step 1  validate_registry.py --only capabilities
         - every frontmatter under plugins/ survives yaml.safe_load
+        - eval files keep their key sets, fixtures resolve, and no
+          triggers.json description states the verdict or names a
+          capability its own query does not mention
+        - bmad/design/workflow-dag-draft.json lists exactly the
+          agents on disk, compared by name
+        - substance warnings: oversized agent body, unjustified opus,
+          long skill body with no references/, a "when to use" heading
+          in a SKILL.md, a long reference file with no ## Contents
+        - a references/ path resolves in its own plugin, or the line
+          names the plugin that owns it
         - agent frontmatter: name matches filename, no duplicates,
           valid model and effort, description present
         - an agent whose body invokes skills carries the Skill tool
@@ -145,11 +172,12 @@ author opens a PR touching plugins/**
         - reference links resolve; deeper than one level warns
         - ${CLAUDE_PLUGIN_ROOT} paths resolve inside the owning plugin
         - relative markdown links inside plugins resolve
-        - a references/ path resolves in its own plugin, or the line
-          names the plugin that owns it
         - no retired capability name appears outside the exempt set
         - combined description budget: warn at 13000, fail at 15000
-        - hooks/tests/test-pre-tool-safety.sh passes
+     step 2  hooks/tests/test-pre-tool-safety.sh   (24 cases)
+     step 3  scripts/test-clean-install.sh         (clean-machine install)
+     step 4  post or update the pull-request comment
+     step 5  fail if step 1, 2 or 3 reported a failure
                  │
                  ▼
    reviewer applies docs/registry/review-checklist.md
@@ -164,19 +192,28 @@ author opens a PR touching plugins/**
 Both jobs post their findings as a pull-request comment, updating the same comment on
 re-runs rather than adding new ones.
 
+Every checking step carries `continue-on-error: true`, and each job's last step re-reads
+their outcomes and exits non-zero if any of them failed. The gating is deferred on purpose.
+Failing a step where it runs would abort the job before the comment step, so a contributor
+would see a red check and no findings at all. The findings go up first, then the job fails.
+
 The job **names** are load-bearing. The branch protection ruleset requires the status
 contexts `Validate marketplace` and `Validate catalog`. Renaming a job in the workflow
 silently blocks every pull request, because a required context that never reports stays
 pending forever. Change the ruleset first.
 
-Run the same validator locally before pushing:
+Run the same four checks locally before pushing:
 
 ```bash
 python3 .github/scripts/validate_registry.py
 claude plugin validate .
+bash hooks/tests/test-pre-tool-safety.sh
+bash scripts/test-clean-install.sh
 ```
 
-`--only manifests` and `--only capabilities` run one half, exactly as the two CI jobs do.
+`--only manifests` and `--only capabilities` run one half of the validator, exactly as the
+two CI jobs do. The clean-install check uses a throwaway `CLAUDE_CONFIG_DIR`, so running it
+does not touch your own `~/.claude`.
 
 ## Flow: installing
 

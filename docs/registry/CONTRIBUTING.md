@@ -127,7 +127,9 @@ If you're changing the `name` or `description` frontmatter, this is a breaking c
 - [ ] Body has `## When to invoke`
 - [ ] At least one example file in `plugins/<plugin>/examples/`
 - [ ] At least three scenarios in `plugins/<plugin>/evals/<name>/evals.json`, plus
-      `triggers.json`
+      `triggers.json`, both in the key sets `validate_evals()` enforces
+- [ ] No `triggers.json` description states a verdict or names a capability its own query
+      does not mention
 - [ ] `docs/registry/CHANGELOG.md` entry under "Unreleased"
 - [ ] Reviewer has applied `review-checklist.md`
 
@@ -142,7 +144,8 @@ If you're changing the `name` or `description` frontmatter, this is a breaking c
 - [ ] Each agent that uses this skill names it and holds the `Skill` tool
 - [ ] The skill lives in the same plugin as the agents that always need it. Cross-plugin
       references are declared in the agent body and degrade gracefully
-- [ ] `plugins/<plugin>/evals/<name>/triggers.json` exists
+- [ ] `plugins/<plugin>/evals/<name>/triggers.json` exists, and no description in it states
+      a verdict or names a capability its own query does not mention
 - [ ] `docs/registry/CHANGELOG.md` entry under "Unreleased"
 
 ---

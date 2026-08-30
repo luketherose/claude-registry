@@ -2,7 +2,7 @@
 audience: contributor
 diataxis: how-to
 last-verified: 2026-08-30
-verified-against: 8670a63
+verified-against: c6c780a
 -->
 
 # Contributing
@@ -83,9 +83,10 @@ Run it with no arguments to be prompted. It creates:
 It refuses a name that is not lowercase alphanumeric with hyphens, and a name containing
 `anthropic` or `claude`, which are reserved.
 
-> The scaffold's `evals.json` and `triggers.json` stubs still use an older shape. Replace
-> them with the schemas in [Reference](Reference#evaluations), which is what all 73
-> existing evaluation directories use.
+The eval stubs it writes are in the schemas CI enforces, including a `triggers.json`
+negative whose placeholder description reads "what makes it out of scope, without naming
+the winner". Fill the placeholders in; do not change the shape. Both schemas are in
+[Reference](Reference#evaluations).
 
 ## Step 2: write the evaluations first
 
@@ -100,6 +101,14 @@ Not after. Writing them afterwards documents an imagined problem.
    than against your intuition.
 
 Trigger evaluations are what catch a description edit that quietly breaks routing.
+
+Each trigger case's `description` restates what the query is about and never names the
+capability that should win. CI rejects a description that states the verdict, and rejects
+one that names an agent or skill the query itself does not mention. The rule exists because
+the suite once graded itself: an earlier corpus named the winner in 364 of 365
+descriptions, and a nine-line keyword table scored 99.7 percent on it without reading a
+capability. Choose the sibling you are testing against when you pick the query, then leave
+it out of the description.
 
 ## Step 3: write the capability
 
@@ -207,10 +216,16 @@ Also update `README.md` when the capability roster changes, and
 python3 .github/scripts/validate_registry.py
 claude plugin validate .
 bash hooks/tests/test-pre-tool-safety.sh
+bash scripts/test-clean-install.sh
 ```
 
-All three run in CI, split across the `Validate marketplace` and `Validate catalog` jobs.
-Exit code 0 with zero errors is the bar. Warnings do not block.
+All four run in CI, split across the `Validate marketplace` and `Validate catalog` jobs.
+Exit code 0 with zero errors is the bar. Warnings do not block, and are worth reading
+anyway: they are the rules the structural gates never covered.
+
+The clean-install check installs every plugin into a throwaway `CLAUDE_CONFIG_DIR`, so
+running it locally does not touch your own `~/.claude`. It is the one that catches a
+reference path which resolves in the repository and not in an install.
 
 Pre-flight checklist:
 
@@ -223,7 +238,8 @@ Pre-flight checklist:
 - [ ] `tools` is a minimal allowlist, and includes `Skill` if the body invokes skills
 - [ ] Model choice follows the policy, or is justified in an HTML comment
 - [ ] Cross-plugin skill dependencies are declared and degrade gracefully
-- [ ] Three evaluation scenarios plus `triggers.json`
+- [ ] Three evaluation scenarios plus `triggers.json`, in the schemas CI enforces
+- [ ] No `triggers.json` description states a verdict or names a capability its query omits
 - [ ] One example in the plugin's `examples/`
 - [ ] Plugin version bumped and changelog entry added
 - [ ] No credentials, tokens or secrets anywhere

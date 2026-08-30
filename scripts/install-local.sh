@@ -84,10 +84,19 @@ mkdir -p "$AGENTS" "$SKILLS" "$REFS"
 
 n_agents=0; n_skills=0; n_refs=0
 for p in "${SELECTED[@]}"; do
-  # references first, so the rewrite target exists
-  if [[ -d "plugins/$p/references" ]]; then
-    rm -rf "${REFS:?}/$p"
-    cp -R "plugins/$p/references" "$REFS/$p"
+  # Bundled material first, so the rewrite target exists. The destination
+  # mirrors the plugin root rather than flattening references/ into it, because
+  # agents also link ${CLAUDE_PLUGIN_ROOT}/examples/ and a single rewrite rule
+  # has to serve both. Flattening one of them is what left seven example links
+  # pointing at a directory that was never copied.
+  rm -rf "${REFS:?}/$p"
+  for sub in references examples; do
+    if [[ -d "plugins/$p/$sub" ]]; then
+      mkdir -p "$REFS/$p"
+      cp -R "plugins/$p/$sub" "$REFS/$p/$sub"
+    fi
+  done
+  if [[ -d "$REFS/$p" ]]; then
     echo "$REFS/$p" >> "$MANIFEST.tmp"
     n_refs=$((n_refs + $( { find "$REFS/$p" -type f 2>/dev/null || true; } | wc -l | tr -d ' ')))
   fi
@@ -96,12 +105,11 @@ for p in "${SELECTED[@]}"; do
     dest="$AGENTS/$(basename "$f")"
     python3 - "$f" "$dest" "$REFS/$p" <<'PY'
 import sys, pathlib
-src, dest, refroot = sys.argv[1], sys.argv[2], sys.argv[3]
+src, dest, refroot = sys.argv[1], sys.argv[2], sys.argv[3]  # refroot mirrors the plugin root
 text = pathlib.Path(src).read_text(encoding="utf-8")
 # ${CLAUDE_PLUGIN_ROOT} only expands inside an installed plugin. Outside one it is a
 # literal string, so every bundled reference would silently fail to open.
-text = text.replace("${CLAUDE_PLUGIN_ROOT}/references", refroot)
-text = text.replace("${CLAUDE_PLUGIN_ROOT}", refroot.rsplit("/", 1)[0])
+text = text.replace("${CLAUDE_PLUGIN_ROOT}", refroot)
 pathlib.Path(dest).write_text(text, encoding="utf-8")
 PY
     echo "$dest" >> "$MANIFEST.tmp"
