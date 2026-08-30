@@ -6,6 +6,23 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 
+### Known issue (three commits on main do not build, 2026-08-30)
+
+`dcf474f`, `a2cdfc3` and `961e76d` each fail `validate_registry.py` with 94 errors. Their
+tip, `d2ec296` onward, is clean, and CI runs against a pull request head rather than the
+commits inside it, so the normal review flow is unaffected. What is affected is `git bisect`
+and any direct checkout of those three SHAs.
+
+Cause: those commits were staged with `git add plugins/ ':(exclude)plugins/*/references/*'`
+in order to leave a concurrently running job's files alone. That pattern also matches
+`plugins/<plugin>/skills/<skill>/references/*`, so 21 newly created skill reference files
+were held back while the `SKILL.md` files linking them were committed. The links resolved
+again one commit later, when the excluded files landed.
+
+The history is deliberately left as it is rather than rewritten, because `main` is shared
+and a force push would leave anyone who had already pulled with a diverging history to
+resolve by hand. Anyone bisecting through this range should skip those three commits.
+
 ### Added (CI gates that landed without an entry, 2026-08-29 to 2026-08-30)
 
 Five validator gates, one CI step and one corpus rewrite reached `main` without a changelog
