@@ -5,6 +5,11 @@
 **Last updated**: 2026-04-28
 **Tracking PR**: `refactor/language-agnostic-supervisors`
 
+**2026-08-31**: the nine repository paths in this document were rewritten for the plugin
+layout, because the `claude-catalog` tree they named was removed in the marketplace
+migration and two live plugin files link here. Only the paths were touched. Whether the
+design below still describes the target was not re-assessed, and the status stays `draft`.
+
 This document describes the target design for the refactoring pipeline
 (Phases 0-5 + top-level `refactoring-supervisor`) after the
 **language-agnostic refactoring**. Today the pipeline is hardcoded for
@@ -212,7 +217,7 @@ when `stack.frameworks` contains `streamlit`, `python-expert` always
 when `stack.primary_language=python`, etc.
 
 The dispatch table lives at
-`claude-catalog/docs/language-agnostic-design.md` (this file) and is
+`docs/language-agnostic-design.md` (this file) and is
 referenced by every supervisor's prompt under a `## Dispatch` section.
 The table itself is **not** duplicated across agents — they all link
 back here. (TODO in implementation: optionally extract to a JSON/YAML
@@ -234,7 +239,7 @@ target stack is a decision, not a discovery. The flow is:
      "java/spring-boot+angular"`
    - a `migration profile` argument: `--profile java-spring-angular`
      (a profile is a named bundle of language + framework choices —
-     declared in `claude-catalog/docs/migration-profiles.md`,
+     declared in `docs/migration-profiles.md`,
      a follow-up artifact)
    - inference + explicit confirmation: e.g. for a Streamlit AS-IS the
      supervisor proposes `java/spring-boot + angular` (the historical
@@ -417,7 +422,7 @@ manifest for unsupported languages in Phase 3 / 4 / 5).
      framework markers are possible (e.g. Next.js + TanStack Query).
 
 3. **Where do migration profiles live**? A YAML file in
-   `claude-catalog/docs/migration-profiles.yaml` referenced from this
+   `docs/migration-profiles.yaml` referenced from this
    doc? Or a skill?
    - **Tentative answer**: YAML file for now; promote to skill if
      consumed by ≥ 2 supervisors.
@@ -432,7 +437,7 @@ manifest for unsupported languages in Phase 3 / 4 / 5).
    `developer-*` agent). Tracked under PR-06; no change in PR-01.
 
 5. **Migration profiles location**? ✅ **Decided in PR-01**: deferred.
-   A YAML file at `claude-catalog/docs/migration-profiles.yaml` is
+   A YAML file at `docs/migration-profiles.yaml` is
    the proposed home, but it is not added until at least one
    supervisor consumes it. Tracked under the PR that first introduces
    profile consumption (likely PR-06).
@@ -471,11 +476,11 @@ The refactor is complete when:
 ## References
 
 - Current `refactoring-supervisor` and phase supervisors:
-  `claude-catalog/agents/refactoring-supervisor.md`,
-  `claude-catalog/agents/{indexing,functional-analysis,technical-analysis,baseline-testing,refactoring-tobe,tobe-testing}/`
+  `plugins/replatforming/agents/refactoring-supervisor.md`,
+  `plugins/replatforming/agents/{indexing,functional-analysis,technical-analysis,baseline-testing,refactoring-tobe,tobe-testing}/`
 - Developer agents (now under `developers/`):
-  `claude-catalog/agents/developers/`
+  `plugins/dev-standards/agents/developers/`
 - Existing Streamlit-aware blocks (to be migrated):
-  grep `streamlit` in `claude-catalog/agents/` for the current list.
+  grep `streamlit` in `plugins/*/agents/` for the current list.
 - 2026-04-28 File-writing rule (carried over to all touched agents):
-  see `claude-catalog/CHANGELOG.md`.
+  see `docs/registry/CHANGELOG.md`.
