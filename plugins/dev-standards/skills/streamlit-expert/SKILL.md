@@ -20,25 +20,25 @@ Apply these Streamlit patterns for state management, caching, multi-page routing
 ## Streamlit app structure
 
 ```
-app.py                          — entry point: router + auth check
-config.json                     — configuration (API keys, endpoints, credentials)
+app.py:                           entry point: router + auth check
+config.json:                      configuration (API keys, endpoints, credentials)
 components/
-  sidebar.py                    — navigation, logout, password change
-  search.py                     — record search with status badge
-  card_grid.py                  — dashboard card grid with permission filtering
-  custom_components.py          — HTML helpers for custom metrics/text
+  sidebar.py:                     navigation, logout, password change
+  search.py:                      record search with status badge
+  card_grid.py:                   dashboard card grid with permission filtering
+  custom_components.py:           HTML helpers for custom metrics/text
 pages/
-  auth/                         — login, user profile
-  [module_1]/                   — pages for the first application domain
-  [module_2]/                   — pages for the second application domain
-  admin/                        — user permissions and configuration
+  auth/:                          login, user profile
+  [module_1]/:                    pages for the first application domain
+  [module_2]/:                    pages for the second application domain
+  admin/:                         user permissions and configuration
 utils/
-  database.py                   — PostgreSQL with deadlock retry; SSL environment handling
-  auth_utils.py                 — login, password reset
-  api_functions.py              — project external API calls
-  permissions.py                — can_view_card(), favourites, admin permission CRUD
-  helper_functions.py           — utilities: normalisation, formatting
-  ui_config.py                  — global CSS style application
+  database.py:                    PostgreSQL with deadlock retry; SSL environment handling
+  auth_utils.py:                  login, password reset
+  api_functions.py:               project external API calls
+  permissions.py:                 can_view_card(), favourites, admin permission CRUD
+  helper_functions.py:            utilities: normalisation, formatting
+  ui_config.py:                   global CSS style application
 ```
 
 ---

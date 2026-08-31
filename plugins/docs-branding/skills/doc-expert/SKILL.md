@@ -38,8 +38,8 @@ If it is already covered, update rather than rewrite.
 
 **What it does**: [1-2 sentences: end-user purpose]
 **When it is used**: [usage context in the application flow]
-**Input**: [required data — from session_state, form, DB]
-**Output/Actions**: [what it produces — navigation, PDF, DB update, etc.]
+**Input**: [required data: from session_state, form, DB]
+**Output/Actions**: [what it produces: navigation, PDF, DB update, etc.]
 **Key session state**: [session_state variables read/written]
 **DB/API touched**: [tables or endpoints used]
 ```
@@ -51,7 +51,7 @@ If it is already covered, update rather than rewrite.
 
 **Endpoint**: `[METHOD] /api/[path]`
 **Purpose**: [what it enables for the user or the system]
-**Authorisation**: [who can call it — roles, permissions]
+**Authorisation**: [who can call it: roles, permissions]
 **Request**: [request DTO + main validations]
 **Response**: [response DTO + HTTP codes]
 **Possible errors**: [list of handled errors with code and cause]
@@ -149,15 +149,15 @@ Document in this order:
 
 ```
 docs/
-  functional/              — functional analysis
-  technical/               — technical analysis
-  api/                     — REST API documentation
+  functional/:               functional analysis
+  technical/:                technical analysis
+  api/:                      REST API documentation
     [module]-api.md
-  components/              — Angular component documentation
+  components/:               Angular component documentation
     [feature]-components.md
-  services/                — Java service documentation
+  services/:                 Java service documentation
     [module]-services.md
-  legacy/                  — legacy component documentation (e.g. Python/Streamlit)
+  legacy/:                   legacy component documentation (e.g. Python/Streamlit)
     [module]-legacy.md
 ```
 

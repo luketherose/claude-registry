@@ -76,7 +76,7 @@ not just calls external systems), then:
    service-collection-builder ON
 Else:
    service-collection-builder OFF
-   Note in bootstrap: "no exposed services detected — Postman collection
+   Note in bootstrap: "no exposed services detected, Postman collection
    skipped"
 ```
 

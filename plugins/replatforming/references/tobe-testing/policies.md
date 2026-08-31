@@ -25,12 +25,12 @@ elif backend OK only:
 elif frontend OK only:
   execute_policy = frontend-only (write BE tests, execute FE only)
 else:
-  execute_policy = off (write all tests, execute none — author-only mode)
+  execute_policy = off (write all tests, execute none, author-only mode)
 
 User can override with --execute on | off | auto
 ```
 
-In `off` mode, all workers still write tests (the suites must exist for go-live), but `tobe-test-runner` validates structure-only and the equivalence-synthesizer marks the report `status: partial — pending execution` with explicit instructions for the user to run the suite in a CI-equivalent environment.
+In `off` mode, all workers still write tests (the suites must exist for go-live), but `tobe-test-runner` validates structure-only and the equivalence-synthesizer marks the report `status: partial, pending execution` with explicit instructions for the user to run the suite in a CI-equivalent environment.
 
 ## Failure policy
 
@@ -78,7 +78,7 @@ The supervisor decides the dispatch mode for **Wave 1 only** (4 workers, note th
 Before dispatching Wave 1, post the chosen mode to the user with the rationale. The user may override.
 
 ```
-=== Phase 5 — Wave 1 dispatch plan ===
+=== Phase 5 Wave 1 dispatch plan ===
 
 UC count:        <N>
 Bounded contexts: <B>

@@ -58,7 +58,7 @@ Do NOT replace the smoke-gate result with a numeric recap. Ask the user
 an **explicit visual question** before requesting PO sign-off:
 
 ```
-Phase 4 Step 6 — UI smoke gate result
+Phase 4 Step 6: UI smoke gate result
 
 ✓ smoke.spec.ts: <N>/<N> routes pass
 ✓ no CLI placeholder detected
@@ -74,7 +74,7 @@ Visually inspect the screenshots. Do you see a coherent layout with a
 working navigation menu, or do you see the Angular CLI welcome page or
 a blank shell?
 
-  [confirm-layout-ok] [reject — layout broken]
+  [confirm-layout-ok] [reject: layout broken]
 
 Sign-off cannot proceed until you confirm.
 ```

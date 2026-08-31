@@ -9,7 +9,7 @@ the provided Word template does not impose one.
 3.  Table of contents
 4.  Introduction
     4.1 Purpose of the document
-    4.2 Technology stack (Angular — project version, TypeScript, NgRx)
+    4.2 Technology stack (Angular with project version, TypeScript, NgRx)
     4.3 Prerequisites
 
 5.  Application Architecture
@@ -22,7 +22,7 @@ the provided Word template does not impose one.
     For each documented feature module:
     6.N [FeatureName]Module
         6.N.1 Component tree (smart/dumb)
-        6.N.2 Components — table with type, @Input/@Output, responsibilities
+        6.N.2 Components: table with type, @Input/@Output, responsibilities
         6.N.3 Feature-specific services
         6.N.4 Feature routing
         6.N.5 NgRx store (if present in the bounded context)

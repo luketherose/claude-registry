@@ -68,16 +68,16 @@ Never use hardcoded values for colours, fonts, or spacing. Use SCSS variables or
 
 ```
 styles/
-  _tokens.scss         — CSS and SCSS variables
-  _reset.scss          — base reset/normalise
-  _typography.scss     — global typographic scale
-  _layout.scss         — grid, container, breakpoint helpers
-  _utilities.scss      — minimal utility classes
-  styles.scss          — entry point (@use of everything above)
+  _tokens.scss:          CSS and SCSS variables
+  _reset.scss:           base reset/normalise
+  _typography.scss:      global typographic scale
+  _layout.scss:          grid, container, breakpoint helpers
+  _utilities.scss:       minimal utility classes
+  styles.scss:           entry point (@use of everything above)
 
 frontend/src/app/
   features/[feature]/
-    [feature].component.scss  — styles scoped to the component
+    [feature].component.scss:   styles scoped to the component
   shared/
     components/
       [component]/

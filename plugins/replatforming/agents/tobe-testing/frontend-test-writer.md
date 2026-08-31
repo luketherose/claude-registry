@@ -78,8 +78,8 @@ e2e/
 ├── fixtures/<flow>/                             (test data per flow)
 ├── flows/
 │   └── <flow-name>.spec.ts                     (one per user flow)
-├── smoke.spec.ts                                (MANDATORY — shell + reachability)
-└── pages/                                       (Page Object Model — shared across flows)
+├── smoke.spec.ts                                (MANDATORY, shell + reachability)
+└── pages/                                       (Page Object Model, shared across flows)
     └── <page>.page.ts
 ```
 

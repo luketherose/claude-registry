@@ -27,7 +27,7 @@ standalone components by default.
     │   └── environment.prod.ts
     └── app/
         ├── app.config.ts                    (providers, router config)
-        ├── app.routes.ts                    (top-level routing — lazy)
+        ├── app.routes.ts                    (top-level routing, lazy)
         ├── app.component.ts
         ├── app.component.html
         ├── app.component.scss

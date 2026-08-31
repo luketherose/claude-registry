@@ -125,7 +125,7 @@ Workflow: application-replatforming v<N>
 <Issues spanning multiple phases, not attributable to a single phase>
 
 ## Recommendation
-<!-- DO NOT EDIT THIS BLOCK MANUALLY — parsed by refactoring-supervisor -->
+<!-- DO NOT EDIT THIS BLOCK MANUALLY, parsed by refactoring-supervisor -->
 decision: close | iterate | defer-and-close
 earliest_affected_phase: phase-N    <!-- only when decision is iterate -->
 open_blocking_count: N
@@ -138,7 +138,7 @@ open_high_count: N
 After producing the report, the supervisor presents:
 
 ```
-=== Workflow Retrospective — complete ===
+=== Workflow Retrospective, complete ===
 
 Report: docs/refactoring/retrospective.md
 

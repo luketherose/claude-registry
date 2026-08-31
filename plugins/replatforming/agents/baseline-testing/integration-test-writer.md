@@ -220,7 +220,7 @@ high | medium | low
 
 ## Open questions
 - <e.g., "INT-05 has no auth method documented in Phase 2; test asserts
-  no auth header — confirm this is correct AS-IS">
+  no auth header, confirm this is correct AS-IS">
 - <e.g., "DB engine is PostgreSQL per Phase 2 but Docker unavailable;
   fallback to SQLite for baseline; some Postgres-specific behaviors
   not covered">

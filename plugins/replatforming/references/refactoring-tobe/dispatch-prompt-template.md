@@ -56,8 +56,8 @@ JSON, CSV, YAML, source code) MUST be written through the `Write` tool
 `tee file`, or any other shell-based content generation. Mermaid syntax
 (`A[label]`, `B{cond?}`, `A --> B`) and code blocks contain shell
 metacharacters (`[`, `{`, `}`, `>`, `<`, `*`, `;`, `&`, `|`) that the
-shell interprets as redirection, glob expansion, or word splitting —
-even inside quotes (Git Bash / MSYS2 on Windows is especially fragile).
+shell interprets as redirection, glob expansion, or word splitting, and it
+does so even inside quotes (Git Bash / MSYS2 on Windows is especially fragile).
 A malformed heredoc produced 48 garbage files in a repo root in the
 Phase 2 incident of 2026-04-28. Allowed Bash: read-only inspection
 (`grep`, `find`, `ls`, `wc`, small `cat` of known files, `git log`,

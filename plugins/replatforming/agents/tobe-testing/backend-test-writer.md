@@ -80,7 +80,7 @@ backend/src/test/java/<bc-package>/
 backend/src/test/resources/
 ├── application-test.yml                         (test-only config: random port, log level)
 ├── fixtures/<bc>/                               (JSON fixtures aligned with Phase 3 oracle)
-└── contracts/<bc>/                              (Spring Cloud Contract DSL — one per operationId)
+└── contracts/<bc>/                              (Spring Cloud Contract DSL, one per operationId)
 
 backend/src/test/java/<bc-package>/contract/
 └── <BC>ContractVerifierBase.java                (base class for SCC-generated tests)

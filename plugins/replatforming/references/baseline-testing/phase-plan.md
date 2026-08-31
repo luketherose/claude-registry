@@ -43,7 +43,7 @@
      [skip]    keep the existing baseline as-is, do nothing.
      [re-run]  re-run the full pipeline from W0 (you'll see explicit
                per-artifact overwrite confirmations for snapshots and
-               benchmark JSON — these are the AS-IS oracle for Phase 5
+               benchmark JSON, these are the AS-IS oracle for Phase 5
                and overwriting them resets the equivalence reference).
      [revise]  inspect a specific section together first (e.g.,
                regenerate only one UC test, refresh benchmarks only).

@@ -14,7 +14,7 @@
   },
   {
     "agent": "indexing-supervisor",
-    "query": "Re-index the codebase — the source has changed since last time",
+    "query": "Re-index the codebase. The source has changed since last time",
     "files": [],
     "expected_behavior": [
       "Detects existing .indexing-kb/ and asks user: skip / re-run / revise",

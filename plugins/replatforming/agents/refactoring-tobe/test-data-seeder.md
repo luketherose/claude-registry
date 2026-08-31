@@ -168,14 +168,14 @@ this directly:
 # Test Data Seeding: Recap
 
 ## Migration tool detected
-<tool> — <evidence path>
+<tool>: <evidence path>
 
 ## Seed files written
 - <path> (<row count> rows, gated to <profile/context>)
 - <path> …
 
 ## Auth-store extension
-<none> | <file path> — <N> users added (credentials in next section)
+<none> | <file path>: <N> users added (credentials in next section)
 
 ## Login credentials (test-only)
 | user | password | role |

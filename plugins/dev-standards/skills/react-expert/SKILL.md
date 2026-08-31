@@ -21,18 +21,18 @@ Write readable, testable and performant React components for enterprise applicat
 ```
 src/
   components/
-    ui/              — reusable presentational components (Button, Input, Modal…)
-    layout/          — Header, Sidebar, Footer
+    ui/:               reusable presentational components (Button, Input, Modal…)
+    layout/:           Header, Sidebar, Footer
   features/
     [feature]/
-      components/    — feature-specific components
-      hooks/         — feature custom hooks
-      types.ts       — local types and interfaces
-      api.ts         — feature API calls
-  hooks/             — shared custom hooks
-  lib/               — utilities and helpers
-  types/             — global shared types
-  pages/             — page-level components (or routes/)
+      components/:     feature-specific components
+      hooks/:          feature custom hooks
+      types.ts:        local types and interfaces
+      api.ts:          feature API calls
+  hooks/:              shared custom hooks
+  lib/:                utilities and helpers
+  types/:              global shared types
+  pages/:              page-level components (or routes/)
 ```
 
 ---

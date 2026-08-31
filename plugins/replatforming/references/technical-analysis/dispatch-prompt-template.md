@@ -62,7 +62,7 @@ Never use `Bash` heredocs (`cat <<EOF > file`), echo redirects
 content generation. Mermaid syntax (`A[label]`, `B{cond?}`, `A --> B`)
 and code blocks contain shell metacharacters (`[`, `{`, `}`, `>`, `<`,
 `*`, `;`, `&`, `|`) that the shell interprets as redirection, glob
-expansion, or word splitting — even inside quotes (Git Bash / MSYS2 on
+expansion, or word splitting, even inside quotes (Git Bash / MSYS2 on
 Windows is especially fragile). A malformed heredoc produced 48 garbage
 files in a repo root in the Phase 2 incident of 2026-04-28. Allowed
 Bash: read-only inspection (`grep`, `find`, `ls`, `wc`, small `cat` of
@@ -72,7 +72,7 @@ string, variable, template, heredoc, or piped input. Use `Write` to
 create, `Edit` to modify. No third path.
 
 Streamlit-aware adjustments (only if stack mode = streamlit):
-<inject the Streamlit instructions block — see below>
+<inject the Streamlit instructions block (see below)>
 
 Frontmatter requirements:
 - agent: <name>
@@ -105,8 +105,8 @@ This codebase uses Streamlit. Adjust your analysis as follows:
   global store.
 - st.cache_data and st.cache_resource decorators introduce non-trivial
   caching semantics; analyze invalidation correctness.
-- "Pages" are .py files under pages/ (or referenced by st.switch_page)
-  — they are not separate processes. Errors in one page can corrupt
+- "Pages" are .py files under pages/ (or referenced by st.switch_page).
+  They are not separate processes. Errors in one page can corrupt
   session_state for the next.
 - I/O happens in the same process as UI. Blocking I/O blocks rendering.
 - Authentication and authorization are typically NOT enforced by

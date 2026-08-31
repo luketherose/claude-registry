@@ -13,14 +13,14 @@ Write modern web code without framework dependencies, leveraging native browser 
 src/
   components/
     [component-name]/
-      index.ts          — barrel export
-      [component].ts    — component logic
-      [component].css   — scoped styles (loaded via import)
+      index.ts:           barrel export
+      [component].ts:     component logic
+      [component].css:    scoped styles (loaded via import)
   lib/
-    dom.ts              — typed DOM utilities
-    events.ts           — event bus
-    http.ts             — fetch wrapper
-  main.ts               — entry point
+    dom.ts:               typed DOM utilities
+    events.ts:            event bus
+    http.ts:              fetch wrapper
+  main.ts:                entry point
 index.html
 vite.config.ts
 tsconfig.json

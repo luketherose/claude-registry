@@ -23,21 +23,21 @@ Build modern web applications with Vue 3: Composition API, Pinia for state manag
 ```
 src/
   components/
-    ui/              — reusable base components (Button, Input, Modal)
-    layout/          — Header, Sidebar, Footer
+    ui/:               reusable base components (Button, Input, Modal)
+    layout/:           Header, Sidebar, Footer
   features/
     [feature]/
-      components/    — feature components
-      composables/   — local composables
-      stores/        — feature Pinia stores
+      components/:     feature components
+      composables/:    local composables
+      stores/:         feature Pinia stores
       types.ts
-  composables/       — globally shared composables
-  stores/            — global Pinia stores (auth, preferences)
+  composables/:        globally shared composables
+  stores/:             global Pinia stores (auth, preferences)
   router/
     index.ts
     guards.ts
-  lib/               — utilities, http client
-  types/             — global types
+  lib/:                utilities, http client
+  types/:              global types
 ```
 
 ---

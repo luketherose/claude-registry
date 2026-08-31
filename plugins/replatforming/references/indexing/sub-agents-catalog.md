@@ -33,7 +33,7 @@ Full directory layout:
     manifest.json                  (codebase-mapper)
     file-inventory.jsonl           (codebase-mapper)
     file-hashes.json               (codebase-mapper)
-    stack.json                     (codebase-mapper — SINGLE SOURCE OF TRUTH)
+    stack.json                     (codebase-mapper, SINGLE SOURCE OF TRUTH)
     symbol-index.jsonl             (codebase-mapper)
     import-graph.json              (dependency-analyzer)
     dependency-locks.json          (dependency-analyzer)

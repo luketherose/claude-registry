@@ -53,7 +53,7 @@
 
    What should I do?
      [exports-only]  regenerate only the missing export(s), reusing the
-                     existing analysis. Fast — does not re-run any of
+                     existing analysis. Fast, does not re-run any of
                      the W1/W2/W3 sub-agents.
      [full-rerun]    re-run the full pipeline from W1 (overwrites the
                      existing analysis; you'll get an explicit

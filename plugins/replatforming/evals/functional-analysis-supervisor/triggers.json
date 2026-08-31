@@ -1,6 +1,6 @@
 [
   {
-    "query": "Run Phase 1 — produce the functional analysis of this application",
+    "query": "Run Phase 1: produce the functional analysis of this application",
     "should_trigger": true,
     "description": "Phase 1 functional analysis run"
   },

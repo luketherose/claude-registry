@@ -67,10 +67,10 @@ For the module or system being analysed, list user-facing functionality in domai
 
 ### Feature 1: [Feature name]
 **Actors**: [who can perform it: e.g. User, Admin, everyone]
-**Prerequisites**: [what must be true beforehand — e.g. authenticated user, selected record]
+**Prerequisites**: [what must be true beforehand: e.g. authenticated user, selected record]
 **Description**: [what it does in 1-3 sentences in business language]
-**Trigger**: [what starts the feature — user action, event, schedule]
-**Effects**: [what changes in the system — DB, file, email, navigation]
+**Trigger**: [what starts the feature: user action, event, schedule]
+**Effects**: [what changes in the system: DB, file, email, navigation]
 ```
 
 ### Step 2: User Flow
@@ -187,13 +187,13 @@ Identify how modules functionally influence each other:
 
 ```
 docs/functional/
-  [module]-features.md          — feature list
-  [module]-userflows.md         — step-by-step user flows
-  [module]-business-rules.md    — business rules
-  [module]-usecases.md          — formal use cases
-  [module]-dependencies.md      — functional dependencies
-  [module]-assumptions.md       — assumptions and uncertain points
-  README.md                     — index of all documents
+  [module]-features.md:           feature list
+  [module]-userflows.md:          step-by-step user flows
+  [module]-business-rules.md:     business rules
+  [module]-usecases.md:           formal use cases
+  [module]-dependencies.md:       functional dependencies
+  [module]-assumptions.md:        assumptions and uncertain points
+  README.md:                      index of all documents
 ```
 
 For large modules, create one document per section. For small modules, a single document is sufficient.

@@ -42,7 +42,6 @@ These mappings are always valid regardless of the specific scope:
 - [ARCHITECTURAL DECISION NEEDED:] for patterns with no direct equivalent
 - Every BR-N must have implementation guidance
 - Pitfall register must cover ≥ 5 items
-```
 
 ---
 

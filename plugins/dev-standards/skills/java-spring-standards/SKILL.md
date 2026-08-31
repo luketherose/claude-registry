@@ -37,15 +37,15 @@ architecture trade-offs, redirect to the relevant skill.
 
 ```
 com.{company}.{service}/
-  {ServiceName}Application.java    — @SpringBootApplication, main only, no beans
-  controller/     — HTTP layer: request/response mapping, validation trigger
-  service/        — Business logic: @Service, @Transactional where needed
-  repository/     — Data access: Spring Data JPA interfaces, @Query methods
-  domain/         — JPA entities, domain objects, enums
-  dto/            — Request/Response DTOs: validation annotations, no JPA mappings
-  config/         — @Configuration classes, Bean definitions, security config
-  exception/      — Typed exception hierarchy, @RestControllerAdvice
-  mapper/         — DTO ↔ domain mapping (manual or MapStruct)
+  {ServiceName}Application.java:     @SpringBootApplication, main only, no beans
+  controller/:      HTTP layer: request/response mapping, validation trigger
+  service/:         Business logic: @Service, @Transactional where needed
+  repository/:      Data access: Spring Data JPA interfaces, @Query methods
+  domain/:          JPA entities, domain objects, enums
+  dto/:             Request/Response DTOs: validation annotations, no JPA mappings
+  config/:          @Configuration classes, Bean definitions, security config
+  exception/:       Typed exception hierarchy, @RestControllerAdvice
+  mapper/:          DTO ↔ domain mapping (manual or MapStruct)
 ```
 
 ---

@@ -216,7 +216,7 @@ docs/
     ├── frontend-doc.tex
     ├── backend-doc.docx         (after pandoc)
     ├── frontend-doc.docx        (after pandoc)
-    └── technical-doc.docx       (optional — BE+FE merge)
+    └── technical-doc.docx       (optional, BE+FE merge)
 ```
 
 ---
@@ -228,9 +228,9 @@ Two documentation tasks are parallelizable when they target distinct surfaces wi
 
 ### Phase model
 ```
-Phase 1 — Sequential anchor    (read Word template, define shared style constants)
-Phase 2 — Parallel fan-out     (backend-documentation ∥ frontend-documentation)
-Phase 3 — Sequential merge     (cross-layer consistency check: DTO names, API contracts)
+Phase 1: Sequential anchor     (read Word template, define shared style constants)
+Phase 2: Parallel fan-out      (backend-documentation ∥ frontend-documentation)
+Phase 3: Sequential merge      (cross-layer consistency check: DTO names, API contracts)
 ```
 
 ### Domain-specific parallelization rules

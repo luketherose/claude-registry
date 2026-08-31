@@ -52,5 +52,5 @@ high | medium | low
 
 ## Open questions
 - <e.g., "BC-02 aggregate uses Money but currency precision rules
-  unclear — flagged for logic-translator">
+  unclear, flagged for logic-translator">
 ```

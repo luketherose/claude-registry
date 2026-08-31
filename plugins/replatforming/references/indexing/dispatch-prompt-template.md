@@ -35,7 +35,7 @@ Never use `Bash` heredocs (`cat <<EOF > file`), echo redirects
 content generation. Mermaid syntax (`A[label]`, `B{cond?}`, `A --> B`)
 and code blocks contain shell metacharacters (`[`, `{`, `}`, `>`, `<`,
 `*`, `;`, `&`, `|`) that the shell interprets as redirection, glob
-expansion, or word splitting — even inside quotes (Git Bash / MSYS2 on
+expansion, or word splitting, even inside quotes (Git Bash / MSYS2 on
 Windows is especially fragile). A malformed heredoc produced 48 garbage
 files in a repo root in the Phase 2 incident of 2026-04-28. Allowed
 Bash: read-only inspection (`grep`, `find`, `ls`, `wc`, small `cat` of

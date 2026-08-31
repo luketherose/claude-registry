@@ -24,17 +24,17 @@ TanStack Start is a full-stack React framework that combines:
 ```
 app/
   routes/
-    __root.tsx           — root layout, HTML shell
-    index.tsx            — route "/"
+    __root.tsx:            root layout, HTML shell
+    index.tsx:             route "/"
     posts/
-      index.tsx          — route "/posts"
-      $postId.tsx        — route "/posts/:postId"
+      index.tsx:           route "/posts"
+      $postId.tsx:         route "/posts/:postId"
   server/
-    functions/           — shared server functions
-  client.tsx             — client entry point
-  router.tsx             — router configuration
-  ssr.tsx                — SSR entry point
-app.config.ts            — Vinxi config
+    functions/:            shared server functions
+  client.tsx:              client entry point
+  router.tsx:              router configuration
+  ssr.tsx:                 SSR entry point
+app.config.ts:             Vinxi config
 ```
 
 ---

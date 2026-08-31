@@ -86,9 +86,9 @@ Read:
 
 ```
 docs/analysis/05-tobe-tests/
-├── README.md                       (you — index/navigation)
-├── 00-context.md                   (you — supplement only if missing)
-└── 01-equivalence-report.md        (you — DELIVERABLE)
+├── README.md                       (you, index/navigation)
+├── 00-context.md                   (you, supplement only if missing)
+└── 01-equivalence-report.md        (you, DELIVERABLE)
 ```
 
 Frontmatter for `01-equivalence-report.md`:

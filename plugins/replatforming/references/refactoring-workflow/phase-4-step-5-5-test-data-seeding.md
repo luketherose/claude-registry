@@ -108,10 +108,10 @@ If any gate item fails, the supervisor:
 Before dispatching `test-data-seeder`, post this brief to the user:
 
 ```
-Phase 4 Step 5.5 — Test Data Seeding
+Phase 4 Step 5.5: Test Data Seeding
 
 Hardening (Step 5) is complete and all automated tests are green.
-The application builds, starts, and passes its test suite — but the
+The application builds, starts, and passes its test suite, but the
 database after migrations is empty, so the upcoming UI smoke gate
 (Step 6) would judge a blank UI as the worst-case visual result.
 
@@ -128,7 +128,7 @@ About to dispatch `test-data-seeder` to:
 Execution policy: <auto | on | off>.
 UI smoke routes Step 6 will visit: <list from manifest>.
 
-  [proceed] [defer — execute_policy=off, write files only]
+  [proceed] [defer: execute_policy=off, write files only]
 ```
 
 If the user picks `defer`, dispatch the agent with
@@ -140,7 +140,7 @@ invocation command without restarting the backend.
 After the agent returns:
 
 ```
-Phase 4 Step 5.5 — Test Data Seeding result
+Phase 4 Step 5.5: Test Data Seeding result
 
 Migration tool: <tool>
 Seed files written: <N> (gated to <profile>)
@@ -153,7 +153,7 @@ Smoke endpoint results:
 
 Caveats: <agent's caveats section, verbatim>
 
-  [confirm — proceed to Step 6 UI smoke gate] [redispatch — gaps in <area>]
+  [confirm: proceed to Step 6 UI smoke gate] [redispatch: gaps in <area>]
 ```
 
 If the user picks `redispatch`, route back to `test-data-seeder`

@@ -1,6 +1,6 @@
 [
   {
-    "query": "Run the technical analysis — identify risks, security issues, and code quality problems",
+    "query": "Run the technical analysis: identify risks, security issues, and code quality problems",
     "should_trigger": true,
     "description": "Technical analysis of risks, security and code quality"
   },

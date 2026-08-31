@@ -46,12 +46,12 @@ def process_items(items: list[dict[str, Any]]) -> list[ProcessedItem]: ...
 ```
 src/
   {package}/
-    api/           — routers, request/response Pydantic models
-    service/       — business logic
-    repository/    — data access (SQLAlchemy / psycopg2)
-    domain/        — domain models, enums
-    config/        — Settings (pydantic-settings)
-    exceptions/    — typed exception hierarchy
+    api/:            routers, request/response Pydantic models
+    service/:        business logic
+    repository/:     data access (SQLAlchemy / psycopg2)
+    domain/:         domain models, enums
+    config/:         Settings (pydantic-settings)
+    exceptions/:     typed exception hierarchy
 tests/
   unit/
   integration/
@@ -61,9 +61,9 @@ tests/
 
 ```
 src/{package}/
-  cli.py          — Click/Typer commands
-  core.py         — business logic
-  config.py       — settings
+  cli.py:           Click/Typer commands
+  core.py:          business logic
+  config.py:        settings
 tests/
 ```
 

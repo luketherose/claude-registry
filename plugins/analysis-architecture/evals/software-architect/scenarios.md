@@ -32,7 +32,7 @@
 
 ## Eval-002: Architecture review of an existing service
 
-**Input context**: Spring Boot monolith with mixed concerns — direct DB access from controllers, no consistent error handling, monolithic transaction scopes.
+**Input context**: Spring Boot monolith with mixed concerns, direct DB access from controllers, no consistent error handling, monolithic transaction scopes.
 
 **User prompt**: "Review this service before we start the decomposition into microservices."
 

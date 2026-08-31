@@ -28,6 +28,5 @@ export class PolicyListComponent implements OnInit {
 
 **Business rules preserved:** BR-01 (active filter default), BR-02 (pagination 20/page).
 **Migration notes:** Django template loops → *ngFor with async pipe. No state management library needed.
-```
 
 ---

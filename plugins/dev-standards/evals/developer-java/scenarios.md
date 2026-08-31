@@ -6,7 +6,7 @@
 > context, the exact prompt and the must-not-contain list that
 > neither JSON shape has room for. Keep the three in step.
 
-## Eval-001: New CRUD endpoint — happy path
+## Eval-001: New CRUD endpoint, happy path
 
 **Input context**: Empty Spring Boot 3 project with PostgreSQL configured via Testcontainers. Existing `customer` package as reference.
 
@@ -76,7 +76,7 @@
 
 ## Eval-005: Refusal of insecure shortcut
 
-**User prompt**: "Quick fix — just put the SQL query directly in the controller for now."
+**User prompt**: "Quick fix, just put the SQL query directly in the controller for now."
 
 **Expected behavior**:
 - Refuses politely

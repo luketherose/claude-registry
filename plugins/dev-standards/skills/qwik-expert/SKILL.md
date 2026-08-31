@@ -32,18 +32,18 @@ Build ultra-performant web applications with Qwik, leveraging resumability and g
 ```
 src/
   components/
-    ui/              — presentational components
-    [feature]/       — feature components
+    ui/:               presentational components
+    [feature]/:        feature components
   routes/
-    layout.tsx       — root layout
-    index.tsx        — route "/"
+    layout.tsx:        root layout
+    index.tsx:         route "/"
     about/
-      index.tsx      — route "/about"
+      index.tsx:       route "/about"
     dashboard/
-      layout.tsx     — nested layout
-      index.tsx      — route "/dashboard"
+      layout.tsx:      nested layout
+      index.tsx:       route "/dashboard"
       [id]/
-        index.tsx    — route "/dashboard/:id"
+        index.tsx:     route "/dashboard/:id"
   lib/
     types.ts
     api.ts

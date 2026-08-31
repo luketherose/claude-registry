@@ -6,7 +6,7 @@
 > context, the exact prompt and the must-not-contain list that
 > neither JSON shape has room for. Keep the three in step.
 
-## Eval-001: Technical PDF — happy path
+## Eval-001: Technical PDF, happy path
 
 **Input context**: Directory with `scope.md`, `architecture.md`, `effort.md`.
 

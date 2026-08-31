@@ -165,7 +165,7 @@ status: complete
 
 ## File 2: `.indexing-kb/02-structure/language-stats.md`
 
-```markdown
+````markdown
 ---
 agent: codebase-mapper
 generated: <ISO-8601>
@@ -184,7 +184,7 @@ status: complete
 | config | … | … | … |
 | build manifest | … | … | … |
 | other | … | … | … |
-```
+````
 
 ---
 

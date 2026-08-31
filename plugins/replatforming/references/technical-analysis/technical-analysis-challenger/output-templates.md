@@ -122,7 +122,7 @@ status: <complete|partial|needs-review|blocked>
 
 \`\`\`
 Blocking issues:  <N>
-Phase 2 ready:    <yes | no — see blocking issues above>
+Phase 2 ready:    <yes | no, see blocking issues above>
 \`\`\`
 
 If `Phase 2 ready: no`: the supervisor should not declare Phase 2

@@ -20,7 +20,7 @@ text-response reporting block the agent prints back to the supervisor.
 
 ## File: `docs/refactoring/roadmap.md`
 
-```markdown
+````markdown
 ---
 agent: migration-roadmap-builder
 generated: <ISO-8601>
@@ -74,7 +74,7 @@ gantt
 
 ## Milestones
 
-(One section per milestone — see `examples.md` for fully worked entries
+(One section per milestone, see `examples.md` for fully worked entries
 and the per-milestone template below.)
 
 ### Per-milestone template
@@ -139,13 +139,13 @@ Milestone M-NN: <BC name>
 - Cutover topology decision: A or B (security to confirm)
 - Production secrets manager: Vault vs AWS SM (ops to confirm)
 - AS-IS DB schema migration vs. dual-write: requires DBA review
-```
+````
 
 ---
 
 ## Reporting (text response)
 
-```markdown
+````markdown
 ## Files written
 - docs/refactoring/roadmap.md
 
@@ -172,4 +172,4 @@ high | medium | low
 ## Open questions
 - <e.g., "ops team to confirm secrets manager choice: placeholder
   in M-00 activities">
-```
+````

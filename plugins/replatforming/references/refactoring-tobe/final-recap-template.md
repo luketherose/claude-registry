@@ -3,7 +3,7 @@
 > Reference doc for `refactoring-tobe-supervisor`. Read at runtime when producing the closing report after Wave 6 (or after the export wave if `--with-exports` was set). Standard recap with execution timings (per-wave + per-agent within W3 fan-out + total + cumulative across phases).
 
 ```
-Phase 4 TO-BE Refactoring — complete.
+Phase 4 TO-BE Refactoring, complete.
 
 Output (TO-BE KB):  .refactoring-kb/
 Output (docs):      docs/refactoring/

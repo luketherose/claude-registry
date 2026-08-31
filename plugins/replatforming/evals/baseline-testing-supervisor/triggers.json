@@ -1,6 +1,6 @@
 [
   {
-    "query": "Run Phase 3 — build the baseline regression suite for this application",
+    "query": "Run Phase 3: build the baseline regression suite for this application",
     "should_trigger": true,
     "description": "Phase 3 baseline regression suite build"
   },

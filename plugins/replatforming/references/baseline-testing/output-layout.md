@@ -10,35 +10,35 @@ All outputs go under two roots:
 
 ```
 tests/baseline/
-├── conftest.py                          (fixture-builder — pytest config)
+├── conftest.py                          (fixture-builder, pytest config)
 ├── fixtures/                            (fixture-builder)
 │   ├── minimal/                         (smallest valid datasets)
 │   ├── realistic/                       (representative datasets)
 │   └── edge/                            (boundary / error datasets)
-├── test_uc_<NN>_<slug>.py               (usecase-test-writer — fan-out)
+├── test_uc_<NN>_<slug>.py               (usecase-test-writer, fan-out)
 ├── test_integration_<system>.py         (integration-test-writer)
 ├── benchmark/                           (benchmark-writer)
 │   ├── bench_uc_<NN>.py
 │   ├── bench_memory.py
 │   └── bench_throughput.py              (only where applicable)
-├── postman/                             (service-collection-builder — conditional)
+├── postman/                             (service-collection-builder, conditional)
 │   ├── <service>.postman_collection.json
 │   └── <service>.postman_environment.json
-└── snapshot/                            (baseline-runner — captured at runtime)
+└── snapshot/                            (baseline-runner, captured at runtime)
     └── ...
 
 docs/analysis/03-baseline/
-├── README.md                            (you — index/navigation)
-├── 00-context.md                        (you — system summary, scope, env, mode)
-├── baseline-report.md                   (you / baseline-runner — pass/fail summary,
+├── README.md                            (you, index/navigation)
+├── 00-context.md                        (you, system summary, scope, env, mode)
+├── baseline-report.md                   (you / baseline-runner, pass/fail summary,
                                           coverage, timings, AS-IS bugs found)
 ├── _meta/
-│   ├── manifest.json                    (you — run history with per-wave timings)
-│   ├── benchmark-baseline.json          (baseline-runner — Phase 5 perf oracle)
-│   ├── test-coverage.json               (baseline-runner — coverage by UC)
-│   ├── as-is-bugs-found.md              (you — bugs surfaced during baseline)
+│   ├── manifest.json                    (you, run history with per-wave timings)
+│   ├── benchmark-baseline.json          (baseline-runner, Phase 5 perf oracle)
+│   ├── test-coverage.json               (baseline-runner, coverage by UC)
+│   ├── as-is-bugs-found.md              (you, bugs surfaced during baseline)
 │   └── challenger-report.md             (baseline-challenger)
-└── unresolved-baseline.md               (you — aggregated)
+└── unresolved-baseline.md               (you, aggregated)
 ```
 
 Workers must not write outside these two roots. Verify after each dispatch by listing modified files.

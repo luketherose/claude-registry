@@ -1,26 +1,26 @@
 [
   {
     "agent": "baseline-testing-supervisor",
-    "query": "Run Phase 3 — build the AS-IS baseline regression suite. .indexing-kb/, docs/analysis/01-functional/, and docs/analysis/02-technical/ are all ready.",
+    "query": "Run Phase 3: build the AS-IS baseline regression suite. .indexing-kb/, docs/analysis/01-functional/, and docs/analysis/02-technical/ are all ready.",
     "files": [],
     "expected_behavior": [
       "Reads supervisor-protocol.md and wave-overview.md before dispatching any worker",
       "Runs fixture-builder in W0 (before any test writers) to establish shared fixtures",
       "Dispatches one usecase-test-writer instance per use case from Phase 1 (fan-out pattern, not a single invocation)",
       "baseline-runner (W2) runs only after all W1 usecase-test-writer workers have completed",
-      "baseline-challenger runs in W3 (always ON — never opt-in)",
+      "baseline-challenger runs in W3 (always ON, never opt-in)",
       "Writes _meta/phase-verification-report.md (Wave 3b) after the challenger",
       "Updates _meta/manifest.json after every wave with timing fields populated",
       "Detects whether pytest is available and switches to write-only mode if the environment is not ready",
       "Never modifies AS-IS source code even if a test fails due to a latent bug",
-      "Marks medium/low severity test failures as xfail with an AS-IS bug note — never silently deletes them",
+      "Marks medium/low severity test failures as xfail with an AS-IS bug note, never silently deletes them",
       "Escalates critical/high severity failures to the user without auto-resolving or auto-marking xfail",
-      "All file content written via Write tool — never via Bash heredoc, echo redirect, tee, or printf > file"
+      "All file content written via Write tool. Never via Bash heredoc, echo redirect, tee, or printf > file"
     ]
   },
   {
     "agent": "baseline-testing-supervisor",
-    "query": "Produce the AS-IS baseline tests — existing tests/baseline/ and oracle snapshots already exist from a previous run",
+    "query": "Produce the AS-IS baseline tests. Existing tests/baseline/ and oracle snapshots already exist from a previous run",
     "files": [],
     "expected_behavior": [
       "Detects existing tests/baseline/ and oracle artifacts before dispatching any worker",
@@ -32,7 +32,7 @@
   },
   {
     "agent": "baseline-testing-supervisor",
-    "query": "Run the baseline tests — the baseline-runner reports a CRITICAL failure in the authentication module",
+    "query": "Run the baseline tests. The baseline-runner reports a CRITICAL failure in the authentication module",
     "files": [],
     "expected_behavior": [
       "Does NOT mark the critical failure as xfail",

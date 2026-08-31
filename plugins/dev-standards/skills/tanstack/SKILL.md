@@ -21,16 +21,16 @@ Implement type-safe routing in React applications with TanStack Router, leveragi
 ```
 src/
   routes/
-    __root.tsx         — root layout (Header, Footer, outlet)
-    index.tsx          — route "/"
-    about.tsx          — route "/about"
+    __root.tsx:          root layout (Header, Footer, outlet)
+    index.tsx:           route "/"
+    about.tsx:           route "/about"
     users/
-      index.tsx        — route "/users"
-      $userId.tsx      — route "/users/:userId" (dynamic param)
-      $userId.edit.tsx — route "/users/:userId/edit"
-    _auth/             — layout route (underscore prefix = layout only, not a URL segment)
-      dashboard.tsx    — route "/dashboard"
-      settings.tsx     — route "/settings"
+      index.tsx:         route "/users"
+      $userId.tsx:       route "/users/:userId" (dynamic param)
+      $userId.edit.tsx:  route "/users/:userId/edit"
+    _auth/:              layout route (underscore prefix = layout only, not a URL segment)
+      dashboard.tsx:     route "/dashboard"
+      settings.tsx:      route "/settings"
 ```
 
 ```typescript

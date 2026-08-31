@@ -202,7 +202,7 @@ high | medium | low
 
 ## Open questions
 - <e.g., "alternative flow B mentioned in UC but not implemented in
-  source — flagged as as-is-bug candidate, severity unclear">
+  source, flagged as as-is-bug candidate, severity unclear">
 ```
 
 ---

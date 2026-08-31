@@ -73,9 +73,9 @@ Two tasks are parallelizable when:
 ### Phase model
 Map every multi-skill task into phases before executing:
 ```
-Phase 1 — Sequential anchor    (shared contracts, interfaces, schemas)
-Phase 2 — Parallel fan-out     (independent implementation workers)
-Phase 3 — Sequential merge     (integration, consistency checks, tests)
+Phase 1: Sequential anchor     (shared contracts, interfaces, schemas)
+Phase 2: Parallel fan-out      (independent implementation workers)
+Phase 3: Sequential merge      (integration, consistency checks, tests)
 ```
 
 ### Domain-specific parallelization rules
@@ -155,7 +155,7 @@ Do not optimise prematurely: profile first, optimise later.
 ### Introducing caching
 
 ```
-L1 caching (Hibernate first-level): automatic per session — do not configure
+L1 caching (Hibernate first-level): automatic per session, do not configure
 L2 caching (Hibernate second-level): for stable lookup entities (< 1 write/hour)
 Application caching (Spring Cache): for results of complex queries that:
   - Do not change frequently (TTL > 5 minutes)

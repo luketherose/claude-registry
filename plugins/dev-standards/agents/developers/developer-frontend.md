@@ -121,7 +121,7 @@ If detected:
 
 ```
 Invoke:
-  unicredit-design-system   — UniCredit brand, Bricks components,
+  unicredit-design-system:    UniCredit brand, Bricks components,
                                        --uc-* token block, EN 301 549 / WCAG 2.1 AA
                                        targets, tone of voice. Overrides the generic
                                        design-expert defaults for visual decisions.

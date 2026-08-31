@@ -101,7 +101,7 @@ status: <complete|partial|needs-review|blocked>
 | SEC-02 | RISK-DA-01 (same SQL injection seen by data-access) |
 
 ## Phase 1 traceability gaps
-<list features / use cases that have no technical findings — could be
+<list features / use cases that have no technical findings, could be
 clean code OR could be uncovered scope>
 
 ## Open questions

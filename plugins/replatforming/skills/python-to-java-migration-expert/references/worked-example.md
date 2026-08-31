@@ -5,7 +5,7 @@
 ### Input (abbreviated)
 
 ```
-MIGRATION_SCOPE: Order management service — model layer and service layer
+MIGRATION_SCOPE: Order management service, model layer and service layer
 PYTHON_FRAMEWORK: Django 3.2, Django REST Framework
 TARGET_SPRING_STACK: Java 21, Spring Boot 3.2, Spring Data JPA, Lombok, MapStruct
 

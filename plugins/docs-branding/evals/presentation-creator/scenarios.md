@@ -6,7 +6,7 @@
 > context, the exact prompt and the must-not-contain list that
 > neither JSON shape has room for. Keep the three in step.
 
-## Eval-001: Business deck — happy path
+## Eval-001: Business deck, happy path
 
 **Input context**: Directory with at least `scope.md` (problem + solution) and `timeline.md` (phases + dates).
 
@@ -42,9 +42,9 @@
 **User prompt**: "Create a presentation from scope.md. Output to /tmp/sparse.pptx."
 
 **Expected behavior**:
-- Agent produces the presentation but marks sections as "To be defined — source data not available" where data is missing
+- Agent produces the presentation but marks sections as "To be defined, source data not available" where data is missing
 - Does NOT invent estimates, architecture, or timeline
-- Does NOT refuse to run — it proceeds with what it has
+- Does NOT refuse to run, it proceeds with what it has
 
 ---
 
