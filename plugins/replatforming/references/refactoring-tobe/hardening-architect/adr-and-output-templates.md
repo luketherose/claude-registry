@@ -70,7 +70,7 @@ tracing as a baseline.
 - All logs are machine-parseable from day one (no migration cost
   later).
 - Production runtime exposes /actuator/prometheus for scraping (gated
-  by ROLE_ADMIN — see ADR-005).
+  by ROLE_ADMIN, see ADR-005).
 - OTel exporter target configurable via OTEL_EXPORTER_OTLP_ENDPOINT.
 - Frontend network tab shows X-Request-Id for debug.
 

@@ -110,7 +110,7 @@ YAML frontmatter (`agent: integration-analyst`, `generated`, `sources`, `confide
   without retry, without auth.
 - **Diagram**: Mermaid `flowchart LR`: app at center, one node per external system,
   edges labeled with protocol + auth.
-- **Catalog**: one `### INT-NN — <name>` entry per integration with all fields from
+- **Catalog**: one `### INT-NN, <name>` entry per integration with all fields from
   Method §1 above, plus embedded `**Findings**` list (IDs `RISK-INT-NN`, severity,
   description).
 - **Cross-cutting findings**: patterns that span multiple integrations

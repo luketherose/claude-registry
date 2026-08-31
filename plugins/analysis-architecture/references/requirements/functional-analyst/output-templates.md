@@ -32,7 +32,7 @@ Use for end-to-end process documentation.
 {Describe what happens when the process cannot continue normally}
 
 ### KPIs / Success Metrics
-{If known — what the business measures to evaluate this process}
+{If known, what the business measures to evaluate this process}
 ```
 
 ## CRUD Matrix

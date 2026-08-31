@@ -1,0 +1,37 @@
+[
+  {
+    "query": "Ho aggiornato una skill nel registry Claude: propaga la modifica al gemello e aggiorna il ledger nello stesso commit",
+    "should_trigger": true,
+    "description": "Propagating an updated skill to the twin registry and updating the ledger in the same commit"
+  },
+  {
+    "query": "Set up the drift check so that presence, freshness and justification each fail the build on their own",
+    "should_trigger": true,
+    "description": "A drift check where presence, freshness and justification each fail the build independently"
+  },
+  {
+    "query": "Questa capability non e portabile sull'altro host: come registro la divergenza con reason e recheck?",
+    "should_trigger": true,
+    "description": "Recording a capability that cannot move to the other host as a divergence with a reason and a recheck date"
+  },
+  {
+    "query": "Are the two registries still in step after last week's edits? Find whatever never propagated",
+    "should_trigger": true,
+    "description": "Checking whether two registries are still in step and finding what never propagated after a week of edits"
+  },
+  {
+    "query": "Dimmi campo per campo come si mappa il frontmatter di un sub-agent fra i due host",
+    "should_trigger": false,
+    "description": "Field by field mapping of sub agent frontmatter between the two hosts"
+  },
+  {
+    "query": "Come configuro il Policy Engine e le approval mode di Gemini CLI per un repo condiviso dal team?",
+    "should_trigger": false,
+    "description": "Configuring the Gemini CLI Policy Engine and approval modes for a repository shared by the team"
+  },
+  {
+    "query": "Devo pubblicare l'estensione: il campo name deve combaciare con la directory? E il manifest va per forza in root?",
+    "should_trigger": false,
+    "description": "Whether the extension name field must match its directory and whether the manifest has to sit at the repository root"
+  }
+]

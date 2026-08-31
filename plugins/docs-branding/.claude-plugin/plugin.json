@@ -18,6 +18,5 @@
     "accenture",
     "branding"
   ],
-  "category": "development",
   "mcpServers": "./.mcp.json"
 }

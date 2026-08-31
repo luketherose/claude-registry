@@ -158,7 +158,7 @@ Stop and ask the user before proceeding when:
 After each phase, post a single concise update:
 
 ```
-Phase <N>/<total>: <name> — <status>
+Phase <N>/<total>: <name>, <status>
 Outputs: <list of files written or updated>
 Issues: <number> open questions, <number> low-confidence sections
 Next: <next phase or "awaiting confirmation">

@@ -74,7 +74,7 @@ You do not invoke `pip-audit`, `safety`, or `osv-scanner`. Analyze statically by
 - mapping each library to its known major-version vulnerability history if widely
   known (e.g., requests < 2.20 has CVE-2018-18074)
 - flagging libraries with CVE history used at versions older than recent stable
-- flagging unpinned versions as `confidence: low — version unknown`
+- flagging unpinned versions as `confidence: low, version unknown`
 
 For each finding: ID `VULN-NN`, Severity, Library + version, CVE/GHSA identifiers
 (if known), Description, Available fix, Sources `<repo-path>:<line>`. Do not

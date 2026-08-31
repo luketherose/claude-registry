@@ -76,8 +76,8 @@ demand. Read each doc only when the matching step is about to run.
 
 ```
 docs/analysis/05-tobe-tests/
-├── 02-coverage-report.md          (markdown summary — coverage)
-├── 03-contract-tests-report.md    (markdown summary — contract verdicts)
+├── 02-coverage-report.md          (markdown summary, coverage)
+├── 03-contract-tests-report.md    (markdown summary, contract verdicts)
 ├── 06-tobe-bug-registry.md        (TBUG-NN entries with disposition)
 └── _meta/
     ├── coverage.json              (JaCoCo + Jest merged)

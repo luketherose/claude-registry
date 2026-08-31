@@ -53,6 +53,7 @@ same 15000-token delegation budget, and a smaller enabled set produces sharper r
 | Producing client deliverables | `docs-branding` |
 | A hard, irreversible decision | `deliberation` |
 | Terse output for prose, commits and reviews | `caveman` |
+| Porting capabilities to or from Gemini CLI | `gemini-interop` |
 
 ## Repository structure
 
@@ -324,6 +325,29 @@ Token-efficient communication mode: terse, direct output with no filler, applied
 | `caveman-commit` | This skill should be used when the user asks for a commit message. Triggers include \"write a commit\", \"commit message for this\", \"conventional... |
 | `caveman-review` | This skill should be used when the user asks for code-review comments or PR review. Triggers include \"review this PR\", \"review the diff\",... |
 | `caveman` | This skill should be used when the user asks for terser, more direct output. Explicit triggers include \"caveman mode\", \"caveman lite|full|ultra\",... |
+
+### `gemini-interop`
+
+Gemini CLI expertise and Claude Code parity mapping: extension authoring, capability translation in both directions, and the mirroring procedure that keeps the two registries in step.
+
+```bash
+/plugin install gemini-interop@claude-registry
+```
+
+**Agents (1)**
+
+| Agent | Model | Purpose |
+|---|---|---|
+| `gemini-porter` | inherit | Use this agent when moving a capability between Claude Code and Gemini CLI in either direction, or when auditing whether the two... |
+
+**Skills (4)**
+
+| Skill | Provides |
+|---|---|
+| `capability-parity-sync` | This skill should be used when a capability is added, changed or retired in one of the two registries and the twin must be... |
+| `cross-host-parity` | This skill should be used when translating a capability between Claude Code and Gemini CLI in either direction, or when deciding... |
+| `gemini-cli-expert` | This skill should be used when working with Google's Gemini CLI: configuring `settings.json`, writing `GEMINI.md` context files,... |
+| `gemini-extension-authoring` | This skill should be used when building, packaging or releasing a Gemini CLI extension: writing `gemini-extension.json`, laying... |
 
 ## Governance
 

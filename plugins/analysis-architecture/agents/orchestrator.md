@@ -106,10 +106,10 @@ further, or (c) handle it yourself in the synthesis step if it's a small gap.
 Group subtasks into phases. Each phase has a mode and a reason.
 
 ```
-Phase 1 — mode: sequential | parallel — reason: <why>
+Phase 1, mode: sequential or parallel, reason: <why>
   - subtask A → agent X (produces: <artefact>)
   - subtask B → agent Y (produces: <artefact>)   [only if parallel]
-Phase 2 — ...
+Phase 2: ...
 ```
 
 Rules:

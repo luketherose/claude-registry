@@ -64,19 +64,19 @@ Before activating any backend skill, query sources in this order:
 Before activating any skill, classify the request into one of the categories:
 
 ```
-TYPE A — New feature
+TYPE A: New feature
   → Requires: architecture → DB → entity/JPA → service → controller
 
-TYPE B — Bug / behavioural problem
+TYPE B: Bug / behavioural problem
   → Requires: layer-by-layer diagnosis (bottom-up: DB → repository → service → controller)
 
-TYPE C — Performance optimisation
+TYPE C: Performance optimisation
   → Requires: DB diagnosis first, then ORM, then application code
 
-TYPE D — Refactoring / redesign
+TYPE D: Refactoring / redesign
   → Requires: architecture → then all involved skills
 
-TYPE E — Atomic single-layer task
+TYPE E: Atomic single-layer task
   → Requires: single skill (do not orchestrate unless necessary)
 ```
 
@@ -139,7 +139,7 @@ These rules must be respected in every orchestrated output:
 [DB]      → Correct types: NUMERIC for money, TIMESTAMPTZ for timestamps, TEXT for strings
 
 [JPA]     → @NoArgsConstructor on every entity
-[JPA]     → @EqualsAndHashCode(of="id") — never relationships in equals/hashCode
+[JPA]     → @EqualsAndHashCode(of="id"), never relationships in equals/hashCode
 [JPA]     → FetchType.LAZY on OneToMany, override with JOIN FETCH where necessary
 [JPA]     → @Transactional(readOnly=true) default in service, override for writes
 [JPA]     → @Enumerated(EnumType.STRING) aligned to TEXT in the DB
@@ -151,7 +151,7 @@ These rules must be respected in every orchestrated output:
 
 [CTRL]    → @Valid on all @RequestBody
 [CTRL]    → No business logic
-[CTRL]    → GlobalExceptionHandler for all errors — no try/catch in the controller
+[CTRL]    → GlobalExceptionHandler for all errors, no try/catch in the controller
 [CTRL]    → ResponseEntity with semantically correct status code (201 for create, 204 for delete)
 
 [JAVA]    → Constructor injection everywhere

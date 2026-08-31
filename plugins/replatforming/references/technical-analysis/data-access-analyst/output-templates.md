@@ -11,7 +11,7 @@
 
 ## File 1: `docs/analysis/02-technical/04-data-access/data-flow-diagram.md`
 
-```markdown
+````markdown
 ---
 agent: data-access-analyst
 generated: <ISO-8601>
@@ -54,11 +54,11 @@ flowchart LR
 ## Open questions
 - <e.g., "data origin for chart Y is unclear; the function uses both a
   DB query AND a hard-coded fallback list">
-```
+````
 
 ## File 2: `docs/analysis/02-technical/04-data-access/access-pattern-map.md`
 
-```markdown
+````markdown
 ---
 agent: data-access-analyst
 generated: <ISO-8601>
@@ -143,4 +143,4 @@ status: <complete|partial|needs-review|blocked>
 ## Open questions
 - <e.g., "DB engine inferred from connection string in env var; not
   verified from schema files">
-```
+````

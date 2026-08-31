@@ -5,7 +5,7 @@
     "files": [],
     "expected_behavior": [
       "Reads bootstrap-protocol.md before starting",
-      "Detects existing phase outputs and asks user per-phase: skip / re-run / revise — never auto-skips silently",
+      "Detects existing phase outputs and asks user per-phase: skip / re-run / revise. Never auto-skips silently",
       "Dispatches indexing-supervisor for Phase 0 (not codebase-mapper directly)",
       "Presents a pre-phase brief (schematic) before starting each phase",
       "Posts a per-phase recap with execution timing after each phase",

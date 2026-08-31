@@ -77,7 +77,7 @@ prior_iteration: <N-1 or null>
 <2–3 paragraphs, plain prose, no jargon. Cover:
  - What the phase produced this iteration
  - The headline counts (e.g. "12 features, 27 use cases, 3 open
-   questions") — phase-specific, drawn from manifest
+   questions"), phase-specific, drawn from manifest
  - The overall confidence signal
  - The single most important thing the user should verify before
    approving>
@@ -131,7 +131,7 @@ The verdict of every always-on auditor for this phase:
 
 For each: PASS / PASS_WITH_GAPS / FAIL, plus a 1–2 sentence summary
 of the gaps if not PASS. If the verdict is FAIL, the supervisor
-MUST NOT propose `approve` — only `iterate` or `stop`.
+MUST NOT propose `approve`, only `iterate` or `stop`.
 
 ## 6. AS-IS purity check
 
@@ -142,7 +142,7 @@ file/line pairs and the suspect tokens.
 
 ## 7. What the user should verify before approving
 
-A checklist — 5 to 10 bullets — generated from sections 2–6. Each
+A checklist: 5 to 10 bullets, generated from sections 2–6. Each
 bullet is an actionable verification, not a restatement. Examples:
 
 - [ ] Read the 5 feature narrative chapters at
@@ -171,7 +171,7 @@ Plus a 1-paragraph rationale.
 
 ## 9. How to respond
 
-Verbatim block — the supervisor copies this into the HITL prompt:
+Verbatim block: the supervisor copies this into the HITL prompt:
 
 ```
 What would you like to do?

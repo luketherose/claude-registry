@@ -35,7 +35,7 @@ for both browser-based (Angular FE → BE) and server-to-server
 
 ## Decision
 
-<chosen scheme — one of:>
+<chosen scheme, one of:>
 - **OAuth2 Authorization Code with PKCE** for FE
 - **Bearer JWT** for service-to-service
 - **Spring Security 6** as the implementation framework

@@ -1,5 +1,5 @@
 {
-  "_comment": "Workflow registry — machine-readable index of all available use-case workflows. Each entry is a self-contained module with its own supervisor, phases, shared agents, and trigger phrases. Adding a new use case = adding an entry here + the corresponding agent cluster in claude-catalog/.",
+  "_comment": "Workflow registry: a machine-readable index of all available use-case workflows. Each entry is a self-contained module with its own supervisor, phases, shared agents, and trigger phrases. Adding a new use case = adding an entry here + the corresponding agent cluster under plugins/<plugin>/agents/.",
   "version": "1.0.0",
   "workflows": [
     {

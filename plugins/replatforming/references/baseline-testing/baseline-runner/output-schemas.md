@@ -102,7 +102,7 @@ run. Suite structure validated only. Run command: `pytest tests/baseline -v`")
 
 ## Benchmarks (key numbers)
 
-(Pull from `_meta/benchmark-baseline.json` — list mean / p95 for each
+(Pull from `_meta/benchmark-baseline.json`, list mean / p95 for each
 named benchmark. This is the AS-IS oracle Phase 5 will gate against.)
 
 | Benchmark | Mean (s) | p95 (s) | StdDev |

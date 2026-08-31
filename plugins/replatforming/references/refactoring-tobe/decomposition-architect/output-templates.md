@@ -17,7 +17,7 @@
 
 ## File 1: `.refactoring-kb/00-decomposition/bounded-contexts.md`
 
-```markdown
+````markdown
 ---
 agent: decomposition-architect
 generated: <ISO-8601>
@@ -76,13 +76,13 @@ SK = shared kernel; ACL = anti-corruption layer.)
 
 ## Open questions
 - ...
-```
+````
 
 ---
 
 ## File 2: `.refactoring-kb/00-decomposition/aggregate-design.md`
 
-```markdown
+````markdown
 ---
 agent: decomposition-architect
 generated: <ISO-8601>
@@ -101,7 +101,7 @@ For each BC, the aggregates that anchor data + behavior consistency.
 
 ## Open questions
 - ...
-```
+````
 
 ---
 
@@ -129,7 +129,7 @@ coverage percent, escalation items.
 
 ## Reporting (text response to supervisor)
 
-```markdown
+````markdown
 ## Files written
 - .refactoring-kb/00-decomposition/bounded-contexts.md
 - .refactoring-kb/00-decomposition/aggregate-design.md
@@ -157,5 +157,5 @@ high | medium | low
 
 ## Open questions
 - <e.g., "BC-04 'Reporting' has overlapping use cases with BC-02
-  'Payments' — recommend boundary review with stakeholder">
-```
+  'Payments', recommend boundary review with stakeholder">
+````

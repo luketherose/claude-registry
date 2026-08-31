@@ -70,14 +70,14 @@ Read or create `<repo>/docs/refactoring/workflow-manifest.json`
 One row per phase, with a recommendation. Use this exact shape:
 
 ```
-=== Application Replatforming workflow — detected state ===
+=== Application Replatforming workflow, detected state ===
 
 Phase | Status                        | Detected                                       | Recommendation
 ------|-------------------------------|------------------------------------------------|---------------------
   0   | complete                      | .indexing-kb/ + manifest OK                    | skip (run if you want a refresh)
-  1   | complete-but-exports-missing  | …01-functional/ — PDF present, PPTX missing    | regenerate-exports
-  2   | partial                       | …02-technical/ — manifest=partial              | re-run recommended
-  3   | absent                        | (none)                                         | run after Phase 2 — next phase
+  1   | complete-but-exports-missing  | …01-functional/: PDF present, PPTX missing     | regenerate-exports
+  2   | partial                       | …02-technical/: manifest=partial               | re-run recommended
+  3   | absent                        | (none)                                         | run after Phase 2 (next phase)
   4   | partial                       | replatforming at Step 2: 4/12 features done    | resume from Step 2 (recommended)
 ```
 
@@ -115,7 +115,7 @@ Phase 1 (functional-analysis) is COMPLETE BUT EXPORTS ARE MISSING in this repo.
   Missing: <list of missing export files>
   What should I do?
     [regenerate-exports]  dispatch functional-analysis-supervisor in
-                           `exports-only` resume mode — runs ONLY the
+                           `exports-only` resume mode: runs ONLY the
                            export wave (document-creator + presentation-creator),
                            reusing the existing analysis. Fast, no W1/W2/W3
                            re-run.

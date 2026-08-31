@@ -113,7 +113,7 @@ Line-heights: 1.2 for headings ≥ 24 px, 1.5 for body, 1.4 for sub-headings.
 ## Spacing, radius, elevation
 
 ```
-Spacing — 8 px base grid (Bricks "streamlined grid")
+Spacing: 8 px base grid (Bricks "streamlined grid")
 --uc-space-2xs:  0.25rem;   /*  4 px */
 --uc-space-xs:   0.5rem;    /*  8 px */
 --uc-space-sm:   0.75rem;   /* 12 px */
@@ -123,14 +123,14 @@ Spacing — 8 px base grid (Bricks "streamlined grid")
 --uc-space-2xl:  3rem;      /* 48 px */
 --uc-space-3xl:  4rem;      /* 64 px */
 
-Radius — restrained, banking-appropriate
+Radius: restrained, banking-appropriate
 --uc-radius-sm:   4px;
 --uc-radius-md:   8px;
 --uc-radius-lg:   12px;
 --uc-radius-xl:   16px;
 --uc-radius-pill: 9999px;
 
-Elevation — subtle, never decorative
+Elevation: subtle, never decorative
 --uc-shadow-sm: 0 1px 2px rgba(14, 14, 18, 0.06);
 --uc-shadow-md: 0 2px 6px rgba(14, 14, 18, 0.08), 0 1px 2px rgba(14, 14, 18, 0.06);
 --uc-shadow-lg: 0 8px 24px rgba(14, 14, 18, 0.10);
@@ -144,7 +144,7 @@ Elevation — subtle, never decorative
 ```
 sm:  576px
 md:  768px
-lg:  1024px   /* tablet landscape — banking app primary breakpoint */
+lg:  1024px   /* tablet landscape, banking app primary breakpoint */
 xl:  1280px
 2xl: 1440px
 ```

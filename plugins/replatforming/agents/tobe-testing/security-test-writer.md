@@ -124,7 +124,7 @@ backend/src/test/java/<bc-package>/security/
 └── owasp/
     ├── A01_BrokenAccessControlTest.java
     ├── A02_CryptographicFailuresTest.java
-    ├── A03_InjectionTest.java          (SQL, command, log injection — log4shell-aware)
+    ├── A03_InjectionTest.java          (SQL, command, log injection, log4shell-aware)
     ├── A04_InsecureDesignTest.java     (rate-limit, lockout, abuse cases)
     ├── A05_SecurityMisconfigTest.java
     ├── A06_VulnerableDepsTest.java     (OWASP DC integration)

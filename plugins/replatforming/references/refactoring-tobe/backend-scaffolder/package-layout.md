@@ -20,11 +20,11 @@ src/main/java/com/<org>/<app>/<bc-pkg>/
 ├── api/                          (controllers + DTOs)
 │   ├── <BC>Controller.java       (implements the OpenAPI-generated interface)
 │   └── dto/                      (request / response DTOs derived from OpenAPI schemas)
-├── application/                  (services — orchestration, not domain logic)
+├── application/                  (services, orchestration, not domain logic)
 │   └── <Aggregate>Service.java
-├── domain/                       (placeholder — populated by data-mapper)
+├── domain/                       (placeholder, populated by data-mapper)
 │   └── README.md                 ("populated by data-mapper")
-└── infrastructure/               (placeholder — populated by data-mapper)
+└── infrastructure/               (placeholder, populated by data-mapper)
     └── README.md                 ("populated by data-mapper")
 ```
 
@@ -44,7 +44,7 @@ src/main/java/com/<org>/<app>/shared/
 │   └── IdempotencyConflictException.java
 ├── idempotency/
 │   ├── IdempotencyKey.java                  (annotation)
-│   ├── IdempotencyKeyAspect.java            (AOP — placeholder logic)
+│   ├── IdempotencyKeyAspect.java            (AOP, placeholder logic)
 │   └── IdempotencyKeyRepository.java        (interface; data-mapper fills impl)
 └── correlation/
     ├── CorrelationIdFilter.java             (puts X-Request-Id in MDC)

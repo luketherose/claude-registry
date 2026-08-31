@@ -21,7 +21,7 @@ the provided Word template does not impose one.
 
 6.  API Reference
     6.1 Base configuration (base URL, versioning, authentication)
-    6.N [ControllerName] — [feature]
+    6.N [ControllerName]: [feature]
         - Endpoint: METHOD /api/path
         - Authorisation: required roles
         - Request DTO: fields, validations
@@ -35,7 +35,7 @@ the provided Word template does not impose one.
     7.3 Request/response DTOs for API
 
 8.  Business Logic
-    8.1 [ServiceName] — [responsibility]
+    8.1 [ServiceName]: [responsibility]
         - Main methods
         - Applied business rules (BR-N reference)
     8.N [ServiceName N]
@@ -48,13 +48,13 @@ the provided Word template does not impose one.
 
 10. Error Handling and Logging
     10.1 Exception hierarchy (base exception and project subclasses)
-    10.2 GlobalExceptionHandler — HTTP status mapping
+    10.2 GlobalExceptionHandler: HTTP status mapping
     10.3 Structured logging (MDC, correlation ID, log levels)
     10.4 Monitoring and metrics
 
 11. External Integrations
     For each external integration in the project:
-    11.N [Integration name] — WebClient pattern
+    11.N [Integration name]: WebClient pattern
 
 12. Configuration
     12.1 Spring profiles (dev, prod)

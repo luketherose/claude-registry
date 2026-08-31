@@ -98,6 +98,20 @@
         "output-style",
         "commit-message"
       ]
+    },
+    {
+      "name": "gemini-interop",
+      "source": "./plugins/gemini-interop",
+      "description": "Gemini CLI expertise and Claude Code parity mapping: extension authoring, capability translation in both directions, and the mirroring procedure that keeps the two registries in step.",
+      "category": "development",
+      "tags": [
+        "gemini-cli",
+        "interop",
+        "parity",
+        "extension",
+        "portability",
+        "agent-skills"
+      ]
     }
   ]
 }

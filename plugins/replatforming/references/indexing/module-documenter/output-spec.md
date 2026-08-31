@@ -53,7 +53,7 @@ status: complete
 
 ## Purpose
 <2-3 sentences inferred from docs, names, and structure. If unclear,
-write: "Purpose unclear — see Open questions" and add the question below.>
+write: "Purpose unclear, see Open questions" and add the question below.>
 
 ## Public interface
 

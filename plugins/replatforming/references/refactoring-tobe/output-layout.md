@@ -29,8 +29,8 @@ Two roots: `<repo>/.refactoring-kb/` (TO-BE knowledge base, distinct from `.inde
     └── unresolved-tobe.md
 
 docs/refactoring/
-├── README.md                                   (you — index)
-├── 00-context.md                               (you — system summary, mode)
+├── README.md                                   (you, index)
+├── 00-context.md                               (you, system summary, mode)
 ├── 4.1-decomposition/                          (decomposition-architect)
 ├── 4.6-api/                                    (api-contract-designer)
 │   ├── openapi.yaml
@@ -52,7 +52,7 @@ docs/adr/                                       (cumulative)
 ├── ADR-004-observability.md                    (hardening-architect)
 └── ADR-005-security-baseline.md                (hardening-architect)
 
-backend/                                        (Spring Boot 3 — Maven)
+backend/                                        (Spring Boot 3, Maven)
 ├── pom.xml
 ├── src/main/java/<base-pkg>/
 │   ├── <bc-1>/                                 (one package per bounded context)

@@ -39,7 +39,7 @@ Format: `del-YYYYMMDD-HHMMSS-<6hex>` (UTC, 6 hex chars from
 │   ├── proposer.r1.json
 │   ├── critic.r1.json
 │   ├── ...
-│   └── (round 2 if debateRounds: 2 — *.r2.json)
+│   └── (round 2 if debateRounds: 2, *.r2.json)
 ├── 04-rebuttals/
 │   ├── proposer.json
 │   ├── critic.json

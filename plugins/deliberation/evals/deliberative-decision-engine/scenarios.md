@@ -17,7 +17,7 @@ declares ("hard rules"). Each eval exercises one or more.
 
 ---
 
-## Eval-001: Italian prose trigger — `decidi con dibattito`
+## Eval-001: Italian prose trigger, `decidi con dibattito`
 
 **Setup**: a fresh working directory with `.indexing-kb/`, Phase 1, and
 Phase 2 outputs already present. No `decisionMode` flag passed.
@@ -53,7 +53,7 @@ Phase 2 outputs already present. No `decisionMode` flag passed.
 
 ---
 
-## Eval-002: English prose trigger — `multi-agent debate`
+## Eval-002: English prose trigger, `multi-agent debate`
 
 **User prompt**:
 > Use multi-agent debate before selecting the target architecture.
@@ -91,7 +91,7 @@ Phase 2 outputs already present. No `decisionMode` flag passed.
 
 ---
 
-## Eval-004: False-positive guard — casual mention
+## Eval-004: False-positive guard, casual mention
 
 **User prompt**:
 > The team is critical of monoliths and we should debate this later.
@@ -105,7 +105,7 @@ Phase 2 outputs already present. No `decisionMode` flag passed.
 
 ---
 
-## Eval-005: Trigger ambiguity — clarifying question
+## Eval-005: Trigger ambiguity, clarifying question
 
 **User prompt**:
 > vorrei pesare i pro e contro di Kafka, ma non ora
@@ -118,7 +118,7 @@ Phase 2 outputs already present. No `decisionMode` flag passed.
 
 ---
 
-## Eval-006: Anti-anchoring — independent drafts in Step 2
+## Eval-006: Anti-anchoring, independent drafts in Step 2
 
 **Setup**: instrument the persona dispatches to log file accesses.
 
@@ -130,7 +130,7 @@ Phase 2 outputs already present. No `decisionMode` flag passed.
 
 ---
 
-## Eval-007: Strategy selection — reasoning-heavy task
+## Eval-007: Strategy selection, reasoning-heavy task
 
 **Brief**: `decisionType: "reasoning"`, `riskLevel: "low"`, no
 unresolved critical objections after rebuttal.
@@ -141,7 +141,7 @@ unresolved critical objections after rebuttal.
 
 ---
 
-## Eval-008: Strategy selection — knowledge-heavy task
+## Eval-008: Strategy selection, knowledge-heavy task
 
 **Brief**: `decisionType: "knowledge-heavy"`, factual uncertainty
 flagged in `02-evidence-summary.json` (≥ 1 entry in
@@ -153,7 +153,7 @@ flagged in `02-evidence-summary.json` (≥ 1 entry in
 
 ---
 
-## Eval-009: Strategy selection — compliance/security with unresolved high
+## Eval-009: Strategy selection, compliance/security with unresolved high
 
 **Brief**: `decisionType: "compliance"`. After rebuttal, ≥ 1 challenge
 of `severity: high` is NOT accepted.
@@ -180,7 +180,7 @@ significant unsupported claims in the evidence summary.
 
 ---
 
-## Eval-011: Replatforming integration — target architecture
+## Eval-011: Replatforming integration, target architecture
 
 **Setup**: the user invokes `refactoring-supervisor` with a Phase-4
 target-architecture decision pending and the prose
@@ -196,7 +196,7 @@ target-architecture decision pending and the prose
 
 ---
 
-## Eval-012: Replatforming integration — risky automated change requires approval
+## Eval-012: Replatforming integration, risky automated change requires approval
 
 **Setup**: the supervisor reaches a Phase-4 Step 5 cutover decision.
 The inferred risk level is `irreversible`. No prose trigger; no
@@ -242,7 +242,7 @@ a `Bearer eyJ...` JWT, and a fiscal code. Artefacts are then written.
 
 ---
 
-## Eval-016: Failure mode — only 2 drafts produced
+## Eval-016: Failure mode, only 2 drafts produced
 
 **Setup**: simulate two persona dispatch failures (e.g., timeout). The
 engine retries each once. The retries also fail.
@@ -275,8 +275,8 @@ judge's first arbitration output omits the objection from
 1. Open Claude Code in a test project that already has
    `.indexing-kb/`, `docs/analysis/01-functional/`,
    `docs/analysis/02-technical/`, and `docs/analysis/03-baseline/`.
-2. Install the agents:
-   `cp claude-catalog/agents/deliberation/*.md .claude/agents/`.
+2. Install the agents: `/plugin install deliberation@claude-registry`, or
+   `./scripts/install-local.sh deliberation` from a clone of this repository.
 3. For each eval, send the prompt or dispatch JSON described.
 4. Inspect the resulting `.deliberation-kb/<trace-id>/` tree against
    the expectations.

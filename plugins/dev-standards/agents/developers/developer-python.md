@@ -66,12 +66,12 @@ All function signatures must have type hints. Return types are mandatory. Use `f
 ```
 src/
   {package}/
-    api/           — Routers, request/response models
-    service/       — Business logic
-    repository/    — Data access
-    domain/        — Domain models, enums
-    config/        — Settings (pydantic-settings)
-    exceptions/    — Typed exception hierarchy
+    api/:            Routers, request/response models
+    service/:        Business logic
+    repository/:     Data access
+    domain/:         Domain models, enums
+    config/:         Settings (pydantic-settings)
+    exceptions/:     Typed exception hierarchy
 tests/
   unit/
   integration/

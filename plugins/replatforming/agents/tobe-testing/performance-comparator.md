@@ -1,6 +1,6 @@
 ---
 name: performance-comparator
-description: "Use this agent to compare TO-BE performance against the AS-IS benchmark from Phase 3. Sub-agent of tobe-testing-supervisor (Wave 2). Authors load-test scenarios (Gatling or k6) for the TO-BE backend and compares the results against the Phase 3 AS-IS benchmark. Produces `04-performance-comparison.md` with per-UC p95 / p99 deltas, throughput comparison, memory footprint comparison, and a regression flag when p95 exceeds +10% of the AS-IS baseline. Drives load tests through the OpenAPI contract (one scenario per critical UC and per high-traffic endpoint). When `execute_policy` permits, runs the load tests and captures real numbers; otherwise scaffolds the scenarios and marks the report `partial — pending execution`."
+description: "Use this agent to compare TO-BE performance against the AS-IS benchmark from Phase 3. Sub-agent of tobe-testing-supervisor (Wave 2). Authors load-test scenarios (Gatling or k6) for the TO-BE backend and compares the results against the Phase 3 AS-IS benchmark. Produces `04-performance-comparison.md` with per-UC p95 / p99 deltas, throughput comparison, memory footprint comparison, and a regression flag when p95 exceeds +10% of the AS-IS baseline. Drives load tests through the OpenAPI contract (one scenario per critical UC and per high-traffic endpoint). When `execute_policy` permits, runs the load tests and captures real numbers; otherwise scaffolds the scenarios and marks the report `partial, pending execution`."
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 color: blue
@@ -63,14 +63,14 @@ hotspots to prioritise scenarios on the critical path.
 
 ```
 e2e/perf/
-├── tool-choice.md                  (Gatling | k6 — decided based on env)
+├── tool-choice.md                  (Gatling | k6, decided based on env)
 ├── README.md                        (run instructions, expected duration)
 └── scenarios/
     ├── <uc-id>-<slug>.<ext>        (one per critical UC)
     └── <endpoint>-<slug>.<ext>     (one per high-traffic endpoint)
 
 docs/analysis/05-tobe-tests/
-├── 04-performance-comparison.md     (markdown report — main deliverable)
+├── 04-performance-comparison.md     (markdown report, main deliverable)
 └── _meta/
     └── benchmark-comparison.json    (machine-readable)
 ```
@@ -270,7 +270,7 @@ methodology` and produce the E2E scenario in
 | `on` (full execute possible) | Run scenarios, capture real numbers, compute deltas, write final report |
 | `backend-only` | Run backend-only scenarios; mark E2E scenarios `pending`; partial report |
 | `frontend-only` | Don't run anything (load testing requires a running backend); partial report |
-| `off` | Scaffold scenarios, document run instructions; report `status: partial — pending execution` |
+| `off` | Scaffold scenarios, document run instructions; report `status: partial, pending execution` |
 
 In any case, write `04-performance-comparison.md`: even a "pending"
 report has value (it states what will be measured and the gate).
@@ -301,7 +301,7 @@ report has value (it states what will be measured and the gate).
 Performance comparison authored.
 Tool:                    Gatling | k6 (containerised: yes/no)
 Scenarios authored:      <count> (UC: <N>, endpoint: <N>)
-Scenarios executed:      <count> (or 'none — pending')
+Scenarios executed:      <count> (or 'none, pending')
 UCs compared:            <count> / <total in AS-IS benchmark>
 p95 regressions (>10%):  <count>  ← blocking if > 0 unless PO accepts
 p95 regressions (>25%):  <count>  ← escalate immediately

@@ -7,7 +7,7 @@
 After each wave (or each agent in sequential mode), post a concise recap. Keep it tight: 6–10 lines, never verbose.
 
 ```
-=== Wave <N>: <name> — completed ===
+=== Wave <N>: <name>, completed ===
 
 Duration:  <human-readable, e.g., "2m 14s">
 Agents:    <N> (parallel | batched | sequential)
@@ -18,7 +18,7 @@ Per-agent timings:
 - <agent-2>:  <duration>   [status]
 - ...
 
-Notes:     <one-line, e.g., "all green" or "1 worker partial — see ...">
+Notes:     <one-line, e.g., "all green" or "1 worker partial, see ...">
 
 Next:      <what comes next>
 ```
@@ -30,7 +30,7 @@ When workers run in parallel, the per-agent timing is the worker's self-reported
 ## Final phase recap template
 
 ```
-Phase 3 Baseline Testing — complete.
+Phase 3 Baseline Testing, complete.
 
 Output (tests):  tests/baseline/
 Output (docs):   docs/analysis/03-baseline/

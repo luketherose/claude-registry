@@ -80,7 +80,11 @@ if [[ -z "$OUTPUT" ]]; then
   OUTPUT="./output/${SAFE_NAME}.${TYPE}"
 fi
 
-OUTPUT="$(realpath -m "$OUTPUT")"
+# realpath -m is GNU-only. BSD realpath on macOS rejects the flag, and with
+# set -e that killed the script here, before it ever built the prompt.
+OUTPUT_DIR="$(dirname "$OUTPUT")"
+mkdir -p "$OUTPUT_DIR"
+OUTPUT="$(cd "$OUTPUT_DIR" && pwd -P)/$(basename "$OUTPUT")"
 
 # ── Build docs list string ────────────────────────────────────────────────────
 DOCS_STR=""
@@ -99,7 +103,7 @@ fi
 # ── Banner ────────────────────────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}╔══════════════════════════════════════════════╗${RESET}"
-echo -e "${BOLD}║     Claude Registry — Present               ║${RESET}"
+echo -e "${BOLD}║     Claude Registry: Present                 ║${RESET}"
 echo -e "${BOLD}╚══════════════════════════════════════════════╝${RESET}"
 echo ""
 echo -e "  Agent:    ${CYAN}$AGENT${RESET}"
@@ -114,7 +118,7 @@ echo ""
 PROMPT="Use the ${AGENT} agent.
 
 Project name: ${PROJECT}
-Target audience: ${AUDIENCE} ($([ "$AUDIENCE" = "biz" ] && echo "business — concise, minimal jargon" || echo "technical — full architecture and patterns"))
+Target audience: ${AUDIENCE} ($([ "$AUDIENCE" = "biz" ] && echo "business: concise, minimal jargon" || echo "technical: full architecture and patterns"))
 Output type: ${TYPE}
 Output path: ${OUTPUT}
 
@@ -122,7 +126,7 @@ Source documents to read:
 ${DOCS_STR}
 
 Read all the source documents listed above, then produce the ${TYPE} output at ${OUTPUT}.
-Follow the Accenture brand standard (colors, fonts, layouts) as defined in claude-catalog/policies/accenture-branding.md.
+Follow the Accenture brand standard for colors, fonts and layouts. It is the accenture-branding skill, which ${AGENT} preloads: take the palette, the typography scale and the layout rules from its assets rather than hardcoding them.
 $([ "$TYPE" = "pptx" ] && echo "Include standard slides: Cover, Agenda, Context & Problem, Proposed Solution, Architecture, Dependencies, Timeline, Risks, Next Steps." || echo "Include standard sections: Cover, Executive Summary, Context & Problem, Proposed Solution, Architecture, Component Inventory, Implementation Plan, Effort Estimate, Risks, Next Steps.")"
 
 # ── Run Claude ────────────────────────────────────────────────────────────────
@@ -139,6 +143,6 @@ if [[ -f "$OUTPUT" ]]; then
   SIZE=$(du -sh "$OUTPUT" | cut -f1)
   echo -e "${GREEN}✓ Output ready:${RESET} $OUTPUT (${SIZE})"
 else
-  echo -e "Note: output file not found at $OUTPUT — check Claude's output above."
+  echo -e "Note: output file not found at $OUTPUT. Check Claude's output above."
 fi
 echo ""

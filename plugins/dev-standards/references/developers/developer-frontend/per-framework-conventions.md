@@ -18,14 +18,14 @@
 
 ```
 Always invoke:
-  angular-expert   — component architecture, smart/dumb, routing, forms, guards
+  angular-expert:    component architecture, smart/dumb, routing, forms, guards
 
 Invoke when state management is needed:
-  ngrx-expert      — only if shared state across features, side effects,
+  ngrx-expert:       only if shared state across features, side effects,
                      or undo/redo is required. Not for local state.
 
 Invoke when RxJS streams are involved:
-  rxjs-expert      — flattening operators, subscription cleanup, stream design
+  rxjs-expert:       flattening operators, subscription cleanup, stream design
 ```
 
 **Angular invariants (non-negotiable):**
@@ -44,19 +44,19 @@ Invoke when RxJS streams are involved:
 
 ```
 Always invoke:
-  react-expert       — hooks, component architecture, TypeScript, performance
+  react-expert:        hooks, component architecture, TypeScript, performance
 
 Invoke when server data fetching is needed:
-  tanstack-query     — useQuery, useMutation, cache invalidation, optimistic updates
+  tanstack-query:      useQuery, useMutation, cache invalidation, optimistic updates
 
 Invoke when client-side routing is needed:
-  tanstack           — TanStack Router, file-based routes, type-safe navigation,
+  tanstack:            TanStack Router, file-based routes, type-safe navigation,
                        loaders, search params
 
 Invoke when full-stack SSR is needed:
-  nextjs             — App Router, RSC, Server Actions, metadata, caching
+  nextjs:              App Router, RSC, Server Actions, metadata, caching
                        OR
-  tanstack-start     — TanStack Start, createServerFn, SSR, streaming
+  tanstack-start:      TanStack Start, createServerFn, SSR, streaming
                        (use nextjs if team is Next.js-experienced;
                                        use tanstack-start for TanStack-native stacks)
 ```
@@ -75,7 +75,7 @@ Invoke when full-stack SSR is needed:
 
 ```
 Always invoke:
-  vue-expert           — Composition API, script setup, Pinia, Vue Router 4,
+  vue-expert:            Composition API, script setup, Pinia, Vue Router 4,
                          composables, reactivity rules
 ```
 
@@ -92,7 +92,7 @@ Always invoke:
 
 ```
 Always invoke:
-  qwik-expert         — resumability, component$, signals, useSignal/useStore,
+  qwik-expert:          resumability, component$, signals, useSignal/useStore,
                         routeLoader$, routeAction$, Qwik City routing
 ```
 
@@ -108,7 +108,7 @@ Always invoke:
 
 ```
 Always invoke:
-  vanilla-expert   — Web Components, TypeScript strict, DOM API,
+  vanilla-expert:    Web Components, TypeScript strict, DOM API,
                      fetch wrapper, Custom Events, Intersection Observer
 ```
 

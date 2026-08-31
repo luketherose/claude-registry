@@ -34,7 +34,6 @@ Migrate Python server-side rendered applications to React at the specification l
 - All server state via TanStack Query
 - All forms via React Hook Form + Zod
 - Accessibility: ARIA required on forms and navigation
-```
 
 ---
 

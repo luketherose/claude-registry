@@ -21,8 +21,8 @@ core/
 │   ├── error.interceptor.ts                 (RFC 7807 → app-level error event)
 │   └── correlation-id.interceptor.ts        (generates / propagates X-Request-Id)
 ├── guards/
-│   ├── auth.guard.ts                        (CanActivate — checks token)
-│   └── role.guard.ts                        (CanActivate — checks role claim)
+│   ├── auth.guard.ts                        (CanActivate, checks token)
+│   └── role.guard.ts                        (CanActivate, checks role claim)
 ├── layout/
 │   ├── layout.component.ts                  (app shell: header + sidenav + outlet)
 │   ├── layout.component.html

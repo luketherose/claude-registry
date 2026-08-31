@@ -28,6 +28,5 @@ export function OrderHistoryPage() {
 ```
 
 **Business rules preserved:** BR-03 (sort by date desc), BR-04 (show last 12 months by default).
-```
 
 ---

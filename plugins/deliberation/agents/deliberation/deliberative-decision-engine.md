@@ -73,9 +73,9 @@ explicitly requested. Fail with a clear failure artefact instead.
 
 ```
 Step 0  Trigger detect + task classify        (this agent)
-Step 1  Decision framing                      (this agent — produces brief)
+Step 1  Decision framing                      (this agent, produces brief)
 Step 2  Independent drafts (parallel, 3 or 5) (debate-* personas)
-Step 3  Neutral evidence summary              (debate-judge — summarise only)
+Step 3  Neutral evidence summary              (debate-judge, summarise only)
 Step 4  Challenge round (1 or 2 rounds)       (debate-* personas)
 Step 5  Rebuttal round                        (debate-* personas)
 Step 6  Convergence + final-decision + commit (this agent + debate-judge)

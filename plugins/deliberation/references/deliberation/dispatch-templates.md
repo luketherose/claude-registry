@@ -151,8 +151,8 @@ You are debate-judge dispatched in ARBITRATION mode.
 Trace ID: del-...
 Step: 6 (final synthesis)
 
-Read every file under .deliberation-kb/del-.../ — drafts, evidence
-summary, all challenge rounds, all rebuttals, the manifest.
+Read every file under .deliberation-kb/del-.../ (drafts, evidence
+summary, all challenge rounds, all rebuttals, the manifest).
 
 Then write the final decision to:
   .deliberation-kb/del-.../05-final-decision.json
@@ -180,7 +180,7 @@ Return only:
 ### Persona retry (after first dispatch failure)
 
 ```
-RETRY — your previous dispatch (step <N>, round <R>) failed with:
+RETRY: your previous dispatch (step <N>, round <R>) failed with:
   <failure reason from manifest>
 
 Rerun the same step. Same anti-anchoring rules. Address the failure
@@ -190,7 +190,7 @@ reason explicitly in the artefact.
 ### Judge re-dispatch after dropped objection
 
 ```
-REJECTED — your previous arbitration output dropped these objections:
+REJECTED: your previous arbitration output dropped these objections:
   - <fromRole>: <objection> (severity: <severity>)
   - ...
 

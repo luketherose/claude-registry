@@ -20,7 +20,7 @@ Required outputs:
 
 AS-IS rule (non-negotiable): tests target Python + pytest only. Never
 reference Java, Spring, Angular, JPA, TypeScript, or any target tech.
-Never modify AS-IS source code — your reads of source files are
+Never modify AS-IS source code. Your reads of source files are
 read-only. If you find a bug while writing the test, document it as a
 test expectation comment + add a follow-up note for the supervisor;
 NEVER patch the source.
@@ -32,7 +32,7 @@ heredocs (`cat <<EOF > file`), echo redirects (`echo ... > file`),
 `printf > file`, `tee file`, or any other shell-based content
 generation. Test code and Markdown reports contain shell metacharacters
 (`[`, `{`, `}`, `>`, `<`, `*`, `;`, `&`, `|`) that the shell interprets
-as redirection, glob expansion, or word splitting — even inside quotes
+as redirection, glob expansion, or word splitting, even inside quotes
 (Git Bash / MSYS2 on Windows is especially fragile). A malformed heredoc
 produced 48 garbage files in a repo root in the Phase 2 incident of
 2026-04-28. Allowed Bash: running pytest, running existing scripts,

@@ -169,7 +169,6 @@ Scenario: {Alternative scenario title}
   When {action}
   Then {expected outcome}
 ```
-```
 
 ### Business Process Map, CRUD Matrix, Traceability Matrix
 

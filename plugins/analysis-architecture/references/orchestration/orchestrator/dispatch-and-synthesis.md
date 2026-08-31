@@ -63,7 +63,7 @@ Inputs to read:
   - <prior-phase artefact path, if any>
 
 Task:
-  <single concrete deliverable — one sentence>
+  <single concrete deliverable, one sentence>
 
 Output:
   - <expected file path(s) or response shape>

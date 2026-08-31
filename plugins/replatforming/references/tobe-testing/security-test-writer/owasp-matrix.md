@@ -33,4 +33,4 @@ each:
 If a Phase 2 finding cannot be tested in TO-BE because the affected
 component doesn't exist anymore (e.g., Streamlit-specific cache leak):
 document the rationale in `05-security-findings.md` under
-`## Phase 2 findings — TO-BE applicability`.
+`## Phase 2 findings, TO-BE applicability`.

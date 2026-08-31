@@ -89,7 +89,7 @@ Targets: line ≥ 80%, branch ≥ 70%.
 
 # TO-BE bug registry (medium / low non-blocking)
 
-> Critical and high regressions are NOT in this registry — they are
+> Critical and high regressions are NOT in this registry, they are
 > in `01-equivalence-report.md` as blocking.
 
 ## TBUG-001: <title>

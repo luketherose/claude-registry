@@ -113,7 +113,7 @@ duration_seconds: <int>
 
 \`\`\`
 Blocking issues:   <N>
-Phase 4 ready:     <yes | no — see blocking issues above>
+Phase 4 ready:     <yes | no, see blocking issues above>
 Phase 5 enabled:   <yes | no>
 \`\`\`
 

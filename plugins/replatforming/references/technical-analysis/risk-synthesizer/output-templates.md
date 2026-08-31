@@ -36,7 +36,7 @@ status: <complete|partial|needs-review|blocked>
 
 ## Method
 Each finding is placed on a likelihood × impact grid using the
-inference rules described below. The rules are heuristic — they are
+inference rules described below. The rules are heuristic, they are
 not a substitute for stakeholder review.
 
 ## Inference rules
@@ -97,7 +97,7 @@ status: <complete|partial|needs-review|blocked>
 
 ## Method
 Ordered by: severity, likelihood, effort, cross-feature impact.
-Remediation hints are AS-IS only — they propose changes within the
+Remediation hints are AS-IS only, they propose changes within the
 current stack, not migration to a different one. Migration planning
 lives in Phase 4 of the workflow.
 
@@ -125,7 +125,7 @@ lives in Phase 4 of the workflow.
 
 ## Notes
 - Dependencies between fixes (if any): "fixing SEC-02 requires the
-  query-builder helper to be in place — track as prerequisite"
+  query-builder helper to be in place, track as prerequisite"
 - Items where AS-IS remediation may be limited (e.g., upstream
   library has no fix): explicitly noted
 

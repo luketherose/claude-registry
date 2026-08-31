@@ -117,9 +117,9 @@ Two tasks are parallelizable when:
 ### Phase model
 Map every multi-skill task into phases before executing:
 ```
-Phase 1 — Sequential anchor    (shared contracts, interfaces, schemas)
-Phase 2 — Parallel fan-out     (independent implementation workers)
-Phase 3 — Sequential merge     (integration, consistency checks, tests)
+Phase 1: Sequential anchor     (shared contracts, interfaces, schemas)
+Phase 2: Parallel fan-out      (independent implementation workers)
+Phase 3: Sequential merge      (integration, consistency checks, tests)
 ```
 
 ### Domain-specific parallelization rules
@@ -146,25 +146,25 @@ Always sequential:
 These rules apply to every orchestrated output, regardless of the scenario:
 
 ```
-[Design]    → Tokens always for colours/spacing/typography — never hardcoded values
+[Design]    → Tokens always for colours/spacing/typography, never hardcoded values
 [Design]    → Components from the project design system library before creating custom ones
 [Design]    → Accessibility: focus ring on interactive controls, WCAG AA contrast
 
 [Angular]   → ChangeDetectionStrategy.OnPush on all dumb components
-[Angular]   → Zero any in TypeScript — explicit interfaces for every model
+[Angular]   → Zero any in TypeScript, explicit interfaces for every model
 [Angular]   → Lazy loading on every feature module
-[Angular]   → Typed @Input/@Output — no omnibus configuration objects
+[Angular]   → Typed @Input/@Output, no omnibus configuration objects
 [Angular]   → Dumb components without dependencies on services or store
 
 [RxJS]      → async pipe preferred over manual subscribes
 [RxJS]      → Every manual subscribe has an explicit cleanup strategy
 [RxJS]      → Do not modify external variables in map (use tap)
 
-[SCSS]      → Styles in .component.scss — no inline CSS in the template
-[SCSS]      → Flat BEM selectors — maximum 3 levels of nesting
+[SCSS]      → Styles in .component.scss, no inline CSS in the template
+[SCSS]      → Flat BEM selectors, maximum 3 levels of nesting
 [SCSS]      → @use instead of @import for tokens and mixins
 
-[NgRx]      → Pure reducers — no side effects, no HTTP calls
+[NgRx]      → Pure reducers, no side effects, no HTTP calls
 [NgRx]      → If using facade, components do not access the store directly
 [NgRx]      → Event-driven actions with source tag: [Page/API] Event Occurred
 ```

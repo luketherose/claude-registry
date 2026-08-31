@@ -21,27 +21,27 @@ Build performant full-stack React applications on the Next.js App Router, using 
 
 ```
 app/
-  layout.tsx            — root layout (HTML, body, provider)
-  page.tsx              — route "/"
-  loading.tsx           — automatic Suspense fallback
-  error.tsx             — automatic Error Boundary
-  not-found.tsx         — 404
+  layout.tsx:             root layout (HTML, body, provider)
+  page.tsx:               route "/"
+  loading.tsx:            automatic Suspense fallback
+  error.tsx:              automatic Error Boundary
+  not-found.tsx:          404
   globals.css
-  (auth)/               — route group (does not add URL segment)
-    login/page.tsx      — route "/login"
+  (auth)/:                route group (does not add URL segment)
+    login/page.tsx:       route "/login"
     register/page.tsx
   dashboard/
-    layout.tsx          — nested layout for dashboard
-    page.tsx            — route "/dashboard"
+    layout.tsx:           nested layout for dashboard
+    page.tsx:             route "/dashboard"
     [id]/
-      page.tsx          — route "/dashboard/:id"
+      page.tsx:           route "/dashboard/:id"
 components/
-  ui/                   — presentational server components
-  client/               — client components ('use client')
+  ui/:                    presentational server components
+  client/:                client components ('use client')
 lib/
-  db.ts                 — database client
-  auth.ts               — session helpers
-  actions/              — Server Actions
+  db.ts:                  database client
+  auth.ts:                session helpers
+  actions/:               Server Actions
 ```
 
 ---

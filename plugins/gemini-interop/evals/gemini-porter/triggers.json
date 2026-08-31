@@ -1,0 +1,37 @@
+[
+  {
+    "query": "Porta questo agente su Gemini CLI e dimmi quali campi hai dovuto buttare via per farlo entrare",
+    "should_trigger": true,
+    "description": "Moving an agent onto Gemini CLI and reporting the fields dropped to make it fit"
+  },
+  {
+    "query": "Translate the whole dev-standards plugin into a Gemini extension and classify each capability by how portable it is",
+    "should_trigger": true,
+    "description": "Translating an entire plugin into a Gemini extension and classifying each capability by how portable it is"
+  },
+  {
+    "query": "Questo supervisor fa fan-out su sei worker: convertilo per l'altro host",
+    "should_trigger": true,
+    "description": "Converting a supervisor that fans work out to six workers so it runs on the other host"
+  },
+  {
+    "query": "Applica le sostituzioni meccaniche a queste tre skill, poi aggiorna il ledger con il source_sha giusto",
+    "should_trigger": true,
+    "description": "Applying the mechanical substitutions to three skills and updating the ledger with the correct source_sha"
+  },
+  {
+    "query": "Come si chiama il tool Gemini per leggere piu file in una volta sola?",
+    "should_trigger": false,
+    "description": "The name of the Gemini tool that reads several files in one call"
+  },
+  {
+    "query": "Spiegami la differenza fra ${extensionPath} e ${workspacePath} dentro il manifest",
+    "should_trigger": false,
+    "description": "The difference between ${extensionPath} and ${workspacePath} inside the manifest"
+  },
+  {
+    "query": "Il drift check dice che tre capability mirrored sono stale: quale delle tre proprieta e fallita?",
+    "should_trigger": false,
+    "description": "A drift check reporting three mirrored capabilities as stale and which of the three properties failed"
+  }
+]

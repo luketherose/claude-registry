@@ -1,13 +1,13 @@
 [
   {
     "agent": "functional-analysis-supervisor",
-    "query": "Run the functional analysis for this application — .indexing-kb/ is ready",
+    "query": "Run the functional analysis for this application (.indexing-kb/ is ready)",
     "files": [],
     "expected_behavior": [
       "Reads stack.json from .indexing-kb/bronze/ before dispatching any sub-agent",
       "Dispatches actor-feature-mapper, ui-surface-analyst, io-catalog-analyst in parallel (Wave 1)",
       "Dispatches user-flow-analyst and implicit-logic-analyst after Wave 1 (Wave 2)",
-      "Runs functional-traceability-auditor in Wave 3b (always ON — not opt-in)",
+      "Runs functional-traceability-auditor in Wave 3b (always ON, not opt-in)",
       "Writes _meta/manifest.json after each wave",
       "Writes _meta/pipeline-state.yaml after each wave",
       "Asks user before overwriting existing docs/analysis/01-functional/ with status: complete"
@@ -15,7 +15,7 @@
   },
   {
     "agent": "functional-analysis-supervisor",
-    "query": "The functional analysis at docs/analysis/01-functional/ is complete but the PDF export is missing — regenerate it",
+    "query": "The functional analysis at docs/analysis/01-functional/ is complete but the PDF export is missing. Regenerate it",
     "files": [],
     "expected_behavior": [
       "Detects docs/analysis/01-functional/ exists with status: complete in manifest",
@@ -27,11 +27,11 @@
   },
   {
     "agent": "functional-analysis-supervisor",
-    "query": "Run Phase 1 functional analysis — .indexing-kb/ does not exist yet",
+    "query": "Run Phase 1 functional analysis (.indexing-kb/ does not exist yet)",
     "files": [],
     "expected_behavior": [
       "Detects .indexing-kb/ is absent or incomplete before dispatching any sub-agent",
-      "Stops and asks the user whether to run indexing first (Phase 0) — does NOT auto-invoke indexing-supervisor",
+      "Stops and asks the user whether to run indexing first (Phase 0). Does NOT auto-invoke indexing-supervisor",
       "Offers degraded-mode option if user wants to proceed anyway, with explicit gap warnings",
       "Does NOT invent a knowledge base or read source code as a substitute for .indexing-kb/"
     ]

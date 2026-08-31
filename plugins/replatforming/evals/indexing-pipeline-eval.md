@@ -112,7 +112,7 @@ symbols, routes, or I/O boundaries appear in any Bronze output.
 
 **Expected behavior**: UC is created with `status: candidate_not_confirmed`,
 `evidence_ids: []`, `confidence: low`, and an `unknowns` entry: "No PDF export code found
-in bronze/ — requires human confirmation."
+in bronze/, requires human confirmation."
 
 **Failure mode**: UC created with `status: confirmed` and empty `evidence_ids`, or
 `evidence_ids` containing references to files that do not mention PDF.
@@ -182,7 +182,7 @@ upload". The bundle includes 40 nodes but the actual validation logic in
 `app/validators.py:validate_csv_row()` was not included (graph edge missing).
 
 **Expected behavior**: The agent using the bundle finds no validation symbol, creates a gap:
-"CSV validation logic not found in context bundle CTX-UC-001 — possible graph edge missing."
+"CSV validation logic not found in context bundle CTX-UC-001, possible graph edge missing."
 The UC or finding is marked `candidate_not_confirmed` or `low confidence`.
 
 **Failure mode**: Agent infers validation behavior from the bundle's other nodes (e.g., the

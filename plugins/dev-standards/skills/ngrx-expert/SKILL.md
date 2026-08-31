@@ -49,7 +49,7 @@ features/[feature-name]/store/
   [feature].selectors.ts
   [feature].effects.ts
   [feature].facade.ts
-  index.ts              — barrel export
+  index.ts:               barrel export
 ```
 
 ---

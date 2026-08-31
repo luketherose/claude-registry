@@ -42,7 +42,7 @@ For each phase N you are about to run, follow this protocol exactly.
 Post a brief in this exact shape:
 
 ```
-=== Phase <N>: <Name> — about to start ===
+=== Phase <N>: <Name>, about to start ===
 
 Goal:        <one-line>
 Supervisor:  <agent-name> (opus)
@@ -51,7 +51,7 @@ Output root: <where the supervisor will write>
 Entry point: <which file the user reads first when this phase ends>
 
 Internal parallelization:
-<paste the schematic for this phase, verbatim — see schematics.md>
+<paste the schematic for this phase, verbatim (see schematics.md)>
 
 Estimated user touchpoints during this phase:
 - The phase supervisor will itself ask for its own confirmations (e.g.,
@@ -119,7 +119,7 @@ gates while still surfacing every failure to the user.
 The driving model:
 
 ```
-Phase 4 driving — per-step protocol (driven by you, the Workflow Supervisor)
+Phase 4 driving: per-step protocol (driven by you, the Workflow Supervisor)
 
   Step 0 (Bootstrap, HARD GATE):
     - dispatch developer-java + developer-frontend in parallel
@@ -157,8 +157,8 @@ Phase 4 driving — per-step protocol (driven by you, the Workflow Supervisor)
       2.4  dispatch test-writer with directive:
            "write unit + integration tests for <UC-id>; per-UC E2E
             only when the UC requires cross-page flow."
-      2.5  run `mvn clean verify` (Bash) — gate
-      2.6  run `mvn test` and `ng test` — gate
+      2.5  run `mvn clean verify` (Bash): gate
+      2.6  run `mvn test` and `ng test`: gate
       2.7  start app + smoke probe + compare output to Phase 3
            oracle snapshot for <UC-id>
       Any failure at 2.5 / 2.6 / 2.7 → Step 3 sub-loop, then resume
@@ -243,7 +243,7 @@ Trust the manifest and the files on disk.
 Post a recap in this exact shape:
 
 ```
-=== Phase <N>: <Name> — iteration <K> completed ===
+=== Phase <N>: <Name>, iteration <K> completed ===
 
 Status:           <complete | partial | failed>
 Iteration:        <K>      (1 for the first run; bumps on every iterate)
@@ -260,7 +260,7 @@ Execution timing:
   - <step-2>:    <duration>
   - ...
   (Phases 0–2 expose wave-level timings; Phase 3 exposes per-agent
-   timings — surface whatever granularity the phase manifest provides.
+   timings. Surface whatever granularity the phase manifest provides.
    If a phase manifest exposes no timing fields, surface only the
    phase total.)
 
@@ -335,7 +335,7 @@ verification report path and ask the user to pick one of three
 options:
 
 ```
-Phase <N>: <Name> — iteration <K> ready for review.
+Phase <N>: <Name>, iteration <K> ready for review.
 
 Verification report:  <path>
 
@@ -455,7 +455,7 @@ every step transition** (Step 0 → 1, 1 → 2, end of each Step 2 feature,
 ### Step 0 / 1 / 5 / 6 recap shape (gate steps)
 
 ```
-=== Phase 4 — Step <N> (<name>) — completed ===
+=== Phase 4, Step <N> (<name>), completed ===
 
 Hard gate evidence:
 - Build (mvn clean verify):     <PASS | FAIL>     <duration>
@@ -484,7 +484,7 @@ Confirm: proceed to Step <N+1>? [yes / revise / stop]
 After every feature completes Step 2.7 successfully, surface:
 
 ```
-=== Phase 4 — Step 2 — feature <UC-id>: <name> — done ===
+=== Phase 4, Step 2, feature <UC-id>: <name>, done ===
 
 Per-feature gate evidence:
 - 2.4 Build:                     PASS    <duration>
@@ -509,7 +509,7 @@ What would you like to do?
   [next]     advance to the next feature (recommended)
   [pause]    pause the loop here, review what's been built
   [revise]   re-do the just-finished feature (broader context)
-  [stop]     end Phase 4 in `partial` state — application is in a
+  [stop]     end Phase 4 in `partial` state, application is in a
              working state at this checkpoint
 ```
 
@@ -524,7 +524,7 @@ Decision rules:
 ### Step 3 sub-loop convergence recap (any time the sub-loop closes)
 
 ```
-=== Phase 4 — Step 3 sub-loop converged ===
+=== Phase 4, Step 3 sub-loop converged ===
 
 Triggered from:    Step <calling-step>
 Trigger reason:    <build failure | test failure | runtime failure | functional issue>
@@ -545,7 +545,7 @@ NEVER silently abandon the failure.
 ### End-of-Phase-4 recap (Step 6 done + PO sign-off)
 
 ```
-=== Phase 4 — Application Replatforming — COMPLETED ===
+=== Phase 4, Application Replatforming, COMPLETED ===
 
 Status:                complete
 Output root:           docs/refactoring/

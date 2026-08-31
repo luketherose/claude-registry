@@ -58,7 +58,7 @@ status: <complete|partial|needs-review|blocked>
 
 ## Open questions
 - <e.g., "input IN-04 is a free-text field; the parsing logic is hidden
-  in transform_data() — see implicit-logic.md">
+  in transform_data(), see implicit-logic.md">
 ```
 
 ---
@@ -103,7 +103,7 @@ status: <complete|partial|needs-review|blocked>
 
 ## Open questions
 - <e.g., "OUT-05 is generated only conditionally; the condition is
-  unclear — see implicit-logic.md">
+  unclear, see implicit-logic.md">
 ```
 
 ---

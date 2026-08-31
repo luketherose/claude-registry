@@ -38,7 +38,7 @@
    What should I do?
      [skip]    keep the existing test suite + report as-is, do nothing.
      [re-run]  re-run the full pipeline from W1 (you'll see explicit
-               per-suite overwrite confirmations — this overwrites
+               per-suite overwrite confirmations, this overwrites
                authored tests).
      [revise]  inspect a specific section together first (e.g.,
                re-run only equivalence tests for a UC that changed,
@@ -116,7 +116,7 @@ Produces:
 - `04-performance-comparison.md`: markdown report with deltas, p95 comparison table, regression flags
 - `_meta/benchmark-comparison.json`: machine-readable
 
-If `execute_policy` permits, runs the load tests and captures real deltas. Else writes scenarios and marks the report `status: partial — pending execution`.
+If `execute_policy` permits, runs the load tests and captures real deltas. Else writes scenarios and marks the report `status: partial, pending execution`.
 
 After dispatch, read outputs. Aggregate `## Open questions` into `14-unresolved-questions.md`.
 
@@ -158,7 +158,7 @@ If the challenger reports ≥ 1 blocking contradiction or coverage gap: **stop, 
 Post a final user-facing summary:
 
 ```
-Phase 5 TO-BE Testing — complete.
+Phase 5 TO-BE Testing, complete.
 
 Output: docs/analysis/05-tobe-tests/
 Entry:  docs/analysis/05-tobe-tests/01-equivalence-report.md  ← PO sign-off here

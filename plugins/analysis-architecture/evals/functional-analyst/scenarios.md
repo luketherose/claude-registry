@@ -13,10 +13,10 @@
 **User prompt**: "Reconstruct functional requirements from this codebase. Write to `docs/functional/`."
 
 **Expected output characteristics**:
-- `docs/functional/features.md` — every distinct feature, with entry point and user-facing outcome
-- `docs/functional/user-flows.md` — step-by-step traces for each feature, source-file references included
-- `docs/functional/business-rules.md` — extracted rules with conditions, effects, and source location
-- `docs/functional/actors.md` — actors and system boundaries
+- `docs/functional/features.md`: every distinct feature, with entry point and user-facing outcome
+- `docs/functional/user-flows.md`: step-by-step traces for each feature, source-file references included
+- `docs/functional/business-rules.md`: extracted rules with conditions, effects, and source location
+- `docs/functional/actors.md`: actors and system boundaries
 - All artifacts are traceable: every claim links back to a file:line in source
 
 **Must contain**:
@@ -71,8 +71,8 @@
 
 **Expected output**:
 - Table: entity × role × operation
-- Each cell: enforcement source (annotation, guard, controller check) OR "no rule found — gap"
-- Inconsistencies flagged (e.g., role can read but not delete — intentional or oversight?)
+- Each cell: enforcement source (annotation, guard, controller check) OR "no rule found, gap"
+- Inconsistencies flagged (e.g., role can read but not delete, intentional or oversight?)
 - File:line references for every enforcement
 
 ---

@@ -15,8 +15,8 @@ All outputs go under `<repo>/docs/analysis/02-technical/`. This directory is the
 
 ```
 docs/analysis/02-technical/
-├── README.md                              (you — index/navigation)
-├── 00-context.md                          (you — system summary, scope, mode)
+├── README.md                              (you, index/navigation)
+├── 00-context.md                          (you, system summary, scope, mode)
 ├── 01-code-quality/                       (code-quality-analyst)
 │   ├── codebase-map.md
 │   ├── duplication-report.md
@@ -47,7 +47,7 @@ docs/analysis/02-technical/
 │   ├── risk-register.md
 │   ├── severity-matrix.md
 │   └── remediation-priority.md
-├── 14-unresolved-questions.md             (you — aggregated)
+├── 14-unresolved-questions.md             (you, aggregated)
 ├── normalized/                            (JSONL machine-readable artifacts)
 │   ├── technical-findings.jsonl           (risk-synthesizer, merged from W1)
 │   ├── risk-register.jsonl                (risk-synthesizer)
@@ -65,10 +65,10 @@ docs/analysis/02-technical/
 │   └── security-findings.jsonl
 ├── final/                                 (analysis-quality-summary.md after auditor)
 ├── _meta/
-│   ├── manifest.json                      (you — run history)
+│   ├── manifest.json                      (you, run history)
 │   ├── risk-register.json                 (risk-synthesizer)
 │   ├── risk-register.csv                  (risk-synthesizer)
-│   ├── dependencies.json                  (dependency-security-analyst — SBOM-lite)
+│   ├── dependencies.json                  (dependency-security-analyst, SBOM-lite)
 │   ├── challenger-report.md               (technical-analysis-challenger)
 │   └── technical-evidence-report.md       (technical-evidence-auditor)
 └── _exports/

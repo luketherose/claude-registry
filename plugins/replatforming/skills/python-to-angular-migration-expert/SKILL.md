@@ -33,7 +33,6 @@ Migrate enterprise Python applications to Angular at the specification level. Wo
 - async pipe in templates, no manual subscriptions
 - OnPush change detection
 - No any TypeScript types
-```
 
 ---
 

@@ -31,18 +31,18 @@ Organize pages around the **Diataxis framework**:
 Wikis with mixed audiences benefit from this canonical page set:
 
 ```
-Home                       — landing page with TL;DR + quick links + sidebar overview
-What-is-this               — one-page explanation (Explanation)
-Quick-start                — install + verify in 5 minutes (Tutorial)
-Installation               — full procedure with prerequisites (How-to)
-Usage                      — common workflows, with examples (How-to)
-Architecture               — diagrams, components, data flow (Explanation)
-Reference                  — schemas, CLI flags, configuration keys (Reference)
-Contributing               — how to propose changes, test, and submit (How-to)
-FAQ                        — common questions and gotchas
-Changelog                  — link to or excerpt of the project changelog
-_Sidebar                   — navigation (controls every page's left rail)
-_Footer                    — footer (license, version, edit-on-GitHub link)
+Home:                        landing page with TL;DR + quick links + sidebar overview
+What-is-this:                one-page explanation (Explanation)
+Quick-start:                 install + verify in 5 minutes (Tutorial)
+Installation:                full procedure with prerequisites (How-to)
+Usage:                       common workflows, with examples (How-to)
+Architecture:                diagrams, components, data flow (Explanation)
+Reference:                   schemas, CLI flags, configuration keys (Reference)
+Contributing:                how to propose changes, test, and submit (How-to)
+FAQ:                         common questions and gotchas
+Changelog:                   link to or excerpt of the project changelog
+_Sidebar:                    navigation (controls every page's left rail)
+_Footer:                     footer (license, version, edit-on-GitHub link)
 ```
 
 Adapt this list to the project: small projects collapse pages
@@ -128,17 +128,17 @@ The metadata is invisible in rendered GitHub but enables future audits
 After writing all pages, post this summary:
 
 ```
-Wiki authored — <N> pages, <M> sidebar entries.
+Wiki authored: <N> pages, <M> sidebar entries.
 
 Output:    <repo>/wiki/
 Pages:     [list with page name → audience → diataxis quadrant]
 Pending:   [internal/external links flagged for human review]
 Stale:     [pages that depend on a part of the codebase you couldn't
-            verify — listed in last-verified comments]
+            verify, listed in last-verified comments]
 
 Next step: open a PR with the wiki/ folder; on merge, run
 `git clone <wiki-url> /tmp/wiki && cp -r wiki/*.md /tmp/wiki/ &&
 cd /tmp/wiki && git add -A && git commit -m "Sync wiki" && git push`.
-DO NOT push from this agent — pushing the wiki is a separate user
+DO NOT push from this agent. Pushing the wiki is a separate user
 action requiring explicit authorization.
 ```

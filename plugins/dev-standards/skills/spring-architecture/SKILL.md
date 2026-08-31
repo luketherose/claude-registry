@@ -15,27 +15,27 @@ Apply these layering conventions when structuring or reviewing an enterprise Spr
 
 ```
 com.example.myapp/
-  controller/              — REST endpoints, input validation, request→response mapping
+  controller/:               REST endpoints, input validation, request→response mapping
   service/
-    api/                   — public service layer interfaces
-    impl/                  — implementations (annotated with @Service)
-  repository/              — Spring Data JPA repositories
+    api/:                    public service layer interfaces
+    impl/:                   implementations (annotated with @Service)
+  repository/:               Spring Data JPA repositories
   entity/
-    domain-a/              — entities for the first domain (e.g. Company, Contact, ...)
-    domain-b/              — entities for the second domain (e.g. Order, Product, ...)
+    domain-a/:               entities for the first domain (e.g. Company, Contact, ...)
+    domain-b/:               entities for the second domain (e.g. Order, Product, ...)
   dto/
-    request/               — inbound DTOs (validated with @Valid)
-    response/              — outbound DTOs (projected from entity)
-  mapper/                  — entity ↔ DTO conversion
-  config/                  — @Configuration: Security, WebClient, JPA, ...
-  security/                — JWT filter, UserDetailsService, ...
-  exception/               — custom exception hierarchy
-  util/                    — shared stateless utilities
+    request/:                inbound DTOs (validated with @Valid)
+    response/:               outbound DTOs (projected from entity)
+  mapper/:                   entity ↔ DTO conversion
+  config/:                   @Configuration: Security, WebClient, JPA, ...
+  security/:                 JWT filter, UserDetailsService, ...
+  exception/:                custom exception hierarchy
+  util/:                     shared stateless utilities
   resources/
     application.yml
     application-dev.yml
     application-prod.yml
-    templates/             — FreeMarker templates
+    templates/:              FreeMarker templates
 ```
 
 ---
@@ -43,8 +43,8 @@ com.example.myapp/
 ## DTO vs Entity: mandatory separation
 
 ```
-Entity:  represents the database structure — coupled to Hibernate
-DTO:     represents the API contract — stable, independent of the schema
+Entity:  represents the database structure, coupled to Hibernate
+DTO:     represents the API contract, stable, independent of the schema
 ```
 
 ```java

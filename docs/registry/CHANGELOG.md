@@ -6,6 +6,198 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 
+### Fixed (registry-wide sweep, 2026-08-31)
+
+Five findings from a skill-by-skill review, each with the gate that would have caught it.
+
+**A dead instruction in an eval.** `plugins/deliberation/evals/deliberative-decision-engine/scenarios.md`
+told a human to run `cp claude-catalog/agents/deliberation/*.md .claude/agents/`. That
+directory has not existed since the plugin migration. It now names
+`/plugin install deliberation@claude-registry` or `./scripts/install-local.sh deliberation`,
+and the second was run against a throwaway `CLAUDE_CONFIG_DIR` to prove it installs the
+seven agents. `bmad/workflows.json` carried the same dead path in its `_comment`.
+
+New gate `RETIRED_PATHS`, scanning `plugins/` and `bmad/` only. Eight files name
+`claude-catalog/` or `claude-marketplace/`; six are records of the migration in
+`wiki/Changelog.md` and two `docs/` pages, which must be able to name what was removed.
+Failing on all eight is how a gate becomes decoration, so this one covers the two
+surfaces where something follows the path. It matches only the path form, which is why
+`CLAUDE.md` can still state that neither directory exists.
+
+**Five files with an unbalanced code fence.** The three `python-to-*-migration-expert`
+SKILL.md files and two of their `worked-example.md` each carried a stray closing ```
+left over from an earlier edit. A lone fence opens a block rather than erroring, so
+everything after it renders as code: in `python-to-java-migration-expert` that was the
+quality checklist and both reference links. Nothing caught it, because the links still
+resolved as text and the bodies stayed under the line ceiling. New gate
+`validate_code_fences()`.
+
+This also invalidated the earlier em dash census, which used a fence state machine that
+those five files corrupted.
+
+**`${CLAUDE_PLUGIN_ROOT}` with no path after it.** `validate_plugin_root_refs()` required
+a slash, so a bare mention was invisible to it and surfaced only in
+`scripts/test-clean-install.sh`, which is much slower. The first material to hit this was
+`gemini-interop`, which documents the variable rather than using it. Gate tightened; the
+convention is to name the variable without the braces when writing about it.
+
+**Em dash in output templates, second pass.** The earlier sweep covered `markdown`-tagged
+fences and missed untagged ones. 367 occurrences across 43 blocks, including the phase
+legend `analysis-architecture/orchestrator` prints to the user. Now zero in prose and
+zero in templates, measured with the same fence model the gate uses. The 245 that remain
+are deliberately kept and every one of them sits inside a language-tagged fence (java 75,
+typescript 67, sql 32, python 30, and eight smaller languages), where the character is part
+of a comment being illustrated rather than something the registry says.
+
+An earlier draft of this paragraph ended with the claim that column-aligned blocks kept
+their widths, "verified by comparing column positions across 241 blocks before and after".
+That was false, and the verification behind it was too weak to notice: it compared column
+positions only within blocks where every line shared a single column, which is exactly the
+shape the damaged blocks did not have. Review caught what the check could not.
+`schematics.md:76` and `:167` were left 59 characters wide inside a diagram whose other
+rules are 60. `bootstrap-protocol.md:78` and `:79` lost a column against the five rows they
+align with. `tanstack/SKILL.md:30` took a comma where its nine siblings take a colon and
+padding. All are repaired, and the check is now diff-aware over the whole changed set: the
+27 box rules in `schematics.md` measure 60, the seven `bootstrap-protocol.md` rows place
+their pipes at columns 6, 38 and 87, and no closed box changed width.
+
+The sweep also reached for a separator it was not entitled to. 11 em dashes became pipes
+rather than a comma, a colon, parentheses or a sentence break, all of them in `=== ... ===`
+status banners, and one of those sat directly above a pipe table in `bootstrap-protocol.md`,
+where a reader would take it for a column. They are commas now, at the same width.
+
+492 em dashes were removed in total, and the 311 sites a line-for-line diff can classify are
+not 311 commas: 211 commas, 69 colons, 8 parenthetical and 23 rewritten into a new sentence.
+The distinction is the whole difficulty, because a dash carrying "namely" turns into a list
+the moment a comma replaces it. The worst instance was a dispatch prompt in
+`deliberation/references/deliberation/dispatch-templates.md:154`, which told an agent to
+read every file under a directory and then, after a dash, named what those files are. A
+comma there converts one instruction into a list of four separate things to go and read.
+It takes parentheses now.
+
+**`category` in six `plugin.json` files.** `claude plugin validate` warned on every one:
+the field belongs in the marketplace entry and Claude Code ignores it at load time. The
+marketplace entries already carried the same value, asserted before removal. The whole
+marketplace now validates with no warnings.
+
+### Fixed (second review pass, 2026-08-31)
+
+Everything above was reviewed again against the tree rather than against its own
+description. Six defects in the fixes themselves, and one in the repository they were
+supposed to protect.
+
+**The fence gate counted fences instead of matching them.** `validate_code_fences()`
+asserted that each file held an even number of fence lines. A file carrying one stray
+closer and one unclosed opener holds an even number, so the gate passed precisely the
+combination it exists to catch. It is now built on `scan_fences()`, a CommonMark state
+machine shared with `validate_plugin_root_refs()` so the two cannot disagree about which
+lines are code: a closer must be bare and at least as long as its opener, a fence carrying
+an info string can never close anything, and blocks do not nest. Reading the corpus that
+way surfaced a sixth stray fence, at
+`plugins/analysis-architecture/agents/functional-analyst.md:172`, swallowing 54 lines
+including both reference links. Four files whose templates quote a three-backtick fence
+were promoted to four-backtick outer fences, applied uniformly per construct rather than
+only where the damage happened to show.
+
+**The retired-path pattern excluded the characters that precede a path.** The lookbehind
+was `(?<![\w/.-])`, which refuses a match after `/`, `.` or `-`. Those are the characters
+a path is actually written after, so `./claude-catalog/x`, `../claude-catalog/x`,
+`~/dev/claude-registry/claude-catalog/x` and `$ROOT/claude-catalog/x` all passed: four of
+the six forms that occur in this corpus. It is `(?<![\w-])` now, which still distinguishes
+`my-claude-catalog/` from the real name, and it catches six of six.
+
+**The gate missed the one live broken instruction in the repository, twice over.**
+`scripts/present.sh:125` told the model to follow a brand standard at
+`claude-catalog/policies/accenture-branding.md`, a file removed in the plugin migration.
+The scan did not see it because `scripts/` was out of scope and because the glob covered
+`.md` and `.json` only. Both are fixed: the scan now follows `scripts/` and `hooks/` as
+well, over every file rather than two extensions. The line points at the
+`accenture-branding` skill, which the agent preloads.
+
+**`present.sh` could not run on macOS at all.** Two lines below that dead instruction,
+`realpath -m` is a GNU extension. BSD `realpath` rejects the flag, and under `set -e` that
+ended the script before it ever built a prompt, so the dead reference was academic: nobody
+on a Mac got far enough to follow it. Replaced with `mkdir -p` and
+`cd "$dir" && pwd -P`, which is portable and creates the output directory that the old line
+assumed already existed.
+
+**Two gates disagreed about the same string.** `validate_plugin_root_refs()` was tightened
+to reject a bare `CLAUDE_PLUGIN_ROOT` reference with no path after it, but
+`scripts/test-clean-install.sh` was not, so material could satisfy one gate and fail the
+other. The tightened gate was also wrong on its own terms. It rejected the variable used as
+a `cwd` value in a documented MCP snippet, which is correct usage, and the rationale given
+for it in the entry above is half false: `install-local.sh:112` rewrites the variable only
+inside the loop over `agents/`, while skills and references are copied with `cp -R` and
+never rewritten. Both gates now apply one rule, and the note above about naming the
+variable without its braces is superseded: a bare reference is an error in agent prose
+outside a code fence, and legal everywhere else.
+
+**`gemini-interop` carried three wrong facts under a heading that said "verified".** The
+sub-agent frontmatter key is `subagent`, not `agentName`. The settings hierarchy has seven
+layers rather than four, and the omitted one matters most: the System settings file at
+layer 5 overrides every other settings file, which is how a managed workstation wins an
+argument with a user. The policy tier table placed Workspace at tier 2 beside Extension; it
+is tier 3, and it is currently non-functional (`google-gemini/gemini-cli` issue #18186).
+Three further corrections went the other way, against claims of mine that were too strong:
+`gemini extensions validate` is documented at `docs/cli/cli-reference.md:103` and is not a
+binary-only discovery, `CLAUDE_PROJECT_DIR` is documented at `docs/hooks/index.md:144`, and
+the system settings path given was Linux-only (macOS is
+`/Library/Application Support/GeminiCli/settings.json`).
+
+**Five of the plan's eight wave exits could not fail.**
+`docs/gemini-twin/twin-registry-plan.md` gives each of its eight waves a single exit
+criterion, stated as a command that exits non-zero while the wave is incomplete. Five were
+defective in one of two ways: vacuously true, where the command succeeds whether or not the
+wave happened, or impossible, where it asserts on a file the wave does not produce. All
+eight were rewritten, and the two failure modes are now designed against rather than
+avoided case by case: `--expect-total N` exists so that no criterion can be satisfied by an
+empty ledger, and the corpus wave counts its files before running `--check`, because an
+empty corpus regenerates nothing and diffs clean.
+
+One finding inverted a risk in that plan, and it is the reason the plan's local-path
+fallback is no longer treated as always available. `security.allowedExtensions` is tested
+with `new RegExp(pattern).test(getRealPath(installMetadata.source))` on every install, in an
+`if / else if` whose `blockGitExtensions` branch never runs while `allowedExtensions` is
+non-empty. The test is not gated on source type, so a local path is subject to it as much as
+a git URL, and the same test runs again in `_buildExtension`, the load path, where it warns
+and returns null. A managed workstation can therefore block the local-path install the plan
+depends on, and can silently unload extensions that are already installed. Verified by
+reading the installed `0.57.0` bundle, not the documentation.
+
+### Added (gemini-interop@1.0.0, 2026-08-30)
+
+A seventh plugin, holding the Gemini CLI knowledge needed to plan and later build a twin
+registry that runs on Google's Gemini CLI instead of Claude Code. Every claim about
+Gemini CLI in these files is verified against the released `v0.57.0` tag of
+`google-gemini/gemini-cli`, not against `main`: the five load-bearing documents (skills,
+sub-agents, extensions, hooks, custom commands) are byte-identical between the two, so
+the material holds on the current stable release.
+
+Four skills and one agent:
+
+- `gemini-cli-expert`, driving the CLI itself: the settings hierarchy, `GEMINI.md` and
+  its import syntax, the built-in tool names, the three ways to restrict a tool, skill
+  discovery tiers, and the diagnosis order for a capability that will not load.
+- `gemini-extension-authoring`, producing the distribution unit: the
+  `gemini-extension.json` manifest, the convention directories that are discovered rather
+  than declared, `${extensionPath}`, declared settings and secrets, and the two release
+  paths.
+- `cross-host-parity`, the mapping in both directions, plus the four structures that have
+  no counterpart.
+- `capability-parity-sync`, the procedure and ledger that keep the two registries in step,
+  with a drift check specified as three failing conditions rather than a description.
+- `gemini-porter`, which performs the translation and refuses the cases that need
+  restructuring first.
+
+The name `claude-gemini-parity` was rejected by `validate_skills()`, which forbids
+"claude" and "anthropic" in a skill name. It is `cross-host-parity`.
+
+`plugins/gemini-interop/.claude-plugin/plugin.json` deliberately omits `category`.
+`claude plugin validate` warns that the field belongs in the marketplace entry and is
+ignored at load time, and the marketplace entry already carries it. The six older plugins
+still declare it and still draw that warning.
+
+
 ### Known issue (three commits on main do not build, 2026-08-30)
 
 `dcf474f`, `a2cdfc3` and `961e76d` each fail `validate_registry.py` with 94 errors. Their

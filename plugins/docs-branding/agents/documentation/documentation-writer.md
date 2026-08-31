@@ -154,10 +154,10 @@ Diagrams (rendered via uml-diagram-generator):
 - docs/diagrams/<slug>-flow-N.svg           (sequence diagram per flow)
 
 Skipped formats:
-  (none)            OR        docx — user did not request
+  (none)            OR        docx, user did not request
 
 Open questions:
-  (none)            OR        <list — for user review>
+  (none)            OR        <list, for user review>
 ```
 
 Never claim "done" without surfacing this deliverable block.

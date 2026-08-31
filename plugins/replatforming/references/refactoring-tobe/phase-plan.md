@@ -40,7 +40,7 @@
      [skip]    keep the existing TO-BE artifacts as-is, do nothing.
      [re-run]  re-run the full pipeline from W1 (you'll see explicit
                per-artifact overwrite confirmations for `.refactoring-kb/`,
-               backend/, and frontend/ — this overwrites generated code).
+               backend/, and frontend/, this overwrites generated code).
      [revise]  inspect a specific section together first (e.g.,
                re-run only the OpenAPI design, only the Angular FE,
                only the migration roadmap).

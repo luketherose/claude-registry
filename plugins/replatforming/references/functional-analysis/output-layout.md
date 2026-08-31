@@ -16,10 +16,10 @@ All outputs go under `<repo>/docs/analysis/01-functional/`. This directory is th
 
 ```
 docs/analysis/01-functional/
-├── README.md                    (you — index/navigation; lists the
+├── README.md                    (you, index/navigation; lists the
 │                                 feature narrative as the first read)
-├── 00-context.md                (you — system summary, scope, sources)
-├── 00b-feature-narrative.md     (you — HUMAN-READABLE ENTRY POINT;
+├── 00-context.md                (you, system summary, scope, sources)
+├── 00b-feature-narrative.md     (you, HUMAN-READABLE ENTRY POINT;
 │                                 feature-by-feature chapters in plain
 │                                 prose. ALWAYS the first technical
 │                                 document a reviewer reads. Slotted
@@ -28,21 +28,21 @@ docs/analysis/01-functional/
 ├── 01-actors.md                 (actor-feature-mapper)
 ├── 02-features.md               (actor-feature-mapper)
 ├── 03-ui-map.md                 (ui-surface-analyst)
-├── 04-screens/                  (ui-surface-analyst — one file per screen)
+├── 04-screens/                  (ui-surface-analyst, one file per screen)
 │   ├── README.md
 │   └── S-NN-<slug>.md
 ├── 05-component-tree.md         (ui-surface-analyst)
-├── 06-use-cases/                (user-flow-analyst — one file per UC)
+├── 06-use-cases/                (user-flow-analyst, one file per UC)
 │   ├── README.md
 │   └── UC-NN-<slug>.md
 ├── 07-user-flows.md             (user-flow-analyst)
-├── 08-sequence-diagrams.md      (user-flow-analyst — Mermaid embedded)
+├── 08-sequence-diagrams.md      (user-flow-analyst, Mermaid embedded)
 ├── 09-inputs.md                 (io-catalog-analyst)
 ├── 10-outputs.md                (io-catalog-analyst)
 ├── 11-transformations.md        (io-catalog-analyst)
 ├── 12-implicit-logic.md         (implicit-logic-analyst)
-├── 13-traceability.md           (you — generated mechanically from IDs)
-├── 14-unresolved-questions.md   (you — aggregated, single file)
+├── 13-traceability.md           (you, generated mechanically from IDs)
+├── 14-unresolved-questions.md   (you, aggregated, single file)
 ├── normalized/                  (JSONL machine-readable artifacts)
 ├── raw/                         (per-agent raw JSONL before normalization)
 ├── final/                       (analysis-quality-summary.md after auditor)
@@ -50,18 +50,18 @@ docs/analysis/01-functional/
 │   ├── manifest.json                       (run history, iterations, status)
 │   ├── iteration-log.jsonl                 (one record per iteration with
 │   │                                        the captured user delta)
-│   ├── phase-verification-report.md        (HITL gate document — see
+│   ├── phase-verification-report.md        (HITL gate document, see
 │   │                                        ../refactoring-workflow/
 │   │                                        phase-verification-report.md)
 │   ├── snapshots/                          (per-iteration snapshots, written
 │   │   └── iter-<K>/                        before overwrite to support
 │   │       └── ...                          rollback and diff-vs-prior)
-│   ├── challenger-report.md                (challenger — opt-in)
+│   ├── challenger-report.md                (challenger, opt-in)
 │   └── functional-traceability-report.md   (functional-traceability-auditor)
 └── _exports/
-    ├── 01-functional-report.pdf  (document-creator — Accenture-branded;
+    ├── 01-functional-report.pdf  (document-creator, Accenture-branded;
     │                              regenerated only on `approve`)
-    └── 01-functional-deck.pptx   (presentation-creator — Accenture-branded;
+    └── 01-functional-deck.pptx   (presentation-creator, Accenture-branded;
                                    regenerated only on `approve`)
 ```
 
@@ -113,7 +113,7 @@ machine-readable views and cross-link back into this narrative.
 for the user, in the user's own terms. No code, no class names.
 
 **Who uses it.** Which actors trigger or consume this feature
-(reference A-NN actors). Brief — one sentence.
+(reference A-NN actors). Brief: one sentence.
 
 **When and why.** What triggers the feature in normal operation, and
 the business reason it exists. 1–2 sentences.
@@ -131,7 +131,7 @@ of the feature (a record in DB, an email sent, a file generated).
 
 **Open questions.** If any UC inside this feature is `candidate_not_
 confirmed` or has open questions, list them here as a 1-line bullet
-each. Do NOT hide them — the reviewer must see uncertainty inline.
+each. Do NOT hide them. The reviewer must see uncertainty inline.
 
 ## Feature <F-NN-slug-2>: ...
 

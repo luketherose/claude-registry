@@ -68,7 +68,7 @@ gate.
 # Test Data Seeding: Recap
 
 ## Migration tool detected
-Liquibase — backend/src/main/resources/db/changelog/db.changelog-master.yaml
+Liquibase: backend/src/main/resources/db/changelog/db.changelog-master.yaml
 
 ## Seed files written
 - backend/src/main/resources/db/changelog/changes/99a-test-seed-customers.yaml (5 rows, context: test)
@@ -78,7 +78,7 @@ Liquibase — backend/src/main/resources/db/changelog/db.changelog-master.yaml
 - backend/src/main/resources/db/changelog/changes/99e-test-seed-reports.yaml (3 rows, context: test)
 
 ## Auth-store extension
-backend/src/main/java/com/<group>/auth/InMemoryUserRepository.java — 4 users added
+backend/src/main/java/com/<group>/auth/InMemoryUserRepository.java, 4 users added
 
 ## Login credentials (test-only)
 | user | password | role |
@@ -117,7 +117,7 @@ backend/src/main/java/com/<group>/auth/InMemoryUserRepository.java — 4 users a
   because no Phase 1 mapping existed for this column.
 
 ## Next gate
-Step 6 — UI smoke gate may now proceed. The /home route and the
+Step 6: UI smoke gate may now proceed. The /home route and the
 following sample routes will render with non-empty data:
 - /customers
 - /orders

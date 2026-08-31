@@ -33,9 +33,9 @@ table.
 
 ### Implementation for this registry
 Each supervisor keeps in its `.md` body only:
-- `## Role` — one paragraph max
-- `## When to invoke` — 2–4 bullets + `Do NOT use` line
-- `## Reference docs` table — the index of stage docs with `Read when` conditions
+- `## Role`: one paragraph max
+- `## When to invoke`: 2–4 bullets + `Do NOT use` line
+- `## Reference docs` table, the index of stage docs with `Read when` conditions
 
 All operational content moves to reference docs in `plugins/<plugin>/references/<phase>/`:
 
@@ -67,7 +67,7 @@ plugins/<plugin>/references/<phase>/
 
 ### Problem
 Supervisors use ad-hoc "detect existing outputs" logic. After a context
-compression event the supervisor cannot reliably resume — it re-reads disk but
+compression event the supervisor cannot reliably resume, it re-reads disk but
 has no authoritative state record.
 
 ### BMAD equivalent
@@ -79,7 +79,7 @@ the document to restore state.
 Each phase outputs a `_meta/pipeline-state.yaml` in its output directory. Format:
 
 ```yaml
-phase: "Phase 1 — Functional Analysis"
+phase: "Phase 1, Functional Analysis"
 use_case: "application-replatforming"
 run_id: "<uuid>"
 started_at: "2026-05-30T10:00:00Z"
@@ -164,7 +164,7 @@ the `refactoring-supervisor` body.
 The `bmad-help` skill reads these to present available capabilities contextually.
 
 ### Implementation for this registry
-`bmad/workflows.json` — top-level use-case registry:
+`bmad/workflows.json`, top-level use-case registry:
 
 ```json
 {
@@ -203,7 +203,7 @@ The `bmad-help` skill reads these to present available capabilities contextually
 ### Problem
 No formal quality gate on whether agents activate correctly or produce correct
 outputs. Quality is enforced only via the body-length ratchet and description
-rubric — not via behavioral testing.
+rubric, not via behavioral testing.
 
 ### BMAD equivalent
 - `triggers.json`: verifies skill activation rate (3 runs, threshold 0.5).
@@ -223,7 +223,7 @@ Directory: `plugins/<plugin>/evals/<agent-name>/`
   {
     "query": "What does this function do?",
     "should_trigger": false,
-    "description": "Generic question — should NOT trigger indexing-supervisor"
+    "description": "Generic question, should NOT trigger indexing-supervisor"
   }
 ]
 ```
@@ -248,7 +248,7 @@ Directory: `plugins/<plugin>/evals/<agent-name>/`
 Priority order for eval authoring:
 1. All 6 supervisors (trigger + artifact evals)
 2. Top-10 standalone agents by usage frequency
-3. All challenger/auditor agents (artifact evals only — activation is via supervisor)
+3. All challenger/auditor agents (artifact evals only, activation is via supervisor)
 
 ---
 
@@ -259,7 +259,7 @@ Adding a use case beyond "application replatforming" requires knowing the exact
 structure, writing agents from scratch, and manually wiring catalog.json.
 
 ### BMAD equivalent
-Build Process (BP) — 6-step guided skill creation. `Convert (CW)` — migrates
+Build Process (BP), 6-step guided skill creation. `Convert (CW)`, migrates
 existing capabilities to BMAD standard.
 
 ### Implementation for this registry
@@ -281,7 +281,7 @@ new-use-case/
 `README.md` walks through the 7 steps to add a new use case:
 1. Define the use case ID, name, trigger phrases
 2. Copy supervisor-template.md → `plugins/<plugin>/agents/<use-case>-supervisor.md`
-3. Identify workers — list which are shared (from shared_agents) vs new
+3. Identify workers, list which are shared (from shared_agents) vs new
 4. For each new worker: copy worker-template.md + fill body
 5. Create `plugins/<plugin>/references/<use-case>/` with reference docs
 6. Add workflow entry to `bmad/workflows.json`
@@ -296,12 +296,12 @@ new-use-case/
 | `SKILL.md` body | Single `.md` file frontmatter + `## Role` + `## When to invoke` + `## Reference docs` |
 | `prompts/stage-NN.md` | `plugins/<plugin>/references/<phase>/supervisor-protocol.md`, `phase-plan.md`, etc. |
 | `references/` directory | `plugins/<plugin>/references/<phase>/` companion docs (already exists) |
-| Progressive disclosure | `## Reference docs` table with `Read when` conditions — load on demand |
+| Progressive disclosure | `## Reference docs` table with `Read when` conditions, load on demand |
 | Document-as-cache | `_meta/pipeline-state.yaml` in each phase output directory |
 | `module-help.csv` `preceded_by`/`followed_by` | `preceded_by[]`/`followed_by[]` arrays in `catalog.json` entries |
 | Module registry / `assets/module.yaml` | `bmad/workflows.json` |
 | `triggers.json` + `evals.json` | `plugins/<plugin>/evals/<name>/triggers.json` + `evals.json` |
 | Build Process (BP) scaffold | `templates/new-use-case/` |
-| Three-layer `customize.toml` | Deferred — not needed for current use case count |
-| Sanctum memory | Out of scope — Claude Code is stateless by design |
-| `npm install` / headless mode | Out of scope — distribution via git + bash scripts |
+| Three-layer `customize.toml` | Deferred, not needed for current use case count |
+| Sanctum memory | Out of scope, Claude Code is stateless by design |
+| `npm install` / headless mode | Out of scope, distribution via git + bash scripts |

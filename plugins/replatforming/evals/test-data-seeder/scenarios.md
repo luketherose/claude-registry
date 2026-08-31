@@ -6,7 +6,7 @@
 > context, the exact prompt and the must-not-contain list that
 > neither JSON shape has room for. Keep the three in step.
 
-## Eval-001: Liquibase + Spring Boot — full happy path
+## Eval-001: Liquibase + Spring Boot, full happy path
 
 **Input context**: Phase 4 Step 5 complete; backend is Spring Boot 3 +
 Liquibase + H2 (test) / PostgreSQL (prod); frontend is Angular. Tests
@@ -98,7 +98,7 @@ Migrate, no raw SQL migrations).
 
 ---
 
-## Eval-004: Column-length safety — adversarial schema
+## Eval-004: Column-length safety, adversarial schema
 
 **Input context**: Schema with several narrow VARCHAR columns:
 `status VARCHAR(10)`, `code VARCHAR(5)`, `priority VARCHAR(8)`.

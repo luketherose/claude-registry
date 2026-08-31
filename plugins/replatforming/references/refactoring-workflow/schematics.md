@@ -73,7 +73,7 @@ technical-analysis-supervisor   (opus)
         |       parallel | batched | sequential (auto by KB size)
         |   +-- check for existing exports -> ask overwrite if found
         |
-        +-- WAVE 1 — 8 workers (mode-dependent dispatch) --+
+        +-- WAVE 1, 8 workers (mode-dependent dispatch) ---+
         |   +-- code-quality-analyst         -> structure, duplication, hotspots
         |   +-- state-runtime-analyst        -> session_state, globals, side effects
         |   +-- dependency-security-analyst  -> deps inventory, CVEs, SBOM-lite
@@ -145,7 +145,7 @@ failure during Steps 0, 1, 2, 4, 5, or 6: it converges before the
 calling step resumes.
 
 ```
-Workflow Supervisor   (opus) — Phase 4: Application Replatforming
+Workflow Supervisor   (opus), Phase 4: Application Replatforming
         |
         |  ┌──────────────── INVARIANT ────────────────┐
         |  │  The application is ALWAYS in a working   │
@@ -158,13 +158,13 @@ Workflow Supervisor   (opus) — Phase 4: Application Replatforming
         |   +-- detect resume state: which step are we on?
         |       (parse docs/refactoring/_meta/manifest.json
         |        `current_step`, `feature_loop_progress`)
-        |   +-- detect env: java/maven, node/ng — REQUIRED
+        |   +-- detect env: java/maven, node/ng, REQUIRED
         |       (off-policy NOT supported: Phase 4 needs to
         |        actually build and start the app)
         |   +-- choose target backend/frontend dirs
         |       (default backend/, frontend/)
         |
-        +-- STEP 0 — BOOTSTRAP (HARD GATE) ----------------+
+        +-- STEP 0, BOOTSTRAP (HARD GATE) -----------------+
         |   +-- create target project structure
         |       (Spring Boot Maven scaffold, Angular workspace)
         |   +-- configure build system, dependencies, profiles
@@ -177,18 +177,18 @@ Workflow Supervisor   (opus) — Phase 4: Application Replatforming
         |
         |          HITL CHECKPOINT 0: build + startup verified
         |
-        +-- STEP 1 — MINIMAL RUNNABLE SKELETON -------------+
+        +-- STEP 1, MINIMAL RUNNABLE SKELETON -------------+
         |   +-- empty controllers / routes (return 200 / empty body)
         |   +-- basic service stubs (no logic)
         |   +-- minimal frontend (blank pages, router shell)
         |   +-- security temporarily simplified
-        |       (permitAll, no auth — will be reintroduced in Step 5)
+        |       (permitAll, no auth, will be reintroduced in Step 5)
         |   +-- mvn clean verify  ← MUST pass
         |   +-- app starts        ← MUST start
         |
         |          HITL CHECKPOINT 1: skeleton runs
         |
-        +-- STEP 2 — INCREMENTAL FEATURE LOOP --------------+
+        +-- STEP 2, INCREMENTAL FEATURE LOOP --------------+
         |   ┌─── for each FEATURE / UC from Phase 1 ─────────┐
         |   │                                                  │
         |   │  2.1  select ONE feature (next from backlog)    │
@@ -211,7 +211,7 @@ Workflow Supervisor   (opus) — Phase 4: Application Replatforming
         |   │                                                  │
         |   └──────────────────────────────────────────────────┘
         |
-        +-- STEP 3 — MANDATORY VALIDATION LOOP (sub-loop) --+
+        +-- STEP 3, MANDATORY VALIDATION LOOP (sub-loop) --+
         |   Triggered on ANY: build failure | runtime failure |
         |   functional issue (HTTP 401, wrong response, baseline diff)
         |
@@ -224,7 +224,7 @@ Workflow Supervisor   (opus) — Phase 4: Application Replatforming
         |   build + tests + startup are ALL green. The calling
         |   step (0 / 1 / 2 / 4 / 5 / 6) waits.
         |
-        +-- STEP 4 — PROGRESSIVE SYSTEM CONSTRUCTION -------+
+        +-- STEP 4, PROGRESSIVE SYSTEM CONSTRUCTION -------+
         |   Continue Step 2 loop across remaining features.
         |   +-- vertical slices preferred (API → service →
         |       integration → frontend) over horizontal layers
@@ -235,9 +235,9 @@ Workflow Supervisor   (opus) — Phase 4: Application Replatforming
         |       (background or after each Step 2.7 success)
         |
         |          HITL CHECKPOINT 2: feature coverage acceptable
-        |          (vs Phase 1 UC list — % covered, % deferred)
+        |          (vs Phase 1 UC list, % covered, % deferred)
         |
-        +-- STEP 5 — HARDENING -----------------------------+
+        +-- STEP 5, HARDENING -----------------------------+
         |   Reintroduce production concerns one at a time.
         |   After EACH change: build + tests + startup must stay green.
         |
@@ -254,18 +254,18 @@ Workflow Supervisor   (opus) — Phase 4: Application Replatforming
         |
         |          HITL CHECKPOINT 3: hardening done, system green
         |
-        +-- STEP 6 — FINAL VALIDATION (DELIVERABLE) --------+
+        +-- STEP 6, FINAL VALIDATION (DELIVERABLE) --------+
             6.1  full backend test suite (mvn verify with
                  Testcontainers)
             6.2  full frontend test suite (ng test, all spec.ts)
             6.3  E2E suite (Playwright, full business flows)
             6.4  business-flow validation vs Phase 3 baseline
                  oracle (every Phase 1 UC must pass)
-            6.5  TODO sweep — no pending TODOs in delivered
+            6.5  TODO sweep, no pending TODOs in delivered
                  code; any residual must be ADR-resolved or
                  explicitly accepted by the user
             6.6  produce 01-replatforming-report.md
-                 (DELIVERABLE — replaces the old
+                 (DELIVERABLE, replaces the old
                   01-equivalence-report.md):
                    - feature coverage matrix vs Phase 1
                    - per-UC verdict vs Phase 3 oracle

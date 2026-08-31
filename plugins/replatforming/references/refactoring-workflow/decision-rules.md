@@ -98,7 +98,7 @@ the supervisor advances to the next feature:
 | 2.6 startup | `java -jar target/*.jar` (or `mvn spring-boot:run`) reaches `/actuator/health` `UP`; `ng serve` reaches `Application bundle generation complete`; **`mvn -Dtest=BootSmokeTest` passes** |
 | 2.6.1 boot wiring | `BootSmokeTest` (no `@ActiveProfiles`) must pass. Without this, default-profile wiring regressions (e.g., missing repo bean for a newly-injected @Service) are silently masked by profile-scoped tests |
 | 2.7 behavior | The new feature's happy path is exercised (curl/playwright) |
-| 2.8 commit | The supervisor commits with `feat(refactor): step 2 — <feature>` so the working state is snapshotted |
+| 2.8 commit | The supervisor commits with `feat(refactor): step 2, <feature>` so the working state is snapshotted |
 
 Sub-step 2.6.1 is the canonical guard against the InfoSync 2026-05
 regression: `mvn test` reporting 177/177 pass while `java -jar

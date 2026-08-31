@@ -21,25 +21,25 @@ Analyse, improve and refactor Angular code by rigorously applying software quali
 
 ```
 core/
-  guards/         — AuthGuard, PermissionGuard (singleton, app-wide)
-  interceptors/   — HTTP interceptors (auth token, error handling)
-  models/         — shared TypeScript interfaces
-  services/       — singleton services injected at root
+  guards/:          AuthGuard, PermissionGuard (singleton, app-wide)
+  interceptors/:    HTTP interceptors (auth token, error handling)
+  models/:          shared TypeScript interfaces
+  services/:        singleton services injected at root
 features/
   [feature-name]/
-    components/   — dumb components (presentational)
-    containers/   — smart components (aware of store/services)
-    services/     — services local to the feature
-    models/       — local interfaces
-    store/        — NgRx (only if necessary)
+    components/:    dumb components (presentational)
+    containers/:    smart components (aware of store/services)
+    services/:      services local to the feature
+    models/:        local interfaces
+    store/:         NgRx (only if necessary)
     [feature].module.ts
     [feature]-routing.module.ts
 shared/
-  components/     — reusable components without domain dependencies
-  pipes/          — pure pipes
-  directives/     — reusable directives
-assets/           — fonts, images, icons
-environments/     — environment.ts / environment.prod.ts
+  components/:      reusable components without domain dependencies
+  pipes/:           pure pipes
+  directives/:      reusable directives
+assets/:            fonts, images, icons
+environments/:      environment.ts / environment.prod.ts
 ```
 
 ---
