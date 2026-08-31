@@ -41,7 +41,14 @@ for p in agents + skills:
                 bad.append(("frontmatter not a mapping", p))
         except Exception as exc:
             bad.append(("frontmatter unparseable: %s" % str(exc).split("\n")[0], p))
-    if "${CLAUDE_PLUGIN_ROOT}" in text:
+    # Agents are the only class install-local.sh rewrites, so a surviving token
+    # there means the rewrite missed it. A skill is copied verbatim, so the token
+    # is only broken when it is used AS A PATH; a skill documenting the variable
+    # (gemini-interop does) is correct content. validate_registry.py draws the
+    # same line, and two gates disagreeing about it is worse than either rule.
+    is_agent = os.path.dirname(p).endswith("agents")
+    if "${CLAUDE_PLUGIN_ROOT}" in text and (
+            is_agent or "${CLAUDE_PLUGIN_ROOT}/" in text):
         bad.append(("unexpanded ${CLAUDE_PLUGIN_ROOT}", p))
     # Anchoring this on /Users/ meant it never matched: the harness installs
     # into mktemp -d, which is /var/folders on macOS and /tmp in CI.

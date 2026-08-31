@@ -58,7 +58,69 @@ RETIRED = {
         "Renamed 2026-08 to `developer-java`.",
 }
 
+# Directories the migration removed. Separate from RETIRED because the failure is
+# different: a retired NAME is wrong wherever it appears, while a retired PATH is
+# expected in a record of the migration and only wrong where something follows it.
+RETIRED_PATHS = {
+    "claude-catalog":
+        "Removed 2026-08; the development source tier no longer exists. "
+        "Capabilities live at `plugins/<plugin>/`.",
+    "claude-marketplace":
+        "Removed 2026-08; distribution is `.claude-plugin/marketplace.json` "
+        "plus one `plugin.json` per plugin.",
+}
+
 errors, warnings = [], []
+
+# Up to three leading spaces, then a run of three or more backticks. A backtick
+# inside the info string means the line is an inline code run, not a fence.
+FENCE_LINE = re.compile(r"^ {0,3}(`{3,})(.*)$")
+
+
+def scan_fences(text):
+    """Classify every line as prose or fenced code, and find an unclosed opener.
+
+    One model, shared, because two gates ask the same question of the same text
+    and a disagreement between them exempts a region the other says is not there.
+
+    Straight CommonMark, which is what every renderer this material passes through
+    implements. A block runs until a closing fence that is bare and at least as
+    long as the opener. Two consequences carry the gate. A shorter run inside a
+    longer block is content, so a four-backtick block may quote a three-backtick
+    opener without the quoted line meaning anything. A run carrying an info string
+    can never close anything, so a ```python seen inside an open block is content
+    too, and the block is still open after it.
+
+    Blocks do not nest, and modelling them as if they did was tempting here: seven
+    sites put ```mermaid or ```gherkin inside a three-backtick template. Those
+    sites are miswritten rather than unsupported, since holding a three-backtick
+    block needs a four-backtick fence around it, and inventing a dialect that
+    accepts them buys a green build by describing a rendering nobody performs. It
+    also costs the gate its subject: reading them as CommonMark does is what
+    surfaces `functional-analyst.md:172`, a sixth instance of the stray fence this
+    gate exists for, swallowing 54 lines including both reference links.
+
+    Returns (context, unclosed). context[n] is None when line n+1 is prose, else
+    the info string of the block holding it. unclosed is the line of an opener
+    that never closes, or None.
+    """
+    lines = text.split("\n")
+    context = [None] * len(lines)
+    opener = None
+    for idx, line in enumerate(lines):
+        m = FENCE_LINE.match(line)
+        if m and "`" not in m.group(2):
+            run, info = len(m.group(1)), m.group(2).strip()
+            if opener is None:
+                opener = (idx + 1, run, info)
+                context[idx] = info
+                continue
+            if run >= opener[1] and info == "":
+                context[idx] = opener[2]
+                opener = None
+                continue
+        context[idx] = opener[2] if opener else None
+    return context, (opener[0] if opener else None)
 
 
 def err(m):
@@ -483,10 +545,117 @@ def validate_skills():
                 warn("%s: reference is more than one level deep -> %s" % (path, link))
 
 
+def validate_code_fences():
+    """Every fenced block under plugins/ closes. Structure, not parity.
+
+    Five files carried a stray closing fence left over from an earlier edit. A
+    lone ``` opens a block rather than erroring, so everything after it renders
+    as code: in one SKILL.md that swallowed the quality checklist and both
+    reference links. Nothing caught it, because the links still resolved as
+    text and the body stayed under the line ceiling.
+
+    Counting the markers and rejecting an odd total was wrong in both
+    directions. It passed a file carrying one stray closer and one unclosed
+    opener, four markers being an even number, and it failed a correct file
+    where a four-backtick block documents a three-backtick opener, three markers
+    being odd. Neither verdict described how the file renders. It also had no
+    state, so a ``` printed by a script inside a block counted as a marker.
+
+    scan_fences() holds the model. What stays undetectable is two stray closers
+    with nothing but bare fences between them: a bare ``` is an opener or a
+    closer purely by the state it lands in, so that pair is textually identical
+    to one of the 266 legitimate untagged blocks here. Separating them needs a
+    content heuristic, and the obvious one, a markdown heading inside an untagged
+    block, fires on 34 real deliverable templates in this tree. Put one tagged
+    fence between the two strays and the info-string rule catches them, which is
+    the common case in any file that shows code at all.
+    """
+    for path in sorted(glob.glob("plugins/**/*.md", recursive=True)):
+        unclosed = scan_fences(open(path, encoding="utf-8").read())[1]
+        if unclosed is not None:
+            err("%s:%d: this code fence opens a block that never closes. "
+                "Everything below it renders as code." % (path, unclosed))
+
+
+# No em dash in prose, and none in a block an agent copies into a deliverable.
+EM_DASH = "\u2014"
+# An untagged block and a `markdown` block are output templates, so the
+# character there is punctuation this registry emits. A language-tagged block is
+# a code sample, where it sits inside a comment being illustrated.
+TEMPLATE_INFO = {"", "markdown", "md", "text", "txt"}
+
+
+def validate_em_dash():
+    """Hold plugins/**/*.md to the em dash rule CLAUDE.md states.
+
+    The rule had no gate, which is how a convention becomes decoration. The
+    scope is exactly what the tree can hold to today and no wider: across 370
+    files under plugins/ the count is 0 in prose, 0 in untagged and
+    `markdown`-tagged fences, and 245 inside language-tagged fences, which are
+    the samples the rule already exempts.
+
+    Left out on purpose, because gating them would fail the build on a backlog
+    rather than on a regression: `plugins/**/*.json`, still carrying 32 in eval
+    strings, and everything under docs/, where the changelog alone has 430.
+    """
+    for path in sorted(glob.glob("plugins/**/*.md", recursive=True)):
+        text = open(path, encoding="utf-8").read()
+        context = scan_fences(text)[0]
+        for i, line in enumerate(text.split("\n"), 1):
+            if EM_DASH not in line:
+                continue
+            info = context[i - 1]
+            if info is None:
+                where = "prose"
+            elif (info.split() or [""])[0].lower() in TEMPLATE_INFO:
+                where = "an output template block"
+            else:
+                continue
+            err("%s:%d: em dash in %s. Use a comma, a colon, parentheses or a "
+                "second sentence." % (path, i, where))
+
+
 def validate_plugin_root_refs():
+    """${CLAUDE_PLUGIN_ROOT} resolves, and is never left bare in agent prose.
+
+    The bare-token half is scoped to `plugins/*/agents/` and to prose, because
+    that is the only file class the installer rewrites and the only place a bare
+    token does damage. `scripts/install-local.sh:112` performs the substitution
+    inside the loop over `plugins/$p/agents`; skills go through `cp -R` at line
+    122 and bundled references at line 96, and neither is ever touched. The old
+    gate scanned every markdown file under plugins/ on a rationale that held for
+    one third of them, and it cost something measurable: the `cross-host-parity`
+    skill degraded its own mapping table and added a paragraph apologising for
+    the degradation, to avoid spelling a variable it is documenting.
+
+    Inside a fenced block the token is also correct and has to survive. A hooks
+    or MCP snippet writes `"cwd": "${CLAUDE_PLUGIN_ROOT}"` and a shell example
+    writes `cd ${CLAUDE_PLUGIN_ROOT}`; both are what Claude Code expands at run
+    time, and the old advice to drop the braces would have made the snippet wrong
+    the moment a reader copied it. install-local.sh rewriting fenced snippets too
+    is an installer bug, not an authoring one, and the fix belongs there.
+
+    Still an error, because it is the defect that started this: a bare token in
+    agent prose. The installer drops an absolute path into the middle of a
+    sentence, and when the plugin ships no references/ and no examples/ the path
+    it names was never created. scripts/test-clean-install.sh:48 catches that
+    case at install time; this catches it at review time.
+    """
     for path in sorted(glob.glob("plugins/**/*.md", recursive=True)):
         root = "plugins/" + path.split("/")[1]
         text = open(path, encoding="utf-8").read()
+        if "/agents/" in path:
+            context = scan_fences(text)[0]
+            for i, line in enumerate(text.split("\n"), 1):
+                if context[i - 1] is not None:
+                    continue
+                if re.search(r"\$\{CLAUDE_PLUGIN_ROOT\}(?!/)", line):
+                    err("%s:%d: leaves ${CLAUDE_PLUGIN_ROOT} bare in agent prose. "
+                        "install-local.sh rewrites the token in every agent body, "
+                        "so this sentence reaches the reader with an absolute path "
+                        "in it, naming a directory that exists only if the plugin "
+                        "ships references/ or examples/. Put a path after it, or "
+                        "move the mention into a code fence." % (path, i))
         for ref in re.findall(r"\$\{CLAUDE_PLUGIN_ROOT\}/([A-Za-z0-9/._-]+)", text):
             target = os.path.join(root, ref.rstrip(".,;:`)"))
             if not os.path.exists(target):
@@ -545,6 +714,50 @@ def validate_agent_references():
             for i, line in enumerate(text.splitlines(), 1):
                 if pattern.search(line):
                     err("%s:%d: references retired capability `%s`. %s"
+                        % (path, i, name, guidance))
+
+    # A retired DIRECTORY is scanned over a different set than a retired name,
+    # because it is not the same failure. Eight files name one and are right to:
+    # `docs/registry/CHANGELOG.md`, `wiki/Changelog.md`,
+    # `docs/registry/release-process.md`,
+    # `docs/registry/how-to-write-a-capability.md`,
+    # `templates/new-use-case/README.md` and the three `docs/modernization/w7-*`
+    # audits each record the removal in the past tense, and a record has to name
+    # what it removed. Exempting them one by one is how a gate becomes decoration,
+    # so the scan follows execution instead of prose: capability material, the
+    # workflow registry, and the maintenance scripts. `archive/` stays out for the
+    # same reason the records do.
+    #
+    # Scripts are in the set because leaving them out is how `scripts/present.sh`
+    # kept a prompt telling an agent to read
+    # `claude-catalog/policies/accenture-branding.md` after the directory was
+    # deleted. The glob was `*.md` plus `*.json`, so a `.sh` file was invisible
+    # even inside a directory that was being scanned.
+    followed = (glob.glob("plugins/**/*.md", recursive=True)
+                + glob.glob("plugins/**/*.json", recursive=True)
+                + glob.glob("bmad/**/*.json", recursive=True)
+                + glob.glob("bmad/**/*.md", recursive=True)
+                + [p for p in glob.glob("scripts/**/*", recursive=True)
+                   + glob.glob("hooks/**/*", recursive=True)
+                   if os.path.isfile(p)])
+    for name, guidance in RETIRED_PATHS.items():
+        # A trailing separator is still required, so CLAUDE.md and a plugin body
+        # can both state that the directory does not exist without naming a path.
+        # Either separator counts: a Windows path in a fenced example is a path.
+        # The lookbehind now excludes only word characters and the hyphen, which
+        # is all it takes to tell `my-claude-catalog/` from the real name. The
+        # previous class also excluded `/`, `.` and `-`, which are exactly the
+        # characters a path is written after, so `./claude-catalog/x`,
+        # `~/dev/claude-registry/claude-catalog/x`, `../claude-catalog/x` and
+        # `$ROOT/claude-catalog/x` all passed: four of the six forms that occur.
+        pattern = re.compile(r'(?<![\w-])%s[/\\]' % re.escape(name))
+        for path in sorted(set(followed)):
+            if not os.path.exists(path):
+                continue
+            for i, line in enumerate(
+                    open(path, encoding="utf-8", errors="replace"), 1):
+                if pattern.search(line):
+                    err("%s:%d: names the retired path `%s/`. %s"
                         % (path, i, name, guidance))
 
 
@@ -614,6 +827,8 @@ if __name__ == "__main__":
         validate_cross_plugin_references()
         budget = validate_agents()
         validate_skills()
+        validate_code_fences()
+        validate_em_dash()
         validate_plugin_root_refs()
         validate_relative_links()
         validate_agent_references()
