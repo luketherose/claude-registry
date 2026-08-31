@@ -490,6 +490,14 @@
       "followed_by": []
     },
     {
+      "name": "gemini-porter",
+      "role": "standalone",
+      "phase": null,
+      "wave": null,
+      "preceded_by": [],
+      "followed_by": []
+    },
+    {
       "name": "hardening-architect",
       "role": "worker",
       "phase": "phase-4-legacy",

@@ -1,0 +1,42 @@
+[
+  {
+    "query": "Sto impacchettando un'estensione Gemini: come strutturo commands/, skills/ e hooks/hooks.json, e cosa va dichiarato nel manifest?",
+    "should_trigger": true,
+    "description": "Directory layout for commands, skills and hooks in a Gemini extension and what the manifest declares"
+  },
+  {
+    "query": "How do I declare a sensitive API key in gemini-extension.json so the extension can actually read it at runtime?",
+    "should_trigger": true,
+    "description": "Declaring a sensitive API key in gemini-extension.json so it is readable at runtime"
+  },
+  {
+    "query": "La mia estensione non si carica e non stampa nessun errore, ho gia controllato name e version nel manifest",
+    "should_trigger": true,
+    "description": "An extension that fails to load and prints no error after name and version were checked in the manifest"
+  },
+  {
+    "query": "Publish this extension through a GitHub Release and get it picked up by the gallery crawler",
+    "should_trigger": true,
+    "description": "Publishing an extension via a GitHub Release so the gallery crawler picks it up"
+  },
+  {
+    "query": "Dove viene sostituito ${extensionPath} e dove invece devo per forza usare un path relativo?",
+    "should_trigger": true,
+    "description": "Where ${extensionPath} is substituted and where a plain relative path is required"
+  },
+  {
+    "query": "Ho gia un plugin Claude Code con sei agenti: dimmi campo per campo cosa si perde convertendolo per l'altro host",
+    "should_trigger": false,
+    "description": "Field by field losses when converting an existing Claude Code plugin with six agents for the other host"
+  },
+  {
+    "query": "Come imposto excludeTools e l'approval mode nel mio ~/.gemini/settings.json a livello utente?",
+    "should_trigger": false,
+    "description": "Setting excludeTools and the approval mode in a user level ~/.gemini/settings.json"
+  },
+  {
+    "query": "Ho modificato una skill su un lato solo: aggiorna il ledger e segna la riga come diverged con il motivo e la data di recheck",
+    "should_trigger": false,
+    "description": "Updating the ledger and marking a row diverged with a reason and a recheck date after a one sided skill edit"
+  }
+]

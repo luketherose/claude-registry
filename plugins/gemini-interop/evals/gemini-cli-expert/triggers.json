@@ -1,0 +1,37 @@
+[
+  {
+    "query": "Come configuro approval mode e regole del Policy Engine nel settings.json di Gemini CLI?",
+    "should_trigger": true,
+    "description": "Approval mode and Policy Engine rules in the Gemini CLI settings.json"
+  },
+  {
+    "query": "Il mio GEMINI.md sembra ignorato, come vedo il contesto concatenato che la CLI carica davvero?",
+    "should_trigger": true,
+    "description": "A GEMINI.md that appears ignored and inspecting the concatenated context the CLI actually loads"
+  },
+  {
+    "query": "How do I wire an MCP server into Gemini CLI and then run it headless in plan mode?",
+    "should_trigger": true,
+    "description": "Wiring an MCP server into Gemini CLI and running it headless in plan mode"
+  },
+  {
+    "query": "Qual e il nome del tool Gemini per la ricerca nei contenuti, e come lo tolgo di mezzo a un agente?",
+    "should_trigger": true,
+    "description": "The Gemini tool name for content search and removing it from an agent view"
+  },
+  {
+    "query": "Devo pubblicare la mia estensione sulla gallery: dove deve stare gemini-extension.json e come dichiaro i secret?",
+    "should_trigger": false,
+    "description": "Publishing an extension to the gallery, placement of gemini-extension.json and declaration of secrets"
+  },
+  {
+    "query": "Qual e l'equivalente Gemini di ${CLAUDE_PLUGIN_ROOT} e dei nomi tool di Claude Code quando traduco un agente?",
+    "should_trigger": false,
+    "description": "The Gemini equivalent of ${CLAUDE_PLUGIN_ROOT} and of Claude Code tool names while translating an agent"
+  },
+  {
+    "query": "The twin registry is behind: run the drift check and tell me which mirrored capabilities moved past their source_sha",
+    "should_trigger": false,
+    "description": "A drift check over a twin registry to find mirrored capabilities that moved past their recorded source_sha"
+  }
+]

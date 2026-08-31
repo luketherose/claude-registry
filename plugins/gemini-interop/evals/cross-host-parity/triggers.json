@@ -1,0 +1,37 @@
+[
+  {
+    "query": "Questo agente si puo portare su Gemini CLI? Ha effort high e usa NotebookEdit",
+    "should_trigger": true,
+    "description": "Whether an agent that sets effort high and uses NotebookEdit can move to Gemini CLI"
+  },
+  {
+    "query": "Map the hook events and the timeout units between the two hosts before I convert this plugin into an extension",
+    "should_trigger": true,
+    "description": "Mapping hook events and timeout units across the two hosts ahead of converting a plugin into an extension"
+  },
+  {
+    "query": "Cosa perdo portando un comando markdown con $ARGUMENTS verso il formato TOML dell'altro host?",
+    "should_trigger": true,
+    "description": "What is lost moving a markdown command that uses $ARGUMENTS into the other host TOML format"
+  },
+  {
+    "query": "Gemini equivalent of our marketplace.json with six plugins in one repo, does that even work over there?",
+    "should_trigger": true,
+    "description": "The Gemini equivalent of a marketplace.json holding six plugins in a single repository"
+  },
+  {
+    "query": "Il drift check e rosso: presence fallisce su tre capability, sistemami le righe del ledger",
+    "should_trigger": false,
+    "description": "A red drift check failing presence on three capabilities and the ledger rows behind it"
+  },
+  {
+    "query": "Scrivimi il gemini-extension.json e la struttura di cartelle per una nuova estensione da zero",
+    "should_trigger": false,
+    "description": "Writing gemini-extension.json and the folder structure for a brand new extension"
+  },
+  {
+    "query": "Come faccio a far leggere lo stesso repo a entrambe le CLI usando context.fileName?",
+    "should_trigger": false,
+    "description": "Making both CLIs read the same repository by way of context.fileName"
+  }
+]

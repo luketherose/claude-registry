@@ -1,0 +1,46 @@
+[
+  {
+    "agent": "gemini-porter",
+    "query": "Porta questa skill sul registry Gemini: usa ${CLAUDE_PLUGIN_ROOT} in due link a references/ e cita tre nomi di tool Claude Code nel corpo",
+    "files": [],
+    "expected_behavior": [
+      "States the portability class before producing any output, and picks portable with adaptation rather than portable as is, because the file carries host specific strings",
+      "Rewrites both ${CLAUDE_PLUGIN_ROOT} links as plain relative paths from the SKILL.md directory, and does not put ${extensionPath} inside SKILL.md, where the host does not substitute it",
+      "Maps each of the three Claude Code tool names onto its Gemini counterpart by name, and calls out any tool with no counterpart instead of choosing an approximate one",
+      "Writes one ledger row for the capability carrying a source, a status and a source_sha, in the same change as the mirrored file"
+    ]
+  },
+  {
+    "agent": "gemini-porter",
+    "query": "Convert our indexing supervisor into a Gemini sub-agent. It dispatches eight workers in fan-out and we need it on the other side this week",
+    "files": [],
+    "expected_behavior": [
+      "Refuses to emit a sub-agent port and gives the reason: the target host blocks agent to agent dispatch by design, so the fan-out mechanism has no counterpart there",
+      "Classifies the capability as portable only after restructuring, not as not portable, and does not fold the restructuring into this piece of work",
+      "Offers the structural alternatives, promoting the dispatch protocol into a skill the main agent loads, or driving the phases from a custom command",
+      "Writes no converted agent file as a partial fallback, since a supervisor ported verbatim would run and silently do the work in one context"
+    ]
+  },
+  {
+    "agent": "gemini-porter",
+    "query": "Traduci questo agente per l'altro host: ha model opus, effort high, color blue, background true e un tools che include NotebookEdit",
+    "files": [],
+    "expected_behavior": [
+      "Lists every source field with no counterpart on the target, naming effort, color and background explicitly rather than letting them disappear from the output",
+      "Flags the tool that has no Gemini counterpart and asks for the substitute before performing the port, not after",
+      "Names the target only fields that have no source value, such as temperature, max_turns and timeout_mins, and leaves the choice to the maintainer instead of defaulting them",
+      "Resolves the model through the target host model policy rather than copying the literal model string across"
+    ]
+  },
+  {
+    "agent": "gemini-porter",
+    "query": "Port the hooks from our plugin settings.json into hooks/hooks.json for the extension, and check the permission rules survive the trip",
+    "files": [],
+    "expected_behavior": [
+      "Converts every hook timeout from seconds to milliseconds and shows the before and after value for each hook, since the number reads as correct on both sides",
+      "Puts the hooks in hooks/hooks.json and does not declare them in the extension manifest, which has no field for them",
+      "Reports that deny rules survive the port while allow rules and yolo configuration are ignored when they come from an extension, so any rule that widens permissions is called out as lost rather than emitted",
+      "Records the dropped allow rules in the ledger entry or in the port report, so the loss stays visible after the change lands"
+    ]
+  }
+]
