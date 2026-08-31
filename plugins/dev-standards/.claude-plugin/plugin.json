@@ -23,6 +23,5 @@
     "testing",
     "debugging"
   ],
-  "category": "development",
   "mcpServers": "./.mcp.json"
 }
