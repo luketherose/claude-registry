@@ -528,5 +528,15 @@
     "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
     "recheck": "2026-12-10",
     "published_ref": ""
+  },
+  {
+    "capability": "app-inventory",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "696bf5ee8f0f0a9eb985d2786d5b6628d479fffa",
+    "recheck": "2026-12-10",
+    "published_ref": ""
   }
 ]

@@ -1,0 +1,479 @@
+{
+  "version": "1.0",
+  "note": "Authoritative classification for app-inventory. Extend by appending; never reorder or reuse a family key, because ledger rows and past workbooks cite them.",
+  "asset_classes": [
+    "SOURCE",
+    "SCRIPT",
+    "CONFIG",
+    "DB",
+    "DATA",
+    "DOC",
+    "TEST",
+    "BUILD",
+    "INFRA",
+    "BINARY",
+    "GENERATED",
+    "VENDORED",
+    "ARCHIVE",
+    "OTHER"
+  ],
+  "families": {
+    "java_jvm": {
+      "class": "SOURCE",
+      "ext": [
+        ".java",
+        ".kt",
+        ".kts",
+        ".scala",
+        ".groovy",
+        ".jsp",
+        ".jspx",
+        ".tag"
+      ]
+    },
+    "dotnet": {
+      "class": "SOURCE",
+      "ext": [
+        ".cs",
+        ".vb",
+        ".fs",
+        ".aspx",
+        ".ascx",
+        ".ashx",
+        ".cshtml",
+        ".razor"
+      ]
+    },
+    "python": {
+      "class": "SOURCE",
+      "ext": [
+        ".py",
+        ".pyi",
+        ".pyx",
+        ".ipynb"
+      ]
+    },
+    "javascript": {
+      "class": "SOURCE",
+      "ext": [
+        ".js",
+        ".mjs",
+        ".cjs",
+        ".jsx"
+      ]
+    },
+    "typescript": {
+      "class": "SOURCE",
+      "ext": [
+        ".ts",
+        ".tsx"
+      ]
+    },
+    "web_component": {
+      "class": "SOURCE",
+      "ext": [
+        ".vue",
+        ".svelte"
+      ]
+    },
+    "php": {
+      "class": "SOURCE",
+      "ext": [
+        ".php",
+        ".phtml"
+      ]
+    },
+    "ruby": {
+      "class": "SOURCE",
+      "ext": [
+        ".rb",
+        ".erb",
+        ".rake"
+      ]
+    },
+    "go": {
+      "class": "SOURCE",
+      "ext": [
+        ".go"
+      ]
+    },
+    "rust": {
+      "class": "SOURCE",
+      "ext": [
+        ".rs"
+      ]
+    },
+    "c_cpp": {
+      "class": "SOURCE",
+      "ext": [
+        ".c",
+        ".h",
+        ".cc",
+        ".cpp",
+        ".cxx",
+        ".hpp",
+        ".hh"
+      ]
+    },
+    "mainframe": {
+      "class": "SOURCE",
+      "ext": [
+        ".cbl",
+        ".cob",
+        ".cpy",
+        ".cbi",
+        ".jcl",
+        ".prc",
+        ".pli",
+        ".pl1",
+        ".asm",
+        ".mac",
+        ".nsp",
+        ".nsn",
+        ".rex",
+        ".rexx"
+      ]
+    },
+    "fourgl_legacy": {
+      "class": "SOURCE",
+      "ext": [
+        ".fmb",
+        ".fmx",
+        ".mmb",
+        ".rdf",
+        ".pll",
+        ".pbl",
+        ".pbd",
+        ".vbp",
+        ".frm",
+        ".bas",
+        ".cls",
+        ".ctl",
+        ".prg",
+        ".mdb",
+        ".accdb"
+      ]
+    },
+    "office_macro": {
+      "class": "DATA",
+      "ext": [
+        ".xlsm",
+        ".xlsb",
+        ".docm",
+        ".pptm"
+      ]
+    },
+    "database": {
+      "class": "DB",
+      "ext": [
+        ".sql",
+        ".ddl",
+        ".dml",
+        ".pks",
+        ".pkb",
+        ".fnc",
+        ".trg",
+        ".vw",
+        ".plb"
+      ]
+    },
+    "etl": {
+      "class": "SOURCE",
+      "ext": [
+        ".dtsx",
+        ".ktr",
+        ".kjb",
+        ".bw",
+        ".bwp",
+        ".bpel",
+        ".xsl",
+        ".xslt"
+      ]
+    },
+    "contract": {
+      "class": "CONFIG",
+      "ext": [
+        ".wsdl",
+        ".xsd",
+        ".proto",
+        ".raml"
+      ]
+    },
+    "reporting": {
+      "class": "SOURCE",
+      "ext": [
+        ".rpt",
+        ".jrxml",
+        ".jasper",
+        ".rdl",
+        ".rdlc",
+        ".twb",
+        ".twbx",
+        ".pbix",
+        ".qvw",
+        ".qvf",
+        ".sas",
+        ".rmd"
+      ]
+    },
+    "rpa": {
+      "class": "SOURCE",
+      "ext": [
+        ".xaml",
+        ".bprelease",
+        ".atmx"
+      ]
+    },
+    "shell": {
+      "class": "SCRIPT",
+      "ext": [
+        ".sh",
+        ".bash",
+        ".ksh",
+        ".csh",
+        ".zsh",
+        ".bat",
+        ".cmd",
+        ".ps1",
+        ".psm1",
+        ".vbs",
+        ".awk",
+        ".sed",
+        ".pl",
+        ".tcl",
+        ".exp"
+      ]
+    },
+    "infra": {
+      "class": "INFRA",
+      "ext": [
+        ".tf",
+        ".tfvars",
+        ".tfstate"
+      ]
+    },
+    "config": {
+      "class": "CONFIG",
+      "ext": [
+        ".xml",
+        ".json",
+        ".yaml",
+        ".yml",
+        ".toml",
+        ".ini",
+        ".properties",
+        ".env",
+        ".conf",
+        ".cfg"
+      ]
+    },
+    "tabular": {
+      "class": "DATA",
+      "ext": [
+        ".csv",
+        ".tsv",
+        ".parquet",
+        ".avro",
+        ".xlsx",
+        ".xls"
+      ]
+    },
+    "doc": {
+      "class": "DOC",
+      "ext": [
+        ".md",
+        ".rst",
+        ".adoc",
+        ".txt",
+        ".pdf",
+        ".doc",
+        ".docx",
+        ".ppt",
+        ".pptx",
+        ".odt"
+      ]
+    },
+    "diagram": {
+      "class": "DOC",
+      "ext": [
+        ".drawio",
+        ".vsd",
+        ".vsdx",
+        ".puml",
+        ".mmd"
+      ]
+    },
+    "archive": {
+      "class": "ARCHIVE",
+      "ext": [
+        ".zip",
+        ".tar",
+        ".gz",
+        ".tgz",
+        ".7z",
+        ".rar",
+        ".jar",
+        ".war",
+        ".ear"
+      ]
+    },
+    "binary": {
+      "class": "BINARY",
+      "ext": [
+        ".dll",
+        ".exe",
+        ".so",
+        ".a",
+        ".o",
+        ".class",
+        ".pyc",
+        ".whl",
+        ".egg",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".gif",
+        ".svg",
+        ".ico",
+        ".woff",
+        ".woff2",
+        ".ttf"
+      ]
+    }
+  },
+  "marker_files": {
+    "pom.xml": "java_jvm",
+    "build.gradle": "java_jvm",
+    "build.gradle.kts": "java_jvm",
+    "settings.gradle": "java_jvm",
+    "build.xml": "java_jvm",
+    "web.xml": "java_jvm",
+    "package.json": "javascript",
+    "tsconfig.json": "typescript",
+    "angular.json": "typescript",
+    "requirements.txt": "python",
+    "pyproject.toml": "python",
+    "setup.py": "python",
+    "Pipfile": "python",
+    "composer.json": "php",
+    "Gemfile": "ruby",
+    "go.mod": "go",
+    "Cargo.toml": "rust",
+    "Dockerfile": "infra",
+    "docker-compose.yml": "infra",
+    "Chart.yaml": "infra",
+    "Jenkinsfile": "infra",
+    "Makefile": "c_cpp",
+    "CMakeLists.txt": "c_cpp"
+  },
+  "boundary_markers": [
+    "pom.xml",
+    "build.gradle",
+    "build.gradle.kts",
+    "package.json",
+    "go.mod",
+    "Cargo.toml",
+    "composer.json",
+    "pyproject.toml",
+    "setup.py",
+    "requirements.txt",
+    "Gemfile",
+    "Dockerfile",
+    "web.xml",
+    "Chart.yaml",
+    "serverless.yml",
+    "manifest.yml"
+  ],
+  "boundary_marker_globs": [
+    "*.csproj",
+    "*.vbproj",
+    "*.fsproj",
+    "*.sln"
+  ],
+  "test_path_hints": [
+    "/test/",
+    "/tests/",
+    "/spec/",
+    "__tests__",
+    "/it/"
+  ],
+  "test_name_hints": [
+    "test_",
+    "_test.",
+    "spec.",
+    "Test.java",
+    "Tests.cs"
+  ],
+  "exclusions": {
+    "dirs": [
+      ".git",
+      ".svn",
+      ".hg",
+      "node_modules",
+      "bower_components",
+      "vendor",
+      "target",
+      "build",
+      "dist",
+      "out",
+      "bin",
+      "obj",
+      ".gradle",
+      ".m2",
+      ".venv",
+      "venv",
+      "env",
+      "__pycache__",
+      ".pytest_cache",
+      ".mypy_cache",
+      ".tox",
+      ".idea",
+      ".vscode",
+      ".next",
+      ".nuxt",
+      "coverage",
+      "htmlcov"
+    ],
+    "files": [
+      ".DS_Store",
+      "Thumbs.db"
+    ],
+    "suffixes": [
+      ".min.js",
+      ".min.css",
+      ".map",
+      ".log",
+      ".lock"
+    ]
+  },
+  "no_loc_ext": [
+    ".pdf",
+    ".doc",
+    ".docx",
+    ".ppt",
+    ".pptx",
+    ".odt",
+    ".xls",
+    ".xlsx",
+    ".xlsm",
+    ".xlsb",
+    ".docm",
+    ".pptm",
+    ".parquet",
+    ".avro",
+    ".mdb",
+    ".accdb",
+    ".pbix",
+    ".twbx",
+    ".qvw",
+    ".qvf",
+    ".rpt",
+    ".jasper",
+    ".fmx",
+    ".pbd",
+    ".vsd",
+    ".vsdx",
+    ".ipynb"
+  ],
+  "_note_no_loc": "Document and data binaries: counted as files and bytes, never line counted. A PDF read as text reports tens of thousands of meaningless lines."
+}
