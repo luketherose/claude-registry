@@ -1,0 +1,532 @@
+[
+  {
+    "capability": "user-context-file",
+    "kind": "context",
+    "source": "claude-config",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "76bbf63d45f563948a3ac4678a4d59bb5245ddd5",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "memory-system",
+    "kind": "command",
+    "source": "claude-config",
+    "status": "diverged",
+    "reason": "The memory KB, its scope/staleness/confidence rules and the six slash commands that drive it depend on a memory directory under the Claude Code user config dir and on a Stop hook that rsyncs it into the claude-config repo. Gemini CLI v0.57.0 has no memory store: GEMINI.md concatenation plus @-imports is context injection, not a scoped, dated, confidence-rated KB. Dropped from the ported context file rather than pointed at a path that does not exist.",
+    "source_sha": "76bbf63d45f563948a3ac4678a4d59bb5245ddd5",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "developer-java",
+    "kind": "agent",
+    "source": "claude-registry",
+    "status": "diverged",
+    "reason": "Ported to the Gemini extension with the tool-name and frontmatter substitutions applied, but the worked example it pointed at (examples/developer-java-example.md, addressed through the Claude Code plugin-root variable) was not carried over: a Gemini extension has no convention for an agent-adjacent reference file, and ${extensionPath} is substituted only in gemini-extension.json and hooks/hooks.json, never in an agent body. The pointer was dropped rather than left aimed at a path that does not resolve, so the Gemini copy gives no worked example of the expected breadth of a change. Close by porting the example as a skill.",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "developer-csharp",
+    "kind": "agent",
+    "source": "claude-registry",
+    "status": "diverged",
+    "reason": "Ported with the tool-name and frontmatter substitutions applied, but the bundled reference references/developers/developer-csharp/project-layout-and-build-settings.md was not carried over: a Gemini extension has no convention for an agent-adjacent reference file, and the source hosts plugin-root variable is not substituted in an agent body here. The pointer was dropped and the docs content kept only as the summary paragraph that already followed it, so the Gemini copy carries the csproj and analyzer settings but not the full four-project scaffold. Close by porting the reference as a skill.",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "developer-frontend",
+    "kind": "agent",
+    "source": "claude-registry",
+    "status": "diverged",
+    "reason": "Ported with the tool-name and frontmatter substitutions applied, but both bundled references (references/developers/developer-frontend/per-framework-conventions.md and output-templates.md) were not carried over: a Gemini extension has no convention for an agent-adjacent reference file, and the source hosts plugin-root variable is not substituted in an agent body here. This is the largest loss in the batch: Step 2 delegated the entire per-stack skill mapping and the non-negotiable framework invariants to the first doc, so the Gemini copy detects the framework and then has no invariant set to apply and must ask the user. Pointers dropped rather than left aimed at paths that do not resolve, invariants not reconstructed. Close by porting both references as a skill before anyone relies on this agent.",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "developer-go",
+    "kind": "agent",
+    "source": "claude-registry",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "developer-kotlin",
+    "kind": "agent",
+    "source": "claude-registry",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "developer-php",
+    "kind": "agent",
+    "source": "claude-registry",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "developer-python",
+    "kind": "agent",
+    "source": "claude-registry",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "developer-ruby",
+    "kind": "agent",
+    "source": "claude-registry",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "developer-rust",
+    "kind": "agent",
+    "source": "claude-registry",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "api-designer",
+    "kind": "agent",
+    "source": "claude-registry",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "debugger",
+    "kind": "agent",
+    "source": "claude-registry",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "d5445e3f197cb05f7611bcbfdb1c2c1781bacb11",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "test-writer",
+    "kind": "agent",
+    "source": "claude-registry",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "functional-reconstruction",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "graphify-code-graph",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "tech-analyst",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "angular-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "backend-orchestrator",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "browser-automation",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "css-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "dependency-resolver",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "design-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "frontend-orchestrator",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "java-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "java-spring-standards",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "nextjs",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "ngrx-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "postgresql-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "python-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "qwik-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "react-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "refactoring-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "rest-api-standards",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "rxjs-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "spring-architecture",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "spring-data-jpa",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "spring-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "streamlit-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "tanstack",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "tanstack-query",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "tanstack-start",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "testing-standards",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "unicredit-design-system",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "vanilla-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "vue-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "accenture-branding",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "961e76da32629b34d5c99f51470961930fddeffa",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "backend-documentation",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "doc-expert",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "documentation-orchestrator",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "frontend-documentation",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "functional-document-generator",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "d2ec2966a8c08f14e6bb9eae1414e14ee545f974",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  },
+  {
+    "capability": "uml-diagram-generator",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "recheck": "2026-12-10",
+    "published_ref": ""
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "name": "dev-standards",
+  "version": "0.1.0",
+  "description": "Gemini CLI twin of the dev-standards plugin: ported agents and skills"
+}
