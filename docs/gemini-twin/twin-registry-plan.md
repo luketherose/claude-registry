@@ -382,6 +382,15 @@ Ranked by expected damage, each with the signal that says it is materialising.
 repository, `gemini-registry`; (c) one repository per extension. (b) and (c) turn the freshness check into a
 cross-repository API call that needs a token and cannot block the offending PR.
 
+**Q1 ANSWERED, 2026-09-10: (a).** Twin tree at `gemini/extensions/<plugin>/`, one extension per
+plugin, inside this repository. Decided on maintenance grounds: one CI run against the existing
+required status checks, no cross-repository token for the freshness check (`git log` is local), and
+the `--path` asymmetry means the monorepo already serves both distribution modes. The escape hatch
+in section 3, `scripts/publish-extension.sh <name>`, keeps promotion to a per-extension repository
+available without reorganising the source, so this choice costs no optionality. Consequence for Q2:
+option (c), a public gallery audience, is not pursued, because it is the one option this topology
+forecloses.
+
 **Q2. Who is the twin for?** (a) Accenture teammates already using Gemini CLI internally; (b) client delivery teams on
 client infrastructure; (c) a public audience through the gallery. Only (c) justifies the per-repository topology, and
 (c) is incompatible with `dev-standards` in its current shape.
@@ -402,6 +411,13 @@ wave 7 and risk 4 but not topology.
 **Q5. Does the client design-system skill mirror at all?** (a) into the monorepo only, never into a publishable
 extension; (b) not at all, recorded as `diverged`; (c) into a separate access-controlled extension. A client-contract
 question, not an engineering one.
+
+**Q5 ANSWERED, 2026-09-10: (a).** Mirrors into the monorepo twin tree only, never into a separately
+publishable extension. The material is already on `origin/main` of this public repository in 16
+files, so the twin adds no exposure that does not already exist; the constraint is recorded in
+`parity/README.md` under "Client material", which is the list the denylist check of section 6 reads.
+The pre-existing public exposure is a separate question from the twin and is not settled by this
+answer.
 
 **Q6. Who owns the twin?** (a) the same authors, under a doubled definition of done enforced by the drift gate; (b) a
 named twin owner running the sync on a cadence and holding a backlog of `pending` rows. (a) is cheaper and drifts
