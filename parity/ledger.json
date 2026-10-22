@@ -538,5 +538,15 @@
     "source_sha": "696bf5ee8f0f0a9eb985d2786d5b6628d479fffa",
     "recheck": "2026-12-10",
     "published_ref": ""
+  },
+  {
+    "capability": "unicredit-document-template",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "308c7aecd7300ec0ce179b457d6c517d4a38d16b",
+    "recheck": "2026-12-22",
+    "published_ref": ""
   }
 ]
