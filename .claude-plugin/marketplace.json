@@ -62,7 +62,7 @@
     {
       "name": "docs-branding",
       "source": "./plugins/docs-branding",
-      "description": "Technical documentation authoring and branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, Accenture-branded PDF/DOCX documents and PowerPoint presentations, and UniCredit-template Word documents.",
+      "description": "Technical documentation authoring and branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, Accenture-branded PDF/DOCX documents and PowerPoint presentations, UniCredit-template Word documents, and interactive HTML explainers.",
       "category": "development",
       "tags": [
         "documentation",

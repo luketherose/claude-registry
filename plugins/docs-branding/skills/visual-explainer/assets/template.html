@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TITOLO</title>
+<style>
+:root{
+  color-scheme: light;
+  --paper:#F2F2F2;
+  --canvas:#FFFFFF;
+  --ink:#1B1B1B;
+  --muted:#616161;
+  --line:#CFCFCF;
+  --node:#FFFFFF;
+  --node-you:#ECECEC;
+  --node-ai:#E6EDFA;
+  --stroke:#3A3A3A;
+  --edge:#6E6E6E;
+  --zone:#8E8E8E;
+  --accent:#1F5FBF;
+  --accent-ink:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme: dark;
+    --paper:#121212;
+    --canvas:#1B1B1B;
+    --ink:#ECECEC;
+    --muted:#A8A8A8;
+    --line:#3C3C3C;
+    --node:#222222;
+    --node-you:#2E2E2E;
+    --node-ai:#1D2840;
+    --stroke:#BDBDBD;
+    --edge:#9A9A9A;
+    --zone:#6F6F6F;
+    --accent:#7EA8FF;
+    --accent-ink:#121212;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+  line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+.page{max-width:1400px;margin:0 auto;padding:32px 24px 40px}
+header::before{content:"";display:block;width:44px;height:4px;background:var(--accent);margin-bottom:16px}
+header h1{font-size:clamp(1.35rem,2.2vw,1.8rem);font-weight:600;letter-spacing:-0.01em;line-height:1.2;margin:0 0 6px}
+header p{margin:0;color:var(--muted);max-width:76ch}
+
+.flows{display:flex;flex-wrap:wrap;gap:6px;margin:22px 0 16px}
+.flows button{
+  font:inherit;font-size:.88rem;padding:7px 13px;border-radius:3px;
+  border:1px solid var(--line);background:var(--canvas);color:var(--ink);cursor:pointer;
+}
+.flows button:hover{border-color:var(--stroke)}
+.flows button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.flows button:focus-visible,.close:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.layout{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:1120px){.layout{grid-template-columns:minmax(0,1fr) 330px;align-items:start}}
+
+.diagram-card{margin:0;background:var(--canvas);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.scroll{overflow-x:auto}
+.scroll svg{display:block;width:100%;min-width:940px;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;padding:12px 18px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+.lg{display:inline-flex;align-items:center;gap:8px}
+.lg svg{flex:none}
+.sw{fill:var(--node);stroke:var(--stroke);stroke-width:1.2}
+.sw.ai{fill:var(--node-ai)}
+.sw.you{fill:var(--node-you)}
+.swz{fill:none;stroke:var(--zone);stroke-width:1.2;stroke-dasharray:6 4}
+.swl{fill:none;stroke:var(--edge);stroke-width:1.4}
+.swm{fill:var(--edge)}
+
+.panel{background:var(--canvas);border:1px solid var(--line);border-radius:4px;padding:20px 22px}
+.panel h2{font-size:1.05rem;font-weight:600;margin:0 0 6px;line-height:1.3}
+.panel p{margin:0 0 10px;font-size:.91rem;color:var(--muted)}
+.steps{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
+.steps li{display:grid;grid-template-columns:24px 1fr;gap:10px;font-size:.91rem;align-items:start}
+.num{
+  width:22px;height:22px;border-radius:50%;margin-top:1px;
+  background:var(--accent);color:var(--accent-ink);font-size:.72rem;font-weight:700;
+  display:grid;place-items:center;
+}
+.num.off{background:transparent;color:var(--muted);border:1.5px solid var(--line)}
+#detail{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.dhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tag{font-size:.78rem;color:var(--muted)}
+.close{font:inherit;font-size:.78rem;border:1px solid var(--line);background:none;color:var(--ink);border-radius:3px;padding:2px 10px;cursor:pointer}
+#detail h3{margin:8px 0 6px;font-size:1rem;font-weight:600}
+#detail p{color:var(--ink)}
+#detail .links{color:var(--muted)}
+.links b{font-weight:600;color:var(--ink)}
+
+.qa{margin-top:16px;background:var(--canvas);border:1px solid var(--line);border-radius:4px;padding:20px 22px}
+.qa h2{font-size:1.05rem;font-weight:600;margin:0 0 12px}
+.qa dl{margin:0;display:grid;gap:0}
+.qa .row{display:grid;grid-template-columns:minmax(160px,230px) 70px 1fr;gap:6px 16px;padding:9px 0;border-top:1px solid var(--line);font-size:.91rem}
+.qa .row:first-child{border-top:none}
+.qa dt{font-weight:600}
+.qa .yn{font-weight:700}
+.qa .yn.si{color:var(--accent)}
+.qa .yn.no{color:var(--muted)}
+.qa dd{margin:0;color:var(--muted)}
+@media (max-width:640px){.qa .row{grid-template-columns:1fr auto}.qa dd{grid-column:1 / -1}}
+.foot{margin:14px 2px 0;font-size:.8rem;color:var(--muted)}
+.foot code{font-size:.78rem}
+
+/* Diagram */
+.grp rect{fill:none;stroke:var(--zone);stroke-width:1;stroke-dasharray:6 4}
+.grp-t{font-size:12px;font-weight:600;fill:var(--ink)}
+
+.node{cursor:pointer;transition:opacity .25s}
+.node .box,.node .back,.node .fold{fill:var(--node);stroke:var(--stroke);stroke-width:1.2}
+.node.ai .box,.node.ai .back{fill:var(--node-ai)}
+.node.you .box{fill:var(--node-you)}
+.node .fold{fill:none}
+.node .nt{font-size:13px;font-weight:600;fill:var(--ink)}
+.node .ns{font-size:11px;fill:var(--muted)}
+.node:focus{outline:none}
+.node:focus-visible .box,.node.selected .box{stroke:var(--accent);stroke-width:2.4}
+
+.edge{transition:opacity .25s}
+.edge .halo{fill:none;stroke:var(--canvas);stroke-width:6}
+.edge .ln{fill:none;stroke:var(--edge);stroke-width:1.4}
+.elab{font-size:10.5px;fill:var(--muted);paint-order:stroke;stroke:var(--canvas);stroke-width:4px;stroke-linejoin:round}
+.mk{fill:var(--edge)}
+.mk-on{fill:var(--accent)}
+.edge.on .ln{stroke:var(--accent);stroke-width:2.2;stroke-dasharray:7 5;animation:flow 1.1s linear infinite}
+.edge.on .elab{fill:var(--ink)}
+.edge.on.hot .ln{stroke-width:3.6}
+@keyframes flow{to{stroke-dashoffset:-24}}
+.dim{opacity:.18}
+.badge circle{fill:var(--accent);stroke:var(--canvas);stroke-width:2}
+.badge text{fill:var(--accent-ink);font-size:10.5px;font-weight:700;text-anchor:middle}
+@media (prefers-reduced-motion:reduce){
+  .edge.on .ln{animation:none;stroke-dasharray:none}
+  .node,.edge{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>TITOLO: una riga, la domanda a cui la pagina risponde</h1>
+    <p>Sottotitolo di una o due righe: cosa mostra lo schema. Scegli un flusso per seguirne i passi, o clicca un componente.</p>
+  </header>
+
+  <nav class="flows" aria-label="Flussi">
+    <button type="button" data-flow="overview" aria-pressed="true">Panoramica</button>
+    <button type="button" data-flow="flusso1" aria-pressed="false">Primo flusso</button>
+    <button type="button" data-flow="flusso2" aria-pressed="false">Secondo flusso</button>
+  </nav>
+
+  <div class="layout">
+    <figure class="diagram-card">
+      <div class="scroll">
+        <svg id="arch" viewBox="0 44 920 340" role="img" aria-label="DESCRIZIONE TESTUALE DELLO SCHEMA, per chi non vede l'immagine"></svg>
+      </div>
+      <figcaption class="legend">
+        <span class="lg"><svg width="22" height="14" aria-hidden="true"><rect x="1" y="1" width="20" height="12" rx="1.5" class="sw"/></svg>Codice o controllo automatico</span>
+        <span class="lg"><svg width="22" height="14" aria-hidden="true"><rect x="1" y="1" width="20" height="12" rx="4" class="sw ai"/></svg>Componente AI</span>
+        <span class="lg"><svg width="22" height="14" aria-hidden="true"><path d="M1,1 H15 L21,7 V13 H1 Z" class="sw"/></svg>File e repository</span>
+        <span class="lg"><svg width="22" height="14" aria-hidden="true"><rect x="1" y="1" width="20" height="12" rx="1.5" class="sw you"/></svg>Persona</span>
+        <span class="lg"><svg width="30" height="14" aria-hidden="true"><path d="M1,7 H29" class="swz"/></svg>Fase</span>
+        <span class="lg"><svg width="30" height="14" aria-hidden="true"><path d="M2,7 H23" class="swl"/><path d="M22,3 L29,7 L22,11 Z" class="swm"/></svg>Passaggio</span>
+      </figcaption>
+    </figure>
+
+    <aside class="panel">
+      <section id="flow" aria-live="polite"></section>
+      <section id="detail" hidden aria-live="polite"></section>
+    </aside>
+  </div>
+
+  <!-- Facoltativa: la risposta secca alla domanda letterale dell'utente. Togli la sezione se non serve. -->
+  <section class="qa" aria-labelledby="qa-t">
+    <h2 id="qa-t">DOMANDA DELL'UTENTE?</h2>
+    <dl>
+      <div class="row"><dt>Opzione A</dt><dd class="yn si">Sì</dd><dd>Una frase che dice come.</dd></div>
+      <div class="row"><dt>Opzione B</dt><dd class="yn no">No</dd><dd>Una frase che dice perché no.</dd></div>
+    </dl>
+  </section>
+
+  <p class="foot">Dove sta: percorsi o fonti, in <code>codice</code>.</p>
+</div>
+
+<script>
+/* ===== DATI: di solito si modifica solo da qui fino a "const NS" ===== */
+
+/* Categorie dei nodi: la legenda in HTML deve usare le stesse.
+   det = riquadro bianco, angoli vivi; ai = riempimento colorato, angoli tondi;
+   doc = file o repository, angolo piegato; you = persone, grigio. */
+const TAG = {
+  det: 'Codice o controllo automatico',
+  ai: 'Componente AI',
+  doc: 'File e repository',
+  you: 'Persona'
+};
+
+/* Zone tratteggiate. Titolo a (x+14, y+22). */
+const GROUPS = [
+  { id: 'z1', x: 20,  y: 60, w: 300, h: 300, t: 'Prima zona' },
+  { id: 'z2', x: 340, y: 60, w: 560, h: 300, t: 'Seconda zona' }
+];
+
+/* t = titolo (13px), s = righe sotto (11px, circa 6px per carattere), d = dettaglio nel pannello.
+   stack: true disegna una pila (piu' istanze dello stesso componente). */
+const NODES = [
+  { id: 'persona', cat: 'you', x: 40, y: 100, w: 160, h: 64, t: 'Persona', s: ['cosa fa, in breve'],
+    d: "Una o due frasi semplici su cosa fa questo componente." },
+  { id: 'file', cat: 'doc', x: 40, y: 240, w: 200, h: 84, t: 'Documento', s: ['riga 1', 'riga 2'],
+    d: "Una o due frasi." },
+  { id: 'motore', cat: 'det', x: 360, y: 100, w: 240, h: 64, t: 'Motore', s: ['cosa decide'],
+    d: "Una o due frasi." },
+  { id: 'agente', cat: 'ai', stack: true, x: 360, y: 230, w: 220, h: 84, t: 'Agente', s: ['uno per compito'],
+    d: "Una o due frasi." },
+  { id: 'esito', cat: 'det', x: 660, y: 230, w: 220, h: 84, t: 'Esito', s: ['controlli'],
+    d: "Una o due frasi." }
+];
+
+/* d = percorso SVG ortogonale (M, H, V) da bordo a bordo; l = [etichetta, x, y, ancoraggio];
+   b = posizione del numero del passo, sul tratto. */
+const EDGES = [
+  { id: 'e1', from: 'persona', to: 'motore', d: 'M200,132 H360', l: ['avvia', 280, 122, 'middle'], b: [280, 132] },
+  { id: 'e2', from: 'file',    to: 'agente', d: 'M240,282 H360', l: ['legge', 300, 272, 'middle'], b: [300, 282] },
+  { id: 'e3', from: 'motore',  to: 'agente', d: 'M470,164 V230', l: ['lancia', 480, 200, 'start'], b: [470, 197] },
+  { id: 'e4', from: 'agente',  to: 'esito',  d: 'M592,272 H660', b: [626, 272] }
+];
+
+/* steps = [id dell'arco, frase]; null per un passo senza arco. Massimo 7 passi per flusso. */
+const FLOWS = {
+  overview: {
+    t: 'Panoramica',
+    d: "L'idea chiave in due righe.",
+    nodes: [], extra: [], steps: []
+  },
+  flusso1: {
+    t: 'Primo flusso',
+    d: "Quando succede, in una riga.",
+    nodes: ['persona', 'motore', 'agente'], extra: [],
+    steps: [
+      ['e1', "Una frase per passo."],
+      ['e3', "Una frase per passo."]
+    ]
+  },
+  flusso2: {
+    t: 'Secondo flusso',
+    d: "Quando succede, in una riga.",
+    nodes: ['file', 'agente', 'esito'], extra: [],
+    steps: [
+      ['e2', "Una frase per passo."],
+      ['e4', "Una frase per passo."],
+      [null, "Un passo che non ha un arco sullo schema."]
+    ]
+  }
+};
+
+/* ===== FINE DATI ===== */
+
+const NS = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('arch');
+
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function tx(parent, x, y, str, cls, anchor) {
+  const t = el('text', { x: x, y: y }, parent);
+  if (cls) t.setAttribute('class', cls);
+  if (anchor) t.setAttribute('text-anchor', anchor);
+  t.textContent = str;
+  return t;
+}
+
+const defs = el('defs', null, svg);
+[['m', 'mk'], ['m-on', 'mk-on']].forEach(([id, cls]) => {
+  const m = el('marker', { id: id, viewBox: '0 0 10 10', refX: '9', refY: '5', markerWidth: '9', markerHeight: '9', markerUnits: 'userSpaceOnUse', orient: 'auto' }, defs);
+  el('path', { d: 'M0,1 L9,5 L0,9 Z', class: cls }, m);
+});
+
+const gGroups = el('g', null, svg);
+const gEdges = el('g', null, svg);
+const gNodes = el('g', null, svg);
+const gBadges = el('g', { 'aria-hidden': 'true' }, svg);
+
+GROUPS.forEach(g => {
+  const G = el('g', { class: 'grp' }, gGroups);
+  el('rect', { x: g.x, y: g.y, width: g.w, height: g.h, rx: 2 }, G);
+  tx(G, g.x + 14, g.y + 22, g.t, 'grp-t');
+});
+
+const edgeEls = {};
+EDGES.forEach(e => {
+  const G = el('g', { class: 'edge' }, gEdges);
+  el('path', { d: e.d, class: 'halo' }, G);
+  const ln = el('path', { d: e.d, class: 'ln', 'marker-end': 'url(#m)' }, G);
+  if (e.l) tx(G, e.l[1], e.l[2], e.l[0], 'elab', e.l[3]);
+  edgeEls[e.id] = { g: G, ln: ln };
+});
+
+const nodeEls = {};
+NODES.forEach(n => {
+  const G = el('g', { class: 'node ' + n.cat, tabindex: '0', role: 'button', 'aria-label': n.t + ', ' + TAG[n.cat] }, gNodes);
+  if (n.stack) {
+    [12, 6].forEach(o => el('rect', { class: 'back', x: n.x + o, y: n.y + o, width: n.w, height: n.h, rx: 7 }, G));
+  }
+  if (n.cat === 'doc') {
+    const f = 12;
+    el('path', { class: 'box', d: `M${n.x},${n.y} H${n.x + n.w - f} L${n.x + n.w},${n.y + f} V${n.y + n.h} H${n.x} Z` }, G);
+    el('path', { class: 'fold', d: `M${n.x + n.w - f},${n.y} V${n.y + f} H${n.x + n.w}` }, G);
+  } else {
+    el('rect', { class: 'box', x: n.x, y: n.y, width: n.w, height: n.h, rx: n.cat === 'ai' ? 7 : 1.5 }, G);
+  }
+  tx(G, n.x + 14, n.y + 25, n.t, 'nt');
+  n.s.forEach((s, i) => tx(G, n.x + 14, n.y + 42 + i * 16, s, 'ns'));
+  G.addEventListener('click', () => select(n.id));
+  G.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); select(n.id); }
+  });
+  nodeEls[n.id] = G;
+});
+
+let current = 'overview';
+let selected = null;
+
+const nameOf = id => NODES.find(x => x.id === id).t;
+
+function setFlow(key) {
+  current = key;
+  document.querySelectorAll('.flows button').forEach(b =>
+    b.setAttribute('aria-pressed', b.dataset.flow === key ? 'true' : 'false'));
+  const f = FLOWS[key];
+  const active = key !== 'overview';
+  const eSet = new Set(active ? [...f.steps.map(s => s[0]).filter(Boolean), ...f.extra] : []);
+  const nSet = new Set(f.nodes);
+
+  EDGES.forEach(e => {
+    const o = edgeEls[e.id];
+    const on = eSet.has(e.id);
+    o.g.classList.toggle('on', on);
+    o.g.classList.toggle('dim', active && !on);
+    o.g.classList.remove('hot');
+    o.ln.setAttribute('marker-end', on ? 'url(#m-on)' : 'url(#m)');
+  });
+  NODES.forEach(n => nodeEls[n.id].classList.toggle('dim', active && !nSet.has(n.id)));
+
+  gBadges.replaceChildren();
+  f.steps.forEach((s, i) => {
+    if (!s[0]) return;
+    const e = EDGES.find(x => x.id === s[0]);
+    const B = el('g', { class: 'badge' }, gBadges);
+    el('circle', { cx: e.b[0], cy: e.b[1], r: 10 }, B);
+    tx(B, e.b[0], e.b[1] + 4, String(i + 1));
+  });
+  renderFlow();
+}
+
+function renderFlow() {
+  const f = FLOWS[current];
+  const box = document.getElementById('flow');
+  let html = `<h2>${f.t}</h2><p>${f.d}</p>`;
+  if (f.steps.length) {
+    html += '<ol class="steps">' + f.steps.map((s, i) =>
+      `<li${s[0] ? ` data-edge="${s[0]}"` : ''}><span class="num${s[0] ? '' : ' off'}">${i + 1}</span><span>${s[1]}</span></li>`
+    ).join('') + '</ol>';
+  } else {
+    html += '<p>Clicca un componente per sapere cosa fa, o scegli un flusso per seguirne i passi sullo schema.</p>';
+  }
+  box.innerHTML = html;
+  box.querySelectorAll('li[data-edge]').forEach(li => {
+    const g = edgeEls[li.dataset.edge].g;
+    li.addEventListener('mouseenter', () => g.classList.add('hot'));
+    li.addEventListener('mouseleave', () => g.classList.remove('hot'));
+  });
+}
+
+function select(id) {
+  selected = (selected === id) ? null : id;
+  Object.entries(nodeEls).forEach(([k, g]) => g.classList.toggle('selected', k === selected));
+  renderDetail();
+}
+
+function renderDetail() {
+  const box = document.getElementById('detail');
+  if (!selected) { box.hidden = true; box.innerHTML = ''; return; }
+  const n = NODES.find(x => x.id === selected);
+  const links = [...new Set(EDGES
+    .filter(e => e.from === n.id || e.to === n.id)
+    .map(e => nameOf(e.from === n.id ? e.to : e.from)))];
+  box.hidden = false;
+  box.innerHTML =
+    `<div class="dhead"><span class="tag">${TAG[n.cat]}</span>` +
+    `<button type="button" class="close">Chiudi</button></div>` +
+    `<h3>${n.t}</h3><p>${n.d}</p>` +
+    (links.length ? `<p class="links"><b>Collegato a:</b> ${links.join(', ')}</p>` : '');
+  box.querySelector('.close').addEventListener('click', () => select(selected));
+}
+
+document.querySelectorAll('.flows button').forEach(b =>
+  b.addEventListener('click', () => setFlow(b.dataset.flow)));
+
+setFlow('overview');
+renderDetail();
+</script>
+</body>
+</html>
