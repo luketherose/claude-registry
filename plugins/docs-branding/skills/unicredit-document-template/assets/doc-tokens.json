@@ -1,0 +1,99 @@
+{
+  "_comment": "UniCredit document template tokens. Measured from the reference runbook unless listed in _added. Lengths in twips (1 cm = 567 twips, 1 pt = 20 twips) and font sizes in points, so the builder can write them without conversion.",
+  "_added": [
+    "toc: the reference has no table of contents; the template requires one",
+    "toc_styles: sizes and indents chosen to sit between body and Heading 2",
+    "headings.*.indent_left: the reference styles carry a leftover hanging indent; normalised to 0 so headings align with body text",
+    "tag: the reference styles [TBC] in accent red once and in plain body text elsewhere; the template uses the accent form everywhere",
+    "bullet level 1: the reference uses a single level"
+  ],
+  "page": {
+    "width": 12240,
+    "height": 15840,
+    "paper": "US Letter, as in the reference",
+    "margin_top": 1418,
+    "margin_bottom": 1134,
+    "margin_left": 1134,
+    "margin_right": 1134,
+    "header_distance": 567,
+    "footer_distance": 0,
+    "content_width": 9972
+  },
+  "font": {
+    "family": "Arial",
+    "language": "en-GB"
+  },
+  "colors": {
+    "text": "000000",
+    "secondary": "777777",
+    "accent": "B00417",
+    "table_header_fill": "D9D9D9",
+    "table_border": "999999"
+  },
+  "body": {
+    "size": 11,
+    "space_before": 0,
+    "space_after": 140,
+    "line": 276
+  },
+  "cover": {
+    "logo_width_emu": 3676650,
+    "logo_space_after": 160,
+    "blank_lines_after_logo": 3,
+    "title": {"size": 26, "bold": true, "space_after": 60},
+    "subtitle": {"size": 14, "bold": true, "space_after": 120},
+    "abstract": {"size": 10, "italic": true, "color": "secondary", "space_after": 240},
+    "metadata_columns": ["Version", "Date", "Author", "Status", "Classification"],
+    "metadata_widths_cm": [2.61, 3.12, 4.25, 3.08, 4.5]
+  },
+  "front_title": {"size": 14, "bold": true, "space_after": 120},
+  "part_label": {
+    "size": 13,
+    "bold": true,
+    "color": "accent",
+    "space_before": 280,
+    "space_after": 160,
+    "border_bottom_eighths": 18,
+    "border_space_pt": 4,
+    "page_break_before": true
+  },
+  "headings": {
+    "h1": {"size": 14, "bold": true, "space_before": 360, "space_after": 120, "line": 276, "indent_left": 0},
+    "h2": {"size": 12, "bold": true, "space_before": 240, "space_after": 100, "line": 276, "indent_left": 0}
+  },
+  "bullets": {
+    "glyph_level0": "•",
+    "glyph_level1": "◦",
+    "indent_left": 714,
+    "hanging": 357,
+    "space_before": 60,
+    "space_after": 60,
+    "line": 276
+  },
+  "note": {"lead": "Note.", "space_before": 100, "space_after": 140},
+  "legend": {"size": 9, "color": "secondary", "space_before": 60, "space_after": 140},
+  "tag": {"bold": true, "color": "accent", "values": ["[TBC]", "[Proposed]"]},
+  "table": {
+    "width": 9972,
+    "border_eighths": 4,
+    "cell_margin_top": 72,
+    "cell_margin_bottom": 72,
+    "cell_margin_left": 100,
+    "cell_margin_right": 100,
+    "cell_space_before": 40,
+    "cell_space_after": 40,
+    "standard": {"size": 10, "line": 260},
+    "compact": {"size": 8.5, "line": 240},
+    "repeat_header": true,
+    "cant_split_rows": true
+  },
+  "toc": {
+    "title": "Contents",
+    "levels": "1-2",
+    "instruction": "TOC \\o \"1-2\" \\h \\z \\u",
+    "toc1": {"size": 11, "bold": false, "space_before": 80, "space_after": 40, "indent_left": 0},
+    "toc2": {"size": 10, "bold": false, "space_before": 0, "space_after": 40, "indent_left": 250},
+    "update_fields_on_open": true
+  },
+  "allowed_font_sizes_pt": [8.5, 9, 10, 11, 12, 13, 14, 26]
+}

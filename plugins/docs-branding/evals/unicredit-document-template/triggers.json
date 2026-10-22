@@ -1,0 +1,42 @@
+[
+  {
+    "query": "Mi serve il runbook di cutover per UniCredit in Word, con indice, document control e le tabelle standard",
+    "should_trigger": true,
+    "description": "UniCredit cutover runbook in Word with contents, document control and standard tables"
+  },
+  {
+    "query": "Prendi questo docx e rimettilo nel formato dei documenti UniCredit: font, colori, tabelle con header grigio",
+    "should_trigger": true,
+    "description": "Restyle an existing docx to the UniCredit document format"
+  },
+  {
+    "query": "Write the design document for the UniCredit migration as a .docx following the UC document template",
+    "should_trigger": true,
+    "description": "UniCredit design document as a docx on the UC document template"
+  },
+  {
+    "query": "Check whether this Word file respects the UniCredit document template before I send it to the client",
+    "should_trigger": true,
+    "description": "Compliance check of a Word file against the UniCredit document template"
+  },
+  {
+    "query": "Il cliente è UniCredit, servono i token Bricks e le regole sul logo UC",
+    "should_trigger": false,
+    "description": "UniCredit Bricks tokens and UC logo rules"
+  },
+  {
+    "query": "Build the Angular login screen for the UniCredit mobile banking app with the right colours",
+    "should_trigger": false,
+    "description": "Angular login screen for a UniCredit banking app"
+  },
+  {
+    "query": "Template HTML/CSS con brand Accenture per il PDF del deliverable",
+    "should_trigger": false,
+    "description": "Accenture branded HTML/CSS template for a PDF deliverable"
+  },
+  {
+    "query": "Aggiorna il runbook di cutover in Excel: aggiungi le colonne owner e stato e ricrea i menu a tendina",
+    "should_trigger": false,
+    "description": "Cutover runbook columns in an Excel workbook"
+  }
+]

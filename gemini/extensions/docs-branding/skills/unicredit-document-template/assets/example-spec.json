@@ -1,0 +1,127 @@
+{
+  "language": "en-GB",
+  "cover": {
+    "title": "Sample Programme – Cutover runbook",
+    "subtitle": "Source region (A) → Target region (B)",
+    "abstract": "Sequence, rationale, controls, decision points and rollback for the production cutover of the sample perimeter. Baseline: general cutover runbook and asset runbooks.",
+    "metadata": {
+      "Version": "0.1",
+      "Date": "01/01/2027",
+      "Author": "Accenture · Migration Programme",
+      "Status": "Draft for review",
+      "Classification": "Strictly confidential"
+    }
+  },
+  "document_control": {
+    "revisions": [
+      ["0.1", "1 Jan 2027", "First draft: structure, principles, rollback plan; issued for review"]
+    ],
+    "approvals": [
+      ["Cutover leader", "Programme", "Execution of the runbook"],
+      ["Programme management", "UniCredit", "Go/No-Go at the plan gate and at the decision points"],
+      ["Application owners", "UniCredit", "Asset runbooks, business tests, production changes"],
+      ["Migration delivery", "Accenture", "Technical content and execution"]
+    ],
+    "conventions": [
+      "**T** is the cutover day. T-n and T+n are counted in calendar days; the mapping to dates is in Annex A.",
+      "**Times** are Central European Time.",
+      "**[Proposed]** marks content proposed by this document that requires approval.",
+      "**[TBC]** marks a value to be confirmed; every TBC is listed in the open points.",
+      "**Roles, not names,** are used in this document; the named contact list is held separately."
+    ]
+  },
+  "parts": [
+    {
+      "label": "Framework",
+      "sections": [
+        {
+          "title": "Purpose, scope and related documents",
+          "subsections": [
+            {"title": "Purpose", "blocks": [
+              {"type": "paragraph", "text": "This runbook defines how the production cutover of the sample perimeter is executed, verified and, if needed, rolled back."}
+            ]},
+            {"title": "Scope", "blocks": [
+              {"type": "paragraph", "text": "**In scope:** the assets of the sample perimeter and the entry points that move with them."},
+              {"type": "paragraph", "text": "**Out of scope:** functional acceptance, which remains with the application owners."}
+            ]},
+            {"title": "Related documents", "blocks": [
+              {"type": "table", "size": "standard", "columns": ["Document", "Relationship"], "rows": [
+                ["General cutover runbook", "Baseline sequence this document details"],
+                ["Asset runbooks", "Detailed steps per asset"]
+              ]}
+            ]}
+          ]
+        },
+        {
+          "title": "Principles",
+          "blocks": [
+            {"type": "bullets", "items": [
+              "**Verified, not executed:** every step has an exit check with evidence.",
+              "**Rollback defined before execution:** decision points and the point of no return are known in advance.",
+              ["Each decision point has a time limit [TBC]."]
+            ]}
+          ]
+        },
+        {
+          "title": "Roles, responsibilities and communication",
+          "subsections": [
+            {"title": "RACI by phase", "blocks": [
+              {"type": "table", "first_column_bold": true, "columns": ["Phase", "Cutover leader", "Asset owners", "Business"], "rows": [
+                ["Plan gate", "R", "C", "I"],
+                ["Cutover night", "A", "R", "I"]
+              ]},
+              {"type": "legend", "text": "R responsible · A accountable · S supports · C consulted · I informed."}
+            ]}
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Execution",
+      "sections": [
+        {
+          "title": "Cutover night",
+          "blocks": [
+            {"type": "table", "first_column_bold": true, "columns": ["ID", "Activity", "Why it is done", "Owner (role)", "Exit check · evidence"], "rows": [
+              ["N1", "Freeze inbound traffic [Proposed]", "No write reaches the source during the copy", "Cutover leader", "Traffic at zero on the dashboard"],
+              ["N2", "Migrate the databases", "Data must be on the target before the switch", "Asset owners", "Row counts reconciled"]
+            ]},
+            {"type": "note", "text": "Intermediate start times depend on the durations measured at the rehearsal."}
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Control",
+      "sections": [
+        {
+          "title": "Risks and contingencies",
+          "blocks": [
+            {"type": "table", "columns": ["Risk", "Mitigation", "Owner"], "rows": [
+              ["Rollback takes longer than the window", "Rehearse rollback and size the decision point time limits on it", "Cutover leader"]
+            ]}
+          ]
+        },
+        {
+          "title": "Open points",
+          "blocks": [
+            {"type": "table", "first_column_bold": true, "columns": ["#", "Open point", "Why it matters", "Owner (role)"], "rows": [
+              ["1", "Time limit of each decision point", "Sets the latest moment a rollback still fits the window", "Programme management"]
+            ]}
+          ]
+        }
+      ]
+    }
+  ],
+  "annexes": [
+    {
+      "title": "Glossary and sources",
+      "blocks": [
+        {"type": "table", "first_column_bold": true, "columns": ["Term", "Meaning"], "rows": [
+          ["DP", "Decision point: a planned Go/No-Go during the night"],
+          ["TBC", "To be confirmed"]
+        ]}
+      ]
+    }
+  ]
+}

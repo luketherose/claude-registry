@@ -6,6 +6,30 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 
+### Added (2026-10-22)
+
+**`unicredit-document-template`, in `docs-branding@1.1.0`.** The UniCredit Word document
+template, measured from the OOXML of a reference UniCredit runbook rather than designed:
+US Letter with 2.5 / 2 cm margins, Arial only, a five-colour palette (`000000`, `777777`,
+accent `B00417`, header fill `D9D9D9`, grid `999999`), the cover with logo and metadata
+table, document control, PART labels with a red rule, manually numbered sections, one table
+design in two sizes, and seven mandatory tables. The reference has no table of contents;
+the template requires one, and the values that had to be added for it are listed in
+`_added` of `assets/doc-tokens.json`, the single source both scripts read.
+
+`scripts/build_uc_docx.py` renders a JSON spec, so numbering, Part labels, the TOC and every
+visual value are computed rather than remembered. `scripts/check_uc_docx.py` prints the
+outline and tables a reader would see and fails on any template break; run on the reference
+itself it reports the expected eight: the `UniCredit` typeface declared in two heading
+styles, em dashes, no TOC, the Part label form, and three front subheadings in the outline. The UniCredit logo is not bundled, because the repository is
+public: the builder takes it from an existing UniCredit document with `--logo-from`.
+
+Two renderer findings are encoded in the builder: macOS Quick Look resolves
+`abstractNumId` by position, so bullet ids are the next free ones rather than a fixed high
+value, and it ignores table-level `tblCellMar`, so cell margins are written per cell as the
+reference does. `triggers.json` carries four positives and four near misses, including the
+Bricks and Accenture queries shared verbatim with `accenture-branding`.
+
 ### Fixed (registry-wide sweep, 2026-08-31)
 
 Five findings from a skill-by-skill review, each with the gate that would have caught it.
