@@ -257,7 +257,7 @@ without the debate, which is rarely what you want.
 /plugin install docs-branding@claude-registry
 ```
 
-Documentation authoring, Accenture-branded deliverables and UniCredit-template Word documents. Ships
+Documentation authoring, Accenture-branded deliverables, UniCredit-template Word documents and interactive HTML explainers. Ships
 `plugins/docs-branding/.mcp.json`, wiring the UML MCP server used by
 `uml-diagram-generator`.
 
@@ -282,6 +282,7 @@ Documentation authoring, Accenture-branded deliverables and UniCredit-template W
 | `functional-document-generator` | Converts existing functional documentation into an enterprise LaTeX deliverable |
 | `uml-diagram-generator` | UML diagrams for documentation, architecture design and code-structure explanation |
 | `unicredit-document-template` | The UniCredit Word document template: page setup, type scale, palette, mandatory frame and tables, plus a JSON-to-DOCX builder and a checker |
+| `visual-explainer` | A one-page interactive HTML explainer: zones, clickable components, flows with numbered steps, plus the template and its checks |
 
 ---
 

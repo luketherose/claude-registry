@@ -1,0 +1,42 @@
+[
+  {
+    "query": "Puoi farmi una cosa visuale che mi spieghi in termini molto semplici come funziona la nostra pipeline di build con gli agenti?",
+    "should_trigger": true,
+    "description": "Simple visual explanation of an agent build pipeline"
+  },
+  {
+    "query": "Graficami il flusso di onboarding di un nuovo cliente: chi fa cosa e in che ordine, una pagina da aprire nel browser",
+    "should_trigger": true,
+    "description": "Browser page that charts who does what in a customer onboarding flow"
+  },
+  {
+    "query": "Make me an interactive HTML page like this one that explains our ticket assistant architecture to a non-technical manager",
+    "should_trigger": true,
+    "description": "Interactive HTML architecture explainer for a non-technical reader"
+  },
+  {
+    "query": "Spiegami con uno schema cliccabile come passano i dati dal frontend al database, con i passi numerati",
+    "should_trigger": true,
+    "description": "Clickable schema of data flowing from frontend to database with numbered steps"
+  },
+  {
+    "query": "Draw the UML sequence diagram of the login use case for the design document",
+    "should_trigger": false,
+    "description": "UML sequence diagram of a login use case"
+  },
+  {
+    "query": "Prepara le slide Accenture per lo steering di giovedi' con l'architettura proposta",
+    "should_trigger": false,
+    "description": "Accenture slide deck with the proposed architecture for a steering meeting"
+  },
+  {
+    "query": "Fammi un grafico a barre dei costi mensili per ambiente a partire da questo CSV",
+    "should_trigger": false,
+    "description": "Bar chart of monthly costs per environment from a CSV"
+  },
+  {
+    "query": "Write the README for this service with setup, configuration and run instructions",
+    "should_trigger": false,
+    "description": "README with setup and run instructions for a service"
+  }
+]

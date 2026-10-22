@@ -8,6 +8,21 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ### Added (2026-10-22)
 
+**`visual-explainer`, in `docs-branding@1.2.0`.** A one-page interactive HTML explainer for
+a system, workflow or process, written for a non-specialist reader: dashed zones, clickable
+components with a detail panel, flow buttons that animate their numbered steps on the
+diagram, an optional yes/no table that answers the user's literal question, light and dark
+mode. `assets/template.html` carries the CSS and rendering code unchanged from the first
+page built with it, and placeholder data in one block between `DATI` and `FINE DATI`; the
+skill fixes the content limits (3 to 5 flows, at most 7 steps, node text that fits its box)
+and the checks before delivery: screenshots at 1440 and 375 px in both colour schemes, no
+page overflow at 375 px, every flow clicked. That first page overflowed at 375 px because
+the single-column grid grew to the 940 px minimum width of the diagram; the template sets
+`grid-template-columns:minmax(0,1fr)` so only the diagram scrolls. The interface strings
+are Italian and the skill lists them for translation. `triggers.json` carries four
+positives and four near misses against `uml-diagram-generator`, `presentation-creator`,
+data charts and READMEs.
+
 **`unicredit-document-template`, in `docs-branding@1.1.0`.** The UniCredit Word document
 template, measured from the OOXML of a reference UniCredit runbook rather than designed:
 US Letter with 2.5 / 2 cm margins, Arial only, a five-colour palette (`000000`, `777777`,
