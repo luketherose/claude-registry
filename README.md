@@ -257,7 +257,7 @@ Multi-agent deliberative decision engine: structured debate with independent per
 
 ### `docs-branding`
 
-Technical documentation authoring and Accenture-branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, PDF/DOCX documents, and PowerPoint presentations.
+Technical documentation authoring and branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, Accenture-branded PDF/DOCX documents and PowerPoint presentations, and UniCredit-template Word documents.
 
 ```bash
 /plugin install docs-branding@claude-registry
@@ -272,7 +272,7 @@ Technical documentation authoring and Accenture-branded deliverable generation: 
 | `presentation-creator` | inherit | Use this agent when you need to create an Accenture-branded PowerPoint presentation (.pptx) from project documents, estimation files, or any set of... |
 | `wiki-writer` | inherit | Use this agent when authoring or restructuring a GitHub wiki for a software project. Reads the codebase, README, CHANGELOG, ADRs, and existing docs... |
 
-**Skills (7)**
+**Skills (8)**
 
 | Skill | Provides |
 |---|---|
@@ -283,6 +283,7 @@ Technical documentation authoring and Accenture-branded deliverable generation: 
 | `frontend-documentation` | This skill should be used when generating enterprise technical documentation for an Angular frontend, typically as part of a... |
 | `functional-document-generator` | This skill should be used when converting existing functional documentation into an enterprise LaTeX deliverable for stakeholders. Trigger phrases:... |
 | `uml-diagram-generator` | This skill should be used when producing UML diagrams for documentation, architecture design, system modeling, or code-structure explanation. Trigger... |
+| `unicredit-document-template` | This skill should be used when producing, restyling or checking a Word (.docx) document written for UniCredit: runbooks, cutover plans, design... |
 
 ### `analysis-architecture`
 
