@@ -6,6 +6,41 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 
+### Added (2026-10-31)
+
+**`frontend-design`, `animate`, `review-animations` and `remove-animations`, in
+`dev-standards@1.1.0`.** The registry's first third-party content, copied as text after a
+review rather than installed. `frontend-design` is Anthropic's skill, read from
+`anthropics/skills` at `ca45fc4` (Apache-2.0): it sets a visual direction for an own-brand
+interface, plans a compact token system (4 to 6 named colours, type roles, ASCII
+wireframes), reviews the plan against the brief for generic defaults, then builds with one
+orchestrated motion moment and a quality floor. The three motion skills are Emil
+Kowalski's, read from `emilkowalski/skills` at `a81dbca` (MIT): `animate` builds motion in
+decision order (frequency gate, purpose, cheapest tool, properties, curve and duration,
+interruption, reduced motion), `review-animations` returns a Before / After / Why table and
+a Block or Approve verdict, `remove-animations` deletes or reduces the motion that fails its
+gate and reports what it kept. Left out: `animation-performance`, because most of its rules
+already sit in `animate` and in the review standards and its own additions lean on React
+and Framer Motion; `improve-animations`, whose audit writes plans into the project and fans
+out subagents; `animation-vocabulary`, a naming glossary for people rather than builders;
+and every React Native, Swift and library-specific skill. All files are Markdown, with no
+script, hook or network call. Changes from upstream, listed in each skill's `## Source`
+section: the em dashes rewritten (9 in `frontend-design`, 121 across the motion skills and
+their references), frontmatter reduced to `name` and `description` (`license` and
+`disable-model-invocation` dropped, so `review-animations` can now be loaded by agents),
+the "Initial Response" fixed greeting dropped, pointers to upstream skills the registry
+does not carry replaced, `RECIPES.md` and `STANDARDS.md` moved under `references/` with a
+contents list, and a scope line under the `frontend-design` title. Each skill directory
+carries the upstream licence text as `LICENSE.txt`. The descriptions say the skills are for
+own-brand products with no company design system and send client systems to
+`design-expert`, which is unchanged. `triggers.json` was written first for each: 14
+positives and 28 near misses in all, against `design-expert`, `css-expert`,
+`vanilla-expert`, `unicredit-design-system`, a code-only request and each other.
+`developer-frontend` gains one entry in Step 3 that sends own-brand work to
+`frontend-design` and motion to the three motion skills; its description is unchanged. The
+convention for copied skills is in `docs/registry/how-to-write-a-capability.md`,
+"Third-party content".
+
 ### Added (2026-10-22)
 
 **`visual-explainer`, in `docs-branding@1.2.0`.** A one-page interactive HTML explainer for

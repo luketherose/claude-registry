@@ -29,7 +29,7 @@
     {
       "name": "dev-standards",
       "source": "./plugins/dev-standards",
-      "description": "Production code standards, developer agents and test authoring for Java/Spring, Python, Go, Rust, Kotlin, C#, PHP, Ruby, Streamlit and frontend frameworks (Angular, React, Vue, Qwik, Vanilla), plus REST API design and bug diagnosis.",
+      "description": "Production code standards, developer agents and test authoring for Java/Spring, Python, Go, Rust, Kotlin, C#, PHP, Ruby, Streamlit and frontend frameworks (Angular, React, Vue, Qwik, Vanilla), plus REST API design, bug diagnosis, and visual design and motion for own-brand interfaces.",
       "category": "development",
       "tags": [
         "java",

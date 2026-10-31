@@ -1,0 +1,52 @@
+[
+  {
+    "query": "La UI della mia app personale sembra un template, dalle un'identita visiva sua: palette, font e layout. Non c'e nessun design system da seguire",
+    "should_trigger": true,
+    "description": "Own app UI that looks templated, given its own palette, type and layout with no design system to follow"
+  },
+  {
+    "query": "Sto costruendo la dashboard del mio second brain, voglio che sembri disegnata da un grafico professionista e non generata",
+    "should_trigger": true,
+    "description": "Personal second-brain dashboard meant to look professionally designed rather than generated"
+  },
+  {
+    "query": "Landing page per il mio side project: scegli tu direzione estetica, tipografia e copy, evita il solito look da SaaS",
+    "should_trigger": true,
+    "description": "Side-project landing page with a free aesthetic direction, typography and copy, away from the usual SaaS look"
+  },
+  {
+    "query": "Make my portfolio site look distinctive: pick the palette, the typefaces and one memorable detail",
+    "should_trigger": true,
+    "description": "Personal portfolio site with a distinctive palette, typefaces and one memorable detail"
+  },
+  {
+    "query": "Mockup della vista filtri seguendo il design system aziendale, poi la implemento io",
+    "should_trigger": false,
+    "description": "Mockup of a filter view following the design system"
+  },
+  {
+    "query": "Restyling della pagina conti per UniCredit con i componenti Bricks",
+    "should_trigger": false,
+    "description": "Accounts page restyled for UniCredit with Bricks components"
+  },
+  {
+    "query": "Questo SCSS ha una specificity war con !important ovunque, rifallo con BEM e design token",
+    "should_trigger": false,
+    "description": "SCSS specificity war rewritten with BEM and design tokens"
+  },
+  {
+    "query": "Fammi un widget standalone in Web Component, niente framework, bundle con Vite",
+    "should_trigger": false,
+    "description": "Standalone Web Component widget bundled with Vite"
+  },
+  {
+    "query": "Il dropdown del menu si apre a scatti: che easing e che durata gli metto?",
+    "should_trigger": false,
+    "description": "Easing and duration for a dropdown menu that opens abruptly"
+  },
+  {
+    "query": "Scrivi la funzione TypeScript che filtra le note per tag e il suo test vitest",
+    "should_trigger": false,
+    "description": "TypeScript function filtering notes by tag, with a vitest test"
+  }
+]

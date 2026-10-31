@@ -168,7 +168,8 @@ their own descriptions still refer to Phase 5.
 ```
 
 Production code standards, developer agents and test authoring across nine languages,
-plus REST API design and bug diagnosis. This is the day-to-day plugin. It ships
+plus REST API design, bug diagnosis, and visual design and motion for own-brand
+interfaces. This is the day-to-day plugin. It ships
 `plugins/dev-standards/.mcp.json`, wiring the Playwright MCP server used by
 `browser-automation`.
 
@@ -215,6 +216,10 @@ plus REST API design and bug diagnosis. This is the day-to-day plugin. It ships
 | `vanilla-expert` | Web Components, ES modules and framework-free widgets and libraries |
 | `css-expert` | CSS and SCSS: design tokens, BEM, specificity, theming, mobile-first responsive layout |
 | `design-expert` | Layouts, mockups and style specifications, produced before implementation starts |
+| `frontend-design` | Visual direction for own-brand interfaces with no company design system: palette, type, layout, copy, planned and reviewed before code. Adapted from Anthropic's skill (Apache-2.0) |
+| `animate` | Builds web motion in decision order: whether to animate, purpose, tool, properties, curve and duration, interruption, reduced motion. Adapted from Emil Kowalski (MIT) |
+| `review-animations` | Strict review of motion code with a findings table and a Block or Approve verdict. Adapted from Emil Kowalski (MIT) |
+| `remove-animations` | Puts every animation through a gate and deletes or reduces the ones that fail, then cleans up. Adapted from Emil Kowalski (MIT) |
 | `unicredit-design-system` | The UniCredit design system, for engagements with that end client |
 | `frontend-orchestrator` | Coordination when a frontend task spans routing, state, styling and API access at once |
 | `rest-api-standards` | The canonical REST design standards: resources, methods, status codes, versioning, RFC 7807, OpenAPI 3.1 |

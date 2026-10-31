@@ -178,7 +178,7 @@ AS-IS to TO-BE application replatforming pipeline: codebase indexing, functional
 
 ### `dev-standards`
 
-Production code standards, developer agents and test authoring for Java/Spring, Python, Go, Rust, Kotlin, C#, PHP, Ruby, Streamlit and frontend frameworks (Angular, React, Vue, Qwik, Vanilla), plus REST API design and bug diagnosis.
+Production code standards, developer agents and test authoring for Java/Spring, Python, Go, Rust, Kotlin, C#, PHP, Ruby, Streamlit and frontend frameworks (Angular, React, Vue, Qwik, Vanilla), plus REST API design, bug diagnosis, and visual design and motion for own-brand interfaces.
 
 ```bash
 /plugin install dev-standards@claude-registry
@@ -201,16 +201,18 @@ Production code standards, developer agents and test authoring for Java/Spring, 
 | `developer-rust` | inherit | Use this agent when writing, reviewing, or refactoring Rust code. Produces production-ready Rust following the Rust API guidelines, idiomatic... |
 | `test-writer` | inherit | Use this agent when writing tests for existing code: unit tests, integration tests, or end-to-end tests. Reads the production code, identifies test... |
 
-**Skills (29)**
+**Skills (33)**
 
 | Skill | Provides |
 |---|---|
 | `angular-expert` | This skill should be used when the user works on Angular 17+ code: writing or reviewing components, applying the smart/dumb split, configuring... |
+| `animate` | This skill should be used when building a web animation or transition from scratch: it makes the decisions in the order that decides whether motion... |
 | `backend-orchestrator` | ALWAYS use this skill when a backend task spans more than one Java/Spring layer: the user asks to add a new endpoint end-to-end, design a module from... |
 | `browser-automation` | This skill should be used when controlling a real browser: navigating pages, taking screenshots, clicking elements, filling forms, switching tabs,... |
 | `css-expert` | This skill should be used when writing, refactoring, or reviewing CSS/SCSS: design tokens, BEM naming, specificity rules, modularity, mobile-first... |
 | `dependency-resolver` | This skill should be used when a dependency conflict blocks progress: the user reports `NoSuchMethodError`, \"works locally fails in CI\",... |
 | `design-expert` | This skill should be used when designing layouts, mockups, or style specifications BEFORE implementing a new frontend component. Trigger phrases:... |
+| `frontend-design` | This skill should be used when building a new interface or reshaping an existing one for an own-brand product with no company design system, where... |
 | `frontend-orchestrator` | ALWAYS use this skill when a frontend task spans multiple concerns: the user asks to design a feature mixing routing, state management, styling, and... |
 | `java-expert` | This skill should be used when working with Java 17+ language features outside the Spring layer: records, sealed classes, Optional, Stream API,... |
 | `java-spring-standards` | This skill should be used when an agent (developer-java, pr-review-toolkit:code-reviewer, test-writer) needs the canonical Java/Spring Boot standards: package... |
@@ -221,7 +223,9 @@ Production code standards, developer agents and test authoring for Java/Spring, 
 | `qwik-expert` | This skill should be used when working on a Qwik or Qwik City app: resumability, lazy components, signals, server-side loaders/actions, file-based... |
 | `react-expert` | This skill should be used when working with React 18+: component architecture, hooks, TypeScript prop typing, performance optimisation... |
 | `refactoring-expert` | This skill should be used when refactoring code in any language to improve internal structure without changing behaviour. Trigger phrases: \"refactor... |
+| `remove-animations` | This skill should be used when an interface has more motion than it needs: it puts every existing animation through a gate (keyboard actions,... |
 | `rest-api-standards` | This skill should be used when an agent (api-designer, developer, pr-review-toolkit:code-reviewer) needs the canonical REST API design standards: resource modeling,... |
+| `review-animations` | This skill should be used when reviewing existing animation and motion code, typically a diff or a just-written component, against a strict craft... |
 | `rxjs-expert` | This skill should be used when working with RxJS in an Angular project: naming conventions, flattening strategies... |
 | `spring-architecture` | This skill should be used when designing or reviewing the LAYERING of a Spring Boot module: Controller/Service/Repository/Entity boundaries,... |
 | `spring-data-jpa` | This skill should be used when working with JPA/Hibernate inside a Spring project: entity design, relations, fetch strategies, N+1 fixes, transaction... |

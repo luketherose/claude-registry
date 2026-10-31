@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "dev-standards",
-  "description": "Production code standards, developer agents and test authoring for Java/Spring, Python, Go, Rust, Kotlin, C#, PHP, Ruby, Streamlit and frontend frameworks (Angular, React, Vue, Qwik, Vanilla), plus REST API design and bug diagnosis.",
-  "version": "1.0.0",
+  "description": "Production code standards, developer agents and test authoring for Java/Spring, Python, Go, Rust, Kotlin, C#, PHP, Ruby, Streamlit and frontend frameworks (Angular, React, Vue, Qwik, Vanilla), plus REST API design, bug diagnosis, and visual design and motion for own-brand interfaces.",
+  "version": "1.1.0",
   "author": {
     "name": "Luca La Rosa",
     "email": "luca.la.rosa@accenture.com"
@@ -21,7 +21,9 @@
     "kotlin",
     "standards",
     "testing",
-    "debugging"
+    "debugging",
+    "design",
+    "animation"
   ],
   "mcpServers": "./.mcp.json"
 }

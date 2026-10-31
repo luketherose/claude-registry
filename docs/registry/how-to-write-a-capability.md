@@ -288,6 +288,39 @@ consuming agent can call it without reading the source.
 Handle errors inside the script rather than deferring to Claude, and justify every
 constant in a comment. A timeout of 47 with no explanation is a bug waiting to happen.
 
+### Third-party content
+
+A skill may be copied from an outside repository when its license allows it. The first
+ones are `frontend-design` (Anthropic, Apache-2.0) and `animate`, `review-animations` and
+`remove-animations` (Emil Kowalski, MIT), all in `dev-standards`.
+
+- **Text only.** Read the upstream files through the GitHub API at a fixed commit
+  (`gh api repos/<owner>/<repo>/contents/<path>?ref=<sha>`), never by cloning, installing
+  or running `npx`. A skill that needs a script, a hook, a binary, an MCP server or a
+  network request at run time is not copied: it would not work in a sandbox with no
+  network, and every update would bring a supply chain to review.
+- **The license sits beside the skill.** The upstream license text goes unchanged into
+  `LICENSE.txt` in the skill directory. The plugin manifest says `UNLICENSED`; the copied
+  files stay under their own license, and that file is what says so.
+- **A `## Source` section ends the body**, with the upstream URL at the commit, the license
+  and the list of changes. Apache-2.0 requires a modified file to say that it was changed,
+  and the list is how a reader tells the upstream text from ours.
+- **Registry rules win over upstream form.** The frontmatter keeps `name` and
+  `description` only, and the change list names every key dropped (`license`,
+  `disable-model-invocation`). The body is rewritten to pass the em dash gate. Companion
+  files move under `references/`, with a `## Contents` when they run past 100 lines.
+  Pointers to upstream skills the registry does not carry are removed or replaced. An
+  instruction to answer with a fixed sentence on first load is dropped, because it stalls
+  an agent that loads the skill in the middle of a task.
+- **The description is ours.** It draws the boundary against the registry's own siblings,
+  and `triggers.json` is written first, with a negative for each of them, as for any skill.
+- **Project rules stay in the project.** A constraint that belongs to one product (a CSP,
+  a test-id contract, a font policy) goes into that product's repository, not into the
+  copied skill.
+- **An update** is a new fetch at a new commit, a diff against the commit recorded in
+  `## Source`, the same changes applied again, and a plugin version bump. Never track a
+  moving branch.
+
 ### How an agent uses a skill
 
 Two mechanisms, and the choice matters.
@@ -516,6 +549,7 @@ bash scripts/test-clean-install.sh
 - [ ] Combined description budget still under 13000 tokens
 - [ ] Any capability this change retires is in `RETIRED`, and every reference to it is gone
 - [ ] Any MCP server this change adds names an exact version or commit SHA
+- [ ] A skill copied from outside the registry carries its upstream `LICENSE.txt` and a `## Source` section naming the commit and the changes
 - [ ] No credentials, tokens or secrets anywhere
 
 ---
