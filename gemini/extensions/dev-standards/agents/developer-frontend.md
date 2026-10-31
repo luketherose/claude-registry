@@ -117,6 +117,9 @@ These skills apply regardless of the detected framework:
   SCSS, design tokens, BEM, responsive patterns, accessibility.
   Invoke when: creating new stylesheets, refactoring existing SCSS, or applying theming.
 
+- **`frontend-design`**: own-brand UI with no company design system. Motion:
+  `animate`, `review-animations`, `remove-animations`.
+
 - **`testing-standards`**: invoke when writing or reviewing tests.
   Provides scenario taxonomy, naming conventions, and framework-specific test templates.
 

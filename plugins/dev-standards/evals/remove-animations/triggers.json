@@ -1,0 +1,52 @@
+[
+  {
+    "query": "L'app sembra lenta, c'e troppa animazione: togli quelle che non servono",
+    "should_trigger": true,
+    "description": "App that feels slow from too much motion, with the unneeded animations taken out"
+  },
+  {
+    "query": "Tone down the motion in this dashboard, it feels over-animated",
+    "should_trigger": true,
+    "description": "Over-animated dashboard with its motion toned down"
+  },
+  {
+    "query": "Quali animazioni posso eliminare? La command palette ha la dissolvenza a ogni apertura e ogni sezione entra con un fade",
+    "should_trigger": true,
+    "description": "Which animations to delete, given a fading command palette and a fade on every section"
+  },
+  {
+    "query": "Review this diff's animations strictly and tell me whether to block or approve",
+    "should_trigger": false,
+    "description": "Strict block-or-approve review of the motion in a diff"
+  },
+  {
+    "query": "Aggiungi una transizione d'ingresso al pannello laterale quando si apre dal pulsante, in CSS senza librerie",
+    "should_trigger": false,
+    "description": "Entry transition for a side panel opened from a button, in CSS with no library"
+  },
+  {
+    "query": "Landing page per il mio side project: scegli tu direzione estetica, tipografia e copy, evita il solito look da SaaS",
+    "should_trigger": false,
+    "description": "Side-project landing page with a free aesthetic direction, typography and copy, away from the usual SaaS look"
+  },
+  {
+    "query": "Mockup della vista filtri seguendo il design system aziendale, poi la implemento io",
+    "should_trigger": false,
+    "description": "Mockup of a filter view following the design system"
+  },
+  {
+    "query": "Questo SCSS ha una specificity war con !important ovunque, rifallo con BEM e design token",
+    "should_trigger": false,
+    "description": "SCSS specificity war rewritten with BEM and design tokens"
+  },
+  {
+    "query": "Fammi un widget standalone in Web Component, niente framework, bundle con Vite",
+    "should_trigger": false,
+    "description": "Standalone Web Component widget bundled with Vite"
+  },
+  {
+    "query": "Rimuovi il codice morto da questo modulo TypeScript, le funzioni che non chiama nessuno",
+    "should_trigger": false,
+    "description": "Dead code removal from a TypeScript module, functions nobody calls"
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "query": "Review this diff's animations strictly and tell me whether to block or approve",
+    "should_trigger": true,
+    "description": "Strict block-or-approve review of the motion in a diff"
+  },
+  {
+    "query": "Controlla le transizioni di questa PR: easing, durate, transform-origin e reduced motion",
+    "should_trigger": true,
+    "description": "Check of a pull request's transitions: easing, durations, transform-origin and reduced motion"
+  },
+  {
+    "query": "Il modal e il tooltip che ho appena scritto: le animazioni sono fatte bene?",
+    "should_trigger": true,
+    "description": "Whether the animations of a just-written modal and tooltip are well built"
+  },
+  {
+    "query": "Il dropdown del menu si apre a scatti: che easing e che durata gli metto?",
+    "should_trigger": false,
+    "description": "Easing and duration for a dropdown menu that opens abruptly"
+  },
+  {
+    "query": "L'app sembra lenta, c'e troppa animazione: togli quelle che non servono",
+    "should_trigger": false,
+    "description": "App that feels slow from too much motion, with the unneeded animations taken out"
+  },
+  {
+    "query": "Sto costruendo la dashboard del mio second brain, voglio che sembri disegnata da un grafico professionista e non generata",
+    "should_trigger": false,
+    "description": "Personal second-brain dashboard meant to look professionally designed rather than generated"
+  },
+  {
+    "query": "Prima di implementare, che aspetto deve avere la pagina di riepilogo ordine? Dammi layout e style spec",
+    "should_trigger": false,
+    "description": "Layout and style spec for an order summary page"
+  },
+  {
+    "query": "Layout responsive mobile-first per questa griglia di card, ora sfonda sotto i 375px",
+    "should_trigger": false,
+    "description": "Mobile-first responsive card grid breaking under 375px"
+  },
+  {
+    "query": "Questo banner lo faccio in DOM puro con ES Modules, il framework sarebbe overkill",
+    "should_trigger": false,
+    "description": "Banner in plain DOM with ES Modules, no framework"
+  },
+  {
+    "query": "Fai la code review di questo service TypeScript, cerca bug e problemi di tipi",
+    "should_trigger": false,
+    "description": "Code review of a TypeScript service for bugs and typing issues"
+  }
+]

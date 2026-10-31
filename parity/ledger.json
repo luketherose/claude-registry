@@ -45,7 +45,7 @@
     "source": "claude-registry",
     "status": "diverged",
     "reason": "Ported with the tool-name and frontmatter substitutions applied, but both bundled references (references/developers/developer-frontend/per-framework-conventions.md and output-templates.md) were not carried over: a Gemini extension has no convention for an agent-adjacent reference file, and the source hosts plugin-root variable is not substituted in an agent body here. This is the largest loss in the batch: Step 2 delegated the entire per-stack skill mapping and the non-negotiable framework invariants to the first doc, so the Gemini copy detects the framework and then has no invariant set to apply and must ask the user. Pointers dropped rather than left aimed at paths that do not resolve, invariants not reconstructed. Close by porting both references as a skill before anyone relies on this agent.",
-    "source_sha": "6d0cadd34b481bda1c9e69389af15fd8c8ced7eb",
+    "source_sha": "8ff60267e61fc8b2d827e82a871f020eb7e63f3c",
     "recheck": "2026-12-10",
     "published_ref": ""
   },
@@ -557,6 +557,46 @@
     "reason": "",
     "source_sha": "6132042001837ef09b5db0d6d1e07ee4d2ab0102",
     "recheck": "2026-12-22",
+    "published_ref": ""
+  },
+  {
+    "capability": "frontend-design",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "8ff60267e61fc8b2d827e82a871f020eb7e63f3c",
+    "recheck": "2026-12-31",
+    "published_ref": ""
+  },
+  {
+    "capability": "animate",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "8ff60267e61fc8b2d827e82a871f020eb7e63f3c",
+    "recheck": "2026-12-31",
+    "published_ref": ""
+  },
+  {
+    "capability": "review-animations",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "8ff60267e61fc8b2d827e82a871f020eb7e63f3c",
+    "recheck": "2026-12-31",
+    "published_ref": ""
+  },
+  {
+    "capability": "remove-animations",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "8ff60267e61fc8b2d827e82a871f020eb7e63f3c",
+    "recheck": "2026-12-31",
     "published_ref": ""
   }
 ]

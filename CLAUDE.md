@@ -208,3 +208,10 @@ fixture path that does not resolve, and on a `description` that states the verdi
 4. Write the capability.
 5. Run the validator, then `claude plugin validate .`.
 6. Update the CHANGELOG and bump the plugin version.
+
+## Project conventions
+
+- A skill copied from an outside repository is text only, keeps the upstream license text
+  in `LICENSE.txt` beside its `SKILL.md`, and ends with a `## Source` section naming the
+  upstream URL at a fixed commit, the license and every change. The full rule is in
+  `docs/registry/how-to-write-a-capability.md`, "Third-party content".
