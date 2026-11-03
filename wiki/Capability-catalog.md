@@ -218,6 +218,7 @@ interfaces. This is the day-to-day plugin. It ships
 | `design-expert` | Layouts, mockups and style specifications, produced before implementation starts |
 | `frontend-design` | Visual direction for own-brand interfaces with no company design system: palette, type, layout, copy, planned and reviewed before code. Adapted from Anthropic's skill (Apache-2.0) |
 | `animate` | Builds web motion in decision order: whether to animate, purpose, tool, properties, curve and duration, interruption, reduced motion. Adapted from Emil Kowalski (MIT) |
+| `apple-design` | Apple's interface and motion principles for the web: translucent materials and depth, interruptible velocity-aware springs, gestures with momentum and rubber-banding, size-specific typography, reduced motion and transparency. Adapted from Emil Kowalski (MIT) |
 | `review-animations` | Strict review of motion code with a findings table and a Block or Approve verdict. Adapted from Emil Kowalski (MIT) |
 | `remove-animations` | Puts every animation through a gate and deletes or reduces the ones that fail, then cleans up. Adapted from Emil Kowalski (MIT) |
 | `unicredit-design-system` | The UniCredit design system, for engagements with that end client |

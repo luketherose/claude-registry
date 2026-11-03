@@ -6,6 +6,26 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 
+### Added (2026-11-04)
+
+**`apple-design`, in `dev-standards@1.2.0`.** Emil Kowalski's skill on Apple's interface and
+motion principles translated for the web, read from `emilkowalski/skills` at `f1090be`
+(MIT) and copied as text, like the four skills of 31 October. It covers response and 1:1
+tracking, interruptibility, springs in Apple's damping and response terms with the values
+Apple ships, velocity handoff, momentum projection, rubber-banding, translucent materials
+and depth (`backdrop-filter` layers, material weight, vibrancy, scroll edge effects,
+materializing rather than fading), multimodal feedback, the reduced-motion,
+reduced-transparency and contrast signals, size-specific tracking and leading, and the
+eight design principles of WWDC 2026. It is Markdown only, with no script, hook or network
+call. Changes from upstream, listed in its `## Source` section: the description rewritten
+to draw the boundary against `animate`, `review-animations`, `frontend-design` and
+`design-expert`, the "Initial Response" fixed greeting dropped, and 65 em dashes rewritten.
+The directory carries the upstream licence text as `LICENSE.txt`. `triggers.json` was
+written first: 5 positives and 7 near misses, against `animate`, `review-animations`,
+`remove-animations`, `frontend-design`, `design-expert`, `css-expert` and a native SwiftUI
+request. `developer-frontend` is unchanged: its body already sits at the 10000 character
+ceiling, so the skill is reached through its own description.
+
 ### Added (2026-10-31)
 
 **`frontend-design`, `animate`, `review-animations` and `remove-animations`, in
