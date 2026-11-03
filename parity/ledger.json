@@ -598,5 +598,15 @@
     "source_sha": "8ff60267e61fc8b2d827e82a871f020eb7e63f3c",
     "recheck": "2026-12-31",
     "published_ref": ""
+  },
+  {
+    "capability": "apple-design",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "98d9ad640f1991f0650ef85bc04c9709b7c80291",
+    "recheck": "2026-12-31",
+    "published_ref": ""
   }
 ]
