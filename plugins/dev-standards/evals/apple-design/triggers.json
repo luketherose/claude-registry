@@ -1,0 +1,62 @@
+[
+  {
+    "query": "Voglio i pannelli traslucidi stile liquid glass di Apple per la dashboard: blur, profondità e testo che resta leggibile",
+    "should_trigger": true,
+    "description": "Apple-style translucent glass panels for a dashboard, with depth and legible text"
+  },
+  {
+    "query": "Make this bottom sheet follow the finger and settle with a spring that keeps the release velocity, like iOS",
+    "should_trigger": true,
+    "description": "Bottom sheet that tracks the pointer and settles with a velocity-aware spring"
+  },
+  {
+    "query": "La barra di navigazione deve galleggiare sopra il contenuto come su macOS, con il contenuto che scorre sotto",
+    "should_trigger": true,
+    "description": "Floating translucent navigation bar with content scrolling underneath, macOS-like"
+  },
+  {
+    "query": "Rubber-band the carousel at its edges and project the flick so it lands on the right card",
+    "should_trigger": true,
+    "description": "Carousel with soft edge resistance and momentum projection on flick"
+  },
+  {
+    "query": "Tighten the tracking of the large headings and loosen the body leading the way Apple does with SF",
+    "should_trigger": true,
+    "description": "Size-specific tracking and leading on headings and body text, Apple-style"
+  },
+  {
+    "query": "Che easing e che durata metto al dropdown che si apre dal bottone?",
+    "should_trigger": false,
+    "description": "Easing and duration for one dropdown opened from a button"
+  },
+  {
+    "query": "Review the animations in this diff and tell me whether to block or approve",
+    "should_trigger": false,
+    "description": "Strict block-or-approve review of the motion in a diff"
+  },
+  {
+    "query": "C'è troppa animazione in questa app, togli quella che non serve",
+    "should_trigger": false,
+    "description": "Taking unneeded motion out of an over-animated app"
+  },
+  {
+    "query": "Give my side project its own look: palette, typefaces and layout that do not feel templated",
+    "should_trigger": false,
+    "description": "Own-brand visual direction for palette, type and layout"
+  },
+  {
+    "query": "Disegna il mockup della pagina di login seguendo il design system del cliente",
+    "should_trigger": false,
+    "description": "Login mockup that follows a client design system"
+  },
+  {
+    "query": "Refactor this SCSS into BEM with design tokens and fix the specificity fights",
+    "should_trigger": false,
+    "description": "SCSS refactor to BEM and tokens with specificity fixes"
+  },
+  {
+    "query": "Write the SwiftUI view for this settings screen with a sheet presentation",
+    "should_trigger": false,
+    "description": "Native SwiftUI settings view with a sheet"
+  }
+]

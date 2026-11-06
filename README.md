@@ -201,12 +201,13 @@ Production code standards, developer agents and test authoring for Java/Spring, 
 | `developer-rust` | inherit | Use this agent when writing, reviewing, or refactoring Rust code. Produces production-ready Rust following the Rust API guidelines, idiomatic... |
 | `test-writer` | inherit | Use this agent when writing tests for existing code: unit tests, integration tests, or end-to-end tests. Reads the production code, identifies test... |
 
-**Skills (33)**
+**Skills (34)**
 
 | Skill | Provides |
 |---|---|
 | `angular-expert` | This skill should be used when the user works on Angular 17+ code: writing or reviewing components, applying the smart/dumb split, configuring... |
 | `animate` | This skill should be used when building a web animation or transition from scratch: it makes the decisions in the order that decides whether motion... |
+| `apple-design` | This skill should be used when an own-brand web interface should look and move the Apple way: translucent materials and depth (backdrop-filter... |
 | `backend-orchestrator` | ALWAYS use this skill when a backend task spans more than one Java/Spring layer: the user asks to add a new endpoint end-to-end, design a module from... |
 | `browser-automation` | This skill should be used when controlling a real browser: navigating pages, taking screenshots, clicking elements, filling forms, switching tabs,... |
 | `css-expert` | This skill should be used when writing, refactoring, or reviewing CSS/SCSS: design tokens, BEM naming, specificity rules, modularity, mobile-first... |
