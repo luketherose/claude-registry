@@ -1,0 +1,57 @@
+[
+  {
+    "query": "Fammi il C4 in HTML per il cliente, livelli 1-3, con gli use case principali evidenziati sul container diagram",
+    "should_trigger": true,
+    "description": "Client HTML page with C4 levels 1 to 3 and the main use cases highlighted on the container diagram"
+  },
+  {
+    "query": "Turn this architecture model into a branded HTML deliverable with context, container and component diagrams, each with a key and the Mermaid source",
+    "should_trigger": true,
+    "description": "Branded HTML deliverable of context, container and component diagrams with keys and Mermaid source"
+  },
+  {
+    "query": "Abbiamo unito due servizi: rigenera la pagina del C4 e ricontrolla che frecce ed etichette non si sovrappongano",
+    "should_trigger": true,
+    "description": "Regenerating a C4 page after merging two services and checking arrows and labels for overlaps"
+  },
+  {
+    "query": "The container diagram is too dense: give me one view per use case with the components involved lit up and the steps numbered beside it",
+    "should_trigger": true,
+    "description": "One view per use case on a dense container diagram, involved components lit up and steps numbered"
+  },
+  {
+    "query": "Rifai i diagrammi di architettura in stile UniCredit, con le zone tratteggiate e i badge numerati sulle frecce",
+    "should_trigger": true,
+    "description": "Architecture diagrams redone in UniCredit style with dashed zones and numbered badges on the arrows"
+  },
+  {
+    "query": "Quali regole del C4 sto violando in questo container diagram scritto in Mermaid?",
+    "should_trigger": false,
+    "description": "Which C4 rules a Mermaid container diagram breaks"
+  },
+  {
+    "query": "Spiegami in modo semplicissimo, con una pagina interattiva, come funziona la nostra pipeline di rilascio",
+    "should_trigger": false,
+    "description": "Very simple interactive page explaining a release pipeline"
+  },
+  {
+    "query": "Draw the sequence diagram of the login flow and the class diagram of the auth module",
+    "should_trigger": false,
+    "description": "Sequence diagram of a login flow and class diagram of an auth module"
+  },
+  {
+    "query": "Make a PowerPoint deck of the target architecture for the steering committee",
+    "should_trigger": false,
+    "description": "Slide deck of a target architecture for a steering committee"
+  },
+  {
+    "query": "Impagina questo runbook nel template Word di UniCredit",
+    "should_trigger": false,
+    "description": "Runbook laid out in the UniCredit Word template"
+  },
+  {
+    "query": "Write an ADR comparing two API gateway products for our platform",
+    "should_trigger": false,
+    "description": "Architecture decision record comparing two API gateway options"
+  }
+]

@@ -62,7 +62,7 @@
     {
       "name": "docs-branding",
       "source": "./plugins/docs-branding",
-      "description": "Technical documentation authoring and branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, Accenture-branded PDF/DOCX documents and PowerPoint presentations, UniCredit-template Word documents, and interactive HTML explainers.",
+      "description": "Technical documentation authoring and branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, Accenture-branded PDF/DOCX documents and PowerPoint presentations, UniCredit-template Word documents, interactive HTML explainers, and C4 architecture pages in HTML.",
       "category": "development",
       "tags": [
         "documentation",
@@ -77,10 +77,11 @@
     {
       "name": "analysis-architecture",
       "source": "./plugins/analysis-architecture",
-      "description": "System architecture design, ADR authoring, functional requirement extraction, technical debt assessment, capability-registry auditing, and multi-domain task orchestration.",
+      "description": "System architecture design, C4 model diagrams, ADR authoring, functional requirement extraction, technical debt assessment, capability-registry auditing, and multi-domain task orchestration.",
       "category": "development",
       "tags": [
         "architecture",
+        "c4",
         "adr",
         "requirements",
         "technical-debt",
