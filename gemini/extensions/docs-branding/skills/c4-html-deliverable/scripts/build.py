@@ -208,7 +208,10 @@ h3{font-size:16px;margin:22px 0 8px;color:var(--ink)}
 .tabs [aria-selected=true] .num{background:var(--accent-text);color:#fff}
 .tabpanel{padding-top:10px}
 .uc-title{font-size:19px;margin:8px 0 2px}
-.js .tabpanel:not(.active){display:none}
+/* Safari draws an SVG wrongly when it is first laid out inside display:none and shown later,
+   so inactive panels stay laid out: collapsed, clipped and invisible, never display:none. */
+section.view{position:relative}
+.js .tabpanel:not(.active){position:absolute;left:0;right:0;top:0;height:0;overflow:hidden;visibility:hidden}
 html:not(.js) .tabs,html:not(.js) .tabs-lead{display:none}
 .flow-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:22px;align-items:start;margin-top:12px}
 .flow-grid>*{min-width:0}
@@ -245,7 +248,7 @@ pre{background:var(--code);color:#EDEDEF;padding:14px;border-radius:6px;overflow
 footer{border-top:1px solid var(--soft);color:var(--muted);font-size:12.5px;padding:16px 32px}
 @media (max-width:1100px){.flow-grid{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:700px){header.top{padding:20px 18px}header.top h1{font-size:23px}h2{font-size:21px}nav.toc{padding:8px 18px;flex-wrap:nowrap;overflow-x:auto;font-size:13px;-webkit-overflow-scrolling:touch}main{padding:4px 16px 32px}.diagram svg{min-width:760px}}
-@media print{nav.toc{display:none}.tabs,.tabs-lead{display:none}.js .tabpanel{display:block}.tabpanel+.tabpanel{break-before:page}section.view{break-before:page}.diagram svg{min-width:0}.flow-grid{grid-template-columns:minmax(0,1fr) 300px}details{display:block}details>*{display:block}header.top,th,.lvl,.steps li::before{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+@media print{nav.toc{display:none}.tabs,.tabs-lead{display:none}.js .tabpanel:not(.active){position:static;height:auto;overflow:visible;visibility:visible}.tabpanel+.tabpanel{break-before:page}section.view{break-before:page}.diagram svg{min-width:0}.flow-grid{grid-template-columns:minmax(0,1fr) 300px}details{display:block}details>*{display:block}header.top,th,.lvl,.steps li::before{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 @page{size:A3 landscape;margin:12mm}
 """
 
