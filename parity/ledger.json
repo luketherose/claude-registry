@@ -525,7 +525,7 @@
     "source": "claude",
     "status": "mirrored",
     "reason": "",
-    "source_sha": "dcf474ff9c61509f36c94658ec990799ac0b7e8e",
+    "source_sha": "7aaf1b568013d308745113de2d8798adfe1bc1a3",
     "recheck": "2026-12-10",
     "published_ref": ""
   },
@@ -606,6 +606,16 @@
     "status": "mirrored",
     "reason": "",
     "source_sha": "98d9ad640f1991f0650ef85bc04c9709b7c80291",
+    "recheck": "2026-12-31",
+    "published_ref": ""
+  },
+  {
+    "capability": "c4-architecture",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "7aaf1b568013d308745113de2d8798adfe1bc1a3",
     "recheck": "2026-12-31",
     "published_ref": ""
   }
