@@ -1,6 +1,6 @@
 ---
 name: c4-architecture
-description: "This skill should be used when documenting or reviewing software architecture with the C4 model: System Context, Container, Component, Deployment and Dynamic diagrams, written as Mermaid C4 diagrams as code. Trigger phrases: \"C4 diagram\", \"C4 model\", \"system context diagram\", \"container diagram\", \"C4 component diagram\", \"deployment diagram\", \"document the architecture\". It holds the level each audience needs, the element and relationship syntax, the notation rules (title, key, type and technology on every element, labelled one-way arrows) and the common modelling mistakes: libraries drawn as containers, a broker drawn as one box, mixed abstraction levels. Not for UML notation such as class, sequence, ER or UML component diagrams (uml-diagram-generator), simple interactive explainers (visual-explainer), BPMN process diagrams, or architecture decisions and trade-offs (software-architect)."
+description: "This skill should be used when documenting or reviewing software architecture with the C4 model: System Context, Container, Component, Deployment and Dynamic diagrams, written as Mermaid C4 diagrams as code. Trigger phrases: \"C4 diagram\", \"C4 model\", \"system context diagram\", \"container diagram\", \"C4 component diagram\", \"deployment diagram\", \"document the architecture\". It holds the level each audience needs, the element and relationship syntax, the notation rules (title, key, type and technology on every element, labelled one-way arrows) and the common modelling mistakes: libraries drawn as containers, a broker drawn as one box, mixed abstraction levels. Not for UML notation such as class, sequence, ER or UML component diagrams (uml-diagram-generator), simple interactive explainers (visual-explainer), a branded HTML page of the model for readers (c4-html-deliverable), BPMN process diagrams, or architecture decisions and trade-offs (software-architect)."
 ---
 
 # C4 Architecture Documentation
@@ -231,7 +231,7 @@ The notation guide and review checklist on c4model.com (https://c4model.com/diag
 
 ### Rendering for a Deliverable
 
-Mermaid lays C4 diagrams out automatically, and past about ten elements labels start to overlap lines and boxes (see the limitations at the end of [references/c4-syntax.md](references/c4-syntax.md)). When the diagrams go to readers rather than into a repository, place the elements explicitly (with `UpdateLayoutConfig` and the order of declaration, or by drawing the SVG from the same element list), keep the Mermaid source beside each picture as the diagram as code, and look at every rendered diagram for crossing lines and covered labels before handing it over.
+Mermaid lays C4 diagrams out automatically, and past about ten elements labels start to overlap lines and boxes (see the limitations at the end of [references/c4-syntax.md](references/c4-syntax.md)). When the diagrams go to readers rather than into a repository, place the elements explicitly (with `UpdateLayoutConfig` and the order of declaration, or by drawing the SVG from the same element list), keep the Mermaid source beside each picture as the diagram as code, and look at every rendered diagram for crossing lines and covered labels before handing it over. In this registry the `c4-html-deliverable` skill of the `docs-branding` plugin does all of this, with a collision check; without that plugin, follow the steps in this paragraph.
 
 ## Microservices Guidelines
 
@@ -311,9 +311,9 @@ In a code repository, write architecture documentation to `docs/architecture/` w
 
 Adapted from the `c4-architecture` skill by Leonardo Flores in `softaworks/agent-toolkit`, https://github.com/softaworks/agent-toolkit/tree/3027f20f3181758385a1bb8c022d4041dfb4de84/skills/c4-architecture (`SKILL.md` blob `ed972bca7f564609ee246e2ddf912b71a073b917`, last changed upstream in `06825f0`), under the MIT License (copyright 2026 Leonardo Flores), whose text is in `LICENSE.txt` beside this file. This file and `references/` are modified. Changes from upstream:
 
-- The description rewritten to draw the registry's boundaries against `uml-diagram-generator`, `visual-explainer` and the `software-architect` agent, and against BPMN.
+- The description rewritten to draw the registry's boundaries against `uml-diagram-generator`, `visual-explainer`, `c4-html-deliverable` and the `software-architect` agent, and against BPMN.
 - "Output Location" limited to code repositories: elsewhere the files go where the user says.
-- Two subsections added under "Best Practices": "Notation", with the four rules of the c4model.com notation guide and checklist that the upstream text does not state, and "Rendering for a Deliverable".
+- Two subsections added under "Best Practices": "Notation", with the four rules of the c4model.com notation guide and checklist that the upstream text does not state, and "Rendering for a Deliverable", which points to `c4-html-deliverable`.
 - In `references/c4-syntax.md` the heading "Table of Contents" renamed "Contents"; `references/advanced-patterns.md` and `references/common-mistakes.md` gained a `## Contents` list, because each runs past 100 lines.
 - The upstream `README.md` not copied: it describes the skill to human readers and repeats the body.
 - This section added. Nothing else changed.
