@@ -41,7 +41,10 @@ container, and network entry points such as virtual IPs are an `infrastructure` 
 as a pill outside the system boundary. Inactive panels stay laid out, collapsed and invisible,
 never `display:none`, because Safari draws an SVG first laid out hidden wrongly once shown.
 Tabs follow the ARIA pattern, take deep links (`#uc2`), scroll sideways on a phone, and
-print one panel per page; without JavaScript every panel shows in sequence. Every view carries
+print one panel per page; without JavaScript every panel shows in sequence. `DOC["pages"]` adds
+pages after the model, such as the network and infrastructure of one environment, behind a page
+menu under the header with the same tab rules; a deep link opens the page and the tab around its
+target. About, Open decisions and C4 conformance can be left out. Every view carries
 its key, notes, element and relationship lists and its Mermaid C4 source. The skill ships the
 engine (`scripts/render.py` with a geometric collision check over arrows, labels, badges,
 zones and canvas; `scripts/check.py`; `scripts/build.py`, which exits 1 while any warning is
