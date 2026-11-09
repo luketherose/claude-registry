@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "docs-branding",
   "description": "Technical documentation authoring and branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, Accenture-branded PDF/DOCX documents and PowerPoint presentations, UniCredit-template Word documents, and interactive HTML explainers.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "Luca La Rosa",
     "email": "luca.la.rosa@accenture.com"

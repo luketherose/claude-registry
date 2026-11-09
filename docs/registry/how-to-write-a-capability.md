@@ -292,7 +292,8 @@ constant in a comment. A timeout of 47 with no explanation is a bug waiting to h
 
 A skill may be copied from an outside repository when its license allows it. The first
 ones are `frontend-design` (Anthropic, Apache-2.0) and `animate`, `review-animations`,
-`remove-animations` and `apple-design` (Emil Kowalski, MIT), all in `dev-standards`.
+`remove-animations` and `apple-design` (Emil Kowalski, MIT), all in `dev-standards`, and
+`c4-architecture` (Leonardo Flores, MIT) in `analysis-architecture`.
 
 - **Text only.** Read the upstream files through the GitHub API at a fixed commit
   (`gh api repos/<owner>/<repo>/contents/<path>?ref=<sha>`), never by cloning, installing

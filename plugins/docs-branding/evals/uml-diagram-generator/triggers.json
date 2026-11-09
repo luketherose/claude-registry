@@ -23,5 +23,10 @@
     "query": "Disegnami il processo di approvazione in BPMN",
     "should_trigger": false,
     "description": "Approval process drawn in BPMN"
+  },
+  {
+    "query": "Fammi il C4 container diagram del sistema, con persone, sistemi esterni e protocolli",
+    "should_trigger": false,
+    "description": "C4 container diagram with people, external systems and protocols"
   }
 ]

@@ -293,7 +293,7 @@ Technical documentation authoring and branded deliverable generation: READMEs, w
 
 ### `analysis-architecture`
 
-System architecture design, ADR authoring, functional requirement extraction, technical debt assessment, capability-registry auditing, and multi-domain task orchestration.
+System architecture design, C4 model diagrams, ADR authoring, functional requirement extraction, technical debt assessment, capability-registry auditing, and multi-domain task orchestration.
 
 ```bash
 /plugin install analysis-architecture@claude-registry
@@ -309,10 +309,12 @@ System architecture design, ADR authoring, functional requirement extraction, te
 | `software-architect` | inherit | Use this agent when analyzing or designing system architecture, evaluating technology choices, reviewing integration patterns, writing Architecture... |
 | `technical-analyst` | inherit | Use this agent when producing a technical analysis of an existing system: technology stack assessment, technical debt inventory, security posture... |
 
-**Skills (3)**
+**Skills (5)**
 
 | Skill | Provides |
 |---|---|
+| `app-inventory` | This skill should be used when the user asks for an inventory of an unknown or poorly documented application estate before a decommissioning, a... |
+| `c4-architecture` | This skill should be used when documenting or reviewing software architecture with the C4 model: System Context, Container, Component, Deployment and... |
 | `functional-reconstruction` | This skill should be used when the user asks to reconstruct, document, or describe the existing functional behaviour of a codebase before a... |
 | `graphify-code-graph` | This skill should be used when an agent needs to understand, navigate, or reason about a codebase through a persistent code knowledge graph instead... |
 | `tech-analyst` | This skill should be used when an analysis, migration, or architecture-understanding pipeline starts and the codebase needs a structural map first.... |

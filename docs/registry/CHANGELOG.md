@@ -6,6 +6,36 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 
+### Added (2026-11-09)
+
+**`c4-architecture`, in `analysis-architecture@1.1.0`.** Leonardo Flores's skill for
+documenting architecture with the C4 model as Mermaid diagrams as code, read from
+`softaworks/agent-toolkit` at `3027f20` (MIT) and copied as text, as `apple-design` was. No
+official C4 skill exists: this is the community one with the widest reach, and its rules
+match the c4model.com guidance (containers are deployable and components are not, shared
+libraries are not containers, a broker is drawn as its topics, external systems are black
+boxes, under 20 elements per diagram). It covers the five diagram types with the audience
+each one serves, the full Mermaid C4 syntax, microservice and event-driven patterns, and a
+catalogue of modelling mistakes. Markdown only, with no script, hook or network call.
+Changes from upstream, listed in its `## Source` section: the description rewritten to draw
+the boundary against `uml-diagram-generator`, `visual-explainer`, `software-architect` and
+BPMN; "Output Location" limited to code repositories; two subsections added, "Notation"
+(key, title with type and scope, acronyms, one look per element across levels, from the
+c4model.com notation guide and checklist) and "Rendering for a Deliverable" (Mermaid's
+automatic layout overlaps labels past about ten elements); a `## Contents` in the three
+references; the upstream README not copied. The directory carries the upstream licence text
+as `LICENSE.txt`. `triggers.json` was written first: 5 positives and 6 near misses, against
+UML diagrams, a visual explainer, an ADR, a branded slide, a codebase structure map and
+BPMN. The README roster of `analysis-architecture` now also lists `app-inventory`, missing
+since it was added.
+
+### Changed (2026-11-09)
+
+**`uml-diagram-generator`, in `docs-branding@1.2.1`.** Its description names C4 model
+diagrams among the non-UML diagrams it does not draw and points to `c4-architecture`, so
+that "component diagram" in a C4 request no longer pulls it. One near miss added to its
+`triggers.json`.
+
 ### Added (2026-11-04)
 
 **`apple-design`, in `dev-standards@1.2.0`.** Emil Kowalski's skill on Apple's interface and

@@ -77,10 +77,11 @@
     {
       "name": "analysis-architecture",
       "source": "./plugins/analysis-architecture",
-      "description": "System architecture design, ADR authoring, functional requirement extraction, technical debt assessment, capability-registry auditing, and multi-domain task orchestration.",
+      "description": "System architecture design, C4 model diagrams, ADR authoring, functional requirement extraction, technical debt assessment, capability-registry auditing, and multi-domain task orchestration.",
       "category": "development",
       "tags": [
         "architecture",
+        "c4",
         "adr",
         "requirements",
         "technical-debt",

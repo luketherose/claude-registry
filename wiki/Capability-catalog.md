@@ -318,6 +318,7 @@ registry auditing.
 | `tech-analyst` | The structural map an analysis or migration pipeline needs first: modules, dependencies, bounded contexts |
 | `functional-reconstruction` | Reconstructing the AS-IS functional behaviour of a codebase before a migration |
 | `graphify-code-graph` | Navigating a codebase through a persistent code knowledge graph instead of ad-hoc grepping |
+| `c4-architecture` | C4 model diagrams as Mermaid code: System Context, Container, Component, Deployment and Dynamic, with the notation rules and the common modelling mistakes. Adapted from Leonardo Flores (MIT) |
 
 ---
 

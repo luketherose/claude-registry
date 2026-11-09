@@ -1,0 +1,57 @@
+[
+  {
+    "query": "Mi serve il C4 della soluzione fino al livello 3: context, container e component",
+    "should_trigger": true,
+    "description": "C4 model of a solution up to level 3: context, container and component"
+  },
+  {
+    "query": "Draw the system context diagram for the payments platform: users, our system and the external systems it talks to",
+    "should_trigger": true,
+    "description": "System context diagram with users and external systems"
+  },
+  {
+    "query": "Fammi il container diagram di questi microservizi con database, code e protocolli sulle frecce",
+    "should_trigger": true,
+    "description": "Container diagram of microservices with stores, queues and protocols on the arrows"
+  },
+  {
+    "query": "Document the architecture of this repo as diagrams-as-code we can keep in docs/architecture",
+    "should_trigger": true,
+    "description": "Architecture documentation of a repository as diagrams kept as code"
+  },
+  {
+    "query": "Review our architecture diagram: are these really containers or just modules, and is the notation consistent?",
+    "should_trigger": true,
+    "description": "Review of an architecture diagram for abstraction levels and notation"
+  },
+  {
+    "query": "Disegnami il class diagram e il sequence diagram del flusso di login",
+    "should_trigger": false,
+    "description": "UML class and sequence diagrams of a login flow"
+  },
+  {
+    "query": "Spiegami con uno schema interattivo, in modo semplice, come funziona questa pipeline",
+    "should_trigger": false,
+    "description": "Simple interactive visual explanation of a pipeline"
+  },
+  {
+    "query": "Write an ADR on whether to keep Apigee or run the API gateway inside the cluster",
+    "should_trigger": false,
+    "description": "Architecture decision record on a gateway choice"
+  },
+  {
+    "query": "Fai una slide Accenture con l'architettura per lo steering committee",
+    "should_trigger": false,
+    "description": "Branded slide with the architecture for a steering committee"
+  },
+  {
+    "query": "Map the modules, bounded contexts and dependencies of this legacy codebase before the migration",
+    "should_trigger": false,
+    "description": "Structural map of a legacy codebase before a migration"
+  },
+  {
+    "query": "Draw the BPMN of the alert investigation process with lanes for L1 and L2",
+    "should_trigger": false,
+    "description": "BPMN process diagram with swimlanes"
+  }
+]
