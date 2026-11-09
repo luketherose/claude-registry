@@ -29,12 +29,40 @@ UML diagrams, a visual explainer, an ADR, a branded slide, a codebase structure 
 BPMN. The README roster of `analysis-architecture` now also lists `app-inventory`, missing
 since it was added.
 
+**`c4-html-deliverable`, in `docs-branding@1.3.0`.** The house format for a C4 architecture
+deliverable: one self-contained HTML page with System Context, Container and Component
+diagrams, generated as inline SVG from one Python model, so an element keeps its name, colour
+and shape on every level. The Container chapter carries a tab menu, and every tab draws the
+same compact copy of the Container layout: the first with every element and call in its normal
+style, the detailed diagram collapsed below it; then one tab per main use case, a C4 dynamic
+diagram that lights up the elements and calls it uses, numbers them in order and lists the
+steps beside it. A Component chapter takes the same menu for the internal paths of its
+container, and network entry points such as virtual IPs are an `infrastructure` kind drawn
+as a pill outside the system boundary. Tabs follow the ARIA pattern, take deep links (`#uc2`), scroll sideways on a phone, and
+print one panel per page; without JavaScript every panel shows in sequence. Every view carries
+its key, notes, element and relationship lists and its Mermaid C4 source. The skill ships the
+engine (`scripts/render.py` with a geometric collision check over arrows, labels, badges,
+zones and canvas; `scripts/check.py`; `scripts/build.py`, which exits 1 while any warning is
+left), a worked example in `assets/template/` (a fictional order platform), the house standard
+in `references/standard.md` and the file format with a warning-to-fix table in
+`references/spec-format.md`. Two themes: `unicredit`, from the `unicredit-design-system`
+tokens, and `accenture`, from `accenture-branding`. It was built for a client deliverable and
+carries none of its content. `triggers.json` was written first: 5 positives and 6 near misses,
+against C4 notation in Mermaid, a visual explainer, UML, a slide deck, a UniCredit Word document
+and an ADR. Python standard library only, no network call.
+
 ### Changed (2026-11-09)
 
-**`uml-diagram-generator`, in `docs-branding@1.2.1`.** Its description names C4 model
+**`uml-diagram-generator`, in `docs-branding@1.3.0`.** Its description names C4 model
 diagrams among the non-UML diagrams it does not draw and points to `c4-architecture`, so
 that "component diagram" in a C4 request no longer pulls it. One near miss added to its
 `triggers.json`.
+
+**`visual-explainer`, in `docs-branding@1.3.0`, and `c4-architecture`, in
+`analysis-architecture@1.1.0`.** Both descriptions name `c4-html-deliverable` among what they
+do not do, so a request for a C4 page for readers no longer lands on the generic explainer or on
+the notation skill. `c4-architecture` also points to it from "Rendering for a Deliverable", and
+its `## Source` list records the change. One near miss added to each `triggers.json`.
 
 ### Added (2026-11-04)
 

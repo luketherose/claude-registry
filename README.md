@@ -262,7 +262,7 @@ Multi-agent deliberative decision engine: structured debate with independent per
 
 ### `docs-branding`
 
-Technical documentation authoring and branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, Accenture-branded PDF/DOCX documents and PowerPoint presentations, UniCredit-template Word documents, and interactive HTML explainers.
+Technical documentation authoring and branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, Accenture-branded PDF/DOCX documents and PowerPoint presentations, UniCredit-template Word documents, interactive HTML explainers, and C4 architecture pages in HTML.
 
 ```bash
 /plugin install docs-branding@claude-registry
@@ -277,12 +277,13 @@ Technical documentation authoring and branded deliverable generation: READMEs, w
 | `presentation-creator` | inherit | Use this agent when you need to create an Accenture-branded PowerPoint presentation (.pptx) from project documents, estimation files, or any set of... |
 | `wiki-writer` | inherit | Use this agent when authoring or restructuring a GitHub wiki for a software project. Reads the codebase, README, CHANGELOG, ADRs, and existing docs... |
 
-**Skills (9)**
+**Skills (10)**
 
 | Skill | Provides |
 |---|---|
 | `accenture-branding` | This skill should be used when an agent (presentation-creator, document-creator) generates an Accenture-branded deliverable and needs the brand... |
 | `backend-documentation` | This skill should be used when generating enterprise technical documentation for a Java/Spring Boot backend, typically as part of a... |
+| `c4-html-deliverable` | This skill should be used when producing or updating a C4 architecture deliverable as one self-contained HTML page: System Context,... |
 | `doc-expert` | This skill should be used when producing technical or functional documentation for a Python/Streamlit, Java/Spring Boot, or Angular project. Trigger... |
 | `documentation-orchestrator` | ALWAYS use this skill when generating enterprise technical documentation for a full-stack project: it interprets a Word template, coordinates... |
 | `frontend-documentation` | This skill should be used when generating enterprise technical documentation for an Angular frontend, typically as part of a... |

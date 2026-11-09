@@ -1,6 +1,6 @@
 ---
 name: visual-explainer
-description: This skill should be used when the user asks to explain a system, workflow, architecture, pipeline or process visually and in very simple terms, as one interactive HTML page. Trigger phrases include "fammi una cosa visuale", "graficami", "spiegami con uno schema", "make me a visual explainer", "a page like this one". It ships the house template (dashed zones, clickable components, flow buttons that animate numbered steps, side panel, optional yes/no table, light and dark mode) and the rules to fill and verify it. Not for UML notation (uml-diagram-generator), slide decks (presentation-creator) or data charts.
+description: This skill should be used when the user asks to explain a system, workflow, architecture, pipeline or process visually and in very simple terms, as one interactive HTML page. Trigger phrases include "fammi una cosa visuale", "graficami", "spiegami con uno schema", "make me a visual explainer", "a page like this one". It ships the house template (dashed zones, clickable components, flow buttons that animate numbered steps, side panel, optional yes/no table, light and dark mode) and the rules to fill and verify it. Not for UML notation (uml-diagram-generator), C4 architecture pages (c4-html-deliverable), slide decks (presentation-creator) or data charts.
 ---
 
 # Visual explainer

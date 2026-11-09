@@ -53,5 +53,10 @@
     "query": "Draw the BPMN of the alert investigation process with lanes for L1 and L2",
     "should_trigger": false,
     "description": "BPMN process diagram with swimlanes"
+  },
+  {
+    "query": "Genera la pagina HTML del C4 per il cliente, in stile UniCredit, con gli use case accesi sul container diagram",
+    "should_trigger": false,
+    "description": "Branded client HTML page of the C4 model with use cases lit up on the container diagram"
   }
 ]

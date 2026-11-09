@@ -289,6 +289,7 @@ Documentation authoring, Accenture-branded deliverables, UniCredit-template Word
 | `uml-diagram-generator` | UML diagrams for documentation, architecture design and code-structure explanation |
 | `unicredit-document-template` | The UniCredit Word document template: page setup, type scale, palette, mandatory frame and tables, plus a JSON-to-DOCX builder and a checker |
 | `visual-explainer` | A one-page interactive HTML explainer: zones, clickable components, flows with numbered steps, plus the template and its checks |
+| `c4-html-deliverable` | A C4 model as one branded HTML page: levels 1 to 3 generated from one Python model, the main use cases as tabs that light up their elements and numbered calls, plus the engine with its collision check, the house standard and a worked example |
 
 ---
 

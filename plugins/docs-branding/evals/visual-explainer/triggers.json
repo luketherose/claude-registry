@@ -38,5 +38,10 @@
     "query": "Write the README for this service with setup, configuration and run instructions",
     "should_trigger": false,
     "description": "README with setup and run instructions for a service"
+  },
+  {
+    "query": "Make the C4 deliverable page for the client: context, containers and components, with a tab per main use case",
+    "should_trigger": false,
+    "description": "Client C4 deliverable page with context, container and component diagrams and one tab per use case"
   }
 ]
