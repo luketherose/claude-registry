@@ -90,3 +90,4 @@ Show the user a screenshot or the measured values, then call it done.
 - Diagrams are drawn in Arial whatever the page font, because the collision check measures text by character count.
 - A theme is a dict in `THEMES` in `scripts/render.py`. A new client gets a new entry built from its design tokens, not a hand-edited page.
 - Print shows every tab panel on its own page and hides the menu; without JavaScript every panel is shown in sequence.
+- Inactive tab panels are collapsed and invisible, never `display:none`: Safari draws an SVG wrongly when it is first laid out hidden and shown later. Check a page in Safari as well, opening a use-case tab directly with its id in the address.

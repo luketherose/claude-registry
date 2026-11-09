@@ -44,6 +44,7 @@ Every static view carries: title, a "Diagram type / Scope" line, the diagram, it
 - Keyboard: arrow keys move between tabs, Home and End jump to the first and last. The markup follows the ARIA tabs pattern (`tablist`, `tab`, `tabpanel`, `aria-selected`).
 - On a narrow screen the row scrolls sideways and the chosen tab is brought into view.
 - Without JavaScript every panel is shown one after the other; in print every panel prints, each on a new page, and the menu is hidden.
+- Inactive panels stay laid out, collapsed and invisible, never `display:none`: Safari draws an SVG wrongly when it is first laid out hidden and shown later.
 - Three to five tabs after the first. Fewer makes the menu pointless; more means the diagram is doing too much.
 
 ## 4. Use-case panels
@@ -87,7 +88,7 @@ A new theme is a new entry in `THEMES` in `scripts/render.py` with the same keys
 ## 7. Modelling rules
 
 - Containers are deployable units, or the application that runs in the browser. Components are not.
-- Shared libraries are not containers: they go in the notes.
+- Shared libraries are not containers: they go in the notes. The exception is Level 3, for a library on the path of every call (tenant context, security): draw it as the components it adds to the container, with the library named in their technology.
 - External systems are black boxes.
 - Network entry points (virtual IPs, load balancers) are infrastructure, not containers. Draw them, as `infra` nodes outside the system boundary, only when the reader needs the entry path; their detail (ingress, internal load balancers, namespaces) belongs to a deployment view.
 - Fewer than 20 elements per diagram.

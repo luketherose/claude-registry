@@ -38,7 +38,9 @@ style, the detailed diagram collapsed below it; then one tab per main use case, 
 diagram that lights up the elements and calls it uses, numbers them in order and lists the
 steps beside it. A Component chapter takes the same menu for the internal paths of its
 container, and network entry points such as virtual IPs are an `infrastructure` kind drawn
-as a pill outside the system boundary. Tabs follow the ARIA pattern, take deep links (`#uc2`), scroll sideways on a phone, and
+as a pill outside the system boundary. Inactive panels stay laid out, collapsed and invisible,
+never `display:none`, because Safari draws an SVG first laid out hidden wrongly once shown.
+Tabs follow the ARIA pattern, take deep links (`#uc2`), scroll sideways on a phone, and
 print one panel per page; without JavaScript every panel shows in sequence. Every view carries
 its key, notes, element and relationship lists and its Mermaid C4 source. The skill ships the
 engine (`scripts/render.py` with a geometric collision check over arrows, labels, badges,
