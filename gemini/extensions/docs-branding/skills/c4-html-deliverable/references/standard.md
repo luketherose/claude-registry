@@ -31,6 +31,9 @@ The rules every C4 deliverable built with this skill follows: one page layout, o
 6. **Level 3**, Component: one diagram per container that needs it, with its internal paths in a tab menu when they help. A container that does one job stays described at Level 2, and the About section says so.
 7. **Open decisions**: a table with the proposal drawn in the model, the alternative and the diagrams it affects.
 8. **C4 conformance**: how the notation rules are applied, acronyms, sources.
+9. **Extra pages**, when needed: a view drawn outside the model, such as the network and infrastructure of one environment, goes on a page of its own. A page menu then sits under the header: the model first, then one tab per page, with the tab rules of section 3 and its own deep link (`#infra`).
+
+About this model, Open decisions and C4 conformance may be left out when the reader asks for the diagrams only: the contents bar then lists the levels alone.
 
 Every static view carries: title, a "Diagram type / Scope" line, the diagram, its key, notes, the list of elements, the list of relationships (an assumption is marked as such) and the source as Mermaid C4 code in a collapsed block.
 

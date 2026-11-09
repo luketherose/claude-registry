@@ -93,9 +93,11 @@ Each step's `calls` names relationships by key (`"c_api>c_db"`, or the `key` giv
 | `footer` | HTML footer line |
 | `intro` | HTML sections before Level 1; the default contents bar links to `<section id="about">` |
 | `outro` | HTML sections after the last view: `decisions`, `conformance` |
-| `toc_before`, `toc_after` | `[(anchor, label)]` around the generated view links in the contents bar |
+| `toc_before`, `toc_after` | `[(anchor, label)]` around the generated view links in the contents bar; `[]` when `intro` or `outro` is empty |
+| `pages` | Extra pages after the model, in a page menu under the header: `dict(id, label, html=...)` or `dict(id, label, file=...)`, the file read from the project folder. The id is the deep link and must not clash with a view or flow id |
+| `model_page` | Label of the first tab of the page menu; default "C4 model" |
 
-`intro` and `outro` are trusted HTML written by the author: they reuse the page classes `box`, `cards`/`card`, `tbl`, `notes` and `scope`. Everything else is escaped.
+`intro`, `outro` and the pages are trusted HTML written by the author: they reuse the page classes `view`, `lvl`, `diagram`, `legend`, `box`, `cards`/`card`, `tbl`, `notes` and `scope`. Everything else is escaped. A page diagram wider than the screen sets its own `min-width` on the `svg`, so it stays readable and scrolls inside its frame.
 
 ## 5. Reading the check output
 

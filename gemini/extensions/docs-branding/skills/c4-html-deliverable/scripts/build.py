@@ -213,6 +213,11 @@ h3{font-size:16px;margin:22px 0 8px;color:var(--ink)}
 section.view{position:relative}
 .js .tabpanel:not(.active){position:absolute;left:0;right:0;top:0;height:0;overflow:hidden;visibility:hidden}
 html:not(.js) .tabs,html:not(.js) .tabs-lead{display:none}
+.tabs.pages{margin:0;padding:0 32px;background:#fff}
+.tabs.pages [role=tab]{font-size:15.5px;padding:12px 16px}
+.pagewrap{position:relative}
+.pagepanel{scroll-margin-top:56px}
+.js .pagepanel:not(.active){position:absolute;left:0;right:0;top:0;height:0;overflow:hidden;visibility:hidden}
 .flow-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:22px;align-items:start;margin-top:12px}
 .flow-grid>*{min-width:0}
 .steps{background:var(--n50);border-left:4px solid var(--accent);border-radius:0 6px 6px 0;padding:18px 20px}
@@ -247,8 +252,8 @@ pre{background:var(--code);color:#EDEDEF;padding:14px;border-radius:6px;overflow
 .card p{margin:0;font-size:14px}
 footer{border-top:1px solid var(--soft);color:var(--muted);font-size:12.5px;padding:16px 32px}
 @media (max-width:1100px){.flow-grid{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:700px){header.top{padding:20px 18px}header.top h1{font-size:23px}h2{font-size:21px}nav.toc{padding:8px 18px;flex-wrap:nowrap;overflow-x:auto;font-size:13px;-webkit-overflow-scrolling:touch}main{padding:4px 16px 32px}.diagram svg{min-width:760px}}
-@media print{nav.toc{display:none}.tabs,.tabs-lead{display:none}.js .tabpanel:not(.active){position:static;height:auto;overflow:visible;visibility:visible}.tabpanel+.tabpanel{break-before:page}section.view{break-before:page}.diagram svg{min-width:0}.flow-grid{grid-template-columns:minmax(0,1fr) 300px}details{display:block}details>*{display:block}header.top,th,.lvl,.steps li::before{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+@media (max-width:700px){header.top{padding:20px 18px}header.top h1{font-size:23px}h2{font-size:21px}nav.toc{padding:8px 18px;flex-wrap:nowrap;overflow-x:auto;font-size:13px;-webkit-overflow-scrolling:touch}main{padding:4px 16px 32px}.diagram svg{min-width:760px}.tabs.pages{padding:0 18px}}
+@media print{nav.toc{display:none}.tabs,.tabs-lead{display:none}.js .tabpanel:not(.active),.js .pagepanel:not(.active){position:static;height:auto;overflow:visible;visibility:visible}.tabpanel+.tabpanel,.pagepanel+.pagepanel{break-before:page}section.view{break-before:page}.diagram svg{min-width:0}.flow-grid{grid-template-columns:minmax(0,1fr) 300px}details{display:block}details>*{display:block}header.top,th,.lvl,.steps li::before{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 @page{size:A3 landscape;margin:12mm}
 """
 
@@ -395,10 +400,19 @@ TABS_JS = """
     });
   });
   function fromHash() {
-    var id = decodeURIComponent(location.hash.slice(1));
-    if (!id) return;
-    var tab = document.querySelector('[role=tab][aria-controls="' + id.replace(/"/g, "") + '"]');
-    if (tab) { activate(tab); tab.closest("section").scrollIntoView(); }
+    var el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (!el) return;
+    // The target may sit in a page and a tab that are not shown: open every panel around it, outermost first.
+    var panels = [];
+    for (var p = el; p; p = p.parentElement) if (p.getAttribute("role") === "tabpanel") panels.unshift(p);
+    panels.forEach(function (panel) {
+      var tab = document.querySelector('[role=tab][aria-controls="' + panel.id + '"]');
+      if (tab) activate(tab);
+    });
+    // A tab scrolls to its chapter, a page to the page menu, anything else to itself.
+    var at = el.classList.contains("pagepanel") ? document.querySelector(".tabs.pages")
+           : el.classList.contains("tabpanel") ? el.closest("section") : el;
+    (at || el).scrollIntoView();
   }
   window.addEventListener("hashchange", fromHash);
   fromHash();
@@ -408,6 +422,27 @@ TABS_JS = """
 
 def links(pairs):
     return "".join(f'<a href="#{a}">{esc(t)}</a>' for a, t in pairs)
+
+
+def paged(model):
+    """With DOC["pages"], the model becomes the first page of a page menu; each extra page is trusted HTML.
+
+    A page carries its HTML inline (`html`) or in a file of the project folder (`file`), for a view
+    drawn outside the model, such as the network and infrastructure of one environment.
+    """
+    pages = DOC.get("pages", [])
+    if not pages:
+        return model
+    tabs = [f'<button type="button" role="tab" id="tab-model" aria-controls="model" aria-selected="true">'
+            f'{esc(DOC.get("model_page", "C4 model"))}</button>']
+    panels = [f'<div class="pagepanel active" role="tabpanel" id="model" aria-labelledby="tab-model">\n{model}\n</div>']
+    for p in pages:
+        html = p["html"] if "html" in p else (PROJECT / p["file"]).read_text(encoding="utf-8")
+        tabs.append(f'<button type="button" role="tab" id="tab-{p["id"]}" aria-controls="{p["id"]}" aria-selected="false" '
+                    f'tabindex="-1">{esc(p["label"])}</button>')
+        panels.append(f'<div class="pagepanel" role="tabpanel" id="{p["id"]}" aria-labelledby="tab-{p["id"]}">\n<main>\n{html}\n</main>\n</div>')
+    return (f'<div class="tabs pages" role="tablist" aria-label="Pages">{"".join(tabs)}</div>\n'
+            f'<div class="pagewrap">\n{"".join(panels)}\n</div>')
 
 
 def build():
@@ -424,6 +459,9 @@ def build():
         toc.append(f'<a href="#{v.spec["id"]}">{esc(v.spec["level"])}: {esc(v.spec["nav"])}</a>')
         body.append(tabbed_section(v, *tabbed[v.spec["id"]]) if v.spec["id"] in tabbed else section(v))
     body.append(DOC["outro"])
+    model = (f'<nav class="toc" aria-label="Contents">{links(DOC.get("toc_before", [("about", "About this model")]))}'
+             f'{"".join(toc)}{links(DOC.get("toc_after", [("decisions", "Open decisions"), ("conformance", "C4 conformance")]))}</nav>\n'
+             f'<main>\n{"".join(body)}\n</main>')
     page = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -440,10 +478,7 @@ def build():
   <p>{esc(DOC['subtitle'])}</p>
   <div class="meta">{DOC['meta']}</div>
 </header>
-<nav class="toc" aria-label="Contents">{links(DOC.get("toc_before", [("about", "About this model")]))}{''.join(toc)}{links(DOC.get("toc_after", [("decisions", "Open decisions"), ("conformance", "C4 conformance")]))}</nav>
-<main>
-{''.join(body)}
-</main>
+{paged(model)}
 <footer>{DOC['footer']}</footer>
 <script>{TABS_JS}</script>
 </body>
