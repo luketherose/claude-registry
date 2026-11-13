@@ -628,5 +628,15 @@
     "source_sha": "42caa04d6a2439e10ddbc9c237b0fe463c0077e4",
     "recheck": "2026-12-31",
     "published_ref": ""
+  },
+  {
+    "capability": "status-update-sintetico",
+    "kind": "skill",
+    "source": "claude",
+    "status": "mirrored",
+    "reason": "",
+    "source_sha": "0ae95fbb03ea84640147632f3c43c3fb29f79a82",
+    "recheck": "2026-12-31",
+    "published_ref": ""
   }
 ]
