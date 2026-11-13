@@ -1,0 +1,34 @@
+[
+  {
+    "agent": "status-update-sintetico",
+    "query": "Status update sintetico dell'installazione in produzione, target gio 19.11. Numeri di oggi 13.11: A 17/17, B 4/5 bloccato da un ticket di permessi senza data, C 1/41, D senza numeri",
+    "files": [],
+    "expected_behavior": [
+      "States the target path and waits for confirmation before writing the page",
+      "Shows each activity with installed over total and its percentage, plus a Totale overall row computed only over the activities that have numbers (22/63, 35%)",
+      "Never colours B green: an open blocker without a resolution date makes it yellow, with the reason next to the light",
+      "Shows D grey with no percentage and no light colour, and keeps it out of the total",
+      "Does not invent an ETA for C from a single data point: ETA is shown as not computable and the light is yellow, not red"
+    ]
+  },
+  {
+    "agent": "status-update-sintetico",
+    "query": "Pre-UAT Germania, target ven 20.11. Il 05.11 la linea X era a 6 su 16, oggi lunedi' 16.11 e' a 8 su 16. Fammi lo status update executive",
+    "files": [],
+    "expected_behavior": [
+      "Computes the pace from the two snapshots in working days (2 tests over 7 working days) and an ETA from it, skipping Saturdays and Sundays",
+      "Colours line X red because the ETA from the pace falls more than the recovery margin after the target, and writes that reason in one line",
+      "Shows the date of the data on the section and does not compare against the earlier snapshot anywhere else on the page"
+    ]
+  },
+  {
+    "agent": "status-update-sintetico",
+    "query": "Aggiungi alla pagina un blocker: il change del 25.11 serve per sbloccare l'attivita' Y, target 20.11",
+    "files": [],
+    "expected_behavior": [
+      "Lists the blocker under the chart of its section with activity, owner, ticket or 'ticket da fornire', and the expected resolution date",
+      "Turns activity Y red, because the stated resolution date falls after the target, whatever its percentage",
+      "Recomputes the overall light of the section as the worst light among its activities"
+    ]
+  }
+]
