@@ -277,7 +277,7 @@ Technical documentation authoring and branded deliverable generation: READMEs, w
 | `presentation-creator` | inherit | Use this agent when you need to create an Accenture-branded PowerPoint presentation (.pptx) from project documents, estimation files, or any set of... |
 | `wiki-writer` | inherit | Use this agent when authoring or restructuring a GitHub wiki for a software project. Reads the codebase, README, CHANGELOG, ADRs, and existing docs... |
 
-**Skills (10)**
+**Skills (11)**
 
 | Skill | Provides |
 |---|---|
@@ -288,6 +288,7 @@ Technical documentation authoring and branded deliverable generation: READMEs, w
 | `documentation-orchestrator` | ALWAYS use this skill when generating enterprise technical documentation for a full-stack project: it interprets a Word template, coordinates... |
 | `frontend-documentation` | This skill should be used when generating enterprise technical documentation for an Angular frontend, typically as part of a... |
 | `functional-document-generator` | This skill should be used when converting existing functional documentation into an enterprise LaTeX deliverable for stakeholders. Trigger phrases:... |
+| `status-update-sintetico` | This skill should be used when the user asks for a synthetic or executive status update with traffic lights, as one self-contained HTML page... |
 | `uml-diagram-generator` | This skill should be used when producing UML diagrams for documentation, architecture design, system modeling, or code-structure explanation. Trigger... |
 | `unicredit-document-template` | This skill should be used when producing, restyling or checking a Word (.docx) document written for UniCredit: runbooks, cutover plans, design... |
 | `visual-explainer` | This skill should be used when the user asks to explain a system, workflow, architecture, pipeline or process visually and in very simple... |

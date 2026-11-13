@@ -1,0 +1,57 @@
+[
+  {
+    "query": "Fammi uno status update sintetico per Austria PROD e Germania Pre-UAT: grafico delle attivita' con percentuale, ETA e semaforo, e sotto i blocker",
+    "should_trigger": true,
+    "description": "Synthetic status update for two streams with percentage, ETA, traffic light and blockers"
+  },
+  {
+    "query": "Prepare an executive status page with a RAG light per workstream, percent complete and expected completion date, blockers listed below each chart",
+    "should_trigger": true,
+    "description": "Executive status page with a RAG light, percent complete and ETA per workstream"
+  },
+  {
+    "query": "Mi serve una pagina da mandare al cliente con lo stato delle installazioni per asset: verde se arriviamo alla data, giallo se e' a rischio, rosso se non ce la facciamo",
+    "should_trigger": true,
+    "description": "Client page with installation status per asset and a three colour date verdict"
+  },
+  {
+    "query": "Aggiorna lo status update executive di ieri con i numeri di oggi del pre-UAT e ricalcola semafori ed ETA",
+    "should_trigger": true,
+    "description": "Refresh of an existing executive status update with new numbers and recomputed lights"
+  },
+  {
+    "query": "Turn these test execution numbers per line into a one-page traffic light status for the steering committee, with the go-live date as target",
+    "should_trigger": true,
+    "description": "One-page traffic light status from test execution numbers against a go-live date"
+  },
+  {
+    "query": "Scrivi il 3P settimanale del team (Progress, Plans, Problems) da mandare in chat",
+    "should_trigger": false,
+    "description": "Weekly Progress, Plans, Problems message for a team chat"
+  },
+  {
+    "query": "Aggiorna il registro di dettaglio con le discussion items, la action list per owner e le open questions dello stand up di oggi",
+    "should_trigger": false,
+    "description": "Detail register update with discussion items, action list and open questions"
+  },
+  {
+    "query": "Prepara le slide Accenture per lo steering di giovedi' con lo stato del progetto",
+    "should_trigger": false,
+    "description": "Accenture slide deck with the project status for a steering meeting"
+  },
+  {
+    "query": "Fammi un grafico a barre dei costi mensili per ambiente a partire da questo CSV",
+    "should_trigger": false,
+    "description": "Bar chart of monthly costs per environment from a CSV"
+  },
+  {
+    "query": "Rigenera il Gantt del piano in Excel con le nuove date dei gate",
+    "should_trigger": false,
+    "description": "Excel Gantt of the plan regenerated with new gate dates"
+  },
+  {
+    "query": "Explain visually how our release pipeline moves a build from QA to production, with numbered steps",
+    "should_trigger": false,
+    "description": "Visual explanation of a release pipeline with numbered steps"
+  }
+]

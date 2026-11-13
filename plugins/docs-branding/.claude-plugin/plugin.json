@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "docs-branding",
-  "description": "Technical documentation authoring and branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, Accenture-branded PDF/DOCX documents and PowerPoint presentations, UniCredit-template Word documents, interactive HTML explainers, and C4 architecture pages in HTML.",
-  "version": "1.3.0",
+  "description": "Technical documentation authoring and branded deliverable generation: READMEs, wikis, runbooks, LaTeX docs, Accenture-branded PDF/DOCX documents and PowerPoint presentations, UniCredit-template Word documents, interactive HTML explainers, C4 architecture pages in HTML, and synthetic status updates with traffic lights.",
+  "version": "1.4.0",
   "author": {
     "name": "Luca La Rosa",
     "email": "luca.la.rosa@accenture.com"
@@ -19,7 +19,8 @@
     "unicredit",
     "branding",
     "html",
-    "c4"
+    "c4",
+    "status-update"
   ],
   "mcpServers": "./.mcp.json"
 }

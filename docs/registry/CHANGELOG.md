@@ -6,6 +6,29 @@ Format: `[name@version] - YYYY-MM-DD` for releases, `[Unreleased]` for pending c
 
 ## [Unreleased]
 
+### Added (2026-11-13)
+
+**`status-update-sintetico`, in `docs-branding@1.4.0`.** The house format for a synthetic
+executive status update: one self-contained HTML page with, per stream (a country, an
+environment, a test gate), one row per activity with done over total and its percentage, an
+ETA, and a light against the stream's target date, a `Totale overall` row, and only the
+blockers that stop an activity listed under the chart. The lights carry Luca La Rosa's
+meaning: green makes the date, yellow the date is at risk, red the date will not be met, grey
+no numbers in the source. They are computed by the page from the data block with fixed rules
+(target passed, a blocker resolved after the target or an ETA past a two working day margin
+give red; an open blocker, a scope part not reported or an ETA that cannot be computed give
+yellow), so an activity at 100% with an open blocker is never green and a single data point
+is never extrapolated. The ETA comes from a declared date or from the pace between two
+snapshots in working days, holidays excluded. The stream light is the worst of its rows and
+the page writes the reason beside every non-green light. Light and dark mode, readable at
+375 px, status colours paired with a shape and a label, `window.__check` for data errors.
+Written for the J2C status updates of Austria production and the Germany pre-UAT after no
+community skill met the brief: four were read through the GitHub API at fixed commits and
+contributed one idea each, listed in its `## Method sources` section; no text was copied.
+`triggers.json` and `evals.json` were written first: 5 positives and 6 near misses (a 3P chat
+message, the detail register, a slide deck, a generic bar chart, an Excel Gantt, a visual
+explainer) and 3 scenarios on blockers, single data points and pace.
+
 ### Added (2026-11-09)
 
 **`c4-architecture`, in `analysis-architecture@1.1.0`.** Leonardo Flores's skill for

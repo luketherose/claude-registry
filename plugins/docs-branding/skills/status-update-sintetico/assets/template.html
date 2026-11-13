@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Status update sintetico</title>
+<style>
+:root { color-scheme: light dark; --bg: #fcfcfb; --card: #ffffff; --ink: #1f1f24; --ink2: #44464f; --muted: #6b6e7b; --line: #e4e4ea; --bar: #7500c0; --track: #ece2f6; --nd: #c9cad2; --good: #0ca30c; --warn: #fab219; --crit: #d03b3b; }
+@media (prefers-color-scheme: dark) { :root { --bg: #1a1a19; --card: #222221; --ink: #ececea; --ink2: #cfcfca; --muted: #9d9d98; --line: #363634; --bar: #a66ae8; --track: #33293d; --nd: #55554f; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+main { max-width: 880px; margin: 0 auto; padding: 24px 20px 40px; }
+h1 { font-size: 20px; margin: 0 0 4px; }
+.src { color: var(--muted); font-size: 12px; margin: 0 0 12px; }
+.glance { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0 0 10px; }
+.glance a { color: var(--ink); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--ink2); margin: 0 0 18px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin: 0 0 16px; break-inside: avoid; }
+.card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-bottom: 4px; }
+.card-head h2 { font-size: 16px; margin: 0; }
+.meta { color: var(--muted); font-size: 12px; margin: 0 0 10px; }
+.light { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.ico { display: inline-block; width: 10px; height: 10px; flex: none; }
+.ico.green { background: var(--good); border-radius: 50%; }
+.ico.yellow { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 10px solid var(--warn); }
+.ico.red { background: var(--crit); border-radius: 2px; }
+.ico.nd { border: 2px solid var(--nd); border-radius: 50%; }
+.row { display: grid; grid-template-columns: minmax(56px, 130px) minmax(0, 1fr) 76px 118px; column-gap: 14px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
+.row.head { border-top: 0; padding: 0 0 4px; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.row.total { font-weight: 600; }
+.name { font-weight: 600; overflow-wrap: anywhere; }
+.num { font-size: 12px; color: var(--ink2); margin-bottom: 3px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.num b { color: var(--ink); }
+.meter { height: 8px; border-radius: 4px; background: var(--track); overflow: hidden; }
+.meter span { display: block; height: 100%; border-radius: 4px; background: var(--bar); }
+.is-nd .meter { background: var(--nd); opacity: .45; }
+.is-nd .num { color: var(--muted); }
+.eta { font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.why { grid-column: 2 / -1; font-size: 12px; color: var(--muted); margin-top: 3px; }
+.blk h3 { font-size: 13px; margin: 14px 0 6px; }
+.blk ul { margin: 0; padding-left: 18px; }
+.blk li { font-size: 13px; margin: 4px 0; }
+.blk .m { color: var(--muted); }
+.none { font-size: 13px; color: var(--muted); margin: 0; }
+footer { color: var(--muted); font-size: 11px; margin-top: 8px; }
+@media (max-width: 560px) {
+  main { padding: 16px 12px 32px; }
+  .card { padding: 12px; }
+  .row { grid-template-columns: minmax(0, 1fr) 112px; grid-template-areas: "name light" "prog eta" "why why"; row-gap: 4px; column-gap: 10px; }
+  .row.head { display: none; }
+  .name { grid-area: name; }
+  .prog { grid-area: prog; }
+  .eta { grid-area: eta; justify-self: end; align-self: end; }
+  .lc { grid-area: light; justify-self: end; }
+  .why { grid-area: why; grid-column: auto; margin-top: 0; }
+}
+@media print { body { background: #fff; } .card { border-color: #ccc; } }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+/* DATI: the only part to edit. Dates are ISO. done and total are counts from the source; null means not reported. */
+const DATA = {
+  title: "Progetto X · Status update sintetico",
+  source: "Fonti: tracker installazioni del 13.11, dashboard test del 12.11",
+  today: "2026-11-13",
+  margin_days: 2,
+  holidays: ["2026-12-08"],
+  sections: [
+    {
+      name: "Paese A · Produzione",
+      target: "2026-11-19",
+      target_label: "T-1, cutover ven 20.11",
+      data_date: "2026-11-13",
+      unit: "pod e API",
+      activities: [
+        { name: "Asset 1", done: 20, total: 20 },
+        { name: "Asset 2", done: 9, total: 12, prev: { date: "2026-11-11", done: 5, total: 12 } },
+        { name: "Asset 3", done: 3, total: 30, prev: { date: "2026-11-11", done: 1, total: 30 } },
+        { name: "Asset 4", done: 8, total: 8, missing: "API" },
+        { name: "Asset 5", done: null, total: null }
+      ],
+      blockers: [
+        { text: "Permessi mancanti del service account", activities: ["Asset 2"], owner: "Cloud team", ticket: "TCK-101", resolution: null }
+      ]
+    },
+    {
+      name: "Paese B · Test pre-UAT",
+      target: "2026-11-20",
+      target_label: "fine pre-UAT",
+      data_date: "2026-11-12",
+      unit: "test",
+      activities: [
+        { name: "Linea 1", done: 14, total: 16, eta: "2026-11-17" },
+        { name: "Linea 2", done: 4, total: 24 }
+      ],
+      blockers: [
+        { text: "Fix del bug di firma", activities: ["Linea 2"], owner: "Team app", ticket: null, resolution: "2026-11-25" }
+      ]
+    }
+  ]
+};
+/* FINE DATI */
+
+(function () {
+  const check = []; window.__check = check;
+  const GG = ["dom", "lun", "mar", "mer", "gio", "ven", "sab"];
+  const LABEL = { green: "In linea", yellow: "A rischio", red: "Non traguarda", nd: "n.d." };
+  const RANK = { nd: 0, green: 1, yellow: 2, red: 3 };
+  const pad = n => String(n).padStart(2, "0");
+  const parse = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+  const iso = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  const fmt = s => { const d = parse(s); return GG[d.getDay()] + " " + pad(d.getDate()) + "." + pad(d.getMonth() + 1); };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const hol = new Set(DATA.holidays || []);
+  const isWork = d => d.getDay() % 6 !== 0 && !hol.has(iso(d));
+  const known = v => typeof v === "number" && isFinite(v);
+  const margin = known(DATA.margin_days) ? DATA.margin_days : 2;
+
+  // working days after a up to b, negative when b comes first
+  function wdBetween(a, b) {
+    if (a === b) return 0;
+    const sign = a < b ? 1 : -1, lo = sign > 0 ? a : b, hi = sign > 0 ? b : a;
+    const d = parse(lo); let n = 0;
+    while (iso(d) < hi) { d.setDate(d.getDate() + 1); if (isWork(d)) n++; }
+    return sign * n;
+  }
+  function addWd(a, n) {
+    const d = parse(a);
+    while (n > 0) { d.setDate(d.getDate() + 1); if (isWork(d)) n--; }
+    return iso(d);
+  }
+
+  function assess(a, sec) {
+    const r = { pct: null, eta: null, etaTxt: "n.d.", light: "nd", why: "nessun numero nella fonte" };
+    const bl = sec.blockers.filter(b => (b.activities || []).includes(a.name));
+    const set = (l, w) => { r.light = l; r.why = w; return r; };
+    if (!(known(a.done) && known(a.total) && a.total > 0)) return set("nd", a.note || r.why);
+    if (a.done > a.total) check.push(sec.name + ", " + a.name + ": done sopra total");
+    r.pct = Math.round(a.done / a.total * 100);
+    const complete = a.done >= a.total && !a.missing;
+    let src = "";
+    if (complete) r.etaTxt = "fatto";
+    else if (a.eta) { r.eta = a.eta; src = "dichiarata"; }
+    else if (a.prev && known(a.prev.done) && a.prev.total === a.total && a.done > a.prev.done) {
+      const days = wdBetween(a.prev.date, sec.data_date);
+      if (days > 0) {
+        const pace = (a.done - a.prev.done) / days;
+        r.eta = addWd(sec.data_date, Math.ceil((a.total - a.done) / pace));
+        src = "dal passo";
+      } else check.push(sec.name + ", " + a.name + ": prev.date non precede data_date");
+    }
+    if (r.eta) r.etaTxt = fmt(r.eta);
+    r.etaSrc = src;
+    const T = sec.target;
+    if (!complete && DATA.today > T) return set("red", "target superato");
+    const late = bl.find(b => b.resolution && b.resolution > T);
+    if (late) return set("red", "blocker risolto " + fmt(late.resolution) + ", dopo il target");
+    if (r.eta && wdBetween(T, r.eta) > margin) return set("red", (src === "dal passo" ? "al passo attuale " : "") + "ETA " + fmt(r.eta) + ", oltre il target");
+    const y = [];
+    bl.forEach(b => y.push(b.resolution ? "blocker risolto entro " + fmt(b.resolution) : "blocker aperto senza data"));
+    if (a.missing) y.push(a.missing + " non riportato");
+    if (!complete && !r.eta) y.push("ETA non calcolabile");
+    if (r.eta && r.eta > T) y.push("ETA " + fmt(r.eta) + ", " + wdBetween(T, r.eta) + " gg oltre il target");
+    if (y.length) return set("yellow", [...new Set(y)].join(" · "));
+    return set("green", complete ? "completato" : "ETA " + fmt(r.eta) + " entro il target");
+  }
+
+  const light = l => '<span class="light"><i class="ico ' + l + '"></i>' + LABEL[l] + "</span>";
+  const meter = (done, total, pct) => '<div class="num"><b>' + pct + "%</b> " + done + "/" + total + '</div><div class="meter"><span style="width:' + (done * 100 / total).toFixed(1) + '%"></span></div>';
+
+  const app = document.getElementById("app");
+  const views = DATA.sections.map((sec, i) => {
+    if (!sec.target) check.push(sec.name + ": target mancante");
+    if (!sec.data_date) check.push(sec.name + ": data_date mancante");
+    sec.blockers = sec.blockers || [];
+    const names = new Set(sec.activities.map(a => a.name));
+    sec.blockers.forEach(b => (b.activities || []).forEach(n => { if (!names.has(n)) check.push(sec.name + ": il blocker '" + b.text + "' cita " + n + ", che non è un'attività"); }));
+    const res = sec.activities.map(a => [a, assess(a, sec)]);
+    const worst = res.reduce((w, [, r]) => RANK[r.light] > RANK[w] ? r.light : w, "nd");
+    const tot = res.filter(([a, r]) => r.pct !== null).reduce((s, [a]) => [s[0] + a.done, s[1] + a.total], [0, 0]);
+    const rows = res.map(([a, r]) => {
+      const tip = esc(a.name + ": " + (r.pct === null ? "n.d." : a.done + " su " + a.total + " (" + r.pct + "%)") + ", ETA " + r.etaTxt + (r.etaSrc ? " (" + r.etaSrc + ")" : "") + ", " + LABEL[r.light] + ": " + r.why);
+      return '<div class="row' + (r.pct === null ? " is-nd" : "") + '" title="' + tip + '">' +
+        '<div class="name">' + esc(a.name) + "</div>" +
+        '<div class="prog">' + (r.pct === null ? '<div class="num">non riportato</div><div class="meter"></div>' : meter(a.done, a.total, r.pct)) + "</div>" +
+        '<div class="eta">' + esc(r.etaTxt) + "</div>" +
+        '<div class="lc">' + light(r.light) + "</div>" +
+        (r.light === "green" ? "" : '<div class="why">' + esc(r.why) + "</div>") + "</div>";
+    }).join("");
+    const total = tot[1] ? '<div class="row total"><div class="name">Totale overall</div><div class="prog">' + meter(tot[0], tot[1], Math.round(tot[0] / tot[1] * 100)) + '</div><div class="eta"></div><div class="lc"></div></div>' : "";
+    const blk = sec.blockers.length
+      ? "<ul>" + sec.blockers.map(b => "<li><b>" + esc((b.activities || []).join(", ")) + "</b> · " + esc(b.text) + ' · <span class="m">' + esc(b.owner || "owner non indicato") + " · " + esc(b.ticket || "ticket da fornire") + " · risoluzione: " + (b.resolution ? esc(fmt(b.resolution)) : "data non indicata") + "</span></li>").join("") + "</ul>"
+      : '<p class="none">Nessun blocker</p>';
+    return { id: "s" + (i + 1), name: sec.name, worst, html:
+      '<section class="card" id="s' + (i + 1) + '"><div class="card-head"><h2>' + esc(sec.name) + "</h2>" + light(worst) + "</div>" +
+      '<p class="meta">Target ' + esc(sec.target ? fmt(sec.target) : "n.d.") + (sec.target_label ? " (" + esc(sec.target_label) + ")" : "") + " · dati al " + esc(sec.data_date ? fmt(sec.data_date) : "n.d.") + "</p>" +
+      '<div class="row head"><div>Attività</div><div>Avanzamento' + (sec.unit ? ", " + esc(sec.unit) : "") + "</div><div>ETA</div><div>Stato</div></div>" +
+      rows + total + '<div class="blk"><h3>Blocker</h3>' + blk + "</div></section>" };
+  });
+
+  app.innerHTML = "<header><h1>" + esc(DATA.title) + '</h1><p class="src">' + esc(DATA.source) + "</p>" +
+    '<div class="glance">' + views.map(v => '<a href="#' + v.id + '">' + esc(v.name) + " " + light(v.worst) + "</a>").join("") + "</div>" +
+    '<div class="legend">' + ["green", "yellow", "red", "nd"].map(l => light(l)).join("") + "</div></header>" +
+    views.map(v => v.html).join("") +
+    "<footer>In linea: ETA entro il target e nessun blocker. A rischio: blocker aperto, parte non riportata, ETA non calcolabile o fino a " + margin + " giorni lavorativi oltre il target. Non traguarda: target superato, blocker risolto dopo il target o ETA oltre " + margin + " giorni lavorativi. ETA dal passo fra due rilevazioni, sabato, domenica e festivi esclusi.</footer>";
+  if (check.length) console.warn("status-update-sintetico:", check);
+})();
+</script>
+</body>
+</html>
